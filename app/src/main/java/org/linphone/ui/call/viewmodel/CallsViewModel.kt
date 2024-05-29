@@ -63,10 +63,6 @@ class CallsViewModel @UiThread constructor() : GenericViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    val changeSystemTopBarColorToMultipleCallsEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
-    }
-
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
         override fun onCallStateChanged(
@@ -270,9 +266,6 @@ class CallsViewModel @UiThread constructor() : GenericViewModel() {
                 )
                 callsTopBarStatus.postValue("") // TODO: improve ?
             }
-
-            Log.i("$TAG At least one other call, asking activity to change status bar color")
-            changeSystemTopBarColorToMultipleCallsEvent.postValue(Event(true))
         } else {
             if (core.callsNb == 1) {
                 callsTopBarIcon.postValue(R.drawable.phone)
@@ -291,11 +284,6 @@ class CallsViewModel @UiThread constructor() : GenericViewModel() {
                 }
                 callsTopBarStatus.postValue(LinphoneUtils.callStateToString(call.state))
             }
-
-            Log.i(
-                "$TAG No more than one call, asking activity to change status bar color back to primary"
-            )
-            changeSystemTopBarColorToMultipleCallsEvent.postValue(Event(false))
         }
     }
 }

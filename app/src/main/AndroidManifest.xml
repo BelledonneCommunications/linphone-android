@@ -106,26 +106,31 @@
 
         <activity
             android:name=".ui.file_viewer.MediaViewerActivity"
+            android:windowSoftInputMode="adjustResize"
             android:launchMode="singleTask"
             android:resizeableActivity="true" />
 
         <activity
             android:name=".ui.file_viewer.FileViewerActivity"
+            android:windowSoftInputMode="adjustResize"
             android:launchMode="singleTask"
             android:resizeableActivity="true" />
 
         <activity
             android:name=".ui.welcome.WelcomeActivity"
+            android:windowSoftInputMode="adjustResize"
             android:launchMode="singleTask"
             android:resizeableActivity="true" />
 
         <activity
             android:name=".ui.assistant.AssistantActivity"
+            android:windowSoftInputMode="adjustResize"
             android:launchMode="singleTask"
             android:resizeableActivity="true" />
 
         <activity
             android:name=".ui.call.CallActivity"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.LinphoneInCall"
             android:launchMode="singleTask"
             android:turnScreenOn="true"

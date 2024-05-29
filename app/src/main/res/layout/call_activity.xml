@@ -28,7 +28,7 @@
                 layout="@layout/call_activity_other_calls_top_bar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:visibility="@{callsViewModel.callsCount > 1 || callsViewModel.showTopBar ? View.VISIBLE : View.GONE, default=gone}"
+                android:visibility="@{callViewModel.fullScreenMode ? View.GONE : View.VISIBLE}"
                 app:viewModel="@{callsViewModel}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

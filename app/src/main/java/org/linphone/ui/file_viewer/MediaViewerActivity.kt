@@ -3,8 +3,12 @@ package org.linphone.ui.file_viewer
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import androidx.annotation.UiThread
 import androidx.core.content.FileProvider
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -49,12 +53,18 @@ class MediaViewerActivity : GenericActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        window.navigationBarColor = getColor(R.color.gray_900)
 
         binding = DataBindingUtil.setContentView(this, R.layout.file_media_viewer_activity)
         binding.lifecycleOwner = this
         setUpToastsArea(binding.toastsArea)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(insets.left, insets.top, insets.right, insets.bottom)
+            WindowInsetsCompat.CONSUMED
+        }
 
         viewModel = ViewModelProvider(this)[MediaListViewModel::class.java]
         binding.viewModel = viewModel

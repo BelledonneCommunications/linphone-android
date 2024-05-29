@@ -29,7 +29,6 @@ import androidx.annotation.UiThread
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import org.linphone.R
 import org.linphone.databinding.CallAudioDevicesBottomSheetBinding
 import org.linphone.ui.call.model.AudioDeviceModel
 
@@ -57,9 +56,6 @@ class AudioDevicesMenuDialogFragment(
         // Makes sure all menu entries are visible,
         // required for landscape mode (otherwise only first item is visible)
         dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
-
-        // Force this navigation bar color
-        dialog.window?.navigationBarColor = requireContext().getColor(R.color.gray_600)
         return dialog
     }
 

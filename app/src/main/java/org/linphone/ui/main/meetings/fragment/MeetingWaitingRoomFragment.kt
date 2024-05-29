@@ -69,8 +69,6 @@ class MeetingWaitingRoomFragment : GenericMainFragment() {
 
     private var bottomSheetDialog: BottomSheetDialogFragment? = null
 
-    private var navBarDefaultColor: Int = -1
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -87,8 +85,6 @@ class MeetingWaitingRoomFragment : GenericMainFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         postponeEnterTransition()
         super.onViewCreated(view, savedInstanceState)
-
-        navBarDefaultColor = requireActivity().window.navigationBarColor
 
         binding.lifecycleOwner = viewLifecycleOwner
 
@@ -153,9 +149,6 @@ class MeetingWaitingRoomFragment : GenericMainFragment() {
     }
 
     override fun onResume() {
-        // Force this navigation bar color
-        requireActivity().window.navigationBarColor = requireContext().getColor(R.color.gray_900)
-
         super.onResume()
 
         if (isCameraPermissionGranted()) {
@@ -178,13 +171,6 @@ class MeetingWaitingRoomFragment : GenericMainFragment() {
         }
 
         super.onPause()
-    }
-
-    override fun onDestroy() {
-        // Reset default navigation bar color
-        requireActivity().window.navigationBarColor = navBarDefaultColor
-
-        super.onDestroy()
     }
 
     private fun isCameraPermissionGranted(): Boolean {

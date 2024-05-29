@@ -23,11 +23,16 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.activity.enableEdgeToEdge
 import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnPreDraw
+import androidx.core.view.updatePadding
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
+import kotlin.math.max
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.compatibility.Compatibility
@@ -47,12 +52,24 @@ class AssistantActivity : GenericActivity() {
     private lateinit var binding: AssistantActivityBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.assistant_activity)
         binding.lifecycleOwner = this
-
         setUpToastsArea(binding.toastsArea)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val keyboard = windowInsets.getInsets(WindowInsetsCompat.Type.ime())
+            v.updatePadding(
+                insets.left,
+                insets.top,
+                insets.right,
+                max(insets.bottom, keyboard.bottom)
+            )
+            WindowInsetsCompat.CONSUMED
+        }
 
         coreContext.postOnCoreThread { core ->
             if (core.accountList.isEmpty()) {

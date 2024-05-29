@@ -7,14 +7,11 @@
 
     <!-- Base application theme. -->
     <style name="Theme.Linphone" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/color_main1_500</item>
         <!-- https://developer.android.com/guide/topics/display-cutout#best_practices_for_display_cutout_support -->
-        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">always</item>
         <!-- Customize your theme here. -->
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowBackground">@color/white</item>
-        <item name="android:navigationBarColor">@color/white</item>
 
         <item name="color_main1_100">@color/orange_main_100</item>
         <item name="color_main1_100_alpha_50">@color/orange_main_100_alpha_50</item>
@@ -107,46 +104,38 @@
 
     <!-- In-call application theme. -->
     <style name="Theme.LinphoneInCall" parent="Theme.Linphone">
-        <item name="android:navigationBarColor">@color/gray_600</item>
-        <item name="android:windowBackground">@color/black</item>
+        <item name="android:windowBackground">@color/gray_600</item>
     </style>
 
     <style name="Theme.LinphoneInCallYellow" parent="Theme.LinphoneYellow">
-        <item name="android:navigationBarColor">@color/gray_600</item>
-        <item name="android:windowBackground">@color/black</item>
+        <item name="android:windowBackground">@color/gray_600</item>
     </style>
 
     <style name="Theme.LinphoneInCallGreen" parent="Theme.LinphoneGreen">
-        <item name="android:navigationBarColor">@color/gray_600</item>
-        <item name="android:windowBackground">@color/black</item>
+        <item name="android:windowBackground">@color/gray_600</item>
     </style>
 
     <style name="Theme.LinphoneInCallBlue" parent="Theme.LinphoneBlue">
-        <item name="android:navigationBarColor">@color/gray_600</item>
-        <item name="android:windowBackground">@color/black</item>
+        <item name="android:windowBackground">@color/gray_600</item>
     </style>
 
     <style name="Theme.LinphoneInCallRed" parent="Theme.LinphoneRed">
-        <item name="android:navigationBarColor">@color/gray_600</item>
-        <item name="android:windowBackground">@color/black</item>
+        <item name="android:windowBackground">@color/gray_600</item>
     </style>
 
     <style name="Theme.LinphoneInCallPink" parent="Theme.LinphonePink">
-        <item name="android:navigationBarColor">@color/gray_600</item>
-        <item name="android:windowBackground">@color/black</item>
+        <item name="android:windowBackground">@color/gray_600</item>
     </style>
 
     <style name="Theme.LinphoneInCallPurple" parent="Theme.LinphonePurple">
-        <item name="android:navigationBarColor">@color/gray_600</item>
-        <item name="android:windowBackground">@color/black</item>
+        <item name="android:windowBackground">@color/gray_600</item>
     </style>
 
     <style name="Theme.LinphoneDialog" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:statusBarColor">@color/gray_600</item>
-        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">always</item>
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowAnimationStyle">@null</item>
         <item name="android:windowBackground">@color/transparent_color</item>
-        <item name="android:navigationBarColor">@color/transparent_color</item>
     </style>
 </resources>

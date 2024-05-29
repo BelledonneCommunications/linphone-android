@@ -23,6 +23,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.addCallback
+import androidx.activity.enableEdgeToEdge
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -51,6 +55,7 @@ class WelcomeActivity : GenericActivity() {
     private val pageChangedCallback = PageChangedCallback()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
         // Disable back gesture / button
@@ -58,6 +63,12 @@ class WelcomeActivity : GenericActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.welcome_activity)
         binding.lifecycleOwner = this
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(insets.left, insets.top, insets.right, insets.bottom)
+            WindowInsetsCompat.CONSUMED
+        }
 
         viewPager = binding.pager
         val pagerAdapter = ScreenSlidePagerAdapter(this)

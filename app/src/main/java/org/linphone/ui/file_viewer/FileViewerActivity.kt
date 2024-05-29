@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.DisplayMetrics
+import androidx.activity.enableEdgeToEdge
 import androidx.annotation.UiThread
 import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
@@ -42,8 +43,8 @@ class FileViewerActivity : GenericActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        window.navigationBarColor = getColor(R.color.gray_900)
 
         binding = DataBindingUtil.setContentView(this, R.layout.file_viewer_activity)
         binding.lifecycleOwner = this

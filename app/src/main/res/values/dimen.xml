@@ -2,7 +2,7 @@
 <resources>
     <dimen name="zero">0dp</dimen>
 
-    <dimen name="screen_bottom_margin">32dp</dimen>
+    <dimen name="screen_bottom_margin">10dp</dimen>
 
     <dimen name="landscape_nav_bar_width">75dp</dimen>
     <dimen name="sliding_pane_left_fragment_width">350dp</dimen>

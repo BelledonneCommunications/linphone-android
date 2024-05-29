@@ -24,13 +24,17 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
+import android.graphics.Color
 import android.os.Bundle
 import android.os.PowerManager
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
-import androidx.core.view.WindowCompat
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.updatePadding
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -39,6 +43,7 @@ import androidx.window.layout.FoldingFeature
 import androidx.window.layout.WindowInfoTracker
 import androidx.window.layout.WindowLayoutInfo
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlin.math.max
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -116,7 +121,29 @@ class CallActivity : GenericActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT) {
+                true // Force dark mode
+            }
+        )
         super.onCreate(savedInstanceState)
+
+        binding = DataBindingUtil.setContentView(this, R.layout.call_activity)
+        binding.lifecycleOwner = this
+        setUpToastsArea(binding.toastsArea)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.otherCallsTopBar.root) { v, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(0, insets.top, 0, 0)
+            WindowInsetsCompat.CONSUMED
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.callNavContainer) { v, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val keyboard = windowInsets.getInsets(WindowInsetsCompat.Type.ime())
+            v.updatePadding(insets.left, 0, insets.right, max(insets.bottom, keyboard.bottom))
+            WindowInsetsCompat.CONSUMED
+        }
 
         val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
         if (!powerManager.isWakeLockLevelSupported(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK)) {
@@ -127,11 +154,6 @@ class CallActivity : GenericActivity() {
             PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
             "$packageName;proximity_sensor"
         )
-
-        binding = DataBindingUtil.setContentView(this, R.layout.call_activity)
-        binding.lifecycleOwner = this
-
-        setUpToastsArea(binding.toastsArea)
 
         lifecycleScope.launch(Dispatchers.Main) {
             WindowInfoTracker
@@ -266,17 +288,6 @@ class CallActivity : GenericActivity() {
                         ActiveConferenceCallFragmentDirections.actionActiveConferenceCallFragmentToCallsListFragment()
                     navController.navigate(action)
                 }
-            }
-        }
-
-        callsViewModel.changeSystemTopBarColorToMultipleCallsEvent.observe(this) {
-            it.consume { useInCallColor ->
-                val color = if (useInCallColor) {
-                    getColor(R.color.success_500)
-                } else {
-                    getColor(R.color.main1_500)
-                }
-                window.statusBarColor = color
             }
         }
 
@@ -442,7 +453,6 @@ class CallActivity : GenericActivity() {
         Log.i("$TAG Switching full screen mode to ${if (hide) "ON" else "OFF"}")
         val windowInsetsCompat = WindowInsetsControllerCompat(window, window.decorView)
         if (hide) {
-            WindowCompat.setDecorFitsSystemWindows(window, false)
             windowInsetsCompat.let {
                 it.hide(WindowInsetsCompat.Type.systemBars())
                 it.systemBarsBehavior =
@@ -450,7 +460,6 @@ class CallActivity : GenericActivity() {
             }
         } else {
             windowInsetsCompat.show(WindowInsetsCompat.Type.systemBars())
-            WindowCompat.setDecorFitsSystemWindows(window, true)
         }
     }
 

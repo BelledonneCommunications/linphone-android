@@ -76,10 +76,6 @@ class MainViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    val changeSystemTopBarColorEvent: MutableLiveData<Event<Int>> by lazy {
-        MutableLiveData<Event<Int>>()
-    }
-
     val goBackToCallEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -449,7 +445,6 @@ class MainViewModel @UiThread constructor() : ViewModel() {
         if (maxedPriorityAlert == null) {
             Log.i("$TAG No alert to display")
             showAlert.postValue(false)
-            changeSystemTopBarColorEvent.postValue(Event(NONE))
             maxAlertLevel.postValue(NONE)
         } else {
             val type = maxedPriorityAlert.first
@@ -470,8 +465,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
             alertLabel.postValue(label)
 
             if (showAlert.value == true) {
-                Log.i("$TAG Alert top-bar is already visible, updating color if needed")
-                changeSystemTopBarColorEvent.postValue(Event(type))
+                Log.i("$TAG Alert top-bar is already visible")
             } else {
                 Log.i("$TAG Alert top-bar is currently invisible, starting job to display it")
                 coreContext.postOnMainThread {
@@ -481,7 +475,6 @@ class MainViewModel @UiThread constructor() : ViewModel() {
                             delay(delayMs)
                             withContext(Dispatchers.Main) {
                                 showAlert.value = true
-                                changeSystemTopBarColorEvent.value = Event(type)
                             }
                         }
                     }

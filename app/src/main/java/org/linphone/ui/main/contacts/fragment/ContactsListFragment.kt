@@ -206,8 +206,8 @@ class ContactsListFragment : AbstractMainFragment() {
         setViewModel(listViewModel)
         initViews(
             binding.slidingPaneLayout,
-            binding.topBar.search,
-            binding.bottomNavBar.root,
+            binding.topBar,
+            binding.bottomNavBar,
             R.id.contactsListFragment
         )
     }

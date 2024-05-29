@@ -25,15 +25,22 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.Gravity
+import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import androidx.annotation.UiThread
 import androidx.car.app.connection.CarConnection
 import androidx.core.os.bundleOf
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -41,6 +48,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
+import kotlin.math.max
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -103,12 +111,41 @@ class MainActivity : GenericActivity() {
         // Must be done before the setContentView
         installSplashScreen()
 
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT) {
+                true // Force dark mode to always have white icons in status bar
+            }
+        )
+
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.main_activity)
         binding.lifecycleOwner = this
-
         setUpToastsArea(binding.toastsArea)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.inCallTopBar.root) { v, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(0, insets.top, 0, 0)
+            WindowInsetsCompat.CONSUMED
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.mainNavContainer) { v, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val keyboard = windowInsets.getInsets(WindowInsetsCompat.Type.ime())
+            v.updatePadding(insets.left, 0, insets.right, max(insets.bottom, keyboard.bottom))
+            WindowInsetsCompat.CONSUMED
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.drawerMenuContent) { v, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val mlp = v.layoutParams as ViewGroup.MarginLayoutParams
+            mlp.leftMargin = insets.left
+            mlp.topMargin = insets.top
+            mlp.rightMargin = insets.right
+            mlp.bottomMargin = insets.bottom
+            v.layoutParams = mlp
+            WindowInsetsCompat.CONSUMED
+        }
 
         while (!coreContext.isReady()) {
             Thread.sleep(50)
@@ -121,23 +158,6 @@ class MainActivity : GenericActivity() {
 
         sharedViewModel = run {
             ViewModelProvider(this)[SharedMainViewModel::class.java]
-        }
-
-        viewModel.changeSystemTopBarColorEvent.observe(this) {
-            it.consume { mode ->
-                window.statusBarColor = when (mode) {
-                    MainViewModel.SINGLE_CALL, MainViewModel.MULTIPLE_CALLS -> {
-                        getColor(R.color.success_500)
-                    }
-                    MainViewModel.NETWORK_NOT_REACHABLE, MainViewModel.NON_DEFAULT_ACCOUNT_NOT_CONNECTED -> {
-                        getColor(R.color.danger_500)
-                    }
-                    MainViewModel.NON_DEFAULT_ACCOUNT_NOTIFICATIONS -> {
-                        getColor(R.color.main2_500)
-                    }
-                    else -> getColor(R.color.main1_500)
-                }
-            }
         }
 
         viewModel.goBackToCallEvent.observe(this) {
@@ -333,7 +353,7 @@ class MainActivity : GenericActivity() {
     }
 
     fun findNavController(): NavController {
-        return findNavController(R.id.main_nav_host_fragment)
+        return findNavController(R.id.main_nav_container)
     }
 
     fun loadContacts() {

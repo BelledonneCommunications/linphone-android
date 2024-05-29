@@ -32,6 +32,8 @@ import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.google.android.material.textfield.TextInputLayout
 import org.linphone.R
 import org.linphone.core.tools.Log
+import org.linphone.databinding.BottomNavBarBinding
+import org.linphone.databinding.TopBarBinding
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.chat.fragment.ConversationsListFragmentDirections
 import org.linphone.ui.main.contacts.fragment.ContactsListFragmentDirections
@@ -142,13 +144,13 @@ abstract class AbstractMainFragment : GenericMainFragment() {
 
     fun initViews(
         slidingPane: SlidingPaneLayout,
-        searchBar: TextInputLayout,
-        navBar: View,
+        topBar: TopBarBinding,
+        navBar: BottomNavBarBinding,
         @IdRes fragmentId: Int
     ) {
         initSlidingPane(slidingPane)
-        initSearchBar(searchBar)
-        initBottomNavBar(navBar)
+        initSearchBar(topBar.search)
+        initBottomNavBar(navBar.root)
         initNavigation(fragmentId)
     }
 

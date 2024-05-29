@@ -28,7 +28,6 @@ import android.view.WindowManager
 import androidx.annotation.DrawableRes
 import androidx.annotation.MainThread
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowCompat
 import androidx.core.view.children
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -67,8 +66,6 @@ open class GenericActivity : AppCompatActivity() {
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
-        WindowCompat.setDecorFitsSystemWindows(window, true)
-
         enableWindowSecureMode(corePreferences.enableSecureMode)
 
         val nightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK

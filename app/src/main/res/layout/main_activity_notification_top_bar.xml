@@ -13,7 +13,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@{viewModel.maxAlertLevel >= 20 ? @color/success_500 : viewModel.maxAlertLevel >= 10 ? @color/danger_500 : @color/main2_500, default=@color/main2_500}"
+        android:minHeight="40dp"
+        android:background="@{viewModel.maxAlertLevel >= 20 ? @color/success_500 : viewModel.maxAlertLevel >= 10 ? @color/danger_500 : viewModel.maxAlertLevel > 0 ? @color/main2_500 : @color/main1_500, default=@color/main1_500}"
         android:onClick="@{() -> viewModel.onTopBarClicked()}">
 
         <ImageView
@@ -25,6 +26,7 @@
             android:layout_marginBottom="5dp"
             android:src="@{viewModel.alertIcon, default=@drawable/bell_simple}"
             android:contentDescription="@null"
+            android:visibility="@{viewModel.showAlert ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -45,6 +47,7 @@
             android:textSize="16sp"
             android:maxLines="1"
             android:ellipsize="end"
+            android:visibility="@{viewModel.showAlert ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintEnd_toStartOf="@id/end_barrier"
             app:layout_constraintStart_toEndOf="@id/icon"
             app:layout_constraintTop_toTopOf="parent"
@@ -67,7 +70,7 @@
             android:text="@{viewModel.callsStatus, default=`Paused`}"
             android:textColor="@color/white"
             android:textSize="14sp"
-            android:visibility="@{viewModel.atLeastOneCall ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{viewModel.showAlert &amp;&amp; viewModel.atLeastOneCall ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/label"
             app:layout_constraintTop_toTopOf="parent"
@@ -82,7 +85,7 @@
             android:src="@drawable/x"
             app:tint="@color/white"
             android:contentDescription="@string/content_description_dismiss_notification"
-            android:visibility="@{viewModel.atLeastOneCall ? View.GONE : View.VISIBLE}"
+            android:visibility="@{!viewModel.showAlert || viewModel.atLeastOneCall ? View.GONE : View.VISIBLE, default=gone}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>

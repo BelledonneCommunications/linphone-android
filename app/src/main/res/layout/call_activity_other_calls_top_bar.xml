@@ -13,7 +13,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/color_success_500"
+        android:minHeight="40dp"
+        android:background="@{viewModel.callsCount > 1 || viewModel.showTopBar ? @color/success_500 : @color/black, default=@color/black}"
         android:onClick="@{() -> viewModel.topBarClicked()}">
 
         <ImageView
@@ -24,6 +25,7 @@
             android:layout_marginEnd="10dp"
             android:src="@{viewModel.callsTopBarIcon, default=@drawable/phone_pause}"
             android:contentDescription="@null"
+            android:visibility="@{viewModel.callsCount > 1 || viewModel.showTopBar ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/call_display_name"
             app:layout_constraintBottom_toBottomOf="@id/call_display_name"
@@ -42,6 +44,7 @@
             android:text="@{viewModel.callsTopBarLabel, default=`John Doe`}"
             android:textColor="@color/white"
             android:textSize="16sp"
+            android:visibility="@{viewModel.callsCount > 1 || viewModel.showTopBar ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintEnd_toStartOf="@id/call_time"
             app:layout_constraintStart_toEndOf="@id/call_icon"
             app:layout_constraintTop_toTopOf="parent"
@@ -57,6 +60,7 @@
             android:text="@{viewModel.callsTopBarStatus, default=`Paused`}"
             android:textColor="@color/white"
             android:textSize="14sp"
+            android:visibility="@{viewModel.callsCount > 1 || viewModel.showTopBar ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/call_display_name"
             app:layout_constraintTop_toTopOf="parent"
