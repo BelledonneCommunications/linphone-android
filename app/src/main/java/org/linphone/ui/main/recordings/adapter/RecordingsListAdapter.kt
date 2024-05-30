@@ -44,6 +44,10 @@ class RecordingsListAdapter :
     HeaderAdapter {
     var selectedAdapterPosition = -1
 
+    val recordingClickedEvent: MutableLiveData<Event<RecordingModel>> by lazy {
+        MutableLiveData<Event<RecordingModel>>()
+    }
+
     val recordingLongClickedEvent: MutableLiveData<Event<RecordingModel>> by lazy {
         MutableLiveData<Event<RecordingModel>>()
     }
@@ -73,6 +77,11 @@ class RecordingsListAdapter :
         val viewHolder = ViewHolder(binding)
         binding.apply {
             lifecycleOwner = parent.findViewTreeLifecycleOwner()
+
+            setOnClickListener {
+                recordingClickedEvent.value = Event(model!!)
+                resetSelection()
+            }
 
             setOnLongClickListener {
                 selectedAdapterPosition = viewHolder.bindingAdapterPosition

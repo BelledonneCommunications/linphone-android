@@ -28,6 +28,7 @@ import androidx.annotation.UiThread
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.io.File
@@ -115,6 +116,18 @@ class RecordingsListFragment : GenericMainFragment() {
                     binding.search.showKeyboard()
                 } else {
                     binding.search.hideKeyboard()
+                }
+            }
+        }
+
+        adapter.recordingClickedEvent.observe(viewLifecycleOwner) {
+            it.consume { model ->
+                val action = RecordingsListFragmentDirections.actionRecordingsListFragmentToRecordingMediaPlayerFragment()
+                if (findNavController().currentDestination?.id == R.id.recordingsListFragment) {
+                    Log.i("$TAG Navigating to recording player for file [${model.filePath}]")
+                    sharedViewModel.playingRecording = model
+
+                    findNavController().navigate(action)
                 }
             }
         }

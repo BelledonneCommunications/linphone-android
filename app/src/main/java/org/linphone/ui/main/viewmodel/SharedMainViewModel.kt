@@ -28,6 +28,7 @@ import org.linphone.core.ChatRoom
 import org.linphone.core.ConferenceInfo
 import org.linphone.core.Friend
 import org.linphone.ui.main.chat.model.MessageModel
+import org.linphone.ui.main.recordings.model.RecordingModel
 import org.linphone.utils.Event
 
 class SharedMainViewModel @UiThread constructor() : ViewModel() {
@@ -159,6 +160,10 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
     val goToScheduleMeetingEvent: MutableLiveData<Event<ArrayList<String>>> by lazy {
         MutableLiveData<Event<ArrayList<String>>>()
     }
+
+    /* Recordings related */
+
+    var playingRecording: RecordingModel? = null
 
     /* Other */
 

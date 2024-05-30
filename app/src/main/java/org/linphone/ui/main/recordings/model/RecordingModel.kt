@@ -21,7 +21,6 @@ package org.linphone.ui.main.recordings.model
 
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
-import androidx.lifecycle.MutableLiveData
 import java.text.SimpleDateFormat
 import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -34,8 +33,6 @@ import org.linphone.utils.TimestampUtils
 class RecordingModel @WorkerThread constructor(
     val filePath: String,
     val fileName: String,
-    private val onPlay: ((model: RecordingModel) -> Unit),
-    private val onPause: ((model: RecordingModel) -> Unit),
     isLegacy: Boolean = false
 ) {
     companion object {
@@ -56,13 +53,7 @@ class RecordingModel @WorkerThread constructor(
 
     val duration: Int
 
-    val isPlaying = MutableLiveData<Boolean>()
-
-    val position = MutableLiveData<Int>()
-
     init {
-        isPlaying.postValue(false)
-
         if (isLegacy) {
             val username = fileName.split("_")[0]
             val sipAddress = coreContext.core.interpretUrl(username, false)
@@ -121,22 +112,6 @@ class RecordingModel @WorkerThread constructor(
         } else {
             duration = 0
             formattedDuration = "??:??"
-        }
-        position.postValue(0)
-    }
-
-    @WorkerThread
-    fun destroy() {
-    }
-
-    @UiThread
-    fun togglePlayPause() {
-        coreContext.postOnCoreThread {
-            if (isPlaying.value == true) {
-                onPause.invoke(this)
-            } else {
-                onPlay.invoke(this)
-            }
         }
     }
 

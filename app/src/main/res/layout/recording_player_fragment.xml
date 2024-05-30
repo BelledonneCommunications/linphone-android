@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="backClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="shareClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="exportClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.main.recordings.viewmodel.RecordingMediaPlayerViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black">
+
+        <TextureView
+            android:id="@+id/video_player"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/top_bar_barrier"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <ImageView
+            android:id="@+id/audio_file_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/music_notes"
+            android:contentDescription="@null"
+            android:visibility="@{viewModel.isVideo ? View.GONE : View.VISIBLE}"
+            app:layout_constraintTop_toBottomOf="@id/top_bar_barrier"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/white" />
+
+        <ImageView
+            android:id="@+id/play_pause_audio_playback"
+            android:onClick="@{() -> viewModel.togglePlayPause()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="@dimen/screen_bottom_margin"
+            android:padding="8dp"
+            android:contentDescription="@string/content_description_play_pause_audio_playback"
+            android:src="@{viewModel.isPlaying ? @drawable/pause_fill : @drawable/play_fill, default=@drawable/play_fill}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:tint="@color/white"/>
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:max="@{viewModel.recordingModel.duration, default=100}"
+            android:progress="@{viewModel.position, default=75}"
+            app:trackCornerRadius="5dp"
+            app:trackThickness="10dp"
+            app:trackColor="?attr/color_main1_100"
+            app:indicatorColor="?attr/color_main1_500"
+            app:layout_constraintTop_toTopOf="@id/play_pause_audio_playback"
+            app:layout_constraintBottom_toBottomOf="@id/play_pause_audio_playback"
+            app:layout_constraintStart_toEndOf="@id/play_pause_audio_playback"
+            app:layout_constraintEnd_toStartOf="@id/duration"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_700"
+            android:id="@+id/duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="@{viewModel.recordingModel.formattedDuration, default=`00:42`}"
+            android:textSize="13sp"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toTopOf="@id/play_pause_audio_playback"
+            app:layout_constraintBottom_toBottomOf="@id/play_pause_audio_playback"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/top_bar_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="back, date_time"
+            app:barrierDirection="bottom" />
+
+        <View
+            android:id="@+id/top_bar_background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/top_bar_barrier"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+            android:id="@+id/back"
+            android:onClick="@{backClickListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/top_bar_height"
+            android:adjustViewBounds="true"
+            android:padding="15dp"
+            android:src="@drawable/caret_left"
+            android:contentDescription="@string/content_description_go_back_icon"
+            app:tint="?attr/color_main1_500"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_700"
+            android:id="@+id/file_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.recordingModel.displayName, default=`nomdufichier.jpg`}"
+            android:textSize="13sp"
+            android:textColor="?attr/color_main2_600"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintEnd_toStartOf="@id/share"
+            app:layout_constraintStart_toEndOf="@id/back"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/date_time"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_300"
+            android:id="@+id/date_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.recordingModel.dateTime, default=`envoyé le 02/05/2023 à 11h05`}"
+            android:textSize="12sp"
+            android:textColor="?attr/color_main2_500"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintTop_toBottomOf="@id/file_name"
+            app:layout_constraintBottom_toBottomOf="@id/back"
+            app:layout_constraintEnd_toStartOf="@id/share"
+            app:layout_constraintStart_toEndOf="@id/back"/>
+
+        <ImageView
+            android:id="@+id/share"
+            android:onClick="@{shareClickListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/top_bar_height"
+            android:adjustViewBounds="true"
+            android:padding="15dp"
+            android:src="@drawable/share_network"
+            android:contentDescription="@string/content_description_share_file"
+            app:tint="?attr/color_main2_500"
+            app:layout_constraintEnd_toStartOf="@id/save"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/save"
+            android:onClick="@{exportClickListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/top_bar_height"
+            android:adjustViewBounds="true"
+            android:padding="15dp"
+            android:src="@drawable/download_simple"
+            android:contentDescription="@string/content_description_save_file"
+            app:tint="?attr/color_main2_500"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/toasts_area"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/toast_top_margin"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            app:layout_constraintWidth_max="@dimen/toast_max_width"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

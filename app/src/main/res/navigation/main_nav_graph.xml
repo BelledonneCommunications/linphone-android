@@ -176,7 +176,18 @@
         android:id="@+id/recordingsListFragment"
         android:name="org.linphone.ui.main.recordings.fragment.RecordingsListFragment"
         android:label="RecordingsListFragment"
-        tools:layout="@layout/recordings_list_fragment" />
+        tools:layout="@layout/recordings_list_fragment">
+
+        <action
+            android:id="@+id/action_recordingsListFragment_to_recordingMediaPlayerFragment"
+            app:destination="@id/recordingMediaPlayerFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:launchSingleTop="true" />
+
+    </fragment>
 
     <action
         android:id="@+id/action_global_recordingsListFragment"
@@ -409,5 +420,11 @@
         app:launchSingleTop="true"
         app:enterAnim="@anim/slide_in"
         app:popExitAnim="@anim/slide_out" />
+
+    <fragment
+        android:id="@+id/recordingMediaPlayerFragment"
+        android:name="org.linphone.ui.main.recordings.fragment.RecordingMediaPlayerFragment"
+        android:label="RecordingMediaPlayerFragment"
+        tools:layout="@layout/recording_player_fragment"/>
 
 </navigation>

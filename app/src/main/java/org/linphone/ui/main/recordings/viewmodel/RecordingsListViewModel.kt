@@ -22,22 +22,11 @@ package org.linphone.ui.main.recordings.viewmodel
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import androidx.media.AudioFocusRequestCompat
 import java.util.regex.Pattern
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.ticker
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.R
-import org.linphone.core.Player
-import org.linphone.core.PlayerListener
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
 import org.linphone.ui.main.recordings.model.RecordingModel
-import org.linphone.utils.AudioUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 
@@ -61,19 +50,6 @@ class RecordingsListViewModel @UiThread constructor() : GenericViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    private var audioFocusRequest: AudioFocusRequestCompat? = null
-
-    private var currentlyPlayedRecording: RecordingModel? = null
-
-    private var player: Player? = null
-    private val playerListener = PlayerListener {
-        Log.i("$TAG End of file reached")
-        stop(currentlyPlayedRecording)
-    }
-
-    private val tickerChannel = ticker(1000, 1000)
-    private var updatePositionJob: Job? = null
-
     init {
         searchBarVisible.value = false
         fetchInProgress.value = true
@@ -81,17 +57,6 @@ class RecordingsListViewModel @UiThread constructor() : GenericViewModel() {
         coreContext.postOnCoreThread {
             computeList("")
         }
-    }
-
-    override fun onCleared() {
-        if (currentlyPlayedRecording != null) {
-            stop(currentlyPlayedRecording)
-            player?.removeListener(playerListener)
-            player = null
-        }
-        recordings.value.orEmpty().forEach(RecordingModel::destroy)
-
-        super.onCleared()
     }
 
     @UiThread
@@ -120,105 +85,7 @@ class RecordingsListViewModel @UiThread constructor() : GenericViewModel() {
     }
 
     @WorkerThread
-    fun onRecordingStartedPlaying(model: RecordingModel) {
-        val lowMediaVolume = AudioUtils.isMediaVolumeLow(coreContext.context)
-        if (lowMediaVolume) {
-            Log.w("$TAG Media volume is low, notifying user as they may not hear voice message")
-            showRedToastEvent.postValue(
-                Event(Pair(R.string.toast_low_media_volume, R.drawable.speaker_slash))
-            )
-        }
-
-        if (player == null) {
-            initAudioPlayer()
-        }
-        if (currentlyPlayedRecording != null && model != currentlyPlayedRecording) {
-            Log.i("$TAG Recording model has changed, stopping player before starting it")
-            stop(currentlyPlayedRecording)
-        }
-
-        currentlyPlayedRecording = model
-        play(model)
-    }
-
-    @WorkerThread
-    fun onRecordingPaused(model: RecordingModel) {
-        pause(model)
-    }
-
-    @WorkerThread
-    private fun initAudioPlayer() {
-        Log.i("$TAG Creating player")
-        val playbackSoundCard = AudioUtils.getAudioPlaybackDeviceIdForCallRecordingOrVoiceMessage()
-        player = coreContext.core.createLocalPlayer(playbackSoundCard, null, null)
-        player?.addListener(playerListener)
-    }
-
-    @WorkerThread
-    private fun play(model: RecordingModel?) {
-        model ?: return
-
-        Log.i("$TAG Starting player")
-        if (player?.state == Player.State.Closed) {
-            player?.open(model.filePath)
-            player?.seek(0)
-        }
-
-        Log.i("$TAG Acquiring audio focus")
-        audioFocusRequest = AudioUtils.acquireAudioFocusForVoiceRecordingOrPlayback(
-            coreContext.context
-        )
-
-        player?.start()
-        model.isPlaying.postValue(true)
-
-        updatePositionJob = viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                for (tick in tickerChannel) {
-                    coreContext.postOnCoreThread {
-                        if (player?.state == Player.State.Playing) {
-                            model.position.postValue(player?.currentPosition)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    @WorkerThread
-    private fun pause(model: RecordingModel?) {
-        model ?: return
-
-        Log.i("$TAG Pausing player, releasing audio focus")
-        if (audioFocusRequest != null) {
-            AudioUtils.releaseAudioFocusForVoiceRecordingOrPlayback(
-                coreContext.context,
-                audioFocusRequest!!
-            )
-        }
-
-        player?.pause()
-        model.isPlaying.postValue(false)
-        updatePositionJob?.cancel()
-        updatePositionJob = null
-    }
-
-    @WorkerThread
-    private fun stop(model: RecordingModel?) {
-        model ?: return
-
-        Log.i("$TAG Stopping player")
-        pause(model)
-        model.position.postValue(0)
-        player?.seek(0)
-        player?.close()
-
-        currentlyPlayedRecording = null
-    }
-
-    @WorkerThread
     private fun computeList(filter: String) {
-        recordings.value.orEmpty().forEach(RecordingModel::destroy)
         val list = arrayListOf<RecordingModel>()
 
         for (file in FileUtils.getFileStorageDir(isRecording = true).listFiles().orEmpty()) {
@@ -226,16 +93,7 @@ class RecordingsListViewModel @UiThread constructor() : GenericViewModel() {
             val name = file.name
 
             Log.d("$TAG Found file $path")
-            val model = RecordingModel(
-                path,
-                name,
-                { model ->
-                    onRecordingStartedPlaying(model)
-                },
-                { model ->
-                    onRecordingPaused(model)
-                }
-            )
+            val model = RecordingModel(path, name)
 
             if (filter.isEmpty() || model.sipUri.contains(filter)) {
                 Log.i("$TAG Added file $path")
@@ -249,17 +107,7 @@ class RecordingsListViewModel @UiThread constructor() : GenericViewModel() {
 
             if (LEGACY_RECORD_PATTERN.matcher(path).matches()) {
                 Log.d("$TAG Found legacy file $path")
-                val model = RecordingModel(
-                    path,
-                    name,
-                    { model ->
-                        onRecordingStartedPlaying(model)
-                    },
-                    { model ->
-                        onRecordingPaused(model)
-                    },
-                    true
-                )
+                val model = RecordingModel(path, name, true)
 
                 if (filter.isEmpty() || model.sipUri.contains(filter)) {
                     Log.i("$TAG Added legacy file $path")
