@@ -15,6 +15,9 @@
             name="deleteImageClickListener"
             type="View.OnClickListener" />
         <variable
+            name="copySipUriClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="prefixTooltipClickListener"
             type="View.OnClickListener" />
         <variable
@@ -203,15 +206,19 @@
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/default_text_style"
                         android:id="@+id/sip_address"
+                        android:onClick="@{copySipUriClickListener}"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
                         android:paddingTop="8dp"
                         android:paddingBottom="8dp"
                         android:text="@={viewModel.sipAddress, default=`sip:johndoe@sip.example.org`}"
                         android:textSize="13sp"
                         android:maxLines="2"
                         android:ellipsize="end"
+                        android:drawableEnd="@drawable/copy"
+                        android:drawablePadding="5dp"
                         app:layout_constraintStart_toEndOf="@id/sip_address_label"
                         app:layout_constraintEnd_toEndOf="@id/details_background"
                         app:layout_constraintTop_toTopOf="@id/sip_address_label"

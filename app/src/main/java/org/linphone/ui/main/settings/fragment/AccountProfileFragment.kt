@@ -19,6 +19,9 @@
  */
 package org.linphone.ui.main.settings.fragment
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -131,6 +134,10 @@ class AccountProfileFragment : GenericMainFragment() {
             viewModel.setNewPicturePath("")
         }
 
+        binding.setCopySipUriClickListener {
+            copyAddressToClipboard(viewModel.sipAddress.value.orEmpty())
+        }
+
         binding.setPrefixTooltipClickListener {
             showHelpPopup()
         }
@@ -218,6 +225,16 @@ class AccountProfileFragment : GenericMainFragment() {
 
     private fun pickImage() {
         pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    }
+
+    private fun copyAddressToClipboard(value: String) {
+        val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        clipboard.setPrimaryClip(ClipData.newPlainText("SIP address", value))
+        val message = getString(R.string.toast_sip_address_copied_to_clipboard)
+        (requireActivity() as GenericActivity).showGreenToast(
+            message,
+            R.drawable.check
+        )
     }
 
     private fun setupDialPlanPicker() {
