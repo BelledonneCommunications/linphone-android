@@ -623,8 +623,6 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
         Log.i("$TAG Current default input audio device is [${defaultInputAudioDevice?.id}]")
         for (audioDevice in core.extendedAudioDevices) {
             if (audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityRecord)) {
-                if (audioDevice.id.contains("deprecated")) continue
-
                 inputAudioDeviceLabels.add(audioDevice.id)
                 inputAudioDeviceValues.add(audioDevice)
                 if (audioDevice.id == defaultInputAudioDevice?.id) {
@@ -639,8 +637,6 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
         Log.i("$TAG Current default output audio device is [${defaultOutputAudioDevice?.id}]")
         for (audioDevice in core.extendedAudioDevices) {
             if (audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
-                if (audioDevice.id.contains("deprecated")) continue
-
                 outputAudioDeviceLabels.add(audioDevice.id)
                 outputAudioDeviceValues.add(audioDevice)
                 if (audioDevice.id == defaultOutputAudioDevice?.id) {
