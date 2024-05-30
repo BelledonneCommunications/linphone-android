@@ -8,6 +8,9 @@ import android.util.DisplayMetrics
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.UiThread
 import androidx.core.content.FileProvider
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -52,6 +55,12 @@ class FileViewerActivity : GenericActivity() {
 
         viewModel = ViewModelProvider(this)[FileViewModel::class.java]
         binding.viewModel = viewModel
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(insets.left, insets.top, insets.right, insets.bottom)
+            WindowInsetsCompat.CONSUMED
+        }
 
         val args = intent.extras
         if (args == null) {

@@ -210,7 +210,7 @@
                         android:paddingBottom="8dp"
                         android:text="@={viewModel.sipAddress, default=`sip:johndoe@sip.example.org`}"
                         android:textSize="13sp"
-                        android:maxLines="1"
+                        android:maxLines="2"
                         android:ellipsize="end"
                         app:layout_constraintStart_toEndOf="@id/sip_address_label"
                         app:layout_constraintEnd_toEndOf="@id/details_background"
