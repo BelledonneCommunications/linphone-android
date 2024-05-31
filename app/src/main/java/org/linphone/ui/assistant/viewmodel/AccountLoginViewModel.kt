@@ -45,6 +45,14 @@ open class AccountLoginViewModel @UiThread constructor() : GenericViewModel() {
         private const val TAG = "[Account Login ViewModel]"
     }
 
+    val showBackButton = MutableLiveData<Boolean>()
+
+    val hideCreateAccount = MutableLiveData<Boolean>()
+
+    val hideScanQrCode = MutableLiveData<Boolean>()
+
+    val hideThirdPartyAccount = MutableLiveData<Boolean>()
+
     val sipIdentity = MutableLiveData<String>()
 
     val password = MutableLiveData<String>()
@@ -68,6 +76,8 @@ open class AccountLoginViewModel @UiThread constructor() : GenericViewModel() {
     val accountLoginErrorEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
     }
+
+    var conditionsAndPrivacyPolicyAccepted = false
 
     private lateinit var newlyCreatedAuthInfo: AuthInfo
     private lateinit var newlyCreatedAccount: Account
@@ -116,6 +126,15 @@ open class AccountLoginViewModel @UiThread constructor() : GenericViewModel() {
     }
 
     init {
+        coreContext.postOnCoreThread { core ->
+            // Prevent user from leaving assistant if no account was configured yet
+            showBackButton.postValue(core.accountList.isNotEmpty())
+            hideCreateAccount.postValue(corePreferences.hideAssistantCreateAccount)
+            hideScanQrCode.postValue(corePreferences.hideAssistantScanQrCode)
+            hideThirdPartyAccount.postValue(corePreferences.hideAssistantThirdPartySipAccount)
+            conditionsAndPrivacyPolicyAccepted = corePreferences.conditionsAndPrivacyPolicyAccepted
+        }
+
         showPassword.value = false
         registrationInProgress.value = false
 

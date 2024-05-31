@@ -92,7 +92,7 @@ class AccountCreationViewModel @UiThread constructor() : GenericViewModel() {
 
     val goToSmsCodeConfirmationViewEvent = MutableLiveData<Event<Boolean>>()
 
-    val goToLoginPageEvent = MutableLiveData<Event<Boolean>>()
+    val accountCreatedEvent = MutableLiveData<Event<Boolean>>()
 
     val errorHappenedEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
@@ -214,7 +214,7 @@ class AccountCreationViewModel @UiThread constructor() : GenericViewModel() {
 
             if (status == AccountCreator.Status.AccountActivated) {
                 Log.i("$TAG Account has been successfully activated, going to login page")
-                goToLoginPageEvent.postValue(Event(true))
+                accountCreatedEvent.postValue(Event(true))
             } else {
                 Log.e("$TAG Account couldn't be activated, an unexpected error occurred!")
                 errorHappenedEvent.postValue(

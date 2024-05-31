@@ -66,13 +66,11 @@ class RegisterCodeConfirmationFragment : GenericFragment() {
             goBack()
         }
 
-        viewModel.goToLoginPageEvent.observe(viewLifecycleOwner) {
+        viewModel.accountCreatedEvent.observe(viewLifecycleOwner) {
             it.consume {
-                Log.i("$TAG Going to login fragment")
                 val identity = viewModel.username.value.orEmpty()
-                val action = RegisterCodeConfirmationFragmentDirections.actionRegisterCodeConfirmationFragmentToLoginFragment(
-                    identity
-                )
+                Log.i("$TAG Account [$identity] has been created")
+                val action = RegisterCodeConfirmationFragmentDirections.actionRegisterCodeConfirmationFragmentToLandingFragment()
                 findNavController().navigate(action)
             }
         }

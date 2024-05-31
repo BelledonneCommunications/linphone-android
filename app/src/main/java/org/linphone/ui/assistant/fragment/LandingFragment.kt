@@ -39,7 +39,7 @@ import org.linphone.databinding.AssistantLandingFragmentBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.GenericFragment
 import org.linphone.ui.assistant.model.AcceptConditionsAndPolicyDialogModel
-import org.linphone.ui.assistant.viewmodel.LandingViewModel
+import org.linphone.ui.assistant.viewmodel.AccountLoginViewModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.PhoneNumberUtils
 
@@ -51,7 +51,7 @@ class LandingFragment : GenericFragment() {
 
     private lateinit var binding: AssistantLandingFragmentBinding
 
-    private val viewModel: LandingViewModel by navGraphViewModels(
+    private val viewModel: AccountLoginViewModel by navGraphViewModels(
         R.id.assistant_nav_graph
     )
 
@@ -117,15 +117,8 @@ class LandingFragment : GenericFragment() {
 
         viewModel.accountLoggedInEvent.observe(viewLifecycleOwner) {
             it.consume { firstAccount ->
-                Log.i("$TAG Account successfully logged-in")
-                if (firstAccount) {
-                    Log.i("$TAG First account, going to secure/interop mode chooser")
-                    val action = LandingFragmentDirections.actionLandingFragmentToProfileModeFragment()
-                    findNavController().navigate(action)
-                } else {
-                    Log.i("$TAG Not first account, leaving assistant")
-                    requireActivity().finish()
-                }
+                Log.i("$TAG Account successfully logged-in, leaving assistant")
+                requireActivity().finish()
             }
         }
 

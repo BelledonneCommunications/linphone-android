@@ -6,26 +6,6 @@
     app:startDestination="@id/landingFragment">
 
     <fragment
-        android:id="@+id/loginFragment"
-        android:name="org.linphone.ui.assistant.fragment.LoginFragment"
-        android:label="LoginFragment"
-        tools:layout="@layout/assistant_login_fragment" >
-
-        <action
-            android:id="@+id/action_loginFragment_to_profileModeFragment"
-            app:destination="@id/profileModeFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            app:launchSingleTop="true" />
-        <argument
-            android:name="sipIdentity"
-            app:argType="string" />
-
-    </fragment>
-
-    <fragment
         android:id="@+id/registerFragment"
         android:name="org.linphone.ui.assistant.fragment.RegisterFragment"
         android:label="RegisterFragment"
@@ -68,7 +48,7 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
             app:launchSingleTop="true"
-            app:popUpTo="@id/loginFragment"
+            app:popUpTo="@id/landingFragment"
             app:popUpToInclusive="false" />
 
         <action
@@ -79,7 +59,7 @@
             app:launchSingleTop="true"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
-            app:popUpTo="@id/loginFragment"
+            app:popUpTo="@id/landingFragment"
             app:popUpToInclusive="false" />
 
     </fragment>
@@ -89,25 +69,17 @@
         android:name="org.linphone.ui.assistant.fragment.RegisterCodeConfirmationFragment"
         android:label="RegisterCodeConfirmationFragment"
         tools:layout="@layout/assistant_register_confirm_sms_code_fragment" >
-
         <action
-            android:id="@+id/action_registerCodeConfirmationFragment_to_loginFragment"
-            app:destination="@id/loginFragment"
+            android:id="@+id/action_registerCodeConfirmationFragment_to_landingFragment"
+            app:destination="@id/landingFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/landingFragment"
+            app:popUpToInclusive="false"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
-            app:launchSingleTop="true"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            app:popUpTo="@id/loginFragment"
-            app:popUpToInclusive="false" />
-
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
-
-    <fragment
-        android:id="@+id/profileModeFragment"
-        android:name="org.linphone.ui.assistant.fragment.ProfileModeFragment"
-        android:label="ProfileModeFragment"
-        tools:layout="@layout/assistant_secure_mode_fragment" />
 
     <fragment
         android:id="@+id/permissionsFragment"
@@ -162,10 +134,6 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
             app:launchSingleTop="true" />
-
-        <action
-            android:id="@+id/action_landingFragment_to_profileModeFragment"
-            app:destination="@id/profileModeFragment" />
 
     </fragment>
 

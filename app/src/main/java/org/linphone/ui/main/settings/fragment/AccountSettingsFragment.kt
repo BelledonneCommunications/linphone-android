@@ -114,11 +114,11 @@ class AccountSettingsFragment : GenericMainFragment() {
                         val currentTransport = viewModel.selectedTransport.value?.name?.uppercase(
                             Locale.getDefault()
                         )
-                        binding.transportSpinner.adapter = adapter
-                        binding.transportSpinner.setSelection(
+                        binding.accountAdvancedSettings.transportSpinner.adapter = adapter
+                        binding.accountAdvancedSettings.transportSpinner.setSelection(
                             viewModel.availableTransports.indexOf(currentTransport)
                         )
-                        binding.transportSpinner.onItemSelectedListener = dropdownListener
+                        binding.accountAdvancedSettings.transportSpinner.onItemSelectedListener = dropdownListener
                     }
                 } else {
                     Log.e(

@@ -37,6 +37,8 @@ class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
         private const val TAG = "[Account Settings ViewModel]"
     }
 
+    val expandAdvancedSettings = MutableLiveData<Boolean>()
+
     val pushNotificationsAvailable = MutableLiveData<Boolean>()
 
     val pushNotificationsEnabled = MutableLiveData<Boolean>()
@@ -79,15 +81,17 @@ class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
     private lateinit var natPolicy: NatPolicy
 
     init {
+        expandAdvancedSettings.value = false
+
         availableTransports.add(TransportType.Udp.name.uppercase(Locale.getDefault()))
         availableTransports.add(TransportType.Tcp.name.uppercase(Locale.getDefault()))
         availableTransports.add(TransportType.Tls.name.uppercase(Locale.getDefault()))
 
         imEncryptionMandatoryAvailable.addSource(limeServerUrl) {
-            imEncryptionMandatoryAvailable.value = isImEncrptionMandatoryAvailable()
+            imEncryptionMandatoryAvailable.value = isImEncryptionMandatoryAvailable()
         }
         imEncryptionMandatoryAvailable.addSource(conferenceFactoryUri) {
-            imEncryptionMandatoryAvailable.value = isImEncrptionMandatoryAvailable()
+            imEncryptionMandatoryAvailable.value = isImEncryptionMandatoryAvailable()
         }
     }
 
@@ -207,7 +211,12 @@ class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
     }
 
     @UiThread
-    fun isImEncrptionMandatoryAvailable(): Boolean {
+    fun isImEncryptionMandatoryAvailable(): Boolean {
         return limeServerUrl.value.orEmpty().isNotEmpty() && conferenceFactoryUri.value.orEmpty().isNotEmpty()
+    }
+
+    @UiThread
+    fun toggleAdvancedSettingsExpand() {
+        expandAdvancedSettings.value = expandAdvancedSettings.value == false
     }
 }
