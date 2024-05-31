@@ -1296,13 +1296,13 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             val notification = builder.build()
 
             Log.i(
-                "$TAG Keep alive for third party accounts Service found, starting it as foreground using notification ID [$KEEP_ALIVE_FOR_THIRD_PARTY_ACCOUNTS_ID] with type DATA_SYNC"
+                "$TAG Keep alive for third party accounts Service found, starting it as foreground using notification ID [$KEEP_ALIVE_FOR_THIRD_PARTY_ACCOUNTS_ID] with type [SPECIAL_USE]"
             )
             Compatibility.startServiceForeground(
                 service,
                 KEEP_ALIVE_FOR_THIRD_PARTY_ACCOUNTS_ID,
                 notification,
-                Compatibility.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+                Compatibility.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
             )
             currentKeepAliveThirdPartyAccountsForegroundServiceNotificationId = KEEP_ALIVE_FOR_THIRD_PARTY_ACCOUNTS_ID
         } else {

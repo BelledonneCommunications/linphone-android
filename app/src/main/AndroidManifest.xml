@@ -30,7 +30,12 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_PHONE_CALL" />
+    <!-- Required for foreground service started when a push is being received,
+    without it app won't be able to access network if data saver is ON (for example) -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <!-- Needed to keep a permanent foreground service and keep app alive to be able to receive
+    messages & calls for third party accounts for which push notifications aren't available -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
 
     <application
         android:name=".LinphoneApplication"
@@ -165,9 +170,13 @@
         <service
             android:name=".core.CoreKeepAliveThirdPartyAccountsService"
             android:exported="false"
-            android:foregroundServiceType="dataSync"
+            android:foregroundServiceType="specialUse"
             android:stopWithTask="false"
-            android:label="@string/app_name" />
+            android:label="@string/app_name">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Needed to keep app alive to be able to receive messages and calls from third party SIP servers for which push notifications aren't available." />
+        </service>
 
         <!-- Receivers -->
 
