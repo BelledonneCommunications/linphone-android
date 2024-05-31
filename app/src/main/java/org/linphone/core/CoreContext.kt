@@ -283,6 +283,25 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
                 }
             }
         }
+
+        override fun onAccountAdded(core: Core, account: Account) {
+            Log.i(
+                "$TAG New account configured: [${account.params.identityAddress?.asStringUriOnly()}]"
+            )
+            if (!core.isPushNotificationAvailable || !account.params.isPushNotificationAvailable) {
+                if (!corePreferences.keepServiceAlive) {
+                    Log.w(
+                        "$TAG Newly added account (or the whole Core) doesn't support push notifications, enabling keep-alive foreground service..."
+                    )
+                    corePreferences.keepServiceAlive = true
+                    startKeepAliveService()
+                } else {
+                    Log.i(
+                        "$TAG Newly added account (or the whole Core) doesn't support push notifications but keep-alive foreground service is already enabled, nothing to do"
+                    )
+                }
+            }
+        }
     }
 
     private val loggingServiceListener = object : LoggingServiceListenerStub() {
@@ -656,9 +675,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
             context,
             CoreKeepAliveThirdPartyAccountsService::class.java
         )
-        Log.i(
-            "$TAG Starting Keep alive for third party accounts Service (as foreground)"
-        )
+        Log.i("$TAG Starting Keep alive for third party accounts Service (as foreground)")
         Compatibility.startForegroundService(context, serviceIntent)
     }
 
