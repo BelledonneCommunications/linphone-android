@@ -432,9 +432,9 @@ class MainActivity : GenericActivity() {
         Log.i(
             "$TAG Handling intent action [${intent.action}], type [${intent.type}], data [${intent.data}] and has ${if (hasExtra) "extras" else "no extra"}"
         )
-        if (intent.action == null) return
 
-        when (intent.action) {
+        val action = intent.action ?: return
+        when (action) {
             Intent.ACTION_SEND -> {
                 handleSendIntent(intent, false)
             }

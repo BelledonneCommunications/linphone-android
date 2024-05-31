@@ -1405,6 +1405,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         return TaskStackBuilder.create(context).run {
             addNextIntentWithParentStack(
                 Intent(context, MainActivity::class.java).apply {
+                    setAction(Intent.ACTION_MAIN) // Needed as well
                     putExtras(args) // Need to pass args here for Chat extra
                 }
             )
