@@ -210,10 +210,6 @@ class ContactsListFragment : AbstractMainFragment() {
             binding.bottomNavBar,
             R.id.contactsListFragment
         )
-    }
-
-    override fun onResume() {
-        super.onResume()
 
         if (ContextCompat.checkSelfPermission(
                 requireContext(),
