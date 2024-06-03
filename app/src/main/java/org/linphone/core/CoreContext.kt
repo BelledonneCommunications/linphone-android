@@ -383,6 +383,11 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
             core.isFecEnabled = true
         }
 
+        val videoPolicy = core.videoActivationPolicy
+        Log.i(
+            "$TAG Core's video policy is: auto initiate [${videoPolicy.automaticallyInitiate}], auto accept [${videoPolicy.automaticallyAccept}], accept direction [${videoPolicy.automaticallyAcceptDirection}]"
+        )
+
         updateFriendListsSubscriptionDependingOnDefaultAccount()
 
         computeUserAgent()
