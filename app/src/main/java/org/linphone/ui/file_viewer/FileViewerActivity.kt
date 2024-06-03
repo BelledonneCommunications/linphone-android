@@ -172,7 +172,7 @@ class FileViewerActivity : GenericActivity() {
             val copy = FileUtils.getFilePath(
                 baseContext,
                 Uri.parse(filePath),
-                overrideExisting = true,
+                overrideExisting = false,
                 copyToCache = true
             )
             if (!copy.isNullOrEmpty()) {

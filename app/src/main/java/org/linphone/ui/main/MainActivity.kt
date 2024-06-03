@@ -542,26 +542,28 @@ class MainActivity : GenericActivity() {
         val parcelablesUri = arrayListOf<Uri>()
 
         if (intent.type == "text/plain") {
+            Log.i("$TAG Intent type is [${intent.type}], expecting text in Intent.EXTRA_TEXT")
             intent.getStringExtra(Intent.EXTRA_TEXT)?.let { extraText ->
+                Log.i("$TAG Found extra text in intent, long of [${extraText.length}]")
                 sharedViewModel.textToShareFromIntent.value = extraText
             }
-        } else {
-            if (multiple) {
-                val parcelables =
-                    intent.getParcelableArrayListExtra<Parcelable>(Intent.EXTRA_STREAM)
-                for (parcelable in parcelables.orEmpty()) {
-                    val uri = parcelable as? Uri
-                    if (uri != null) {
-                        Log.i("$TAG Found URI [$uri] in parcelable extra list")
-                        parcelablesUri.add(uri)
-                    }
-                }
-            } else {
-                val uri = intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri
+        }
+
+        if (multiple) {
+            val parcelables =
+                intent.getParcelableArrayListExtra<Parcelable>(Intent.EXTRA_STREAM)
+            for (parcelable in parcelables.orEmpty()) {
+                val uri = parcelable as? Uri
                 if (uri != null) {
-                    Log.i("$TAG Found URI [$uri] in parcelable extra")
+                    Log.i("$TAG Found URI [$uri] in parcelable extra list")
                     parcelablesUri.add(uri)
                 }
+            }
+        } else {
+            val uri = intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri
+            if (uri != null) {
+                Log.i("$TAG Found URI [$uri] in parcelable extra")
+                parcelablesUri.add(uri)
             }
         }
 
@@ -569,6 +571,7 @@ class MainActivity : GenericActivity() {
         lifecycleScope.launch {
             val deferred = arrayListOf<Deferred<String?>>()
             for (uri in parcelablesUri) {
+                Log.i("$TAG Deferring copy from file [${uri.path}] to local storage")
                 deferred.add(async { FileUtils.getFilePath(this@MainActivity, uri, false) })
             }
 

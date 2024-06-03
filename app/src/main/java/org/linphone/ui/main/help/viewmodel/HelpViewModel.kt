@@ -22,6 +22,8 @@ package org.linphone.ui.main.help.viewmodel
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -34,6 +36,7 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
+import org.linphone.utils.FileUtils
 
 class HelpViewModel @UiThread constructor() : GenericViewModel() {
     companion object {
@@ -196,7 +199,18 @@ class HelpViewModel @UiThread constructor() : GenericViewModel() {
         coreContext.postOnCoreThread { core ->
             Log.i("$TAG Dumping & displaying Core's config")
             val config = core.config.dump()
-            showConfigFileEvent.postValue(Event(config))
+            val file = FileUtils.getFileStorageCacheDir(
+                "linphonerc.txt",
+                overrideExisting = true
+            )
+            viewModelScope.launch {
+                if (FileUtils.dumpStringToFile(config, file)) {
+                    Log.i("$TAG .linphonerc string saved as file in cache folder")
+                    showConfigFileEvent.postValue(Event(file.absolutePath))
+                } else {
+                    Log.e("$TAG Failed to save .linphonerc string as file in cache folder")
+                }
+            }
         }
     }
 }

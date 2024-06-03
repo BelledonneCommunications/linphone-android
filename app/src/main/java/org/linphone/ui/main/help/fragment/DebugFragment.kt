@@ -28,7 +28,6 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import org.linphone.R
-import org.linphone.core.CorePreferences
 import org.linphone.core.tools.Log
 import org.linphone.databinding.HelpDebugFragmentBinding
 import org.linphone.ui.GenericActivity
@@ -116,12 +115,11 @@ class DebugFragment : GenericMainFragment() {
         }
 
         viewModel.showConfigFileEvent.observe(viewLifecycleOwner) {
-            it.consume { content ->
+            it.consume { path ->
                 if (findNavController().currentDestination?.id == R.id.debugFragment) {
                     val intent = Intent(requireActivity(), FileViewerActivity::class.java)
                     val bundle = Bundle()
-                    bundle.putString("path", CorePreferences.CONFIG_FILE_NAME)
-                    bundle.putString("content", content)
+                    bundle.putString("path", path)
                     val nowInSeconds = System.currentTimeMillis() / 1000
                     bundle.putLong("timestamp", nowInSeconds)
                     intent.putExtras(bundle)
