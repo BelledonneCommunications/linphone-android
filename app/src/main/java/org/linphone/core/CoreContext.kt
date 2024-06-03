@@ -132,6 +132,12 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         @WorkerThread
         override fun onGlobalStateChanged(core: Core, state: GlobalState, message: String) {
             Log.i("$TAG Global state changed [$state]")
+
+            if (state == GlobalState.On) {
+                // Wait for GlobalState.ON as some settings modification won't be saved
+                // in RC file if Core isn't ON
+                onCoreStarted()
+            }
         }
 
         @WorkerThread
@@ -366,48 +372,57 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
 
     @WorkerThread
     fun startCore() {
-        Log.i("$TAG Configuring Core")
-        core.videoCodecPriorityPolicy = CodecPriorityPolicy.Auto
-
-        val oldVersion = corePreferences.linphoneConfigurationVersion
-        if (oldVersion < CorePreferences.CURRENT_VERSION) {
-            Log.i(
-                "$TAG Migrating configuration from [$oldVersion] to [${CorePreferences.CURRENT_VERSION}]"
-            )
-            val policy = core.videoActivationPolicy.clone()
-            policy.automaticallyInitiate = false
-            policy.automaticallyAccept = true
-            policy.automaticallyAcceptDirection = MediaDirection.RecvOnly
-            core.videoActivationPolicy = policy
-
-            core.isFecEnabled = true
-        }
-
-        val videoPolicy = core.videoActivationPolicy
-        Log.i(
-            "$TAG Core's video policy is: auto initiate [${videoPolicy.automaticallyInitiate}], auto accept [${videoPolicy.automaticallyAccept}], accept direction [${videoPolicy.automaticallyAcceptDirection}]"
-        )
-
+        Log.i("$TAG Starting Core")
         updateFriendListsSubscriptionDependingOnDefaultAccount()
-
-        computeUserAgent()
-        Log.i("$TAG Core has been configured with user-agent [${core.userAgent}], starting it")
-        core.start()
-
-        contactsManager.onCoreStarted(core)
-        telecomManager.onCoreStarted(core)
-        notificationsManager.onCoreStarted(core)
 
         val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         audioManager.registerAudioDeviceCallback(audioDeviceCallback, coreThread)
 
-        corePreferences.linphoneConfigurationVersion = CorePreferences.CURRENT_VERSION
+        computeUserAgent()
+        Log.i("$TAG Core has been configured with user-agent [${core.userAgent}], starting it")
+        core.start()
+    }
 
-        Log.i("$TAG Report Core created and started")
+    @WorkerThread
+    fun onCoreStarted() {
+        Log.i("$TAG Core started, updating configuration if required")
+        core.videoCodecPriorityPolicy = CodecPriorityPolicy.Auto
+
+        val currentVersion = BuildConfig.VERSION_CODE
+        val oldVersion = corePreferences.linphoneConfigurationVersion
+        Log.w("$TAG Current configuration version is [$oldVersion]")
+
+        if (oldVersion < currentVersion) {
+            Log.w("$TAG Migrating configuration to [$currentVersion]")
+
+            if (oldVersion < 600000) { // 6.0.0 initial release
+                val policy = core.videoActivationPolicy.clone()
+                policy.automaticallyInitiate = false
+                policy.automaticallyAccept = true
+                policy.automaticallyAcceptDirection = MediaDirection.RecvOnly
+                core.videoActivationPolicy = policy
+                Log.i(
+                    "$TAG Updated video activation policy to disable auto initiate, enable auto accept with media direction RecvOnly"
+                )
+
+                core.isFecEnabled = true
+                Log.i("$TAG Video FEC has been enabled")
+            }
+
+            corePreferences.linphoneConfigurationVersion = currentVersion
+            Log.w(
+                "$TAG Core configuration updated to version [${corePreferences.linphoneConfigurationVersion}]"
+            )
+        }
 
         if (corePreferences.keepServiceAlive) {
             startKeepAliveService()
         }
+
+        contactsManager.onCoreStarted(core)
+        telecomManager.onCoreStarted(core)
+        notificationsManager.onCoreStarted(core, oldVersion < 600000) // Re-create channels when migrating from a non 6.0 version
+        Log.i("$TAG Started contacts, telecom & notifications managers")
     }
 
     @WorkerThread

@@ -63,7 +63,6 @@ import org.linphone.core.Core
 import org.linphone.core.CoreForegroundService
 import org.linphone.core.CoreKeepAliveThirdPartyAccountsService
 import org.linphone.core.CoreListenerStub
-import org.linphone.core.CorePreferences
 import org.linphone.core.Friend
 import org.linphone.core.MediaDirection
 import org.linphone.core.tools.Log
@@ -450,13 +449,11 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     }
 
     @WorkerThread
-    fun onCoreStarted(core: Core) {
+    fun onCoreStarted(core: Core, clearChannels: Boolean) {
         Log.i("$TAG Core has been started")
 
-        val rcVersion = corePreferences.linphoneConfigurationVersion
-        val clearPreviousChannels = rcVersion < CorePreferences.CURRENT_VERSION
         coreContext.postOnMainThread {
-            createChannels(clearPreviousChannels)
+            createChannels(clearChannels)
         }
 
         core.addListener(coreListener)

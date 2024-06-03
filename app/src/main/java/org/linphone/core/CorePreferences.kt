@@ -32,7 +32,6 @@ class CorePreferences @UiThread constructor(private val context: Context) {
         private const val TAG = "[Preferences]"
 
         const val CONFIG_FILE_NAME = ".linphonerc"
-        const val CURRENT_VERSION = 60000
     }
 
     private var _config: Config? = null
@@ -140,7 +139,7 @@ class CorePreferences @UiThread constructor(private val context: Context) {
 
     @get:WorkerThread @set:WorkerThread
     var linphoneConfigurationVersion: Int
-        get() = config.getInt("app", "config_version", 50200)
+        get() = config.getInt("app", "config_version", 52005)
         set(value) {
             config.setInt("app", "config_version", value)
         }
