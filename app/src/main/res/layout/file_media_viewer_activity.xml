@@ -72,7 +72,7 @@
             android:layout_height="wrap_content"
             android:text="@{viewModel.currentlyDisplayedFileName, default=`nomdufichier.jpg`}"
             android:textSize="13sp"
-            android:textColor="?attr/color_main2_600"
+            android:textColor="@color/gray_main2_600"
             android:maxLines="1"
             android:ellipsize="end"
             app:layout_constraintVertical_chainStyle="packed"
@@ -88,7 +88,7 @@
             android:layout_height="wrap_content"
             android:text="@{viewModel.currentlyDisplayedFileDateTime, default=`envoyé le 02/05/2023 à 11h05`}"
             android:textSize="12sp"
-            android:textColor="?attr/color_main2_500"
+            android:textColor="@color/gray_main2_500"
             android:maxLines="1"
             android:ellipsize="end"
             app:layout_constraintTop_toBottomOf="@id/file_name"
@@ -105,7 +105,7 @@
             android:padding="15dp"
             android:src="@drawable/share_network"
             android:contentDescription="@string/content_description_share_file"
-            app:tint="?attr/color_main2_500"
+            app:tint="@color/gray_main2_500"
             app:layout_constraintEnd_toStartOf="@id/save"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -118,7 +118,7 @@
             android:padding="15dp"
             android:src="@drawable/download_simple"
             android:contentDescription="@string/content_description_save_file"
-            app:tint="?attr/color_main2_500"
+            app:tint="@color/gray_main2_500"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
