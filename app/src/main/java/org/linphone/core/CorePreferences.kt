@@ -109,16 +109,6 @@ class CorePreferences @UiThread constructor(private val context: Context) {
             config.setBool("app", "show_confirmation_dialog_zrtp_trust_call", value)
         }
 
-    // Conversation settings
-
-    @get:WorkerThread @set:WorkerThread
-    var exportMediaToNativeGallery: Boolean // TODO: use it!
-        // Keep old name for backward compatibility
-        get() = config.getBool("app", "make_downloaded_images_public_in_gallery", true)
-        set(value) {
-            config.setBool("app", "make_downloaded_images_public_in_gallery", value)
-        }
-
     /* Voice Recordings */
 
     @get:WorkerThread @set:WorkerThread

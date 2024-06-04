@@ -239,7 +239,6 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
             useWifiOnly.postValue(core.isWifiOnlyEnabled)
 
             autoDownloadEnabled.postValue(core.maxSizeForAutoDownloadIncomingFiles == 0)
-            exportMediaEnabled.postValue(corePreferences.exportMediaToNativeGallery)
 
             defaultLayout.postValue(core.defaultConferenceLayout.toInt())
 
@@ -367,15 +366,6 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
         coreContext.postOnCoreThread { core ->
             core.maxSizeForAutoDownloadIncomingFiles = if (newValue) 0 else -1
             autoDownloadEnabled.postValue(newValue)
-        }
-    }
-
-    @UiThread
-    fun toggleExportMedia() {
-        val newValue = exportMediaEnabled.value == false
-        coreContext.postOnCoreThread {
-            corePreferences.exportMediaToNativeGallery = newValue
-            exportMediaEnabled.postValue(newValue)
         }
     }
 

@@ -262,8 +262,6 @@
     <string name="settings_calls_auto_record_title">Automatically start recording calls</string>
     <string name="settings_conversations_title">Conversations</string>
     <string name="settings_conversations_auto_download_title">Auto-download files</string>
-    <string name="settings_conversations_export_media_title">Export media in native gallery</string>
-    <string name="settings_conversations_export_media_subtitle">Media from ephemeral messages will never be exported</string>
     <string name="settings_contacts_title">Contacts</string>
     <string name="settings_contacts_add_ldap_server_title">Add LDAP server</string>
     <string name="settings_contacts_edit_ldap_server_title">Edit LDAP server</string>
