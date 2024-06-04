@@ -313,6 +313,10 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
                     } else {
                         conferenceModel.destroy()
                     }
+                } else if (call.state == Call.State.StreamsRunning) {
+                    if (corePreferences.automaticallyStartCallRecording) {
+                        isRecording.postValue(call.params.isRecording)
+                    }
                 }
             }
 
@@ -1103,9 +1107,12 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
         displayedName.postValue(model.friend.name)
 
         isRecording.postValue(call.params.isRecording)
-        isRemoteRecordingEvent.postValue(
-            Event(Pair(call.remoteParams?.isRecording ?: false, displayedName.value.orEmpty()))
-        )
+
+        val isRemoteRecording = call.remoteParams?.isRecording ?: false
+        if (isRemoteRecording) {
+            Log.w("$TAG Remote end [${displayedName.value.orEmpty()}] is recording the call")
+            isRemoteRecordingEvent.postValue(Event(Pair(true, displayedName.value.orEmpty())))
+        }
 
         callDuration.postValue(call.duration)
     }

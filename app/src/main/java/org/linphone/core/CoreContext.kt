@@ -128,6 +128,8 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         }
     }
 
+    private var previousCallState = Call.State.Idle
+
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
         override fun onGlobalStateChanged(core: Core, state: GlobalState, message: String) {
@@ -176,8 +178,11 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
             state: Call.State?,
             message: String
         ) {
-            Log.i("$TAG Call [${call.remoteAddress.asStringUriOnly()}] state changed [$state]")
-            when (state) {
+            val currentState = call.state
+            Log.i(
+                "$TAG Call [${call.remoteAddress.asStringUriOnly()}] state changed [$currentState]"
+            )
+            when (currentState) {
                 Call.State.OutgoingInit -> {
                     val conferenceInfo = core.findConferenceInformationFromUri(call.remoteAddress)
                     // Do not show outgoing call view for conference calls, wait for connected state
@@ -196,6 +201,16 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
                         showCallActivity()
                     }
                 }
+                Call.State.StreamsRunning -> {
+                    if (previousCallState == Call.State.Connected) {
+                        if (corePreferences.automaticallyStartCallRecording && !call.params.isRecording) {
+                            if (call.conference == null) { // TODO: FIXME: Conference recordings are currently disabled
+                                Log.i("$TAG Auto record calls is enabled, starting it now")
+                                call.startRecording()
+                            }
+                        }
+                    }
+                }
                 Call.State.Error -> {
                     val errorInfo = call.errorInfo
                     Log.w(
@@ -209,6 +224,8 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
                 else -> {
                 }
             }
+
+            previousCallState = currentState
         }
 
         @WorkerThread
