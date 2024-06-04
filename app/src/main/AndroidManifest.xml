@@ -146,7 +146,7 @@
         <!-- Services -->
 
         <service
-            android:name=".core.CoreForegroundService"
+            android:name=".core.CoreInCallService"
             android:exported="false"
             android:foregroundServiceType="phoneCall|camera|microphone"
             android:stopWithTask="false"

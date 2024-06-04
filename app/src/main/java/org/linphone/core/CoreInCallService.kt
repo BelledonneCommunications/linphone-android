@@ -27,9 +27,9 @@ import org.linphone.core.tools.Log
 import org.linphone.core.tools.service.CoreService
 
 @MainThread
-class CoreForegroundService : CoreService() {
+class CoreInCallService : CoreService() {
     companion object {
-        private const val TAG = "[Core Foreground Service]"
+        private const val TAG = "[Core InCall Service]"
     }
 
     override fun onCreate() {
@@ -39,7 +39,7 @@ class CoreForegroundService : CoreService() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i("$TAG onStartCommand")
-        coreContext.notificationsManager.onServiceStarted(this)
+        coreContext.notificationsManager.onInCallServiceStarted(this)
 
         return super.onStartCommand(intent, flags, startId)
     }
@@ -52,7 +52,7 @@ class CoreForegroundService : CoreService() {
 
     override fun onDestroy() {
         Log.i("$TAG onDestroy")
-        coreContext.notificationsManager.onServiceDestroyed()
+        coreContext.notificationsManager.onInCallServiceDestroyed()
 
         super.onDestroy()
     }

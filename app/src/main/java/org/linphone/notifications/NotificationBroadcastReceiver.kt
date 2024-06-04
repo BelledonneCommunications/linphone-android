@@ -121,7 +121,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
             if (intent.action == NotificationsManager.INTENT_REPLY_MESSAGE_NOTIF_ACTION) {
                 val msg = room.createMessageFromUtf8(reply)
                 msg.userData = notificationId
-                msg.addListener(coreContext.notificationsManager.chatListener)
+                msg.addListener(coreContext.notificationsManager.chatMessageListener)
                 msg.send()
                 Log.i("$TAG Reply sent for notif id [$notificationId]")
             } else if (intent.action == NotificationsManager.INTENT_MARK_MESSAGE_AS_READ_NOTIF_ACTION) {

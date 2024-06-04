@@ -60,7 +60,7 @@ import org.linphone.core.ChatMessageListenerStub
 import org.linphone.core.ChatMessageReaction
 import org.linphone.core.ChatRoom
 import org.linphone.core.Core
-import org.linphone.core.CoreForegroundService
+import org.linphone.core.CoreInCallService
 import org.linphone.core.CoreKeepAliveThirdPartyAccountsService
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.Friend
@@ -96,7 +96,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         private const val MISSED_CALL_ID = 10
     }
 
-    private var currentForegroundServiceNotificationId = -1
+    private var currentInCallServiceNotificationId = -1
     private var currentKeepAliveThirdPartyAccountsForegroundServiceNotificationId = -1
 
     private var currentlyRingingCallRemoteAddress: Address? = null
@@ -136,11 +136,11 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                 }
                 Call.State.Updating -> {
                     val notifiable = getNotifiableForCall(call)
-                    if (notifiable.notificationId == currentForegroundServiceNotificationId) {
+                    if (notifiable.notificationId == currentInCallServiceNotificationId) {
                         Log.i(
                             "$TAG Update foreground Service type in case video was enabled/disabled since last time"
                         )
-                        startCallForeground(call)
+                        startInCallForegroundService(call)
                     }
                 }
                 Call.State.End, Call.State.Error -> {
@@ -173,7 +173,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         @WorkerThread
         override fun onLastCallEnded(core: Core) {
             Log.i("$TAG Last call ended, stopping foreground service")
-            stopCallForeground()
+            stopInCallCallForegroundService()
         }
 
         @WorkerThread
@@ -318,7 +318,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         }
     }
 
-    val chatListener: ChatMessageListener = object : ChatMessageListenerStub() {
+    val chatMessageListener: ChatMessageListener = object : ChatMessageListenerStub() {
         @WorkerThread
         override fun onMsgStateChanged(message: ChatMessage, state: ChatMessage.State) {
             message.userData ?: return
@@ -349,7 +349,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         }
     }
 
-    private var coreService: CoreForegroundService? = null
+    private var inCallService: CoreInCallService? = null
     private var keepAliveService: CoreKeepAliveThirdPartyAccountsService? = null
 
     private val callNotificationsMap: HashMap<String, Notifiable> = HashMap()
@@ -389,28 +389,28 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     }
 
     @MainThread
-    fun onServiceStarted(service: CoreForegroundService) {
+    fun onInCallServiceStarted(service: CoreInCallService) {
         Log.i("$TAG Service has been started")
-        coreService = service
+        inCallService = service
 
         coreContext.postOnCoreThread { core ->
             if (core.callsNb == 0) {
                 Log.w("$TAG No call anymore, stopping service")
-                stopCallForeground()
-            } else if (currentForegroundServiceNotificationId == -1) {
+                stopInCallCallForegroundService()
+            } else if (currentInCallServiceNotificationId == -1) {
                 Log.i(
                     "$TAG At least a call is still running and no foreground Service notification was found"
                 )
                 val call = core.currentCall ?: core.calls.first()
-                startCallForeground(call)
+                startInCallForegroundService(call)
             }
         }
     }
 
     @MainThread
-    fun onServiceDestroyed() {
+    fun onInCallServiceDestroyed() {
         Log.i("$TAG Service has been destroyed")
-        coreService = null
+        inCallService = null
     }
 
     @MainThread
@@ -467,16 +467,16 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
     @WorkerThread
     fun removeIncomingCallNotification() {
-        if (currentForegroundServiceNotificationId == INCOMING_CALL_ID) {
-            if (coreService != null) {
+        if (currentInCallServiceNotificationId == INCOMING_CALL_ID) {
+            if (inCallService != null) {
                 Log.i(
                     "$TAG Service found, stopping it as foreground before cancelling notification"
                 )
-                coreService?.stopForeground(STOP_FOREGROUND_REMOVE)
+                inCallService?.stopForeground(STOP_FOREGROUND_REMOVE)
             } else {
                 Log.w("$TAG Incoming call foreground notification Service wasn't found, weird...")
             }
-            currentForegroundServiceNotificationId = -1
+            currentInCallServiceNotificationId = -1
         } else {
             Log.i(
                 "$TAG Incoming call notification wasn't used to keep running Service as foreground"
@@ -516,13 +516,13 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         if (isIncoming) {
             currentlyRingingCallRemoteAddress = call.remoteAddress
             notify(INCOMING_CALL_ID, notification)
-            if (currentForegroundServiceNotificationId == -1) {
-                startIncomingCallForeground(notification)
+            if (currentInCallServiceNotificationId == -1) {
+                startIncomingCallForegroundService(notification)
             }
         } else {
             notify(notifiable.notificationId, notification)
-            if (currentForegroundServiceNotificationId == -1) {
-                startCallForeground(call)
+            if (currentInCallServiceNotificationId == -1) {
+                startInCallForegroundService(call)
             }
         }
     }
@@ -569,9 +569,9 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     }
 
     @WorkerThread
-    private fun startIncomingCallForeground(notification: Notification) {
+    private fun startIncomingCallForegroundService(notification: Notification) {
         Log.i("$TAG Trying to start foreground Service using incoming call notification")
-        val service = coreService
+        val service = inCallService
         if (service != null) {
             Log.i(
                 "$TAG Service found, starting it as foreground using notification ID [$INCOMING_CALL_ID] with type PHONE_CALL"
@@ -582,14 +582,14 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                 notification,
                 Compatibility.FOREGROUND_SERVICE_TYPE_PHONE_CALL
             )
-            currentForegroundServiceNotificationId = INCOMING_CALL_ID
+            currentInCallServiceNotificationId = INCOMING_CALL_ID
         } else {
             Log.w("$TAG Core Foreground Service hasn't started yet...")
         }
     }
 
     @WorkerThread
-    private fun startCallForeground(call: Call) {
+    private fun startInCallForegroundService(call: Call) {
         Log.i("$TAG Trying to start/update foreground Service using call notification")
 
         val channelId = context.getString(R.string.notification_channel_call_id)
@@ -647,7 +647,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             }
         }
 
-        val service = coreService
+        val service = inCallService
         if (service != null) {
             Log.i(
                 "$TAG Service found, starting it as foreground using notification ID [${notifiable.notificationId}] with type(s) [$mask]"
@@ -658,22 +658,22 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                 notification.notification,
                 mask
             )
-            currentForegroundServiceNotificationId = notifiable.notificationId
+            currentInCallServiceNotificationId = notifiable.notificationId
         } else {
             Log.w("$TAG Core Foreground Service hasn't started yet...")
         }
     }
 
     @WorkerThread
-    private fun stopCallForeground() {
-        val service = coreService
+    private fun stopInCallCallForegroundService() {
+        val service = inCallService
         if (service != null) {
             Log.i(
-                "$TAG Stopping foreground Service (was using notification ID [$currentForegroundServiceNotificationId])"
+                "$TAG Stopping foreground Service (was using notification ID [$currentInCallServiceNotificationId])"
             )
             service.stopForeground(STOP_FOREGROUND_REMOVE)
             service.stopSelf()
-            currentForegroundServiceNotificationId = -1
+            currentInCallServiceNotificationId = -1
         } else {
             Log.w("$TAG Can't stop foreground Service & notif, no Service was found")
         }
@@ -820,7 +820,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             try {
                 notificationManager.notify(tag, id, notification)
             } catch (iae: IllegalArgumentException) {
-                if (coreService == null && tag == null) {
+                if (inCallService == null && tag == null) {
                     // We can't notify using CallStyle if there isn't a foreground service running
                     Log.w(
                         "$TAG Foreground Service hasn't started yet, can't display a CallStyle notification until then: $iae"
