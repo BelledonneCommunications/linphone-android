@@ -431,24 +431,7 @@ class MeetingWaitingRoomViewModel @UiThread constructor() : GenericViewModel() {
     private fun initOutputAudioDevice(videoEnabled: Boolean) {
         val core = coreContext.core
 
-        val audioDevice = if (corePreferences.routeAudioToBluetoothIfAvailable) {
-            // Prefer bluetooth audio device if setting says so
-            if (bluetoothAudioDevice != null) {
-                bluetoothAudioDevice
-            } else {
-                if (corePreferences.routeAudioToSpeakerWhenVideoIsEnabled && videoEnabled) {
-                    // If setting says to use speaker when video is enabled, use speaker instead of earpiece
-                    val defaultDevice = core.outputAudioDevice ?: core.defaultOutputAudioDevice
-                    if (defaultDevice?.type == AudioDevice.Type.Earpiece) {
-                        speakerAudioDevice
-                    } else {
-                        defaultDevice
-                    }
-                } else {
-                    core.outputAudioDevice ?: core.defaultOutputAudioDevice
-                }
-            }
-        } else if (corePreferences.routeAudioToSpeakerWhenVideoIsEnabled && videoEnabled) {
+        val audioDevice = if (corePreferences.routeAudioToSpeakerWhenVideoIsEnabled && videoEnabled) {
             // If setting says to use speaker when video is enabled, use speaker instead of earpiece
             val defaultDevice = core.outputAudioDevice ?: core.defaultOutputAudioDevice
             if (defaultDevice?.type == AudioDevice.Type.Earpiece) {

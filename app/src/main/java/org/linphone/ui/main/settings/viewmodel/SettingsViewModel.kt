@@ -67,7 +67,6 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
 
     // Calls settings
     val echoCancellerEnabled = MutableLiveData<Boolean>()
-    val routeAudioToBluetooth = MutableLiveData<Boolean>()
     val videoEnabled = MutableLiveData<Boolean>()
     val videoFecEnabled = MutableLiveData<Boolean>()
 
@@ -230,7 +229,6 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
             isUiSecureModeEnabled.postValue(corePreferences.enableSecureMode)
 
             echoCancellerEnabled.postValue(core.isEchoCancellationEnabled)
-            routeAudioToBluetooth.postValue(corePreferences.routeAudioToBluetoothIfAvailable)
             videoEnabled.postValue(core.isVideoEnabled)
             videoFecEnabled.postValue(core.isFecEnabled)
             vibrateDuringIncomingCall.postValue(core.isVibrationOnIncomingCallEnabled)
@@ -306,15 +304,6 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
         coreContext.postOnCoreThread { core ->
             core.isEchoCancellationEnabled = newValue
             echoCancellerEnabled.postValue(newValue)
-        }
-    }
-
-    @UiThread
-    fun toggleRouteAudioToBluetooth() {
-        val newValue = routeAudioToBluetooth.value == false
-        coreContext.postOnCoreThread {
-            corePreferences.routeAudioToBluetoothIfAvailable = newValue
-            routeAudioToBluetooth.postValue(newValue)
         }
     }
 

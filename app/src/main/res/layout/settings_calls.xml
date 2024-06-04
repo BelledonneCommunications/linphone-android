@@ -60,34 +60,6 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/settings_title_style"
-            android:onClick="@{() -> viewModel.toggleRouteAudioToBluetooth()}"
-            android:id="@+id/route_audio_to_bluetooth_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="10dp"
-            android:text="@string/settings_calls_route_audio_to_bluetooth_title"
-            android:maxLines="2"
-            android:ellipsize="end"
-            app:layout_constraintTop_toTopOf="@id/route_audio_to_bluetooth_switch"
-            app:layout_constraintBottom_toBottomOf="@id/route_audio_to_bluetooth_switch"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/route_audio_to_bluetooth_switch"/>
-
-        <com.google.android.material.materialswitch.MaterialSwitch
-            style="@style/material_switch_style"
-            android:id="@+id/route_audio_to_bluetooth_switch"
-            android:onClick="@{() -> viewModel.toggleRouteAudioToBluetooth()}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="16dp"
-            android:checked="@{viewModel.routeAudioToBluetooth}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/echo_canceller_switch" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/settings_title_style"
             android:onClick="@{() -> viewModel.toggleEnableVideo()}"
             android:id="@+id/enable_video_title"
             android:layout_width="0dp"
@@ -112,7 +84,7 @@
             android:layout_marginEnd="16dp"
             android:checked="@{viewModel.videoEnabled}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/route_audio_to_bluetooth_switch" />
+            app:layout_constraintTop_toBottomOf="@id/echo_canceller_switch" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/settings_title_style"

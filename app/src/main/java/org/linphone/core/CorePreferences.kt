@@ -80,13 +80,6 @@ class CorePreferences @UiThread constructor(private val context: Context) {
 
     // Calls settings
 
-    @get:WorkerThread @set:WorkerThread
-    var routeAudioToBluetoothIfAvailable: Boolean
-        get() = config.getBool("app", "route_audio_to_bluetooth_if_available", true)
-        set(value) {
-            config.setBool("app", "route_audio_to_bluetooth_if_available", value)
-        }
-
     // This won't be done if bluetooth or wired headset is used
     @get:WorkerThread @set:WorkerThread
     var routeAudioToSpeakerWhenVideoIsEnabled: Boolean
