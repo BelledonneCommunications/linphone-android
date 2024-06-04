@@ -141,9 +141,6 @@
     <string name="assistant_third_party_sip_account_create_linphone_account">Je préfère créer un compte</string>
     <string name="assistant_third_party_sip_account_warning_ok">J\'ai compris</string>
     <string name="assistant_third_party_sip_account_username_or_identity">Nom d\'utilisateur ou identité SIP*</string>
-    <string name="assistant_account_secure_mode_title">Choisissez votre mode</string>
-    <string name="assistant_account_secure_mode_subtitle">Vous pourrez le changer plus tard</string>
-    <string name="assistant_secure_mode_finish_account_login">Continuer</string>
     <string name="assistant_account_register_unavailable_no_push_toast">Les notifications poussées ne sont pas disponibles, la création de compte est donc désactivée.</string>
     <string name="assistant_account_register_username_already_in_use_error">Ce compte existe déjà</string>
     <string name="assistant_account_register_username_invalid_characters_error">Caractère(s) invalide(s): les majuscules et les caractères spéciaux ne sont pas autorisés</string>
@@ -304,10 +301,9 @@
     <string name="manage_account_status_cleared_summary">Compte désactivé, vous ne recevrez ni appel ni message.</string>
     <string name="manage_account_status_progress_summary">Connexion en cours, merci de patienter…</string>
     <string name="manage_account_status_failed_summary">Erreur de connexion, vérifiez vos paramètres.</string>
-    <string name="manage_account_change_mode">Changer de mode</string>
     <string name="manage_account_international_prefix">Préfixe international</string>
     <string name="manage_account_dialog_international_prefix_help_title">Pourquoi en avons-nous besoin ?</string>
-    <string name="manage_account_dialog_international_prefix_help_message">Blah blah blah</string>
+    <string name="manage_account_dialog_international_prefix_help_message">Blah blah blah</string> <!-- TODO -->
     <string name="manage_account_settings">Paramètres de compte</string>
     <string name="manage_account_delete">Supprimer le compte</string>
     <string name="manage_account_choose_mode_title">Choisir le mode</string>

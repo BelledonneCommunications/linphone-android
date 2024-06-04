@@ -230,6 +230,7 @@ class TimestampUtils {
                 )
                 hours >= 1L -> {
                     String.format(
+                        Locale.getDefault(),
                         "%02d:%02d:%02d",
                         seconds / 3600,
                         (seconds % 3600) / 60,
@@ -237,6 +238,7 @@ class TimestampUtils {
                     )
                 }
                 else -> String.format(
+                    Locale.getDefault(),
                     "%02d:%02d",
                     (seconds % 3600) / 60,
                     (seconds % 60)

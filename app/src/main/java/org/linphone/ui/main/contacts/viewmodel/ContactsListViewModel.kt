@@ -161,10 +161,9 @@ class ContactsListViewModel @UiThread constructor() : AbstractMainViewModel() {
     @WorkerThread
     private fun updateDomainFilter() {
         val defaultAccount = coreContext.core.defaultAccount
-        isDefaultAccountLinphone.postValue(
-            defaultAccount?.isEndToEndEncryptionMandatory() == true && defaultAccount.params.domain == corePreferences.defaultDomain
-        )
-        domainFilter = if (defaultAccount?.isEndToEndEncryptionMandatory() == true) {
+        val defaultDomain = defaultAccount?.params?.domain == corePreferences.defaultDomain
+        isDefaultAccountLinphone.postValue(defaultDomain)
+        domainFilter = if (isEndToEndEncryptionMandatory() == true) {
             corePreferences.defaultDomain
         } else {
             "*"

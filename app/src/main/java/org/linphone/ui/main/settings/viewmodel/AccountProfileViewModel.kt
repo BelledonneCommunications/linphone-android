@@ -30,8 +30,6 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
 import org.linphone.ui.main.model.AccountModel
 import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
-import org.linphone.ui.main.model.setEndToEndEncryptionMandatory
-import org.linphone.ui.main.model.setInteroperabilityMode
 import org.linphone.ui.main.settings.model.AccountDeviceModel
 import org.linphone.utils.Event
 
@@ -109,7 +107,7 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
                 Log.i("$TAG Found matching account [$found]")
                 account = found
                 accountModel.postValue(AccountModel(account))
-                isCurrentlySelectedModeSecure.postValue(account.isEndToEndEncryptionMandatory())
+                isCurrentlySelectedModeSecure.postValue(isEndToEndEncryptionMandatory())
                 registerEnabled.postValue(account.params.isRegisterEnabled)
 
                 sipAddress.postValue(account.params.identityAddress?.asStringUriOnly())
@@ -265,33 +263,6 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
             Log.i(
                 "$TAG Removed international prefix for account [${account.params.identityAddress?.asStringUriOnly()}]"
             )
-        }
-    }
-
-    @UiThread
-    fun switchToSecureMode() {
-        isCurrentlySelectedModeSecure.value = true
-    }
-
-    @UiThread
-    fun switchToInteropMode() {
-        isCurrentlySelectedModeSecure.value = false
-    }
-
-    @UiThread
-    fun applySelectedMode() {
-        coreContext.postOnCoreThread { core ->
-            if (isCurrentlySelectedModeSecure.value == true) {
-                Log.i(
-                    "$TAG Selected mode is end-to-end encrypted, forcing media & im encryption to mandatory and setting media encryption to ZRTP"
-                )
-                account.setEndToEndEncryptionMandatory()
-            } else {
-                Log.i(
-                    "$TAG Selected mode is interoperable, not forcing media & im encryption to mandatory and setting media encryption to SRTP"
-                )
-                account.setInteroperabilityMode()
-            }
         }
     }
 }

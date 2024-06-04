@@ -498,8 +498,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
     @WorkerThread
     fun checkIfConversationShouldBeDisabledForSecurityReasons() {
         if (!chatRoom.hasCapability(ChatRoom.Capabilities.Encrypted.toInt())) {
-            val account = LinphoneUtils.getDefaultAccount()
-            if (account?.isEndToEndEncryptionMandatory() == true) {
+            if (isEndToEndEncryptionMandatory() == true) {
                 Log.w(
                     "$TAG Conversation with subject [${chatRoom.subject}] has been disabled because it isn't encrypted and default account is in secure mode"
                 )

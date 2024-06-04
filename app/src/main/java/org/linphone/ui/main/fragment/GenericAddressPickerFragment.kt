@@ -162,7 +162,7 @@ abstract class GenericAddressPickerFragment : GenericMainFragment() {
             val numbersCount = friend.phoneNumbers.size
 
             // Do not consider phone numbers if default account is in secure mode
-            val enablePhoneNumbers = core.defaultAccount?.isEndToEndEncryptionMandatory() != true
+            val enablePhoneNumbers = isEndToEndEncryptionMandatory() != true
 
             if (addressesCount == 1 && (numbersCount == 0 || !enablePhoneNumbers)) {
                 val address = friend.addresses.first()

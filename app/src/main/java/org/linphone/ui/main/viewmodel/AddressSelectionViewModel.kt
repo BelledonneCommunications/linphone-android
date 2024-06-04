@@ -85,8 +85,7 @@ abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccoun
         multipleSelectionMode.value = false
 
         coreContext.postOnCoreThread { core ->
-            val defaultAccount = core.defaultAccount
-            limitSearchToLinphoneAccounts = defaultAccount?.isEndToEndEncryptionMandatory() ?: false
+            limitSearchToLinphoneAccounts = isEndToEndEncryptionMandatory() ?: false
 
             coreContext.contactsManager.addListener(contactsListener)
             magicSearch = core.createMagicSearch()

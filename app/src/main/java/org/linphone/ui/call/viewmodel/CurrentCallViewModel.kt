@@ -803,13 +803,13 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
 
                 val sameDomain =
                     remote.domain == corePreferences.defaultDomain && remote.domain == account.params.domain
-                if (account.isEndToEndEncryptionMandatory() && sameDomain) {
+                if (isEndToEndEncryptionMandatory() && sameDomain) {
                     Log.i(
                         "$TAG Account is in secure mode & domain matches, creating a E2E conversation"
                     )
                     params.backend = ChatRoom.Backend.FlexisipChat
                     params.isEncryptionEnabled = true
-                } else if (!account.isEndToEndEncryptionMandatory()) {
+                } else if (!isEndToEndEncryptionMandatory()) {
                     if (LinphoneUtils.isEndToEndEncryptedChatAvailable(core)) {
                         Log.i(
                             "$TAG Account is in interop mode but LIME is available, creating a E2E conversation"

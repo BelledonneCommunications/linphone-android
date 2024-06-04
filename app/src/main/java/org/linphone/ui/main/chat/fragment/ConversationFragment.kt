@@ -133,7 +133,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
             maxItems = SendMessageInConversationViewModel.MAX_FILES_TO_ATTACH
         )
     ) { list ->
-        if (!list.isNullOrEmpty()) {
+        if (list.isNotEmpty()) {
             for (uri in list) {
                 lifecycleScope.launch {
                     withContext(Dispatchers.IO) {

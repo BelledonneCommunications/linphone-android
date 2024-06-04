@@ -150,8 +150,8 @@ class DrawerMenuFragment : GenericMainFragment() {
 
         val popupWindow = PopupWindow(
             popupView.root,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
+            LayoutParams.WRAP_CONTENT,
+            LayoutParams.WRAP_CONTENT,
             true
         )
 

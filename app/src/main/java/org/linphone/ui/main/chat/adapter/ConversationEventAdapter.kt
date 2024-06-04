@@ -199,7 +199,7 @@ class ConversationEventAdapter :
                 model = message
                 executePendingBindings()
 
-                binding.root.doOnPreDraw {
+                root.doOnPreDraw {
                     binding.deliveryStatus.startAnimatedDrawable()
                 }
             }
@@ -214,7 +214,7 @@ class ConversationEventAdapter :
                 model = message
                 executePendingBindings()
 
-                binding.root.doOnPreDraw {
+                root.doOnPreDraw {
                     binding.deliveryStatus.startAnimatedDrawable()
                 }
             }

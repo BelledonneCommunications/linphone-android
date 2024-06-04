@@ -749,7 +749,7 @@ fun Friend.getListOfSipAddressesAndPhoneNumbers(listener: ContactNumberOrAddress
 
         // phone numbers are disabled is secure mode unless linked to a SIP address
         val defaultAccount = LinphoneUtils.getDefaultAccount()
-        val enablePhoneNumbers = hasPresenceInfo || defaultAccount?.isEndToEndEncryptionMandatory() == false
+        val enablePhoneNumbers = hasPresenceInfo || isEndToEndEncryptionMandatory() == false
         val address = presenceAddress ?: core.interpretUrl(
             number.phoneNumber,
             LinphoneUtils.applyInternationalPrefix(defaultAccount)

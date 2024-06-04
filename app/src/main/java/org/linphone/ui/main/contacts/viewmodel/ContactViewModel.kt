@@ -250,7 +250,7 @@ class ContactViewModel @UiThread constructor() : GenericViewModel() {
             )
             // Only expand contacts' devices & trust by default if in E2E encrypted mode
             expandDevicesTrust.postValue(
-                LinphoneUtils.getDefaultAccount()?.isEndToEndEncryptionMandatory() == true
+                isEndToEndEncryptionMandatory() == true
             )
             coreContext.contactsManager.addListener(contactsListener)
         }
@@ -427,7 +427,7 @@ class ContactViewModel @UiThread constructor() : GenericViewModel() {
             val numbersCount = friend.phoneNumbers.size
 
             // Do not consider phone numbers if default account is in secure mode
-            val enablePhoneNumbers = core.defaultAccount?.isEndToEndEncryptionMandatory() != true
+            val enablePhoneNumbers = isEndToEndEncryptionMandatory() != true
 
             if (addressesCount == 1 && (numbersCount == 0 || !enablePhoneNumbers)) {
                 Log.i(
@@ -464,7 +464,7 @@ class ContactViewModel @UiThread constructor() : GenericViewModel() {
             val numbersCount = friend.phoneNumbers.size
 
             // Do not consider phone numbers if default account is in secure mode
-            val enablePhoneNumbers = core.defaultAccount?.isEndToEndEncryptionMandatory() != true
+            val enablePhoneNumbers = isEndToEndEncryptionMandatory() != true
 
             if (addressesCount == 1 && (numbersCount == 0 || !enablePhoneNumbers)) {
                 Log.i(
@@ -501,7 +501,7 @@ class ContactViewModel @UiThread constructor() : GenericViewModel() {
             val numbersCount = friend.phoneNumbers.size
 
             // Do not consider phone numbers if default account is in secure mode
-            val enablePhoneNumbers = core.defaultAccount?.isEndToEndEncryptionMandatory() != true
+            val enablePhoneNumbers = isEndToEndEncryptionMandatory() != true
 
             if (addressesCount == 1 && (numbersCount == 0 || !enablePhoneNumbers)) {
                 Log.i(
@@ -547,13 +547,13 @@ class ContactViewModel @UiThread constructor() : GenericViewModel() {
             params.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
 
             val sameDomain = remote.domain == corePreferences.defaultDomain && remote.domain == account.params.domain
-            if (account.isEndToEndEncryptionMandatory() && sameDomain) {
+            if (isEndToEndEncryptionMandatory() && sameDomain) {
                 Log.i(
                     "$TAG Account is in secure mode & domain matches, creating a E2E conversation"
                 )
                 params.backend = ChatRoom.Backend.FlexisipChat
                 params.isEncryptionEnabled = true
-            } else if (!account.isEndToEndEncryptionMandatory()) {
+            } else if (!isEndToEndEncryptionMandatory()) {
                 if (LinphoneUtils.isEndToEndEncryptedChatAvailable(core)) {
                     Log.i(
                         "$TAG Account is in interop mode but LIME is available, creating a E2E conversation"

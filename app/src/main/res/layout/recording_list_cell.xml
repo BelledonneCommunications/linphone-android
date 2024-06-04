@@ -67,6 +67,7 @@
                 android:layout_marginEnd="10dp"
                 android:padding="12dp"
                 android:src="@drawable/play_fill"
+                android:contentDescription="@string/content_description_play_call_recording"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:tint="?attr/color_main1_500" />

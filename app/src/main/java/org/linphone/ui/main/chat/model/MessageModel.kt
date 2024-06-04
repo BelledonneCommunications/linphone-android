@@ -101,7 +101,7 @@ class MessageModel @WorkerThread constructor(
     val time = TimestampUtils.toString(timestamp)
 
     val chatRoomIsReadOnly = chatMessage.chatRoom.isReadOnly ||
-        (!chatMessage.chatRoom.hasCapability(ChatRoom.Capabilities.Encrypted.toInt()) && LinphoneUtils.getDefaultAccount()?.isEndToEndEncryptionMandatory() == true)
+        (!chatMessage.chatRoom.hasCapability(ChatRoom.Capabilities.Encrypted.toInt()) && isEndToEndEncryptionMandatory() == true)
 
     val groupedWithNextMessage = MutableLiveData<Boolean>()
 

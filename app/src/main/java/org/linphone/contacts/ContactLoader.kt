@@ -57,7 +57,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
         private const val MIN_INTERVAL_TO_WAIT_BEFORE_REFRESH = 300000L // 5 minutes
     }
 
-    val friends = HashMap<String, Friend>()
+    private val friends = HashMap<String, Friend>()
 
     @MainThread
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {

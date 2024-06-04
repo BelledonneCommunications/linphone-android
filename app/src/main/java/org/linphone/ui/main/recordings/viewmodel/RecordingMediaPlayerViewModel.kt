@@ -47,7 +47,7 @@ class RecordingMediaPlayerViewModel @UiThread constructor() : GenericViewModel()
 
     lateinit var recordingModel: RecordingModel
 
-    lateinit var player: Player
+    private lateinit var player: Player
 
     val isVideo = MutableLiveData<Boolean>()
 
@@ -217,7 +217,7 @@ class RecordingMediaPlayerViewModel @UiThread constructor() : GenericViewModel()
         if (!::player.isInitialized) return
 
         Log.i("$TAG Stopping player")
-        pause()
+        pausePlayback()
         position.postValue(0)
         player.seek(0)
         player.close()

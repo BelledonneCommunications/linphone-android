@@ -24,7 +24,6 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.contacts.AbstractAvatarModel
 import org.linphone.core.Account
@@ -170,7 +169,7 @@ class AccountModel @WorkerThread constructor(
         )
 
         trust.postValue(SecurityLevel.EndToEndEncryptedAndVerified)
-        showTrust.postValue(account.isEndToEndEncryptionMandatory())
+        showTrust.postValue(isEndToEndEncryptionMandatory())
 
         val name = LinphoneUtils.getDisplayName(account.params.identityAddress)
         displayName.postValue(name)
@@ -240,36 +239,6 @@ class AccountModel @WorkerThread constructor(
 }
 
 @WorkerThread
-fun Account.isEndToEndEncryptionMandatory(): Boolean {
-    val defaultDomain = params.identityAddress?.domain == corePreferences.defaultDomain
-    val encryption = params.instantMessagingEncryptionMandatory
-    return defaultDomain && encryption
-}
-
-@WorkerThread
-fun Account.setEndToEndEncryptionMandatory() {
-    val clone = params.clone()
-    clone.instantMessagingEncryptionMandatory = true
-    params = clone
-
-    if (this == core.defaultAccount) {
-        coreContext.contactsManager.updateContactsModelDependingOnDefaultAccountMode()
-    }
-    Log.i(
-        "[Account] End-to-end encryption is now mandatory on account [${params.identityAddress?.asStringUriOnly()}]"
-    )
-}
-
-@WorkerThread
-fun Account.setInteroperabilityMode() {
-    val clone = params.clone()
-    clone.instantMessagingEncryptionMandatory = false
-    params = clone
-
-    if (this == core.defaultAccount) {
-        coreContext.contactsManager.updateContactsModelDependingOnDefaultAccountMode()
-    }
-    Log.i(
-        "[Account] End-to-end encryption is no longer mandatory on account [${params.identityAddress?.asStringUriOnly()}]"
-    )
+fun isEndToEndEncryptionMandatory(): Boolean {
+    return false // TODO: Will be done later in SDK
 }

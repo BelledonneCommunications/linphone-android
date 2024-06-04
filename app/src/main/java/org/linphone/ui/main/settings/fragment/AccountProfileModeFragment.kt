@@ -30,7 +30,6 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.AccountProfileSecureModeFragmentBinding
 import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.settings.viewmodel.AccountProfileViewModel
-import org.linphone.utils.DialogUtils
 
 @UiThread
 class AccountProfileModeFragment : GenericMainFragment() {
@@ -63,22 +62,6 @@ class AccountProfileModeFragment : GenericMainFragment() {
         binding.setBackClickListener {
             Log.i("$TAG Leaving without saving changes...")
             goBack()
-        }
-
-        binding.setContinueClickListener {
-            Log.i("$TAG Applying changes and leaving...")
-            viewModel.applySelectedMode()
-            goBack()
-        }
-
-        binding.setDefaultModeTooltipClickListener {
-            val dialog = DialogUtils.getAccountModeExplanationDialog(requireActivity(), true)
-            dialog.show()
-        }
-
-        binding.setInteropModeTooltipClickListener {
-            val dialog = DialogUtils.getAccountModeExplanationDialog(requireActivity(), false)
-            dialog.show()
         }
     }
 }

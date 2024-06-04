@@ -35,8 +35,6 @@ import org.linphone.core.Reason
 import org.linphone.core.RegistrationState
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
-import org.linphone.ui.main.model.setEndToEndEncryptionMandatory
-import org.linphone.ui.main.model.setInteroperabilityMode
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
@@ -66,8 +64,6 @@ open class AccountLoginViewModel @UiThread constructor() : GenericViewModel() {
     val loginEnabled = MediatorLiveData<Boolean>()
 
     val registrationInProgress = MutableLiveData<Boolean>()
-
-    val isCurrentlySelectedModeSecure = MutableLiveData<Boolean>()
 
     val accountLoggedInEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
@@ -144,8 +140,6 @@ open class AccountLoginViewModel @UiThread constructor() : GenericViewModel() {
         loginEnabled.addSource(password) {
             loginEnabled.value = isLoginButtonEnabled()
         }
-
-        isCurrentlySelectedModeSecure.value = true
     }
 
     @UiThread
@@ -244,37 +238,6 @@ open class AccountLoginViewModel @UiThread constructor() : GenericViewModel() {
     @UiThread
     fun toggleShowPassword() {
         showPassword.value = showPassword.value == false
-    }
-
-    @UiThread
-    fun switchToSecureMode() {
-        isCurrentlySelectedModeSecure.value = true
-    }
-
-    @UiThread
-    fun switchToInteropMode() {
-        isCurrentlySelectedModeSecure.value = false
-    }
-
-    @UiThread
-    fun applySelectedMode() {
-        coreContext.postOnCoreThread { core ->
-            if (::newlyCreatedAccount.isInitialized) {
-                if (isCurrentlySelectedModeSecure.value == true) {
-                    Log.i(
-                        "$TAG Selected mode is end-to-end encrypted, forcing media & im encryption to mandatory and setting media encryption to ZRTP"
-                    )
-                    newlyCreatedAccount.setEndToEndEncryptionMandatory()
-                } else {
-                    Log.i(
-                        "$TAG Selected mode is interoperable, not forcing media & im encryption to mandatory and setting media encryption to SRTP"
-                    )
-                    newlyCreatedAccount.setInteroperabilityMode()
-                }
-            } else {
-                Log.e("$TAG Failed to find newlyCreatedAccount!")
-            }
-        }
     }
 
     @UiThread

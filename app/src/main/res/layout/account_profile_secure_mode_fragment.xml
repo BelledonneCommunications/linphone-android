@@ -81,7 +81,6 @@
                 <com.google.android.material.radiobutton.MaterialRadioButton
                     style="@style/default_text_style_800"
                     android:id="@+id/default_mode"
-                    android:onClick="@{() -> viewModel.switchToSecureMode()}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
@@ -111,7 +110,6 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/default_text_style"
                     android:id="@+id/default_mode_summary"
-                    android:onClick="@{() -> viewModel.switchToSecureMode()}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -142,7 +140,6 @@
                 <com.google.android.material.radiobutton.MaterialRadioButton
                     style="@style/default_text_style_800"
                     android:id="@+id/interop_mode"
-                    android:onClick="@{() -> viewModel.switchToInteropMode()}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="32dp"
@@ -173,7 +170,6 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/default_text_style"
                     android:id="@+id/interop_mode_summary"
-                    android:onClick="@{() -> viewModel.switchToInteropMode()}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
