@@ -42,6 +42,7 @@ import org.linphone.ui.main.chat.model.ParticipantModel
 import org.linphone.ui.main.chat.viewmodel.ConversationInfoViewModel
 import org.linphone.ui.main.fragment.GroupSetOrEditSubjectDialogModel
 import org.linphone.ui.main.fragment.SlidingPaneChildFragment
+import org.linphone.ui.main.history.model.ConfirmationDialogModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 
@@ -150,7 +151,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
                 Log.i("$TAG History has been deleted, leaving conversation info...")
                 sharedViewModel.forceRefreshConversationEvents.value = Event(true)
                 goBack()
-                val message = getString(R.string.toast_conversation_history_deleted)
+                val message = getString(R.string.conversation_info_history_deleted_toast)
                 (requireActivity() as GenericActivity).showGreenToast(
                     message,
                     R.drawable.chat_teardrop_text
@@ -293,6 +294,10 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
                 findNavController().navigate(action)
             }
         }
+
+        binding.setDeleteHistoryClickListener {
+            showDeleteHistoryConfirmationDialog()
+        }
     }
 
     private fun showParticipantAdminPopupMenu(view: View, participantModel: ParticipantModel) {
@@ -372,5 +377,28 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
         // Elevation is for showing a shadow around the popup
         popupWindow.elevation = 20f
         popupWindow.showAsDropDown(view, 0, 0, Gravity.BOTTOM)
+    }
+
+    private fun showDeleteHistoryConfirmationDialog() {
+        val model = ConfirmationDialogModel()
+        val dialog = DialogUtils.getDeleteConversationHistoryConfirmationDialog(
+            requireActivity(),
+            model
+        )
+
+        model.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        model.confirmEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                viewModel.deleteHistory()
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
     }
 }

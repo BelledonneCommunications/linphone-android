@@ -129,7 +129,6 @@
     <string name="toast_voice_recording_max_duration_reached">Max duration reached</string>
     <string name="toast_failed_to_add_participant_to_group_conversation">Failed to add participant(s) to conversation</string>
     <string name="toast_conversation_deleted">Conversation was successfully deleted</string>
-    <string name="toast_conversation_history_deleted">History has been successfully deleted</string>
     <string name="toast_group_conversation_left">You have left the group</string>
     <string name="toast_low_media_volume">Media volume is low, you may not hear anything!</string>
     <string name="toast_no_app_registered_to_handle_content_type_error">No app found to open this kind of file</string>
@@ -530,6 +529,9 @@
     <string name="conversation_info_admin_menu_unset_participant_admin">Remove admin rights</string>
     <string name="conversation_info_menu_go_to_contact">See contact profile</string>
     <string name="conversation_info_menu_add_to_contacts">Add to contacts</string>
+    <string name="conversation_info_dialog_delete_all_call_logs_title">Do you really want to delete all messages?</string>
+    <string name="conversation_info_dialog_delete_all_message">All messages will be removed from the history</string>
+    <string name="conversation_info_history_deleted_toast">History has been successfully deleted</string>
 
     <string name="conversation_event_conference_created">You have joined the group</string>
     <string name="conversation_event_conference_destroyed">You have left the group</string>

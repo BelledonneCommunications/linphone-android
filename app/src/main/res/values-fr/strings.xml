@@ -94,7 +94,6 @@
     <string name="toast_voice_recording_max_duration_reached">Durée maximale atteinte</string>
     <string name="toast_failed_to_add_participant_to_group_conversation">Un ou plusieurs participants n\'ont pû être ajoutés</string>
     <string name="toast_conversation_deleted">Conversation supprimée</string>
-    <string name="toast_conversation_history_deleted">Historique d\'appels supprimé</string>
     <string name="toast_group_conversation_left">Vous avez quitté la conversation</string>
     <string name="toast_low_media_volume">Le volume media est bas, vous pourriez ne rien entendre !</string>
     <string name="toast_no_app_registered_to_handle_content_type_error">Aucune application trouvée pour lire ce fichier</string>
@@ -494,6 +493,9 @@
     <string name="conversation_info_admin_menu_unset_participant_admin">Retirer les privilèges administrateur</string>
     <string name="conversation_info_menu_go_to_contact">Voir le contact</string>
     <string name="conversation_info_menu_add_to_contacts">Ajouter aux contacts</string>
+    <string name="conversation_info_dialog_delete_all_call_logs_title">Voulez-vous tout supprimer ?</string>
+    <string name="conversation_info_dialog_delete_all_message">Tout les messages de cette conversation seront supprimés.</string>
+    <string name="conversation_info_history_deleted_toast">Historique supprimé</string>
 
     <string name="conversation_event_conference_created">Vous avez rejoint le groupe</string>
     <string name="conversation_event_conference_destroyed">Vous avez quitté le groupe</string>

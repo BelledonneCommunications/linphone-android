@@ -267,7 +267,6 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
     @UiThread
     fun deleteHistory() {
         coreContext.postOnCoreThread {
-            // TODO: confirmation dialog ?
             if (isChatRoomInitialized()) {
                 Log.i(
                     "$TAG Cleaning conversation [${LinphoneUtils.getChatRoomId(chatRoom)}] history"

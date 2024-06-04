@@ -25,6 +25,9 @@
             name="configureEphemeralMessagesClickListener"
             type="View.OnClickListener" />
         <variable
+            name="deleteHistoryClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.main.chat.viewmodel.ConversationInfoViewModel" />
     </data>
@@ -443,7 +446,7 @@
                     android:layout_marginBottom="@dimen/screen_bottom_margin"
                     android:background="@drawable/action_background"
                     android:drawableStart="@drawable/trash_simple"
-                    android:onClick="@{() -> viewModel.deleteHistory()}"
+                    android:onClick="@{deleteHistoryClickListener}"
                     android:text="@string/conversation_info_delete_history_action"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@id/actions_background"

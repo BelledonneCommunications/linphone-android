@@ -50,6 +50,7 @@ import org.linphone.databinding.DialogPickNumberOrAddressBinding
 import org.linphone.databinding.DialogRemoveAccountBinding
 import org.linphone.databinding.DialogRemoveAllCallLogsBinding
 import org.linphone.databinding.DialogRemoveCallLogsBinding
+import org.linphone.databinding.DialogRemoveConversationHistoryBinding
 import org.linphone.databinding.DialogSetOrEditGroupSubjectBindingImpl
 import org.linphone.databinding.DialogUpdateAccountPasswordBinding
 import org.linphone.databinding.DialogUpdateAvailableBinding
@@ -289,6 +290,22 @@ class DialogUtils {
             binding.viewModel = viewModel
             // For some reason, binding.subject triggers an error on Android Studio...
             binding.root.findViewById<AppCompatEditText>(R.id.subject)?.requestFocus()
+
+            return getDialog(context, binding)
+        }
+
+        @UiThread
+        fun getDeleteConversationHistoryConfirmationDialog(
+            context: Context,
+            viewModel: ConfirmationDialogModel
+        ): Dialog {
+            val binding: DialogRemoveConversationHistoryBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_remove_conversation_history,
+                null,
+                false
+            )
+            binding.viewModel = viewModel
 
             return getDialog(context, binding)
         }
