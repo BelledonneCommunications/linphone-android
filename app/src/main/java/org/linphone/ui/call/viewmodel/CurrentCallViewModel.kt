@@ -473,6 +473,8 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
                 removedCharacterAtCurrentPositionEvent.value = Event(true)
             },
             { // OnCallClicked
+            },
+            { // OnClearInput
             }
         )
 

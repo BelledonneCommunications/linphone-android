@@ -110,6 +110,12 @@ class StartCallFragment : GenericAddressPickerFragment() {
             }
         }
 
+        viewModel.clearSearchBarEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                binding.searchBar.setText("")
+            }
+        }
+
         viewModel.appendDigitToSearchBarEvent.observe(viewLifecycleOwner) {
             it.consume { digit ->
                 binding.searchBar.addCharacterAtPosition(digit)

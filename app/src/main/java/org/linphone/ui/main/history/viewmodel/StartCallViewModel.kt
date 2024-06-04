@@ -66,6 +66,10 @@ class StartCallViewModel @UiThread constructor() : AddressSelectionViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val clearSearchBarEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     val requestKeyboardVisibilityChangedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -143,6 +147,9 @@ class StartCallViewModel @UiThread constructor() : AddressSelectionViewModel() {
                         }
                     }
                 }
+            },
+            { // OnClearInput
+                clearSearchBarEvent.value = Event(true)
             }
         )
 

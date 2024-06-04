@@ -21,12 +21,14 @@ package org.linphone.ui.main.history.model
 
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.tools.Log
 
 open class NumpadModel @UiThread constructor(
     private val onDigitClicked: (value: String) -> (Unit),
     private val onBackspaceClicked: () -> (Unit),
-    private val onCallClicked: () -> (Unit)
+    private val onCallClicked: () -> (Unit),
+    private val onClearClicked: () -> (Unit)
 ) {
     companion object {
         private const val TAG = "[Numpad Model]"
@@ -38,6 +40,12 @@ open class NumpadModel @UiThread constructor(
     fun onDigitClicked(value: String) {
         Log.i("$TAG Clicked on digit [$value]")
         onDigitClicked.invoke(value)
+
+        if (value.isNotEmpty()) {
+            coreContext.postOnCoreThread { core ->
+                coreContext.playDtmf(value[0])
+            }
+        }
     }
 
     fun onDigitLongClicked(value: String): Boolean {
@@ -50,6 +58,13 @@ open class NumpadModel @UiThread constructor(
     fun onBackspaceClicked() {
         Log.i("$TAG Clicked on backspace")
         onBackspaceClicked.invoke()
+    }
+
+    @UiThread
+    fun onBackspaceLongClicked(): Boolean {
+        Log.i("$TAG Long clicked on backspace, clearing input")
+        onClearClicked.invoke()
+        return true
     }
 
     @UiThread

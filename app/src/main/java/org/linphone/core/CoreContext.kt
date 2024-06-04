@@ -29,6 +29,7 @@ import android.media.AudioManager
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
+import android.provider.Settings
 import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
@@ -741,6 +742,15 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
             }
         } else {
             Log.e("$TAG Default account is null, do not touch friend lists subscription")
+        }
+    }
+
+    @WorkerThread
+    fun playDtmf(character: Char, duration: Int = 200) {
+        if (Settings.System.getInt(context.contentResolver, Settings.System.DTMF_TONE_WHEN_DIALING) != 0) {
+            core.playDtmf(character, duration)
+        } else {
+            Log.w("$TAG Numpad DTMF tones are disabled in system settings, not playing them")
         }
     }
 
