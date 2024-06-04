@@ -200,8 +200,6 @@
     <string name="help_dialog_update_available_title">Mise à jour disponible</string>
     <string name="help_dialog_update_available_message">Une nouvelle version %s est disponible. Voulez-vous mettre à jour ?</string>
     <string name="help_troubleshooting_title">Dépannage</string>
-    <string name="help_troubleshooting_debug_title">Activer/désactiver les messages dans ADB</string>
-    <string name="help_troubleshooting_debug_subtitle">Blah blah blah?</string> <!-- TODO -->
     <string name="help_troubleshooting_clean_logs">Nettoyer les journaux</string>
     <string name="help_troubleshooting_share_logs">Partager les journaux</string>
     <string name="help_troubleshooting_app_version_title">Version de l\'application</string>
@@ -312,8 +310,6 @@
     <string name="manage_account_e2e_encrypted_mode_interoperable_summary">Ce mode vous permet de profiter de toutes les fonctionnalités de &appName; tout en restant interopérable avec n’importe qu’elle autre service SIP.</string>
     <string name="manage_account_device_remove">Supprimer</string>
     <string name="manage_account_device_last_connection">Dernière connexion :</string>
-    <string name="manage_account_dialog_e2e_encrypted_mode_default_message">Blah</string> <!-- TODO -->
-    <string name="manage_account_dialog_e2e_encrypted_mode_interoperable_message">Blah</string> <!-- TODO -->
     <string name="manage_account_dialog_remove_account_title">Supprimer %s ?</string>
     <string name="manage_account_dialog_remove_account_message">Vous pouvez vous reconnecter à tout moment en cliquant sur "Ajouter un compte".Cependant toutes les informations stockées sur ce périphérique seront supprimées.</string>
 
@@ -598,7 +594,6 @@
 
     <string name="call_dialog_zrtp_validate_trust_title">Valider l\'appareil</string>
     <string name="call_dialog_zrtp_validate_trust_subtitle">Dites %s puis cliquez sur les lettres données par votre correspondant :</string>
-    <string name="call_dialog_zrtp_validate_trust_message">Blah</string> <!-- TODO FIXME -->
     <string name="call_dialog_zrtp_validate_trust_letters_do_not_match">Je ne trouve pas</string>
 
     <string name="call_audio_device_type_earpiece">Oreilette</string>

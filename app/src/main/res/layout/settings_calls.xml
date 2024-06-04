@@ -88,35 +88,6 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/settings_title_style"
-            android:onClick="@{() -> viewModel.toggleEnableVideoFec()}"
-            android:id="@+id/enable_fec_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="10dp"
-            android:text="@string/settings_calls_enable_fec_title"
-            android:maxLines="2"
-            android:ellipsize="end"
-            app:layout_constraintTop_toTopOf="@id/enable_fec_switch"
-            app:layout_constraintBottom_toBottomOf="@id/enable_fec_switch"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/enable_fec_switch"/>
-
-        <com.google.android.material.materialswitch.MaterialSwitch
-            style="@style/material_switch_style"
-            android:id="@+id/enable_fec_switch"
-            android:onClick="@{() -> viewModel.toggleEnableVideoFec()}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="16dp"
-            android:enabled="@{viewModel.videoEnabled}"
-            android:checked="@{viewModel.videoEnabled &amp;&amp; viewModel.videoFecEnabled}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/enable_video_switch" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/settings_title_style"
             android:onClick="@{() -> viewModel.toggleVibrateOnIncomingCalls()}"
             android:id="@+id/vibrate_title"
             android:visibility="@{viewModel.isVibrationAvailable ? View.VISIBLE : View.GONE}"
@@ -143,7 +114,7 @@
             android:layout_marginEnd="16dp"
             android:checked="@{viewModel.vibrateDuringIncomingCall}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/enable_fec_switch" />
+            app:layout_constraintTop_toBottomOf="@id/enable_video_switch" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/settings_title_style"

@@ -33,7 +33,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LifecycleOwner
 import org.linphone.R
-import org.linphone.databinding.DialogAccountModesExplanationBinding
 import org.linphone.databinding.DialogAssistantAcceptConditionsAndPolicyBinding
 import org.linphone.databinding.DialogAssistantCreateAccountConfirmPhoneNumberBinding
 import org.linphone.databinding.DialogCancelContactChangesBinding
@@ -112,28 +111,6 @@ class DialogUtils {
                 dialog.dismiss()
             }
 
-            return dialog
-        }
-
-        @UiThread
-        fun getAccountModeExplanationDialog(
-            context: Context,
-            defaultMode: Boolean
-        ): Dialog {
-            lateinit var dialog: Dialog
-
-            val binding: DialogAccountModesExplanationBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(context),
-                R.layout.dialog_account_modes_explanation,
-                null,
-                false
-            )
-            binding.defaultMode = defaultMode
-            binding.setDismissClickListener {
-                dialog.dismiss()
-            }
-
-            dialog = getDialog(context, binding)
             return dialog
         }
 

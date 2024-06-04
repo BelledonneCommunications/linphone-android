@@ -235,8 +235,6 @@
     <string name="help_dialog_update_available_title">Update available</string>
     <string name="help_dialog_update_available_message">A new version %s is available. Do you want to update?</string>
     <string name="help_troubleshooting_title">Troubleshooting</string>
-    <string name="help_troubleshooting_debug_title">Enable/disable printing logs in ADB</string>
-    <string name="help_troubleshooting_debug_subtitle">Blah blah blah?</string> <!-- TODO -->
     <string name="help_troubleshooting_clean_logs">Clean logs</string>
     <string name="help_troubleshooting_share_logs">Share logs</string>
     <string name="help_troubleshooting_app_version_title">App version</string>
@@ -347,8 +345,6 @@
     <string name="manage_account_e2e_encrypted_mode_interoperable_summary">This mode allows you to enjoy all &appName; features while staying interoperable with any SIP service through point-to-point encryption.</string>
     <string name="manage_account_device_remove">Remove</string>
     <string name="manage_account_device_last_connection">Last connection:</string>
-    <string name="manage_account_dialog_e2e_encrypted_mode_default_message">Blah</string> <!-- TODO -->
-    <string name="manage_account_dialog_e2e_encrypted_mode_interoperable_message">Blah</string> <!-- TODO -->
     <string name="manage_account_dialog_remove_account_title">Delete %s?</string>
     <string name="manage_account_dialog_remove_account_message">You can reconnect at any time by clicking “Add an account”. However, all data on this phone will be deleted.</string>
 
@@ -634,7 +630,6 @@
 
     <string name="call_dialog_zrtp_validate_trust_title">Validate the device</string>
     <string name="call_dialog_zrtp_validate_trust_subtitle">Say %s and click on the letters given by your correspondent:</string>
-    <string name="call_dialog_zrtp_validate_trust_message">Blah</string> <!-- TODO FIXME -->
     <string name="call_dialog_zrtp_validate_trust_letters_do_not_match">Letters don\'t match!</string>
 
     <string name="call_audio_device_type_earpiece">Earpiece</string>

@@ -26,11 +26,9 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
-import org.linphone.core.Factory
 import org.linphone.core.VersionUpdateCheckResult
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
@@ -48,8 +46,6 @@ class HelpViewModel @UiThread constructor() : GenericViewModel() {
     val appVersion = MutableLiveData<String>()
 
     val sdkVersion = MutableLiveData<String>()
-
-    val printLogInLogcatEnabled = MutableLiveData<Boolean>()
 
     val checkUpdateAvailable = MutableLiveData<Boolean>()
 
@@ -139,7 +135,6 @@ class HelpViewModel @UiThread constructor() : GenericViewModel() {
 
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
-            printLogInLogcatEnabled.postValue(corePreferences.printLogsInLogcat)
 
             val checkUpdateServerUrl = core.config.getString("misc", "version_check_url_root", "")
             checkUpdateAvailable.postValue(!checkUpdateServerUrl.isNullOrEmpty())
@@ -153,17 +148,6 @@ class HelpViewModel @UiThread constructor() : GenericViewModel() {
 
         coreContext.postOnCoreThread { core ->
             core.removeListener(coreListener)
-        }
-    }
-
-    @UiThread
-    fun togglePrintLogsInLogcat() {
-        val enabled = printLogInLogcatEnabled.value == false
-        printLogInLogcatEnabled.value = enabled
-
-        coreContext.postOnCoreThread {
-            corePreferences.printLogsInLogcat = enabled
-            Factory.instance().enableLogcatLogs(corePreferences.printLogsInLogcat)
         }
     }
 
