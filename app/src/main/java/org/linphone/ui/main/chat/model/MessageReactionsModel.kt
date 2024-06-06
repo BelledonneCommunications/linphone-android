@@ -93,7 +93,8 @@ class MessageReactionsModel @WorkerThread constructor(
             allReactions.add(
                 MessageBottomSheetParticipantModel(
                     reaction.fromAddress,
-                    body,
+                    reaction.body,
+                    -1,
                     isOurOwn
                 ) {
                     if (isOurOwn) {

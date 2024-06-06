@@ -101,10 +101,12 @@ class MessageDeliveryModel @WorkerThread constructor(
         errorModels.clear()
 
         for (participant in chatMessage.getParticipantsByImdnState(State.Displayed)) {
+            val timestamp = participant.stateChangeTime
             displayedModels.add(
                 MessageBottomSheetParticipantModel(
                     participant.participant.address,
-                    TimestampUtils.toString(participant.stateChangeTime)
+                    TimestampUtils.toString(timestamp),
+                    timestamp
                 )
             )
         }
@@ -117,10 +119,12 @@ class MessageDeliveryModel @WorkerThread constructor(
         )
 
         for (participant in chatMessage.getParticipantsByImdnState(State.DeliveredToUser)) {
+            val timestamp = participant.stateChangeTime
             deliveredModels.add(
                 MessageBottomSheetParticipantModel(
                     participant.participant.address,
-                    TimestampUtils.toString(participant.stateChangeTime)
+                    TimestampUtils.toString(timestamp),
+                    timestamp
                 )
             )
         }
@@ -133,10 +137,12 @@ class MessageDeliveryModel @WorkerThread constructor(
         )
 
         for (participant in chatMessage.getParticipantsByImdnState(State.Delivered)) {
+            val timestamp = participant.stateChangeTime
             sentModels.add(
                 MessageBottomSheetParticipantModel(
                     participant.participant.address,
-                    TimestampUtils.toString(participant.stateChangeTime)
+                    TimestampUtils.toString(timestamp),
+                    timestamp
                 )
             )
         }
@@ -149,10 +155,12 @@ class MessageDeliveryModel @WorkerThread constructor(
         )
 
         for (participant in chatMessage.getParticipantsByImdnState(State.NotDelivered)) {
+            val timestamp = participant.stateChangeTime
             errorModels.add(
                 MessageBottomSheetParticipantModel(
                     participant.participant.address,
-                    TimestampUtils.toString(participant.stateChangeTime)
+                    TimestampUtils.toString(timestamp),
+                    timestamp
                 )
             )
         }
@@ -163,6 +171,11 @@ class MessageDeliveryModel @WorkerThread constructor(
                 errorCount
             )
         )
+
+        displayedModels.sortBy { it.timestamp }
+        deliveredModels.sortBy { it.timestamp }
+        sentModels.sortBy { it.timestamp }
+        errorModels.sortBy { it.timestamp }
 
         Log.i("$TAG Message ID [${chatMessage.messageId}] is in state [${chatMessage.state}]")
         Log.i(

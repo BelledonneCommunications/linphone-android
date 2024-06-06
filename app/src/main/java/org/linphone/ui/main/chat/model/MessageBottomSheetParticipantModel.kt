@@ -27,6 +27,7 @@ import org.linphone.core.Address
 class MessageBottomSheetParticipantModel @WorkerThread constructor(
     address: Address,
     val value: String,
+    val timestamp: Long,
     val isOurOwnReaction: Boolean = false,
     val onClick: (() -> Unit)? = null
 ) {
