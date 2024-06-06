@@ -121,11 +121,10 @@ class CallActivity : GenericActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT) {
-                true // Force dark mode
-            }
-        )
+        val style = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT) {
+            true // Force dark mode
+        }
+        enableEdgeToEdge(style, style)
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.call_activity)
