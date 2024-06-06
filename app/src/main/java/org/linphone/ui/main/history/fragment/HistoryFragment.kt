@@ -143,7 +143,7 @@ class HistoryFragment : SlidingPaneChildFragment() {
                 sharedViewModel.forceRefreshCallLogsListEvent.value = Event(true)
 
                 (requireActivity() as GenericActivity).showGreenToast(
-                    getString(R.string.toast_call_history_deleted),
+                    getString(R.string.call_history_deleted_toast),
                     R.drawable.check
                 )
                 goBack()
@@ -180,7 +180,7 @@ class HistoryFragment : SlidingPaneChildFragment() {
         clipboard.setPrimaryClip(ClipData.newPlainText(label, value))
 
         (requireActivity() as GenericActivity).showGreenToast(
-            getString(R.string.toast_sip_address_copied_to_clipboard),
+            getString(R.string.sip_address_copied_to_clipboard_toast),
             R.drawable.check
         )
     }

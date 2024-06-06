@@ -64,7 +64,7 @@ class ConversationsListViewModel @UiThread constructor() : AbstractMainViewModel
 
                     showGreenToastEvent.postValue(
                         Event(
-                            Pair(R.string.toast_conversation_deleted, R.drawable.chat_teardrop_text)
+                            Pair(R.string.conversation_deleted_toast, R.drawable.chat_teardrop_text)
                         )
                     )
                 }

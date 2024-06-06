@@ -248,7 +248,7 @@ class MeetingFragment : SlidingPaneChildFragment() {
         clipboard.setPrimaryClip(ClipData.newPlainText(label, meetingSipUri))
 
         (requireActivity() as GenericActivity).showGreenToast(
-            getString(R.string.toast_meeting_address_copied_to_clipboard),
+            getString(R.string.meeting_address_copied_to_clipboard_toast),
             R.drawable.check
         )
     }

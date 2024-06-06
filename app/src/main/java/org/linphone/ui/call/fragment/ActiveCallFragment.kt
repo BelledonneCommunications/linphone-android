@@ -244,7 +244,7 @@ class ActiveCallFragment : GenericCallFragment() {
 
                         if (verified) {
                             (requireActivity() as GenericActivity).showBlueToast(
-                                getString(R.string.toast_call_can_be_trusted),
+                                getString(R.string.call_can_be_trusted_toast),
                                 R.drawable.trusted,
                                 doNotTint = true
                             )

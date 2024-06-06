@@ -546,7 +546,7 @@ class SendMessageInConversationViewModel @UiThread constructor() : GenericViewMo
                     showRedToastEvent.postValue(
                         Event(
                             Pair(
-                                R.string.toast_voice_recording_max_duration_reached,
+                                R.string.conversation_voice_recording_max_duration_reached_toast,
                                 R.drawable.warning_circle
                             )
                         )
@@ -616,7 +616,9 @@ class SendMessageInConversationViewModel @UiThread constructor() : GenericViewMo
         if (lowMediaVolume) {
             Log.w("$TAG Media volume is low, notifying user as they may not hear voice message")
             showRedToastEvent.postValue(
-                Event(Pair(R.string.toast_low_media_volume, R.drawable.speaker_slash))
+                Event(
+                    Pair(R.string.media_playback_low_volume_warning_toast, R.drawable.speaker_slash)
+                )
             )
         }
 

@@ -164,7 +164,7 @@ class ConversationDocumentsListFragment : SlidingPaneChildFragment() {
                 } catch (anfe: ActivityNotFoundException) {
                     Log.e("$TAG Can't open file [$path] in third party app: $anfe")
                     val message = getString(
-                        R.string.toast_no_app_registered_to_handle_content_type_error
+                        R.string.conversation_no_app_registered_to_handle_content_type_error_toast
                     )
                     val icon = R.drawable.file
                     (requireActivity() as GenericActivity).showRedToast(message, icon)

@@ -213,6 +213,7 @@ class HistoryViewModel @UiThread constructor() : GenericViewModel() {
                     Log.e(
                         "$TAG Account is in secure mode, can't chat with SIP address of different domain [${remote.asStringUriOnly()}]"
                     )
+                    // TODO: show error
                     return@postOnCoreThread
                 }
 

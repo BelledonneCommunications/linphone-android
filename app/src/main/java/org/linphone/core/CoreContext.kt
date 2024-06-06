@@ -155,7 +155,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
                 showGreenToastEvent.postValue(
                     Event(
                         Pair(
-                            org.linphone.R.string.toast_remote_provisioning_config_applied,
+                            org.linphone.R.string.remote_provisioning_config_applied_toast,
                             org.linphone.R.drawable.smiley
                         )
                     )
@@ -164,7 +164,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
                 showRedToastEvent.postValue(
                     Event(
                         Pair(
-                            org.linphone.R.string.toast_remote_provisioning_config_failed,
+                            org.linphone.R.string.remote_provisioning_config_failed_toast,
                             org.linphone.R.drawable.warning_circle
                         )
                     )
@@ -237,7 +237,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
             if (state == Call.State.Connected) {
                 val icon = org.linphone.R.drawable.phone_transfer
                 showGreenToastEvent.postValue(
-                    Event(Pair(org.linphone.R.string.toast_call_transfer_successful, icon))
+                    Event(Pair(org.linphone.R.string.call_transfer_successful_toast, icon))
                 )
             }
         }

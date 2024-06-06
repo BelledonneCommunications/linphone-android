@@ -422,7 +422,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
                     (view.parent as? ViewGroup)?.doOnPreDraw {
                         Log.e("$TAG Failed to find conversation, going back")
                         goBack()
-                        val message = getString(R.string.toast_cant_find_conversation_to_display)
+                        val message = getString(R.string.conversation_to_display_no_found_toast)
                         (requireActivity() as GenericActivity).showRedToast(
                             message,
                             R.drawable.warning_circle
@@ -1329,7 +1329,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
         } catch (anfe: ActivityNotFoundException) {
             Log.e("$TAG Can't open file [$path] in third party app: $anfe")
             val message = getString(
-                R.string.toast_no_app_registered_to_handle_content_type_error
+                R.string.conversation_no_app_registered_to_handle_content_type_error_toast
             )
             val icon = R.drawable.file
             (requireActivity() as MainActivity).showRedToast(message, icon)

@@ -134,7 +134,7 @@ class MeetingWaitingRoomFragment : GenericMainFragment() {
             it.consume {
                 Log.e("$TAG Error joining the conference!")
                 val message = getString(
-                    R.string.toast_failed_to_join_conference
+                    R.string.meeting_waiting_room_failed_to_join_toast
                 )
                 val icon = R.drawable.warning_circle
                 (requireActivity() as GenericActivity).showRedToast(message, icon)

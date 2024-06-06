@@ -97,7 +97,7 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
         override fun onParticipantAdded(chatRoom: ChatRoom, eventLog: EventLog) {
             Log.i("$TAG A participant has been added to the group [${chatRoom.subject}]")
             val message = AppUtils.getFormattedString(
-                R.string.toast_participant_added_to_conversation,
+                R.string.conversation_info_participant_added_to_conversation_toast,
                 getParticipant(eventLog)
             )
             showFormattedGreenToastEvent.postValue(Event(Pair(message, R.drawable.user_circle)))
@@ -110,7 +110,7 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
         override fun onParticipantRemoved(chatRoom: ChatRoom, eventLog: EventLog) {
             Log.i("$TAG A participant has been removed from the group [${chatRoom.subject}]")
             val message = AppUtils.getFormattedString(
-                R.string.toast_participant_removed_from_conversation,
+                R.string.conversation_info_participant_removed_from_conversation_toast,
                 getParticipant(eventLog)
             )
             showFormattedGreenToastEvent.postValue(Event(Pair(message, R.drawable.user_circle)))
@@ -126,12 +126,12 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
             )
             val message = if (eventLog.type == EventLog.Type.ConferenceParticipantSetAdmin) {
                 AppUtils.getFormattedString(
-                    R.string.toast_participant_has_been_granted_admin_rights,
+                    R.string.conversation_info_participant_has_been_granted_admin_rights_toast,
                     getParticipant(eventLog)
                 )
             } else {
                 AppUtils.getFormattedString(
-                    R.string.toast_participant_no_longer_has_admin_rights,
+                    R.string.conversation_info_participant_no_longer_has_admin_rights_toast,
                     getParticipant(eventLog)
                 )
             }
@@ -146,7 +146,7 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
                 "$TAG Conversation [${LinphoneUtils.getChatRoomId(chatRoom)}] has a new subject [${chatRoom.subject}]"
             )
             showGreenToastEvent.postValue(
-                Event(Pair(R.string.toast_conversation_subject_changed, R.drawable.check))
+                Event(Pair(R.string.conversation_subject_changed_toast, R.drawable.check))
             )
 
             subject.postValue(chatRoom.subject)
@@ -161,7 +161,7 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
                     showGreenToastEvent.postValue(
                         Event(
                             Pair(
-                                R.string.toast_conversation_ephemeral_messages_enabled,
+                                R.string.conversation_ephemeral_messages_enabled_toast,
                                 R.drawable.clock_countdown
                             )
                         )
@@ -171,7 +171,7 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
                     showGreenToastEvent.postValue(
                         Event(
                             Pair(
-                                R.string.toast_conversation_ephemeral_messages_disabled,
+                                R.string.conversation_ephemeral_messages_disabled_toast,
                                 R.drawable.clock_countdown
                             )
                         )
@@ -181,7 +181,7 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
                     showGreenToastEvent.postValue(
                         Event(
                             Pair(
-                                R.string.toast_conversation_ephemeral_messages_lifetime_changed,
+                                R.string.conversation_ephemeral_messages_lifetime_changed_toast,
                                 R.drawable.clock_countdown
                             )
                         )
@@ -466,7 +466,7 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
                         showRedToastEvent.postValue(
                             Event(
                                 Pair(
-                                    R.string.toast_failed_to_add_participant_to_group_conversation,
+                                    R.string.conversation_failed_to_add_participant_to_group_conversation_toast,
                                     R.drawable.warning_circle
                                 )
                             )

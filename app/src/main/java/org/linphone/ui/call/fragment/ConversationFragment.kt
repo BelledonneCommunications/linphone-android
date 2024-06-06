@@ -265,7 +265,7 @@ class ConversationFragment : GenericCallFragment() {
                     (view.parent as? ViewGroup)?.doOnPreDraw {
                         Log.e("$TAG Failed to find conversation, going back")
                         findNavController().popBackStack()
-                        val message = getString(R.string.toast_cant_find_conversation_to_display)
+                        val message = getString(R.string.conversation_to_display_no_found_toast)
                         (requireActivity() as GenericActivity).showRedToast(
                             message,
                             R.drawable.warning_circle

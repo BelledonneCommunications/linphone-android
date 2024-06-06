@@ -118,7 +118,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
                     (view.parent as? ViewGroup)?.doOnPreDraw {
                         Log.e("$TAG Failed to find conversation, going back")
                         goBack()
-                        val message = getString(R.string.toast_cant_find_conversation_to_display)
+                        val message = getString(R.string.conversation_to_display_no_found_toast)
                         (requireActivity() as GenericActivity).showRedToast(
                             message,
                             R.drawable.warning_circle
@@ -138,7 +138,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
                 Log.i("$TAG Group has been left, leaving conversation info...")
                 sharedViewModel.forceRefreshConversationInfo.value = Event(true)
                 goBack()
-                val message = getString(R.string.toast_group_conversation_left)
+                val message = getString(R.string.conversation_group_left_toast)
                 (requireActivity() as GenericActivity).showGreenToast(
                     message,
                     R.drawable.chat_teardrop_text
@@ -258,7 +258,9 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
                 sharedViewModel.showContactEvent.value = Event(refKey)
             } else {
                 Log.e("$TAG Can't go to contact page, friend ref key is null or empty!")
-                val message = getString(R.string.toast_cant_find_contact_to_display)
+                val message = getString(
+                    R.string.conversation_info_cant_find_contact_to_display_toast
+                )
                 (requireActivity() as GenericActivity).showRedToast(
                     message,
                     R.drawable.warning_circle
@@ -275,7 +277,9 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
                 sharedViewModel.showNewContactEvent.value = Event(true)
             } else {
                 Log.e("$TAG Can't add empty/null SIP URI to contacts!")
-                val message = getString(R.string.toast_no_address_to_add_to_contact)
+                val message = getString(
+                    R.string.conversation_info_no_address_to_add_to_contact_toast
+                )
                 (requireActivity() as GenericActivity).showRedToast(
                     message,
                     R.drawable.warning_circle
@@ -347,7 +351,9 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
                 sharedViewModel.showContactEvent.value = Event(friendRefKey)
             } else {
                 Log.e("$TAG Can't go to contact page, friend ref key is null or empty!")
-                val message = getString(R.string.toast_cant_find_contact_to_display)
+                val message = getString(
+                    R.string.conversation_info_cant_find_contact_to_display_toast
+                )
                 (requireActivity() as GenericActivity).showRedToast(
                     message,
                     R.drawable.warning_circle
@@ -365,7 +371,9 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
                 sharedViewModel.showNewContactEvent.value = Event(true)
             } else {
                 Log.e("$TAG Can't add empty/null SIP URI to contacts!")
-                val message = getString(R.string.toast_no_address_to_add_to_contact)
+                val message = getString(
+                    R.string.conversation_info_no_address_to_add_to_contact_toast
+                )
                 (requireActivity() as GenericActivity).showRedToast(
                     message,
                     R.drawable.warning_circle

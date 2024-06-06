@@ -179,7 +179,7 @@ class MainActivity : GenericActivity() {
                     // First remove any already existing connection error toast
                     removePersistentRedToast(tag)
 
-                    val message = getString(R.string.toast_default_account_connection_state_error)
+                    val message = getString(R.string.default_account_connection_state_error_toast)
                     showPersistentRedToast(message, R.drawable.warning_circle, tag)
                 } else {
                     removePersistentRedToast(tag)
@@ -189,7 +189,7 @@ class MainActivity : GenericActivity() {
 
         viewModel.showNewAccountToastEvent.observe(this) {
             it.consume {
-                val message = getString(R.string.toast_new_account_configured)
+                val message = getString(R.string.new_account_configured_toast)
                 showGreenToast(message, R.drawable.user_circle)
             }
         }

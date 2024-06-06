@@ -251,9 +251,9 @@ class ContactFragment : SlidingPaneChildFragment() {
         clipboard.setPrimaryClip(ClipData.newPlainText(label, value))
 
         val message = if (isSip) {
-            getString(R.string.toast_sip_address_copied_to_clipboard)
+            getString(R.string.sip_address_copied_to_clipboard_toast)
         } else {
-            getString(R.string.toast_phone_number_copied_to_clipboard)
+            getString(R.string.contact_details_phone_number_copied_to_clipboard_toast)
         }
         (requireActivity() as GenericActivity).showGreenToast(
             message,

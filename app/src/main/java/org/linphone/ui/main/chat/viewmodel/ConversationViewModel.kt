@@ -865,7 +865,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
                     showGreenToastEvent.postValue(
                         Event(
                             Pair(
-                                R.string.toast_file_successfully_exported_to_documents,
+                                R.string.file_successfully_exported_to_documents_toast,
                                 R.drawable.check
                             )
                         )
@@ -875,7 +875,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
                     showRedToastEvent.postValue(
                         Event(
                             Pair(
-                                R.string.toast_export_file_to_documents_error,
+                                R.string.export_file_to_documents_error_toast,
                                 R.drawable.warning_circle
                             )
                         )

@@ -181,7 +181,7 @@ class RecordingsListFragment : GenericMainFragment() {
                         "$TAG File [$filePath] has been successfully exported to MediaStore"
                     )
                     val message = AppUtils.getString(
-                        R.string.toast_file_successfully_exported_to_media_store
+                        R.string.file_successfully_exported_to_media_store_toast
                     )
                     (requireActivity() as GenericActivity).showGreenToast(
                         message,
@@ -192,7 +192,7 @@ class RecordingsListFragment : GenericMainFragment() {
                         "$TAG Failed to export file [$filePath] to MediaStore!"
                     )
                     val message = AppUtils.getString(
-                        R.string.toast_export_file_to_media_store_error
+                        R.string.export_file_to_media_store_error_toast
                     )
                     (requireActivity() as GenericActivity).showRedToast(
                         message,

@@ -230,7 +230,7 @@ class AccountProfileFragment : GenericMainFragment() {
     private fun copyAddressToClipboard(value: String) {
         val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         clipboard.setPrimaryClip(ClipData.newPlainText("SIP address", value))
-        val message = getString(R.string.toast_sip_address_copied_to_clipboard)
+        val message = getString(R.string.sip_address_copied_to_clipboard_toast)
         (requireActivity() as GenericActivity).showGreenToast(
             message,
             R.drawable.check

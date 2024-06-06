@@ -129,22 +129,22 @@ class LinphoneUtils {
             )
             return when (errorInfo.reason) {
                 Reason.Busy -> {
-                    AppUtils.getString(R.string.toast_call_error_user_busy)
+                    AppUtils.getString(R.string.call_error_user_busy_toast)
                 }
                 Reason.IOError -> {
-                    AppUtils.getString(R.string.toast_call_error_io_error)
+                    AppUtils.getString(R.string.call_error_io_error_toast)
                 }
                 Reason.NotAcceptable -> {
-                    AppUtils.getString(R.string.toast_call_error_incompatible_media_params)
+                    AppUtils.getString(R.string.call_error_incompatible_media_params_toast)
                 }
                 Reason.NotFound -> {
-                    AppUtils.getString(R.string.toast_call_error_user_not_found)
+                    AppUtils.getString(R.string.call_error_user_not_found_toast)
                 }
                 Reason.ServerTimeout -> {
-                    AppUtils.getString(R.string.toast_call_error_server_timeout)
+                    AppUtils.getString(R.string.call_error_server_timeout_toast)
                 }
                 Reason.TemporarilyUnavailable -> {
-                    AppUtils.getString(R.string.toast_call_error_temporarily_unavailable)
+                    AppUtils.getString(R.string.call_error_temporarily_unavailable_toast)
                 }
                 else -> {
                     "${errorInfo.protocolCode} / ${errorInfo.phrase}"

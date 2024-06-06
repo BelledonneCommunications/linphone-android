@@ -37,6 +37,7 @@
     <string name="web_platform_forgotten_password_url" translatable="false">https://subscribe.linphone.org/</string>
     <string name="website_translate_weblate_url" translatable="false">https://weblate.linphone.org/</string>
     <string name="website_open_source_licences_usage_url" translatable="false">https://wiki.linphone.org/xwiki/wiki/public/view/Linphone/Third%20party%20components%20/#Hlinphone-android</string>
+    <string name="conversation_end_to_end_encrypted_bottom_sheet_link" translatable="false"><u>https://linphone.org/security</u></string>
 
     <string name="conversation_one_to_one_hidden_subject" translatable="false">Dummy subject</string>
 
@@ -103,53 +104,17 @@
     <string name="welcome_page_3_title">Open source</string>
     <string name="welcome_page_3_message">A <b>free</b> and open source application since <b>2001</b>.</string>
 
-    <string name="toast_assistant_qr_code_invalid">Invalid QR code!</string>
-    <string name="toast_sip_address_copied_to_clipboard">SIP address copied into clipboard</string>
-    <string name="toast_meeting_address_copied_to_clipboard">Meeting address copied into clipboard</string>
-    <string name="toast_phone_number_copied_to_clipboard">Number copied into clipboard</string>
-    <string name="toast_call_history_deleted">History has been deleted</string>
-    <string name="toast_call_can_be_trusted">This call can be trusted</string>
-    <string name="toast_new_account_configured">Connection successful</string>
-    <string name="toast_default_account_connection_state_error">Connection error!</string>
-    <string name="toast_file_successfully_exported_to_media_store">File has been exported to native gallery</string>
-    <string name="toast_export_file_to_media_store_error">Error trying to export file to native gallery</string>
-    <string name="toast_file_successfully_exported_to_documents">File has been exported to documents</string>
-    <string name="toast_export_file_to_documents_error">Error trying to export file to documents</string>
-    <string name="toast_participant_added_to_conversation">%s joined the conversation</string>
-    <string name="toast_participant_removed_from_conversation">%s left the conversation</string>
-    <string name="toast_participant_has_been_granted_admin_rights">%s is now admin</string>
-    <string name="toast_participant_no_longer_has_admin_rights">%s is no longer admin</string>
-    <string name="toast_conversation_subject_changed">Conversation subject has changed</string>
-    <string name="toast_conversation_ephemeral_messages_enabled">Ephemeral messages have been enabled</string>
-    <string name="toast_conversation_ephemeral_messages_disabled">Ephemeral messages have been disabled</string>
-    <string name="toast_conversation_ephemeral_messages_lifetime_changed">Ephemeral messages lifetime changed</string>
-    <string name="toast_cant_find_contact_to_display">Contact was not found</string>
-    <string name="toast_no_address_to_add_to_contact">No address to add to contact</string>
-    <string name="toast_cant_find_conversation_to_display">Conversation was not found</string>
-    <string name="toast_voice_recording_max_duration_reached">Max duration reached</string>
-    <string name="toast_failed_to_add_participant_to_group_conversation">Failed to add participant(s) to conversation</string>
-    <string name="toast_conversation_deleted">Conversation was successfully deleted</string>
-    <string name="toast_group_conversation_left">You have left the group</string>
-    <string name="toast_low_media_volume">Media volume is low, you may not hear anything!</string>
-    <string name="toast_no_app_registered_to_handle_content_type_error">No app found to open this kind of file</string>
-    <plurals name="toast_files_waiting_to_be_shared">
-        <item quantity="one">%s file waiting to be shared</item>
-        <item quantity="other">%s files waiting to be shared</item>
-    </plurals>
-    <string name="toast_text_waiting_to_be_shared">Text is waiting to be shared</string>
-    <string name="toast_message_waiting_to_be_forwarded">A message is waiting to be forwarded</string>
-    <string name="toast_call_transfer_in_progress">Call is being transferred</string>
-    <string name="toast_call_transfer_successful">Call has been successfully transferred</string>
-    <string name="toast_call_transfer_failed">Call transfer failed!</string>
-    <string name="toast_failed_to_join_conference">Failed to join conference!</string>
-    <string name="toast_remote_provisioning_config_applied">Configuration successfully applied</string>
-    <string name="toast_remote_provisioning_config_failed">Error while trying to download and apply remote configuration</string>
-    <string name="toast_call_error_user_busy">User is busy</string>
-    <string name="toast_call_error_user_not_found">User has not been found</string>
-    <string name="toast_call_error_incompatible_media_params">Incompatible media parameters</string>
-    <string name="toast_call_error_io_error">Service unavailable or network error</string>
-    <string name="toast_call_error_server_timeout">Server timeout</string>
-    <string name="toast_call_error_temporarily_unavailable">Temporarily unavailable</string>
+    <!-- Generic toasts -->
+    <string name="sip_address_copied_to_clipboard_toast">SIP address copied into clipboard</string>
+    <string name="new_account_configured_toast">Connection successful</string>
+    <string name="default_account_connection_state_error_toast">Connection error!</string>
+    <string name="file_successfully_exported_to_media_store_toast">File has been exported to native gallery</string>
+    <string name="export_file_to_media_store_error_toast">Error trying to export file to native gallery</string>
+    <string name="file_successfully_exported_to_documents_toast">File has been exported to documents</string>
+    <string name="export_file_to_documents_error_toast">Error trying to export file to documents</string>
+    <string name="media_playback_low_volume_warning_toast">Media volume is low, you may not hear anything!</string>
+    <string name="remote_provisioning_config_applied_toast">Configuration successfully applied</string>
+    <string name="remote_provisioning_config_failed_toast">Error while trying to download and apply remote configuration</string>
 
     <!-- Assistant related string (account register / login / etc...) -->
     <string name="assistant_dialog_general_terms_and_privacy_policy_title">General terms &amp; privacy policy</string>
@@ -160,6 +125,7 @@
     <string name="assistant_dialog_confirm_phone_number_message">Are you sure you want to use this phone number?</string>
     <string name="assistant_account_login">Login</string>
     <string name="assistant_scan_qr_code">Scan QR code</string>
+    <string name="assistant_qr_code_invalid_toast">Invalid QR code!</string>
     <string name="assistant_login_third_party_sip_account">Use a third party SIP account</string>
     <string name="assistant_login_using_single_sign_on">Single sign on</string>
     <string name="assistant_login_cant_parse_address_toast">SIP address is invalid!</string>
@@ -423,6 +389,7 @@
     <string name="contact_details_delete">Delete</string>
     <string name="contact_sms_invite_content">Hello, join me on &appName;! You can download it for free at %s</string>
     <string name="contact_deleted_toast">Contact has been removed</string>
+    <string name="contact_details_phone_number_copied_to_clipboard_toast">Number copied into clipboard</string>
 
     <string name="contact_dialog_increase_trust_level_title">Increase trust level</string>
     <string name="contact_dialog_increase_trust_level_message">You\'re about to make a call to $1%s\'s device $2%s.\nDo you want to make the call?</string>
@@ -448,6 +415,13 @@
     <string name="conversations_list_empty">No conversation for the moment…</string>
     <string name="conversations_list_is_being_removed_label">Removal in progress…</string>
     <string name="conversations_last_message_format">%s:</string>
+    <string name="conversations_message_waiting_to_be_forwarded_toast">A message is waiting to be forwarded</string>
+    <plurals name="conversations_files_waiting_to_be_shared_toast">
+        <item quantity="one">%s file waiting to be shared</item>
+        <item quantity="other">%s files waiting to be shared</item>
+    </plurals>
+    <string name="conversations_text_waiting_to_be_shared_toast">Text is waiting to be shared</string>
+
     <string name="conversation_action_mark_as_read">Mark as read</string>
     <string name="conversation_action_mute">Mute</string>
     <string name="conversation_action_unmute">Un-mute</string>
@@ -490,7 +464,6 @@
     <string name="conversation_end_to_end_encrypted_event_subtitle">Messages in this conversation are e2e encrypted. Only your correspondent can decrypt them.</string>
     <string name="conversation_end_to_end_encrypted_bottom_sheet_title">Guaranteed confidentiality</string>
     <string name="conversation_end_to_end_encrypted_bottom_sheet_message">Thanks to end-to-end encryption technology in &appName;, messages, calls and meetings confidentiality are guaranteed. No-one can decrypt exchanged data, not even ourselves.</string>
-    <string name="conversation_end_to_end_encrypted_bottom_sheet_link"><u>https://linphone.org/security</u></string>
     <string name="conversation_warning_disabled_because_not_secured_title">This conversation is not encrypted!</string>
     <string name="conversation_warning_disabled_because_not_secured_subtitle">For your safety, this conversation was disabled.</string>
     <string name="conversation_warning_disabled_encrypted_bottom_sheet_title">Mandatory encryption</string>
@@ -509,6 +482,16 @@
     <string name="conversation_failed_to_create_toast">Failed to create conversation!</string>
     <string name="conversation_invalid_participant_due_to_security_mode_toast">Can\'t create conversation with a participant not on the same domain due to security restrictions!</string>
     <string name="conversation_media_not_found_toast">Selected media wasn\'t found</string>
+    <string name="conversation_subject_changed_toast">Conversation subject has changed</string>
+    <string name="conversation_ephemeral_messages_enabled_toast">Ephemeral messages have been enabled</string>
+    <string name="conversation_ephemeral_messages_disabled_toast">Ephemeral messages have been disabled</string>
+    <string name="conversation_ephemeral_messages_lifetime_changed_toast">Ephemeral messages lifetime changed</string>
+    <string name="conversation_voice_recording_max_duration_reached_toast">Max duration reached</string>
+    <string name="conversation_failed_to_add_participant_to_group_conversation_toast">Failed to add participant(s) to conversation</string>
+    <string name="conversation_deleted_toast">Conversation was successfully deleted</string>
+    <string name="conversation_group_left_toast">You have left the group</string>
+    <string name="conversation_no_app_registered_to_handle_content_type_error_toast">No app found to open this kind of file</string>
+    <string name="conversation_to_display_no_found_toast">Conversation was not found</string>
 
     <string name="conversation_info_participants_list_title">Group members</string>
     <string name="conversation_info_add_participants_label">Add participants</string>
@@ -522,6 +505,12 @@
     <string name="conversation_info_dialog_delete_all_call_logs_title">Do you really want to delete all messages?</string>
     <string name="conversation_info_dialog_delete_all_message">All messages will be removed from the history</string>
     <string name="conversation_info_history_deleted_toast">History has been successfully deleted</string>
+    <string name="conversation_info_participant_added_to_conversation_toast">%s joined the conversation</string>
+    <string name="conversation_info_participant_removed_from_conversation_toast">%s left the conversation</string>
+    <string name="conversation_info_participant_has_been_granted_admin_rights_toast">%s is now admin</string>
+    <string name="conversation_info_participant_no_longer_has_admin_rights_toast">%s is no longer admin</string>
+    <string name="conversation_info_cant_find_contact_to_display_toast">Contact was not found</string>
+    <string name="conversation_info_no_address_to_add_to_contact_toast">No address to add to contact</string>
 
     <string name="conversation_event_conference_created">You have joined the group</string>
     <string name="conversation_event_conference_destroyed">You have left the group</string>
@@ -585,11 +574,13 @@
     <string name="meeting_schedule_mandatory_field_not_filled_toast">A least a mandatory field wasn\'t filled</string>
     <string name="meeting_failed_to_send_invites_toast">Failed to send all invites to meeting!</string>
     <string name="meeting_failed_to_send_part_of_invites_toast">Failed to send invites to some participants of the meeting!</string>
+    <string name="meeting_address_copied_to_clipboard_toast">Meeting address copied into clipboard</string>
 
     <string name="meeting_waiting_room_join">Join</string>
     <string name="meeting_waiting_room_cancel">Cancel</string>
     <string name="meeting_waiting_room_joining_title">Connection in progress</string>
     <string name="meeting_waiting_room_joining_subtitle">You\'ll be joining in a short moment</string>
+    <string name="meeting_waiting_room_failed_to_join_toast">Failed to join meeting!</string>
 
     <!-- Call related -->
     <string name="call_outgoing">Outgoing call</string>
@@ -654,6 +645,18 @@
     <string name="call_stats_zrtp_hash_algo">Hash algorithm: %s</string>
     <string name="call_stats_zrtp_auth_tag_algo">Authentication algorithm: %s</string>
     <string name="call_stats_zrtp_sas_algo">SAS algorithm: %s</string>
+
+    <string name="call_history_deleted_toast">History has been deleted</string>
+    <string name="call_can_be_trusted_toast">This call can be trusted</string>
+    <string name="call_transfer_in_progress_toast">Call is being transferred</string>
+    <string name="call_transfer_successful_toast">Call has been successfully transferred</string>
+    <string name="call_transfer_failed_toast">Call transfer failed!</string>
+    <string name="call_error_user_busy_toast">User is busy</string>
+    <string name="call_error_user_not_found_toast">User has not been found</string>
+    <string name="call_error_incompatible_media_params_toast">Incompatible media parameters</string>
+    <string name="call_error_io_error_toast">Service unavailable or network error</string>
+    <string name="call_error_server_timeout_toast">Server timeout</string>
+    <string name="call_error_temporarily_unavailable_toast">Temporarily unavailable</string>
 
     <!-- Conference (in-call) -->
     <string name="conference_share_link_title">Share invitation</string>

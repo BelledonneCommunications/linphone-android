@@ -121,7 +121,9 @@ class RecordingMediaPlayerViewModel @UiThread constructor() : GenericViewModel()
         if (lowMediaVolume) {
             Log.w("$TAG Media volume is low, notifying user as they may not hear voice message")
             showRedToastEvent.postValue(
-                Event(Pair(R.string.toast_low_media_volume, R.drawable.speaker_slash))
+                Event(
+                    Pair(R.string.media_playback_low_volume_warning_toast, R.drawable.speaker_slash)
+                )
             )
         }
 
