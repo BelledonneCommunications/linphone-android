@@ -56,9 +56,8 @@ class EventLogModel @WorkerThread constructor(
             val replyMessage = chatMessage.replyMessage
             if (replyMessage != null) {
                 val from = replyMessage.fromAddress
-                replyTo = coreContext.contactsManager.findContactByAddress(from)?.name ?: LinphoneUtils.getDisplayName(
-                    from
-                )
+                val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(from)
+                replyTo = avatarModel.contactName ?: LinphoneUtils.getDisplayName(from)
 
                 LinphoneUtils.getTextDescribingMessage(replyMessage)
             } else {
