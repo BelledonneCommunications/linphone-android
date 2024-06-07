@@ -22,4 +22,12 @@
     <entry name="rtp_bundle" overwrite="true">1</entry>
     <entry name="lime_server_url" overwrite="true"></entry>
   </section>
+  <section name="nat_policy_default_values">
+    <entry name="stun_server" overwrite="true">stun.linphone.org</entry>
+    <entry name="protocols" overwrite="true">stun,ice</entry>
+  </section>
+  <section name="sip">
+    <entry name="media_encryption">srtp</entry>
+    <entry name="media_encryption_mandatory" overwrite="true">0</entry>
+  </section>
 </config>

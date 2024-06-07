@@ -778,7 +778,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         val deviceName = AppUtils.getDeviceName(context)
         val appName = context.getString(org.linphone.R.string.app_name)
         val androidVersion = BuildConfig.VERSION_NAME
-        val userAgent = "$appName/$androidVersion ($deviceName) LinphoneSDK"
+        val userAgent = "${appName}Android/$androidVersion ($deviceName) LinphoneSDK"
         val sdkVersion = context.getString(R.string.linphone_sdk_version)
         val sdkBranch = context.getString(R.string.linphone_sdk_branch)
         val sdkUserAgent = "$sdkVersion ($sdkBranch)"

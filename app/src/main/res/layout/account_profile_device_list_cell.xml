@@ -22,12 +22,15 @@
             android:id="@+id/name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="23dp"
+            android:layout_marginStart="15dp"
             android:layout_marginTop="34dp"
             android:layout_marginEnd="5dp"
             android:text="@{model.name, default=`Pixel 6 Pro`}"
             android:maxLines="1"
             android:ellipsize="end"
+            android:drawableStart="@{model.isMobileDevice ? @drawable/device_mobile_camera : @drawable/desktop, default=@drawable/device_mobile_camera}"
+            android:drawablePadding="6dp"
+            app:drawableTint="?attr/color_main2_700"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/remove"/>
@@ -60,29 +63,30 @@
             android:id="@+id/last_connection"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="23dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
             android:text="@string/manage_account_device_last_connection"
             app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintTop_toBottomOf="@id/name"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/last_connection_date"/>
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
             android:id="@+id/last_connection_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="10dp"
             android:text="@{model.lastConnectionDate, default=`03/10/2023`}"
             android:textSize="14sp"
             android:textColor="?attr/color_main2_600"
             android:drawableStart="@drawable/calendar_blank"
             android:drawablePadding="6dp"
-            app:layout_constraintTop_toTopOf="@id/last_connection"
-            app:layout_constraintBottom_toBottomOf="@id/last_connection"
-            app:layout_constraintStart_toEndOf="@id/last_connection"
+            app:drawableTint="?attr/color_main2_700"
+            app:layout_constraintTop_toBottomOf="@id/last_connection"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/last_connection_time"/>
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -90,16 +94,17 @@
             android:id="@+id/last_connection_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
             android:text="@{model.lastConnectionTime, default=`9h25`}"
             android:textSize="14sp"
             android:textColor="?attr/color_main2_600"
             android:drawableStart="@drawable/clock"
             android:drawablePadding="6dp"
-            app:layout_constraintTop_toTopOf="@id/last_connection"
-            app:layout_constraintBottom_toBottomOf="@id/last_connection"
-            app:layout_constraintStart_toEndOf="@id/last_connection_date"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:drawableTint="?attr/color_main2_700"
+            app:layout_constraintTop_toBottomOf="@id/last_connection"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/last_connection_date"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

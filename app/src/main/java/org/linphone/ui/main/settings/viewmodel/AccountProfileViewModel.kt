@@ -20,11 +20,19 @@
 package org.linphone.ui.main.settings.viewmodel
 
 import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
+import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.R
 import org.linphone.core.Account
+import org.linphone.core.AccountDevice
+import org.linphone.core.AccountManagerServices
+import org.linphone.core.AccountManagerServicesRequest
+import org.linphone.core.AccountManagerServicesRequestListenerStub
 import org.linphone.core.DialPlan
+import org.linphone.core.Dictionary
 import org.linphone.core.Factory
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
@@ -62,6 +70,8 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
 
     val expandDevices = MutableLiveData<Boolean>()
 
+    val devicesAvailable = MutableLiveData<Boolean>()
+
     val hideAccountSettings = MutableLiveData<Boolean>()
 
     val accountRemovedEvent: MutableLiveData<Event<Boolean>> by lazy {
@@ -70,9 +80,72 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
 
     private lateinit var account: Account
 
+    private lateinit var accountManagerServices: AccountManagerServices
+
+    private val accountManagerServicesListener = object : AccountManagerServicesRequestListenerStub() {
+        @WorkerThread
+        override fun onDevicesListFetched(
+            request: AccountManagerServicesRequest,
+            accountDevices: Array<out AccountDevice>
+        ) {
+            Log.i("$TAG Fetched [${accountDevices.size}] devices for our account")
+            val devicesList = arrayListOf<AccountDeviceModel>()
+            for (accountDevice in accountDevices) {
+                devicesList.add(
+                    AccountDeviceModel(accountDevice) { device ->
+                        if (::accountManagerServices.isInitialized) {
+                            val identityAddress = account.params.identityAddress
+                            if (identityAddress != null) {
+                                Log.i(
+                                    "$TAG Removing device with name [${device.name}] and uuid [${device.uuid}]"
+                                )
+                                val deleteRequest = accountManagerServices.createDeleteDeviceRequest(
+                                    identityAddress,
+                                    device
+                                )
+                                deleteRequest.addListener(this)
+                                deleteRequest.submit()
+                            } else {
+                                Log.e("$TAG Account identity address is null, can't delete device!")
+                            }
+                        }
+                    }
+                )
+            }
+            devices.postValue(devicesList)
+        }
+
+        @WorkerThread
+        override fun onRequestError(
+            request: AccountManagerServicesRequest,
+            statusCode: Int,
+            errorMessage: String?,
+            parameterErrors: Dictionary?
+        ) {
+            Log.e(
+                "$TAG Request [${request.type}] returned an error with status code [$statusCode] and message [$errorMessage]"
+            )
+            if (!errorMessage.isNullOrEmpty()) {
+                when (request.type) {
+                    AccountManagerServicesRequest.Type.GetDevicesList, AccountManagerServicesRequest.Type.DeleteDevice -> {
+                        showFormattedRedToastEvent.postValue(
+                            Event(
+                                Pair(
+                                    errorMessage,
+                                    R.drawable.warning_circle
+                                )
+                            )
+                        )
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
+
     init {
         expandDetails.value = true
-        expandDevices.value = false // TODO: set to true when feature will be available
+        expandDevices.value = false
 
         coreContext.postOnCoreThread { core ->
             hideAccountSettings.postValue(corePreferences.hideAccountSettings)
@@ -92,7 +165,7 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
     override fun onCleared() {
         super.onCleared()
 
-        coreContext.postOnCoreThread { core ->
+        coreContext.postOnCoreThread {
             accountModel.value?.destroy()
         }
     }
@@ -113,9 +186,30 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
                 sipAddress.postValue(account.params.identityAddress?.asStringUriOnly())
                 displayName.postValue(account.params.identityAddress?.displayName)
 
-                val devicesList = arrayListOf<AccountDeviceModel>()
-                // TODO FIXME: use real devices list from API, not implemented yet
-                devices.postValue(devicesList)
+                val identityAddress = account.params.identityAddress
+                if (identityAddress != null) {
+                    val domain = identityAddress.domain
+                    val defaultDomain = corePreferences.defaultDomain
+                    devicesAvailable.postValue(domain == defaultDomain)
+                    if (domain == defaultDomain) {
+                        Log.i(
+                            "$TAG Request list of known devices for account [${identityAddress.asStringUriOnly()}]"
+                        )
+                        accountManagerServices = core.createAccountManagerServices()
+                        accountManagerServices.language = Locale.getDefault().language // Returns en, fr, etc...
+                        val request = accountManagerServices.createGetDevicesListRequest(
+                            identityAddress
+                        )
+                        request.addListener(accountManagerServicesListener)
+                        request.submit()
+                    } else {
+                        Log.i(
+                            "$TAG Account with domain [$domain] can't get devices list, only works with [$defaultDomain] domain"
+                        )
+                    }
+                } else {
+                    Log.e("$TAG No identity address found!")
+                }
 
                 val prefix = account.params.internationalPrefix
                 val isoCountryCode = account.params.internationalPrefixIsoCountryCode

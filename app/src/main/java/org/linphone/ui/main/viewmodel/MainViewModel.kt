@@ -253,14 +253,12 @@ class MainViewModel @UiThread constructor() : ViewModel() {
 
         @WorkerThread
         override fun onAccountRemoved(core: Core, account: Account) {
-            accountsFound -= 1
-
-            if (core.defaultAccount == null) {
-                Log.i(
-                    "$TAG Default account was removed, setting first available account (if any) as default"
-                )
-                core.defaultAccount = core.accountList.firstOrNull()
-            }
+            Log.w(
+                "$TAG Account [${account.params.identityAddress?.asStringUriOnly()}] has been removed!"
+            )
+            removeAlert(NON_DEFAULT_ACCOUNT_NOT_CONNECTED)
+            core.refreshRegisters()
+            computeNonDefaultAccountNotificationsCount()
         }
     }
 

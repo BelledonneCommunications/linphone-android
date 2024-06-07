@@ -69,9 +69,8 @@ class RegisterCodeConfirmationFragment : GenericFragment() {
         viewModel.accountCreatedEvent.observe(viewLifecycleOwner) {
             it.consume {
                 val identity = viewModel.username.value.orEmpty()
-                Log.i("$TAG Account [$identity] has been created")
-                val action = RegisterCodeConfirmationFragmentDirections.actionRegisterCodeConfirmationFragmentToLandingFragment()
-                findNavController().navigate(action)
+                Log.i("$TAG Account [$identity] has been created, leaving assistant")
+                requireActivity().finish()
             }
         }
 

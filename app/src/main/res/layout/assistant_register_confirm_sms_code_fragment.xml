@@ -178,6 +178,7 @@
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style_600"
                 android:id="@+id/wrong_number"
+                android:onClick="@{backClickListener}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="51dp"

@@ -268,7 +268,7 @@
                     app:layout_constraintBottom_toBottomOf="@id/password" />
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:onClick="@{() -> viewModel.confirmPhoneNumber()}"
+                    android:onClick="@{() -> viewModel.phoneNumberConfirmedByUser()}"
                     android:enabled="@{viewModel.createEnabled &amp;&amp; viewModel.pushNotificationsAvailable &amp;&amp; !viewModel.operationInProgress, default=false}"
                     style="@style/primary_button_label_style"
                     android:id="@+id/create"

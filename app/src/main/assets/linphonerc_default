@@ -25,8 +25,6 @@ automatically_accept_direction=2 #receive only
 
 [app]
 tunnel=disabled
-auto_start=1
-record_aware=1
 auto_download_incoming_voice_recordings=1
 auto_download_incoming_icalendars=1
 

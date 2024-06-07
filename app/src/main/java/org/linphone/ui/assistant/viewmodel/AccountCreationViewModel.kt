@@ -24,6 +24,7 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import java.util.Locale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -32,15 +33,16 @@ import kotlinx.coroutines.withContext
 import org.json.JSONException
 import org.json.JSONObject
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
-import org.linphone.core.AccountCreator
-import org.linphone.core.AccountCreator.PhoneNumberStatus
-import org.linphone.core.AccountCreator.UsernameStatus
-import org.linphone.core.AccountCreatorListenerStub
+import org.linphone.core.Account
+import org.linphone.core.AccountManagerServices
+import org.linphone.core.AccountManagerServicesRequest
+import org.linphone.core.AccountManagerServicesRequestListenerStub
+import org.linphone.core.AuthInfo
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.DialPlan
+import org.linphone.core.Dictionary
 import org.linphone.core.Factory
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
@@ -51,6 +53,9 @@ import org.linphone.utils.LinphoneUtils
 class AccountCreationViewModel @UiThread constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Account Creation ViewModel]"
+
+        private const val TIME_TO_WAIT_FOR_PUSH_NOTIFICATION_WITH_ACCOUNT_CREATION_TOKEN = 5000
+        private const val HASH_ALGORITHM = "SHA-256"
     }
 
     val username = MutableLiveData<String>()
@@ -88,6 +93,7 @@ class AccountCreationViewModel @UiThread constructor() : GenericViewModel() {
 
     val operationInProgress = MutableLiveData<Boolean>()
 
+    private var normalizedPhoneNumber: String? = null
     val normalizedPhoneNumberEvent = MutableLiveData<Event<String>>()
 
     val goToSmsCodeConfirmationViewEvent = MutableLiveData<Event<Boolean>>()
@@ -101,130 +107,101 @@ class AccountCreationViewModel @UiThread constructor() : GenericViewModel() {
     private var waitingForFlexiApiPushToken = false
     private var waitForPushJob: Job? = null
 
-    private lateinit var accountCreator: AccountCreator
+    private lateinit var accountManagerServices: AccountManagerServices
+    private var accountCreationToken: String? = null
 
-    private val accountCreatorListener = object : AccountCreatorListenerStub() {
+    private var accountCreatedAuthInfo: AuthInfo? = null
+    private var accountCreated: Account? = null
+
+    private val accountManagerServicesListener = object : AccountManagerServicesRequestListenerStub() {
         @WorkerThread
-        override fun onIsAccountExist(
-            creator: AccountCreator,
-            status: AccountCreator.Status,
-            response: String?
+        override fun onRequestSuccessful(
+            request: AccountManagerServicesRequest,
+            data: String?
         ) {
-            Log.i("$TAG onIsAccountExist status [$status] ($response)")
-
-            when (status) {
-                AccountCreator.Status.AccountExist, AccountCreator.Status.AccountExistWithAlias -> {
-                    operationInProgress.postValue(false)
-                    createEnabled.postValue(false)
-
-                    val error = AppUtils.getString(
-                        R.string.assistant_account_register_username_already_in_use_error
-                    )
-                    usernameError.postValue(error)
-                }
-                AccountCreator.Status.AccountNotExist -> {
-                    operationInProgress.postValue(false)
-                    checkPhoneNumber()
-                }
-                else -> {
-                    Log.e("$TAG An unexpected error occurred!")
-                    operationInProgress.postValue(false)
-                    createEnabled.postValue(false)
-
-                    phoneNumberError.postValue(
-                        AppUtils.getString(
-                            R.string.assistant_account_register_invalid_phone_number_error
-                        )
-                    )
-                }
-            }
-        }
-
-        @WorkerThread
-        override fun onIsAliasUsed(
-            creator: AccountCreator,
-            status: AccountCreator.Status,
-            response: String?
-        ) {
-            Log.i("$TAG onIsAliasUsed status [$status] ($response)")
-            when (status) {
-                AccountCreator.Status.AliasExist, AccountCreator.Status.AliasIsAccount -> {
-                    operationInProgress.postValue(false)
-                    createEnabled.postValue(false)
-
-                    val error = AppUtils.getString(
-                        R.string.assistant_account_register_phone_number_already_in_use_error
-                    )
-                    phoneNumberError.postValue(error)
-                }
-                AccountCreator.Status.AliasNotExist -> {
-                    operationInProgress.postValue(false)
-                    createAccount()
-                }
-                else -> {
-                    Log.e("$TAG An unexpected error occurred!")
-                    operationInProgress.postValue(false)
-                    createEnabled.postValue(false)
-
-                    phoneNumberError.postValue(
-                        AppUtils.getString(
-                            R.string.assistant_account_register_invalid_phone_number_error
-                        )
-                    )
-                }
-            }
-        }
-
-        @WorkerThread
-        override fun onCreateAccount(
-            creator: AccountCreator,
-            status: AccountCreator.Status,
-            response: String?
-        ) {
-            Log.i("$TAG onCreateAccount status [$status] ($response)")
-            accountCreator.token = null
+            Log.i("$TAG Request [$request] was successful, data is [$data]")
             operationInProgress.postValue(false)
 
-            when (status) {
-                AccountCreator.Status.AccountCreated -> {
+            when (request.type) {
+                AccountManagerServicesRequest.Type.CreateAccountUsingToken -> {
+                    if (!data.isNullOrEmpty()) {
+                        storeAccountInCore(data)
+                        sendCodeBySms()
+                    } else {
+                        Log.e(
+                            "$TAG No data found for createAccountUsingToken request, can't continue!"
+                        )
+                    }
+                }
+                AccountManagerServicesRequest.Type.SendPhoneNumberLinkingCodeBySms -> {
                     goToSmsCodeConfirmationViewEvent.postValue(Event(true))
                 }
-                else -> {
-                    Log.e("$TAG Account couldn't be created, an unexpected error occurred!")
-                    errorHappenedEvent.postValue(
-                        Event(
-                            AppUtils.getFormattedString(
-                                R.string.assistant_account_register_server_error,
-                                status.toInt()
-                            )
+                AccountManagerServicesRequest.Type.LinkPhoneNumberUsingCode -> {
+                    val account = accountCreated
+                    if (account != null) {
+                        Log.i(
+                            "$TAG Account [${account.params.identityAddress?.asStringUriOnly()}] has been created & activated, setting it as default"
                         )
-                    )
+                        coreContext.core.defaultAccount = account
+                    }
+                    accountCreatedEvent.postValue(Event(true))
                 }
+                else -> { }
             }
         }
 
         @WorkerThread
-        override fun onActivateAccount(
-            creator: AccountCreator,
-            status: AccountCreator.Status,
-            response: String?
+        override fun onRequestError(
+            request: AccountManagerServicesRequest,
+            statusCode: Int,
+            errorMessage: String?,
+            parameterErrors: Dictionary?
         ) {
-            Log.i("$TAG onActivateAccount status [$status] ($response)")
+            Log.e(
+                "$TAG Request [$request] returned an error with status code [$statusCode] and message [$errorMessage]"
+            )
             operationInProgress.postValue(false)
 
-            if (status == AccountCreator.Status.AccountActivated) {
-                Log.i("$TAG Account has been successfully activated, going to login page")
-                accountCreatedEvent.postValue(Event(true))
-            } else {
-                Log.e("$TAG Account couldn't be activated, an unexpected error occurred!")
-                errorHappenedEvent.postValue(
+            if (!errorMessage.isNullOrEmpty()) {
+                showFormattedRedToastEvent.postValue(
                     Event(
-                        AppUtils.getFormattedString(
-                            R.string.assistant_account_register_server_error,
-                            status.toInt()
+                        Pair(
+                            errorMessage,
+                            R.drawable.warning_circle
                         )
                     )
                 )
+            }
+
+            for (parameter in parameterErrors?.keys.orEmpty()) {
+                val parameterErrorMessage = parameterErrors?.getString(parameter) ?: ""
+                when (parameter) {
+                    "username" -> usernameError.postValue(parameterErrorMessage)
+                    "password" -> passwordError.postValue(parameterErrorMessage)
+                    "phone" -> phoneNumberError.postValue(parameterErrorMessage)
+                }
+            }
+
+            when (request.type) {
+                AccountManagerServicesRequest.Type.SendAccountCreationTokenByPush -> {
+                    Log.w("$TAG Cancelling job waiting for push notification")
+                    waitingForFlexiApiPushToken = false
+                    waitForPushJob?.cancel()
+                }
+                AccountManagerServicesRequest.Type.SendPhoneNumberLinkingCodeBySms -> {
+                    val authInfo = accountCreatedAuthInfo
+                    if (authInfo != null) {
+                        coreContext.core.removeAuthInfo(authInfo)
+                    }
+                    val account = accountCreated
+                    if (account != null) {
+                        coreContext.core.removeAccount(account)
+                    }
+                    createEnabled.postValue(true)
+                }
+                else -> {
+                    createEnabled.postValue(true)
+                }
             }
         }
     }
@@ -253,9 +230,11 @@ class AccountCreationViewModel @UiThread constructor() : GenericViewModel() {
 
                         val token = customPayload.getString("token")
                         if (token.isNotEmpty()) {
-                            Log.i("$TAG Extracted token [$token] from push payload")
-                            accountCreator.token = token
-                            checkUsername()
+                            accountCreationToken = token
+                            Log.i(
+                                "$TAG Extracted token [$accountCreationToken] from push payload, creating account"
+                            )
+                            createAccount()
                         } else {
                             Log.e("$TAG Push payload JSON object has an empty 'token'!")
                             onFlexiApiTokenRequestError()
@@ -292,8 +271,8 @@ class AccountCreationViewModel @UiThread constructor() : GenericViewModel() {
                 )
             }
 
-            accountCreator = core.createAccountCreator(core.accountCreatorUrl)
-            accountCreator.addListener(accountCreatorListener)
+            accountManagerServices = core.createAccountManagerServices()
+            accountManagerServices.language = Locale.getDefault().language // Returns en, fr, etc...
             core.addListener(coreListener)
         }
 
@@ -316,9 +295,6 @@ class AccountCreationViewModel @UiThread constructor() : GenericViewModel() {
     @UiThread
     override fun onCleared() {
         coreContext.postOnCoreThread { core ->
-            if (::accountCreator.isInitialized) {
-                accountCreator.removeListener(accountCreatorListener)
-            }
             core.removeListener(coreListener)
         }
         waitForPushJob?.cancel()
@@ -327,79 +303,29 @@ class AccountCreationViewModel @UiThread constructor() : GenericViewModel() {
     }
 
     @UiThread
-    fun confirmPhoneNumber() {
+    fun phoneNumberConfirmedByUser() {
         coreContext.postOnCoreThread {
-            if (::accountCreator.isInitialized) {
+            if (::accountManagerServices.isInitialized) {
                 val dialPlan = selectedDialPlan.value
-                val prefix = dialPlan?.countryCallingCode.orEmpty()
-                val digitsPrefix = if (prefix.startsWith("+")) {
-                    prefix.substring(1)
-                } else {
-                    prefix
+                if (dialPlan == null) {
+                    Log.e("$TAG No dial plan (country) selected!")
+                    return@postOnCoreThread
                 }
                 val number = phoneNumber.value.orEmpty().trim()
+                val formattedPhoneNumber = dialPlan.formatPhoneNumber(number, false)
+                Log.i(
+                    "$TAG Formatted phone number [$number] using dial plan [${dialPlan.country}] is [$formattedPhoneNumber]"
+                )
 
-                val status = accountCreator.setPhoneNumber(number, digitsPrefix)
-                Log.i("$TAG setPhoneNumber returned $status")
-                if (status == PhoneNumberStatus.Ok.toInt()) {
-                    val normalizedPhoneNumber = accountCreator.phoneNumber
-
-                    val message = coreContext.context.getString(
-                        R.string.assistant_account_creation_sms_confirmation_explanation,
-                        normalizedPhoneNumber
-                    )
-                    confirmationMessage.postValue(message)
-
-                    Log.i(
-                        "$TAG Normalized phone number from [$number] and prefix [$digitsPrefix] is [$normalizedPhoneNumber]"
-                    )
-                    if (!normalizedPhoneNumber.isNullOrEmpty()) {
-                        normalizedPhoneNumberEvent.postValue(Event(normalizedPhoneNumber))
-                    } else {
-                        Log.e(
-                            "$TAG Failed to compute phone number using international prefix [$digitsPrefix] and number [$number]"
-                        )
-
-                        val error = AppUtils.getString(
-                            R.string.assistant_account_register_invalid_phone_number_error
-                        )
-                        phoneNumberError.postValue(error)
-                    }
-                } else {
-                    Log.e(
-                        "$TAG Failed to set phone number [$number] and prefix [$digitsPrefix] into account creator!"
-                    )
-                    val error = when (status) {
-                        PhoneNumberStatus.Invalid.toInt() -> {
-                            AppUtils.getString(
-                                R.string.assistant_account_register_invalid_phone_number_error
-                            )
-                        }
-                        PhoneNumberStatus.InvalidCountryCode.toInt() -> {
-                            AppUtils.getString(
-                                R.string.assistant_account_register_invalid_phone_number_international_prefix_error
-                            )
-                        }
-                        PhoneNumberStatus.TooLong.toInt() -> {
-                            AppUtils.getString(
-                                R.string.assistant_account_register_invalid_phone_number_too_long_error
-                            )
-                        }
-                        PhoneNumberStatus.TooShort.toInt() -> {
-                            AppUtils.getString(
-                                R.string.assistant_account_register_invalid_phone_number_too_short_error
-                            )
-                        }
-                        else -> {
-                            AppUtils.getString(
-                                R.string.assistant_account_register_invalid_phone_number_error
-                            )
-                        }
-                    }
-                    phoneNumberError.postValue(error)
-                }
+                val message = coreContext.context.getString(
+                    R.string.assistant_account_creation_sms_confirmation_explanation,
+                    formattedPhoneNumber
+                )
+                normalizedPhoneNumber = formattedPhoneNumber
+                confirmationMessage.postValue(message)
+                normalizedPhoneNumberEvent.postValue(Event(formattedPhoneNumber))
             } else {
-                Log.e("$TAG Account creator hasn't been initialized!")
+                Log.e("$TAG Account manager services hasn't been initialized!")
                 errorHappenedEvent.postValue(
                     Event(AppUtils.getString(R.string.assistant_account_register_unexpected_error))
                 )
@@ -408,16 +334,22 @@ class AccountCreationViewModel @UiThread constructor() : GenericViewModel() {
     }
 
     @UiThread
-    fun requestToken() {
+    fun startAccountCreation() {
         operationInProgress.value = true
 
         coreContext.postOnCoreThread {
-            if (accountCreator.token == null) {
+            if (accountCreationToken.isNullOrEmpty()) {
                 Log.i("$TAG We don't have a creation token, let's request one")
                 requestFlexiApiToken()
             } else {
-                Log.i("$TAG We've already have a token [${accountCreator.token}], continuing")
-                checkUsername()
+                val authInfo = accountCreatedAuthInfo
+                if (authInfo != null) {
+                    Log.i("$TAG Account has already been created, requesting SMS to be sent")
+                    sendCodeBySms()
+                } else {
+                    Log.i("$TAG We've already have a token [$accountCreationToken], continuing")
+                    createAccount()
+                }
             }
         }
     }
@@ -434,141 +366,144 @@ class AccountCreationViewModel @UiThread constructor() : GenericViewModel() {
 
     @UiThread
     fun validateCode() {
+        usernameError.postValue("")
+        passwordError.postValue("")
+        phoneNumberError.postValue("")
         operationInProgress.value = true
 
-        val code = "${smsCodeFirstDigit.value}${smsCodeSecondDigit.value}${smsCodeThirdDigit.value}${smsCodeLastDigit.value}"
-        Log.i("$TAG Activating account using code [$code]")
-        accountCreator.activationCode = code
-
-        coreContext.postOnCoreThread {
-            val status = accountCreator.activateAccount()
-            Log.i("$TAG activateAccount returned $status")
-            if (status != AccountCreator.Status.RequestOk) {
-                Log.e("$TAG Can't activate account [$status]")
-                operationInProgress.postValue(false)
-                errorHappenedEvent.postValue(
-                    Event(
-                        AppUtils.getFormattedString(
-                            R.string.assistant_account_register_server_error,
-                            status.toInt()
-                        )
-                    )
+        val account = accountCreated
+        if (::accountManagerServices.isInitialized && account != null) {
+            val code =
+                "${smsCodeFirstDigit.value}${smsCodeSecondDigit.value}${smsCodeThirdDigit.value}${smsCodeLastDigit.value}"
+            val identity = account.params.identityAddress
+            if (identity != null) {
+                Log.i(
+                    "$TAG Activating account using code [$code] for account [${identity.asStringUriOnly()}]"
                 )
+                val request = accountManagerServices.createLinkPhoneNumberToAccountUsingCodeRequest(
+                    identity,
+                    code
+                )
+                request.addListener(accountManagerServicesListener)
+                request.submit()
+
+                // Reset code
+                smsCodeFirstDigit.postValue("")
+                smsCodeSecondDigit.postValue("")
+                smsCodeThirdDigit.postValue("")
+                smsCodeLastDigit.postValue("")
             }
         }
     }
 
     @WorkerThread
-    private fun checkUsername() {
-        operationInProgress.postValue(true)
-
+    private fun sendCodeBySms() {
         usernameError.postValue("")
-        val usernameStatus = accountCreator.setUsername(username.value.orEmpty().trim())
-        Log.i("$TAG setUsername returned $usernameStatus")
-        if (usernameStatus != UsernameStatus.Ok) {
-            val error = when (usernameStatus) {
-                UsernameStatus.InvalidCharacters, UsernameStatus.Invalid -> {
-                    AppUtils.getString(
-                        R.string.assistant_account_register_username_invalid_characters_error
-                    )
-                }
-                UsernameStatus.TooShort -> {
-                    AppUtils.getString(R.string.assistant_account_register_username_too_short_error)
-                }
-                UsernameStatus.TooLong -> {
-                    AppUtils.getString(R.string.assistant_account_register_username_too_long_error)
-                }
-                else -> {
-                    AppUtils.getString(R.string.assistant_account_register_username_error)
-                }
+        passwordError.postValue("")
+        phoneNumberError.postValue("")
+
+        val account = accountCreated
+        if (::accountManagerServices.isInitialized && account != null) {
+            val phoneNumberValue = normalizedPhoneNumber
+            if (phoneNumberValue.isNullOrEmpty()) {
+                Log.e("$TAG Phone number is null or empty, this shouldn't happen at this step!")
+                return
             }
-            usernameError.postValue(error)
-            operationInProgress.postValue(false)
-            return
-        }
 
-        accountCreator.domain = corePreferences.defaultDomain
+            operationInProgress.postValue(true)
+            createEnabled.postValue(false)
 
-        val status = accountCreator.isAccountExist
-        Log.i("$TAG isAccountExist for username [${accountCreator.username}] returned $status")
-        if (status != AccountCreator.Status.RequestOk) {
-            Log.e("$TAG Can't check if account already exists [$status]")
-            operationInProgress.postValue(false)
-            errorHappenedEvent.postValue(
-                Event(
-                    AppUtils.getFormattedString(
-                        R.string.assistant_account_register_server_error,
-                        status.toInt()
-                    )
+            val identity = account.params.identityAddress
+            if (identity != null) {
+                Log.i(
+                    "$TAG Account [${identity.asStringUriOnly()}] should now be created, asking account manager to send a confirmation code by SMS to [$phoneNumberValue]"
                 )
-            )
-        }
-    }
-
-    @WorkerThread
-    private fun checkPhoneNumber() {
-        operationInProgress.postValue(true)
-
-        val status = accountCreator.isAliasUsed
-        Log.i("$TAG isAliasUsed returned $status")
-        if (status != AccountCreator.Status.RequestOk) {
-            Log.e("$TAG Can't check if phone number is already used [$status]")
-            operationInProgress.postValue(false)
-            errorHappenedEvent.postValue(
-                Event(
-                    AppUtils.getFormattedString(
-                        R.string.assistant_account_register_server_error,
-                        status.toInt()
-                    )
+                val request = accountManagerServices.createSendPhoneNumberLinkingCodeBySmsRequest(
+                    identity,
+                    phoneNumberValue
                 )
-            )
+                request.addListener(accountManagerServicesListener)
+                request.submit()
+            }
         }
     }
 
     @WorkerThread
     private fun createAccount() {
-        operationInProgress.postValue(true)
+        usernameError.postValue("")
+        passwordError.postValue("")
+        phoneNumberError.postValue("")
 
-        val passwordStatus = accountCreator.setPassword(password.value.orEmpty().trim())
-        Log.i("$TAG setPassword returned $passwordStatus")
-        if (passwordStatus != AccountCreator.PasswordStatus.Ok) {
-            val error = when (passwordStatus) {
-                AccountCreator.PasswordStatus.InvalidCharacters -> {
-                    AppUtils.getString(
-                        R.string.assistant_account_register_password_invalid_characters_error
-                    )
-                }
-                AccountCreator.PasswordStatus.TooShort -> {
-                    AppUtils.getString(R.string.assistant_account_register_password_too_short)
-                }
-                AccountCreator.PasswordStatus.TooLong -> {
-                    AppUtils.getString(R.string.assistant_account_register_password_too_long_error)
-                }
-                else -> {
-                    AppUtils.getString(R.string.assistant_account_register_invalid_password_error)
-                }
+        if (::accountManagerServices.isInitialized) {
+            val token = accountCreationToken
+            if (token.isNullOrEmpty()) {
+                Log.e("$TAG No account creation token, can't create account!")
+                return
             }
-            passwordError.postValue(error)
-            operationInProgress.postValue(false)
+
+            operationInProgress.postValue(true)
+            createEnabled.postValue(false)
+
+            val usernameValue = username.value
+            val passwordValue = password.value
+            if (usernameValue.isNullOrEmpty() || passwordValue.isNullOrEmpty()) {
+                Log.e("$TAG Either username [$usernameValue] or password is null or empty!")
+                return
+            }
+
+            Log.i(
+                "$TAG Account creation token is [$token], creating account with username [$usernameValue] and algorithm SHA-256"
+            )
+            val request = accountManagerServices.createNewAccountUsingTokenRequest(
+                usernameValue,
+                passwordValue,
+                HASH_ALGORITHM,
+                token
+            )
+            request.addListener(accountManagerServicesListener)
+            request.submit()
+        }
+    }
+
+    @WorkerThread
+    private fun storeAccountInCore(identity: String) {
+        val passwordValue = password.value
+
+        val core = coreContext.core
+        val sipIdentity = Factory.instance().createAddress(identity)
+        if (sipIdentity == null) {
+            Log.e("$TAG Failed to create address from SIP Identity [$identity]!")
+            return
         }
 
-        val status = accountCreator.createAccount() // TODO FIXME: use createPushAccount instead ?
-        Log.i("$TAG createAccount returned $status")
-        if (status != AccountCreator.Status.RequestOk) {
-            Log.e("$TAG Can't create account [$status]")
-            operationInProgress.postValue(false)
-            errorHappenedEvent.postValue(
-                Event(
-                    AppUtils.getFormattedString(
-                        R.string.assistant_account_register_server_error,
-                        status.toInt()
-                    )
-                )
+        // We need to have an AuthInfo for newly created account to authorize phone number linking request
+        val authInfo = Factory.instance().createAuthInfo(
+            sipIdentity.username.orEmpty(),
+            null,
+            passwordValue,
+            null,
+            null,
+            sipIdentity.domain
+        )
+        core.addAuthInfo(authInfo)
+        Log.i("$TAG Auth info for SIP identity [${sipIdentity.asStringUriOnly()}] created & added")
+
+        val dialPlan = selectedDialPlan.value
+        val accountParams = core.createAccountParams()
+        accountParams.identityAddress = sipIdentity
+        if (dialPlan != null) {
+            Log.i(
+                "$TAG Setting international prefix [${dialPlan.internationalCallPrefix}] and country [${dialPlan.isoCountryCode}] to account params"
             )
-        } else {
-            Log.i("$TAG createAccount consumed our token, setting it to null")
-            accountCreator.token = null
+            accountParams.internationalPrefix = dialPlan.internationalCallPrefix
+            accountParams.internationalPrefixIsoCountryCode = dialPlan.isoCountryCode
         }
+        val account = core.createAccount(accountParams)
+        core.addAccount(account)
+        Log.i("$TAG Account for SIP identity [${sipIdentity.asStringUriOnly()}] created & added")
+
+        accountCreatedAuthInfo = authInfo
+        accountCreated = account
     }
 
     @WorkerThread
@@ -582,39 +517,46 @@ class AccountCreationViewModel @UiThread constructor() : GenericViewModel() {
         }
 
         operationInProgress.postValue(true)
+        createEnabled.postValue(false)
 
         val pushConfig = coreContext.core.pushNotificationConfig
         if (pushConfig != null) {
-            Log.i(
-                "$TAG Found push notification info: provider [${pushConfig.provider}], param [${pushConfig.param}] and prid [${pushConfig.prid}]"
-            )
-            accountCreator.pnProvider = pushConfig.provider
-            accountCreator.pnParam = pushConfig.param
-            accountCreator.pnPrid = pushConfig.prid
+            val provider = pushConfig.provider
+            val param = pushConfig.param
+            val prid = pushConfig.prid
+            if (provider.isNullOrEmpty() || param.isNullOrEmpty() || prid.isNullOrEmpty()) {
+                Log.e(
+                    "$TAG At least one mandatory push information (provider [$provider], param [$param], prid [$prid]) is missing!"
+                )
+                onFlexiApiTokenRequestError()
+                return
+            }
 
             // Request an auth token, will be sent by push
-            val result = accountCreator.requestAuthToken()
-            if (result == AccountCreator.Status.RequestOk) {
-                val waitFor = 5000
-                waitingForFlexiApiPushToken = true
-                waitForPushJob?.cancel()
+            val request = accountManagerServices.createSendAccountCreationTokenByPushRequest(
+                provider,
+                param,
+                prid
+            )
+            request.addListener(accountManagerServicesListener)
+            request.submit()
 
-                Log.i("$TAG Waiting push with auth token for $waitFor ms")
-                waitForPushJob = viewModelScope.launch {
-                    withContext(Dispatchers.IO) {
-                        delay(waitFor.toLong())
-                    }
-                    withContext(Dispatchers.Main) {
-                        if (waitingForFlexiApiPushToken) {
-                            waitingForFlexiApiPushToken = false
-                            Log.e("$TAG Auth token wasn't received by push in $waitFor ms")
-                            onFlexiApiTokenRequestError()
-                        }
+            val waitFor = TIME_TO_WAIT_FOR_PUSH_NOTIFICATION_WITH_ACCOUNT_CREATION_TOKEN
+            waitingForFlexiApiPushToken = true
+            waitForPushJob?.cancel()
+
+            Log.i("$TAG Waiting push with auth token for $waitFor ms")
+            waitForPushJob = viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    delay(waitFor.toLong())
+                }
+                withContext(Dispatchers.Main) {
+                    if (waitingForFlexiApiPushToken) {
+                        waitingForFlexiApiPushToken = false
+                        Log.e("$TAG Auth token wasn't received by push in [$waitFor] ms")
+                        onFlexiApiTokenRequestError()
                     }
                 }
-            } else {
-                Log.e("$TAG Failed to require a push with an auth token: [$result]")
-                onFlexiApiTokenRequestError()
             }
         } else {
             Log.e("$TAG No push configuration object in Core, shouldn't happen!")

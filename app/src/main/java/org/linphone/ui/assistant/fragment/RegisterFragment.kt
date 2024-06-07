@@ -217,7 +217,7 @@ class RegisterFragment : GenericFragment() {
 
         model.confirmPhoneNumberEvent.observe(viewLifecycleOwner) {
             it.consume {
-                viewModel.requestToken()
+                viewModel.startAccountCreation()
                 dialog.dismiss()
             }
         }
