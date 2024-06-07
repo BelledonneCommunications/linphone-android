@@ -648,6 +648,7 @@
 
     <string name="call_history_deleted_toast">History has been deleted</string>
     <string name="call_can_be_trusted_toast">This call can be trusted</string>
+    <string name="call_can_not_be_trusted_alert_toast">Security alert !</string>
     <string name="call_transfer_in_progress_toast">Call is being transferred</string>
     <string name="call_transfer_successful_toast">Call has been successfully transferred</string>
     <string name="call_transfer_failed_toast">Call transfer failed!</string>

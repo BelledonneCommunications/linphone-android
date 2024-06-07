@@ -231,29 +231,39 @@ class ActiveCallFragment : GenericCallFragment() {
                 val model = ZrtpSasConfirmationDialogModel(pair.first, pair.second)
                 val dialog = DialogUtils.getZrtpSasConfirmationDialog(requireActivity(), model)
 
-                model.dismissEvent.observe(viewLifecycleOwner) { event ->
+                model.skipEvent.observe(viewLifecycleOwner) { event ->
                     event.consume {
+                        callViewModel.skipZrtpSas()
                         dialog.dismiss()
                     }
                 }
 
-                model.trustVerified.observe(viewLifecycleOwner) { event ->
-                    event.consume { verified ->
-                        callViewModel.updateZrtpSas(verified)
+                model.authTokenClickedEvent.observe(viewLifecycleOwner) { event ->
+                    event.consume { authToken ->
+                        callViewModel.updateZrtpSas(authToken)
                         dialog.dismiss()
-
-                        if (verified) {
-                            (requireActivity() as GenericActivity).showBlueToast(
-                                getString(R.string.call_can_be_trusted_toast),
-                                R.drawable.trusted,
-                                doNotTint = true
-                            )
-                        }
                     }
                 }
 
                 dialog.show()
                 zrtpSasDialog = dialog
+            }
+        }
+
+        callViewModel.zrtpAuthTokenVerifiedEvent.observe(viewLifecycleOwner) {
+            it.consume { verified ->
+                if (verified) {
+                    (requireActivity() as GenericActivity).showBlueToast(
+                        getString(R.string.call_can_be_trusted_toast),
+                        R.drawable.trusted,
+                        doNotTint = true
+                    )
+                } else {
+                    (requireActivity() as GenericActivity).showRedToast(
+                        getString(R.string.call_can_not_be_trusted_alert_toast),
+                        R.drawable.warning_circle
+                    )
+                }
             }
         }
 

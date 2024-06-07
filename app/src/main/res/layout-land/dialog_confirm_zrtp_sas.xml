@@ -12,7 +12,6 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:onClick="@{() -> viewModel.dismiss()}"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -135,7 +134,7 @@
             app:layout_constraintBottom_toBottomOf="@id/letters_1"/>
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{() -> viewModel.dismiss()}"
+            android:onClick="@{() -> viewModel.skip()}"
             style="@style/default_text_style_600"
             android:id="@+id/skip"
             android:layout_width="wrap_content"
@@ -153,7 +152,7 @@
             app:layout_constraintBottom_toTopOf="@id/nothing_matches"/>
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{() -> viewModel.dismiss()}"
+            android:onClick="@{() -> viewModel.notFound()}"
             style="@style/default_text_style_600"
             android:id="@+id/nothing_matches"
             android:layout_width="0dp"

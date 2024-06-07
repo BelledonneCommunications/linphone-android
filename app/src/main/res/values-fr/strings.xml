@@ -611,6 +611,7 @@
 
     <string name="call_history_deleted_toast">L\'historique des appels a été supprimé</string>
     <string name="call_can_be_trusted_toast">Cet appel est complètement sécurisé</string>
+    <string name="call_can_not_be_trusted_alert_toast">Problème de sécurité !</string>
     <string name="call_transfer_in_progress_toast">Appel en cours de transfert</string>
     <string name="call_transfer_successful_toast">L\'appel a été transferré</string>
     <string name="call_transfer_failed_toast">Le transfert a échoué !</string>

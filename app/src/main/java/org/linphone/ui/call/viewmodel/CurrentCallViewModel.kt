@@ -27,7 +27,6 @@ import androidx.annotation.WorkerThread
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import java.util.Locale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -165,8 +164,12 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
 
     // ZRTP related
 
-    val showZrtpSasDialogEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
-        MutableLiveData<Event<Pair<String, String>>>()
+    val showZrtpSasDialogEvent: MutableLiveData<Event<Pair<String, List<String>>>> by lazy {
+        MutableLiveData<Event<Pair<String, List<String>>>>()
+    }
+
+    val zrtpAuthTokenVerifiedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
     }
 
     // Chat
@@ -226,8 +229,16 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
     private val callListener = object : CallListenerStub() {
         @WorkerThread
         override fun onEncryptionChanged(call: Call, on: Boolean, authenticationToken: String?) {
+            Log.i("$TAG Call encryption changed, updating...")
             updateEncryption()
             callMediaEncryptionModel.update(call)
+        }
+
+        override fun onAuthenticationTokenVerified(call: Call, verified: Boolean) {
+            Log.w(
+                "$TAG Notified that authentication token is [${if (verified) "verified" else "not verified!"}]"
+            )
+            zrtpAuthTokenVerifiedEvent.postValue(Event(verified))
         }
 
         override fun onRemoteRecording(call: Call, recording: Boolean) {
@@ -523,14 +534,29 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
     }
 
     @UiThread
-    fun updateZrtpSas(verified: Boolean) {
+    fun skipZrtpSas() {
         coreContext.postOnCoreThread {
             if (::currentCall.isInitialized) {
-                if (!verified && !currentCall.authenticationTokenVerified) {
-                    Log.w("$TAG ZRTP SAS validation failed")
+                Log.w("$TAG User skipped SAS validation in ZRTP call")
+                currentCall.skipZrtpAuthentication()
+            }
+        }
+    }
+
+    @UiThread
+    fun updateZrtpSas(authTokenClicked: String) {
+        coreContext.postOnCoreThread {
+            if (::currentCall.isInitialized) {
+                if (authTokenClicked.isEmpty()) {
+                    Log.e(
+                        "$TAG Doing a fake ZRTP SAS check with empty token because user clicked on 'Not Found' button!"
+                    )
                 } else {
-                    currentCall.authenticationTokenVerified = verified
+                    Log.i(
+                        "$TAG Checking if ZRTP SAS auth token [$authTokenClicked] is the right one"
+                    )
                 }
+                currentCall.checkAuthenticationTokenSelected(authTokenClicked)
             }
         }
     }
@@ -921,45 +947,33 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
     fun showZrtpSasDialogIfPossible() {
         coreContext.postOnCoreThread {
             if (currentCall.currentParams.mediaEncryption == MediaEncryption.ZRTP) {
-                val authToken = currentCall.authenticationToken
-                val isDeviceTrusted = currentCall.authenticationTokenVerified && authToken != null
+                val isDeviceTrusted = currentCall.authenticationTokenVerified
                 Log.i(
-                    "$TAG Current call media encryption is ZRTP, auth token is ${if (isDeviceTrusted) "trusted" else "not trusted yet"}"
+                    "$TAG Current call media encryption is ZRTP, auth token is [${if (isDeviceTrusted) "trusted" else "not trusted yet"}]"
                 )
-                if (!authToken.isNullOrEmpty()) {
-                    showZrtpSasDialog(authToken)
+                val tokenToRead = currentCall.localAuthenticationToken
+                val tokensToDisplay = currentCall.remoteAuthenticationTokens.toList()
+                if (!tokenToRead.isNullOrEmpty() && tokensToDisplay.size == 4) {
+                    showZrtpSasDialogEvent.postValue(Event(Pair(tokenToRead, tokensToDisplay)))
+                } else {
+                    Log.w(
+                        "$TAG Either local auth token is null/empty or remote tokens list doesn't contains 4 elements!"
+                    )
                 }
             }
         }
     }
 
     @WorkerThread
-    private fun showZrtpSasDialog(authToken: String) {
-        val upperCaseAuthToken = authToken.uppercase(Locale.getDefault())
-        val toRead: String
-        val toListen: String
-        when (currentCall.dir) {
-            Call.Dir.Incoming -> {
-                toRead = upperCaseAuthToken.substring(0, 2)
-                toListen = upperCaseAuthToken.substring(2)
-            }
-            else -> {
-                toRead = upperCaseAuthToken.substring(2)
-                toListen = upperCaseAuthToken.substring(0, 2)
-            }
-        }
-        showZrtpSasDialogEvent.postValue(Event(Pair(toRead, toListen)))
-    }
-
-    @WorkerThread
     private fun updateEncryption(): Boolean {
         when (val mediaEncryption = currentCall.currentParams.mediaEncryption) {
             MediaEncryption.ZRTP -> {
-                val authToken = currentCall.authenticationToken
-                val isDeviceTrusted = currentCall.authenticationTokenVerified && authToken != null
+                val isDeviceTrusted = currentCall.authenticationTokenVerified
+                val cacheMismatch = currentCall.zrtpCacheMismatchFlag
                 Log.i(
-                    "$TAG Current call media encryption is ZRTP, auth token is ${if (isDeviceTrusted) "trusted" else "not trusted yet"}"
+                    "$TAG Current call media encryption is ZRTP, auth token is [${if (isDeviceTrusted) "trusted" else "not trusted yet"}], cache mismatch is [$cacheMismatch]"
                 )
+
                 val securityLevel = if (isDeviceTrusted) SecurityLevel.EndToEndEncryptedAndVerified else SecurityLevel.EndToEndEncrypted
                 val avatarModel = contact.value
                 if (avatarModel != null && currentCall.conference == null) { // Don't do it for conferences
@@ -984,9 +998,17 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
                     coreContext.core.postQuantumAvailable && stats?.isZrtpKeyAgreementAlgoPostQuantum == true
                 )
 
-                if (!isDeviceTrusted && !authToken.isNullOrEmpty()) {
+                if (cacheMismatch || !isDeviceTrusted) {
                     Log.i("$TAG Showing ZRTP SAS confirmation dialog")
-                    showZrtpSasDialog(authToken)
+                    val tokenToRead = currentCall.localAuthenticationToken
+                    val tokensToDisplay = currentCall.remoteAuthenticationTokens.toList()
+                    if (!tokenToRead.isNullOrEmpty() && tokensToDisplay.size == 4) {
+                        showZrtpSasDialogEvent.postValue(Event(Pair(tokenToRead, tokensToDisplay)))
+                    } else {
+                        Log.w(
+                            "$TAG Either local auth token is null/empty or remote tokens list doesn't contains 4 elements!"
+                        )
+                    }
                 }
 
                 return isDeviceTrusted

@@ -21,7 +21,6 @@ package org.linphone.ui.call.model
 
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
-import java.util.Random
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
@@ -30,11 +29,10 @@ import org.linphone.utils.Event
 
 class ZrtpSasConfirmationDialogModel @UiThread constructor(
     authTokenToRead: String,
-    private val authTokenToListen: String
+    authTokensToListen: List<String>
 ) : GenericViewModel() {
     companion object {
         private const val TAG = "[ZRTP SAS Confirmation Dialog]"
-        private const val ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
     }
 
     val message = MutableLiveData<String>()
@@ -43,57 +41,36 @@ class ZrtpSasConfirmationDialogModel @UiThread constructor(
     val letters3 = MutableLiveData<String>()
     val letters4 = MutableLiveData<String>()
 
-    val trustVerified = MutableLiveData<Event<Boolean>>()
+    val authTokenClickedEvent = MutableLiveData<Event<String>>()
 
-    val dismissEvent = MutableLiveData<Event<Boolean>>()
+    val skipEvent = MutableLiveData<Event<Boolean>>()
 
     init {
         message.value = AppUtils.getFormattedString(
             R.string.call_dialog_zrtp_validate_trust_subtitle,
             authTokenToRead
         )
-
-        // TODO FIXME: use SDK API when it will be available
-        val rnd = Random()
-        val randomLetters1 = "${ALPHABET[rnd.nextInt(ALPHABET.length)]}${ALPHABET[
-            rnd.nextInt(
-                ALPHABET.length
-            )
-        ]}"
-        val randomLetters2 = "${ALPHABET[rnd.nextInt(ALPHABET.length)]}${ALPHABET[
-            rnd.nextInt(
-                ALPHABET.length
-            )
-        ]}"
-        val randomLetters3 = "${ALPHABET[rnd.nextInt(ALPHABET.length)]}${ALPHABET[
-            rnd.nextInt(
-                ALPHABET.length
-            )
-        ]}"
-        val randomLetters4 = "${ALPHABET[rnd.nextInt(ALPHABET.length)]}${ALPHABET[
-            rnd.nextInt(
-                ALPHABET.length
-            )
-        ]}"
-
-        val correctLetters = rnd.nextInt(4)
-        letters1.value = if (correctLetters == 0) authTokenToListen else randomLetters1
-        letters2.value = if (correctLetters == 1) authTokenToListen else randomLetters2
-        letters3.value = if (correctLetters == 2) authTokenToListen else randomLetters3
-        letters4.value = if (correctLetters == 3) authTokenToListen else randomLetters4
+        letters1.value = authTokensToListen[0]
+        letters2.value = authTokensToListen[1]
+        letters3.value = authTokensToListen[2]
+        letters4.value = authTokensToListen[3]
     }
 
     @UiThread
-    fun dismiss() {
-        dismissEvent.value = Event(true)
+    fun skip() {
+        skipEvent.value = Event(true)
+    }
+
+    @UiThread
+    fun notFound() {
+        Log.e("$TAG User clicked on 'Not Found' button!")
+        authTokenClickedEvent.value = Event("")
     }
 
     @UiThread
     fun lettersClicked(letters: MutableLiveData<String>) {
-        val verified = letters.value == authTokenToListen
-        Log.i(
-            "$TAG User clicked on ${if (verified) "right" else "wrong"} letters"
-        )
-        trustVerified.value = Event(verified)
+        val token = letters.value.orEmpty()
+        Log.i("$TAG User clicked on [$token] letters")
+        authTokenClickedEvent.value = Event(token)
     }
 }
