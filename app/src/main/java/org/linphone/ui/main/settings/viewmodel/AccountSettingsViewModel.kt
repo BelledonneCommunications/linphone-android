@@ -185,22 +185,35 @@ class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
 
                 newParams.isCpimInBasicChatRoomEnabled = cpimInBasicChatRooms.value == true
 
-                val mwiAddress = core.interpretUrl(voicemailUri.value.orEmpty(), false)
-                newParams.mwiServerAddress = mwiAddress
+                val mwiUri = voicemailUri.value.orEmpty()
+                if (mwiUri.isNotEmpty()) {
+                    val mwiAddress = core.interpretUrl(mwiUri, false)
+                    newParams.mwiServerAddress = mwiAddress
+                } else {
+                    newParams.mwiServerAddress = null
+                }
 
                 newParams.expires = expire.value?.toInt() ?: 31536000
 
-                val conferenceFactoryAddress = core.interpretUrl(
-                    conferenceFactoryUri.value.orEmpty(),
-                    false
-                )
-                newParams.conferenceFactoryAddress = conferenceFactoryAddress
+                val conferenceUri = conferenceFactoryUri.value.orEmpty()
+                if (conferenceUri.isNotEmpty()) {
+                    val conferenceFactoryAddress = core.interpretUrl(conferenceUri, false)
+                    newParams.conferenceFactoryAddress = conferenceFactoryAddress
+                } else {
+                    newParams.conferenceFactoryAddress = null
+                }
 
-                val audioVideoConferenceFactoryAddress = core.interpretUrl(
-                    audioVideoConferenceFactoryUri.value.orEmpty(),
-                    false
-                )
-                newParams.audioVideoConferenceFactoryAddress = audioVideoConferenceFactoryAddress
+                val audioVideoConferenceUri = audioVideoConferenceFactoryUri.value.orEmpty()
+                if (audioVideoConferenceUri.isNotEmpty()) {
+                    val audioVideoConferenceFactoryAddress = core.interpretUrl(
+                        audioVideoConferenceUri,
+                        false
+                    )
+                    newParams.audioVideoConferenceFactoryAddress =
+                        audioVideoConferenceFactoryAddress
+                } else {
+                    newParams.audioVideoConferenceFactoryAddress = null
+                }
 
                 newParams.limeServerUrl = limeServerUrl.value
 
