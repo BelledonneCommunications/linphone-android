@@ -652,16 +652,14 @@ class MainActivity : GenericActivity() {
         }
 
         Log.i("$TAG Found URI [$uri] as data for intent [${intent.action}]")
-        val sipUriToCall = if (uri.startsWith("tel:")) {
-            uri.substring("tel:".length)
-        } else if (uri.startsWith("sip-linphone:")) {
-            uri.replace("sip-linphone:", "sip:")
-        } else {
-            if (uri.startsWith("sips-linphone:")) {
-                uri.replace("sips-linphone:", "sips:")
-            } else {
-                uri
-            }.replace("%40", "@") // Unescape @ character if needed
+        val sipUriToCall = when {
+            uri.startsWith("tel:") -> uri.substring("tel:".length)
+            uri.startsWith("callto:") -> uri.substring("callto:".length)
+            uri.startsWith("sip-linphone:") -> uri.replace("sip-linphone:", "sip:")
+            uri.startsWith("linphone-sip:") -> uri.replace("linphone-sip:", "sip:")
+            uri.startsWith("sips-linphone:") -> uri.replace("sips-linphone:", "sips:")
+            uri.startsWith("linphone-sips:") -> uri.replace("linphone-sips:", "sips:")
+            else -> uri.replace("%40", "@") // Unescape @ character if needed
         }
 
         coreContext.postOnCoreThread {

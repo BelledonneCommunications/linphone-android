@@ -101,9 +101,12 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="tel" />
                 <data android:scheme="sip" />
+                <data android:scheme="callto" />
                 <data android:scheme="sips" />
                 <data android:scheme="sip-linphone" />
                 <data android:scheme="sips-linphone" />
+                <data android:scheme="linphone-sip" />
+                <data android:scheme="linphone-sips" />
                 <data android:scheme="linphone-config" />
             </intent-filter>
 
