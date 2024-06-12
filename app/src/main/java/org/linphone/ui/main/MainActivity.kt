@@ -284,12 +284,10 @@ class MainActivity : GenericActivity() {
 
         goToLatestVisitedFragment()
 
-        if (intent != null) {
-            Log.d("$TAG Post create intent not null, handling it")
+        // We don't want that intent to be handled upon rotation
+        if (savedInstanceState == null && intent != null) {
+            Log.d("$TAG savedInstanceState is null but intent isn't, handling it")
             handleIntent(intent)
-        } else {
-            // This should never happen!
-            Log.e("$TAG onPostCreate called without intent !")
         }
     }
 
