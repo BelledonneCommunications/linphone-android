@@ -10,14 +10,47 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+
+## [6.0.0] - 2024-07-??
+
+6.0.0 release is a complete rework of Linphone Android, with a fully redesigned UI, so it is impossible to list everything here.
+
+### Changed
+- Separated threads: Contrary to previous versions, our SDK is now running in it's own thread, meaning it won't freeze the UI anymore in case of heavy work, thus reducing the number of ANR and greatly increasing the fluidity of the app.
+- Improved multi account: you'll only see history, conversations, meetings etc... related to currently selected account, and you can switch the default account in two clicks.
+- Settings: a lot of them are gone, the one that are still there have been reworked to increase user friendlyness.
+- Default screen (between contacts, call history, conversations & meetings list) will change depending on where you were when the app was paused or killed, and you will return to that last visited screen on the next startup.
+- Gradle files have been migrated from Groovy to Kotlin DSL, and dependencies are now in a separated file (libs.versions.toml).
+- Account creation no longer allows you to use your phone number as username, but it is still required to provide it to receive activation code by SMS.
+- Minimum supported Android OS version is now 9 (API level 28).
+- Telecom Manager support is now based on androidx.core.core-telecom package.
+
+### Added
+- Contacts trust: contacts for which all devices have been validated through a ZRTP call with SAS exchange are now highlighted with a blue circle (and with a red one in case of mistrust). That trust is now handled at contact level (instead of conversation level in previous versions). 
+- Media & documents exchanged in a conversation can be easily found through a dedicated screen.
+- You can now react to a chat message using any emoji.
+- Screen sharing in conference: only desktop app starting with 6.0 version is able to start it, but on mobiles you'll be able to see it.
+- Chat while in call: a shortcut to a conversation screen with the remote.
+- Security focus: security & trust is more visible than ever, and unsecure conversations & calls are even more visible than before.
+- CardDAV: you can configure as many CardDAV servers you want to synchronize you contacts in Linphone (in addition or in replacement of native addressbook import).
+- OpenID: when used with a SSO compliant SIP server (such as Flexisip), we support single-sign-on login.
+
+### Removed
+- Dialer: the previous home screen (dialer) has been removed, you'll find it as an input option in the new start call screen.
+- Peer-to-peer: a SIP account (sip.linphone.org or other) is now required.
+- Contacts: we no longer add contacts created in-app in the native addressbook (WRITE_CONTACTS permission was removed), but we still import them if you grant us the READ_CONTACTS permission.
+
+### Fixed
+- No longer trying to play vocal messages & call recordings using bluetooth when connected to an Android Auto car, causing playback issues.
+
 ## [5.2.5] - 2024-05-03
 
-## Changed
+### Changed
 - Updated translations
 
 ## [5.2.4] - 2024-04-22
 
-## Fixed
+### Fixed
 - Active speaker video hidden when you are the first one to join a meeting
 - Show camera icon instead of microphone for incoming video calls
 - SIP URI parsing from native contact due to international prefix being applied when it shouldn't
