@@ -204,7 +204,7 @@
     <string name="settings_contacts_carddav_sync_error_toast">Erreur de synchronization !</string>
     <string name="settings_contacts_carddav_deleted_toast">Compte CardDAV supprimé</string>
     <string name="settings_contacts_carddav_mandatory_field_not_filled_toast">Au moins un champ obligatoire n\'est pas rempli</string>
-    <string name="settings_contacts_ldap_server_url_title">URL du serveur</string>
+    <string name="settings_contacts_ldap_server_url_title">URL du serveur (ne peut être vide)</string>
     <string name="settings_contacts_ldap_bind_dn_title">Bind DN</string>
     <string name="settings_contacts_ldap_password_title">Mot de passe</string>
     <string name="settings_contacts_ldap_use_tls_title">Utiliser TLS</string>
@@ -218,6 +218,7 @@
     <string name="settings_contacts_ldap_sip_attributes_title">Attributs SIP</string>
     <string name="settings_contacts_ldap_sip_domain_title">Domaine SIP</string>
     <string name="settings_contacts_ldap_error_toast">Une erreur s\'est produite, la configuration LDAP n\'a pas été sauvegardée !</string>
+    <string name="settings_contacts_ldap_empty_server_error_toast">L\'URL du serveur ne peut être vide</string>
     <string name="settings_meetings_title">Réunions</string>
     <string name="settings_meetings_default_layout_title">Disposition par défaut</string>
     <string name="settings_meetings_layout_active_speaker_label">Intervenant actif</string>

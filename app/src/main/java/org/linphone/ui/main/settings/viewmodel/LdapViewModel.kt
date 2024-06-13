@@ -136,10 +136,24 @@ class LdapViewModel : GenericViewModel() {
     fun addServer() {
         coreContext.postOnCoreThread { core ->
             try {
+                val server = serverUrl.value.orEmpty().trim()
+                if (server.isEmpty()) {
+                    Log.e("$TAG Server field can't be empty!")
+                    showRedToastEvent.postValue(
+                        Event(
+                            Pair(
+                                R.string.settings_contacts_ldap_empty_server_error_toast,
+                                R.drawable.warning_circle
+                            )
+                        )
+                    )
+                    return@postOnCoreThread
+                }
+
                 val ldapParams = core.createLdapParams()
 
                 ldapParams.enabled = true
-                ldapParams.server = serverUrl.value.orEmpty().trim()
+                ldapParams.server = server
                 ldapParams.bindDn = bindDn.value.orEmpty().trim()
                 ldapParams.password = password.value.orEmpty().trim()
                 ldapParams.authMethod = Ldap.AuthMethod.Simple
