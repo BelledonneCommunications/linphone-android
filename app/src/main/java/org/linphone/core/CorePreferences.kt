@@ -148,7 +148,7 @@ class CorePreferences @UiThread constructor(private val context: Context) {
 
     @get:WorkerThread
     val changeMainColorAllowed: Boolean
-        get() = config.getBool("ui", "change_main_color_allowed", true)
+        get() = config.getBool("ui", "change_main_color_allowed", false)
 
     @get:WorkerThread
     val onlyDisplaySipUriUsername: Boolean
