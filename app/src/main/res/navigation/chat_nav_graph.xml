@@ -59,6 +59,14 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_conversationFragment_to_conversationForwardMessageFragment"
+            app:destination="@id/conversationForwardMessageFragment"
+            app:launchSingleTop="true"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <action
@@ -141,6 +149,23 @@
         <argument
             android:name="remoteSipUri"
             app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/conversationForwardMessageFragment"
+        android:name="org.linphone.ui.main.chat.fragment.ConversationForwardMessageFragment"
+        android:label="ConversationForwardMessageFragment"
+        tools:layout="@layout/chat_message_forward_fragment">
+        <action
+            android:id="@+id/action_conversationForwardMessageFragment_to_conversationFragment"
+            app:destination="@id/conversationFragment"
+            app:popUpTo="@id/conversationFragment"
+            app:popUpToInclusive="true"
+            app:launchSingleTop="true"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
 </navigation>

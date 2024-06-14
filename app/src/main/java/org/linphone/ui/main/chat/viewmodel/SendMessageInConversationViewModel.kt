@@ -394,6 +394,10 @@ class SendMessageInConversationViewModel @UiThread constructor() : GenericViewMo
                 val forwardedMessage = chatRoom.createForwardMessage(messageToForward)
                 Log.i("$TAG Sending forwarded message")
                 forwardedMessage.send()
+
+                showGreenToastEvent.postValue(
+                    Event(Pair(R.string.conversation_message_forwarded_toast, R.drawable.forward))
+                )
             }
         }
     }

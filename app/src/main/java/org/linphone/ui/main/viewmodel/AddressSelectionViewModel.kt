@@ -85,7 +85,7 @@ abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccoun
         multipleSelectionMode.value = false
 
         coreContext.postOnCoreThread { core ->
-            limitSearchToLinphoneAccounts = isEndToEndEncryptionMandatory() ?: false
+            limitSearchToLinphoneAccounts = isEndToEndEncryptionMandatory()
 
             coreContext.contactsManager.addListener(contactsListener)
             magicSearch = core.createMagicSearch()

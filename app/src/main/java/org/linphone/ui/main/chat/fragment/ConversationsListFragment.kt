@@ -254,18 +254,6 @@ class ConversationsListFragment : AbstractMainFragment() {
             }
         }
 
-        sharedViewModel.messageToForwardEvent.observe(viewLifecycleOwner) { event ->
-            if (!event.consumed()) {
-                // Do not consume it yet
-                val message = getString(
-                    R.string.conversations_message_waiting_to_be_forwarded_toast
-                )
-                val icon = R.drawable.forward
-                (requireActivity() as GenericActivity).showGreenToast(message, icon)
-                Log.i("$TAG Found a message waiting to be forwarded")
-            }
-        }
-
         sharedViewModel.filesToShareFromIntent.observe(viewLifecycleOwner) { filesToShare ->
             val count = filesToShare.size
             if (count > 0) {

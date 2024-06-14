@@ -1056,13 +1056,17 @@ class ConversationFragment : SlidingPaneChildFragment() {
         }
 
         layout.setForwardClickListener {
-            Log.i("$TAG Forwarding message, going back to conversations list")
+            Log.i("$TAG Forwarding message")
             // Remove observer before setting the message to forward
             // as we don't want to forward it in this chat room
             sharedViewModel.messageToForwardEvent.removeObservers(viewLifecycleOwner)
             sharedViewModel.messageToForwardEvent.postValue(Event(chatMessageModel))
             dismissDialog()
-            goBack()
+
+            if (findNavController().currentDestination?.id == R.id.conversationFragment) {
+                val action = ConversationFragmentDirections.actionConversationFragmentToConversationForwardMessageFragment()
+                findNavController().navigate(action)
+            }
         }
 
         layout.setReplyClickListener {

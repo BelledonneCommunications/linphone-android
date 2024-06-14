@@ -492,6 +492,11 @@
     <string name="conversation_media_list_title">Médias partagés</string>
     <string name="conversation_document_list_title">Documents partagés</string>
 
+    <string name="conversation_forward_message_title">Transférer à…</string>
+    <string name="conversation_message_forwarded_toast">Le message a été transféré</string>
+    <string name="conversation_message_forward_cancelled_toast">Transfert du message abandonné</string>
+    <string name="conversation_message_forward_conversations_list_title">Conversations</string>
+
     <string name="message_delivery_info_read_title">Lu %s</string>
     <string name="message_delivery_info_received_title">Reçu %s</string>
     <string name="message_delivery_info_sent_title">Envoyé %s</string>

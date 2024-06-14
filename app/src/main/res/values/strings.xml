@@ -529,6 +529,11 @@
     <string name="conversation_media_list_title">Shared media</string>
     <string name="conversation_document_list_title">Shared documents</string>
 
+    <string name="conversation_forward_message_title">Forward message to…</string>
+    <string name="conversation_message_forwarded_toast">Message was forwarded</string>
+    <string name="conversation_message_forward_cancelled_toast">Message forward was cancelled</string>
+    <string name="conversation_message_forward_conversations_list_title">Conversations</string>
+
     <string name="message_delivery_info_read_title">Read %s</string>
     <string name="message_delivery_info_received_title">Received %s</string>
     <string name="message_delivery_info_sent_title">Sent %s</string>
