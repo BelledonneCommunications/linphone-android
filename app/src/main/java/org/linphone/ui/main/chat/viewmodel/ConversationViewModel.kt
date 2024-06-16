@@ -563,6 +563,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
             val fakeFriend = coreContext.core.createFriend()
             fakeFriend.name = chatRoom.subject
             val model = ContactAvatarModel(fakeFriend)
+            model.updateSecurityLevelUsingConversation(chatRoom)
             model
         } else {
             coreContext.contactsManager.getContactAvatarModelForAddress(address)

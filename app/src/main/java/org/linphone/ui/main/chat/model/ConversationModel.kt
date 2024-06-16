@@ -335,6 +335,7 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
             fakeFriend.name = chatRoom.subject
             val model = ContactAvatarModel(fakeFriend)
             model.defaultToConversationIcon.postValue(true)
+            model.updateSecurityLevelUsingConversation(chatRoom)
             avatarModel.postValue(model)
         } else {
             avatarModel.postValue(

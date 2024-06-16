@@ -601,6 +601,7 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
             fakeFriend.name = chatRoom.subject
             val model = ContactAvatarModel(fakeFriend)
             model.defaultToConversationIcon.postValue(true)
+            model.updateSecurityLevelUsingConversation(chatRoom)
             model
         } else {
             participantsList.first().avatarModel

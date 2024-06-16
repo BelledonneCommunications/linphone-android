@@ -22,13 +22,16 @@ package org.linphone.ui.main.contacts.model
 import android.net.Uri
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.contacts.AbstractAvatarModel
 import org.linphone.contacts.getNativeContactPictureUri
 import org.linphone.core.Address
+import org.linphone.core.ChatRoom
 import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.Friend
 import org.linphone.core.FriendListenerStub
+import org.linphone.core.SecurityLevel
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.TimestampUtils
@@ -90,6 +93,41 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend, val addre
 
         name.postValue(friend.name)
         computePresence(address)
+    }
+
+    @WorkerThread
+    fun updateSecurityLevelUsingConversation(chatRoom: ChatRoom) {
+        /*
+        // Don't do that, as chatRoom securityLevel is taking into account the security level
+        // between the device and the other devices that shares the same SIP identity
+        val securityLevel = when (chatRoom.securityLevel) {
+            ChatRoom.SecurityLevel.Unsafe -> {
+                SecurityLevel.Unsafe
+            }
+            ChatRoom.SecurityLevel.Encrypted -> {
+                SecurityLevel.EndToEndEncrypted
+            }
+            ChatRoom.SecurityLevel.Safe -> {
+                SecurityLevel.EndToEndEncryptedAndVerified
+            }
+            else -> SecurityLevel.None
+        }*/
+
+        var lowestSecurityLevel = SecurityLevel.EndToEndEncryptedAndVerified
+        for (participant in chatRoom.participants) {
+            val friend = coreContext.contactsManager.findContactByAddress(participant.address)
+            if (friend == null || friend.securityLevel == SecurityLevel.None) {
+                lowestSecurityLevel = SecurityLevel.None
+            } else if (friend.securityLevel == SecurityLevel.Unsafe) {
+                lowestSecurityLevel = SecurityLevel.Unsafe
+                break
+            } else if (friend.securityLevel == SecurityLevel.EndToEndEncrypted || friend.securityLevel == SecurityLevel.PointToPointEncrypted) {
+                if (lowestSecurityLevel != SecurityLevel.None) {
+                    lowestSecurityLevel = SecurityLevel.EndToEndEncrypted
+                }
+            }
+        }
+        trust.postValue(lowestSecurityLevel)
     }
 
     @WorkerThread
