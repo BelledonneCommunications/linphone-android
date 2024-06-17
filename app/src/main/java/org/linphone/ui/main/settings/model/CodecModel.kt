@@ -25,9 +25,9 @@ import androidx.lifecycle.MutableLiveData
 
 class CodecModel @WorkerThread constructor(
     val mimeType: String,
-    val clockRate: Int,
-    val recvFmtp: String?,
-    val isAudioCodec: Boolean,
+    clockRate: Int,
+    recvFmtp: String?,
+    private val isAudioCodec: Boolean,
     enabled: Boolean,
     val onEnabledChanged: ((enabled: Boolean) -> Unit)
 ) {

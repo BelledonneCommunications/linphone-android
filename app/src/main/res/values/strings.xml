@@ -72,7 +72,6 @@
     <string name="dialog_ok">OK</string>
     <string name="dialog_call">Call</string>
     <string name="dialog_delete">Delete</string>
-    <string name="dialog_close">Close</string>
     <string name="dialog_install">Install</string>
     <string name="dialog_do_not_show_anymore">Do not show this dialog anymore</string>
     <string name="dialog_no">No</string>
@@ -219,7 +218,6 @@
     <string name="settings_calls_title">Calls</string>
     <string name="settings_calls_echo_canceller_title">Use echo canceller</string>
     <string name="settings_calls_echo_canceller_subtitle">Prevents echo from being heard by remote end</string>
-    <string name="settings_calls_route_audio_to_bluetooth_title">Route audio to bluetooth device, if any</string>
     <string name="settings_calls_enable_video_title">Enable video</string>
     <string name="settings_calls_enable_fec_title">Enable video FEC</string>
     <string name="settings_calls_vibrate_while_ringing_title">Vibrate while incoming call is ringing</string>
@@ -343,8 +341,6 @@
     <string name="history_call_start_search_bar_filter_hint">Search contact or history call</string>
     <string name="history_call_start_create_group_call">Create a group call</string>
     <string name="history_call_start_no_suggestion_nor_contact">No suggestion and no contact for the moment…</string>
-    <string name="history_call_start_contacts_list_title">Contacts</string>
-    <string name="history_call_start_suggestions_list_title">Suggestions</string>
     <string name="history_group_call_start_dialog_set_subject">Set group call subject</string>
     <string name="history_group_call_start_dialog_subject_hint">Group call subject</string>
     <string name="history_list_empty_history">No call for the moment…</string>
@@ -416,7 +412,6 @@
     <string name="conversations_list_empty">No conversation for the moment…</string>
     <string name="conversations_list_is_being_removed_label">Removal in progress…</string>
     <string name="conversations_last_message_format">%s:</string>
-    <string name="conversations_message_waiting_to_be_forwarded_toast">A message is waiting to be forwarded</string>
     <plurals name="conversations_files_waiting_to_be_shared_toast">
         <item quantity="one">%s file waiting to be shared</item>
         <item quantity="other">%s files waiting to be shared</item>
@@ -532,7 +527,6 @@
     <string name="conversation_forward_message_title">Forward message to…</string>
     <string name="conversation_message_forwarded_toast">Message was forwarded</string>
     <string name="conversation_message_forward_cancelled_toast">Message forward was cancelled</string>
-    <string name="conversation_message_forward_conversations_list_title">Conversations</string>
 
     <string name="message_delivery_info_read_title">Read %s</string>
     <string name="message_delivery_info_received_title">Received %s</string>
@@ -728,6 +722,9 @@
     </plurals>
     <string name="network_not_reachable">You aren\'t connected to internet</string>
     <string name="operation_in_progress_overlay">Operation in progress, please wait</string>
+    <string name="generic_address_picker_conversations_list_title">Conversations</string>
+    <string name="generic_address_picker_contacts_list_title">Contacts</string>
+    <string name="generic_address_picker_suggestions_list_title">Suggestions</string>
 
     <!-- Keep <u></u> in the following strings translations! -->
     <string name="welcome_carousel_skip"><u>Skip</u></string>

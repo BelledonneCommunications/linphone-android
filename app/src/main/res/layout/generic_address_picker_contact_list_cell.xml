@@ -7,14 +7,14 @@
         <import type="android.view.View" />
         <import type="android.graphics.Typeface" />
         <variable
-            name="model"
-            type="org.linphone.ui.main.contacts.model.ContactAvatarModel" />
-        <variable
             name="onClickListener"
             type="View.OnClickListener" />
         <variable
             name="firstContactStartingByThatLetter"
             type="Boolean" />
+        <variable
+            name="model"
+            type="org.linphone.ui.main.model.ConversationContactOrSuggestionModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -42,7 +42,7 @@
             android:layout_width="25dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:text="@{model.firstLetter, default=`A`}"
+            android:text="@{model.avatarModel.firstLetter, default=`A`}"
             android:visibility="@{firstContactStartingByThatLetter ? View.VISIBLE : View.INVISIBLE}"
             android:textColor="?attr/color_main2_400"
             android:textSize="20sp"
@@ -59,7 +59,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             layout="@layout/contact_avatar"
-            bind:model="@{model}"
+            bind:model="@{model.avatarModel}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/header"
             app:layout_constraintTop_toTopOf="parent" />

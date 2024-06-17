@@ -498,7 +498,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
     @WorkerThread
     fun checkIfConversationShouldBeDisabledForSecurityReasons() {
         if (!chatRoom.hasCapability(ChatRoom.Capabilities.Encrypted.toInt())) {
-            if (isEndToEndEncryptionMandatory() == true) {
+            if (isEndToEndEncryptionMandatory()) {
                 Log.w(
                     "$TAG Conversation with subject [${chatRoom.subject}] has been disabled because it isn't encrypted and default account is in secure mode"
                 )

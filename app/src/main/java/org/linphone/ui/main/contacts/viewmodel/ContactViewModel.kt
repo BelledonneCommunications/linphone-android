@@ -250,7 +250,7 @@ class ContactViewModel @UiThread constructor() : GenericViewModel() {
             )
             // Only expand contacts' devices & trust by default if in E2E encrypted mode
             expandDevicesTrust.postValue(
-                isEndToEndEncryptionMandatory() == true
+                isEndToEndEncryptionMandatory()
             )
             coreContext.contactsManager.addListener(contactsListener)
         }
@@ -427,7 +427,7 @@ class ContactViewModel @UiThread constructor() : GenericViewModel() {
             val numbersCount = friend.phoneNumbers.size
 
             // Do not consider phone numbers if default account is in secure mode
-            val enablePhoneNumbers = isEndToEndEncryptionMandatory() != true
+            val enablePhoneNumbers = !isEndToEndEncryptionMandatory()
 
             if (addressesCount == 1 && (numbersCount == 0 || !enablePhoneNumbers)) {
                 Log.i(
@@ -464,7 +464,7 @@ class ContactViewModel @UiThread constructor() : GenericViewModel() {
             val numbersCount = friend.phoneNumbers.size
 
             // Do not consider phone numbers if default account is in secure mode
-            val enablePhoneNumbers = isEndToEndEncryptionMandatory() != true
+            val enablePhoneNumbers = !isEndToEndEncryptionMandatory()
 
             if (addressesCount == 1 && (numbersCount == 0 || !enablePhoneNumbers)) {
                 Log.i(
@@ -501,7 +501,7 @@ class ContactViewModel @UiThread constructor() : GenericViewModel() {
             val numbersCount = friend.phoneNumbers.size
 
             // Do not consider phone numbers if default account is in secure mode
-            val enablePhoneNumbers = isEndToEndEncryptionMandatory() != true
+            val enablePhoneNumbers = !isEndToEndEncryptionMandatory()
 
             if (addressesCount == 1 && (numbersCount == 0 || !enablePhoneNumbers)) {
                 Log.i(

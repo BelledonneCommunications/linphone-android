@@ -32,10 +32,12 @@ import org.linphone.core.MagicSearch
 import org.linphone.core.MagicSearchListenerStub
 import org.linphone.core.SearchResult
 import org.linphone.mediastream.Log
-import org.linphone.ui.main.history.model.ContactOrSuggestionModel
+import org.linphone.ui.main.contacts.model.ContactAvatarModel
+import org.linphone.ui.main.model.ConversationContactOrSuggestionModel
 import org.linphone.ui.main.model.SelectedAddressModel
 import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.utils.AppUtils
+import org.linphone.utils.LinphoneUtils
 
 abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccountChangedViewModel() {
     companion object {
@@ -48,14 +50,18 @@ abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccoun
 
     val selectionCount = MutableLiveData<String>()
 
+    val searchFilter = MutableLiveData<String>()
+
+    val modelsList = MutableLiveData<ArrayList<ConversationContactOrSuggestionModel>>()
+
+    val isEmpty = MutableLiveData<Boolean>()
+
     protected var magicSearchSourceFlags = MagicSearch.Source.All.toInt()
+
+    protected var skipConversation: Boolean = true
 
     private var currentFilter = ""
     private var previousFilter = "NotSet"
-
-    val searchFilter = MutableLiveData<String>()
-
-    val contactsAndSuggestionsList = MutableLiveData<ArrayList<ContactOrSuggestionModel>>()
 
     private var limitSearchToLinphoneAccounts = true
 
@@ -83,6 +89,7 @@ abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccoun
 
     init {
         multipleSelectionMode.value = false
+        isEmpty.value = true
 
         coreContext.postOnCoreThread { core ->
             limitSearchToLinphoneAccounts = isEndToEndEncryptionMandatory()
@@ -221,15 +228,67 @@ abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccoun
     private fun processMagicSearchResults(results: Array<SearchResult>) {
         Log.i("$TAG Processing [${results.size}] results")
 
-        val contactsList = arrayListOf<ContactOrSuggestionModel>()
-        val suggestionsList = arrayListOf<ContactOrSuggestionModel>()
+        val conversationsList = arrayListOf<ConversationContactOrSuggestionModel>()
+        if (!skipConversation) {
+            for (chatRoom in LinphoneUtils.getDefaultAccount()?.chatRooms.orEmpty()) {
+                // Only get group conversations
+                if (!chatRoom.currentParams.isGroupEnabled) {
+                    continue
+                }
+
+                val found = if (currentFilter.isEmpty()) {
+                    null
+                } else {
+                    chatRoom.participants.find {
+                        // Search in address but also in contact name if exists
+                        val model =
+                            coreContext.contactsManager.getContactAvatarModelForAddress(it.address)
+                        model.contactName?.contains(
+                            currentFilter,
+                            ignoreCase = true
+                        ) == true || it.address.asStringUriOnly().contains(
+                            currentFilter,
+                            ignoreCase = true
+                        )
+                    }
+                }
+                if (
+                    currentFilter.isEmpty() ||
+                    found != null ||
+                    chatRoom.peerAddress.asStringUriOnly().contains(
+                        currentFilter,
+                        ignoreCase = true
+                    ) ||
+                    chatRoom.subject.orEmpty().contains(currentFilter, ignoreCase = true)
+                ) {
+                    val localAddress = chatRoom.localAddress
+                    val remoteAddress = chatRoom.peerAddress
+                    val model = ConversationContactOrSuggestionModel(
+                        remoteAddress,
+                        localAddress,
+                        chatRoom.subject
+                    )
+
+                    val fakeFriend = coreContext.core.createFriend()
+                    fakeFriend.name = chatRoom.subject
+                    val avatarModel = ContactAvatarModel(fakeFriend)
+                    avatarModel.defaultToConversationIcon.postValue(true)
+
+                    model.avatarModel.postValue(avatarModel)
+                    conversationsList.add(model)
+                }
+            }
+        }
+
+        val contactsList = arrayListOf<ConversationContactOrSuggestionModel>()
+        val suggestionsList = arrayListOf<ConversationContactOrSuggestionModel>()
 
         for (result in results) {
             val address = result.address
             if (address != null) {
                 val friend = coreContext.contactsManager.findContactByAddress(address)
                 if (friend != null) {
-                    val model = ContactOrSuggestionModel(address, friend)
+                    val model = ConversationContactOrSuggestionModel(address, friend = friend)
                     val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
                         address
                     )
@@ -255,7 +314,7 @@ abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccoun
                         continue
                     }
 
-                    val model = ContactOrSuggestionModel(address) {
+                    val model = ConversationContactOrSuggestionModel(address) {
                         coreContext.startAudioCall(address)
                     }
 
@@ -272,12 +331,14 @@ abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccoun
             collator.compare(model1.name, model2.name)
         }
 
-        val list = arrayListOf<ContactOrSuggestionModel>()
+        val list = arrayListOf<ConversationContactOrSuggestionModel>()
+        list.addAll(conversationsList)
         list.addAll(contactsList)
         list.addAll(suggestionsList)
-        contactsAndSuggestionsList.postValue(list)
+        modelsList.postValue(list)
+        isEmpty.postValue(list.isEmpty())
         Log.i(
-            "$TAG Processed [${results.size}] results, extracted [${suggestionsList.size}] suggestions"
+            "$TAG Processed [${results.size}] results: [${conversationsList.size}] conversations, [${contactsList.size}] contacts and [${suggestionsList.size}] suggestions"
         )
     }
 }

@@ -32,7 +32,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatMessageForwardFragmentBinding
-import org.linphone.ui.main.chat.adapter.ConversationsContactsAndSuggestionsListAdapter
+import org.linphone.ui.adapter.ConversationsContactsAndSuggestionsListAdapter
 import org.linphone.ui.main.chat.viewmodel.ConversationForwardMessageViewModel
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
@@ -103,7 +103,7 @@ class ConversationForwardMessageFragment : SlidingPaneChildFragment() {
         val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
         binding.contactsList.addItemDecoration(headerItemDecoration)
 
-        viewModel.conversationsContactsAndSuggestionsList.observe(
+        viewModel.modelsList.observe(
             viewLifecycleOwner
         ) {
             Log.i(

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.main.chat.model
+package org.linphone.ui.main.model
 
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
@@ -31,7 +31,7 @@ import org.linphone.utils.LinphoneUtils
 class ConversationContactOrSuggestionModel @WorkerThread constructor(
     val address: Address,
     val localAddress: Address? = null,
-    private val conversationSubject: String? = null,
+    conversationSubject: String? = null,
     val friend: Friend? = null,
     private val onClicked: ((Address) -> Unit)? = null
 ) {

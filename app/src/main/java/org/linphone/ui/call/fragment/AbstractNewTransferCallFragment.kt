@@ -37,12 +37,12 @@ import org.linphone.contacts.getListOfSipAddressesAndPhoneNumbers
 import org.linphone.core.Address
 import org.linphone.core.tools.Log
 import org.linphone.databinding.StartCallFragmentBinding
+import org.linphone.ui.adapter.ConversationsContactsAndSuggestionsListAdapter
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
-import org.linphone.ui.main.history.adapter.ContactsAndSuggestionsListAdapter
-import org.linphone.ui.main.history.model.ContactOrSuggestionModel
 import org.linphone.ui.main.history.viewmodel.StartCallViewModel
+import org.linphone.ui.main.model.ConversationContactOrSuggestionModel
 import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.LinphoneUtils
@@ -62,7 +62,7 @@ abstract class AbstractNewTransferCallFragment : GenericCallFragment() {
         R.id.call_nav_graph
     )
 
-    private lateinit var adapter: ContactsAndSuggestionsListAdapter
+    private lateinit var adapter: ConversationsContactsAndSuggestionsListAdapter
 
     private val listener = object : ContactNumberOrAddressClickListener {
         @UiThread
@@ -87,7 +87,7 @@ abstract class AbstractNewTransferCallFragment : GenericCallFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        adapter = ContactsAndSuggestionsListAdapter()
+        adapter = ConversationsContactsAndSuggestionsListAdapter()
     }
 
     override fun onCreateView(
@@ -125,7 +125,7 @@ abstract class AbstractNewTransferCallFragment : GenericCallFragment() {
             binding.contactsAndSuggestionsList.adapter = adapter
         }
 
-        adapter.contactClickedEvent.observe(viewLifecycleOwner) {
+        adapter.onClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
                 startCall(model)
             }
@@ -133,7 +133,7 @@ abstract class AbstractNewTransferCallFragment : GenericCallFragment() {
 
         binding.contactsAndSuggestionsList.layoutManager = LinearLayoutManager(requireContext())
 
-        viewModel.contactsAndSuggestionsList.observe(
+        viewModel.modelsList.observe(
             viewLifecycleOwner
         ) {
             Log.i("$TAG Contacts & suggestions list is ready with [${it.size}] items")
@@ -213,7 +213,7 @@ abstract class AbstractNewTransferCallFragment : GenericCallFragment() {
     @WorkerThread
     abstract fun action(address: Address)
 
-    private fun startCall(model: ContactOrSuggestionModel) {
+    private fun startCall(model: ConversationContactOrSuggestionModel) {
         coreContext.postOnCoreThread { core ->
             val friend = model.friend
             if (friend == null) {
@@ -225,7 +225,7 @@ abstract class AbstractNewTransferCallFragment : GenericCallFragment() {
             val numbersCount = friend.phoneNumbers.size
 
             // Do not consider phone numbers if default account is in secure mode
-            val enablePhoneNumbers = isEndToEndEncryptionMandatory() != true
+            val enablePhoneNumbers = !isEndToEndEncryptionMandatory()
 
             if (addressesCount == 1 && (numbersCount == 0 || !enablePhoneNumbers)) {
                 Log.i(

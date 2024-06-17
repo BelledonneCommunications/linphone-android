@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.main.chat.adapter
+package org.linphone.ui.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -31,11 +31,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
-import org.linphone.databinding.ChatMessageForwardContactListCellBinding
-import org.linphone.databinding.ChatMessageForwardConversationListCellBinding
-import org.linphone.databinding.ChatMessageForwardSuggestionListCellBinding
-import org.linphone.databinding.StartCallSuggestionListDecorationBinding
-import org.linphone.ui.main.chat.model.ConversationContactOrSuggestionModel
+import org.linphone.databinding.GenericAddressPickerContactListCellBinding
+import org.linphone.databinding.GenericAddressPickerConversationListCellBinding
+import org.linphone.databinding.GenericAddressPickerListDecorationBinding
+import org.linphone.databinding.GenericAddressPickerSuggestionListCellBinding
+import org.linphone.ui.main.model.ConversationContactOrSuggestionModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.HeaderAdapter
@@ -64,16 +64,18 @@ class ConversationsContactsAndSuggestionsListAdapter :
     }
 
     override fun getHeaderViewForPosition(context: Context, position: Int): View {
-        val binding = StartCallSuggestionListDecorationBinding.inflate(LayoutInflater.from(context))
+        val binding = GenericAddressPickerListDecorationBinding.inflate(
+            LayoutInflater.from(context)
+        )
         binding.header.text = when (getItemViewType(position)) {
             CONVERSATION_TYPE -> {
-                AppUtils.getString(R.string.conversation_message_forward_conversations_list_title)
+                AppUtils.getString(R.string.generic_address_picker_conversations_list_title)
             }
             SUGGESTION_TYPE -> {
-                AppUtils.getString(R.string.history_call_start_suggestions_list_title)
+                AppUtils.getString(R.string.generic_address_picker_suggestions_list_title)
             }
             else -> {
-                AppUtils.getString(R.string.history_call_start_contacts_list_title)
+                AppUtils.getString(R.string.generic_address_picker_contacts_list_title)
             }
         }
         return binding.root
@@ -93,33 +95,51 @@ class ConversationsContactsAndSuggestionsListAdapter :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             CONVERSATION_TYPE -> {
-                val binding: ChatMessageForwardConversationListCellBinding = DataBindingUtil.inflate(
+                val binding: GenericAddressPickerConversationListCellBinding = DataBindingUtil.inflate(
                     LayoutInflater.from(parent.context),
-                    R.layout.chat_message_forward_conversation_list_cell,
+                    R.layout.generic_address_picker_conversation_list_cell,
                     parent,
                     false
                 )
-                binding.lifecycleOwner = parent.findViewTreeLifecycleOwner()
+                binding.apply {
+                    lifecycleOwner = parent.findViewTreeLifecycleOwner()
+
+                    setOnClickListener {
+                        onClickedEvent.value = Event(model!!)
+                    }
+                }
                 ConversationViewHolder(binding)
             }
             CONTACT_TYPE -> {
-                val binding: ChatMessageForwardContactListCellBinding = DataBindingUtil.inflate(
+                val binding: GenericAddressPickerContactListCellBinding = DataBindingUtil.inflate(
                     LayoutInflater.from(parent.context),
-                    R.layout.chat_message_forward_contact_list_cell,
+                    R.layout.generic_address_picker_contact_list_cell,
                     parent,
                     false
                 )
-                binding.lifecycleOwner = parent.findViewTreeLifecycleOwner()
+                binding.apply {
+                    lifecycleOwner = parent.findViewTreeLifecycleOwner()
+
+                    setOnClickListener {
+                        onClickedEvent.value = Event(model!!)
+                    }
+                }
                 ContactViewHolder(binding)
             }
             else -> {
-                val binding: ChatMessageForwardSuggestionListCellBinding = DataBindingUtil.inflate(
+                val binding: GenericAddressPickerSuggestionListCellBinding = DataBindingUtil.inflate(
                     LayoutInflater.from(parent.context),
-                    R.layout.chat_message_forward_suggestion_list_cell,
+                    R.layout.generic_address_picker_suggestion_list_cell,
                     parent,
                     false
                 )
-                binding.lifecycleOwner = parent.findViewTreeLifecycleOwner()
+                binding.apply {
+                    lifecycleOwner = parent.findViewTreeLifecycleOwner()
+
+                    setOnClickListener {
+                        onClickedEvent.value = Event(model!!)
+                    }
+                }
                 SuggestionViewHolder(binding)
             }
         }
@@ -134,16 +154,12 @@ class ConversationsContactsAndSuggestionsListAdapter :
     }
 
     inner class ConversationViewHolder(
-        val binding: ChatMessageForwardConversationListCellBinding
+        val binding: GenericAddressPickerConversationListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         @UiThread
         fun bind(conversationContactOrSuggestionModel: ConversationContactOrSuggestionModel) {
             with(binding) {
                 model = conversationContactOrSuggestionModel
-
-                setOnClickListener {
-                    onClickedEvent.value = Event(conversationContactOrSuggestionModel)
-                }
 
                 executePendingBindings()
             }
@@ -151,16 +167,12 @@ class ConversationsContactsAndSuggestionsListAdapter :
     }
 
     inner class ContactViewHolder(
-        val binding: ChatMessageForwardContactListCellBinding
+        val binding: GenericAddressPickerContactListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         @UiThread
         fun bind(conversationContactOrSuggestionModel: ConversationContactOrSuggestionModel) {
             with(binding) {
-                model = conversationContactOrSuggestionModel.avatarModel.value
-
-                setOnClickListener {
-                    onClickedEvent.value = Event(conversationContactOrSuggestionModel)
-                }
+                model = conversationContactOrSuggestionModel
 
                 val previousItem = bindingAdapterPosition - 1
                 val previousLetter = if (previousItem >= 0) {
@@ -179,16 +191,12 @@ class ConversationsContactsAndSuggestionsListAdapter :
     }
 
     inner class SuggestionViewHolder(
-        val binding: ChatMessageForwardSuggestionListCellBinding
+        val binding: GenericAddressPickerSuggestionListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         @UiThread
         fun bind(conversationContactOrSuggestionModel: ConversationContactOrSuggestionModel) {
             with(binding) {
                 model = conversationContactOrSuggestionModel
-
-                setOnClickListener {
-                    onClickedEvent.value = Event(conversationContactOrSuggestionModel)
-                }
 
                 executePendingBindings()
             }

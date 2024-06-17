@@ -79,7 +79,6 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
     val showConversationsSettings = MutableLiveData<Boolean>()
 
     val autoDownloadEnabled = MutableLiveData<Boolean>()
-    val exportMediaEnabled = MutableLiveData<Boolean>()
 
     // Contacts settings
     val showContactsSettings = MutableLiveData<Boolean>()

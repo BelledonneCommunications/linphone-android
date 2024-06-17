@@ -31,11 +31,11 @@ import org.linphone.contacts.getListOfSipAddressesAndPhoneNumbers
 import org.linphone.core.Address
 import org.linphone.core.Friend
 import org.linphone.core.tools.Log
+import org.linphone.ui.adapter.ConversationsContactsAndSuggestionsListAdapter
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
-import org.linphone.ui.main.history.adapter.ContactsAndSuggestionsListAdapter
-import org.linphone.ui.main.history.model.ContactOrSuggestionModel
+import org.linphone.ui.main.model.ConversationContactOrSuggestionModel
 import org.linphone.ui.main.model.SelectedAddressModel
 import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.ui.main.viewmodel.AddressSelectionViewModel
@@ -51,7 +51,7 @@ abstract class GenericAddressPickerFragment : GenericMainFragment() {
 
     private var numberOrAddressPickerDialog: Dialog? = null
 
-    protected lateinit var adapter: ContactsAndSuggestionsListAdapter
+    protected lateinit var adapter: ConversationsContactsAndSuggestionsListAdapter
 
     protected abstract val viewModel: AddressSelectionViewModel
 
@@ -85,13 +85,13 @@ abstract class GenericAddressPickerFragment : GenericMainFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        adapter = ContactsAndSuggestionsListAdapter()
+        adapter = ConversationsContactsAndSuggestionsListAdapter()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter.contactClickedEvent.observe(viewLifecycleOwner) {
+        adapter.onClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
                 handleClickOnContactModel(model)
             }
@@ -147,7 +147,7 @@ abstract class GenericAddressPickerFragment : GenericMainFragment() {
         }
     }
 
-    private fun handleClickOnContactModel(model: ContactOrSuggestionModel) {
+    private fun handleClickOnContactModel(model: ConversationContactOrSuggestionModel) {
         coreContext.postOnCoreThread { core ->
             val friend = model.friend
             if (friend == null) {
@@ -162,7 +162,7 @@ abstract class GenericAddressPickerFragment : GenericMainFragment() {
             val numbersCount = friend.phoneNumbers.size
 
             // Do not consider phone numbers if default account is in secure mode
-            val enablePhoneNumbers = isEndToEndEncryptionMandatory() != true
+            val enablePhoneNumbers = !isEndToEndEncryptionMandatory()
 
             if (addressesCount == 1 && (numbersCount == 0 || !enablePhoneNumbers)) {
                 val address = friend.addresses.first()

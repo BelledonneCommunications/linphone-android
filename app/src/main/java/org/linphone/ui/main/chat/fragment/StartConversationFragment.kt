@@ -79,7 +79,7 @@ class StartConversationFragment : GenericAddressPickerFragment() {
 
         setupRecyclerView(binding.contactsList)
 
-        viewModel.contactsAndSuggestionsList.observe(
+        viewModel.modelsList.observe(
             viewLifecycleOwner
         ) {
             Log.i("$TAG Contacts & suggestions list is ready with [${it.size}] items")
