@@ -17,8 +17,9 @@ Group changes to describe their impact on the project, as follows:
 
 ### Changed
 - Separated threads: Contrary to previous versions, our SDK is now running in it's own thread, meaning it won't freeze the UI anymore in case of heavy work, thus reducing the number of ANR and greatly increasing the fluidity of the app.
+- Asymmetrical video : you no longer need to send your own camera feed to receive the one from the remote end of the call, and vice versa.
 - Improved multi account: you'll only see history, conversations, meetings etc... related to currently selected account, and you can switch the default account in two clicks.
-- Settings: a lot of them are gone, the one that are still there have been reworked to increase user friendlyness.
+- Settings: a lot of them are gone, the one that are still there have been reworked to increase user friendliness.
 - Default screen (between contacts, call history, conversations & meetings list) will change depending on where you were when the app was paused or killed, and you will return to that last visited screen on the next startup.
 - Gradle files have been migrated from Groovy to Kotlin DSL, and dependencies are now in a separated file (libs.versions.toml).
 - Account creation no longer allows you to use your phone number as username, but it is still required to provide it to receive activation code by SMS.
