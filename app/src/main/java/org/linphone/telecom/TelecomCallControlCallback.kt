@@ -203,7 +203,9 @@ class TelecomCallControlCallback(
                     if (result is CallControlResult.Error) {
                         Log.e("$TAG Failed to change endpoint audio device, error [$result]")
                     } else {
-                        Log.i("$TAG It took [$attempts] attempt(s) to change endpoint audio device...")
+                        Log.i(
+                            "$TAG It took [$attempts] attempt(s) to change endpoint audio device..."
+                        )
                     }
                 }
 

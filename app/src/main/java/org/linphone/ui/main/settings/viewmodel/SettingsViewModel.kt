@@ -118,6 +118,7 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
 
     // Network settings
     val useWifiOnly = MutableLiveData<Boolean>()
+    val allowIpv6 = MutableLiveData<Boolean>()
 
     // User Interface settings
     val showThemeSelector = MutableLiveData<Boolean>()
@@ -234,6 +235,7 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
             autoRecordCalls.postValue(corePreferences.automaticallyStartCallRecording)
 
             useWifiOnly.postValue(core.isWifiOnlyEnabled)
+            allowIpv6.postValue(core.isIpv6Enabled)
 
             autoDownloadEnabled.postValue(core.maxSizeForAutoDownloadIncomingFiles == 0)
 
@@ -440,6 +442,15 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
         coreContext.postOnCoreThread { core ->
             core.isWifiOnlyEnabled = newValue
             useWifiOnly.postValue(newValue)
+        }
+    }
+
+    @UiThread
+    fun toggleIpv6() {
+        val newValue = allowIpv6.value == false
+        coreContext.postOnCoreThread { core ->
+            core.isIpv6Enabled = newValue
+            allowIpv6.postValue(newValue)
         }
     }
 

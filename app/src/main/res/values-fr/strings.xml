@@ -223,6 +223,7 @@
     <string name="settings_meetings_layout_mosaic_label">Mosaïque</string>
     <string name="settings_network_title">Réseau</string>
     <string name="settings_network_use_wifi_only">Se connecter uniquement via le Wi-Fi</string>
+    <string name="settings_network_allow_ipv6">Autoriser l\'IPv6</string>
     <string name="settings_user_interface_title">Affichage</string>
     <string name="settings_user_interface_theme_title">Thème</string>
     <string name="settings_user_interface_dark_theme_label">Sombre</string>
