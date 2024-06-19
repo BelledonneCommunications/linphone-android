@@ -115,16 +115,17 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend, val addre
 
         var lowestSecurityLevel = SecurityLevel.EndToEndEncryptedAndVerified
         for (participant in chatRoom.participants) {
-            val friend = coreContext.contactsManager.findContactByAddress(participant.address)
-            if (friend == null || friend.securityLevel == SecurityLevel.None) {
+            val avatar = coreContext.contactsManager.getContactAvatarModelForAddress(
+                participant.address
+            )
+            val level = avatar.trust.value ?: SecurityLevel.None
+            if (level == SecurityLevel.None) {
                 lowestSecurityLevel = SecurityLevel.None
-            } else if (friend.securityLevel == SecurityLevel.Unsafe) {
+            } else if (level == SecurityLevel.Unsafe) {
                 lowestSecurityLevel = SecurityLevel.Unsafe
                 break
-            } else if (friend.securityLevel == SecurityLevel.EndToEndEncrypted || friend.securityLevel == SecurityLevel.PointToPointEncrypted) {
-                if (lowestSecurityLevel != SecurityLevel.None) {
-                    lowestSecurityLevel = SecurityLevel.EndToEndEncrypted
-                }
+            } else if (lowestSecurityLevel != SecurityLevel.None && level != SecurityLevel.EndToEndEncryptedAndVerified) {
+                lowestSecurityLevel = SecurityLevel.EndToEndEncrypted
             }
         }
         trust.postValue(lowestSecurityLevel)
