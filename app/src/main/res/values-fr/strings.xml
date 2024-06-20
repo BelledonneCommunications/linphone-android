@@ -586,9 +586,11 @@
     <string name="calls_list_dialog_merge_into_conference_title">Fusionner les appels en une conférence ?</string>
     <string name="calls_list_dialog_merge_into_conference_label">Créer une conférence</string>
 
-    <string name="call_dialog_zrtp_validate_trust_title">Valider l\'appareil</string>
-    <string name="call_dialog_zrtp_validate_trust_subtitle">Dites %s puis cliquez sur les lettres données par votre correspondant :</string>
-    <string name="call_dialog_zrtp_validate_trust_letters_do_not_match">Je ne trouve pas</string>
+    <string name="call_dialog_zrtp_validate_trust_title">Vérification de sécurité</string>
+    <string name="call_dialog_zrtp_validate_trust_message">Pour votre sécurité, nous avons besoin de vérifier l\'appareil de votre correspondant.\nVeuillez échanger vos codes :</string>
+    <string name="call_dialog_zrtp_validate_trust_local_code_label">Votre code :</string>
+    <string name="call_dialog_zrtp_validate_trust_remote_code_label">Code correspondant : </string>
+    <string name="call_dialog_zrtp_validate_trust_letters_do_not_match">Aucune correspondance</string>
 
     <string name="call_audio_device_type_earpiece">Oreilette</string>
     <string name="call_audio_device_type_speaker">Haut parleur</string>

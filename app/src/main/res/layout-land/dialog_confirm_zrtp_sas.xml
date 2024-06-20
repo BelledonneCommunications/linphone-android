@@ -13,173 +13,252 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp">
 
-        <ImageView
-            android:id="@+id/dialog_background"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp"
-            android:layout_marginBottom="2dp"
-            android:src="@drawable/shape_dialog_background"
-            android:contentDescription="@null"
-            app:layout_constraintBottom_toBottomOf="@id/anchor"
-            app:layout_constraintWidth_max="@dimen/dialog_max_width"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/title" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/section_header_style"
-            android:id="@+id/title"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/header"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:paddingTop="@dimen/dialog_top_bottom_margin"
-            android:text="@string/call_dialog_zrtp_validate_trust_title"
+            android:background="@drawable/shape_zrtp_dialog_header_background"
             app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintBottom_toTopOf="@id/message"
-            app:layout_constraintStart_toStartOf="@id/dialog_background"
-            app:layout_constraintEnd_toEndOf="@id/dialog_background"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintWidth_max="@dimen/dialog_max_width"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/body"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style"
-            android:id="@+id/message"
+            <ImageView
+                android:id="@+id/header_icon"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/lock_key"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:tint="@color/white" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_700"
+                android:id="@id/header_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:paddingBottom="10dp"
+                android:text="@string/call_dialog_zrtp_validate_trust_title"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                app:layout_constraintTop_toBottomOf="@id/header_icon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_600"
+                android:id="@+id/skip"
+                android:onClick="@{() -> viewModel.skip()}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="13dp"
+                android:paddingBottom="13dp"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                android:text="@string/call_zrtp_sas_validation_skip"
+                android:textSize="13sp"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/body"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginTop="10dp"
-            android:text="@{viewModel.message, default=@string/call_dialog_zrtp_validate_trust_subtitle}"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toTopOf="@id/letters_1"
-            app:layout_constraintStart_toStartOf="@id/dialog_background"
-            app:layout_constraintEnd_toEndOf="@id/dialog_background"
-            app:layout_constraintTop_toBottomOf="@id/title" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{() -> viewModel.lettersClicked(viewModel.letters1)}"
-            style="@style/default_text_style"
-            android:id="@+id/letters_1"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="32dp"
-            android:text="@{viewModel.letters1, default=`RV`}"
-            android:textSize="32sp"
-            android:textColor="@color/gray_main2_600"
-            android:gravity="center"
-            android:background="@drawable/shape_circle_white_call_background"
-            android:elevation="5dp"
+            android:background="@drawable/shape_zrtp_dialog_background"
+            app:layout_constraintWidth_max="@dimen/dialog_max_width"
+            app:layout_constraintTop_toBottomOf="@id/header"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/letters_2"
-            app:layout_constraintTop_toBottomOf="@id/message"
-            app:layout_constraintBottom_toTopOf="@id/skip"
-            app:layout_constraintHorizontal_chainStyle="packed"/>
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{() -> viewModel.lettersClicked(viewModel.letters2)}"
-            style="@style/default_text_style"
-            android:id="@+id/letters_2"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_marginEnd="32dp"
-            android:text="@{viewModel.letters2, default=`PT`}"
-            android:textSize="32sp"
-            android:textColor="@color/gray_main2_600"
-            android:gravity="center"
-            android:background="@drawable/shape_circle_white_call_background"
-            android:elevation="5dp"
-            app:layout_constraintStart_toEndOf="@id/letters_1"
-            app:layout_constraintEnd_toStartOf="@id/letters_3"
-            app:layout_constraintTop_toTopOf="@id/letters_1"
-            app:layout_constraintBottom_toBottomOf="@id/letters_1"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:id="@+id/message"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/call_dialog_zrtp_validate_trust_message"
+                android:textSize="14sp"
+                android:textColor="@color/gray_main2_600"
+                android:gravity="center"
+                app:layout_constraintWidth_max="@dimen/toast_max_width"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/local_code_label"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{() -> viewModel.lettersClicked(viewModel.letters3)}"
-            style="@style/default_text_style"
-            android:id="@+id/letters_3"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_marginEnd="32dp"
-            android:text="@{viewModel.letters3, default=`BB`}"
-            android:textSize="32sp"
-            android:textColor="@color/gray_main2_600"
-            android:gravity="center"
-            android:background="@drawable/shape_circle_white_call_background"
-            android:elevation="5dp"
-            app:layout_constraintStart_toEndOf="@id/letters_2"
-            app:layout_constraintEnd_toStartOf="@id/letters_4"
-            app:layout_constraintTop_toTopOf="@id/letters_2"
-            app:layout_constraintBottom_toBottomOf="@id/letters_2"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:id="@+id/local_code_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:text="@string/call_dialog_zrtp_validate_trust_local_code_label"
+                android:textSize="14sp"
+                android:textColor="@color/gray_main2_600"
+                app:layout_constraintStart_toEndOf="@id/message"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/message"
+                app:layout_constraintBottom_toTopOf="@id/local_code_value"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{() -> viewModel.lettersClicked(viewModel.letters4)}"
-            style="@style/default_text_style"
-            android:id="@+id/letters_4"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:text="@{viewModel.letters4, default=`NM`}"
-            android:textSize="32sp"
-            android:textColor="@color/gray_main2_600"
-            android:gravity="center"
-            android:background="@drawable/shape_circle_white_call_background"
-            android:elevation="5dp"
-            app:layout_constraintStart_toEndOf="@id/letters_3"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/letters_1"
-            app:layout_constraintBottom_toBottomOf="@id/letters_1"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_700"
+                android:id="@+id/local_code_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.localToken, default=`ZZ`}"
+                android:textSize="18sp"
+                android:textColor="@color/gray_main2_600"
+                app:layout_constraintStart_toStartOf="@id/local_code_label"
+                app:layout_constraintEnd_toEndOf="@id/local_code_label"
+                app:layout_constraintTop_toBottomOf="@id/local_code_label"
+                app:layout_constraintBottom_toBottomOf="@id/message"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{() -> viewModel.skip()}"
-            style="@style/default_text_style_600"
-            android:id="@+id/skip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingEnd="20dp"
-            android:paddingStart="20dp"
-            android:text="@string/call_zrtp_sas_validation_skip"
-            android:textSize="13sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/letters_1"
-            app:layout_constraintBottom_toTopOf="@id/nothing_matches"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/remote_tokens"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingStart="30dp"
+                android:paddingEnd="30dp"
+                android:paddingBottom="10dp"
+                android:background="@drawable/shape_zrtp_tokens_dialog_background"
+                app:layout_constraintTop_toBottomOf="@id/message"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{() -> viewModel.notFound()}"
-            style="@style/default_text_style_600"
-            android:id="@+id/nothing_matches"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:paddingBottom="@dimen/primary_secondary_buttons_label_padding"
-            android:paddingTop="@dimen/primary_secondary_buttons_label_padding"
-            android:gravity="center"
-            android:background="@drawable/shape_red_outlined_button_background"
-            android:text="@string/call_dialog_zrtp_validate_trust_letters_do_not_match"
-            android:textSize="18sp"
-            android:textColor="?attr/color_danger_500"
-            app:layout_constraintStart_toStartOf="@id/dialog_background"
-            app:layout_constraintEnd_toEndOf="@id/dialog_background"
-            app:layout_constraintTop_toBottomOf="@id/skip"
-            app:layout_constraintBottom_toTopOf="@id/anchor"/>
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style"
+                    android:id="@+id/remote_code_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/call_dialog_zrtp_validate_trust_remote_code_label"
+                    android:textSize="14sp"
+                    android:textColor="@color/gray_main2_600"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
-        <View
-            android:id="@+id/anchor"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/dialog_top_bottom_margin"
-            app:layout_constraintTop_toBottomOf="@id/nothing_matches"
-            app:layout_constraintStart_toStartOf="@id/dialog_background"
-            app:layout_constraintEnd_toEndOf="@id/dialog_background"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:onClick="@{() -> viewModel.lettersClicked(viewModel.letters1)}"
+                    style="@style/default_text_style"
+                    android:id="@+id/letters_1"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@{viewModel.letters1, default=`RV`}"
+                    android:textSize="32sp"
+                    android:textColor="@color/gray_main2_600"
+                    android:gravity="center"
+                    android:background="@drawable/circle_white_button_background"
+                    android:elevation="5dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/letters_2"
+                    app:layout_constraintTop_toBottomOf="@id/remote_code_label"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintHorizontal_chainStyle="packed"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:onClick="@{() -> viewModel.lettersClicked(viewModel.letters2)}"
+                    style="@style/default_text_style"
+                    android:id="@+id/letters_2"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="@{viewModel.letters2, default=`PT`}"
+                    android:textSize="32sp"
+                    android:textColor="@color/gray_main2_600"
+                    android:gravity="center"
+                    android:background="@drawable/circle_white_button_background"
+                    android:elevation="5dp"
+                    app:layout_constraintStart_toEndOf="@id/letters_1"
+                    app:layout_constraintEnd_toStartOf="@id/letters_3"
+                    app:layout_constraintTop_toTopOf="@id/letters_1"
+                    app:layout_constraintBottom_toBottomOf="@id/letters_1"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:onClick="@{() -> viewModel.lettersClicked(viewModel.letters3)}"
+                    style="@style/default_text_style"
+                    android:id="@+id/letters_3"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginStart="10dp"
+                    android:text="@{viewModel.letters3, default=`BB`}"
+                    android:textSize="32sp"
+                    android:textColor="@color/gray_main2_600"
+                    android:gravity="center"
+                    android:background="@drawable/circle_white_button_background"
+                    android:elevation="5dp"
+                    app:layout_constraintStart_toEndOf="@id/letters_2"
+                    app:layout_constraintEnd_toStartOf="@id/letters_4"
+                    app:layout_constraintTop_toTopOf="@id/letters_1"
+                    app:layout_constraintBottom_toBottomOf="@id/letters_1"
+                    app:layout_constraintHorizontal_chainStyle="packed"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:onClick="@{() -> viewModel.lettersClicked(viewModel.letters4)}"
+                    style="@style/default_text_style"
+                    android:id="@+id/letters_4"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="@{viewModel.letters4, default=`NM`}"
+                    android:textSize="32sp"
+                    android:textColor="@color/gray_main2_600"
+                    android:gravity="center"
+                    android:background="@drawable/circle_white_button_background"
+                    android:elevation="5dp"
+                    app:layout_constraintStart_toEndOf="@id/letters_3"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/letters_1"
+                    app:layout_constraintBottom_toBottomOf="@id/letters_1"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:onClick="@{() -> viewModel.notFound()}"
+                style="@style/default_text_style_600"
+                android:id="@+id/nothing_matches"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:paddingBottom="@dimen/primary_secondary_buttons_label_padding"
+                android:paddingTop="@dimen/primary_secondary_buttons_label_padding"
+                android:gravity="center"
+                android:background="@drawable/shape_red_outlined_button_background"
+                android:text="@string/call_dialog_zrtp_validate_trust_letters_do_not_match"
+                android:textSize="18sp"
+                android:textColor="?attr/color_danger_500"
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:layout_constraintWidth_max="@dimen/button_max_width"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/remote_tokens"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -19,16 +19,10 @@
  */
 package org.linphone.ui.call.model
 
-import android.graphics.Typeface
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.style.StyleSpan
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
-import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
-import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
 class ZrtpSasConfirmationDialogModel @UiThread constructor(
@@ -39,7 +33,7 @@ class ZrtpSasConfirmationDialogModel @UiThread constructor(
         private const val TAG = "[ZRTP SAS Confirmation Dialog]"
     }
 
-    val message = MutableLiveData<Spanned>()
+    val localToken = MutableLiveData<String>()
     val letters1 = MutableLiveData<String>()
     val letters2 = MutableLiveData<String>()
     val letters3 = MutableLiveData<String>()
@@ -50,17 +44,7 @@ class ZrtpSasConfirmationDialogModel @UiThread constructor(
     val skipEvent = MutableLiveData<Event<Boolean>>()
 
     init {
-        val text = AppUtils.getString(R.string.call_dialog_zrtp_validate_trust_subtitle)
-        val boldIndex = text.indexOf("%s")
-        val formattedText = text.replace("%s", authTokenToRead)
-        val builder = SpannableStringBuilder(formattedText)
-        builder.setSpan(
-            StyleSpan(Typeface.BOLD),
-            boldIndex,
-            boldIndex + authTokenToRead.length,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        message.value = builder
+        localToken.value = authTokenToRead
         letters1.value = authTokensToListen[0]
         letters2.value = authTokensToListen[1]
         letters3.value = authTokensToListen[2]

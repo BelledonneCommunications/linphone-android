@@ -234,6 +234,7 @@ class ActiveCallFragment : GenericCallFragment() {
                 model.skipEvent.observe(viewLifecycleOwner) { event ->
                     event.consume {
                         callViewModel.skipZrtpSas()
+                        callMediaEncryptionStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                         dialog.dismiss()
                     }
                 }
@@ -241,6 +242,7 @@ class ActiveCallFragment : GenericCallFragment() {
                 model.authTokenClickedEvent.observe(viewLifecycleOwner) { event ->
                     event.consume { authToken ->
                         callViewModel.updateZrtpSas(authToken)
+                        callMediaEncryptionStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                         dialog.dismiss()
                     }
                 }

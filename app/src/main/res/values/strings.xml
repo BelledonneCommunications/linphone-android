@@ -624,8 +624,10 @@
     <string name="calls_list_dialog_merge_into_conference_label">Create conference</string>
 
     <string name="call_dialog_zrtp_validate_trust_title">Validate the device</string>
-    <string name="call_dialog_zrtp_validate_trust_subtitle">Say %s and click on the letters given by your correspondent:</string>
-    <string name="call_dialog_zrtp_validate_trust_letters_do_not_match">Letters don\'t match!</string>
+    <string name="call_dialog_zrtp_validate_trust_message">For your safety, we need to validate your correspondent device.\nPlease exchange your codes:</string>
+    <string name="call_dialog_zrtp_validate_trust_local_code_label">Your code:</string>
+    <string name="call_dialog_zrtp_validate_trust_remote_code_label">Correspondent code:</string>
+    <string name="call_dialog_zrtp_validate_trust_letters_do_not_match">Nothing matches</string>
 
     <string name="call_audio_device_type_earpiece">Earpiece</string>
     <string name="call_audio_device_type_speaker">Speaker</string>
