@@ -245,6 +245,9 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
             )
             isZrtpSasValidationRequired.postValue(!verified)
             zrtpAuthTokenVerifiedEvent.postValue(Event(verified))
+            if (verified) {
+                isMediaEncrypted.postValue(true)
+            }
         }
 
         override fun onRemoteRecording(call: Call, recording: Boolean) {
@@ -956,13 +959,19 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
         coreContext.postOnCoreThread {
             if (currentCall.currentParams.mediaEncryption == MediaEncryption.ZRTP) {
                 val isDeviceTrusted = currentCall.authenticationTokenVerified
+                val cacheMismatch = currentCall.zrtpCacheMismatchFlag
                 Log.i(
                     "$TAG Current call media encryption is ZRTP, auth token is [${if (isDeviceTrusted) "trusted" else "not trusted yet"}]"
                 )
                 val tokenToRead = currentCall.localAuthenticationToken
                 val tokensToDisplay = currentCall.remoteAuthenticationTokens.toList()
                 if (!tokenToRead.isNullOrEmpty() && tokensToDisplay.size == 4) {
-                    showZrtpSasDialogEvent.postValue(Event(Pair(tokenToRead, tokensToDisplay)))
+                    val event = Event(Pair(tokenToRead, tokensToDisplay))
+                    if (cacheMismatch) {
+                        showZrtpSasCacheMismatchDialogEvent.postValue(event)
+                    } else {
+                        showZrtpSasDialogEvent.postValue(event)
+                    }
                 } else {
                     Log.w(
                         "$TAG Either local auth token is null/empty or remote tokens list doesn't contains 4 elements!"

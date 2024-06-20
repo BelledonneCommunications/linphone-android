@@ -37,7 +37,6 @@ import org.linphone.databinding.DialogAssistantAcceptConditionsAndPolicyBinding
 import org.linphone.databinding.DialogAssistantCreateAccountConfirmPhoneNumberBinding
 import org.linphone.databinding.DialogCancelContactChangesBinding
 import org.linphone.databinding.DialogCancelMeetingBinding
-import org.linphone.databinding.DialogConfirmZrtpSasBinding
 import org.linphone.databinding.DialogContactConfirmTrustCallBinding
 import org.linphone.databinding.DialogContactTrustProcessBinding
 import org.linphone.databinding.DialogDeleteContactBinding
@@ -53,8 +52,11 @@ import org.linphone.databinding.DialogRemoveConversationHistoryBinding
 import org.linphone.databinding.DialogSetOrEditGroupSubjectBindingImpl
 import org.linphone.databinding.DialogUpdateAccountPasswordBinding
 import org.linphone.databinding.DialogUpdateAvailableBinding
+import org.linphone.databinding.DialogZrtpSasValidationBinding
+import org.linphone.databinding.DialogZrtpSecurityAlertBinding
 import org.linphone.ui.assistant.model.AcceptConditionsAndPolicyDialogModel
 import org.linphone.ui.assistant.model.ConfirmPhoneNumberDialogModel
+import org.linphone.ui.call.model.ZrtpAlertDialogModel
 import org.linphone.ui.call.model.ZrtpSasConfirmationDialogModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.contacts.model.TrustCallDialogModel
@@ -343,9 +345,25 @@ class DialogUtils {
             context: Context,
             viewModel: ZrtpSasConfirmationDialogModel
         ): Dialog {
-            val binding: DialogConfirmZrtpSasBinding = DataBindingUtil.inflate(
+            val binding: DialogZrtpSasValidationBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
-                R.layout.dialog_confirm_zrtp_sas,
+                R.layout.dialog_zrtp_sas_validation,
+                null,
+                false
+            )
+            binding.viewModel = viewModel
+
+            return getDialog(context, binding)
+        }
+
+        @UiThread
+        fun getZrtpAlertDialog(
+            context: Context,
+            viewModel: ZrtpAlertDialogModel
+        ): Dialog {
+            val binding: DialogZrtpSecurityAlertBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_zrtp_security_alert,
                 null,
                 false
             )

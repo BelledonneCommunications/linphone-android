@@ -42,6 +42,7 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.CallActiveFragmentBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.call.CallActivity
+import org.linphone.ui.call.model.ZrtpAlertDialogModel
 import org.linphone.ui.call.model.ZrtpSasConfirmationDialogModel
 import org.linphone.ui.call.viewmodel.CallsViewModel
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
@@ -238,10 +239,7 @@ class ActiveCallFragment : GenericCallFragment() {
                         doNotTint = true
                     )
                 } else {
-                    (requireActivity() as GenericActivity).showRedToast(
-                        getString(R.string.call_can_not_be_trusted_alert_toast),
-                        R.drawable.warning_circle
-                    )
+                    showZrtpAlertDialog()
                 }
             }
         }
@@ -438,6 +436,28 @@ class ActiveCallFragment : GenericCallFragment() {
         model.authTokenClickedEvent.observe(viewLifecycleOwner) { event ->
             event.consume { authToken ->
                 callViewModel.updateZrtpSas(authToken)
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
+        zrtpSasDialog = dialog
+    }
+
+    private fun showZrtpAlertDialog() {
+        val model = ZrtpAlertDialogModel()
+        val dialog = DialogUtils.getZrtpAlertDialog(requireActivity(), model)
+
+        model.tryAgainEvent.observe(viewLifecycleOwner) { event ->
+            event.consume {
+                callViewModel.showZrtpSasDialogIfPossible()
+                dialog.dismiss()
+            }
+        }
+
+        model.hangUpEvent.observe(viewLifecycleOwner) { event ->
+            event.consume {
+                callViewModel.hangUp()
                 dialog.dismiss()
             }
         }

@@ -629,6 +629,9 @@
     <string name="call_dialog_zrtp_validate_trust_local_code_label">Your code:</string>
     <string name="call_dialog_zrtp_validate_trust_remote_code_label">Correspondent code:</string>
     <string name="call_dialog_zrtp_validate_trust_letters_do_not_match">Nothing matches</string>
+    <string name="call_dialog_zrtp_security_alert_title">Security alert</string>
+    <string name="call_dialog_zrtp_security_alert_try_again">Try again</string>
+    <string name="call_dialog_zrtp_security_alert_message">This call confidentiality may be compromise!</string>
 
     <string name="call_audio_device_type_earpiece">Earpiece</string>
     <string name="call_audio_device_type_speaker">Speaker</string>
