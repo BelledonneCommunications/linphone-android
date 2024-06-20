@@ -47,7 +47,6 @@ import org.linphone.core.CoreListenerStub
 import org.linphone.core.MediaDirection
 import org.linphone.core.MediaEncryption
 import org.linphone.core.SecurityLevel
-import org.linphone.core.StreamType
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
 import org.linphone.ui.call.conference.viewmodel.ConferenceViewModel
@@ -109,9 +108,11 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
 
     val halfOpenedFolded = MutableLiveData<Boolean>()
 
-    val isZrtpPq = MutableLiveData<Boolean>()
-
     val isZrtp = MutableLiveData<Boolean>()
+
+    val isZrtpSasValidationRequired = MutableLiveData<Boolean>()
+
+    val waitingForEncryptionInfo = MutableLiveData<Boolean>()
 
     val isMediaEncrypted = MutableLiveData<Boolean>()
 
@@ -238,6 +239,7 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
             Log.w(
                 "$TAG Notified that authentication token is [${if (verified) "verified" else "not verified!"}]"
             )
+            isZrtpSasValidationRequired.postValue(!verified)
             zrtpAuthTokenVerifiedEvent.postValue(Event(verified))
         }
 
@@ -270,6 +272,7 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
                             "$TAG From now on current call will be [${newCurrentCall.remoteAddress.asStringUriOnly()}]"
                         )
                         configureCall(newCurrentCall)
+                        updateEncryption()
                     } else {
                         Log.e(
                             "$TAG Failed to get a valid call to display, go to ended call fragment"
@@ -390,6 +393,7 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
                         )
                         currentCall.removeListener(callListener)
                         configureCall(call)
+                        updateEncryption()
                     } else if (LinphoneUtils.isCallIncoming(call.state)) {
                         Log.w(
                             "$TAG A call is being received [${call.remoteAddress.asStringUriOnly()}], using it as current call unless declined"
@@ -965,7 +969,7 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
     }
 
     @WorkerThread
-    private fun updateEncryption(): Boolean {
+    private fun updateEncryption() {
         when (val mediaEncryption = currentCall.currentParams.mediaEncryption) {
             MediaEncryption.ZRTP -> {
                 val isDeviceTrusted = currentCall.authenticationTokenVerified
@@ -992,12 +996,8 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
 
                 isMediaEncrypted.postValue(true)
                 isZrtp.postValue(true)
-                // When Post Quantum is available, ZRTP is Post Quantum if key exchange was made with Post Quantum algorithm
-                val stats = currentCall.getStats(StreamType.Audio)
-                isZrtpPq.postValue(
-                    coreContext.core.postQuantumAvailable && stats?.isZrtpKeyAgreementAlgoPostQuantum == true
-                )
 
+                isZrtpSasValidationRequired.postValue(cacheMismatch || !isDeviceTrusted)
                 if (cacheMismatch || !isDeviceTrusted) {
                     Log.i("$TAG Showing ZRTP SAS confirmation dialog")
                     val tokenToRead = currentCall.localAuthenticationToken
@@ -1010,23 +1010,19 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
                         )
                     }
                 }
-
-                return isDeviceTrusted
             }
             MediaEncryption.SRTP, MediaEncryption.DTLS -> {
                 Log.i("$TAG Current call media encryption is [$mediaEncryption]")
                 isMediaEncrypted.postValue(true)
                 isZrtp.postValue(false)
-                isZrtpPq.postValue(false)
             }
             else -> {
                 Log.w("$TAG Current call doesn't have any media encryption!")
                 isMediaEncrypted.postValue(false)
                 isZrtp.postValue(false)
-                isZrtpPq.postValue(false)
             }
         }
-        return false
+        waitingForEncryptionInfo.postValue(false)
     }
 
     @WorkerThread
@@ -1035,6 +1031,8 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
             "$TAG Configuring call with remote address [${call.remoteAddress.asStringUriOnly()}] as current"
         )
         contact.value?.destroy()
+        waitingForEncryptionInfo.postValue(true)
+        isMediaEncrypted.postValue(false)
 
         terminatedByUsed = false
         currentCall = call
@@ -1125,8 +1123,6 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
                 ContactAvatarModel(fakeFriend)
             }
         }
-
-        updateEncryption()
 
         contact.postValue(model)
         displayedName.postValue(model.friend.name)

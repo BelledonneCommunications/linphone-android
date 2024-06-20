@@ -571,10 +571,13 @@
     <string name="call_state_paused_by_remote">Mis en pause par le correpondant</string>
     <string name="call_state_resuming">Reprise…</string>
     <string name="call_state_ended">Terminé</string>
+    <string name="call_waiting_for_encryption_info">En attente du chiffrement…</string>
     <string name="call_zrtp_end_to_end_encrypted">Appel chiffré de bout en bout</string>
     <string name="call_post_quantum_zrtp_end_to_end_encrypted">Appel chiffré de bout en bout en post-quantique</string>
-    <string name="call_do_zrtp_sas_validation_again">Faire la validation à nouveau</string>
+    <string name="call_do_zrtp_sas_validation_again">Faire la vérification à nouveau</string>
+    <string name="call_zrtp_sas_validation_required">Vérification nécessaire</string>
     <string name="call_srtp_point_to_point_encrypted">Appel chiffré de point à point</string>
+    <string name="call_not_encrypted">Appel non chiffré</string>
     <string name="calls_list_title">Liste des appels</string>
     <string name="call_transfer_title">Transférer l\'appel vers</string>
     <string name="call_remote_is_recording">%s est en train d\'enregistrer</string>
@@ -611,7 +614,7 @@
     <string name="call_stats_zrtp_sas_algo">Algorithme SAS : %s</string>
 
     <string name="call_history_deleted_toast">L\'historique des appels a été supprimé</string>
-    <string name="call_can_be_trusted_toast">Cet appel est complètement sécurisé</string>
+    <string name="call_can_be_trusted_toast">Appareil vérifié</string>
     <string name="call_can_not_be_trusted_alert_toast">Problème de sécurité !</string>
     <string name="call_transfer_in_progress_toast">Appel en cours de transfert</string>
     <string name="call_transfer_successful_toast">L\'appel a été transferré</string>

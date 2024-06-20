@@ -60,35 +60,15 @@
             app:layout_constraintTop_toTopOf="@id/call_direction_label"
             app:layout_constraintBottom_toBottomOf="@id/call_direction_label"/>
 
-        <ImageView
-            android:id="@+id/media_encryption_icon"
-            android:layout_width="@dimen/small_icon_size"
-            android:layout_height="0dp"
-            android:layout_marginStart="10dp"
-            android:adjustViewBounds="true"
-            android:paddingTop="3dp"
-            android:contentDescription="@null"
-            android:src="@{viewModel.isZrtpPq ? @drawable/atom : @drawable/lock_simple, default=@drawable/atom}"
-            android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; viewModel.isMediaEncrypted ? View.VISIBLE : View.GONE}"
-            app:layout_constraintStart_toEndOf="@id/back"
-            app:layout_constraintTop_toTopOf="@id/media_encryption_label"
-            app:layout_constraintBottom_toBottomOf="@id/media_encryption_label"
-            app:tint="@color/blue_info_500" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style"
-            android:id="@+id/media_encryption_label"
-            android:layout_width="wrap_content"
+        <include
+            android:id="@+id/call_media_encryption_info"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:text="@{viewModel.isZrtpPq ? @string/call_post_quantum_zrtp_end_to_end_encrypted : @string/call_zrtp_end_to_end_encrypted, default=@string/call_post_quantum_zrtp_end_to_end_encrypted}"
-            android:textSize="12sp"
-            android:textColor="@color/blue_info_500"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; viewModel.isMediaEncrypted ? View.VISIBLE : View.GONE}"
-            app:layout_constraintStart_toEndOf="@id/media_encryption_icon"
-            app:layout_constraintTop_toBottomOf="@id/call_direction_label"/>
+            layout="@layout/call_media_encryption_info"
+            bind:viewModel="@{viewModel}"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            app:layout_constraintStart_toEndOf="@id/back"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <include
             android:id="@+id/avatar"
@@ -102,7 +82,7 @@
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/media_encryption_icon"
+            app:layout_constraintTop_toBottomOf="@id/call_media_encryption_info"
             app:layout_constraintBottom_toTopOf="@id/name" />
 
         <androidx.appcompat.widget.AppCompatTextView

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="callMediaEncryptionStatisticsClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.call.viewmodel.CurrentCallViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp">
+
+        <androidx.constraintlayout.widget.Group
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="wait_for_encryption_info_icon, wait_for_encryption_info_label"
+            android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; viewModel.waitingForEncryptionInfo ? View.VISIBLE : View.GONE}" />
+
+        <androidx.constraintlayout.widget.Group
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="no_media_encryption_icon, no_media_encryption_label"
+            android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; !viewModel.waitingForEncryptionInfo &amp;&amp; !viewModel.isMediaEncrypted ? View.VISIBLE : View.GONE, default=gone}" />
+
+        <androidx.constraintlayout.widget.Group
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="sas_validation_required_icon, sas_validation_required_label"
+            android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; !viewModel.waitingForEncryptionInfo &amp;&amp; viewModel.isZrtpSasValidationRequired ? View.VISIBLE : View.GONE, default=gone}" />
+
+        <androidx.constraintlayout.widget.Group
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="media_encryption_icon, media_encryption_label"
+            android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; !viewModel.waitingForEncryptionInfo &amp;&amp; viewModel.isMediaEncrypted &amp;&amp; !viewModel.isZrtpSasValidationRequired ? View.VISIBLE : View.GONE, default=gone}" />
+
+        <ImageView
+            android:id="@+id/wait_for_encryption_info_icon"
+            android:layout_width="@dimen/small_icon_size"
+            android:layout_height="0dp"
+            android:adjustViewBounds="true"
+            android:paddingTop="3dp"
+            android:contentDescription="@null"
+            android:src="@drawable/animated_in_progress"
+            animatedDrawable="@{true}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/wait_for_encryption_info_label"
+            app:layout_constraintBottom_toBottomOf="@id/wait_for_encryption_info_label"
+            app:tint="@color/white" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/wait_for_encryption_info_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@string/call_waiting_for_encryption_info"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintStart_toEndOf="@id/wait_for_encryption_info_icon"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/no_media_encryption_icon"
+            android:layout_width="@dimen/small_icon_size"
+            android:layout_height="0dp"
+            android:adjustViewBounds="true"
+            android:paddingTop="3dp"
+            android:contentDescription="@null"
+            android:src="@drawable/lock_simple_open_bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/no_media_encryption_label"
+            app:layout_constraintBottom_toBottomOf="@id/no_media_encryption_label"
+            app:tint="@color/white" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/no_media_encryption_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@string/call_not_encrypted"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintStart_toEndOf="@id/no_media_encryption_icon"
+            app:layout_constraintTop_toBottomOf="@id/wait_for_encryption_info_label"/>
+
+        <ImageView
+            android:id="@+id/sas_validation_required_icon"
+            android:onClick="@{callMediaEncryptionStatisticsClickListener}"
+            android:layout_width="@dimen/small_icon_size"
+            android:layout_height="0dp"
+            android:adjustViewBounds="true"
+            android:paddingTop="3dp"
+            android:contentDescription="@null"
+            android:src="@drawable/warning_circle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/sas_validation_required_label"
+            app:layout_constraintBottom_toBottomOf="@id/sas_validation_required_label"
+            app:tint="@color/orange_warning_600_night" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/sas_validation_required_label"
+            android:onClick="@{callMediaEncryptionStatisticsClickListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@string/call_zrtp_sas_validation_required"
+            android:textSize="12sp"
+            android:textColor="@color/orange_warning_600_night"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintStart_toEndOf="@id/sas_validation_required_icon"
+            app:layout_constraintTop_toBottomOf="@id/no_media_encryption_label"/>
+
+        <ImageView
+            android:id="@+id/media_encryption_icon"
+            android:onClick="@{callMediaEncryptionStatisticsClickListener}"
+            android:layout_width="@dimen/small_icon_size"
+            android:layout_height="0dp"
+            android:adjustViewBounds="true"
+            android:paddingTop="3dp"
+            android:contentDescription="@null"
+            android:src="@{viewModel.isZrtp ? @drawable/lock_key : @drawable/lock_simple, default=@drawable/lock_key}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/media_encryption_label"
+            app:layout_constraintBottom_toBottomOf="@id/media_encryption_label"
+            app:tint="@color/blue_info_500" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/media_encryption_label"
+            android:onClick="@{callMediaEncryptionStatisticsClickListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@{viewModel.isZrtp ? @string/call_zrtp_end_to_end_encrypted : @string/call_srtp_point_to_point_encrypted, default=@string/call_zrtp_end_to_end_encrypted}"
+            android:textSize="12sp"
+            android:textColor="@color/blue_info_500"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintStart_toEndOf="@id/media_encryption_icon"
+            app:layout_constraintTop_toBottomOf="@id/sas_validation_required_label"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

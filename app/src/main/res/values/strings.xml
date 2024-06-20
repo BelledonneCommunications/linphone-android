@@ -608,10 +608,13 @@
     <string name="call_state_paused_by_remote">Paused by remote</string>
     <string name="call_state_resuming">Resuming…</string>
     <string name="call_state_ended">Ended</string>
+    <string name="call_waiting_for_encryption_info">Waiting for encryption…</string>
     <string name="call_zrtp_end_to_end_encrypted">End-to-end encrypted by ZRTP</string>
     <string name="call_post_quantum_zrtp_end_to_end_encrypted">End-to-end encrypted by post-quantum ZRTP</string>
     <string name="call_do_zrtp_sas_validation_again">Validate ZRTP SAS again</string>
+    <string name="call_zrtp_sas_validation_required">Validation required</string>
     <string name="call_srtp_point_to_point_encrypted">Point-to-point encrypted by SRTP</string>
+    <string name="call_not_encrypted">Call is not encrypted</string>
     <string name="calls_list_title">Calls list</string>
     <string name="call_transfer_title">Transfer call to</string>
     <string name="call_remote_is_recording">%s is recording</string>
@@ -648,7 +651,7 @@
     <string name="call_stats_zrtp_sas_algo">SAS algorithm: %s</string>
 
     <string name="call_history_deleted_toast">History has been deleted</string>
-    <string name="call_can_be_trusted_toast">This call can be trusted</string>
+    <string name="call_can_be_trusted_toast">Device validated</string>
     <string name="call_can_not_be_trusted_alert_toast">Security alert !</string>
     <string name="call_transfer_in_progress_toast">Call is being transferred</string>
     <string name="call_transfer_successful_toast">Call has been successfully transferred</string>
