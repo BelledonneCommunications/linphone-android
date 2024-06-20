@@ -169,6 +169,10 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
         MutableLiveData<Event<Pair<String, List<String>>>>()
     }
 
+    val showZrtpSasCacheMismatchDialogEvent: MutableLiveData<Event<Pair<String, List<String>>>> by lazy {
+        MutableLiveData<Event<Pair<String, List<String>>>>()
+    }
+
     val zrtpAuthTokenVerifiedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -1003,7 +1007,12 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
                     val tokenToRead = currentCall.localAuthenticationToken
                     val tokensToDisplay = currentCall.remoteAuthenticationTokens.toList()
                     if (!tokenToRead.isNullOrEmpty() && tokensToDisplay.size == 4) {
-                        showZrtpSasDialogEvent.postValue(Event(Pair(tokenToRead, tokensToDisplay)))
+                        val event = Event(Pair(tokenToRead, tokensToDisplay))
+                        if (cacheMismatch) {
+                            showZrtpSasCacheMismatchDialogEvent.postValue(event)
+                        } else {
+                            showZrtpSasDialogEvent.postValue(event)
+                        }
                     } else {
                         Log.w(
                             "$TAG Either local auth token is null/empty or remote tokens list doesn't contains 4 elements!"

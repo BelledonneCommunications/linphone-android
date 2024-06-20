@@ -27,7 +27,8 @@ import org.linphone.utils.Event
 
 class ZrtpSasConfirmationDialogModel @UiThread constructor(
     authTokenToRead: String,
-    authTokensToListen: List<String>
+    authTokensToListen: List<String>,
+    val cacheMismatch: Boolean
 ) : GenericViewModel() {
     companion object {
         private const val TAG = "[ZRTP SAS Confirmation Dialog]"

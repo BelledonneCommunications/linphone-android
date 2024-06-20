@@ -624,7 +624,8 @@
     <string name="calls_list_dialog_merge_into_conference_label">Create conference</string>
 
     <string name="call_dialog_zrtp_validate_trust_title">Validate the device</string>
-    <string name="call_dialog_zrtp_validate_trust_message">For your safety, we need to validate your correspondent device.\nPlease exchange your codes:</string>
+    <string name="call_dialog_zrtp_validate_trust_message">For your safety, we need to authenticate your correspondent device.\nPlease exchange your codes:</string>
+    <string name="call_dialog_zrtp_validate_trust_warning_message">For your safety, we need to re-authenticate your correspondent device.\nPlease re-exchange your codes:</string>
     <string name="call_dialog_zrtp_validate_trust_local_code_label">Your code:</string>
     <string name="call_dialog_zrtp_validate_trust_remote_code_label">Correspondent code:</string>
     <string name="call_dialog_zrtp_validate_trust_letters_do_not_match">Nothing matches</string>

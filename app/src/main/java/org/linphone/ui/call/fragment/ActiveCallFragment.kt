@@ -217,27 +217,15 @@ class ActiveCallFragment : GenericCallFragment() {
 
         callViewModel.showZrtpSasDialogEvent.observe(viewLifecycleOwner) {
             it.consume { pair ->
-                val model = ZrtpSasConfirmationDialogModel(pair.first, pair.second)
-                val dialog = DialogUtils.getZrtpSasConfirmationDialog(requireActivity(), model)
+                callMediaEncryptionStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                showZrtpSasValidationDialog(pair.first, pair.second, false)
+            }
+        }
 
-                model.skipEvent.observe(viewLifecycleOwner) { event ->
-                    event.consume {
-                        callViewModel.skipZrtpSas()
-                        callMediaEncryptionStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                        dialog.dismiss()
-                    }
-                }
-
-                model.authTokenClickedEvent.observe(viewLifecycleOwner) { event ->
-                    event.consume { authToken ->
-                        callViewModel.updateZrtpSas(authToken)
-                        callMediaEncryptionStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                        dialog.dismiss()
-                    }
-                }
-
-                dialog.show()
-                zrtpSasDialog = dialog
+        callViewModel.showZrtpSasCacheMismatchDialogEvent.observe(viewLifecycleOwner) {
+            it.consume { pair ->
+                callMediaEncryptionStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                showZrtpSasValidationDialog(pair.first, pair.second, true)
             }
         }
 
@@ -426,5 +414,35 @@ class ActiveCallFragment : GenericCallFragment() {
         }
 
         set.applyTo(constraintLayout)
+    }
+
+    private fun showZrtpSasValidationDialog(
+        authTokenToRead: String,
+        authTokensToListen: List<String>,
+        cacheMismatch: Boolean
+    ) {
+        val model = ZrtpSasConfirmationDialogModel(
+            authTokenToRead,
+            authTokensToListen,
+            cacheMismatch
+        )
+        val dialog = DialogUtils.getZrtpSasConfirmationDialog(requireActivity(), model)
+
+        model.skipEvent.observe(viewLifecycleOwner) { event ->
+            event.consume {
+                callViewModel.skipZrtpSas()
+                dialog.dismiss()
+            }
+        }
+
+        model.authTokenClickedEvent.observe(viewLifecycleOwner) { event ->
+            event.consume { authToken ->
+                callViewModel.updateZrtpSas(authToken)
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
+        zrtpSasDialog = dialog
     }
 }

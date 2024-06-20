@@ -21,7 +21,7 @@
             android:id="@+id/header"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/shape_zrtp_dialog_header_background"
+            android:background="@{viewModel.cacheMismatch ? @drawable/shape_zrtp_dialog_warning_header_background : @drawable/shape_zrtp_dialog_header_background, default=@drawable/shape_zrtp_dialog_header_background}"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintWidth_max="@dimen/dialog_max_width"
             app:layout_constraintTop_toTopOf="parent"
@@ -34,11 +34,10 @@
                 android:layout_width="@dimen/icon_size"
                 android:layout_height="@dimen/icon_size"
                 android:layout_marginTop="10dp"
-                android:src="@drawable/lock_key"
+                android:src="@drawable/trusted_white"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:tint="@color/white" />
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style_700"
@@ -76,7 +75,7 @@
             android:id="@+id/body"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/shape_zrtp_dialog_background"
+            android:background="@{viewModel.cacheMismatch ? @drawable/shape_zrtp_dialog_warning_background : @drawable/shape_zrtp_dialog_background, default=@drawable/shape_zrtp_dialog_background}"
             app:layout_constraintWidth_max="@dimen/dialog_max_width"
             app:layout_constraintTop_toBottomOf="@id/header"
             app:layout_constraintBottom_toBottomOf="parent"
