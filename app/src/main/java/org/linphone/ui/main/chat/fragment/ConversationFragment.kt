@@ -1022,6 +1022,9 @@ class ConversationFragment : SlidingPaneChildFragment() {
             null,
             false
         )
+        val emojiSheetBehavior = BottomSheetBehavior.from(layout.emojiPickerBottomSheet.root)
+        emojiSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        emojiSheetBehavior.skipCollapsed = true
 
         layout.root.setOnClickListener {
             dismissDialog()
@@ -1045,7 +1048,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
         layout.setPickEmojiClickListener {
             Log.i("$TAG Opening emoji-picker for reaction")
-            val emojiSheetBehavior = BottomSheetBehavior.from(layout.emojiPickerBottomSheet.root)
             emojiSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
 

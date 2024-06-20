@@ -93,17 +93,6 @@ class ActiveCallFragment : GenericCallFragment() {
         }
     }
 
-    private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
-        override fun onStateChanged(bottomSheet: View, newState: Int) {
-            if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-            }
-        }
-
-        override fun onSlide(bottomSheet: View, slideOffset: Float) { }
-    }
-
     private val actionsBottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
             if (newState == BottomSheetBehavior.STATE_EXPANDED) {
@@ -167,17 +156,17 @@ class ActiveCallFragment : GenericCallFragment() {
 
         val numpadBottomSheetBehavior = BottomSheetBehavior.from(binding.callNumpad.root)
         numpadBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        numpadBottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
+        numpadBottomSheetBehavior.skipCollapsed = true
 
         val callStatsBottomSheetBehavior = BottomSheetBehavior.from(binding.callStats.root)
         callStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        callStatsBottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
+        callStatsBottomSheetBehavior.skipCollapsed = true
 
         val callMediaEncryptionStatsBottomSheetBehavior = BottomSheetBehavior.from(
             binding.callMediaEncryptionStats.root
         )
         callMediaEncryptionStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        callMediaEncryptionStatsBottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
+        callMediaEncryptionStatsBottomSheetBehavior.skipCollapsed = true
 
         binding.setBackClickListener {
             requireActivity().finish()
