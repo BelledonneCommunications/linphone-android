@@ -34,6 +34,7 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
 import androidx.car.app.connection.CarConnection
 import androidx.core.os.bundleOf
@@ -107,6 +108,17 @@ class MainActivity : GenericActivity() {
         }
     }
 
+    private val postNotificationsPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            Log.i("$TAG POST_NOTIFICATIONS permission has been granted")
+            viewModel.updatePostNotificationsPermission()
+        } else {
+            Log.w("$TAG POST_NOTIFICATIONS permission has been denied!")
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         // Must be done before the setContentView
         installSplashScreen()
@@ -169,6 +181,12 @@ class MainActivity : GenericActivity() {
         viewModel.openDrawerEvent.observe(this) {
             it.consume {
                 openDrawerMenu()
+            }
+        }
+
+        viewModel.askPostNotificationsPermissionEvent.observe(this) {
+            it.consume {
+                postNotificationsPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         }
 
@@ -325,6 +343,7 @@ class MainActivity : GenericActivity() {
         super.onResume()
 
         viewModel.checkForNewAccount()
+        viewModel.updateNetworkReachability()
     }
 
     override fun onNewIntent(intent: Intent) {

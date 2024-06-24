@@ -19,8 +19,13 @@
  */
 package org.linphone.ui.main.viewmodel
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -55,6 +60,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
         const val NONE = 0
         const val NON_DEFAULT_ACCOUNT_NOTIFICATIONS = 5
         const val NON_DEFAULT_ACCOUNT_NOT_CONNECTED = 10
+        const val SEND_NOTIFICATIONS_PERMISSION_NOT_GRANTED = 17
         const val NETWORK_NOT_REACHABLE = 19
         const val SINGLE_CALL = 20
         const val MULTIPLE_CALLS = 21
@@ -81,6 +87,10 @@ class MainViewModel @UiThread constructor() : ViewModel() {
     }
 
     val openDrawerEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    val askPostNotificationsPermissionEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
 
@@ -165,13 +175,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
 
         @WorkerThread
         override fun onNetworkReachable(core: Core, reachable: Boolean) {
-            Log.i("$TAG Network is ${if (reachable) "reachable" else "not reachable"}")
-            if (!reachable) {
-                val label = AppUtils.getString(R.string.network_not_reachable)
-                addAlert(NETWORK_NOT_REACHABLE, label)
-            } else {
-                removeAlert(NETWORK_NOT_REACHABLE)
-            }
+            checkNetworkReachability()
         }
 
         @WorkerThread
@@ -214,6 +218,15 @@ class MainViewModel @UiThread constructor() : ViewModel() {
                         if (found == null) {
                             removeAlert(NON_DEFAULT_ACCOUNT_NOT_CONNECTED)
                         }
+                    }
+                }
+                RegistrationState.Progress, RegistrationState.Refreshing -> {
+                    if (defaultAccountRegistrationFailed) {
+                        Log.i(
+                            "$TAG Default account is registering, removing registration failed toast for now"
+                        )
+                        defaultAccountRegistrationFailed = false
+                        defaultAccountRegistrationErrorEvent.postValue(Event(false))
                     }
                 }
                 else -> {}
@@ -267,6 +280,10 @@ class MainViewModel @UiThread constructor() : ViewModel() {
                 addAlert(NETWORK_NOT_REACHABLE, label)
             }
 
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                checkPostNotificationsPermission()
+            }
+
             if (core.callsNb > 0) {
                 updateCallAlert()
             }
@@ -301,6 +318,22 @@ class MainViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
+    fun updateNetworkReachability() {
+        coreContext.postOnCoreThread {
+            checkNetworkReachability()
+        }
+    }
+
+    @UiThread
+    fun updatePostNotificationsPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            coreContext.postOnCoreThread {
+                checkPostNotificationsPermission()
+            }
+        }
+    }
+
+    @UiThread
     fun checkForNewAccount() {
         coreContext.postOnCoreThread { core ->
             val count = core.accountList.size
@@ -327,6 +360,8 @@ class MainViewModel @UiThread constructor() : ViewModel() {
     fun onTopBarClicked() {
         if (atLeastOneCall.value == true) {
             goBackToCallEvent.value = Event(true)
+        } else if (!isPostNotificationsPermissionGranted()) {
+            askPostNotificationsPermissionEvent.value = Event(true)
         } else {
             openDrawerEvent.value = Event(true)
         }
@@ -458,6 +493,9 @@ class MainViewModel @UiThread constructor() : ViewModel() {
                 NETWORK_NOT_REACHABLE -> {
                     alertIcon.postValue(R.drawable.wifi_slash)
                 }
+                SEND_NOTIFICATIONS_PERMISSION_NOT_GRANTED -> {
+                    alertIcon.postValue(R.drawable.bell_simple_slash)
+                }
                 SINGLE_CALL, MULTIPLE_CALLS -> {
                     alertIcon.postValue(R.drawable.phone)
                 }
@@ -488,5 +526,42 @@ class MainViewModel @UiThread constructor() : ViewModel() {
         firstAccountRegistered = true
         Log.i("$TAG Trying to fetch & import native contacts")
         startLoadingContactsEvent.postValue(Event(true))
+    }
+
+    @WorkerThread
+    private fun checkNetworkReachability() {
+        val reachable = coreContext.core.isNetworkReachable
+        Log.i("$TAG Network is ${if (reachable) "reachable" else "not reachable"}")
+        if (!reachable) {
+            val label = AppUtils.getString(R.string.network_not_reachable)
+            addAlert(NETWORK_NOT_REACHABLE, label)
+        } else {
+            removeAlert(NETWORK_NOT_REACHABLE)
+        }
+    }
+
+    private fun isPostNotificationsPermissionGranted(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ContextCompat.checkSelfPermission(
+                coreContext.context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            true
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    @WorkerThread
+    private fun checkPostNotificationsPermission() {
+        if (!isPostNotificationsPermissionGranted()) {
+            Log.w("$TAG POST_NOTIFICATIONS seems to be not granted!")
+            val label = AppUtils.getString(R.string.post_notifications_permission_not_granted)
+            coreContext.postOnCoreThread {
+                addAlert(SEND_NOTIFICATIONS_PERMISSION_NOT_GRANTED, label)
+            }
+        } else {
+            removeAlert(SEND_NOTIFICATIONS_PERMISSION_NOT_GRANTED)
+        }
     }
 }
