@@ -74,6 +74,10 @@ class StartCallViewModel @UiThread constructor() : AddressSelectionViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val leaveFragmentEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     private val conferenceSchedulerListener = object : ConferenceSchedulerListenerStub() {
         override fun onStateChanged(
             conferenceScheduler: ConferenceScheduler,
@@ -89,6 +93,7 @@ class StartCallViewModel @UiThread constructor() : AddressSelectionViewModel() {
                         "$TAG Conference info created, address is ${conferenceAddress.asStringUriOnly()}"
                     )
                     coreContext.startVideoCall(conferenceAddress)
+                    leaveFragmentEvent.postValue(Event(true))
                 } else {
                     Log.e("$TAG Conference info URI is null!")
                     showRedToastEvent.postValue(
@@ -142,6 +147,7 @@ class StartCallViewModel @UiThread constructor() : AddressSelectionViewModel() {
                         if (address != null) {
                             Log.i("$TAG Calling [${address.asStringUriOnly()}]")
                             coreContext.startAudioCall(address)
+                            leaveFragmentEvent.postValue(Event(true))
                         } else {
                             Log.e("$TAG Failed to parse [$suggestion] as SIP address")
                         }

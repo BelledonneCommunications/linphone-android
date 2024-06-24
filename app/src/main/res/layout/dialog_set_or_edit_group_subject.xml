@@ -16,6 +16,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/half_screen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.50" />
+
         <ImageView
             android:id="@+id/dialog_background"
             android:layout_width="0dp"
@@ -106,7 +113,7 @@
             app:layout_constraintTop_toBottomOf="@id/confirm"
             app:layout_constraintStart_toStartOf="@id/dialog_background"
             app:layout_constraintEnd_toEndOf="@id/dialog_background"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="@id/half_screen"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

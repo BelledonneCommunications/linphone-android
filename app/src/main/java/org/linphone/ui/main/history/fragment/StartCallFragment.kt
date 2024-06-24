@@ -39,6 +39,7 @@ import org.linphone.ui.main.fragment.GenericAddressPickerFragment
 import org.linphone.ui.main.fragment.GroupSetOrEditSubjectDialogModel
 import org.linphone.ui.main.history.viewmodel.StartCallViewModel
 import org.linphone.utils.DialogUtils
+import org.linphone.utils.Event
 import org.linphone.utils.addCharacterAtPosition
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.removeCharacterAtPosition
@@ -104,6 +105,12 @@ class StartCallFragment : GenericAddressPickerFragment() {
             }
         }
 
+        viewModel.leaveFragmentEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                goBack()
+            }
+        }
+
         viewModel.removedCharacterAtCurrentPositionEvent.observe(viewLifecycleOwner) {
             it.consume {
                 binding.searchBar.removeCharacterAtPosition()
@@ -159,6 +166,7 @@ class StartCallFragment : GenericAddressPickerFragment() {
     @WorkerThread
     override fun onSingleAddressSelected(address: Address, friend: Friend) {
         coreContext.startAudioCall(address)
+        viewModel.leaveFragmentEvent.postValue(Event(true))
     }
 
     override fun onPause() {
