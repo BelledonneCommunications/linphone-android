@@ -12,6 +12,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:focusable="true"
+        android:clickable="true"
         android:background="@color/dialog_background"
         android:visibility="@{visibility ? View.VISIBLE : View.GONE, default=gone}">
 
