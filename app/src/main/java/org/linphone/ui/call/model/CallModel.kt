@@ -42,7 +42,7 @@ class CallModel @WorkerThread constructor(val call: Call) {
 
     val isPaused = MutableLiveData<Boolean>()
 
-    val friend = coreContext.contactsManager.findContactByAddress(call.remoteAddress)
+    val friend = coreContext.contactsManager.findContactByAddress(call.callLog.remoteAddress)
 
     val contact = MutableLiveData<ContactAvatarModel>()
 
@@ -58,16 +58,17 @@ class CallModel @WorkerThread constructor(val call: Call) {
         call.addListener(callListener)
 
         val conferenceInfo = coreContext.core.findConferenceInformationFromUri(call.remoteAddress)
+        val remoteAddress = call.callLog.remoteAddress
         val avatarModel = if (conferenceInfo != null) {
             coreContext.contactsManager.getContactAvatarModelForConferenceInfo(conferenceInfo)
         } else {
             coreContext.contactsManager.getContactAvatarModelForAddress(
-                call.remoteAddress
+                remoteAddress
             )
         }
         contact.postValue(avatarModel)
         displayName.postValue(
-            avatarModel.friend.name ?: LinphoneUtils.getDisplayName(call.remoteAddress)
+            avatarModel.friend.name ?: LinphoneUtils.getDisplayName(remoteAddress)
         )
 
         state.postValue(LinphoneUtils.callStateToString(call.state))

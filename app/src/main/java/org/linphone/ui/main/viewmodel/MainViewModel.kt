@@ -398,7 +398,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
 
             val currentCall = core.currentCall ?: core.calls.firstOrNull()
             if (currentCall != null) {
-                val address = currentCall.remoteAddress
+                val address = currentCall.callLog.remoteAddress
                 val contact = coreContext.contactsManager.findContactByAddress(address)
                 val label = if (contact != null) {
                     contact.name ?: LinphoneUtils.getDisplayName(address)

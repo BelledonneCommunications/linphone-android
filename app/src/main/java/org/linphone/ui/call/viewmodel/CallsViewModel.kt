@@ -245,15 +245,16 @@ class CallsViewModel @UiThread constructor() : GenericViewModel() {
                 }
                 callsTopBarIcon.postValue(R.drawable.phone_pause)
                 if (found != null) {
+                    val remoteAddress = found.callLog.remoteAddress
                     val conference = found.conference
                     if (conference != null) {
                         callsTopBarLabel.postValue(conference.subject)
                     } else {
                         val contact = coreContext.contactsManager.findContactByAddress(
-                            found.remoteAddress
+                            remoteAddress
                         )
                         callsTopBarLabel.postValue(
-                            contact?.name ?: LinphoneUtils.getDisplayName(found.remoteAddress)
+                            contact?.name ?: LinphoneUtils.getDisplayName(remoteAddress)
                         )
                     }
                     callsTopBarStatus.postValue(LinphoneUtils.callStateToString(found.state))
@@ -275,11 +276,12 @@ class CallsViewModel @UiThread constructor() : GenericViewModel() {
                 if (conference != null) {
                     callsTopBarLabel.postValue(conference.subject)
                 } else {
+                    val remoteAddress = call.callLog.remoteAddress
                     val contact = coreContext.contactsManager.findContactByAddress(
-                        call.remoteAddress
+                        remoteAddress
                     )
                     callsTopBarLabel.postValue(
-                        contact?.name ?: LinphoneUtils.getDisplayName(call.remoteAddress)
+                        contact?.name ?: LinphoneUtils.getDisplayName(remoteAddress)
                     )
                 }
                 callsTopBarStatus.postValue(LinphoneUtils.callStateToString(call.state))

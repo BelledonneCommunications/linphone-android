@@ -1118,7 +1118,7 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
         isPausedByRemote.postValue(call.state == Call.State.PausedByRemote)
         canBePaused.postValue(canCallBePaused())
 
-        val address = call.remoteAddress
+        val address = call.callLog.remoteAddress
         val uri = if (corePreferences.onlyDisplaySipUriUsername) {
             address.username ?: ""
         } else {

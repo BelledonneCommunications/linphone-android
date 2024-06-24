@@ -536,7 +536,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                 .format(missedCallCount.toString())
             Log.i("$TAG Updating missed calls notification count to $missedCallCount")
         } else {
-            val remoteAddress = call.remoteAddress
+            val remoteAddress = call.callLog.remoteAddress
             val friend: Friend? = coreContext.contactsManager.findContactByAddress(remoteAddress)
             body = context.getString(R.string.notification_missed_call)
                 .format(friend?.name ?: LinphoneUtils.getDisplayName(remoteAddress))
@@ -910,7 +910,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         val declineIntent = getCallDeclinePendingIntent(notifiable)
         val answerIntent = getCallAnswerPendingIntent(notifiable)
 
-        val remoteAddress = call.remoteAddress
+        val remoteAddress = call.callLog.remoteAddress
         val remoteContactAddress = call.remoteContactAddress
         val conferenceInfo = if (remoteContactAddress != null) {
             call.core.findConferenceInformationFromUri(remoteContactAddress) ?: call.callLog.conferenceInfo

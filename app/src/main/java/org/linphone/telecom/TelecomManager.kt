@@ -81,7 +81,7 @@ class TelecomManager @WorkerThread constructor(context: Context) {
     fun onCallCreated(call: Call) {
         Log.i("$TAG Call created: $call")
 
-        val address = call.remoteAddress
+        val address = call.callLog.remoteAddress
         val friend = coreContext.contactsManager.findContactByAddress(address)
         val displayName = friend?.name ?: LinphoneUtils.getDisplayName(address)
 
