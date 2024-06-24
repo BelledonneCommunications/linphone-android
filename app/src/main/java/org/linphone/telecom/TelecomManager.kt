@@ -52,7 +52,14 @@ class TelecomManager @WorkerThread constructor(context: Context) {
         override fun onCallCreated(core: Core, call: Call) {
             onCallCreated(call)
         }
+
+        @WorkerThread
+        override fun onLastCallEnded(core: Core) {
+            currentlyFollowedCalls = 0
+        }
     }
+
+    private var currentlyFollowedCalls: Int = 0
 
     init {
         callsManager.registerAppWithTelecom(
@@ -63,6 +70,11 @@ class TelecomManager @WorkerThread constructor(context: Context) {
         Log.i(
             "$TAG App has been registered with Telecom, android.software.telecom feature is [${if (hasTelecomFeature) "available" else "not available"}]"
         )
+    }
+
+    @WorkerThread
+    fun getCurrentlyFollowedCalls(): Int {
+        return currentlyFollowedCalls
     }
 
     @WorkerThread
@@ -112,6 +124,7 @@ class TelecomManager @WorkerThread constructor(context: Context) {
                         coreContext.postOnCoreThread {
                             coreContext.terminateCall(call)
                         }
+                        currentlyFollowedCalls -= 1
                     },
                     { // onSetActive
                         Log.i("$TAG We're asked to resume the call")
@@ -140,6 +153,8 @@ class TelecomManager @WorkerThread constructor(context: Context) {
 
                     // We must first call setCallback on callControlScope before using it
                     callbacks.onCallControlCallbackSet()
+                    currentlyFollowedCalls += 1
+                    Log.i("$TAG Call added to Telecom's CallsManager")
                 }
             } catch (e: Exception) {
                 Log.e("$TAG Failed to add call to Telecom's CallsManager!")

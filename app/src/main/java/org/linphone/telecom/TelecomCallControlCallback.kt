@@ -99,7 +99,7 @@ class TelecomCallControlCallback(
 
         callControl.availableEndpoints.onEach { list ->
             Log.i("$TAG New available audio endpoints list")
-            if (availableEndpoints.size != list.size) {
+            if (availableEndpoints != list) {
                 Log.i(
                     "$TAG List size of available audio endpoints has changed, reload sound devices in SDK"
                 )

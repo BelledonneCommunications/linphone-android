@@ -111,7 +111,14 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
                         "$TAG Added device [${device.productName}] with ID [${device.id}] and type [${device.type}]"
                     )
                 }
-                core.reloadSoundDevices()
+                if (telecomManager.getCurrentlyFollowedCalls() <= 0) {
+                    Log.i("$TAG No call found in Telecom's CallsManager, reloading sound devices")
+                    core.reloadSoundDevices()
+                } else {
+                    Log.i(
+                        "$TAG At least one active call in Telecom's CallsManager, let it handle the added device"
+                    )
+                }
             }
         }
 
@@ -124,7 +131,14 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
                         "$TAG Removed device [${device.id}][${device.productName}][${device.type}]"
                     )
                 }
-                core.reloadSoundDevices()
+                if (telecomManager.getCurrentlyFollowedCalls() <= 0) {
+                    Log.i("$TAG No call found in Telecom's CallsManager, reloading sound devices")
+                    core.reloadSoundDevices()
+                } else {
+                    Log.i(
+                        "$TAG At least one active call in Telecom's CallsManager, let it handle the removed device"
+                    )
+                }
             }
         }
     }
@@ -240,6 +254,11 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
                     Event(Pair(org.linphone.R.string.call_transfer_successful_toast, icon))
                 )
             }
+        }
+
+        @WorkerThread
+        override fun onAudioDevicesListUpdated(core: Core) {
+            Log.i("$TAG Available audio devices list was updated")
         }
 
         @WorkerThread
