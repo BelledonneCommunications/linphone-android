@@ -239,7 +239,8 @@ class ActiveCallFragment : GenericCallFragment() {
                         doNotTint = true
                     )
                 } else {
-                    showZrtpAlertDialog()
+                    // Only allow "trying again" once
+                    showZrtpAlertDialog(callViewModel.zrtpSasValidationAttempts == 1)
                 }
             }
         }
@@ -444,8 +445,8 @@ class ActiveCallFragment : GenericCallFragment() {
         zrtpSasDialog = dialog
     }
 
-    private fun showZrtpAlertDialog() {
-        val model = ZrtpAlertDialogModel()
+    private fun showZrtpAlertDialog(allowTryAgain: Boolean = true) {
+        val model = ZrtpAlertDialogModel(allowTryAgain)
         val dialog = DialogUtils.getZrtpAlertDialog(requireActivity(), model)
 
         model.tryAgainEvent.observe(viewLifecycleOwner) { event ->

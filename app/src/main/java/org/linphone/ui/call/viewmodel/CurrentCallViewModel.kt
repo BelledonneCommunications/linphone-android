@@ -177,6 +177,8 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    var zrtpSasValidationAttempts = 0
+
     // Chat
 
     val operationInProgress = MutableLiveData<Boolean>()
@@ -243,11 +245,14 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
             Log.w(
                 "$TAG Notified that authentication token is [${if (verified) "verified" else "not verified!"}]"
             )
+            zrtpSasValidationAttempts += 1
             isZrtpSasValidationRequired.postValue(!verified)
             zrtpAuthTokenVerifiedEvent.postValue(Event(verified))
             if (verified) {
                 isMediaEncrypted.postValue(true)
             }
+
+            updateAvatarModelSecurityLevel(verified)
         }
 
         override fun onRemoteRecording(call: Call, recording: Boolean) {
@@ -991,21 +996,7 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
                     "$TAG Current call media encryption is ZRTP, auth token is [${if (isDeviceTrusted) "trusted" else "not trusted yet"}], cache mismatch is [$cacheMismatch]"
                 )
 
-                val securityLevel = if (isDeviceTrusted) SecurityLevel.EndToEndEncryptedAndVerified else SecurityLevel.EndToEndEncrypted
-                val avatarModel = contact.value
-                if (avatarModel != null && currentCall.conference == null) { // Don't do it for conferences
-                    avatarModel.trust.postValue(securityLevel)
-                    contact.postValue(avatarModel!!)
-
-                    // Also update avatar contact model if any for the rest of the app
-                    val address = currentCall.remoteAddress
-                    val storedModel = coreContext.contactsManager.getContactAvatarModelForAddress(
-                        address
-                    )
-                    storedModel.updateSecurityLevel(address)
-                } else {
-                    Log.e("$TAG No avatar model found!")
-                }
+                updateAvatarModelSecurityLevel(isDeviceTrusted && !cacheMismatch)
 
                 isMediaEncrypted.postValue(true)
                 isZrtp.postValue(true)
@@ -1053,6 +1044,7 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
         isMediaEncrypted.postValue(false)
 
         terminatedByUsed = false
+        zrtpSasValidationAttempts = 0
         currentCall = call
         callStatsModel.update(call, call.audioStats)
         callMediaEncryptionModel.update(call)
@@ -1230,5 +1222,24 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
                 }
             }
         }
+    }
+
+    @WorkerThread
+    private fun updateAvatarModelSecurityLevel(trusted: Boolean) {
+        val securityLevel = if (trusted) SecurityLevel.EndToEndEncryptedAndVerified else SecurityLevel.EndToEndEncrypted
+        val avatarModel = contact.value
+        if (avatarModel != null && currentCall.conference == null) { // Don't do it for conferences
+            avatarModel.trust.postValue(securityLevel)
+            contact.postValue(avatarModel!!)
+        } else {
+            Log.e("$TAG No avatar model found!")
+        }
+
+        // Also update avatar contact model if any for the rest of the app
+        val address = currentCall.remoteAddress
+        val storedModel = coreContext.contactsManager.getContactAvatarModelForAddress(
+            address
+        )
+        storedModel.updateSecurityLevel(address)
     }
 }
