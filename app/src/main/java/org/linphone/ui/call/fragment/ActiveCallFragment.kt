@@ -383,6 +383,14 @@ class ActiveCallFragment : GenericCallFragment() {
             // Need to be done manually
             callViewModel.updateCallDuration()
         }
+
+        if (callViewModel.isZrtpAlertDialogVisible) {
+            Log.i("$TAG Fragment resuming, showing ZRTP alert dialog")
+            showZrtpAlertDialog(callViewModel.zrtpSasValidationAttempts == 1)
+        } else if (callViewModel.isZrtpDialogVisible) {
+            Log.i("$TAG Fragment resuming, showing ZRTP SAS validation dialog")
+            callViewModel.showZrtpSasDialogIfPossible()
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -431,6 +439,7 @@ class ActiveCallFragment : GenericCallFragment() {
             event.consume {
                 callViewModel.skipZrtpSas()
                 dialog.dismiss()
+                callViewModel.isZrtpDialogVisible = false
             }
         }
 
@@ -438,11 +447,13 @@ class ActiveCallFragment : GenericCallFragment() {
             event.consume { authToken ->
                 callViewModel.updateZrtpSas(authToken)
                 dialog.dismiss()
+                callViewModel.isZrtpDialogVisible = false
             }
         }
 
         dialog.show()
         zrtpSasDialog = dialog
+        callViewModel.isZrtpDialogVisible = true
     }
 
     private fun showZrtpAlertDialog(allowTryAgain: Boolean = true) {
@@ -453,6 +464,7 @@ class ActiveCallFragment : GenericCallFragment() {
             event.consume {
                 callViewModel.showZrtpSasDialogIfPossible()
                 dialog.dismiss()
+                callViewModel.isZrtpAlertDialogVisible = false
             }
         }
 
@@ -460,10 +472,13 @@ class ActiveCallFragment : GenericCallFragment() {
             event.consume {
                 callViewModel.hangUp()
                 dialog.dismiss()
+                callViewModel.isZrtpAlertDialogVisible = false
             }
         }
 
         dialog.show()
         zrtpSasDialog = dialog
+        callViewModel.isZrtpDialogVisible = false
+        callViewModel.isZrtpAlertDialogVisible = true
     }
 }

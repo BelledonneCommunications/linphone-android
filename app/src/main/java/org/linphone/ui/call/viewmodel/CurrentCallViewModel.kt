@@ -179,6 +179,9 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
 
     var zrtpSasValidationAttempts = 0
 
+    var isZrtpDialogVisible: Boolean = false
+    var isZrtpAlertDialogVisible: Boolean = false
+
     // Chat
 
     val operationInProgress = MutableLiveData<Boolean>()
