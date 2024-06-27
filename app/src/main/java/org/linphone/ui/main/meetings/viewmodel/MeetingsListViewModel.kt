@@ -75,6 +75,15 @@ class MeetingsListViewModel @UiThread constructor() : AbstractMainViewModel() {
         }
     }
 
+    @UiThread
+    fun cancelMeeting(conferenceInfo: ConferenceInfo) {
+        coreContext.postOnCoreThread { core ->
+            Log.w("$TAG Cancelling conference info [${conferenceInfo.uri?.asStringUriOnly()}]")
+            val conferenceScheduler = core.createConferenceScheduler()
+            conferenceScheduler.cancelConference(conferenceInfo)
+        }
+    }
+
     @WorkerThread
     private fun computeMeetingsList(filter: String) {
         if (meetings.value.orEmpty().isEmpty()) {
@@ -133,8 +142,8 @@ class MeetingsListViewModel @UiThread constructor() : AbstractMainViewModel() {
                         System.currentTimeMillis(),
                         false
                     )
-                    val firstMeetingOfTheWeek = previousModelWeekLabel != todayWeekLabel
-                    list.add(MeetingListItemModel(null, firstMeetingOfTheWeek))
+                    val first = previousModelWeekLabel != todayWeekLabel
+                    list.add(MeetingListItemModel(null, first))
                     meetingForTodayFound = true
                     previousModelWeekLabel = todayWeekLabel
                 } else {

@@ -530,7 +530,7 @@
     <string name="meeting_schedule_description_title">Description</string>
     <string name="meeting_schedule_edit_title">Modifier la réunion</string>
     <string name="meeting_schedule_cancel_dialog_title">Annuler la réunion?</string>
-    <string name="meeting_schedule_cancel_dialog_message">Voulez-vous annuler la réunion et envoyer une notification aux participants?</string>
+    <string name="meeting_schedule_cancel_dialog_message">Voulez-vous annuler la réunion et envoyer une notification aux participants ?</string>
     <string name="meeting_info_created_toast">La réunion a été créée</string>
     <string name="meeting_info_updated_toast">La réunion a été mise à jour</string>
     <string name="meeting_info_cancelled_toast">La réunion a été annulée</string>
@@ -592,7 +592,7 @@
     <string name="call_dialog_zrtp_validate_trust_local_code_label">Votre code :</string>
     <string name="call_dialog_zrtp_validate_trust_remote_code_label">Code correspondant : </string>
     <string name="call_dialog_zrtp_validate_trust_letters_do_not_match">Aucune correspondance</string>
-    <string name="call_dialog_zrtp_security_alert_title">Security alert</string>
+    <string name="call_dialog_zrtp_security_alert_title">Alerte de sécurité</string>
     <string name="call_dialog_zrtp_security_alert_try_again">Réessayer</string>
     <string name="call_dialog_zrtp_security_alert_message">La confidentialité de votre appel peut être compromise !</string>
 
@@ -620,8 +620,7 @@
     <string name="call_stats_zrtp_sas_algo">Algorithme SAS : %s</string>
 
     <string name="call_history_deleted_toast">L\'historique des appels a été supprimé</string>
-    <string name="call_can_be_trusted_toast">Appareil vérifié</string>
-    <string name="call_can_not_be_trusted_alert_toast">Problème de sécurité !</string>
+    <string name="call_can_be_trusted_toast">Appareil authentifié</string>
     <string name="call_transfer_in_progress_toast">Appel en cours de transfert</string>
     <string name="call_transfer_successful_toast">L\'appel a été transferré</string>
     <string name="call_transfer_failed_toast">Le transfert a échoué !</string>

@@ -36,9 +36,12 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.MeetingsListFragmentBinding
 import org.linphone.ui.main.fragment.AbstractMainFragment
+import org.linphone.ui.main.history.model.ConfirmationDialogModel
 import org.linphone.ui.main.meetings.adapter.MeetingsListAdapter
+import org.linphone.ui.main.meetings.model.MeetingModel
 import org.linphone.ui.main.meetings.viewmodel.MeetingsListViewModel
 import org.linphone.utils.AppUtils
+import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import org.linphone.utils.RecyclerViewHeaderDecoration
 
@@ -153,9 +156,13 @@ class MeetingsListFragment : AbstractMainFragment() {
                         adapter.resetSelection()
                     },
                     { // onDelete
-                        Log.i("$TAG Deleting meeting [${model.id}]")
-                        model.delete()
-                        listViewModel.applyFilter()
+                        if (model.isOrganizer()) {
+                            showCancelMeetingDialog(model)
+                        } else {
+                            Log.i("$TAG Deleting meeting [${model.id}]")
+                            model.delete()
+                            listViewModel.applyFilter()
+                        }
                     }
                 )
                 modalBottomSheet.show(parentFragmentManager, MeetingsMenuDialogFragment.TAG)
@@ -245,5 +252,39 @@ class MeetingsListFragment : AbstractMainFragment() {
             index,
             AppUtils.getDimension(R.dimen.meeting_list_decoration_height).toInt()
         )
+    }
+
+    private fun showCancelMeetingDialog(meetingModel: MeetingModel) {
+        Log.i("$TAG Meeting is editable, asking whether to cancel it or not before deleting it")
+
+        val model = ConfirmationDialogModel()
+        val dialog = DialogUtils.getCancelMeetingDialog(requireContext(), model)
+
+        model.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        model.cancelEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Deleting meeting [${meetingModel.id}]")
+                meetingModel.delete()
+                listViewModel.applyFilter()
+                dialog.dismiss()
+            }
+        }
+
+        model.confirmEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Cancelling meeting [${meetingModel.id}]")
+                listViewModel.cancelMeeting(meetingModel.conferenceInfo)
+                meetingModel.delete()
+                listViewModel.applyFilter()
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
     }
 }

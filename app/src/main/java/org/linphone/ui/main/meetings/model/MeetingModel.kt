@@ -84,4 +84,12 @@ class MeetingModel @WorkerThread constructor(val conferenceInfo: ConferenceInfo)
             core.deleteConferenceInformation(conferenceInfo)
         }
     }
+
+    @WorkerThread
+    fun isOrganizer(): Boolean {
+        return coreContext.core.accountList.find { account ->
+            val address = account.params.identityAddress
+            address != null && conferenceInfo.organizer?.weakEqual(address) == true
+        } != null
+    }
 }
