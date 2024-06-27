@@ -241,7 +241,6 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
         override fun onEncryptionChanged(call: Call, on: Boolean, authenticationToken: String?) {
             Log.i("$TAG Call encryption changed, updating...")
             updateEncryption()
-            callMediaEncryptionModel.update(call)
         }
 
         override fun onAuthenticationTokenVerified(call: Call, verified: Boolean) {
@@ -345,6 +344,15 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
                 } else if (call.state == Call.State.StreamsRunning) {
                     if (corePreferences.automaticallyStartCallRecording) {
                         isRecording.postValue(call.params.isRecording)
+                    }
+
+                    // MediaEncryption None & SRTP won't be notified through onEncryptionChanged callback,
+                    // we have to do it manually to leave the "wait for encryption" state
+                    when (call.currentParams.mediaEncryption) {
+                        MediaEncryption.SRTP, MediaEncryption.None -> {
+                            updateEncryption()
+                        }
+                        else -> {}
                     }
                 }
             }
@@ -1035,6 +1043,7 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
             }
         }
         waitingForEncryptionInfo.postValue(false)
+        callMediaEncryptionModel.update(currentCall)
     }
 
     @WorkerThread
