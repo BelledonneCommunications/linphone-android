@@ -175,6 +175,9 @@ class MainViewModel @UiThread constructor() : ViewModel() {
 
         @WorkerThread
         override fun onNetworkReachable(core: Core, reachable: Boolean) {
+            Log.i(
+                "$TAG According to SDK, network is ${if (reachable) "reachable" else "not reachable"}"
+            )
             checkNetworkReachability()
         }
 
@@ -200,6 +203,8 @@ class MainViewModel @UiThread constructor() : ViewModel() {
                     }
                 }
                 RegistrationState.Ok -> {
+                    removeAlert(NETWORK_NOT_REACHABLE) // Just in case
+
                     if (!firstAccountRegistered) {
                         triggerNativeAddressBookImport()
                     }

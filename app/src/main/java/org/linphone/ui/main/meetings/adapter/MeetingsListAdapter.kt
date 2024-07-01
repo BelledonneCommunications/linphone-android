@@ -171,7 +171,7 @@ class MeetingsListAdapter :
     private class MeetingDiffCallback : DiffUtil.ItemCallback<MeetingListItemModel>() {
         override fun areItemsTheSame(oldItem: MeetingListItemModel, newItem: MeetingListItemModel): Boolean {
             if (oldItem.model is MeetingModel && newItem.model is MeetingModel) {
-                return oldItem.model.id == newItem.model.id
+                return oldItem.model.id.isNotEmpty() && oldItem.model.id == newItem.model.id
             }
             return false
         }
@@ -181,7 +181,7 @@ class MeetingsListAdapter :
             newItem: MeetingListItemModel
         ): Boolean {
             if (oldItem.model is MeetingModel && newItem.model is MeetingModel) {
-                return oldItem.model.subject.value == newItem.model.subject.value && oldItem.model.time == newItem.model.time
+                return oldItem.model.subject.value.orEmpty().isNotEmpty() && oldItem.model.subject.value == newItem.model.subject.value && oldItem.model.time == newItem.model.time
             }
             return false
         }

@@ -103,8 +103,15 @@ class MeetingsListViewModel @UiThread constructor() : AbstractMainViewModel() {
         var previousModel: MeetingModel? = null
         var previousModelWeekLabel = ""
         var meetingForTodayFound = false
+        Log.d("$TAG There are [${source.size}] conference info in DB")
+
         for (info: ConferenceInfo in source) {
-            if (info.duration == 0) continue // This isn't a scheduled conference, don't display it
+            if (info.duration == 0) {
+                Log.d(
+                    "$TAG Skipping conference info [${info.subject}] with uri [${info.uri?.asStringUriOnly()}] because it has no duration"
+                )
+                continue
+            } // This isn't a scheduled conference, don't display it
             val add = if (filter.isNotEmpty()) {
                 val organizerCheck = info.organizer?.asStringUriOnly()?.contains(
                     filter,
@@ -123,7 +130,7 @@ class MeetingsListViewModel @UiThread constructor() : AbstractMainViewModel() {
             if (add) {
                 val model = MeetingModel(info)
 
-                val firstMeetingOfTheWeek = previousModelWeekLabel != model.weekLabel
+                var firstMeetingOfTheWeek = previousModelWeekLabel != model.weekLabel
 
                 val firstMeetingOfTheDay = if (previousModel != null) {
                     previousModel.day != model.day || previousModel.dayNumber != model.dayNumber
@@ -146,6 +153,7 @@ class MeetingsListViewModel @UiThread constructor() : AbstractMainViewModel() {
                     list.add(MeetingListItemModel(null, first))
                     meetingForTodayFound = true
                     previousModelWeekLabel = todayWeekLabel
+                    firstMeetingOfTheWeek = false
                 } else {
                     previousModelWeekLabel = model.weekLabel
                 }
@@ -165,6 +173,7 @@ class MeetingsListViewModel @UiThread constructor() : AbstractMainViewModel() {
             list.add(MeetingListItemModel(null, firstMeetingOfTheWeek))
         }
 
+        Log.d("$TAG We will display [${list.size}] conference info from the ones fetched from DB")
         meetings.postValue(list)
     }
 }
