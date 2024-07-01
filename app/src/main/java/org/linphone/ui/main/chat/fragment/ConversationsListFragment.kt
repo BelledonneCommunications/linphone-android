@@ -72,10 +72,7 @@ class ConversationsListFragment : AbstractMainFragment() {
             binding.conversationsList.scrollToPosition(0)
         }
 
-        override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
-            Log.i("$TAG [$itemCount] removed, scrolling to top")
-            binding.conversationsList.scrollToPosition(0)
-        }
+        override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) { }
     }
 
     override fun onDefaultAccountChanged() {
@@ -118,6 +115,7 @@ class ConversationsListFragment : AbstractMainFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = listViewModel
+        observeToastEvents(listViewModel)
 
         binding.conversationsList.setHasFixedSize(true)
         binding.conversationsList.layoutManager = LinearLayoutManager(requireContext())
@@ -150,7 +148,6 @@ class ConversationsListFragment : AbstractMainFragment() {
                     { // onDeleteConversation
                         Log.i("$TAG Deleting conversation [${model.id}]")
                         model.delete()
-                        listViewModel.applyFilter()
                     },
                     { // onLeaveGroup
                         Log.i("$TAG Leaving group conversation [${model.id}]")

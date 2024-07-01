@@ -227,6 +227,7 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
             val basic = chatRoom.hasCapability(Capabilities.Basic.toInt())
             ShortcutUtils.removeShortcutToChatRoom(chatRoom)
             core.deleteChatRoom(chatRoom)
+
             if (basic) {
                 Log.i("$TAG Conversation [$id] has been deleted")
                 isBeingDeleted.postValue(false)

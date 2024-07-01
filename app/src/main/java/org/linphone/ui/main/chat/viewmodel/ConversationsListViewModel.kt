@@ -60,7 +60,19 @@ class ConversationsListViewModel @UiThread constructor() : AbstractMainViewModel
                     computeChatRoomsList(currentFilter)
                 }
                 ChatRoom.State.Deleted -> {
-                    computeChatRoomsList(currentFilter)
+                    val currentList = conversations.value.orEmpty()
+                    val found = currentList.find {
+                        it.chatRoom == chatRoom
+                    }
+                    if (found != null) {
+                        val newList = arrayListOf<ConversationModel>()
+                        newList.addAll(currentList)
+                        newList.remove(found)
+                        Log.i("$TAG Removing chat room from list")
+                        conversations.postValue(newList)
+                    } else {
+                        Log.w("$TAG Failed to find item in list matching deleted chat room")
+                    }
 
                     showGreenToastEvent.postValue(
                         Event(
