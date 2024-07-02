@@ -171,6 +171,14 @@ class DrawerMenuViewModel @UiThread constructor() : GenericViewModel() {
         }
         accounts.postValue(list)
 
-        hideAddAccount.postValue(corePreferences.oneAccountMax && list.isNotEmpty())
+        val maxAccount = corePreferences.maxAccountsCount
+        val accountsCount = list.size
+        val maxAccountsReached = maxAccount > 0 && accountsCount >= maxAccount
+        if (maxAccountsReached) {
+            Log.w(
+                "$TAG Max number of allowed accounts reached [$maxAccount], hiding add account button"
+            )
+        }
+        hideAddAccount.postValue(maxAccountsReached)
     }
 }

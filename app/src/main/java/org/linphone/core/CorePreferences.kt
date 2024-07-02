@@ -175,8 +175,8 @@ class CorePreferences @UiThread constructor(private val context: Context) {
         get() = config.getBool("ui", "disable_call_recordings_feature", false)
 
     @get:WorkerThread
-    val oneAccountMax: Boolean
-        get() = config.getBool("ui", "one_account_max", false)
+    val maxAccountsCount: Int
+        get() = config.getInt("ui", "max_account", 0) // 0 means no max
 
     @get:WorkerThread
     val hideSettings: Boolean
