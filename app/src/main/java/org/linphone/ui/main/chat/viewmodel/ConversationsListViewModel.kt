@@ -56,30 +56,8 @@ class ConversationsListViewModel @UiThread constructor() : AbstractMainViewModel
             )
 
             when (state) {
-                ChatRoom.State.Created -> {
-                    computeChatRoomsList(currentFilter)
-                }
-                ChatRoom.State.Deleted -> {
-                    val currentList = conversations.value.orEmpty()
-                    val found = currentList.find {
-                        it.chatRoom == chatRoom
-                    }
-                    if (found != null) {
-                        val newList = arrayListOf<ConversationModel>()
-                        newList.addAll(currentList)
-                        newList.remove(found)
-                        Log.i("$TAG Removing chat room from list")
-                        conversations.postValue(newList)
-                    } else {
-                        Log.w("$TAG Failed to find item in list matching deleted chat room")
-                    }
-
-                    showGreenToastEvent.postValue(
-                        Event(
-                            Pair(R.string.conversation_deleted_toast, R.drawable.chat_teardrop_text)
-                        )
-                    )
-                }
+                ChatRoom.State.Created -> addChatRoom(chatRoom)
+                ChatRoom.State.Deleted -> removeChatRoom(chatRoom)
                 else -> {}
             }
         }
@@ -140,6 +118,36 @@ class ConversationsListViewModel @UiThread constructor() : AbstractMainViewModel
     }
 
     @WorkerThread
+    private fun createConversationModel(chatRoom: ChatRoom): ConversationModel? {
+        val filter = currentFilter
+        if (filter.isEmpty()) {
+            return ConversationModel(chatRoom)
+        } else {
+            val participants = chatRoom.participants
+            val found = participants.find {
+                // Search in address but also in contact name if exists
+                val model =
+                    coreContext.contactsManager.getContactAvatarModelForAddress(it.address)
+                model.contactName?.contains(
+                    filter,
+                    ignoreCase = true
+                ) == true || it.address.asStringUriOnly().contains(
+                    filter,
+                    ignoreCase = true
+                )
+            }
+            if (
+                found != null ||
+                chatRoom.peerAddress.asStringUriOnly().contains(filter, ignoreCase = true) ||
+                chatRoom.subject.orEmpty().contains(filter, ignoreCase = true)
+            ) {
+                return ConversationModel(chatRoom)
+            }
+        }
+        return null
+    }
+
+    @WorkerThread
     private fun computeChatRoomsList(filter: String) {
         conversations.value.orEmpty().forEach(ConversationModel::destroy)
 
@@ -153,33 +161,10 @@ class ConversationsListViewModel @UiThread constructor() : AbstractMainViewModel
         val account = LinphoneUtils.getDefaultAccount()
         val chatRooms = account?.chatRooms ?: coreContext.core.chatRooms
         for (chatRoom in chatRooms) {
-            if (filter.isEmpty()) {
-                val model = ConversationModel(chatRoom)
+            val model = createConversationModel(chatRoom)
+            if (model != null) {
                 list.add(model)
                 count += 1
-            } else {
-                val participants = chatRoom.participants
-                val found = participants.find {
-                    // Search in address but also in contact name if exists
-                    val model =
-                        coreContext.contactsManager.getContactAvatarModelForAddress(it.address)
-                    model.contactName?.contains(
-                        filter,
-                        ignoreCase = true
-                    ) == true || it.address.asStringUriOnly().contains(
-                        filter,
-                        ignoreCase = true
-                    )
-                }
-                if (
-                    found != null ||
-                    chatRoom.peerAddress.asStringUriOnly().contains(filter, ignoreCase = true) ||
-                    chatRoom.subject.orEmpty().contains(filter, ignoreCase = true)
-                ) {
-                    val model = ConversationModel(chatRoom)
-                    list.add(model)
-                    count += 1
-                }
             }
 
             if (count == 15) {
@@ -188,6 +173,59 @@ class ConversationsListViewModel @UiThread constructor() : AbstractMainViewModel
         }
 
         conversations.postValue(list)
+    }
+
+    @WorkerThread
+    private fun addChatRoom(chatRoom: ChatRoom) {
+        val defaultAccount = LinphoneUtils.getDefaultAccount()
+        if (defaultAccount == null || defaultAccount.params.identityAddress?.weakEqual(
+                chatRoom.localAddress
+            ) == false
+        ) {
+            Log.w(
+                "$TAG A chat room was created but not displaying it because it doesn't belong to currently default account"
+            )
+            return
+        }
+
+        val currentList = conversations.value.orEmpty()
+        val newList = arrayListOf<ConversationModel>()
+
+        val model = createConversationModel(chatRoom)
+        if (model != null) {
+            newList.add(model)
+            newList.addAll(currentList)
+            Log.i("$TAG Adding chat room to list")
+            conversations.postValue(newList)
+        } else {
+            Log.w(
+                "$TAG A chat room was created but not displaying it because it doesn't match current filter"
+            )
+        }
+    }
+
+    @WorkerThread
+    private fun removeChatRoom(chatRoom: ChatRoom) {
+        val currentList = conversations.value.orEmpty()
+        val found = currentList.find {
+            it.chatRoom == chatRoom
+        }
+        if (found != null) {
+            val newList = arrayListOf<ConversationModel>()
+            newList.addAll(currentList)
+            newList.remove(found)
+            found.destroy()
+            Log.i("$TAG Removing chat room from list")
+            conversations.postValue(newList)
+        } else {
+            Log.w("$TAG Failed to find item in list matching deleted chat room")
+        }
+
+        showGreenToastEvent.postValue(
+            Event(
+                Pair(R.string.conversation_deleted_toast, R.drawable.chat_teardrop_text)
+            )
+        )
     }
 
     @WorkerThread
