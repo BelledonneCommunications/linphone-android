@@ -57,6 +57,10 @@ class CorePreferences @UiThread constructor(private val context: Context) {
             config.setBool("app", "first_6.0_launch", value)
         }
 
+    @get:WorkerThread
+    val checkForUpdateServerUrl: String
+        get() = config.getString("misc", "version_check_url_root", "").orEmpty()
+
     @get:WorkerThread @set:WorkerThread
     var conditionsAndPrivacyPolicyAccepted: Boolean
         get() = config.getBool("app", "read_and_agree_terms_and_privacy", false)

@@ -113,7 +113,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="24dp"
                 android:text="@string/help_troubleshooting_app_version_title"
-                app:layout_constraintTop_toBottomOf="@id/send_logs"
+                app:layout_constraintTop_toBottomOf="@id/clean_logs"
                 app:layout_constraintStart_toEndOf="@id/app_version_icon"
                 app:layout_constraintEnd_toEndOf="parent"/>
 

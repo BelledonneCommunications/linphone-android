@@ -26,6 +26,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
@@ -136,8 +137,7 @@ class HelpViewModel @UiThread constructor() : GenericViewModel() {
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
 
-            val checkUpdateServerUrl = core.config.getString("misc", "version_check_url_root", "")
-            checkUpdateAvailable.postValue(!checkUpdateServerUrl.isNullOrEmpty())
+            checkUpdateAvailable.postValue(corePreferences.checkForUpdateServerUrl.isNotEmpty())
             uploadLogsAvailable.postValue(!core.logCollectionUploadServerUrl.isNullOrEmpty())
         }
     }
