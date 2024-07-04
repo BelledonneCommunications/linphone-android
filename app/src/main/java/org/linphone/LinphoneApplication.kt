@@ -33,6 +33,7 @@ import coil.imageLoader
 import coil.memory.MemoryCache
 import coil.request.CachePolicy
 import com.google.android.material.color.DynamicColors
+import org.linphone.compatibility.Compatibility
 import org.linphone.core.CoreContext
 import org.linphone.core.CorePreferences
 import org.linphone.core.Factory
@@ -81,16 +82,12 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
         Factory.instance().enableLogcatLogs(corePreferences.printLogsInLogcat)
 
         Log.i("$TAG Report Core preferences initialized")
+        Compatibility.setupAppStartupListener(context)
 
         coreContext = CoreContext(context)
         coreContext.start()
 
         DynamicColors.applyToActivitiesIfAvailable(this)
-    }
-
-    override fun onLowMemory() {
-        super.onLowMemory()
-        Log.w("$TAG onLowMemory !")
     }
 
     override fun onTrimMemory(level: Int) {

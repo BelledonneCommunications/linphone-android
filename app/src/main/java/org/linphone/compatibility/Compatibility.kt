@@ -183,5 +183,11 @@ class Compatibility {
             }
             return Environment.DIRECTORY_PODCASTS
         }
+
+        fun setupAppStartupListener(context: Context) {
+            if (Version.sdkAboveOrEqual(Version.API35_ANDROID_15_VANILLA_ICE_CREAM)) {
+                Api35Compatibility.setupAppStartupListener(context)
+            }
+        }
     }
 }
