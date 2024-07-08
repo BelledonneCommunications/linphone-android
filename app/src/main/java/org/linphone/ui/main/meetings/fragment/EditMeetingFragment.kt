@@ -24,6 +24,8 @@ import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -52,6 +54,17 @@ class EditMeetingFragment : SlidingPaneChildFragment() {
     private lateinit var viewModel: ScheduleMeetingViewModel
 
     private val args: EditMeetingFragmentArgs by navArgs()
+
+    private val timeZonePickerListener = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            val timeZone = viewModel.availableTimeZones[position]
+            Log.i("$TAG Selected time zone is now [$timeZone] at index [$position]")
+            viewModel.updateTimeZone(timeZone)
+        }
+
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -195,5 +208,23 @@ class EditMeetingFragment : SlidingPaneChildFragment() {
                 viewModel.setParticipants(list)
             }
         }
+
+        setupTimeZonePicker()
+    }
+
+    private fun setupTimeZonePicker() {
+        val timeZoneIndex = viewModel.availableTimeZones.indexOf(viewModel.selectedTimeZone.value)
+        Log.i("$TAG Setting default time zone at index [$timeZoneIndex]")
+        val adapter = ArrayAdapter(
+            requireContext(),
+            R.layout.drop_down_item,
+            viewModel.availableTimeZones
+        )
+        adapter.setDropDownViewResource(
+            R.layout.generic_dropdown_cell
+        )
+        binding.timezonePicker.adapter = adapter
+        binding.timezonePicker.onItemSelectedListener = timeZonePickerListener
+        binding.timezonePicker.setSelection(if (timeZoneIndex == -1) 0 else timeZoneIndex)
     }
 }

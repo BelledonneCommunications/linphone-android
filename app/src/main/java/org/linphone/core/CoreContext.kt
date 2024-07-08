@@ -324,6 +324,9 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
                 AuthMethod.Tls -> {
                     Log.w("$TAG Authentication requested method is TLS, not doing anything...")
                 }
+                else -> {
+                    Log.w("$TAG Unexpected authentication request method [$method]")
+                }
             }
         }
 

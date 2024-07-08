@@ -24,7 +24,6 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import java.util.Calendar
-import java.util.Locale
 import java.util.TimeZone
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -39,8 +38,8 @@ import org.linphone.core.Participant
 import org.linphone.core.ParticipantInfo
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
+import org.linphone.ui.main.meetings.model.TimeZoneModel
 import org.linphone.ui.main.model.SelectedAddressModel
-import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.TimestampUtils
 
@@ -67,7 +66,10 @@ class ScheduleMeetingViewModel @UiThread constructor() : GenericViewModel() {
 
     val toTime = MutableLiveData<String>()
 
-    val timezone = MutableLiveData<String>()
+    val availableTimeZones: List<TimeZoneModel> = TimeZone.getAvailableIDs().map { id ->
+        TimeZoneModel(TimeZone.getTimeZone(id))
+    }.toList().sorted()
+    var selectedTimeZone = MutableLiveData<TimeZoneModel>()
 
     val sendInvitations = MutableLiveData<Boolean>()
 
@@ -194,8 +196,14 @@ class ScheduleMeetingViewModel @UiThread constructor() : GenericViewModel() {
         allDayMeeting.value = false
         sendInvitations.value = true
 
+        selectedTimeZone.value = availableTimeZones.find {
+            it.id == TimeZone.getDefault().id
+        }
+
         val now = System.currentTimeMillis()
-        val cal = Calendar.getInstance()
+        val cal = Calendar.getInstance(
+            TimeZone.getTimeZone(selectedTimeZone.value?.id ?: TimeZone.getDefault().id)
+        )
         cal.timeInMillis = now
         cal.add(Calendar.HOUR, 1)
         cal.set(Calendar.MINUTE, 0)
@@ -219,7 +227,6 @@ class ScheduleMeetingViewModel @UiThread constructor() : GenericViewModel() {
 
         computeDateLabels()
         computeTimeLabels()
-        updateTimezone()
     }
 
     override fun onCleared() {
@@ -293,6 +300,12 @@ class ScheduleMeetingViewModel @UiThread constructor() : GenericViewModel() {
     fun setEndDate(timestamp: Long) {
         endTimestamp = timestamp
         computeDateLabels()
+    }
+
+    @UiThread
+    fun updateTimeZone(timeZone: TimeZoneModel) {
+        selectedTimeZone.value = timeZone
+        computeTimeLabels()
     }
 
     @UiThread
@@ -486,19 +499,24 @@ class ScheduleMeetingViewModel @UiThread constructor() : GenericViewModel() {
 
             isBroadcastSelected.postValue(false) // TODO FIXME: not implemented yet
 
-            startHour = 0
-            startMinutes = 0
-            endHour = 0
-            endMinutes = 0
             startTimestamp = conferenceInfo.dateTime * 1000 /* Linphone timestamps are in seconds */
             endTimestamp =
                 (conferenceInfo.dateTime + conferenceInfo.duration * 60) * 1000 /* Linphone timestamps are in seconds */
             Log.i(
                 "$TAG Loaded start date is [$startTimestamp], loaded end date is [$endTimestamp]"
             )
+            val cal = Calendar.getInstance(
+                TimeZone.getTimeZone(selectedTimeZone.value?.id ?: TimeZone.getDefault().id)
+            )
+            cal.timeInMillis = startTimestamp
+            startHour = cal.get(Calendar.HOUR_OF_DAY)
+            startMinutes = cal.get(Calendar.MINUTE)
+            cal.timeInMillis = endTimestamp
+            endHour = cal.get(Calendar.HOUR_OF_DAY)
+            endMinutes = cal.get(Calendar.MINUTE)
+
             computeDateLabels()
             computeTimeLabels()
-            updateTimezone()
 
             val list = arrayListOf<SelectedAddressModel>()
             for (participant in conferenceInfo.participantInfos) {
@@ -554,9 +572,13 @@ class ScheduleMeetingViewModel @UiThread constructor() : GenericViewModel() {
 
     @AnyThread
     private fun computeTimeLabels() {
-        val cal = Calendar.getInstance()
+        val timeZoneId = selectedTimeZone.value?.id ?: TimeZone.getDefault().id
+        Log.i("$TAG Updating timestamps using time zone [${selectedTimeZone.value}]($timeZoneId)")
+        val cal = Calendar.getInstance(
+            TimeZone.getTimeZone(timeZoneId)
+        )
         cal.timeInMillis = startTimestamp
-        if (startHour != 0 && startMinutes != 0) {
+        if (startHour != -1 && startMinutes != -1) {
             cal.set(Calendar.HOUR_OF_DAY, startHour)
             cal.set(Calendar.MINUTE, startMinutes)
         }
@@ -565,30 +587,12 @@ class ScheduleMeetingViewModel @UiThread constructor() : GenericViewModel() {
         fromTime.postValue(start)
 
         cal.timeInMillis = endTimestamp
-        if (endHour != 0 && endMinutes != 0) {
+        if (endHour != -1 && endMinutes != -1) {
             cal.set(Calendar.HOUR_OF_DAY, endHour)
             cal.set(Calendar.MINUTE, endMinutes)
         }
         val end = TimestampUtils.timeToString(cal.timeInMillis, timestampInSecs = false)
         Log.i("$TAG Computed end time for timestamp [$endTimestamp] is [$end]")
         toTime.postValue(end)
-    }
-
-    @AnyThread
-    private fun updateTimezone() {
-        timezone.postValue(
-            AppUtils.getFormattedString(
-                R.string.meeting_schedule_timezone_title,
-                TimeZone.getDefault().displayName.replaceFirstChar {
-                    if (it.isLowerCase()) {
-                        it.titlecase(
-                            Locale.getDefault()
-                        )
-                    } else {
-                        it.toString()
-                    }
-                }
-            )
-        )
     }
 }

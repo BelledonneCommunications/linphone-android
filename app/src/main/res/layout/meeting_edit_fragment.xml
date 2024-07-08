@@ -195,13 +195,13 @@
 
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/default_text_style_700"
-                        android:id="@+id/timezone"
+                        android:id="@+id/timezone_label"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="26dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:text="@{viewModel.timezone, default=@string/meeting_schedule_timezone_title}"
+                        android:text="@string/meeting_schedule_timezone_title"
                         android:textColor="?attr/color_main2_600"
                         android:textSize="14sp"
                         android:maxLines="1"
@@ -212,6 +212,38 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/to_date" />
+
+                    <androidx.appcompat.widget.AppCompatSpinner
+                        style="@style/default_text_style"
+                        android:id="@+id/timezone_picker"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginTop="5dp"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:textSize="14sp"
+                        android:textColor="@color/gray_main2_600"
+                        android:gravity="center_vertical"
+                        android:overlapAnchor="false"
+                        android:dropDownVerticalOffset="25dp"
+                        android:spinnerMode="dropdown"
+                        android:popupBackground="@drawable/shape_squircle_white_background"
+                        android:background="@drawable/edit_text_background"
+                        app:layout_constraintTop_toBottomOf="@id/timezone_label"
+                        app:layout_constraintStart_toStartOf="@id/timezone_label"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/timezone_picker_caret"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:src="@drawable/caret_down"
+                        android:contentDescription="@null"
+                        app:layout_constraintTop_toTopOf="@id/timezone_picker"
+                        app:layout_constraintBottom_toBottomOf="@id/timezone_picker"
+                        app:layout_constraintEnd_toEndOf="@id/timezone_picker"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/default_text_style_700"
@@ -229,7 +261,7 @@
                         android:drawableTint="?attr/color_main2_600"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/timezone" />
+                        app:layout_constraintTop_toBottomOf="@id/timezone_picker" />
 
                     <View
                         android:id="@+id/separator_2"
