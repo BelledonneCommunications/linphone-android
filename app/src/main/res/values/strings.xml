@@ -456,7 +456,6 @@
     <string name="conversation_menu_documents_files">Documents</string>
     <string name="conversation_no_media_found">No media found…</string>
     <string name="conversation_no_document_found">No document found…</string>
-    <string name="conversation_filter_no_matching_result">No matching result</string>
     <string name="conversation_end_to_end_encrypted_event_title">End-to-end encrypted conversation</string>
     <string name="conversation_end_to_end_encrypted_event_subtitle">Messages in this conversation are e2e encrypted. Only your correspondent can decrypt them.</string>
     <string name="conversation_end_to_end_encrypted_bottom_sheet_title">Guaranteed confidentiality</string>
@@ -723,6 +722,7 @@
     <string name="purple">Purple</string>
 
     <!-- Misc -->
+    <string name="list_filter_no_result_found">No result found…</string>
     <string name="multiple_participants_selection_placeholder">Selected participants will appear here</string>
     <string name="connection_error_for_non_default_account">Account(s) connection error</string>
     <plurals name="pending_notification_for_other_accounts">

@@ -77,7 +77,7 @@
                     android:id="@+id/no_conversation_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/conversations_list_empty"
+                    android:text="@{viewModel.isFilterEmpty ? @string/conversations_list_empty : @string/list_filter_no_result_found, default=@string/conversations_list_empty}"
                     app:layout_constraintBottom_toTopOf="@id/background"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

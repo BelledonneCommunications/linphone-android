@@ -143,17 +143,20 @@ class MeetingsListViewModel @UiThread constructor() : AbstractMainViewModel() {
                     meetingForTodayFound = true
                 }
 
-                // If no meeting was found for today, insert "Today" fake model before the next meeting to come
+                // If no meeting was found for today, insert "Today" fake model before the next meeting to come,
+                // but only add that fake meeting if filter is empty
                 if (!meetingForTodayFound && model.isAfterToday) {
-                    val todayWeekLabel = TimestampUtils.firstAndLastDayOfWeek(
-                        System.currentTimeMillis(),
-                        false
-                    )
-                    val first = previousModelWeekLabel != todayWeekLabel
-                    list.add(MeetingListItemModel(null, first))
-                    meetingForTodayFound = true
-                    previousModelWeekLabel = todayWeekLabel
-                    firstMeetingOfTheWeek = false
+                    if (filter.isEmpty()) {
+                        val todayWeekLabel = TimestampUtils.firstAndLastDayOfWeek(
+                            System.currentTimeMillis(),
+                            false
+                        )
+                        val first = previousModelWeekLabel != todayWeekLabel
+                        list.add(MeetingListItemModel(null, first))
+                        meetingForTodayFound = true
+                        previousModelWeekLabel = todayWeekLabel
+                        firstMeetingOfTheWeek = false
+                    }
                 } else {
                     previousModelWeekLabel = model.weekLabel
                 }
@@ -163,8 +166,9 @@ class MeetingsListViewModel @UiThread constructor() : AbstractMainViewModel() {
             }
         }
 
-        // If no meeting was found after today, insert "Today" fake model at the end
-        if (!meetingForTodayFound) {
+        // If no meeting was found after today, insert "Today" fake model at the end,
+        // but only add that fake meeting if filter is empty
+        if (!meetingForTodayFound && filter.isEmpty()) {
             val todayWeekLabel = TimestampUtils.firstAndLastDayOfWeek(
                 System.currentTimeMillis(),
                 false

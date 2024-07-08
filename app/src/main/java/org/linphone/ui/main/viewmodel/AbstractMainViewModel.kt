@@ -66,6 +66,8 @@ open class AbstractMainViewModel @UiThread constructor() : GenericViewModel() {
 
     val unreadMessages = MutableLiveData<Int>()
 
+    val isFilterEmpty = MutableLiveData<Boolean>()
+
     val focusSearchBarEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -170,6 +172,7 @@ open class AbstractMainViewModel @UiThread constructor() : GenericViewModel() {
         }
 
         searchBarVisible.value = false
+        isFilterEmpty.value = true
     }
 
     @UiThread
@@ -214,6 +217,7 @@ open class AbstractMainViewModel @UiThread constructor() : GenericViewModel() {
     fun applyFilter(filter: String = currentFilter) {
         Log.i("$TAG New filter set by user [$filter]")
         currentFilter = filter
+        isFilterEmpty.postValue(filter.isEmpty())
         filter()
     }
 

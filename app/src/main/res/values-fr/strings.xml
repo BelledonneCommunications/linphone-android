@@ -419,7 +419,6 @@
     <string name="conversation_menu_documents_files">Documents</string>
     <string name="conversation_no_media_found">Aucun média pour le moment…</string>
     <string name="conversation_no_document_found">Aucun document pour le moment…</string>
-    <string name="conversation_filter_no_matching_result">Aucun résultat…</string>
     <string name="conversation_end_to_end_encrypted_event_title">Conversation chiffrée de bout en bout</string>
     <string name="conversation_end_to_end_encrypted_event_subtitle">Les messages de cette conversation sont chiffrés de bout en bout. Seul votre correspondant peut les déchiffrer.</string>
     <string name="conversation_end_to_end_encrypted_bottom_sheet_title">La confidentialité de vos échanges garantie</string>
@@ -686,6 +685,7 @@
     <string name="purple">Violet</string>
 
     <!-- Misc -->
+    <string name="list_filter_no_result_found">Aucun résultat…</string>
     <string name="multiple_participants_selection_placeholder">Les participants selectionnés apparaîtront ici</string>
     <string name="connection_error_for_non_default_account">Compte(s) non connecté(s)</string>
     <plurals name="pending_notification_for_other_accounts" tools:ignore="MissingQuantity">

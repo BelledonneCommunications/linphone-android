@@ -246,7 +246,7 @@
                 android:id="@+id/no_result"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/conversation_filter_no_matching_result"
+                android:text="@string/list_filter_no_result_found"
                 android:textColor="?attr/color_main2_600"
                 android:textSize="16sp"
                 android:visibility="@{viewModel.noMatchingResultForFilter ? View.VISIBLE : View.GONE}"

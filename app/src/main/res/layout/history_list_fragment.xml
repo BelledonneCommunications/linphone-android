@@ -97,7 +97,7 @@
                     android:id="@+id/no_calls_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/history_list_empty_history"
+                    android:text="@{viewModel.isFilterEmpty ? @string/history_list_empty_history : @string/list_filter_no_result_found, default=@string/history_list_empty_history}"
                     app:layout_constraintBottom_toTopOf="@id/background"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

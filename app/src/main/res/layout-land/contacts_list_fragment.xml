@@ -142,7 +142,7 @@
                     android:id="@+id/no_contacts_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/contacts_list_empty"
+                    android:text="@{viewModel.isFilterEmpty ? @string/contacts_list_empty : @string/list_filter_no_result_found, default=@string/contacts_list_empty}"
                     app:layout_constraintBottom_toTopOf="@id/lists"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
