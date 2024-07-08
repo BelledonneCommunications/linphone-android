@@ -206,6 +206,14 @@ class ContactsManager @UiThread constructor() {
 
     @WorkerThread
     fun contactRemoved(friend: Friend) {
+        val refKey = friend.refKey.orEmpty()
+        if (refKey.isNotEmpty() && knownContactsAvatarsMap.keys.contains(refKey)) {
+            Log.d("$TAG Found RefKey [$refKey] in knownContactsAvatarsMap, removing it")
+            val oldModel = knownContactsAvatarsMap[refKey]
+            oldModel?.destroy()
+            knownContactsAvatarsMap.remove(refKey)
+        }
+
         for (sipAddress in friend.addresses) {
             val sipUri = sipAddress.asStringUriOnly()
             if (knownContactsAvatarsMap.keys.contains(sipUri)) {
@@ -387,7 +395,7 @@ class ContactsManager @UiThread constructor() {
             "$TAG Looking for avatar model for friend [${friend.name}] using SIP URI  [${address.asStringUriOnly()}]"
         )
 
-        val key = LinphoneUtils.getAddressAsCleanStringUriOnly(address)
+        val key = friend.refKey ?: LinphoneUtils.getAddressAsCleanStringUriOnly(address)
         val foundInMap = getAvatarModelFromCache(key)
         if (foundInMap != null) {
             Log.d("$TAG Found avatar model in map using SIP URI [$key]")
