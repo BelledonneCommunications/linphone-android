@@ -403,6 +403,7 @@
                         android:drawableStart="@drawable/arrow_clockwise"
                         android:drawablePadding="8dp"
                         android:drawableTint="?attr/color_main2_600"
+                        android:visibility="gone"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/timezone_picker" />
