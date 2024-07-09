@@ -12,6 +12,7 @@
         <!-- Customize your theme here. -->
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowBackground">@color/white</item>
+        <item name="android:statusBarColor">?attr/color_main1_500</item>
 
         <item name="color_main1_100">@color/orange_main_100</item>
         <item name="color_main1_100_alpha_50">@color/orange_main_100_alpha_50</item>
