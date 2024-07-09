@@ -39,6 +39,7 @@ import org.linphone.core.AudioDevice
 import org.linphone.core.Call
 import org.linphone.core.CallListenerStub
 import org.linphone.core.CallStats
+import org.linphone.core.ChatMessage
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomListenerStub
 import org.linphone.core.ChatRoomParams
@@ -183,6 +184,10 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
     var isZrtpAlertDialogVisible: Boolean = false
 
     // Chat
+
+    var currentCallConversation: ChatRoom? = null
+
+    val unreadMessagesCount = MutableLiveData<Int>()
 
     val operationInProgress = MutableLiveData<Boolean>()
 
@@ -445,6 +450,34 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
                 transferInProgressEvent.postValue(Event(true))
             } else if (LinphoneUtils.isCallEnding(state)) {
                 transferFailedEvent.postValue(Event(true))
+            }
+        }
+
+        @WorkerThread
+        override fun onMessagesReceived(
+            core: Core,
+            chatRoom: ChatRoom,
+            messages: Array<out ChatMessage>
+        ) {
+            if (::currentCall.isInitialized) {
+                if (currentCallConversation == null) {
+                    currentCallConversation = lookupCurrentCallConversation(currentCall)
+                }
+                if (currentCallConversation != null && currentCallConversation == chatRoom) {
+                    val unreadCount = chatRoom.unreadMessagesCount
+                    Log.i(
+                        "$TAG Received [${messages.size}] message(s) for current call conversation, currently [$unreadCount] unread messages"
+                    )
+                    unreadMessagesCount.postValue(unreadCount)
+                }
+            }
+        }
+
+        @WorkerThread
+        override fun onChatRoomRead(core: Core, chatRoom: ChatRoom) {
+            if (currentCallConversation != null && currentCallConversation == chatRoom) {
+                Log.i("$TAG Current call conversation was marked as read")
+                unreadMessagesCount.postValue(0)
             }
         }
     }
@@ -845,111 +878,26 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
 
     @UiThread
     fun createConversation() {
-        coreContext.postOnCoreThread { core ->
-            val account = core.defaultAccount
-            val localSipUri = account?.params?.identityAddress?.asStringUriOnly()
-            val remote = currentCall.remoteAddress
-            if (!localSipUri.isNullOrEmpty()) {
-                val remoteSipUri = remote.asStringUriOnly()
-                Log.i(
-                    "$TAG Looking for existing conversation between [$localSipUri] and [$remoteSipUri]"
-                )
-
-                val params: ChatRoomParams = coreContext.core.createDefaultChatRoomParams()
-                params.isGroupEnabled = false
-                params.subject = AppUtils.getString(R.string.conversation_one_to_one_hidden_subject)
-                params.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
-
-                val sameDomain =
-                    remote.domain == corePreferences.defaultDomain && remote.domain == account.params.domain
-                if (isEndToEndEncryptionMandatory() && sameDomain) {
-                    Log.i(
-                        "$TAG Account is in secure mode & domain matches, creating a E2E conversation"
-                    )
-                    params.backend = ChatRoom.Backend.FlexisipChat
-                    params.isEncryptionEnabled = true
-                } else if (!isEndToEndEncryptionMandatory()) {
-                    if (LinphoneUtils.isEndToEndEncryptedChatAvailable(core)) {
-                        Log.i(
-                            "$TAG Account is in interop mode but LIME is available, creating a E2E conversation"
-                        )
-                        params.backend = ChatRoom.Backend.FlexisipChat
-                        params.isEncryptionEnabled = true
-                    } else {
-                        Log.i(
-                            "$TAG Account is in interop mode but LIME isn't available, creating a SIP simple conversation"
-                        )
-                        params.backend = ChatRoom.Backend.Basic
-                        params.isEncryptionEnabled = false
-                    }
-                } else {
-                    Log.e(
-                        "$TAG Account is in secure mode, can't chat with SIP address of different domain [${remote.asStringUriOnly()}]"
-                    )
-                    // TODO: show error
-                    return@postOnCoreThread
-                }
-
-                val participants = arrayOf(remote)
-                val localAddress = account.params.identityAddress
-                val existingChatRoom = core.searchChatRoom(params, localAddress, null, participants)
-                if (existingChatRoom != null) {
+        if (::currentCall.isInitialized) {
+            coreContext.postOnCoreThread {
+                val existingConversation = lookupCurrentCallConversation(currentCall)
+                if (existingConversation != null) {
                     Log.i(
                         "$TAG Found existing conversation [${
-                        LinphoneUtils.getChatRoomId(
-                            existingChatRoom
-                        )
+                        LinphoneUtils.getChatRoomId(existingConversation)
                         }], going to it"
                     )
                     goToConversationEvent.postValue(
-                        Event(Pair(localSipUri, existingChatRoom.peerAddress.asStringUriOnly()))
+                        Event(
+                            Pair(
+                                existingConversation.localAddress.asStringUriOnly(),
+                                existingConversation.peerAddress.asStringUriOnly()
+                            )
+                        )
                     )
                 } else {
-                    Log.i(
-                        "$TAG No existing conversation between [$localSipUri] and [$remoteSipUri] was found, let's create it"
-                    )
-                    operationInProgress.postValue(true)
-                    val chatRoom = core.createChatRoom(params, localAddress, participants)
-                    if (chatRoom != null) {
-                        if (params.backend == ChatRoom.Backend.FlexisipChat) {
-                            if (chatRoom.state == ChatRoom.State.Created) {
-                                val id = LinphoneUtils.getChatRoomId(chatRoom)
-                                Log.i("$TAG 1-1 conversation [$id] has been created")
-                                operationInProgress.postValue(false)
-                                goToConversationEvent.postValue(
-                                    Event(
-                                        Pair(
-                                            chatRoom.localAddress.asStringUriOnly(),
-                                            chatRoom.peerAddress.asStringUriOnly()
-                                        )
-                                    )
-                                )
-                            } else {
-                                Log.i("$TAG Conversation isn't in Created state yet, wait for it")
-                                chatRoom.addListener(chatRoomListener)
-                            }
-                        } else {
-                            val id = LinphoneUtils.getChatRoomId(chatRoom)
-                            Log.i("$TAG Conversation successfully created [$id]")
-                            operationInProgress.postValue(false)
-                            goToConversationEvent.postValue(
-                                Event(
-                                    Pair(
-                                        chatRoom.localAddress.asStringUriOnly(),
-                                        chatRoom.peerAddress.asStringUriOnly()
-                                    )
-                                )
-                            )
-                        }
-                    } else {
-                        Log.e(
-                            "$TAG Failed to create 1-1 conversation with [${remote.asStringUriOnly()}]!"
-                        )
-                        operationInProgress.postValue(false)
-                        chatRoomCreationErrorEvent.postValue(
-                            Event(R.string.conversation_creation_error_toast)
-                        )
-                    }
+                    Log.i("$TAG No existing conversation was found, let's create it")
+                    createCurrentCallConversation(currentCall)
                 }
             }
         }
@@ -1158,6 +1106,18 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
         }
 
         callDuration.postValue(call.duration)
+
+        val chatRoom = lookupCurrentCallConversation(call)
+        currentCallConversation = chatRoom
+        if (chatRoom != null) {
+            val unreadCount = chatRoom.unreadMessagesCount
+            Log.i(
+                "$TAG Found existing 1-1 conversation for current call, currently [$unreadCount] unread messages in existing conversation"
+            )
+            unreadMessagesCount.postValue(unreadCount)
+        } else {
+            Log.i("$TAG Failed to find an existing 1-1 conversation for current call")
+        }
     }
 
     @WorkerThread
@@ -1167,6 +1127,7 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
         }
     }
 
+    @WorkerThread
     private fun updateOutputAudioDevice(audioDevice: AudioDevice?) {
         isSpeakerEnabled.postValue(audioDevice?.type == AudioDevice.Type.Speaker)
         isHeadsetEnabled.postValue(
@@ -1253,5 +1214,117 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
             address
         )
         storedModel.updateSecurityLevel(address)
+    }
+
+    @WorkerThread
+    private fun lookupCurrentCallConversation(call: Call): ChatRoom? {
+        val localAddress = call.callLog.localAddress
+        val remoteAddress = call.remoteAddress
+
+        val params = getChatRoomParams(call) ?: return null
+        val participants = arrayOf(remoteAddress)
+        val existingConversation = call.core.searchChatRoom(
+            params,
+            localAddress,
+            null,
+            participants
+        )
+        return existingConversation
+    }
+
+    @WorkerThread
+    private fun createCurrentCallConversation(call: Call) {
+        val localAddress = call.callLog.localAddress
+        val remoteAddress = call.remoteAddress
+        val participants = arrayOf(remoteAddress)
+        val core = call.core
+        operationInProgress.postValue(true)
+
+        val params = getChatRoomParams(call) ?: return // TODO: show error to user
+        val conversation = core.createChatRoom(params, localAddress, participants)
+        if (conversation != null) {
+            if (params.backend == ChatRoom.Backend.FlexisipChat) {
+                if (conversation.state == ChatRoom.State.Created) {
+                    val id = LinphoneUtils.getChatRoomId(conversation)
+                    Log.i("$TAG 1-1 conversation [$id] has been created")
+                    operationInProgress.postValue(false)
+                    goToConversationEvent.postValue(
+                        Event(
+                            Pair(
+                                conversation.localAddress.asStringUriOnly(),
+                                conversation.peerAddress.asStringUriOnly()
+                            )
+                        )
+                    )
+                } else {
+                    Log.i("$TAG Conversation isn't in Created state yet, wait for it")
+                    conversation.addListener(chatRoomListener)
+                }
+            } else {
+                val id = LinphoneUtils.getChatRoomId(conversation)
+                Log.i("$TAG Conversation successfully created [$id]")
+                operationInProgress.postValue(false)
+                goToConversationEvent.postValue(
+                    Event(
+                        Pair(
+                            conversation.localAddress.asStringUriOnly(),
+                            conversation.peerAddress.asStringUriOnly()
+                        )
+                    )
+                )
+            }
+        } else {
+            Log.e(
+                "$TAG Failed to create 1-1 conversation with [${remoteAddress.asStringUriOnly()}]!"
+            )
+            operationInProgress.postValue(false)
+            chatRoomCreationErrorEvent.postValue(
+                Event(R.string.conversation_creation_error_toast)
+            )
+        }
+    }
+
+    @WorkerThread
+    private fun getChatRoomParams(call: Call): ChatRoomParams? {
+        val localAddress = call.callLog.localAddress
+        val remoteAddress = call.remoteAddress
+        val core = call.core
+        val account = core.accountList.find {
+            it.params.identityAddress?.weakEqual(localAddress) == true
+        } ?: LinphoneUtils.getDefaultAccount() ?: return null
+
+        val params: ChatRoomParams = core.createDefaultChatRoomParams()
+        params.isGroupEnabled = false
+        params.subject = AppUtils.getString(R.string.conversation_one_to_one_hidden_subject)
+        params.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
+
+        val sameDomain = remoteAddress.domain == corePreferences.defaultDomain && remoteAddress.domain == account.params.domain
+        if (isEndToEndEncryptionMandatory() && sameDomain) {
+            Log.i(
+                "$TAG Account is in secure mode & domain matches, requesting E2E encryption"
+            )
+            params.backend = ChatRoom.Backend.FlexisipChat
+            params.isEncryptionEnabled = true
+        } else if (!isEndToEndEncryptionMandatory()) {
+            if (LinphoneUtils.isEndToEndEncryptedChatAvailable(core)) {
+                Log.i(
+                    "$TAG Account is in interop mode but LIME is available, requesting E2E encryption"
+                )
+                params.backend = ChatRoom.Backend.FlexisipChat
+                params.isEncryptionEnabled = true
+            } else {
+                Log.i(
+                    "$TAG Account is in interop mode but LIME isn't available, disabling E2E encryption"
+                )
+                params.backend = ChatRoom.Backend.Basic
+                params.isEncryptionEnabled = false
+            }
+        } else {
+            Log.e(
+                "$TAG Account is in secure mode, can't chat with SIP address of different domain [${remoteAddress.asStringUriOnly()}]"
+            )
+            return null
+        }
+        return params
     }
 }
