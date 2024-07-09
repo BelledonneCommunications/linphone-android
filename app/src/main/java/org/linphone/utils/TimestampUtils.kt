@@ -26,6 +26,7 @@ import java.time.format.TextStyle
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 
@@ -35,17 +36,17 @@ class TimestampUtils {
 
         @AnyThread
         fun isToday(timestamp: Long, timestampInSecs: Boolean = true): Boolean {
-            val cal = Calendar.getInstance()
+            val cal = getCalendar()
             cal.timeInMillis = if (timestampInSecs) timestamp * 1000 else timestamp
-            return isSameDay(cal, Calendar.getInstance())
+            return isSameDay(cal, getCalendar())
         }
 
         @AnyThread
         fun isAfterToday(timestamp: Long, timestampInSecs: Boolean = true): Boolean {
-            val cal = Calendar.getInstance()
+            val cal = getCalendar()
             cal.timeInMillis = if (timestampInSecs) timestamp * 1000 else timestamp
 
-            val tomorrow = Calendar.getInstance()
+            val tomorrow = getCalendar()
             tomorrow.timeInMillis = System.currentTimeMillis()
 
             if (cal.get(Calendar.ERA) > tomorrow.get(Calendar.ERA)) return true
@@ -61,16 +62,16 @@ class TimestampUtils {
 
         @AnyThread
         fun isYesterday(timestamp: Long, timestampInSecs: Boolean = true): Boolean {
-            val yesterday = Calendar.getInstance()
+            val yesterday = getCalendar()
             yesterday.roll(Calendar.DAY_OF_MONTH, -1)
-            val cal = Calendar.getInstance()
+            val cal = getCalendar()
             cal.timeInMillis = if (timestampInSecs) timestamp * 1000 else timestamp
             return isSameDay(cal, yesterday)
         }
 
         @AnyThread
         fun dayOfWeek(timestamp: Long, timestampInSecs: Boolean = true): String {
-            val calendar = Calendar.getInstance()
+            val calendar = getCalendar()
             calendar.timeInMillis = if (timestampInSecs) timestamp * 1000 else timestamp
             val dayName = calendar.getDisplayName(
                 Calendar.DAY_OF_WEEK,
@@ -92,14 +93,14 @@ class TimestampUtils {
 
         @AnyThread
         fun dayOfMonth(timestamp: Long, timestampInSecs: Boolean = true): String {
-            val calendar = Calendar.getInstance()
+            val calendar = getCalendar()
             calendar.timeInMillis = if (timestampInSecs) timestamp * 1000 else timestamp
             return calendar.get(Calendar.DAY_OF_MONTH).toString()
         }
 
         @AnyThread
         fun firstAndLastDayOfWeek(timestamp: Long, timestampInSecs: Boolean = true): String {
-            val calendar = Calendar.getInstance()
+            val calendar = getCalendar()
             calendar.timeInMillis = if (timestampInSecs) timestamp * 1000 else timestamp
             while (calendar.get(Calendar.DAY_OF_WEEK) != calendar.firstDayOfWeek) {
                 calendar.add(Calendar.DATE, -1)
@@ -126,7 +127,7 @@ class TimestampUtils {
 
         @AnyThread
         fun month(timestamp: Long, timestampInSecs: Boolean = true): String {
-            val calendar = Calendar.getInstance()
+            val calendar = getCalendar()
             calendar.timeInMillis = if (timestampInSecs) timestamp * 1000 else timestamp
             val month = calendar.getDisplayName(
                 Calendar.MONTH,
@@ -136,7 +137,7 @@ class TimestampUtils {
                 ?.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
                 ?: "?"
 
-            val now = Calendar.getInstance()
+            val now = getCalendar()
             if (isSameYear(now, calendar)) {
                 return month
             }
@@ -150,7 +151,7 @@ class TimestampUtils {
             val use24hFormat = android.text.format.DateFormat.is24HourFormat(
                 coreContext.context
             )
-            val calendar = Calendar.getInstance()
+            val calendar = getCalendar()
             calendar.timeInMillis = if (timestampInSecs) time * 1000 else time
 
             return if (use24hFormat) {
@@ -166,14 +167,14 @@ class TimestampUtils {
                 if (duration >= 3600) "HH:mm:ss" else "mm:ss",
                 Locale.getDefault()
             )
-            val cal = Calendar.getInstance()
+            val cal = getCalendar()
             cal[0, 0, 0, 0, 0] = duration
             return dateFormat.format(cal.time)
         }
 
         @AnyThread
         fun toFullString(time: Long, timestampInSecs: Boolean = true): String {
-            val calendar = Calendar.getInstance()
+            val calendar = getCalendar()
             calendar.timeInMillis = if (timestampInSecs) time * 1000 else time
 
             return SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(calendar.time)
@@ -200,9 +201,9 @@ class TimestampUtils {
                 }
             } as SimpleDateFormat
 
-            val cal = Calendar.getInstance()
+            val cal = getCalendar()
             cal.timeInMillis = if (timestampInSecs) timestamp * 1000 else timestamp
-            val now = Calendar.getInstance()
+            val now = getCalendar()
             if (hideYear && isSameYear(cal, now)) {
                 // Remove the year part of the format
                 dateFormat.applyPattern(
@@ -263,6 +264,11 @@ class TimestampUtils {
         ): Boolean {
             return cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA) &&
                 cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+        }
+
+        @AnyThread
+        private fun getCalendar(): Calendar {
+            return Calendar.getInstance(TimeZone.getDefault())
         }
     }
 }

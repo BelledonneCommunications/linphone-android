@@ -19,12 +19,11 @@
  */
 package org.linphone.ui.main.meetings.model
 
-import androidx.annotation.UiThread
 import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
-class TimeZoneModel @UiThread constructor(timeZone: TimeZone) : Comparable<TimeZoneModel> {
+class TimeZoneModel(timeZone: TimeZone) : Comparable<TimeZoneModel> {
     val id: String = timeZone.id
 
     private val hours: Long = TimeUnit.MILLISECONDS.toHours(timeZone.rawOffset.toLong())

@@ -22,10 +22,8 @@ package org.linphone.ui.main.meetings.viewmodel
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
-import java.util.Locale
 import java.util.TimeZone
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.R
 import org.linphone.core.Address
 import org.linphone.core.ChatRoom
 import org.linphone.core.ConferenceInfo
@@ -36,7 +34,7 @@ import org.linphone.core.Participant
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
 import org.linphone.ui.main.meetings.model.ParticipantModel
-import org.linphone.utils.AppUtils
+import org.linphone.ui.main.meetings.model.TimeZoneModel
 import org.linphone.utils.Event
 import org.linphone.utils.TimestampUtils
 
@@ -229,13 +227,7 @@ class MeetingViewModel @UiThread constructor() : GenericViewModel() {
             endTimeStamp.postValue(end * 1000)
             dateTime.postValue("$date | $startTime - $endTime")
 
-            timezone.postValue(
-                AppUtils.getFormattedString(
-                    R.string.meeting_schedule_timezone_title,
-                    TimeZone.getDefault().displayName
-                )
-                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
-            )
+            timezone.postValue(TimeZoneModel(TimeZone.getDefault()).toString())
 
             val organizerAddress = conferenceInfo.organizer
             if (organizerAddress != null) {
