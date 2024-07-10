@@ -79,6 +79,10 @@ class CardDavViewModel : GenericViewModel() {
                             )
                         )
                     )
+
+                    Log.i("$TAG Notifying contacts manager that contacts have changed")
+                    coreContext.contactsManager.notifyContactsListChanged()
+
                     syncSuccessfulEvent.postValue(Event(true))
                 }
                 FriendList.SyncStatus.Failure -> {
@@ -150,6 +154,10 @@ class CardDavViewModel : GenericViewModel() {
                         )
                     )
                 )
+
+                Log.i("$TAG Notifying contacts manager that contacts have changed")
+                coreContext.contactsManager.notifyContactsListChanged()
+
                 friendListRemovedEvent.postValue(Event(true))
             }
         }
