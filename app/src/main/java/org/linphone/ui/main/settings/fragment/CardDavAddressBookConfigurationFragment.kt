@@ -79,5 +79,12 @@ class CardDavAddressBookConfigurationFragment : GenericMainFragment() {
                 goBack()
             }
         }
+
+        viewModel.friendListRemovedEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG CardDAV account removed, going back")
+                goBack()
+            }
+        }
     }
 }

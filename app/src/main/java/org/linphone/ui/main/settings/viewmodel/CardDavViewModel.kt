@@ -54,6 +54,8 @@ class CardDavViewModel : GenericViewModel() {
 
     val syncSuccessfulEvent = MutableLiveData<Event<Boolean>>()
 
+    val friendListRemovedEvent = MutableLiveData<Event<Boolean>>()
+
     private lateinit var friendList: FriendList
 
     private val friendListListener = object : FriendListListenerStub() {
@@ -148,6 +150,7 @@ class CardDavViewModel : GenericViewModel() {
                         )
                     )
                 )
+                friendListRemovedEvent.postValue(Event(true))
             }
         }
     }
