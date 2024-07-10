@@ -446,6 +446,15 @@ class ContactsManager @UiThread constructor() {
             Log.w("$TAG READ_CONTACTS permission was denied, creating chat rooms shortcuts")
             ShortcutUtils.createShortcutsToChatRooms(context)
         }
+
+        for (list in core.friendsLists) {
+            if (list.type == FriendList.Type.CardDAV && !list.uri.isNullOrEmpty()) {
+                Log.i(
+                    "$TAG Found a CardDAV friend list with name [${list.displayName}] and URI [${list.uri}], synchronizing it"
+                )
+                list.synchronizeFriendsFromServer()
+            }
+        }
     }
 
     @WorkerThread

@@ -29,9 +29,11 @@ import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.contacts.ContactLoader.Companion.LINPHONE_ADDRESS_BOOK_FRIEND_LIST
+import org.linphone.core.Address
 import org.linphone.core.Factory
 import org.linphone.core.Friend
 import org.linphone.core.FriendList.Status
+import org.linphone.core.FriendPhoneNumber
 import org.linphone.core.SubscribePolicy
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
@@ -90,7 +92,7 @@ class ContactNewOrEditViewModel @UiThread constructor() : GenericViewModel() {
             isEdit.postValue(exists)
 
             if (exists) {
-                Log.i("$TAG Found friend [$friend] using ref key [$refKey]")
+                Log.i("$TAG Found friend [${friend.name}] using ref key [$refKey]")
                 val vCard = friend.vcard
                 if (vCard != null) {
                     firstName.postValue(vCard.givenName)
@@ -202,30 +204,8 @@ class ContactNewOrEditViewModel @UiThread constructor() : GenericViewModel() {
             friend.organization = organization
             friend.jobTitle = jobTitle.value.orEmpty().trim()
 
-            for (address in friend.addresses) {
-                friend.removeAddress(address)
-            }
-            for (address in sipAddresses) {
-                val data = address.value.value.orEmpty().trim()
-                if (data.isNotEmpty()) {
-                    val parsedAddress = core.interpretUrl(data, false)
-                    if (parsedAddress != null) {
-                        friend.addAddress(parsedAddress)
-                    }
-                }
-            }
-
-            for (number in friend.phoneNumbers) {
-                friend.removePhoneNumber(number)
-            }
-            for (number in phoneNumbers) {
-                val data = number.value.value.orEmpty().trim()
-                val label = number.label.orEmpty()
-                if (data.isNotEmpty()) {
-                    val phoneNumber = Factory.instance().createFriendPhoneNumber(data, label)
-                    friend.addPhoneNumberWithLabel(phoneNumber)
-                }
-            }
+            updateAddresses()
+            updatePhoneNumbers()
 
             if (isEdit.value == false) {
                 if (friend.vcard?.generateUniqueId() == true) {
@@ -373,5 +353,112 @@ class ContactNewOrEditViewModel @UiThread constructor() : GenericViewModel() {
             !phoneNumbers.firstOrNull()?.value?.value.isNullOrEmpty() ||
             !company.value.isNullOrEmpty() ||
             !jobTitle.value.isNullOrEmpty()
+    }
+
+    @WorkerThread
+    private fun updateAddresses() {
+        val core = coreContext.core
+
+        val toKeep = arrayListOf<Address>()
+        for (address in sipAddresses) {
+            val data = address.value.value.orEmpty().trim()
+            if (data.isNotEmpty()) {
+                val parsedAddress = core.interpretUrl(data, false)
+                if (parsedAddress != null) {
+                    toKeep.add(parsedAddress)
+                }
+            }
+        }
+        val toRemove = arrayListOf<Address>()
+        val toAdd = arrayListOf<Address>()
+
+        for (newAddress in toKeep) {
+            var found = false
+            for (oldAddress in friend.addresses) {
+                if (oldAddress.weakEqual(newAddress)) {
+                    found = true
+                    break
+                }
+            }
+            if (!found) {
+                Log.i(
+                    "$TAG Address [${newAddress.asStringUriOnly()}] doesn't exist yet in friend, adding it"
+                )
+                toAdd.add(newAddress)
+            }
+        }
+        for (oldAddress in friend.addresses) {
+            var found = false
+            for (newAddress in toKeep) {
+                if (oldAddress.weakEqual(newAddress)) {
+                    found = true
+                    break
+                }
+            }
+            if (!found) {
+                Log.i(
+                    "$TAG Address [${oldAddress.asStringUriOnly()}] no longer exists, removing it"
+                )
+                toRemove.add(oldAddress)
+            }
+        }
+        for (address in toRemove) {
+            friend.removeAddress(address)
+        }
+        for (address in toAdd) {
+            friend.addAddress(address)
+        }
+    }
+
+    @WorkerThread
+    private fun updatePhoneNumbers() {
+        val toKeep = arrayListOf<FriendPhoneNumber>()
+        for (number in phoneNumbers) {
+            val data = number.value.value.orEmpty().trim()
+            val label = number.label.orEmpty()
+            if (data.isNotEmpty()) {
+                val phoneNumber = Factory.instance().createFriendPhoneNumber(data, label)
+                toKeep.add(phoneNumber)
+            }
+        }
+        val toRemove = arrayListOf<FriendPhoneNumber>()
+        val toAdd = arrayListOf<FriendPhoneNumber>()
+
+        for (newNumber in toKeep) {
+            var found = false
+            for (oldNumber in friend.phoneNumbersWithLabel) {
+                if (oldNumber.phoneNumber == newNumber.phoneNumber) {
+                    found = true
+                    break
+                }
+            }
+            if (!found) {
+                Log.i(
+                    "$TAG Phone number [${newNumber.phoneNumber}] doesn't exist yet in friend, adding it"
+                )
+                toAdd.add(newNumber)
+            }
+        }
+        for (oldNumber in friend.phoneNumbersWithLabel) {
+            var found = false
+            for (newNumber in toKeep) {
+                if (oldNumber.phoneNumber == newNumber.phoneNumber && (newNumber.label.isNullOrEmpty() || newNumber.label == oldNumber.label)) {
+                    found = true
+                    break
+                }
+            }
+            if (!found) {
+                Log.i(
+                    "$TAG Phone number [${oldNumber.phoneNumber}](${oldNumber.label}) no longer exists, removing it"
+                )
+                toRemove.add(oldNumber)
+            }
+        }
+        for (address in toRemove) {
+            friend.removePhoneNumberWithLabel(address)
+        }
+        for (address in toAdd) {
+            friend.addPhoneNumberWithLabel(address)
+        }
     }
 }
