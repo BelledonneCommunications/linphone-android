@@ -391,6 +391,12 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                     if (found == null) {
                         val newFriend = friends[key]
                         if (newFriend != null) {
+                            if (newFriend.refKey == null) {
+                                Log.w(
+                                    "$TAG Found friend [${newFriend.name}] with no refKey, using ID [$key]"
+                                )
+                                newFriend.refKey = key
+                            }
                             Log.i(
                                 "$TAG Friend [${newFriend.name}] with ref key [${newFriend.refKey}] not found in currently stored list, adding it"
                             )
