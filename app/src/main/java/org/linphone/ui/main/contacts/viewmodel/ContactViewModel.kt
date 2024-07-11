@@ -21,6 +21,7 @@ package org.linphone.ui.main.contacts.viewmodel
 
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import java.io.File
@@ -64,6 +65,7 @@ class ContactViewModel @UiThread constructor() : GenericViewModel() {
     val contact = MutableLiveData<ContactAvatarModel>()
 
     val sipAddressesAndPhoneNumbers = MutableLiveData<ArrayList<ContactNumberOrAddressModel>>()
+    val atLeastOneSipAddressOrPhoneNumber = MediatorLiveData<Boolean>()
 
     val devices = MutableLiveData<ArrayList<ContactDeviceModel>>()
 
@@ -236,8 +238,14 @@ class ContactViewModel @UiThread constructor() : GenericViewModel() {
 
     init {
         isStored.value = false
+
         expandNumbersAndAddresses.value = true
         trustedDevicesPercentage.value = 0
+
+        atLeastOneSipAddressOrPhoneNumber.value = false
+        atLeastOneSipAddressOrPhoneNumber.addSource(sipAddressesAndPhoneNumbers) {
+            atLeastOneSipAddressOrPhoneNumber.value = it.isNotEmpty()
+        }
 
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)

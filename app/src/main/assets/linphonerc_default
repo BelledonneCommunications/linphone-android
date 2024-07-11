@@ -44,4 +44,7 @@ hide_empty_chat_rooms=0
 [fec]
 fec_enabled=1
 
+[magic_search]
+return_empty_friends=1
+
 ## End of default rc

@@ -447,6 +447,9 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
 
                 core.isFecEnabled = true
                 Log.i("$TAG Video FEC has been enabled")
+
+                core.config.setBool("magic_search", "return_empty_friends", true)
+                Log.i("$TAG Showing 'empty' friends enabled")
             }
 
             corePreferences.linphoneConfigurationVersion = currentVersion
