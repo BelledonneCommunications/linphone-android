@@ -26,7 +26,6 @@ import androidx.core.app.NotificationCompat
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.core.tools.service.PushService
-import org.linphone.notifications.NotificationsManager
 
 @MainThread
 class CorePushService : PushService() {
@@ -68,8 +67,7 @@ class CorePushService : PushService() {
             .setSmallIcon(R.drawable.linphone_notification)
             .setAutoCancel(false)
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
-            .setGroup(NotificationsManager.CHAT_NOTIFICATIONS_GROUP)
-            .setVisibility(NotificationCompat.VISIBILITY_SECRET)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setWhen(System.currentTimeMillis())
             .setShowWhen(false)
             .setOngoing(true)

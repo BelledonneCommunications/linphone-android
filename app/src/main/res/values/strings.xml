@@ -93,6 +93,17 @@
     <string name="notification_missed_call_title">Missed call</string>
     <string name="notification_push_received_title">&appName;</string>
     <string name="notification_push_received_message">Searching for new messages</string>
+    <string name="notification_file_transfer_title">&appName;</string>
+    <string name="notification_file_transfer_startup_message">File(s) transfer in progress</string>
+    <plurals name="notification_file_transfer_upload">
+        <item quantity="one">%s file being uploaded</item>
+        <item quantity="other">%s files being uploaded</item>
+    </plurals>
+    <plurals name="notification_file_transfer_download">
+        <item quantity="one">%s file being downloaded</item>
+        <item quantity="other">%s files being downloaded</item>
+    </plurals>
+    <string name="notification_file_transfer_upload_download_message" translatable="false">%s, %s</string>
 
     <!-- First screens user see when app is installed and started -->
     <string name="welcome_page_title">Welcome</string>

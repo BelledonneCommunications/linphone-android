@@ -57,6 +57,16 @@
     <string name="notification_missed_call_title">Appel manqué</string>
     <string name="notification_push_received_title">&appName;</string>
     <string name="notification_push_received_message">Recherche de nouveaux messages</string>
+    <string name="notification_file_transfer_title">&appName;</string>
+    <string name="notification_file_transfer_startup_message">Transfert de fichier(s) en cours</string>
+    <plurals name="notification_file_transfer_upload" tools:ignore="MissingQuantity">
+        <item quantity="one">%s fichier en cours d\'envoi</item>
+        <item quantity="other">%s fichiers en cours d\'envoi</item>
+    </plurals>
+    <plurals name="notification_file_transfer_download" tools:ignore="MissingQuantity">
+        <item quantity="one">%s fichier en cours de réception</item>
+        <item quantity="other">%s fichiers en cours de réception</item>
+    </plurals>
 
     <!-- First screens user see when app is installed and started -->
     <string name="welcome_page_title">Bienvenue</string>

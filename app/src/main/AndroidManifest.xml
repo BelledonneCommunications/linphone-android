@@ -162,6 +162,13 @@
             android:stopWithTask="false"
             android:label="@string/app_name" />
 
+        <service
+            android:name=".core.CoreFileTransferService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync"
+            android:stopWithTask="false"
+            android:label="@string/app_name" />
+
         <service android:name="org.linphone.core.tools.firebase.FirebaseMessaging"
             android:enabled="true"
             android:exported="false">
