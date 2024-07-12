@@ -959,7 +959,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
         popupView.setUnmuteClickListener {
             Log.i("$TAG Un-muting conversation")
-            viewModel.unmute()
+            viewModel.unMute()
             popupWindow.dismiss()
         }
 

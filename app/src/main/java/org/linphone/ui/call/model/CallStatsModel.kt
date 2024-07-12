@@ -39,6 +39,11 @@ class CallStatsModel @WorkerThread constructor() {
     val videoResolution = MutableLiveData<String>()
     val videoFps = MutableLiveData<String>()
 
+    val fecEnabled = MutableLiveData<Boolean>()
+    val lostPackets = MutableLiveData<String>()
+    val repairedPackets = MutableLiveData<String>()
+    val fecBandwidth = MutableLiveData<String>()
+
     @WorkerThread
     fun update(call: Call, stats: CallStats?) {
         stats ?: return
@@ -50,6 +55,9 @@ class CallStatsModel @WorkerThread constructor() {
         val localSendsVideo = localParamsVideoDirection == MediaDirection.SendRecv || localParamsVideoDirection == MediaDirection.SendOnly
         val showVideoStats = videoEnabled && (remoteSendsVideo || localSendsVideo)
         isVideoEnabled.postValue(showVideoStats)
+
+        val isFecEnabled = call.core.isFecEnabled // TODO FIXME: use real value from call
+        fecEnabled.postValue(showVideoStats && isFecEnabled)
 
         when (stats.type) {
             StreamType.Audio -> {
@@ -101,6 +109,30 @@ class CallStatsModel @WorkerThread constructor() {
                     "↑ $sentFps ↓ $receivedFps"
                 )
                 videoFps.postValue(fpsLabel)
+
+                if (isFecEnabled) {
+                    val lostPacketsValue = stats.fecCumulativeLostPacketsNumber
+                    val lostPacketsLabel = AppUtils.getFormattedString(
+                        R.string.call_stats_fec_lost_packets_label,
+                        lostPacketsValue
+                    )
+                    lostPackets.postValue(lostPacketsLabel)
+
+                    val repairedPacketsValue = stats.fecRepairedPacketsNumber
+                    val repairedPacketsLabel = AppUtils.getFormattedString(
+                        R.string.call_stats_fec_repaired_packets_label,
+                        repairedPacketsValue
+                    )
+                    repairedPackets.postValue(repairedPacketsLabel)
+
+                    val fecUploadBandwidth = stats.fecUploadBandwidth.roundToInt()
+                    val fecDownloadBandwidth = stats.fecDownloadBandwidth.roundToInt()
+                    val fecBandwidthLabel = AppUtils.getFormattedString(
+                        R.string.call_stats_fec_lost_bandwidth_label,
+                        "↑ $fecUploadBandwidth kbits/s ↓ $fecDownloadBandwidth kbits/s"
+                    )
+                    fecBandwidth.postValue(fecBandwidthLabel)
+                }
             }
             else -> {}
         }

@@ -656,6 +656,10 @@
     <string name="call_stats_video_title">Video</string>
     <string name="call_stats_resolution_label">Resolution: %s</string>
     <string name="call_stats_fps_label">FPS: %s</string>
+    <string name="call_stats_fec_title">FEC</string>
+    <string name="call_stats_fec_lost_packets_label">Lost packets: %s</string>
+    <string name="call_stats_fec_repaired_packets_label">Repaired packets: %s</string>
+    <string name="call_stats_fec_lost_bandwidth_label">Bandwidth: %s</string>
 
     <string name="call_stats_media_encryption_title">Media encryption</string>
     <string name="call_stats_media_encryption">Media encryption: %s</string>

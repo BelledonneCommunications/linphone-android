@@ -432,7 +432,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
     }
 
     @UiThread
-    fun unmute() {
+    fun unMute() {
         coreContext.postOnCoreThread {
             chatRoom.muted = false
             isMuted.postValue(chatRoom.muted)

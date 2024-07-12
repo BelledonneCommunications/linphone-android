@@ -62,8 +62,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:text="@{model.audioCodec, default=@string/call_stats_codec_label}"
                 android:textColor="@color/white"
                 android:maxLines="1"
@@ -75,8 +73,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:layout_marginBottom="10dp"
                 android:text="@{model.audioBandwidth, default=@string/call_stats_bandwidth_label}"
                 android:textColor="@color/white"
@@ -98,7 +94,7 @@
             app:layout_constraintTop_toBottomOf="@id/audio_stats"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/fec_stats"
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -116,8 +112,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:text="@{model.videoCodec, default=@string/call_stats_codec_label}"
                 android:textColor="@color/white"
                 android:maxLines="1"
@@ -129,8 +123,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:text="@{model.videoBandwidth, default=@string/call_stats_bandwidth_label}"
                 android:textColor="@color/white"
                 android:maxLines="1"
@@ -142,8 +134,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:text="@{model.videoResolution, default=@string/call_stats_resolution_label}"
                 android:textColor="@color/white"
                 android:maxLines="1"
@@ -155,10 +145,68 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:layout_marginBottom="10dp"
                 android:text="@{model.videoFps, default=@string/call_stats_fps_label}"
+                android:textColor="@color/white"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/fec_stats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/shape_squircle_gray_600_background"
+            android:visibility="@{model.fecEnabled ? View.VISIBLE : View.GONE}"
+            app:layout_constraintTop_toBottomOf="@id/video_stats"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_700"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/call_stats_fec_title"
+                android:textSize="12sp"
+                android:textColor="@color/white"
+                android:gravity="center" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@{model.lostPackets, default=@string/call_stats_fec_lost_packets_label}"
+                android:textColor="@color/white"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:gravity="center" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@{model.repairedPackets, default=@string/call_stats_fec_repaired_packets_label}"
+                android:textColor="@color/white"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:gravity="center" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@{model.fecBandwidth, default=@string/call_stats_fec_lost_bandwidth_label}"
                 android:textColor="@color/white"
                 android:maxLines="1"
                 android:ellipsize="end"
