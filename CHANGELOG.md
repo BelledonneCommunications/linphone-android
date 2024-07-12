@@ -35,6 +35,9 @@ Group changes to describe their impact on the project, as follows:
 - Security focus: security & trust is more visible than ever, and unsecure conversations & calls are even more visible than before.
 - CardDAV: you can configure as many CardDAV servers you want to synchronize you contacts in Linphone (in addition or in replacement of native addressbook import).
 - OpenID: when used with a SSO compliant SIP server (such as Flexisip), we support single-sign-on login.
+- Devices list: check on which device your sip.linphone.org account is connected and the last connection date & time (like on subscribe.linphone.org).
+- Protobuf dependency to allow logging native crashes stack traces at next app startup.
+- Android 15 startup listener, allowing us to log type of start (cold, warm, etc...) and some other useful info.
 
 ### Removed
 - Dialer: the previous home screen (dialer) has been removed, you'll find it as an input option in the new start call screen.
