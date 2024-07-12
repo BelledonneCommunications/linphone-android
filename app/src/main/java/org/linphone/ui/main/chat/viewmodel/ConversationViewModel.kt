@@ -129,11 +129,9 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
 
     private val chatRoomListener = object : ChatRoomListenerStub() {
         @WorkerThread
-        override fun onStateChanged(chatRoom: ChatRoom, newState: ChatRoom.State?) {
-            Log.i("$TAG Conversation state changed [${chatRoom.state}]")
-            if (chatRoom.state == ChatRoom.State.Created) {
-                computeConversationInfo()
-            }
+        override fun onConferenceJoined(chatRoom: ChatRoom, eventLog: EventLog) {
+            Log.i("$TAG Conversation was joined")
+            computeConversationInfo()
         }
 
         @WorkerThread
