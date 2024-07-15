@@ -106,18 +106,18 @@ import org.linphone.utils.setKeyboardInsetListener
 import org.linphone.utils.showKeyboard
 
 @UiThread
-class ConversationFragment : SlidingPaneChildFragment() {
+open class ConversationFragment : SlidingPaneChildFragment() {
     companion object {
         private const val TAG = "[Conversation Fragment]"
 
         private const val EXPORT_FILE_AS_DOCUMENT = 10
     }
 
-    private lateinit var binding: ChatConversationFragmentBinding
+    protected lateinit var binding: ChatConversationFragmentBinding
 
-    private lateinit var viewModel: ConversationViewModel
+    protected lateinit var viewModel: ConversationViewModel
 
-    private lateinit var sendMessageViewModel: SendMessageInConversationViewModel
+    protected lateinit var sendMessageViewModel: SendMessageInConversationViewModel
 
     private lateinit var adapter: ConversationEventAdapter
 
