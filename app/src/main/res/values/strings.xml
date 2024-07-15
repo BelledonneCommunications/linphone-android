@@ -310,8 +310,7 @@
     <string name="manage_account_status_progress_summary">Account is connecting to the server, please wait…</string>
     <string name="manage_account_status_failed_summary">Account connection failed, check your settings.</string>
     <string name="manage_account_international_prefix">International Prefix</string>
-    <string name="manage_account_dialog_international_prefix_help_title">Why do we need it?</string>
-    <string name="manage_account_dialog_international_prefix_help_message">Blah blah blah</string> <!-- TODO -->
+    <string name="manage_account_dialog_international_prefix_help_message">Pick your country to allow &appName; to match your contacts.</string>
     <string name="manage_account_settings">Account settings</string>
     <string name="manage_account_delete">Delete account</string>
     <string name="manage_account_choose_mode_title">Choose account mode</string>
