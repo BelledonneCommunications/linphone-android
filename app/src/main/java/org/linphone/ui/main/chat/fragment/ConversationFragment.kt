@@ -48,7 +48,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnPreDraw
+import androidx.core.view.updatePadding
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -1013,9 +1016,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
     private fun showChatMessageLongPressMenu(chatMessageModel: MessageModel) {
         Compatibility.setBlurRenderEffect(binding.root)
 
-        val dialog = Dialog(requireContext(), R.style.Theme_LinphoneDialog)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-
         val layout: ChatBubbleLongPressMenuBinding = DataBindingUtil.inflate(
             LayoutInflater.from(context),
             R.layout.chat_bubble_long_press_menu,
@@ -1085,21 +1085,37 @@ class ConversationFragment : SlidingPaneChildFragment() {
             dismissDialog()
         }
 
-        dialog.setContentView(layout.root)
-        dialog.setOnDismissListener {
-            Compatibility.removeBlurRenderEffect(binding.root)
+        val dialog = Dialog(requireContext(), R.style.Theme_LinphoneDialog)
+        dialog.apply {
+            setOnDismissListener {
+                Compatibility.removeBlurRenderEffect(binding.root)
+            }
+            requestWindowFeature(Window.FEATURE_NO_TITLE)
+
+            window?.apply {
+                setLayout(
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.MATCH_PARENT
+                )
+
+                setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+
+                val d: Drawable = ColorDrawable(
+                    requireContext().getColor(R.color.grey_300)
+                )
+                d.alpha = 102
+                setBackgroundDrawable(d)
+            }
+
+            setContentView(layout.root)
+
+            ViewCompat.setOnApplyWindowInsetsListener(layout.root) { v, windowInsets ->
+                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+                v.updatePadding(0, 0, 0, insets.bottom)
+                WindowInsetsCompat.CONSUMED
+            }
         }
 
-        dialog.window
-            ?.setLayout(
-                WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.MATCH_PARENT
-            )
-        val d: Drawable = ColorDrawable(
-            requireContext().getColor(R.color.grey_300)
-        )
-        d.alpha = 102
-        dialog.window?.setBackgroundDrawable(d)
         dialog.show()
         messageLongPressDialog = dialog
     }
