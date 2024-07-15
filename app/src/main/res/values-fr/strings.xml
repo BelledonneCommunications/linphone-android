@@ -364,8 +364,8 @@
 
     <string name="contact_dialog_increase_trust_level_title">Augmenter le niveau de confiance</string>
     <string name="contact_dialog_increase_trust_level_message">Vous êtes sur le point de passer un appel vers l\'appareil $2%s\ de $1%s.\Voulez-vous démarrer l\'appel ?</string>
-    <string name="contact_dialog_devices_trust_help_title">What does it mean?</string>
-    <string name="contact_dialog_devices_trust_help_message">Blah blah blah</string> <!-- TODO FIXME -->
+    <string name="contact_dialog_devices_trust_help_title">Niveau de confiance</string>
+    <string name="contact_dialog_devices_trust_help_message">Vérifiez les appareils de votre contact pour confirmer que vos communications seront sécurisées et sans compromission.\nQuand tous seront vérifiés, vous atteindrez le niveau de confiance maximal.</string>
     <string name="contact_dialog_delete_title">Supprimer %s ?</string>
     <string name="contact_dialog_delete_message">Ce contact sera définitivement supprimé.</string>
     <string name="contact_dialog_pick_phone_number_or_sip_address_title">Choisissez un numéro ou adresse SIP</string>

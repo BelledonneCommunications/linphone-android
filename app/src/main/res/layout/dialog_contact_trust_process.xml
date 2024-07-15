@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
         <variable
             name="dismissClickListener"
             type="View.OnClickListener" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.main.contacts.model.ContactTrustDialogModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -54,10 +57,52 @@
             android:layout_marginTop="10dp"
             android:text="@string/contact_dialog_devices_trust_help_message"
             android:textSize="14sp"
-            app:layout_constraintBottom_toTopOf="@id/confirm"
+            app:layout_constraintBottom_toTopOf="@id/image1"
             app:layout_constraintStart_toStartOf="@id/dialog_background"
             app:layout_constraintEnd_toEndOf="@id/dialog_background"
             app:layout_constraintTop_toBottomOf="@id/title" />
+
+        <include
+            android:id="@+id/image1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="32dp"
+            layout="@layout/contact_avatar"
+            bind:model="@{viewModel.avatarModel}"
+            bind:hidePresence="@{true}"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/arrow"
+            app:layout_constraintTop_toBottomOf="@id/message"
+            app:layout_constraintBottom_toTopOf="@id/confirm" />
+
+        <ImageView
+            android:id="@+id/arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/arrow_right"
+            android:contentDescription="@null"
+            app:tint="?attr/color_main2_600"
+            app:layout_constraintStart_toEndOf="@id/image1"
+            app:layout_constraintEnd_toStartOf="@id/image2"
+            app:layout_constraintTop_toTopOf="@id/image1"
+            app:layout_constraintBottom_toBottomOf="@id/image1"/>
+
+        <include
+            android:id="@+id/image2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            layout="@layout/contact_avatar"
+            bind:model="@{viewModel.trustedAvatarModel}"
+            bind:hidePresence="@{true}"
+            app:strokeWidth="@dimen/avatar_trust_border_width"
+            app:strokeColor="?attr/color_info_500"
+            app:layout_constraintStart_toEndOf="@id/arrow"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/image1"
+            app:layout_constraintBottom_toBottomOf="@id/image1"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{dismissClickListener}"
@@ -71,7 +116,7 @@
             android:text="@string/dialog_ok"
             app:layout_constraintStart_toStartOf="@id/dialog_background"
             app:layout_constraintEnd_toEndOf="@id/dialog_background"
-            app:layout_constraintTop_toBottomOf="@id/message"
+            app:layout_constraintTop_toBottomOf="@id/image1"
             app:layout_constraintBottom_toTopOf="@id/anchor"/>
 
         <View

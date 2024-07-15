@@ -58,6 +58,7 @@ import org.linphone.ui.assistant.model.AcceptConditionsAndPolicyDialogModel
 import org.linphone.ui.assistant.model.ConfirmPhoneNumberDialogModel
 import org.linphone.ui.call.model.ZrtpAlertDialogModel
 import org.linphone.ui.call.model.ZrtpSasConfirmationDialogModel
+import org.linphone.ui.main.contacts.model.ContactTrustDialogModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.contacts.model.TrustCallDialogModel
 import org.linphone.ui.main.fragment.AuthRequestedDialogModel
@@ -170,13 +171,18 @@ class DialogUtils {
         }
 
         @UiThread
-        fun getContactTrustProcessExplanationDialog(context: Context): Dialog {
+        fun getContactTrustProcessExplanationDialog(
+            context: Context,
+            viewModel: ContactTrustDialogModel
+        ): Dialog {
             val binding: DialogContactTrustProcessBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
                 R.layout.dialog_contact_trust_process,
                 null,
                 false
             )
+            binding.viewModel = viewModel
+
             val dialog = getDialog(context, binding)
 
             binding.setDismissClickListener {

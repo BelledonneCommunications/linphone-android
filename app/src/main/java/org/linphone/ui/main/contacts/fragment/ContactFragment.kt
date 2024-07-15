@@ -45,6 +45,7 @@ import org.linphone.core.Factory
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactFragmentBinding
 import org.linphone.ui.GenericActivity
+import org.linphone.ui.main.contacts.model.ContactTrustDialogModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.contacts.model.TrustCallDialogModel
 import org.linphone.ui.main.contacts.viewmodel.ContactViewModel
@@ -297,7 +298,10 @@ class ContactFragment : SlidingPaneChildFragment() {
     }
 
     private fun showTrustProcessDialog() {
-        val dialog = DialogUtils.getContactTrustProcessExplanationDialog(requireActivity())
+        val initials = viewModel.contact.value?.initials?.value ?: "JD"
+        val picture = viewModel.contact.value?.picturePath?.value.orEmpty()
+        val model = ContactTrustDialogModel(initials, picture)
+        val dialog = DialogUtils.getContactTrustProcessExplanationDialog(requireActivity(), model)
         dialog.show()
     }
 

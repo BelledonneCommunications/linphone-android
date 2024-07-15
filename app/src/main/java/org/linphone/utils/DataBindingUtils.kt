@@ -425,7 +425,7 @@ private fun loadContactPictureWithCoil(
         }
 
         val image = model.picturePath.value.orEmpty()
-        if (image != null) {
+        if (image.isNotEmpty()) {
             imageView.load(image) {
                 transformations(CircleCropTransformation())
                 listener(
