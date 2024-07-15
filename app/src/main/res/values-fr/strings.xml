@@ -440,6 +440,7 @@
     <string name="conversation_maximum_number_of_attachments_reached">Nombre maximum de fichiers atteint !</string>
     <string name="conversation_dialog_set_subject">Nommer la conversation</string>
     <string name="conversation_dialog_edit_subject">Renommer la conversation</string>
+    <string name="conversation_dialog_subject_cant_be_empty_error">Un nom est obligatoire</string>
     <string name="conversation_dialog_subject_hint">Nom de la conversation</string>
     <string name="conversation_dialog_edit_subject_confirm_button">Confirmer</string>
     <string name="conversation_dialog_open_or_export_file_title">Ouvrir ou sauvegarder le fichier ?</string>

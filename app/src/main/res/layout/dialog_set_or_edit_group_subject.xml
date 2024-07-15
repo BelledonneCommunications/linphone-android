@@ -67,7 +67,7 @@
             android:textSize="14sp"
             android:textColor="?attr/color_main2_600"
             android:maxLines="1"
-            android:background="@drawable/edit_text_background"
+            android:background="@{viewModel.emptySubject ? @drawable/shape_edit_text_error_background : @drawable/edit_text_background, default=@drawable/edit_text_background}"
             android:inputType="text|textCapSentences"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintWidth_max="@dimen/text_input_max_width"
@@ -75,6 +75,19 @@
             app:layout_constraintStart_toStartOf="@id/dialog_background"
             app:layout_constraintEnd_toEndOf="@id/dialog_background"
             app:layout_constraintTop_toBottomOf="@id/title"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_600"
+            android:id="@+id/subject_error"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/conversation_dialog_subject_cant_be_empty_error"
+            android:textSize="13sp"
+            android:textColor="?attr/color_danger_500"
+            android:visibility="@{viewModel.emptySubject ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintTop_toBottomOf="@id/subject"
+            app:layout_constraintStart_toStartOf="@id/subject"
+            app:layout_constraintEnd_toEndOf="@id/subject"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{() -> viewModel.dismiss()}"
@@ -100,6 +113,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
+            android:enabled="@{!viewModel.emptySubject}"
             android:text="@string/conversation_dialog_edit_subject_confirm_button"
             app:layout_constraintStart_toStartOf="@id/dialog_background"
             app:layout_constraintEnd_toEndOf="@id/dialog_background"

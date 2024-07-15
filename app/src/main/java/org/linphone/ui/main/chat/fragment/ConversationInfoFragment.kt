@@ -226,6 +226,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
 
             val dialog = DialogUtils.getSetOrEditGroupSubjectDialog(
                 requireContext(),
+                viewLifecycleOwner,
                 model
             )
 
@@ -238,11 +239,17 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
 
             model.confirmEvent.observe(viewLifecycleOwner) {
                 it.consume { newSubject ->
-                    Log.i(
-                        "$TAG Conversation subject edit confirmed, new subject is [$newSubject] (old was [$currentSubject])"
-                    )
-                    viewModel.updateSubject(newSubject)
-                    dialog.dismiss()
+                    if (newSubject.isNotEmpty()) {
+                        Log.i(
+                            "$TAG Conversation subject edit confirmed, new subject is [$newSubject] (old was [$currentSubject])"
+                        )
+                        viewModel.updateSubject(newSubject)
+                        dialog.dismiss()
+                    } else {
+                        val message = getString(R.string.conversation_invalid_empty_subject_toast)
+                        val icon = R.drawable.warning_circle
+                        (requireActivity() as GenericActivity).showRedToast(message, icon)
+                    }
                 }
             }
 

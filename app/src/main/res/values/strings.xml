@@ -478,6 +478,7 @@
     <string name="conversation_maximum_number_of_attachments_reached">Maximum number of attachments reached!</string>
     <string name="conversation_dialog_set_subject">Set conversation subject</string>
     <string name="conversation_dialog_edit_subject">Edit conversation subject</string>
+    <string name="conversation_dialog_subject_cant_be_empty_error">Subject is mandatory</string>
     <string name="conversation_dialog_subject_hint">Conversation subject</string>
     <string name="conversation_dialog_edit_subject_confirm_button">Confirm</string>
     <string name="conversation_dialog_open_or_export_file_title">Open or export file?</string>

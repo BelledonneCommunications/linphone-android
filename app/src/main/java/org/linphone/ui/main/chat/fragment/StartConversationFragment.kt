@@ -129,6 +129,7 @@ class StartConversationFragment : GenericAddressPickerFragment() {
 
         val dialog = DialogUtils.getSetOrEditGroupSubjectDialog(
             requireContext(),
+            viewLifecycleOwner,
             model
         )
 

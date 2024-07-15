@@ -258,6 +258,7 @@ class DialogUtils {
         @UiThread
         fun getSetOrEditGroupSubjectDialog(
             context: Context,
+            lifecycleOwner: LifecycleOwner,
             viewModel: GroupSetOrEditSubjectDialogModel
         ): Dialog {
             val binding: DialogSetOrEditGroupSubjectBindingImpl = DataBindingUtil.inflate(
@@ -266,6 +267,7 @@ class DialogUtils {
                 null,
                 false
             )
+            binding.lifecycleOwner = lifecycleOwner
             binding.viewModel = viewModel
             // For some reason, binding.subject triggers an error on Android Studio...
             binding.root.findViewById<AppCompatEditText>(R.id.subject)?.requestFocus()

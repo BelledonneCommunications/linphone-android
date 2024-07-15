@@ -20,6 +20,7 @@
 package org.linphone.ui.main.fragment
 
 import androidx.annotation.UiThread
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import org.linphone.utils.Event
 
@@ -35,7 +36,12 @@ class GroupSetOrEditSubjectDialogModel @UiThread constructor(
 
     val confirmEvent = MutableLiveData<Event<String>>()
 
+    val emptySubject = MediatorLiveData<Boolean>()
+
     init {
+        emptySubject.addSource(subject) { subject ->
+            emptySubject.value = subject.isEmpty()
+        }
         subject.value = initialSubject
     }
 
@@ -46,6 +52,8 @@ class GroupSetOrEditSubjectDialogModel @UiThread constructor(
 
     @UiThread
     fun confirm() {
-        confirmEvent.value = Event(subject.value.orEmpty())
+        val newSubject = subject.value.orEmpty()
+        emptySubject.value = newSubject.isEmpty()
+        confirmEvent.value = Event(newSubject)
     }
 }
