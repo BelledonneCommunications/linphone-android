@@ -50,6 +50,8 @@ class ConversationContactOrSuggestionModel @WorkerThread constructor(
 
     val avatarModel = MutableLiveData<ContactAvatarModel>()
 
+    val selected = MutableLiveData<Boolean>()
+
     @UiThread
     fun onClicked() {
         onClicked?.invoke(address)

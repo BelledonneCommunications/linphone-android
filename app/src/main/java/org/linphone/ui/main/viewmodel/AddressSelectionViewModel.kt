@@ -146,6 +146,11 @@ abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccoun
             list.add(model)
             list.addAll(actual)
 
+            val found = modelsList.value.orEmpty().find {
+                it.address.weakEqual(model.address)
+            }
+            found?.selected?.postValue(true)
+
             selectionCount.postValue(
                 AppUtils.getStringWithPlural(
                     R.plurals.selection_count_label,
@@ -172,6 +177,11 @@ abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccoun
             list.addAll(actual)
             model.avatarModel?.destroy()
             list.remove(model)
+
+            val found = modelsList.value.orEmpty().find {
+                it.address.weakEqual(model.address)
+            }
+            found?.selected?.postValue(false)
 
             selectionCount.postValue(
                 AppUtils.getStringWithPlural(

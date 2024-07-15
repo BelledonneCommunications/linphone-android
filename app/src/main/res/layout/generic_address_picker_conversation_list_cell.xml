@@ -49,14 +49,29 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
             android:id="@+id/name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:text="@{model.name, default=`Friends group`}"
             android:textSize="14sp"
-            android:layout_marginStart="10dp"
+            android:maxLines="1"
+            android:ellipsize="end"
             app:layout_constraintStart_toEndOf="@id/avatar"
+            app:layout_constraintEnd_toStartOf="@id/selected"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageView
+            android:id="@+id/selected"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:contentDescription="@null"
+            android:src="@drawable/check"
+            android:visibility="@{model.selected ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/color_main1_500" />
 
         <View
             android:id="@+id/separator"
