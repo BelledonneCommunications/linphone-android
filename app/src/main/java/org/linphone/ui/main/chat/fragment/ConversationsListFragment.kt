@@ -130,6 +130,7 @@ class ConversationsListFragment : AbstractMainFragment() {
                     model.isMuted.value == true,
                     model.isGroup,
                     model.isReadOnly,
+                    (model.unreadMessageCount.value ?: 0) > 0,
                     { // onDismiss
                         adapter.resetSelection()
                     },

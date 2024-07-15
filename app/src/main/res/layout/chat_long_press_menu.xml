@@ -28,6 +28,9 @@
         <variable
             name="isReadOnly"
             type="Boolean" />
+        <variable
+            name="hasUnreadMessages"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -41,9 +44,10 @@
             android:id="@+id/mark_as_read"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            android:visibility="@{hasUnreadMessages ? View.VISIBLE : View.GONE}"
             android:text="@string/conversation_action_mark_as_read"
             android:background="@drawable/menu_item_background"
-            android:layout_marginBottom="1dp"
             android:drawableStart="@drawable/envelope_simple_open"
             app:layout_constraintBottom_toTopOf="@id/mute"
             app:layout_constraintStart_toStartOf="parent"

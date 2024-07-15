@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.adapter
+package org.linphone.ui.main.adapter
 
 import android.content.Context
 import android.view.LayoutInflater

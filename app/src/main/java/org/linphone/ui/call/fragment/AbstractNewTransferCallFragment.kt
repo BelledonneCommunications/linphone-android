@@ -37,7 +37,7 @@ import org.linphone.contacts.getListOfSipAddressesAndPhoneNumbers
 import org.linphone.core.Address
 import org.linphone.core.tools.Log
 import org.linphone.databinding.StartCallFragmentBinding
-import org.linphone.ui.adapter.ConversationsContactsAndSuggestionsListAdapter
+import org.linphone.ui.main.adapter.ConversationsContactsAndSuggestionsListAdapter
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel

@@ -36,6 +36,7 @@ class ConversationDialogFragment(
     private val isMuted: Boolean,
     private val isGroup: Boolean,
     private val isReadOnly: Boolean,
+    private val hasUnreadMessages: Boolean,
     private val onDismiss: (() -> Unit)? = null,
     private val onMarkConversationAsRead: (() -> Unit)? = null,
     private val onToggleMute: (() -> Unit)? = null,
@@ -74,6 +75,7 @@ class ConversationDialogFragment(
         view.isMuted = isMuted
         view.isGroup = isGroup
         view.isReadOnly = isReadOnly
+        view.hasUnreadMessages = hasUnreadMessages
 
         view.setMarkAsReadClickListener {
             onMarkConversationAsRead?.invoke()
