@@ -56,7 +56,7 @@ class CallStatsModel @WorkerThread constructor() {
         val showVideoStats = videoEnabled && (remoteSendsVideo || localSendsVideo)
         isVideoEnabled.postValue(showVideoStats)
 
-        val isFecEnabled = call.core.isFecEnabled // TODO FIXME: use real value from call
+        val isFecEnabled = call.currentParams.isFecEnabled
         fecEnabled.postValue(showVideoStats && isFecEnabled)
 
         when (stats.type) {
