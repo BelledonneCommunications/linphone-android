@@ -1000,8 +1000,6 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
             "$TAG Configuring call with remote address [${call.remoteAddress.asStringUriOnly()}] as current"
         )
         contact.value?.destroy()
-        waitingForEncryptionInfo.postValue(true)
-        isMediaEncrypted.postValue(false)
 
         terminatedByUsed = false
         zrtpSasValidationAttempts = 0
@@ -1009,6 +1007,13 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
         callStatsModel.update(call, call.audioStats)
         callMediaEncryptionModel.update(call)
         call.addListener(callListener)
+
+        if (call.currentParams.mediaEncryption == MediaEncryption.None) {
+            waitingForEncryptionInfo.postValue(true)
+            isMediaEncrypted.postValue(false)
+        } else {
+            updateEncryption()
+        }
 
         val remoteContactAddress = call.remoteContactAddress
         val conferenceInfo = if (remoteContactAddress != null) {
