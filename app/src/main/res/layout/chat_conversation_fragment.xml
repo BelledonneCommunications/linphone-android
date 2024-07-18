@@ -87,7 +87,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginStart="@{viewModel.isInCallConversation || viewModel.showBackButton ? @dimen/chat_conversation_header_avatar_start_margin_if_back_button : @dimen/chat_conversation_header_avatar_start_margin_if_no_back_button, default=@dimen/chat_conversation_header_avatar_start_margin_if_back_button}"
                     layout="@layout/contact_avatar"
                     bind:model="@{viewModel.avatarModel}"
                     app:layout_constraintStart_toEndOf="@id/back"
