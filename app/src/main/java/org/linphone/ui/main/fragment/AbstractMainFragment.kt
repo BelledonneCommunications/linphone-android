@@ -33,7 +33,7 @@ import com.google.android.material.textfield.TextInputLayout
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.BottomNavBarBinding
-import org.linphone.databinding.TopBarBinding
+import org.linphone.databinding.MainActivityTopBarBinding
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.chat.fragment.ConversationsListFragmentDirections
 import org.linphone.ui.main.contacts.fragment.ContactsListFragmentDirections
@@ -144,7 +144,7 @@ abstract class AbstractMainFragment : GenericMainFragment() {
 
     fun initViews(
         slidingPane: SlidingPaneLayout,
-        topBar: TopBarBinding,
+        topBar: MainActivityTopBarBinding,
         navBar: BottomNavBarBinding,
         @IdRes fragmentId: Int
     ) {

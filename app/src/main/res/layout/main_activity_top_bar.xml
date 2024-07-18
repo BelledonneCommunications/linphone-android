@@ -6,6 +6,18 @@
     <data>
         <import type="android.view.View" />
         <variable
+            name="enableExtraAction"
+            type="Boolean" />
+        <variable
+            name="extraActionClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="extraActionIcon"
+            type="android.graphics.drawable.Drawable" />
+        <variable
+            name="extraActionContentDescription"
+            type="String" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.main.viewmodel.AbstractMainViewModel" />
     </data>
@@ -13,7 +25,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_bar_height"
-        android:background="?attr/color_main1_500">
+        android:background="@drawable/shape_squircle_main1_500">
 
         <androidx.constraintlayout.widget.Group
             android:layout_width="wrap_content"
@@ -69,6 +81,20 @@
             android:padding="15dp"
             android:src="@drawable/magnifying_glass"
             android:contentDescription="@string/content_description_open_filter"
+            app:layout_constraintBottom_toBottomOf="@id/title"
+            app:layout_constraintEnd_toStartOf="@id/extra_action"
+            app:layout_constraintTop_toTopOf="@id/title"
+            app:tint="?attr/color_on_main" />
+
+        <ImageView
+            android:id="@+id/extra_action"
+            android:onClick="@{extraActionClickListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:padding="15dp"
+            android:src="@{extraActionIcon, default=@drawable/dots_three_vertical}"
+            android:contentDescription="@{extraActionContentDescription}"
+            android:visibility="@{enableExtraAction ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/title"

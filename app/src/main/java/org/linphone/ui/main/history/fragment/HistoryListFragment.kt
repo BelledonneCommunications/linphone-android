@@ -299,7 +299,7 @@ class HistoryListFragment : AbstractMainFragment() {
 
         // Elevation is for showing a shadow around the popup
         popupWindow.elevation = 20f
-        popupWindow.showAsDropDown(binding.menu, 0, 0, Gravity.BOTTOM)
+        popupWindow.showAsDropDown(binding.topBar.extraAction, 0, 0, Gravity.BOTTOM)
     }
 
     private fun showDeleteConfirmationDialog() {

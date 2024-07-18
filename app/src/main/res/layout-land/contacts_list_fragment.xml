@@ -27,8 +27,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="?attr/color_main1_500">
+                android:layout_height="match_parent">
 
                 <androidx.constraintlayout.widget.Group
                     android:layout_width="wrap_content"
@@ -48,28 +47,17 @@
 
                 <include
                     android:id="@+id/top_bar"
-                    layout="@layout/top_bar"
+                    layout="@layout/main_activity_top_bar"
                     bind:viewModel="@{viewModel}"
+                    bind:enableExtraAction="@{true}"
+                    bind:extraActionIcon="@{@drawable/funnel}"
+                    bind:extraActionClickListener="@{filterClickListener}"
+                    bind:extraActionContentDescription="@{@string/content_description_contacts_list_filters}"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/top_bar_height"
-                    android:layout_marginEnd="9dp"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
-                    app:layout_constraintEnd_toStartOf="@id/filter"/>
-
-                <ImageView
-                    android:onClick="@{filterClickListener}"
-                    android:id="@+id/filter"
-                    android:layout_width="@dimen/icon_size"
-                    android:layout_height="0dp"
-                    android:layout_marginEnd="9dp"
-                    android:src="@drawable/funnel"
-                    android:contentDescription="@string/content_description_contacts_list_filters"
-                    android:visibility="@{viewModel.searchBarVisible ? View.GONE : View.VISIBLE}"
-                    app:tint="?attr/color_on_main"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/top_bar"
-                    app:layout_constraintBottom_toBottomOf="@id/top_bar" />
+                    app:layout_constraintEnd_toEndOf="parent"/>
 
                 <LinearLayout
                     android:id="@+id/lists"

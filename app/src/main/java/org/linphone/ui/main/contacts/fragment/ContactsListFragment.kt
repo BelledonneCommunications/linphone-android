@@ -171,7 +171,7 @@ class ContactsListFragment : AbstractMainFragment() {
         }
 
         binding.setFilterClickListener {
-            showFilterPopupMenu(binding.filter)
+            showFilterPopupMenu(binding.topBar.extraAction)
         }
 
         sharedViewModel.showContactEvent.observe(
