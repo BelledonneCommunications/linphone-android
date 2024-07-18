@@ -286,9 +286,15 @@ class MessageModel @WorkerThread constructor(
     @UiThread
     fun sendReaction(emoji: String) {
         coreContext.postOnCoreThread {
-            Log.i("$TAG Sending reaction [$emoji] to message with ID [$id]")
-            val reaction = chatMessage.createReaction(emoji)
-            reaction.send()
+            if (chatMessage.ownReaction?.body == emoji) {
+                Log.i("$TAG Removing our existing reaction [$emoji] to message with ID [$id]")
+                val reaction = chatMessage.createReaction("")
+                reaction.send()
+            } else {
+                Log.i("$TAG Sending reaction [$emoji] to message with ID [$id]")
+                val reaction = chatMessage.createReaction(emoji)
+                reaction.send()
+            }
             dismissLongPressMenuEvent.postValue(Event(true))
         }
     }
