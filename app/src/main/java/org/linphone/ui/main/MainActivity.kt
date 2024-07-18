@@ -344,6 +344,7 @@ class MainActivity : GenericActivity() {
 
         viewModel.checkForNewAccount()
         viewModel.updateNetworkReachability()
+        viewModel.updatePostNotificationsPermission()
     }
 
     override fun onNewIntent(intent: Intent) {

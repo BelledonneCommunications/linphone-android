@@ -283,9 +283,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
                 addAlert(NETWORK_NOT_REACHABLE, label)
             }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                checkPostNotificationsPermission()
-            }
+            updatePostNotificationsPermission()
 
             if (core.callsNb > 0) {
                 updateCallAlert()
