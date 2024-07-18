@@ -42,6 +42,8 @@ class ChatMessageLongPressViewModel : GenericViewModel() {
 
     val hideForward = MutableLiveData<Boolean>()
 
+    val hideCopyTextToClipboard = MutableLiveData<Boolean>()
+
     val horizontalBias = MutableLiveData<Float>()
 
     val isChatRoomReadOnly = MutableLiveData<Boolean>()
@@ -82,6 +84,7 @@ class ChatMessageLongPressViewModel : GenericViewModel() {
 
     @UiThread
     fun setMessage(model: MessageModel) {
+        hideCopyTextToClipboard.value = model.text.value.isNullOrEmpty()
         isChatRoomReadOnly.value = model.chatRoomIsReadOnly
         isMessageOutgoing.value = model.isOutgoing
         isMessageInError.value = model.isInError
