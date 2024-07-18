@@ -25,6 +25,7 @@
     <color name="gray_200">#EDEDED</color>
     <color name="gray_200_night">#1F1F1F</color>
     <color name="gray_300">#C9C9C9</color>
+    <color name="gray_300_alpha_40">#66C9C9C9</color>
     <color name="gray_400">#949494</color>
     <color name="gray_500">#4E4E4E</color>
     <color name="gray_600">#2E3030</color>

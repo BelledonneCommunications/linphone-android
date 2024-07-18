@@ -21,15 +21,9 @@ package org.linphone.ui.main.chat.fragment
 
 import android.Manifest
 import android.app.Activity
-import android.app.Dialog
 import android.content.ActivityNotFoundException
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
@@ -40,18 +34,13 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.view.Window
-import android.view.WindowManager
 import android.widget.PopupWindow
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnPreDraw
-import androidx.core.view.updatePadding
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -75,7 +64,6 @@ import org.linphone.R
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.ChatMessage
 import org.linphone.core.tools.Log
-import org.linphone.databinding.ChatBubbleLongPressMenuBinding
 import org.linphone.databinding.ChatConversationFragmentBinding
 import org.linphone.databinding.ChatConversationPopupMenuBinding
 import org.linphone.ui.GenericActivity
@@ -88,6 +76,7 @@ import org.linphone.ui.main.chat.model.MessageDeliveryModel
 import org.linphone.ui.main.chat.model.MessageModel
 import org.linphone.ui.main.chat.model.MessageReactionsModel
 import org.linphone.ui.main.chat.view.RichEditText
+import org.linphone.ui.main.chat.viewmodel.ChatMessageLongPressViewModel
 import org.linphone.ui.main.chat.viewmodel.ConversationViewModel
 import org.linphone.ui.main.chat.viewmodel.ConversationViewModel.Companion.SCROLLING_POSITION_NOT_SET
 import org.linphone.ui.main.chat.viewmodel.SendMessageInConversationViewModel
@@ -119,11 +108,11 @@ open class ConversationFragment : SlidingPaneChildFragment() {
 
     protected lateinit var sendMessageViewModel: SendMessageInConversationViewModel
 
+    protected lateinit var messageLongPressViewModel: ChatMessageLongPressViewModel
+
     private lateinit var adapter: ConversationEventAdapter
 
     private lateinit var bottomSheetAdapter: MessageBottomSheetAdapter
-
-    private var messageLongPressDialog: Dialog? = null
 
     private val args: ConversationFragmentArgs by navArgs()
 
@@ -363,6 +352,11 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         sendMessageViewModel = ViewModelProvider(this)[SendMessageInConversationViewModel::class.java]
         binding.sendMessageViewModel = sendMessageViewModel
         observeToastEvents(sendMessageViewModel)
+
+        messageLongPressViewModel = ViewModelProvider(this)[ChatMessageLongPressViewModel::class.java]
+        binding.messageLongPressViewModel = messageLongPressViewModel
+        observeToastEvents(messageLongPressViewModel)
+        messageLongPressViewModel.setupEmojiPicker(binding.longPressMenu.emojiPickerBottomSheet)
 
         binding.setBackClickListener {
             goBack()
@@ -617,7 +611,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
 
         viewModel.fileToDisplayEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
-                if (messageLongPressDialog != null) return@consume
+                if (messageLongPressViewModel.visible.value == true) return@consume
                 Log.i("$TAG User clicked on file [${model.path}], let's display it in file viewer")
                 goToFileViewer(model)
             }
@@ -625,7 +619,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
 
         viewModel.conferenceToJoinEvent.observe(viewLifecycleOwner) {
             it.consume { conferenceUri ->
-                if (messageLongPressDialog != null) return@consume
+                if (messageLongPressViewModel.visible.value == true) return@consume
                 Log.i("$TAG Requesting to go to waiting room for conference URI [$conferenceUri]")
                 sharedViewModel.goToMeetingWaitingRoomEvent.value = Event(conferenceUri)
             }
@@ -633,7 +627,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
 
         viewModel.openWebBrowserEvent.observe(viewLifecycleOwner) {
             it.consume { url ->
-                if (messageLongPressDialog != null) return@consume
+                if (messageLongPressViewModel.visible.value == true) return@consume
                 Log.i("$TAG Requesting to open web browser on page [$url]")
                 try {
                     val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
@@ -648,7 +642,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
 
         viewModel.contactToDisplayEvent.observe(viewLifecycleOwner) {
             it.consume { friendRefKey ->
-                if (messageLongPressDialog != null) return@consume
+                if (messageLongPressViewModel.visible.value == true) return@consume
                 Log.i("$TAG Navigating to contact with ref key [$friendRefKey]")
                 sharedViewModel.navigateToContactsEvent.value = Event(true)
                 sharedViewModel.showContactEvent.value = Event(friendRefKey)
@@ -668,6 +662,49 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                 val icon = R.drawable.trash_simple
                 (requireActivity() as GenericActivity).showGreenToast(message, icon)
                 sharedViewModel.forceRefreshConversations.value = Event(true)
+            }
+        }
+
+        messageLongPressViewModel.replyToMessageEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                val model = messageLongPressViewModel.messageModel.value
+                if (model != null) {
+                    sendMessageViewModel.replyToMessage(model)
+                    // Open keyboard & focus edit text
+                    binding.sendArea.messageToSend.showKeyboard()
+                }
+            }
+        }
+
+        messageLongPressViewModel.deleteMessageEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                val model = messageLongPressViewModel.messageModel.value
+                if (model != null) {
+                    viewModel.deleteChatMessage(model)
+                }
+            }
+        }
+
+        messageLongPressViewModel.forwardMessageEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                val model = messageLongPressViewModel.messageModel.value
+                if (model != null) {
+                    // Remove observer before setting the message to forward
+                    // as we don't want to forward it in this chat room
+                    sharedViewModel.messageToForwardEvent.removeObservers(viewLifecycleOwner)
+                    sharedViewModel.messageToForwardEvent.postValue(Event(model))
+
+                    if (findNavController().currentDestination?.id == R.id.conversationFragment) {
+                        val action = ConversationFragmentDirections.actionConversationFragmentToConversationForwardMessageFragment()
+                        findNavController().navigate(action)
+                    }
+                }
+            }
+        }
+
+        messageLongPressViewModel.onDismissedEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Compatibility.removeBlurRenderEffect(binding.coordinatorLayout)
             }
         }
 
@@ -1008,116 +1045,16 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         popupWindow.showAsDropDown(view, 0, 0, Gravity.BOTTOM)
     }
 
-    private fun dismissDialog() {
-        messageLongPressDialog?.dismiss()
-        messageLongPressDialog = null
-    }
-
+    @UiThread
     private fun showChatMessageLongPressMenu(chatMessageModel: MessageModel) {
-        Compatibility.setBlurRenderEffect(binding.root)
-
-        val layout: ChatBubbleLongPressMenuBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(context),
-            R.layout.chat_bubble_long_press_menu,
-            null,
-            false
-        )
-        val emojiSheetBehavior = BottomSheetBehavior.from(layout.emojiPickerBottomSheet.root)
-        emojiSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        emojiSheetBehavior.skipCollapsed = true
-
-        layout.root.setOnClickListener {
-            dismissDialog()
-        }
-
-        layout.setDeleteClickListener {
-            Log.i("$TAG Deleting message")
-            viewModel.deleteChatMessage(chatMessageModel)
-            dismissDialog()
-        }
-
-        layout.setCopyClickListener {
-            Log.i("$TAG Copying message text into clipboard")
-            val text = chatMessageModel.text.value?.toString()
-            val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val label = "Message"
-            clipboard.setPrimaryClip(ClipData.newPlainText(label, text))
-
-            dismissDialog()
-        }
-
-        layout.setPickEmojiClickListener {
-            Log.i("$TAG Opening emoji-picker for reaction")
-            emojiSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-        }
-
-        layout.setResendClickListener {
-            Log.i("$TAG Re-sending message in error state")
-            chatMessageModel.resend()
-            dismissDialog()
-        }
-
-        layout.setForwardClickListener {
-            Log.i("$TAG Forwarding message")
-            // Remove observer before setting the message to forward
-            // as we don't want to forward it in this chat room
-            sharedViewModel.messageToForwardEvent.removeObservers(viewLifecycleOwner)
-            sharedViewModel.messageToForwardEvent.postValue(Event(chatMessageModel))
-            dismissDialog()
-
-            if (findNavController().currentDestination?.id == R.id.conversationFragment) {
-                val action = ConversationFragmentDirections.actionConversationFragmentToConversationForwardMessageFragment()
-                findNavController().navigate(action)
-            }
-        }
-
-        layout.setReplyClickListener {
-            Log.i("$TAG Updating sending area to reply to selected message")
-            sendMessageViewModel.replyToMessage(chatMessageModel)
-            dismissDialog()
-
-            // Open keyboard & focus edit text
-            binding.sendArea.messageToSend.showKeyboard()
-        }
-
-        layout.model = chatMessageModel
+        Compatibility.setBlurRenderEffect(binding.coordinatorLayout)
+        messageLongPressViewModel.setMessage(chatMessageModel)
         chatMessageModel.dismissLongPressMenuEvent.observe(viewLifecycleOwner) {
-            dismissDialog()
-        }
-
-        val dialog = Dialog(requireContext(), R.style.Theme_LinphoneDialog)
-        dialog.apply {
-            setOnDismissListener {
-                Compatibility.removeBlurRenderEffect(binding.root)
-            }
-            requestWindowFeature(Window.FEATURE_NO_TITLE)
-
-            window?.apply {
-                setLayout(
-                    WindowManager.LayoutParams.MATCH_PARENT,
-                    WindowManager.LayoutParams.MATCH_PARENT
-                )
-
-                setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-
-                val d: Drawable = ColorDrawable(
-                    requireContext().getColor(R.color.grey_300)
-                )
-                d.alpha = 102
-                setBackgroundDrawable(d)
-            }
-
-            setContentView(layout.root)
-
-            ViewCompat.setOnApplyWindowInsetsListener(layout.root) { v, windowInsets ->
-                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-                v.updatePadding(0, 0, 0, insets.bottom)
-                WindowInsetsCompat.CONSUMED
+            it.consume {
+                messageLongPressViewModel.dismiss()
             }
         }
-
-        dialog.show()
-        messageLongPressDialog = dialog
+        messageLongPressViewModel.visible.value = true
     }
 
     @UiThread

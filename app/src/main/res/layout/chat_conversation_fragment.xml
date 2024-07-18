@@ -35,301 +35,317 @@
         <variable
             name="sendMessageViewModel"
             type="org.linphone.ui.main.chat.viewmodel.SendMessageInConversationViewModel" />
+        <variable
+            name="messageLongPressViewModel"
+            type="org.linphone.ui.main.chat.viewmodel.ChatMessageLongPressViewModel" />
     </data>
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/coordinator_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?attr/color_main2_000">
+            android:layout_height="match_parent">
 
-            <androidx.constraintlayout.widget.Group
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:constraint_referenced_ids="avatar, title, show_menu"
-                android:visibility="@{viewModel.searchBarVisible ? View.GONE : View.VISIBLE}" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/color_main2_000">
 
-            <androidx.constraintlayout.widget.Group
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:constraint_referenced_ids="cancel_search, search, clear_field"
-                android:visibility="@{viewModel.searchBarVisible ? View.VISIBLE : View.GONE, default=gone}" />
+                <androidx.constraintlayout.widget.Group
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids="avatar, title, show_menu"
+                    android:visibility="@{viewModel.searchBarVisible ? View.GONE : View.VISIBLE}" />
 
-            <ImageView
-                android:id="@+id/back"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/top_bar_height"
-                android:padding="15dp"
-                android:adjustViewBounds="true"
-                android:onClick="@{backClickListener}"
-                android:visibility="@{viewModel.isInCallConversation || viewModel.showBackButton &amp;&amp; !viewModel.searchBarVisible ? View.VISIBLE : View.GONE}"
-                android:src="@drawable/caret_left"
-                android:contentDescription="@string/content_description_go_back_icon"
-                app:tint="?attr/color_main1_500"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                <androidx.constraintlayout.widget.Group
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids="cancel_search, search, clear_field"
+                    android:visibility="@{viewModel.searchBarVisible ? View.VISIBLE : View.GONE, default=gone}" />
 
-            <include
-                android:id="@+id/avatar"
-                android:onClick="@{goToInfoClickListener}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginStart="5dp"
-                layout="@layout/contact_avatar"
-                bind:model="@{viewModel.avatarModel}"
-                app:layout_constraintStart_toEndOf="@id/back"
-                app:layout_constraintTop_toTopOf="parent" />
+                <ImageView
+                    android:id="@+id/back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/top_bar_height"
+                    android:padding="15dp"
+                    android:adjustViewBounds="true"
+                    android:onClick="@{backClickListener}"
+                    android:visibility="@{viewModel.isInCallConversation || viewModel.showBackButton &amp;&amp; !viewModel.searchBarVisible ? View.VISIBLE : View.GONE}"
+                    android:src="@drawable/caret_left"
+                    android:contentDescription="@string/content_description_go_back_icon"
+                    app:tint="?attr/color_main1_500"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style"
-                android:id="@+id/title"
-                android:onClick="@{goToInfoClickListener}"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="5dp"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:text="@{viewModel.isGroup ? viewModel.subject : viewModel.avatarModel.name, default=`John Doe`}"
-                android:textSize="16sp"
-                android:textColor="?attr/color_main2_600"
-                android:gravity="center_vertical"
-                app:layout_constraintEnd_toStartOf="@id/start_call"
-                app:layout_constraintStart_toEndOf="@id/avatar"
-                app:layout_constraintTop_toTopOf="@id/avatar"
-                app:layout_constraintBottom_toTopOf="@id/subtitle_barrier"/>
+                <include
+                    android:id="@+id/avatar"
+                    android:onClick="@{goToInfoClickListener}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginStart="5dp"
+                    layout="@layout/contact_avatar"
+                    bind:model="@{viewModel.avatarModel}"
+                    app:layout_constraintStart_toEndOf="@id/back"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.constraintlayout.widget.Barrier
-                android:id="@+id/subtitle_barrier"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:barrierDirection="top"
-                app:constraint_referenced_ids="muted, ephemeral_enabled" />
-
-            <ImageView
-                android:id="@+id/muted"
-                android:layout_width="@dimen/small_icon_size"
-                android:layout_height="@dimen/small_icon_size"
-                android:layout_marginEnd="5dp"
-                android:src="@drawable/bell_simple_slash"
-                android:contentDescription="@string/content_description_chat_muted"
-                android:visibility="@{viewModel.isMuted ? View.VISIBLE : View.GONE, default=gone}"
-                app:layout_constraintStart_toStartOf="@id/title"
-                app:layout_constraintEnd_toStartOf="@id/ephemeral_enabled"
-                app:layout_constraintTop_toBottomOf="@id/title"
-                app:layout_constraintBottom_toBottomOf="@id/avatar"
-                app:tint="@color/main1_500"/>
-
-            <ImageView
-                android:id="@+id/ephemeral_enabled"
-                android:layout_width="@dimen/small_icon_size"
-                android:layout_height="@dimen/small_icon_size"
-                android:layout_marginEnd="5dp"
-                android:src="@drawable/clock_countdown"
-                android:contentDescription="@string/content_description_chat_ephemeral_enabled"
-                android:visibility="@{viewModel.ephemeralLifetime > 0L ? View.VISIBLE : View.GONE, default=gone}"
-                app:layout_constraintStart_toEndOf="@id/muted"
-                app:layout_constraintTop_toBottomOf="@id/title"
-                app:layout_constraintBottom_toBottomOf="@id/avatar"
-                app:tint="@color/main1_500"/>
-
-            <ImageView
-                android:id="@+id/show_menu"
-                android:onClick="@{showMenuClickListener}"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/top_bar_height"
-                android:padding="15dp"
-                android:adjustViewBounds="true"
-                android:src="@drawable/dots_three_vertical"
-                android:contentDescription="@string/content_description_show_popup_menu"
-                android:visibility="@{viewModel.isInCallConversation ? View.GONE : View.VISIBLE}"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:tint="?attr/color_main2_500"/>
-
-            <ImageView
-                android:id="@+id/start_call"
-                android:onClick="@{() -> viewModel.startCall()}"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/top_bar_height"
-                android:padding="15dp"
-                android:src="@drawable/phone"
-                android:contentDescription="@string/content_description_call_start"
-                android:visibility="@{viewModel.isInCallConversation || viewModel.isReadOnly || viewModel.searchBarVisible ? View.GONE : View.VISIBLE}"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/show_menu"
-                app:tint="?attr/color_main2_500" />
-
-            <ImageView
-                android:id="@+id/cancel_search"
-                android:onClick="@{() -> viewModel.closeSearchBar()}"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:padding="15dp"
-                android:src="@drawable/caret_left"
-                android:contentDescription="@string/content_description_cancel_filter"
-                app:layout_constraintBottom_toBottomOf="@id/search"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/search"
-                app:tint="?attr/color_main2_500" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="?attr/textInputFilledStyle"
-                android:id="@+id/search"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/top_bar_height"
-                android:gravity="center_vertical"
-                android:textColorHint="?attr/color_main2_400"
-                app:hintEnabled="false"
-                app:hintAnimationEnabled="false"
-                app:hintTextColor="?attr/color_main2_400"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp"
-                app:layout_constraintEnd_toStartOf="@id/clear_field"
-                app:layout_constraintStart_toEndOf="@id/cancel_search"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:textCursorDrawable="@null"
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style"
+                    android:id="@+id/title"
+                    android:onClick="@{goToInfoClickListener}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="5dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="@{viewModel.isGroup ? viewModel.subject : viewModel.avatarModel.name, default=`John Doe`}"
                     android:textSize="16sp"
-                    android:inputType="text"
-                    android:paddingVertical="1dp"
-                    android:text="@={viewModel.searchFilter}"
-                    android:background="@android:color/transparent" />
+                    android:textColor="?attr/color_main2_600"
+                    android:gravity="center_vertical"
+                    app:layout_constraintEnd_toStartOf="@id/start_call"
+                    app:layout_constraintStart_toEndOf="@id/avatar"
+                    app:layout_constraintTop_toTopOf="@id/avatar"
+                    app:layout_constraintBottom_toTopOf="@id/subtitle_barrier"/>
 
-            </com.google.android.material.textfield.TextInputLayout>
+                <androidx.constraintlayout.widget.Barrier
+                    android:id="@+id/subtitle_barrier"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:barrierDirection="top"
+                    app:constraint_referenced_ids="muted, ephemeral_enabled" />
 
-            <ImageView
-                android:id="@+id/clear_field"
-                android:onClick="@{() -> viewModel.clearFilter()}"
-                android:enabled="@{viewModel.searchFilter.length() > 0}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="6dp"
-                android:layout_marginEnd="9dp"
-                android:src="@drawable/x"
-                android:contentDescription="@string/content_description_clear_filter"
-                app:layout_constraintBottom_toBottomOf="@id/search"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/search"
-                app:tint="?attr/color_main2_500" />
+                <ImageView
+                    android:id="@+id/muted"
+                    android:layout_width="@dimen/small_icon_size"
+                    android:layout_height="@dimen/small_icon_size"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/bell_simple_slash"
+                    android:contentDescription="@string/content_description_chat_muted"
+                    android:visibility="@{viewModel.isMuted ? View.VISIBLE : View.GONE, default=gone}"
+                    app:layout_constraintStart_toStartOf="@id/title"
+                    app:layout_constraintEnd_toStartOf="@id/ephemeral_enabled"
+                    app:layout_constraintTop_toBottomOf="@id/title"
+                    app:layout_constraintBottom_toBottomOf="@id/avatar"
+                    app:tint="@color/main1_500"/>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/events_list"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="55dp"
-                android:paddingBottom="5dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/composing"/>
+                <ImageView
+                    android:id="@+id/ephemeral_enabled"
+                    android:layout_width="@dimen/small_icon_size"
+                    android:layout_height="@dimen/small_icon_size"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/clock_countdown"
+                    android:contentDescription="@string/content_description_chat_ephemeral_enabled"
+                    android:visibility="@{viewModel.ephemeralLifetime > 0L ? View.VISIBLE : View.GONE, default=gone}"
+                    app:layout_constraintStart_toEndOf="@id/muted"
+                    app:layout_constraintTop_toBottomOf="@id/title"
+                    app:layout_constraintBottom_toBottomOf="@id/avatar"
+                    app:tint="@color/main1_500"/>
+
+                <ImageView
+                    android:id="@+id/show_menu"
+                    android:onClick="@{showMenuClickListener}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/top_bar_height"
+                    android:padding="15dp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/dots_three_vertical"
+                    android:contentDescription="@string/content_description_show_popup_menu"
+                    android:visibility="@{viewModel.isInCallConversation ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:tint="?attr/color_main2_500"/>
+
+                <ImageView
+                    android:id="@+id/start_call"
+                    android:onClick="@{() -> viewModel.startCall()}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/top_bar_height"
+                    android:padding="15dp"
+                    android:src="@drawable/phone"
+                    android:contentDescription="@string/content_description_call_start"
+                    android:visibility="@{viewModel.isInCallConversation || viewModel.isReadOnly || viewModel.searchBarVisible ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/show_menu"
+                    app:tint="?attr/color_main2_500" />
+
+                <ImageView
+                    android:id="@+id/cancel_search"
+                    android:onClick="@{() -> viewModel.closeSearchBar()}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:padding="15dp"
+                    android:src="@drawable/caret_left"
+                    android:contentDescription="@string/content_description_cancel_filter"
+                    app:layout_constraintBottom_toBottomOf="@id/search"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/search"
+                    app:tint="?attr/color_main2_500" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="?attr/textInputFilledStyle"
+                    android:id="@+id/search"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/top_bar_height"
+                    android:gravity="center_vertical"
+                    android:textColorHint="?attr/color_main2_400"
+                    app:hintEnabled="false"
+                    app:hintAnimationEnabled="false"
+                    app:hintTextColor="?attr/color_main2_400"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    app:layout_constraintEnd_toStartOf="@id/clear_field"
+                    app:layout_constraintStart_toEndOf="@id/cancel_search"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textCursorDrawable="@null"
+                        android:textSize="16sp"
+                        android:inputType="text"
+                        android:paddingVertical="1dp"
+                        android:text="@={viewModel.searchFilter}"
+                        android:background="@android:color/transparent" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageView
+                    android:id="@+id/clear_field"
+                    android:onClick="@{() -> viewModel.clearFilter()}"
+                    android:enabled="@{viewModel.searchFilter.length() > 0}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="6dp"
+                    android:layout_marginEnd="9dp"
+                    android:src="@drawable/x"
+                    android:contentDescription="@string/content_description_clear_filter"
+                    app:layout_constraintBottom_toBottomOf="@id/search"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/search"
+                    app:tint="?attr/color_main2_500" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/events_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="55dp"
+                    android:paddingBottom="5dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/composing"/>
+
+                <include
+                    android:id="@+id/secured_event"
+                    android:onClick="@{endToEndEncryptedEventClickListener}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{viewModel.isEmpty &amp;&amp; viewModel.isEndToEndEncrypted ? View.VISIBLE : View.GONE}"
+                    layout="@layout/chat_conversation_secured_first_event"
+                    app:layout_constraintTop_toTopOf="@id/events_list"
+                    app:layout_constraintStart_toStartOf="@id/events_list"
+                    app:layout_constraintEnd_toEndOf="@id/events_list" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style_800"
+                    android:id="@+id/no_result"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/list_filter_no_result_found"
+                    android:textColor="?attr/color_main2_600"
+                    android:textSize="16sp"
+                    android:visibility="@{viewModel.noMatchingResultForFilter ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/search"
+                    app:layout_constraintBottom_toTopOf="@id/send_area"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style_300"
+                    android:id="@+id/composing"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:paddingBottom="5dp"
+                    android:background="?attr/color_main2_000"
+                    android:text="@{viewModel.composingLabel, default=`John Doe is composing...`}"
+                    android:textSize="12sp"
+                    android:textColor="?attr/color_main2_400"
+                    android:visibility="@{viewModel.composingLabel.length() == 0 ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintBottom_toTopOf="@id/warning_disabled_not_secured"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <include
+                    style="@style/default_text_style"
+                    android:id="@+id/warning_disabled_not_secured"
+                    android:onClick="@{warningConversationDisabledClickListener}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{viewModel.isDisabledBecauseNotSecured ? View.VISIBLE : View.GONE, default=gone}"
+                    layout="@layout/chat_conversation_send_area_disabled_unsecured_warning"
+                    app:layout_constraintBottom_toTopOf="@id/send_area"/>
+
+                <include
+                    android:id="@+id/send_area"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{viewModel.isReadOnly || viewModel.isDisabledBecauseNotSecured ? View.GONE : View.VISIBLE}"
+                    layout="@layout/chat_conversation_send_area"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    bind:openFilePickerClickListener="@{openFilePickerClickListener}"
+                    bind:openCameraClickListener="@{openCameraClickListener}"
+                    bind:viewModel="@{sendMessageViewModel}"/>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/scroll_to_bottom"
+                    android:onClick="@{scrollToBottomClickListener}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|bottom"
+                    android:layout_margin="16dp"
+                    android:src="@drawable/caret_double_down"
+                    android:contentDescription="@string/content_description_chat_scroll_to_bottom_or_first_unread"
+                    android:visibility="@{viewModel.isUserScrollingUp ? View.VISIBLE : View.GONE}"
+                    app:tint="?attr/color_on_main"
+                    app:backgroundTint="?attr/color_main1_500"
+                    app:shapeAppearanceOverlay="@style/rounded"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/send_area" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style"
+                    android:id="@+id/unread_messages"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginTop="-13dp"
+                    android:layout_marginStart="-11dp"
+                    android:gravity="center"
+                    android:background="@drawable/shape_red_round"
+                    android:text="@{String.valueOf(viewModel.unreadMessagesCount), default=`1`}"
+                    android:textColor="?attr/color_on_main"
+                    android:textSize="13sp"
+                    android:visibility="@{viewModel.isUserScrollingUp &amp;&amp; viewModel.unreadMessagesCount > 0 ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintTop_toTopOf="@id/scroll_to_bottom"
+                    app:layout_constraintStart_toEndOf="@id/scroll_to_bottom"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <include
-                android:id="@+id/secured_event"
-                android:onClick="@{endToEndEncryptedEventClickListener}"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:visibility="@{viewModel.isEmpty &amp;&amp; viewModel.isEndToEndEncrypted ? View.VISIBLE : View.GONE}"
-                layout="@layout/chat_conversation_secured_first_event"
-                app:layout_constraintTop_toTopOf="@id/events_list"
-                app:layout_constraintStart_toStartOf="@id/events_list"
-                app:layout_constraintEnd_toEndOf="@id/events_list" />
+                android:id="@+id/message_bottom_sheet"
+                layout="@layout/chat_message_bottom_sheet" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style_800"
-                android:id="@+id/no_result"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/list_filter_no_result_found"
-                android:textColor="?attr/color_main2_600"
-                android:textSize="16sp"
-                android:visibility="@{viewModel.noMatchingResultForFilter ? View.VISIBLE : View.GONE}"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/search"
-                app:layout_constraintBottom_toTopOf="@id/send_area"
-                app:layout_constraintEnd_toEndOf="parent"/>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style_300"
-                android:id="@+id/composing"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:paddingBottom="5dp"
-                android:background="?attr/color_main2_000"
-                android:text="@{viewModel.composingLabel, default=`John Doe is composing...`}"
-                android:textSize="12sp"
-                android:textColor="?attr/color_main2_400"
-                android:visibility="@{viewModel.composingLabel.length() == 0 ? View.GONE : View.VISIBLE}"
-                app:layout_constraintBottom_toTopOf="@id/warning_disabled_not_secured"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <include
-                style="@style/default_text_style"
-                android:id="@+id/warning_disabled_not_secured"
-                android:onClick="@{warningConversationDisabledClickListener}"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="@{viewModel.isDisabledBecauseNotSecured ? View.VISIBLE : View.GONE, default=gone}"
-                layout="@layout/chat_conversation_send_area_disabled_unsecured_warning"
-                app:layout_constraintBottom_toTopOf="@id/send_area"/>
-
-            <include
-                android:id="@+id/send_area"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="@{viewModel.isReadOnly || viewModel.isDisabledBecauseNotSecured ? View.GONE : View.VISIBLE}"
-                layout="@layout/chat_conversation_send_area"
-                app:layout_constraintBottom_toBottomOf="parent"
-                bind:openFilePickerClickListener="@{openFilePickerClickListener}"
-                bind:openCameraClickListener="@{openCameraClickListener}"
-                bind:viewModel="@{sendMessageViewModel}"/>
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/scroll_to_bottom"
-                android:onClick="@{scrollToBottomClickListener}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|bottom"
-                android:layout_margin="16dp"
-                android:src="@drawable/caret_double_down"
-                android:contentDescription="@string/content_description_chat_scroll_to_bottom_or_first_unread"
-                android:visibility="@{viewModel.isUserScrollingUp ? View.VISIBLE : View.GONE}"
-                app:tint="?attr/color_on_main"
-                app:backgroundTint="?attr/color_main1_500"
-                app:shapeAppearanceOverlay="@style/rounded"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/send_area" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style"
-                android:id="@+id/unread_messages"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginTop="-13dp"
-                android:layout_marginStart="-11dp"
-                android:gravity="center"
-                android:background="@drawable/shape_red_round"
-                android:text="@{String.valueOf(viewModel.unreadMessagesCount), default=`1`}"
-                android:textColor="?attr/color_on_main"
-                android:textSize="13sp"
-                android:visibility="@{viewModel.isUserScrollingUp &amp;&amp; viewModel.unreadMessagesCount > 0 ? View.VISIBLE : View.GONE}"
-                app:layout_constraintTop_toTopOf="@id/scroll_to_bottom"
-                app:layout_constraintStart_toEndOf="@id/scroll_to_bottom"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <include
-            android:id="@+id/message_bottom_sheet"
-            layout="@layout/chat_message_bottom_sheet" />
+            android:id="@+id/long_press_menu"
+            android:visibility="@{messageLongPressViewModel.visible ? View.VISIBLE : View.GONE, default=gone}"
+            bind:viewModel="@{messageLongPressViewModel}"
+            layout="@layout/chat_bubble_long_press_menu" />
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </FrameLayout>
 
 </layout>

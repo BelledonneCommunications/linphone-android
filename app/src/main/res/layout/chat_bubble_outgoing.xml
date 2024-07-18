@@ -22,6 +22,9 @@
         <variable
             name="model"
             type="org.linphone.ui.main.chat.model.MessageModel" />
+        <variable
+            name="inflatedVisibility"
+            type="Integer" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,7 +34,9 @@
         android:layout_marginStart="32dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="@{model.groupedWithNextMessage ? @dimen/chat_bubble_grouped_bottom_margin : @dimen/chat_bubble_bottom_margin, default=@dimen/chat_bubble_bottom_margin}"
-        android:layout_marginTop="@{model.groupedWithPreviousMessage ? @dimen/chat_bubble_grouped_top_margin : @dimen/chat_bubble_top_margin, default=@dimen/chat_bubble_top_margin}">
+        android:layout_marginTop="@{model.groupedWithPreviousMessage ? @dimen/chat_bubble_grouped_top_margin : @dimen/chat_bubble_top_margin, default=@dimen/chat_bubble_top_margin}"
+        android:visibility="@{inflatedVisibility == View.VISIBLE ? View.VISIBLE : View.GONE}"
+        inflatedLifecycleOwner="@{true}">
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/reply_group"

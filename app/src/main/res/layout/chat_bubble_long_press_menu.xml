@@ -6,186 +6,171 @@
     <data>
         <import type="android.view.View" />
         <variable
-            name="resendClickListener"
-            type="View.OnClickListener" />
-        <variable
-            name="replyClickListener"
-            type="View.OnClickListener" />
-        <variable
-            name="copyClickListener"
-            type="View.OnClickListener" />
-        <variable
-            name="forwardClickListener"
-            type="View.OnClickListener" />
-        <variable
-            name="deleteClickListener"
-            type="View.OnClickListener" />
-        <variable
-            name="pickEmojiClickListener"
-            type="View.OnClickListener" />
-        <variable
-            name="model"
-            type="org.linphone.ui.main.chat.model.MessageModel" />
-        <variable
-            name="hideForward"
-            type="Boolean" />
+            name="viewModel"
+            type="org.linphone.ui.main.chat.viewmodel.ChatMessageLongPressViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:onClick="@{() -> viewModel.dismiss()}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraint_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <androidx.constraintlayout.widget.Barrier
-                android:id="@+id/bubble_top_barrier"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:barrierDirection="top"
-                app:constraint_referenced_ids="incoming_bubble, outgoing_bubble" />
-
-            <androidx.constraintlayout.widget.Barrier
-                android:id="@+id/bottom_barrier"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:barrierDirection="top"
-                app:constraint_referenced_ids="action_reply, action_resend" />
-
-            <ViewStub
-                android:id="@+id/outgoing_bubble"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="12dp"
-                android:layout="@layout/chat_bubble_outgoing"
-                android:visibility="@{model.outgoing ? View.VISIBLE : View.GONE, default=gone}"
-                bind:inflatedVisibility="@{model.outgoing ? View.VISIBLE : View.GONE, default=gone}"
-                app:layout_constraintTop_toBottomOf="@id/emojis"
-                app:layout_constraintBottom_toTopOf="@id/bottom_barrier"
-                app:layout_constraintHeight_max="@dimen/chat_bubble_max_height_long_press"
-                bind:model="@{model}"/>
-
-            <ViewStub
-                android:id="@+id/incoming_bubble"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginBottom="12dp"
-                android:layout="@layout/chat_bubble_incoming"
-                android:visibility="@{model.outgoing ? View.GONE : View.VISIBLE}"
-                bind:inflatedVisibility="@{model.outgoing ? View.GONE : View.VISIBLE}"
-                app:layout_constraintTop_toBottomOf="@id/emojis"
-                app:layout_constraintBottom_toBottomOf="@id/bottom_barrier"
-                app:layout_constraintHeight_max="@dimen/chat_bubble_max_height_long_press"
-                bind:model="@{model}"/>
+            android:layout_height="match_parent"
+            android:background="@color/gray_300_alpha_40">
 
             <include
                 android:id="@+id/emojis"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:visibility="@{model.chatRoomIsReadOnly ? View.GONE : View.VISIBLE}"
+                android:layout_marginBottom="5dp"
+                android:visibility="@{viewModel.isChatRoomReadOnly ? View.GONE : View.VISIBLE}"
                 layout="@layout/chat_emoji_reaction_picker"
-                bind:model="@{model}"
-                bind:pickEmojiClickListener="@{pickEmojiClickListener}"
-                app:layout_constraintVertical_bias="1"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/bubble_top_barrier"
+                bind:model="@{viewModel.messageModel}"
+                bind:pickEmojiClickListener="@{() -> viewModel.pickEmoji()}"
+                app:layout_constraintHorizontal_bias="@{viewModel.horizontalBias, default=0}"
+                app:layout_constraintWidth_max="@dimen/dialog_max_width"
+                app:layout_constraintBottom_toTopOf="@id/bubbles"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
-            <View
-                android:id="@+id/actions_background"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:background="?attr/color_main2_200"
-                app:layout_constraintTop_toTopOf="@id/bottom_barrier"
-                app:layout_constraintBottom_toBottomOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/context_menu_action_label_style"
-                android:id="@+id/action_resend"
-                android:onClick="@{resendClickListener}"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/bubbles"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="1dp"
-                android:text="@string/menu_resend_chat_message"
-                android:background="@drawable/menu_item_background"
-                android:drawableStart="@drawable/paper_plane_right"
-                android:visibility="@{model.isInError &amp;&amp; model.isOutgoing ? View.VISIBLE : View.GONE, default=gone}"
-                app:layout_constraintBottom_toTopOf="@id/action_reply"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="5dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/actions">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/context_menu_action_label_style"
-                android:id="@+id/action_reply"
-                android:onClick="@{replyClickListener}"
+                <ViewStub
+                    android:id="@+id/outgoing_bubble"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout="@layout/chat_bubble_outgoing"
+                    android:visibility="@{viewModel.isMessageOutgoing ? View.VISIBLE : View.GONE, default=gone}"
+                    bind:inflatedVisibility="@{viewModel.isMessageOutgoing ? View.VISIBLE : View.GONE, default=gone}"
+                    bind:model="@{viewModel.messageModel}"
+                    bind:skipGroupMargins="@{true}"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHeight_max="@dimen/chat_bubble_max_height_long_press"/>
+
+                <ViewStub
+                    android:id="@+id/incoming_bubble"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout="@layout/chat_bubble_incoming"
+                    android:visibility="@{viewModel.isMessageOutgoing ? View.GONE : View.VISIBLE}"
+                    bind:inflatedVisibility="@{viewModel.isMessageOutgoing ? View.GONE : View.VISIBLE}"
+                    bind:model="@{viewModel.messageModel}"
+                    bind:skipGroupMargins="@{true}"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHeight_max="@dimen/chat_bubble_max_height_long_press"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:id="@+id/actions"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="1dp"
-                android:text="@string/menu_reply_to_chat_message"
-                android:visibility="@{model.chatRoomIsReadOnly ? View.GONE : View.VISIBLE}"
-                android:background="@drawable/menu_item_background"
-                android:drawableStart="@drawable/reply"
-                app:layout_constraintBottom_toTopOf="@id/action_copy"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/context_menu_action_label_style"
-                android:id="@+id/action_copy"
-                android:onClick="@{copyClickListener}"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="1dp"
-                android:text="@string/menu_copy_chat_message"
-                android:background="@drawable/menu_item_background"
-                android:drawableStart="@drawable/copy"
-                app:layout_constraintBottom_toTopOf="@id/action_forward"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/context_menu_action_label_style"
-                android:id="@+id/action_forward"
-                android:onClick="@{forwardClickListener}"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="1dp"
-                android:text="@string/menu_forward_chat_message"
-                android:background="@drawable/menu_item_background"
-                android:drawableStart="@drawable/forward"
-                android:visibility="@{hideForward ? View.GONE : View.VISIBLE}"
-                app:layout_constraintBottom_toTopOf="@id/action_delete"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/context_menu_danger_action_label_style"
-                android:id="@+id/action_delete"
-                android:onClick="@{deleteClickListener}"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="1dp"
-                android:text="@string/menu_delete_selected_item"
-                android:background="@drawable/menu_item_background"
-                android:drawableStart="@drawable/trash_simple"
+                android:orientation="vertical"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="60dp"
+                android:background="@drawable/shape_squircle_white_background"
+                app:layout_constraintWidth_max="250dp"
+                app:layout_constraintHorizontal_bias="@{viewModel.horizontalBias, default=0}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/popup_menu_action_label_style"
+                    android:id="@+id/action_resend"
+                    android:onClick="@{() -> viewModel.resend()}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/menu_resend_chat_message"
+                    android:drawableEnd="@drawable/paper_plane_right"
+                    android:visibility="@{viewModel.isMessageInError &amp;&amp; viewModel.isMessageOutgoing ? View.VISIBLE : View.GONE, default=gone}" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/color_main2_200"
+                    android:visibility="@{viewModel.isMessageInError &amp;&amp; viewModel.isMessageOutgoing ? View.VISIBLE : View.GONE, default=gone}"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/popup_menu_action_label_style"
+                    android:id="@+id/action_reply"
+                    android:onClick="@{() -> viewModel.reply()}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/menu_reply_to_chat_message"
+                    android:visibility="@{viewModel.isChatRoomReadOnly ? View.GONE : View.VISIBLE}"
+                    android:drawableEnd="@drawable/reply" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/color_main2_200"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/popup_menu_action_label_style"
+                    android:id="@+id/action_copy"
+                    android:onClick="@{() -> viewModel.copyClickListener()}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/menu_copy_chat_message"
+                    android:drawableEnd="@drawable/copy" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/color_main2_200"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/popup_menu_action_label_style"
+                    android:id="@+id/action_forward"
+                    android:onClick="@{() -> viewModel.forwardClickListener()}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/menu_forward_chat_message"
+                    android:drawableEnd="@drawable/forward"
+                    android:visibility="@{viewModel.hideForward ? View.GONE : View.VISIBLE}" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/color_main2_200"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/popup_menu_danger_action_label_style"
+                    android:id="@+id/action_delete"
+                    android:onClick="@{() -> viewModel.deleteClickListener()}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/menu_delete_selected_item"
+                    android:drawableEnd="@drawable/trash_simple" />
+
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <include
             android:id="@+id/emoji_picker_bottom_sheet"
             layout="@layout/chat_bubble_emoji_picker_bottom_sheet"
-            bind:model="@{model}"/>
+            bind:model="@{viewModel.messageModel}"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
