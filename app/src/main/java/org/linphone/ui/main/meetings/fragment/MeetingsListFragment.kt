@@ -104,8 +104,8 @@ class MeetingsListFragment : AbstractMainFragment() {
 
         binding.meetingsList.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(requireContext())
-        layoutManager.stackFromEnd = true
         binding.meetingsList.layoutManager = layoutManager
+
         val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
         binding.meetingsList.addItemDecoration(headerItemDecoration)
 
