@@ -37,7 +37,6 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.corePreferences
-import org.linphone.compatibility.Compatibility
 import org.linphone.contacts.ContactsManager
 import org.linphone.core.tools.Log
 import org.linphone.notifications.NotificationsManager
@@ -741,8 +740,8 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
             context,
             CoreKeepAliveThirdPartyAccountsService::class.java
         )
-        Log.i("$TAG Starting Keep alive for third party accounts Service (as foreground)")
-        Compatibility.startForegroundService(context, serviceIntent)
+        Log.i("$TAG Starting Keep alive for third party accounts Service")
+        context.startService(serviceIntent)
     }
 
     @WorkerThread

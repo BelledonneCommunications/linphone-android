@@ -23,8 +23,6 @@ import android.app.Activity
 import android.app.Notification
 import android.app.PictureInPictureParams
 import android.app.Service
-import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
 import org.linphone.core.tools.Log
@@ -43,10 +41,6 @@ class Api28Compatibility {
             } catch (e: Exception) {
                 Log.e("$TAG Can't start service as foreground! $e")
             }
-        }
-
-        fun startForegroundService(context: Context, intent: Intent) {
-            context.startForegroundService(intent)
         }
 
         fun enterPipMode(activity: Activity): Boolean {
