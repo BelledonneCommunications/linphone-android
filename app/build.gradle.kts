@@ -141,6 +141,13 @@ android {
             resValue("string", "file_provider", "$packageName.fileprovider")
             resValue("string", "linphone_app_version", gitVersion.trim())
             resValue("string", "linphone_app_branch", gitBranch.toString().trim())
+
+            if (crashlyticsAvailable) {
+                configure<CrashlyticsExtension> {
+                    nativeSymbolUploadEnabled = true
+                    unstrippedNativeLibsDir = File("$sdkPath/libs-debug/").toString()
+                }
+            }
         }
     }
 
@@ -221,6 +228,12 @@ if (crashlyticsAvailable) {
         )
         tasks.getByName("packageDebug").finalizedBy(
             tasks.getByName("uploadCrashlyticsSymbolFileDebug")
+        )
+        tasks.getByName("assembleRelease").finalizedBy(
+            tasks.getByName("uploadCrashlyticsSymbolFileRelease")
+        )
+        tasks.getByName("packageRelease").finalizedBy(
+            tasks.getByName("uploadCrashlyticsSymbolFileRelease")
         )
     }
 }
