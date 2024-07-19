@@ -117,6 +117,8 @@ class MessageModel @WorkerThread constructor(
 
     val reactions = MutableLiveData<String>()
 
+    val ourReactionIndex = MutableLiveData<Int>()
+
     val filesList = MutableLiveData<ArrayList<FileModel>>()
 
     val firstFileModel = MediatorLiveData<FileModel>()
@@ -531,8 +533,23 @@ class MessageModel @WorkerThread constructor(
                 reactionsList += " $count"
             }
         }
-
         Log.d("$TAG Reactions for message [$id] are [$reactionsList]")
+
+        val ourOwnReaction = chatMessage.ownReaction
+        if (ourOwnReaction != null) {
+            val index = when (ourOwnReaction.body) {
+                AppUtils.getString(R.string.emoji_thumbs_up) -> 0
+                AppUtils.getString(R.string.emoji_love) -> 1
+                AppUtils.getString(R.string.emoji_laughing) -> 2
+                AppUtils.getString(R.string.emoji_surprised) -> 3
+                AppUtils.getString(R.string.emoji_tear) -> 4
+                else -> -1
+            }
+            ourReactionIndex.postValue(index)
+        } else {
+            ourReactionIndex.postValue(-1)
+        }
+
         reactions.postValue(reactionsList)
     }
 

@@ -291,7 +291,7 @@
             android:background="@drawable/shape_chat_bubble_incoming_reactions_background"
             android:text="@{model.reactions, default=@string/emoji_love}"
             android:visibility="@{model.reactions.length() > 0 ? View.VISIBLE : View.GONE}"
-            app:layout_constraintEnd_toEndOf="@id/bubble"
+            app:layout_constraintStart_toStartOf="@id/bubble"
             app:layout_constraintTop_toBottomOf="@id/bubble" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

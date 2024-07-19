@@ -49,6 +49,7 @@
     <dimen name="button_max_width">400dp</dimen>
     <dimen name="dialog_max_width">400dp</dimen>
     <dimen name="text_input_max_width">400dp</dimen>
+    <dimen name="emoji_list_max_width">400dp</dimen>
     <dimen name="popup_menu_width">250dp</dimen>
     <dimen name="popup_menu_padding">15dp</dimen>
     <dimen name="popup_menu_item_top_margin">20dp</dimen>
@@ -93,7 +94,7 @@
     <dimen name="chat_room_emoji_picker_height">300dp</dimen>
     <dimen name="chat_room_participants_list_max_height">300dp</dimen>
     <dimen name="chat_bubble_emoji_picker_height">425dp</dimen>
-    <dimen name="chat_bubble_max_height_long_press">300dp</dimen>
+    <dimen name="chat_bubble_max_height_long_press">340dp</dimen>
 
     <dimen name="recycler_view_min_height">200dp</dimen>
 
