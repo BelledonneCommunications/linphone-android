@@ -136,8 +136,9 @@
             android:gravity="end"
             android:selected="@{model.isSelected}"
             android:background="@{model.groupedWithNextMessage ? @drawable/chat_bubble_outgoing_full_background : @drawable/chat_bubble_outgoing_last_background, default=@drawable/chat_bubble_outgoing_last_background}"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintWidth_max="@dimen/chat_bubble_max_width"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/reply"
             app:layout_constraintEnd_toEndOf="parent">
 

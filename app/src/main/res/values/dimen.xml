@@ -85,7 +85,6 @@
     <dimen name="chat_bubble_meeting_invite_width">271dp</dimen>
     <dimen name="chat_bubble_voice_record_width">271dp</dimen>
     <dimen name="chat_bubble_max_reply_width">271dp</dimen>
-    <dimen name="chat_bubble_max_width">291dp</dimen>
     <dimen name="chat_bubble_images_rounded_corner_radius">5dp</dimen>
     <dimen name="chat_bubble_start_margin_when_avatar_displayed">10dp</dimen>
     <dimen name="chat_conversation_header_avatar_start_margin_if_back_button">5dp</dimen>
