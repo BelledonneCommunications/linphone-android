@@ -138,7 +138,12 @@ class TelecomCallControlCallback(
             }
             if (route.isNotEmpty()) {
                 coreContext.postOnCoreThread {
-                    AudioUtils.applyAudioRouteChangeInLinphone(call, route)
+                    if (!AudioUtils.applyAudioRouteChangeInLinphone(call, route)) {
+                        Log.w("$TAG Failed to apply audio route change, trying again in 200ms")
+                        coreContext.postOnCoreThreadDelayed({
+                            AudioUtils.applyAudioRouteChangeInLinphone(call, route)
+                        }, 200)
+                    }
                 }
             }
         }.launchIn(scope)

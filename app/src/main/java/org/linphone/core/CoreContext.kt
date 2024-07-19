@@ -111,14 +111,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
                         "$TAG Added device [${device.productName}] with ID [${device.id}] and type [${device.type}]"
                     )
                 }
-                if (telecomManager.getCurrentlyFollowedCalls() <= 0) {
-                    Log.i("$TAG No call found in Telecom's CallsManager, reloading sound devices")
-                    core.reloadSoundDevices()
-                } else {
-                    Log.i(
-                        "$TAG At least one active call in Telecom's CallsManager, let it handle the added device"
-                    )
-                }
+                core.reloadSoundDevices()
             }
         }
 
@@ -510,6 +503,16 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         coreThread.post {
             lambda.invoke(core)
         }
+    }
+
+    @AnyThread
+    fun postOnCoreThreadDelayed(
+        @WorkerThread lambda: (core: Core) -> Unit,
+        delay: Long
+    ) {
+        coreThread.postDelayed({
+            lambda.invoke(core)
+        }, delay)
     }
 
     @AnyThread

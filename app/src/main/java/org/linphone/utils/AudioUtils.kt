@@ -103,7 +103,7 @@ class AudioUtils {
             call: Call?,
             types: List<AudioDevice.Type>,
             output: Boolean = true
-        ) {
+        ): Boolean {
             val capability = if (output) {
                 AudioDevice.Capabilities.CapabilityPlay
             } else {
@@ -139,12 +139,7 @@ class AudioUtils {
                 Log.e(
                     "$TAG Couldn't find audio device with capability [$capability] and type [$types]"
                 )
-                for (device in extendedAudioDevices) {
-                    Log.i(
-                        "$TAG Extended audio device: [${device.deviceName} (${device.driverName}) ${device.type} / ${device.capabilities}]"
-                    )
-                }
-                return
+                return false
             }
             if (call != null) {
                 Log.i(
@@ -165,6 +160,7 @@ class AudioUtils {
                     coreContext.core.inputAudioDevice = audioDevice
                 }
             }
+            return true
         }
 
         @WorkerThread
