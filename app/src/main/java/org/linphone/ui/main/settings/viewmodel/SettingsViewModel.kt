@@ -75,6 +75,8 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
 
     val autoRecordCalls = MutableLiveData<Boolean>()
 
+    val goToIncomingCallNotificationChannelSettingsEvent = MutableLiveData<Event<Boolean>>()
+
     // Conversations settings
     val showConversationsSettings = MutableLiveData<Boolean>()
 
@@ -343,6 +345,11 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
             corePreferences.automaticallyStartCallRecording = newValue
             autoRecordCalls.postValue(newValue)
         }
+    }
+
+    @UiThread
+    fun changeRingtone() {
+        goToIncomingCallNotificationChannelSettingsEvent.value = Event(true)
     }
 
     @UiThread

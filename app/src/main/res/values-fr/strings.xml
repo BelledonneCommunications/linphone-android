@@ -196,6 +196,7 @@
     <string name="settings_calls_enable_fec_title">Activer la FEC vidéo</string>
     <string name="settings_calls_vibrate_while_ringing_title">Vibrer lors de la réception d\'un appel</string>
     <string name="settings_calls_auto_record_title">Démarrer l\'enregistrement des appels automatiquement</string>
+    <string name="settings_calls_change_ringtone_title">Changer de sonnerie</string>
     <string name="settings_conversations_title">Conversations</string>
     <string name="settings_conversations_auto_download_title">Télécharger automatiquement les fichiers</string>
     <string name="settings_contacts_title">Contacts</string>

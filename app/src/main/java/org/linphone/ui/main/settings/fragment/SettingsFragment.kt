@@ -19,7 +19,9 @@
  */
 package org.linphone.ui.main.settings.fragment
 
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -134,6 +136,20 @@ class SettingsFragment : GenericMainFragment() {
             it.consume {
                 Log.w("$TAG Recreate Activity")
                 requireActivity().recreate()
+            }
+        }
+
+        viewModel.goToIncomingCallNotificationChannelSettingsEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.w("$TAG Going to incoming call channel settings")
+                val intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).apply {
+                    putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
+                    putExtra(
+                        Settings.EXTRA_CHANNEL_ID,
+                        getString(R.string.notification_channel_incoming_call_id)
+                    )
+                }
+                startActivity(intent)
             }
         }
 

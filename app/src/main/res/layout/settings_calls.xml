@@ -144,6 +144,25 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/vibrate_switch" />
 
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/settings_title_style"
+            android:id="@+id/advanced_settings"
+            android:onClick="@{() -> viewModel.changeRingtone()}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="@dimen/screen_bottom_margin"
+            android:text="@string/settings_calls_change_ringtone_title"
+            android:drawableEnd="@drawable/caret_right"
+            android:drawableTint="?attr/color_main2_600"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/auto_record_switch"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
