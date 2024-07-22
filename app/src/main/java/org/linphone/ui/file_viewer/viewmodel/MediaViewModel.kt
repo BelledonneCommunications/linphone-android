@@ -107,8 +107,10 @@ class MediaViewModel @UiThread constructor() : GenericViewModel() {
     }
 
     @UiThread
-    fun toggleFullScreen() {
-        fullScreenMode.value = fullScreenMode.value != true
+    fun toggleFullScreen(): Boolean {
+        val newValue = fullScreenMode.value != true
+        fullScreenMode.value = newValue
+        return newValue
     }
 
     @UiThread

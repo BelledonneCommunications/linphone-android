@@ -35,18 +35,12 @@ class MediaListViewModel @UiThread constructor() : AbstractConversationViewModel
 
     val mediaList = MutableLiveData<List<FileModel>>()
 
-    val fullScreenMode = MutableLiveData<Boolean>()
-
     val currentlyDisplayedFileName = MutableLiveData<String>()
 
     val currentlyDisplayedFileDateTime = MutableLiveData<String>()
 
     override fun beforeNotifyingChatRoomFound(sameOne: Boolean) {
         loadMediaList()
-    }
-
-    init {
-        fullScreenMode.value = true
     }
 
     override fun onCleared() {

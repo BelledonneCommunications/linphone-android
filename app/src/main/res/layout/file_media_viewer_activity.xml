@@ -16,6 +16,9 @@
         <variable
             name="viewModel"
             type="org.linphone.ui.file_viewer.viewmodel.MediaListViewModel" />
+        <variable
+            name="sharedViewModel"
+            type="org.linphone.ui.main.viewmodel.SharedMainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,7 +29,7 @@
         <androidx.constraintlayout.widget.Group
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="@{viewModel.fullScreenMode ? View.GONE : View.VISIBLE}"
+            android:visibility="@{sharedViewModel.mediaViewerFullScreenMode ? View.GONE : View.VISIBLE}"
             app:constraint_referenced_ids="top_bar_background, back, file_name, share, save, date_time"/>
 
         <androidx.constraintlayout.widget.Barrier

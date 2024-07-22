@@ -24,6 +24,7 @@ import org.linphone.ui.GenericActivity
 import org.linphone.ui.file_viewer.adapter.MediaListAdapter
 import org.linphone.ui.file_viewer.viewmodel.MediaListViewModel
 import org.linphone.ui.main.chat.model.FileModel
+import org.linphone.ui.main.viewmodel.SharedMainViewModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.FileUtils
 
@@ -40,6 +41,8 @@ class MediaViewerActivity : GenericActivity() {
     private lateinit var viewModel: MediaListViewModel
 
     private lateinit var viewPager: ViewPager2
+
+    private lateinit var sharedViewModel: SharedMainViewModel
 
     private val pageListener = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
@@ -66,12 +69,16 @@ class MediaViewerActivity : GenericActivity() {
             WindowInsetsCompat.CONSUMED
         }
 
+        sharedViewModel = run {
+            ViewModelProvider(this)[SharedMainViewModel::class.java]
+        }
+        binding.sharedViewModel = sharedViewModel
+        sharedViewModel.mediaViewerFullScreenMode.value = true
+
         viewModel = ViewModelProvider(this)[MediaListViewModel::class.java]
         binding.viewModel = viewModel
 
-        adapter = MediaListAdapter(this, viewModel) { fullScreen ->
-            viewModel.fullScreenMode.value = fullScreen
-        }
+        adapter = MediaListAdapter(this, viewModel)
 
         viewPager = binding.mediaViewPager
         viewPager.adapter = adapter

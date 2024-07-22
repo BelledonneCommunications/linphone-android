@@ -167,6 +167,8 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
 
     /* Other */
 
+    val mediaViewerFullScreenMode = MutableLiveData<Boolean>()
+
     val listOfSelectedSipUrisEvent: MutableLiveData<Event<ArrayList<String>>> by lazy {
         MutableLiveData<Event<ArrayList<String>>>()
     }

@@ -29,8 +29,7 @@ import org.linphone.ui.file_viewer.viewmodel.MediaListViewModel
 
 class MediaListAdapter(
     fragmentActivity: FragmentActivity,
-    private val viewModel: MediaListViewModel,
-    private val lambda: ((fullScreen: Boolean) -> Unit)
+    private val viewModel: MediaListViewModel
 ) :
     FragmentStateAdapter(fragmentActivity) {
     companion object {
@@ -51,12 +50,10 @@ class MediaListAdapter(
 
     override fun createFragment(position: Int): Fragment {
         val fragment = MediaViewerFragment()
-        fragment.fullScreenChanged = lambda
         fragment.arguments = Bundle().apply {
             val path = viewModel.mediaList.value.orEmpty().getOrNull(position)?.path
             Log.d("$TAG Path is [$path] for position [$position]")
             putString("path", path)
-            putBoolean("fullScreen", viewModel.fullScreenMode.value == true)
         }
         return fragment
     }
