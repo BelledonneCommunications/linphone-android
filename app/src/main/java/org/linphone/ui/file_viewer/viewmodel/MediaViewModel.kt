@@ -31,6 +31,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
+import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.TimestampUtils
 
@@ -58,6 +59,10 @@ class MediaViewModel @UiThread constructor() : GenericViewModel() {
     val formattedDuration = MutableLiveData<String>()
 
     val position = MutableLiveData<Int>()
+
+    val videoSizeChangedEvent: MutableLiveData<Event<Pair<Int, Int>>> by lazy {
+        MutableLiveData<Event<Pair<Int, Int>>>()
+    }
 
     lateinit var mediaPlayer: MediaPlayer
 
@@ -167,6 +172,9 @@ class MediaViewModel @UiThread constructor() : GenericViewModel() {
 
                 // Leave full screen when playback is done
                 fullScreenMode.postValue(false)
+            }
+            setOnVideoSizeChangedListener { mediaPlayer, width, height ->
+                videoSizeChangedEvent.postValue(Event(Pair(width, height)))
             }
             prepare()
         }

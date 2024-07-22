@@ -86,6 +86,15 @@ class MediaViewerFragment : GenericMainFragment() {
             val fullScreenMode = viewModel.toggleFullScreen()
             sharedViewModel.mediaViewerFullScreenMode.value = fullScreenMode
         }
+
+        viewModel.videoSizeChangedEvent.observe(viewLifecycleOwner) {
+            it.consume { pair ->
+                val width = pair.first
+                val height = pair.second
+                Log.i("$TAG Updating video texture ration to ${width}x$height")
+                binding.videoPlayer.setAspectRatio(width, height)
+            }
+        }
     }
 
     override fun onResume() {

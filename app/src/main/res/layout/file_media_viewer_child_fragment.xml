@@ -25,9 +25,9 @@
             android:visibility="@{viewModel.fullScreenMode ? View.GONE : viewModel.isAudio || viewModel.isVideo ? View.VISIBLE : View.GONE}"
             app:constraint_referenced_ids="play_pause_audio_playback, progress, duration" />
 
-        <TextureView
+        <org.linphone.ui.file_viewer.view.RatioTextureView
             android:id="@+id/video_player"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="@{viewModel.isVideo ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintTop_toTopOf="parent"
