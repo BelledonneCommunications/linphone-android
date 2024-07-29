@@ -143,7 +143,7 @@
             android:layout_height="0dp"
             android:indeterminate="true"
             android:visibility="@{viewModel.operationInProgress ? View.VISIBLE : View.GONE}"
-            app:indicatorColor="@color/main1_500"
+            app:indicatorColor="?attr/color_main1_500"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toTopOf="@id/chat"
             app:layout_constraintStart_toStartOf="@id/chat"

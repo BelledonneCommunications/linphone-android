@@ -111,7 +111,7 @@
                     android:layout_height="wrap_content"
                     android:indeterminate="true"
                     android:visibility="@{viewModel.fetchInProgress ? View.VISIBLE : View.GONE}"
-                    app:indicatorColor="@color/main1_500"
+                    app:indicatorColor="?attr/color_main1_500"
                     app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"

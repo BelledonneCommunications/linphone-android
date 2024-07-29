@@ -16,7 +16,7 @@
         android:onClick="@{() -> model.setAsDefault()}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@{model.isDefault ? @color/main2_100 : @color/main2_000, default=@color/main2_100}">
+        android:background="@{model.isDefault ? @drawable/color_main2_100 : @drawable/color_main2_000, default=@drawable/color_main2_100}">
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/end_barrier"

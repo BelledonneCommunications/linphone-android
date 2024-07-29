@@ -144,7 +144,7 @@
                 android:src="@drawable/pause"
                 android:contentDescription="@string/content_description_paused_call"
                 android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; conferenceViewModel.isPaused ? View.VISIBLE : View.GONE, default=gone}"
-                app:tint="@color/main1_500"
+                app:tint="?attr/color_main1_500"
                 app:layout_constraintTop_toTopOf="@id/back"
                 app:layout_constraintBottom_toBottomOf="@id/back"
                 app:layout_constraintEnd_toStartOf="@id/stats" />

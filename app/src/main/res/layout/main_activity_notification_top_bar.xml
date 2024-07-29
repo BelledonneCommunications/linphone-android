@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="40dp"
-        android:background="@{viewModel.maxAlertLevel >= 20 ? @color/success_500 : viewModel.maxAlertLevel >= 10 ? @color/danger_500 : viewModel.maxAlertLevel > 0 ? @color/main2_500 : @color/main1_500, default=@color/main1_500}"
+        android:background="@{viewModel.maxAlertLevel >= 20 ? @drawable/color_success_500 : viewModel.maxAlertLevel >= 10 ? @drawable/color_danger_500 : viewModel.maxAlertLevel > 0 ? @drawable/color_main2_500 : @drawable/color_main1_500, default=@drawable/color_main1_500}"
         android:onClick="@{() -> viewModel.onTopBarClicked()}">
 
         <ImageView

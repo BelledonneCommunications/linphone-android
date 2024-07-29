@@ -36,7 +36,7 @@
             android:contentDescription="@string/app_name"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:tint="@color/main1_500" />
+            app:tint="?attr/color_main1_500" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/section_header_style"
