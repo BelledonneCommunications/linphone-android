@@ -87,13 +87,13 @@ class HelpViewModel @UiThread constructor() : GenericViewModel() {
         override fun onVersionUpdateCheckResultReceived(
             core: Core,
             result: VersionUpdateCheckResult,
-            version: String?,
+            version: String,
             url: String?
         ) {
             when (result) {
                 VersionUpdateCheckResult.NewVersionAvailable -> {
                     Log.i("$TAG Update available, version [$version], url [$url]")
-                    if (!version.isNullOrEmpty() && !url.isNullOrEmpty()) {
+                    if (version.isNotEmpty() && !url.isNullOrEmpty()) {
                         newVersionAvailableEvent.postValue(Event(Pair(version, url)))
                     }
                 }
