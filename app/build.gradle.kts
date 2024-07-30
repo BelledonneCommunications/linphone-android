@@ -64,6 +64,7 @@ task("getGitVersion") {
     } catch (e: Exception) {
         println("Git not found [$e], using $gitVersion")
     }
+    project.version = gitVersion
 }
 project.tasks.preBuild.dependsOn("getGitVersion")
 
@@ -105,7 +106,7 @@ android {
         variant.outputs
             .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
             .forEach { output ->
-                output.outputFileName = "linphone-android-${variant.buildType.name}-$versionName.apk"
+                output.outputFileName = "linphone-android-${variant.buildType.name}-${project.version}.apk"
             }
     }
 
