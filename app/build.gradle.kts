@@ -1,6 +1,8 @@
 import com.android.build.gradle.internal.tasks.factory.dependsOn
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 import java.io.ByteArrayOutputStream
+import java.io.FileInputStream
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.androidApplication)
@@ -105,6 +107,19 @@ android {
             .forEach { output ->
                 output.outputFileName = "linphone-android-${variant.buildType.name}-$versionName.apk"
             }
+    }
+
+    val keystorePropertiesFile = rootProject.file("keystore.properties")
+    val keystoreProperties = Properties()
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+
+    signingConfigs {
+        create("release") {
+            storeFile = File(keystoreProperties["storeFile"].toString())
+            storePassword = keystoreProperties["storePassword"].toString()
+            keyAlias = keystoreProperties["keyAlias"].toString()
+            keyPassword = keystoreProperties["keyPassword"].toString()
+        }
     }
 
     buildTypes {
