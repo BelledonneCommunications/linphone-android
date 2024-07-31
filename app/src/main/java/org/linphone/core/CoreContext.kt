@@ -499,8 +499,12 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
     fun postOnCoreThread(
         @WorkerThread lambda: (core: Core) -> Unit
     ) {
-        coreThread.post {
-            lambda.invoke(core)
+        if (::coreThread.isInitialized) {
+            coreThread.post {
+                lambda.invoke(core)
+            }
+        } else {
+            Log.e("$TAG Core's thread not initialized yet!")
         }
     }
 
@@ -509,9 +513,13 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         @WorkerThread lambda: (core: Core) -> Unit,
         delay: Long
     ) {
-        coreThread.postDelayed({
-            lambda.invoke(core)
-        }, delay)
+        if (::coreThread.isInitialized) {
+            coreThread.postDelayed({
+                lambda.invoke(core)
+            }, delay)
+        } else {
+            Log.e("$TAG Core's thread not initialized yet!")
+        }
     }
 
     @AnyThread

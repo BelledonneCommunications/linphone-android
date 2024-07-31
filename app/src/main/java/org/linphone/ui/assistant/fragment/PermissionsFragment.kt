@@ -148,12 +148,20 @@ class PermissionsFragment : GenericFragment() {
                 if (core.accountList.isNotEmpty()) {
                     coreContext.postOnMainThread {
                         Log.w("$TAG At least one account was found, leaving assistant")
-                        requireActivity().finish()
+                        try {
+                            requireActivity().finish()
+                        } catch (ise: IllegalStateException) {
+                            Log.e("$TAG Failed to finish activity: $ise")
+                        }
                     }
                 } else {
                     coreContext.postOnMainThread {
                         Log.w("$TAG No account was found, going to landing fragment")
-                        goToLoginFragment()
+                        try {
+                            goToLoginFragment()
+                        } catch (ise: IllegalStateException) {
+                            Log.e("$TAG Failed to navigate to login fragment: $ise")
+                        }
                     }
                 }
             }
