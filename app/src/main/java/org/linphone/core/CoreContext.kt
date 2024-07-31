@@ -442,6 +442,13 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
 
                 core.config.setBool("magic_search", "return_empty_friends", true)
                 Log.i("$TAG Showing 'empty' friends enabled")
+
+                if (LinphoneUtils.getDefaultAccount()?.params?.domain == corePreferences.defaultDomain) {
+                    corePreferences.contactsFilter = corePreferences.defaultDomain
+                    Log.i(
+                        "$TAG Setting default contacts list filter to [${corePreferences.contactsFilter}]"
+                    )
+                }
             }
 
             corePreferences.linphoneConfigurationVersion = currentVersion

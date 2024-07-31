@@ -57,6 +57,13 @@ class CorePreferences @UiThread constructor(private val context: Context) {
             config.setBool("app", "first_6.0_launch", value)
         }
 
+    @get:WorkerThread @set:WorkerThread
+    var linphoneConfigurationVersion: Int
+        get() = config.getInt("app", "config_version", 52005)
+        set(value) {
+            config.setInt("app", "config_version", value)
+        }
+
     @get:WorkerThread
     val checkForUpdateServerUrl: String
         get() = config.getString("misc", "version_check_url_root", "").orEmpty()
@@ -82,7 +89,7 @@ class CorePreferences @UiThread constructor(private val context: Context) {
             config.setBool("app", "keep_service_alive", value)
         }
 
-    // Calls settings
+    /* Call settings */
 
     // This won't be done if bluetooth or wired headset is used
     @get:WorkerThread @set:WorkerThread
@@ -106,14 +113,32 @@ class CorePreferences @UiThread constructor(private val context: Context) {
             config.setBool("app", "show_confirmation_dialog_zrtp_trust_call", value)
         }
 
-    /* Voice Recordings */
+    /* Contacts related */
+
+    @get:WorkerThread @set:WorkerThread
+    var contactsFilter: String
+        get() = config.getString("ui", "contacts_filter", "")!! // Default value must be empty!
+        set(value) {
+            config.setString("ui", "contacts_filter", value)
+        }
+
+    @get:WorkerThread @set:WorkerThread
+    var showFavoriteContacts: Boolean
+        get() = config.getBool("ui", "show_favorites_contacts", true)
+        set(value) {
+            config.setBool("ui", "show_favorites_contacts", value)
+        }
+
+    /* Voice recordings related */
 
     @get:WorkerThread @set:WorkerThread
     var voiceRecordingMaxDuration: Int
         get() = config.getInt("app", "voice_recording_max_duration", 600000) // in ms
         set(value) = config.setInt("app", "voice_recording_max_duration", value)
 
-    /** -1 means auto, 0 no, 1 yes */
+    /* User interface related */
+
+    // -1 means auto, 0 no, 1 yes
     @get:WorkerThread @set:WorkerThread
     var darkMode: Int
         get() {
@@ -124,14 +149,7 @@ class CorePreferences @UiThread constructor(private val context: Context) {
             config.setInt("app", "dark_mode", value)
         }
 
-    @get:WorkerThread @set:WorkerThread
-    var linphoneConfigurationVersion: Int
-        get() = config.getInt("app", "config_version", 52005)
-        set(value) {
-            config.setInt("app", "config_version", value)
-        }
-
-    /** Allows to make screenshots */
+    // Allows to make screenshots
     @get:WorkerThread @set:WorkerThread
     var enableSecureMode: Boolean
         get() = config.getBool("ui", "enable_secure_mode", true)
@@ -197,6 +215,8 @@ class CorePreferences @UiThread constructor(private val context: Context) {
     @get:WorkerThread
     val hideAssistantThirdPartySipAccount: Boolean
         get() = config.getBool("ui", "assistant_hide_third_party_account", false)
+
+    /* Paths */
 
     @get:WorkerThread
     val defaultDomain: String

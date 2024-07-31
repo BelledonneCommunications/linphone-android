@@ -47,4 +47,7 @@ fec_enabled=1
 [magic_search]
 return_empty_friends=1
 
+[ui]
+contacts_filter=sip.linphone.org
+
 ## End of default rc
