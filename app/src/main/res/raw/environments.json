@@ -1,0 +1,91 @@
+[
+  {
+    "Id": "NA",
+    "Name": "North America",
+    "AssociatedCultures": [ "en-US" ],
+    "IdentityServerUri": "https://login.xarios.cloud",
+    "GatewayApiUri": "https://ucgateway.xarios.cloud",
+    "RealtimeApiUri": "https://realtime.xarios.cloud",
+    "DocumentationUri": "https://docs.xarios.cloud/mobile",
+    "DiagnosticsBlobConnectionString": "BlobEndpoint=https://naclientlogs.blob.core.windows.net/;SharedAccessSignature=sv=2019-02-02&ss=bq&srt=sco&sp=wacu&se=2119-12-31T23:59:59Z&st=2019-10-01T13:00:13Z&spr=https&sig=wdb0AWRuDxRdHed0RVziduGU8F7nnHfwwpKyyCTD3Hc%3D",
+    "ResourcesBlobUrl": "https://resource.xarios.cloud"
+  },
+  {
+    "Id": "AU",
+    "Name": "Australia",
+    "AssociatedCultures": [ "en-AU", "en-NZ" ],
+    "IdentityServerUri": "https://login.au.xarios.cloud",
+    "GatewayApiUri": "https://ucgateway.au.xarios.cloud",
+    "RealtimeApiUri": "https://realtime.au.xarios.cloud",
+    "DocumentationUri": "https://docs.au.xarios.cloud/mobile",
+    "DiagnosticsBlobConnectionString": "BlobEndpoint=https://ausclientlogs.blob.core.windows.net/;SharedAccessSignature=sv=2019-12-12&ss=b&srt=sco&sp=rwlacx&se=2099-10-14T19:33:42Z&st=2020-10-14T11:33:42Z&spr=https&sig=Q8H4mNhpB5QtltFTyvLFqx3SXt6rsoigUSigxLQdtUg%3D",
+    "ResourcesBlobUrl": "https://resource.au.xarios.cloud"
+  },
+  {
+    "Id": "EU",
+    "Name": "Europe",
+    "AssociatedCultures": [],
+    "IdentityServerUri": "https://login.eu.xarios.cloud",
+    "GatewayApiUri": "https://ucgateway.eu.xarios.cloud",
+    "RealtimeApiUri": "https://realtime.eu.xarios.cloud",
+    "DocumentationUri": "https://docs.eu.xarios.cloud/mobile",
+    "DiagnosticsBlobConnectionString": "BlobEndpoint=https://euclientlogs.blob.core.windows.net/uconnect?sp=acw&st=2021-07-27T15:03:49Z&se=2099-07-27T23:03:49Z&spr=https&sv=2020-08-04&sr=c&sig=VD2uKfbwC6bo423KALDYP6WpXAtYkSyNrVQYPjJ7qgc%3D",
+    "ResourcesBlobUrl": "https://resource.eu.xarios.cloud"
+  },
+  {
+    "Id": "UK",
+    "Name": "United Kingdom",
+    "IsDefault": true,
+    "AssociatedCultures": [ "en-GB" ],
+    "IdentityServerUri": "https://login.uk.xarios.cloud",
+    "GatewayApiUri": "https://ucgateway.uk.xarios.cloud",
+    "RealtimeApiUri": "https://realtime.uk.xarios.cloud",
+    "DocumentationUri": "https://docs.uk.xarios.cloud/mobile",
+    "DiagnosticsBlobConnectionString": "BlobEndpoint=https://ukclientlogs.blob.core.windows.net/;SharedAccessSignature=sv=2019-12-12&ss=b&srt=sco&sp=rwlacx&se=2099-10-14T19:36:27Z&st=2020-10-14T11:36:27Z&spr=https&sig=LMSfBV6EHl%2FRiNNsRtNepltCJSWq4EXlXsLIX8ofjsc%3D",
+    "ResourcesBlobUrl": "https://resource.uk.xarios.cloud"
+  },
+  {
+    "Id": "Stg",
+    "Name": "Staging",
+    "IsHidden": true,
+    "IdentityServerUri": "https://login.stage-env.dev",
+    "GatewayApiUri": "https://ucgateway.stage-env.dev",
+    "RealtimeApiUri": "https://realtime.stage-env.dev",
+    "DocumentationUri": "https://docs.stage-env.dev/mobile",
+    "DiagnosticsBlobConnectionString": "BlobEndpoint=https://qaclientlogs.blob.core.windows.net/uconnect?sp=acw&st=2021-03-08T14:55:21Z&se=2031-03-08T22:55:21Z&spr=https&sv=2020-02-10&sr=c&sig=rfiMSOzjWTvmLVOmXqwxDzwEvmVrcrwEKfGZ5MUPA6o%3D",
+    "ResourcesBlobUrl": "https://resource.stage-env.dev"
+  },
+  {
+    "Id": "QA",
+    "Name": "QA",
+    "IsHidden": true,
+    "IdentityServerUri": "https://login.xarios.dev",
+    "GatewayApiUri": "https://ucgateway.xarios.dev",
+    "RealtimeApiUri": "https://realtime.xarios.dev",
+    "DocumentationUri": "https://docs.xarios.dev/mobile",
+    "DiagnosticsBlobConnectionString": "BlobEndpoint=https://qaclientlogs.blob.core.windows.net/uconnect?sp=acw&st=2021-03-08T14:55:21Z&se=2031-03-08T22:55:21Z&spr=https&sv=2020-02-10&sr=c&sig=rfiMSOzjWTvmLVOmXqwxDzwEvmVrcrwEKfGZ5MUPA6o%3D",
+    "ResourcesBlobUrl": "https://resource.xarios.dev"
+  },
+  {
+    "Id": "Dev",
+    "Name": "Development",
+    "IsHidden": true,
+    "IdentityServerUri": "http://cloud.idp:5001",
+    "GatewayApiUri": "http://cloud.api.ucgateway:5020",
+    "RealtimeApiUri": "http://cloud.api.realtime:5005",
+    "DocumentationUri": "https://docs.xarios.dev/mobile/",
+    "DiagnosticsBlobConnectionString": "BlobEndpoint=https://qaclientlogs.blob.core.windows.net/uconnect?sp=acw&st=2021-03-08T14:55:21Z&se=2031-03-08T22:55:21Z&spr=https&sv=2020-02-10&sr=c&sig=rfiMSOzjWTvmLVOmXqwxDzwEvmVrcrwEKfGZ5MUPA6o%3D",
+    "ResourcesBlobUrl": "https://resource.xarios.dev"
+  },
+  {
+    "Id": "RemoteDev",
+    "Name": "Remote Development",
+    "IsHidden": true,
+    "IdentityServerUri": "https://grapefruit-idp.cowling.dev",
+    "GatewayApiUri": "https://grapefruit-ucgateway.cowling.dev",
+    "RealtimeApiUri": "https://grapefruit-realtime.cowling.dev",
+    "DocumentationUri": "https://docs.xarios.dev/mobile/",
+    "DiagnosticsBlobConnectionString": "BlobEndpoint=https://qaclientlogs.blob.core.windows.net/uconnect?sp=acw&st=2021-03-08T14:55:21Z&se=2031-03-08T22:55:21Z&spr=https&sv=2020-02-10&sr=c&sig=rfiMSOzjWTvmLVOmXqwxDzwEvmVrcrwEKfGZ5MUPA6o%3D",
+    "ResourcesBlobUrl": "https://resource.xarios.dev"
+  }
+]

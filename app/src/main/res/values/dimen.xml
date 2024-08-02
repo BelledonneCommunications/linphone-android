@@ -91,4 +91,9 @@
     <dimen name="chat_message_emoji_font_size">45sp</dimen>
     <dimen name="chat_message_emoji_reaction_font_size">20sp</dimen>
     <dimen name="chat_message_emoji_reactions_count_font_size">14sp</dimen>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="section_margin">16dp</dimen>
 </resources>

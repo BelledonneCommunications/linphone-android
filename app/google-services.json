@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:929724111839:android:4662ea9a056188c4",
         "android_client_info": {
-          "package_name": "org.linphone"
+          "package_name": "org.dimensionstechnologies"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "929724111839-co5kffto4j7dets7oolvfv0056cvpfbl.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "org.linphone",
+            "package_name": "org.dimensionstechnologies",
             "certificate_hash": "85463a95603f7b6331899b74b85d53d043dcd500"
           }
         },
@@ -37,7 +37,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:929724111839:android:3cf90ee1d2f8fcb6",
         "android_client_info": {
-          "package_name": "org.linphone.debug"
+          "package_name": "org.dimensionstechnologies.debug"
         }
       },
       "oauth_client": [

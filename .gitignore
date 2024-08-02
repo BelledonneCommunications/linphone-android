@@ -27,3 +27,4 @@ app/releaseAppBundle
 app/releaseWithCrashlytics
 keystore.properties
 app/src/main/res/xml/contacts.xml
+/keystore.properties.jks
