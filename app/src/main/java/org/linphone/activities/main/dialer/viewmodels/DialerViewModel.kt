@@ -126,19 +126,19 @@ class DialerViewModel : LogsUploadViewModel() {
             }
         }
 
-        override fun onVersionUpdateCheckResultReceived(
-            core: Core,
-            result: VersionUpdateCheckResult,
-            version: String?,
-            url: String?
-        ) {
-            if (result == VersionUpdateCheckResult.NewVersionAvailable) {
-                Log.i("[Dialer] Update available, version [$version], url [$url]")
-                if (!url.isNullOrEmpty()) {
-                    updateAvailableEvent.value = Event(url)
-                }
-            }
-        }
+//        override fun onVersionUpdateCheckResultReceived(
+//            core: Core,
+//            result: VersionUpdateCheckResult,
+//            version: String?,
+//            url: String?
+//        ) {
+//            if (result == VersionUpdateCheckResult.NewVersionAvailable) {
+//                Log.i("[Dialer] Update available, version [$version], url [$url]")
+//                if (!url.isNullOrEmpty()) {
+//                    updateAvailableEvent.value = Event(url)
+//                }
+//            }
+//        }
 
         override fun onAccountRegistrationStateChanged(
             core: Core,

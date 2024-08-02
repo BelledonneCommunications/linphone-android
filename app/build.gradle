@@ -90,6 +90,9 @@ android {
         versionCode appVersionCode
         versionName "${project.version}"
         applicationId packageName
+        manifestPlaceholders = [
+                appAuthRedirectScheme: 'org.linphone'
+        ]
     }
 
     applicationVariants.all { variant ->
@@ -107,11 +110,13 @@ android {
             variant.getMergedFlavor().manifestPlaceholders = [linphone_address_mime_type: "vnd.android.cursor.item/vnd." + packageName + ".provider.sip_address",
                                                               linphone_file_provider: packageName + ".fileprovider",
                                                               appLabel: "@string/app_name",
+                                                              appAuthRedirectScheme: "org.linphone",
                                                               firebaseServiceEnabled: enableFirebaseService]
         } else {
             variant.getMergedFlavor().manifestPlaceholders = [linphone_address_mime_type: "vnd.android.cursor.item/vnd." + packageName + ".provider.sip_address",
                                                               linphone_file_provider: packageName + ".debug.fileprovider",
                                                               appLabel: "@string/app_name_debug",
+                                                              appAuthRedirectScheme: "org.linphone",
                                                               firebaseServiceEnabled: enableFirebaseService]
             extractNativeLibs = true
         }
@@ -255,6 +260,9 @@ dependencies {
 
     // Only enable leak canary prior to release
     // debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
+
+    implementation 'com.auth0.android:jwtdecode:2.0.0'
+    implementation 'net.openid:appauth:0.9.1'
 }
 
 task generateContactsXml(type: Copy) {

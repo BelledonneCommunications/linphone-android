@@ -1,0 +1,12 @@
+{
+  "client_id": "plum",
+  "redirect_uri": "org.linphone:/oauth2redirect",
+  "end_session_redirect_uri": "org.linphone:/oauth2redirect",
+  "authorization_scope": "openid profile offline_access realtime ucgateway",
+  "discovery_uri": "https://login.xarios.dev/.well-known/openid-configuration",
+  "authorization_endpoint_uri": "",
+  "token_endpoint_uri": "",
+  "registration_endpoint_uri": "",
+  "user_info_endpoint_uri": "",
+  "https_required": true
+}

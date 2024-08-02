@@ -56,6 +56,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_PHONE_CALL" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".LinphoneApplication"
         android:allowBackup="false"
@@ -71,16 +73,33 @@
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc"/>
 
+        <!-- ENTRY POINT -->
+        <activity
+            android:name=".activities.main.LoginActivity"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity android:name=".activities.main.MainActivity"
             android:exported="true"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/AppSplashScreenTheme">
             <nav-graph android:value="@navigation/main_nav_graph" />
-
+            <!--
+                        <intent-filter>
+                            <action android:name="android.intent.action.MAIN" />
+                            <category android:name="android.intent.category.LAUNCHER" />
+                        </intent-filter>
+            -->
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="org.linphone.HANDLE_AUTHORIZATION_RESPONSE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
 
             <meta-data
@@ -142,6 +161,41 @@
                 <data android:scheme="mmsto" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="net.openid.appauth.RedirectUriReceiverActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data android:scheme="org.linphone" android:path="/oauth2redirect"/>
+                <!--
+                <data android:scheme="https"
+                    android:host="appauth.demo-app.io"
+                    android:path="/oauth2redirect"/>
+                -->
+            </intent-filter>
+        </activity>
+        <!--
+         <activity android:name="net.openid.appauth.RedirectUriReceiverActivity">
+             <intent-filter>
+                 <action android:name="android.intent.action.VIEW"/>
+                 <category android:name="android.intent.category.DEFAULT"/>
+                 <category android:name="android.intent.category.BROWSABLE"/>
+ _
+                 <data android:scheme="org.linphone" android:path="/oauth2redirect"/>
+             </intent-filter>
+             <intent-filter>
+                 <action android:name="android.intent.action.VIEW"/>
+                 <category android:name="android.intent.category.DEFAULT"/>
+                 <category android:name="android.intent.category.BROWSABLE"/>
+
+                 <data android:scheme="org.linphone" android:path="/logout"/>
+             </intent-filter>
+         </activity>
+         -->
 
         <activity android:name=".activities.assistant.AssistantActivity"
             android:windowSoftInputMode="adjustResize"/>
@@ -250,7 +304,5 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-
     </application>
-
 </manifest>
