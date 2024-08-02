@@ -20,6 +20,7 @@
 package org.linphone.activities.main.sidemenu.fragments
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
@@ -39,6 +40,7 @@ import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.activities.main.sidemenu.viewmodels.SideMenuViewModel
 import org.linphone.activities.main.viewmodels.DialogViewModel
+import org.linphone.authentication.AuthStateManager
 import org.linphone.core.Factory
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SideMenuFragmentBinding
@@ -121,6 +123,11 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
             navigateToAbout()
         }
 
+        binding.setLogoutClickListener {
+            sharedViewModel.toggleDrawerEvent.value = Event(true)
+            logout()
+        }
+
         binding.setConferencesClickListener {
             sharedViewModel.toggleDrawerEvent.value = Event(true)
             navigateToScheduledConferences()
@@ -133,6 +140,14 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
             Log.i("[Side Menu] Stopping Core Context")
             coreContext.notificationsManager.stopForegroundNotification()
             coreContext.stop()
+        }
+
+        if (::viewModel.isInitialized) {
+            viewModel.userName.set("Loading auth token...")
+
+            val authManager = AuthStateManager.getInstance(requireContext())
+            var x = authManager.current
+            authManager.userName.subscribe({ user -> viewModel.userName.set("TOKEN:\n" + user) })
         }
     }
 
@@ -149,6 +164,25 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
                 }
             }
         }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        val authManager = AuthStateManager.getInstance(requireContext())
+
+        // authManager.userName.subscribe({ user -> viewModel.userName = user })
+        /*
+        if (authManager.userName == null) {
+            binding.userName.text = "Null observable!"
+        } else {
+            authManager.userName.subscribe(
+                { user -> if (binding != null) binding.userName.text = user },
+                { error -> viewModel.userName = "ERROR" }
+            )
+        }
+        */
+        // viewModel.userName.set("TEST!")
     }
 
     private fun pickFile() {
@@ -262,5 +296,10 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
         )
 
         dialog.show()
+    }
+
+    public fun logout() {
+        val authManager = AuthStateManager.getInstance(requireContext())
+        authManager.logout(context)
     }
 }

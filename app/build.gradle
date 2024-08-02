@@ -6,10 +6,10 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
-def appVersionName = "5.2.5"
-def appVersionCode = 52005
+def appVersionName = "5.3.0"
+def appVersionCode = 52000
 
-def packageName = "org.linphone"
+def packageName = "org.dimensionstechnologies"
 
 def firebaseAvailable = new File(projectDir.absolutePath +'/google-services.json').exists()
 
@@ -91,7 +91,7 @@ android {
         versionName "${project.version}"
         applicationId packageName
         manifestPlaceholders = [
-                appAuthRedirectScheme: 'org.linphone'
+                appAuthRedirectScheme: 'plum.oauth2'
         ]
     }
 
@@ -110,13 +110,13 @@ android {
             variant.getMergedFlavor().manifestPlaceholders = [linphone_address_mime_type: "vnd.android.cursor.item/vnd." + packageName + ".provider.sip_address",
                                                               linphone_file_provider: packageName + ".fileprovider",
                                                               appLabel: "@string/app_name",
-                                                              appAuthRedirectScheme: "org.linphone",
+                                                              appAuthRedirectScheme: "plum.oauth2",
                                                               firebaseServiceEnabled: enableFirebaseService]
         } else {
             variant.getMergedFlavor().manifestPlaceholders = [linphone_address_mime_type: "vnd.android.cursor.item/vnd." + packageName + ".provider.sip_address",
                                                               linphone_file_provider: packageName + ".debug.fileprovider",
                                                               appLabel: "@string/app_name_debug",
-                                                              appAuthRedirectScheme: "org.linphone",
+                                                              appAuthRedirectScheme: "plum.oauth2",
                                                               firebaseServiceEnabled: enableFirebaseService]
             extractNativeLibs = true
         }
@@ -262,7 +262,17 @@ dependencies {
     // debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
 
     implementation 'com.auth0.android:jwtdecode:2.0.0'
-    implementation 'net.openid:appauth:0.9.1'
+    implementation 'net.openid:appauth:0.11.1'
+    implementation "io.reactivex.rxjava3:rxjava:3.1.8"
+
+    //https://github.com/square/retrofit/blob/trunk/LICENSE.txt
+    implementation 'com.squareup.retrofit2:retrofit:2.11.0'
+    implementation 'com.google.code.gson:gson:2.11.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.11.0'
+
+    //https://github.com/square/okhttp/blob/master/LICENSE.txt
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation "com.squareup.okhttp3:logging-interceptor:4.12.0"
 }
 
 task generateContactsXml(type: Copy) {

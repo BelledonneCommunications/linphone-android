@@ -19,12 +19,12 @@ class Constants {
         val CODE_VERIFIER_CHALLENGE_METHOD = "S256"
         val MESSAGE_DIGEST_ALGORITHM = "SHA-256"
 
-        val URL_AUTHORIZATION = "https://login.xarios.dev"
+        val URL_AUTHORIZATION = "https://login.stage-env.dev"
         val URL_TOKEN_EXCHANGE = "https://www.googleapis.com/oauth2/v4/token"
-        val URL_AUTH_REDIRECT = "org.linphone:/oauth2redirect"
+        val URL_AUTH_REDIRECT = "plum.oauth2:/oauth2redirect"
         val URL_API_CALL = "https://www.googleapis.com/drive/v2/files"
         val URL_LOGOUT = "https://accounts.google.com/o/oauth2/revoke?token="
 
-        val URL_LOGOUT_REDIRECT = "org.linphone:/logout"
+        val URL_LOGOUT_REDIRECT = "plum.oauth2:/logout"
     }
 }

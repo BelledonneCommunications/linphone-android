@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2016 The AppAuth for Android Authors. All Rights Reserved.
  *
@@ -20,6 +21,8 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -28,14 +31,17 @@ import net.openid.appauth.connectivity.DefaultConnectionBuilder;
 import okio.Buffer;
 import okio.BufferedSource;
 import okio.Okio;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.linphone.R;
+import org.linphone.environment.DimensionsEnvironmentService;
+import org.linphone.models.DimensionsEnvironment;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.nio.charset.StandardCharsets;
-
 
 /**
  * Reads and validates the demo app configuration from `res/raw/auth_config.json`. Configuration
@@ -56,6 +62,8 @@ public final class AuthConfiguration {
     private final Resources mResources;
 
     private JSONObject mConfigJson;
+    private JSONArray mEnvironmentSettingsJson;
+
     private String mConfigHash;
     private String mConfigError;
 
@@ -187,7 +195,8 @@ public final class AuthConfiguration {
         return mPrefs.getString(KEY_LAST_HASH, null);
     }
 
-    private void readConfiguration() throws InvalidConfigurationException {
+    private void readConfigurationFile() throws InvalidConfigurationException {
+        Log.d("AuthConfiguration", "Reading auth_config...");
         BufferedSource configSource =
                 Okio.buffer(Okio.source(mResources.openRawResource(R.raw.auth_config)));
         Buffer configData = new Buffer();
@@ -201,8 +210,29 @@ public final class AuthConfiguration {
             throw new InvalidConfigurationException(
                     "Unable to parse configuration: " + ex.getMessage());
         }
-
         mConfigHash = configData.sha256().base64();
+    }
+
+    private void readEnvironmentSettingsFile() throws InvalidConfigurationException {
+        Log.d("AuthConfiguration", "Reading environments...");
+        BufferedSource configSource = Okio.buffer(Okio.source(mResources.openRawResource(R.raw.environments)));
+        Log.d("AuthConfiguration", "Got environments");
+        Buffer configData = new Buffer();
+        try {
+            configSource.readAll(configData);
+            mEnvironmentSettingsJson = new JSONArray(configData.readString(StandardCharsets.UTF_8));
+        } catch (IOException ex) {
+            throw new InvalidConfigurationException(
+                    "Failed to read configuration: " + ex.getMessage());
+        } catch (JSONException ex) {
+            throw new InvalidConfigurationException(
+                    "Unable to parse configuration: " + ex.getMessage());
+        }
+    }
+
+    public void readConfiguration() throws InvalidConfigurationException {
+        readConfigurationFile();
+        readEnvironmentSettingsFile();
         mClientId = getConfigString("client_id");
         mScope = getRequiredConfigString("authorization_scope");
         mRedirectUri = getRequiredConfigUri("redirect_uri");
@@ -216,9 +246,17 @@ public final class AuthConfiguration {
                             + "exists in your app manifest.");
         }
 
-        if (getConfigString("discovery_uri") == null) {
-            mAuthEndpointUri = getRequiredConfigWebUri("authorization_endpoint_uri");
+        //TODO getEnvironmentString needs some sort of environment selector
+        String loginUri = "";
 
+        DimensionsEnvironment dimensionsEnvironment = DimensionsEnvironmentService.Companion.getInstance(mContext).getCurrentEnvironment();
+        if (dimensionsEnvironment != null)
+        {
+            loginUri = dimensionsEnvironment.getIdentityServerUri();
+        }
+
+        if (loginUri.isBlank()) {
+            mAuthEndpointUri = getRequiredConfigWebUri("authorization_endpoint_uri");
             mTokenEndpointUri = getRequiredConfigWebUri("token_endpoint_uri");
             mUserInfoEndpointUri = getRequiredConfigWebUri("user_info_endpoint_uri");
             mEndSessionEndpoint = getRequiredConfigUri("end_session_endpoint");
@@ -227,7 +265,7 @@ public final class AuthConfiguration {
                 mRegistrationEndpointUri = getRequiredConfigWebUri("registration_endpoint_uri");
             }
         } else {
-            mDiscoveryUri = getRequiredConfigWebUri("discovery_uri");
+            mDiscoveryUri = Uri.parse(loginUri + "/.well-known/openid-configuration");
         }
 
         mHttpsRequired = mConfigJson.optBoolean("https_required", true);
@@ -246,6 +284,29 @@ public final class AuthConfiguration {
         }
 
         return value;
+    }
+
+    @Nullable
+    private String getEnvironmentString(String environmentId, String propName) throws InvalidConfigurationException {
+
+        for(int i=0;i<mEnvironmentSettingsJson.length();i++)
+        {
+            try
+            {
+                JSONObject environment = mEnvironmentSettingsJson.getJSONObject(i);
+                if (environment.optString("Id").equals(environmentId))
+                {
+                    return environment.optString(propName);
+                }
+            }
+            catch (JSONException ignored)
+            {
+                throw new InvalidConfigurationException(
+                        environmentId + " there was a problem with the environment settings file");
+            }
+        }
+
+        return null;
     }
 
     @NonNull

@@ -6,6 +6,7 @@
     <data>
         <import type="android.view.View"/>
         <import type="org.linphone.core.ConsolidatedPresence"/>
+
         <variable
             name="selfPictureClickListener"
             type="android.view.View.OnClickListener"/>
@@ -20,6 +21,9 @@
             type="android.view.View.OnClickListener"/>
         <variable
             name="aboutClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="logoutClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
             name="conferencesClickListener"
@@ -308,6 +312,47 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="?dividerColor" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:onClick="@{logoutClickListener}"
+                    android:visibility="@{viewModel.showLogout ? View.VISIBLE : View.GONE}">
+
+                    <ImageView
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:contentDescription="Logout"
+                        android:padding="10dp"
+                        android:src="@drawable/chat_group_delete"
+                        app:srcCompat="@drawable/chat_group_delete" />
+
+                    <TextView
+                        style="@style/standard_text_font"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="16dp"
+                        android:text="@string/log_out" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="?dividerColor"
+                    android:visibility="@{viewModel.showAbout ? View.VISIBLE : View.GONE}" />
+
+                <TextView
+                    style="@style/standard_text_font"
+                    android:layout_width="match_parent"
+                    android:layout_height="334dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="16dp"
+                    android:text="@{viewModel.userName}" />
 
             </LinearLayout>
 

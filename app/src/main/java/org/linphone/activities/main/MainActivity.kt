@@ -31,7 +31,9 @@ import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.MainThread
 import androidx.annotation.StringRes
+import androidx.annotation.WorkerThread
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.doOnAttach
 import androidx.databinding.DataBindingUtil
@@ -48,26 +50,61 @@ import com.google.android.material.snackbar.Snackbar
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
 import kotlin.math.abs
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import net.openid.appauth.AuthorizationException
+import net.openid.appauth.AuthorizationResponse
+import net.openid.appauth.AuthorizationService
+import net.openid.appauth.AuthorizationService.TokenResponseCallback
+import net.openid.appauth.ClientAuthentication
+import net.openid.appauth.ClientAuthentication.UnsupportedAuthenticationMethod
+import net.openid.appauth.TokenRequest
+import net.openid.appauth.TokenResponse
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
-import org.linphone.activities.*
+import org.linphone.activities.GenericActivity
+import org.linphone.activities.SnackBarActivity
 import org.linphone.activities.assistant.AssistantActivity
 import org.linphone.activities.main.viewmodels.CallOverlayViewModel
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
+import org.linphone.activities.navigateToChatRoom
+import org.linphone.activities.navigateToChatRooms
+import org.linphone.activities.navigateToContact
+import org.linphone.activities.navigateToContacts
 import org.linphone.activities.navigateToDialer
+import org.linphone.authentication.AuthStateManager
 import org.linphone.compatibility.Compatibility
 import org.linphone.contact.ContactsUpdatedListenerStub
+import org.linphone.core.AVPFMode
 import org.linphone.core.AuthInfo
 import org.linphone.core.AuthMethod
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.CorePreferences
+import org.linphone.core.Factory
+import org.linphone.core.TransportType
 import org.linphone.core.tools.Log
 import org.linphone.databinding.MainActivityBinding
-import org.linphone.utils.*
+import org.linphone.environment.DimensionsEnvironmentService
+import org.linphone.models.UserDevice
+import org.linphone.services.APIClientService
+import org.linphone.utils.AppUtils
+import org.linphone.utils.DialogUtils
+import org.linphone.utils.Event
+import org.linphone.utils.FileUtils
+import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.PermissionHelper
+import org.linphone.utils.ShortcutsHelper
+import org.linphone.utils.hideKeyboard
+import org.linphone.utils.setKeyboardInsetListener
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestinationChangedListener {
     private lateinit var binding: MainActivityBinding
@@ -134,11 +171,38 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
     private val keyboardVisibilityListeners = arrayListOf<AppUtils.KeyboardVisibilityListener>()
 
+    private lateinit var apiClientService: APIClientService
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // Must be done before the setContentView
         installSplashScreen()
+
+        val dimensionsEnvironment = DimensionsEnvironmentService.getInstance(applicationContext).getCurrentEnvironment()
+        val asm = AuthStateManager.getInstance(applicationContext)
+
+        apiClientService = APIClientService()
+        apiClientService.getUCGatewayService(
+            this.applicationContext,
+            dimensionsEnvironment!!.gatewayApiUri
+        ).doGetUserDevices(
+            userID = asm.fetchUserId()
+        )
+            .enqueue(object : Callback<List<UserDevice>> {
+                override fun onFailure(call: Call<List<UserDevice>>, t: Throwable) {
+                }
+
+                override fun onResponse(
+                    call: Call<List<UserDevice>>,
+                    response: Response<List<UserDevice>>
+                ) {
+                    val userDevices = response.body()
+                    if (!userDevices.isNullOrEmpty()) {
+                        registerSipEndpoints(userDevices)
+                    }
+                }
+            })
 
         binding = DataBindingUtil.setContentView(this, R.layout.main_activity)
         binding.lifecycleOwner = this
@@ -196,12 +260,144 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         }
     }
 
+    private fun registerSipEndpoints(userDeviceList: List<UserDevice>) {
+        setAudioPayloadTypes()
+        setVideoPayloadTypes()
+
+        coreContext.core.clearAllAuthInfo()
+        coreContext.core.clearProxyConfig()
+        coreContext.core.clearAccounts()
+
+        userDeviceList.forEach {
+            RegisterSipEndpoint(it)
+        }
+
+        if (coreContext.core.accountList.any()) {
+            coreContext.core.defaultAccount = coreContext.core.accountList.first()
+        }
+    }
+
+    private fun RegisterSipEndpoint(userDevice: UserDevice) {
+        if (userDevice.hasCredentials()) {
+            val accountParams = coreContext.core.createAccountParams()
+            val identityUri = "${userDevice.sipUsername} <sip:${userDevice.sipUsername}@${userDevice.sipRealm}>"
+
+            accountParams.identityAddress = coreContext.core.interpretUrl(identityUri, false)
+
+            var enableOutboundProxy = false
+            if (userDevice.sipOutboundProxy.isNotBlank()) {
+                enableOutboundProxy = true
+            }
+
+            var sipTransport = userDevice.sipTransport
+            if (sipTransport.isBlank()) {
+                sipTransport = "tls"
+            }
+
+            var serverUri = "<sip:${userDevice.sipOutboundProxy};transport=${stringToTransportType(
+                sipTransport
+            )}>"
+            accountParams.serverAddress = coreContext.core.interpretUrl(serverUri, false)
+
+            accountParams.isOutboundProxyEnabled = enableOutboundProxy
+            accountParams.isRegisterEnabled = true
+            accountParams.avpfMode = AVPFMode.Disabled // This is always disabled in PlumMobile
+            accountParams.expires = userDevice.sipRegisterTimeout
+            accountParams.pushNotificationAllowed = false
+            accountParams.remotePushNotificationAllowed = false
+
+            val auth = Factory.instance().createAuthInfo(
+                userDevice.sipUsername,
+                userDevice.sipUsername,
+                userDevice.sipUserPassword,
+                "",
+                "",
+                userDevice.sipRealm
+            )
+            coreContext.core.addAuthInfo(auth)
+
+            if (accountParams.natPolicy == null) {
+                accountParams.natPolicy = coreContext.core.createNatPolicy()
+            }
+
+            accountParams.natPolicy!!.isIceEnabled = false
+            accountParams.natPolicy!!.isStunEnabled = false
+            accountParams.natPolicy!!.stunServerUsername = null
+            accountParams.natPolicy!!.isTurnEnabled = false
+            accountParams.natPolicy!!.isUdpTurnTransportEnabled = false
+            accountParams.natPolicy!!.isTcpTurnTransportEnabled = false
+            accountParams.natPolicy!!.isTlsTurnTransportEnabled = false
+
+            // TODO createPushToken service
+            // val pushToken = pushTokenService.GetVoipToken()
+
+            val account = coreContext.core.createAccount(accountParams)
+            coreContext.core.addAccount(account)
+        }
+    }
+
+    private fun stringToTransportType(sipTransport: String): TransportType {
+        if (sipTransport.lowercase() == "udp") return TransportType.Udp
+        if (sipTransport.lowercase() == "tcp") return TransportType.Tcp
+
+        return TransportType.Tls
+    }
+
+    private fun setVideoPayloadTypes() {
+//        for (payloadType in coreContext.core.videoPayloadTypes) {
+//        }
+    }
+
+    private fun setAudioPayloadTypes() {
+        for (payloadType in coreContext.core.audioPayloadTypes) {
+            if (payloadType.mimeType.equals("PCMA", true) ||
+                payloadType.mimeType.equals("PCMU", true)
+            ) {
+                payloadType.enable(true)
+            }
+        }
+    }
+
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
 
         if (intent != null) {
             Log.d("[Main Activity] Found new intent")
             handleIntentParams(intent)
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        // the stored AuthState is incomplete, so check if we are currently receiving the result of
+        // the authorization flow from the browser.
+        val response = AuthorizationResponse.fromIntent(intent)
+        val ex = AuthorizationException.fromIntent(intent)
+        val asm = AuthStateManager.getInstance(applicationContext)
+
+        if (asm.current.isAuthorized) {
+            // displayAuthorized();
+            Log.d(
+                "MainActivity",
+                "isAuthorised: " + asm.current.idToken + " | " + asm.current.accessToken
+            )
+            return
+        }
+
+        if (response != null || ex != null) {
+            asm.updateAfterAuthorization(response, ex)
+        }
+
+        if (response?.authorizationCode != null) {
+            Log.d("MainActivity", "isAuthorised")
+            // authorization code exchange is required
+            asm.updateAfterAuthorization(response, ex)
+            exchangeAuthorizationCode(response)
+        } else if (ex != null) {
+            // displayNotAuthorized("Authorization flow failed: " + ex.message)
+        } else {
+            // displayNotAuthorized("No authorization state retained - reauthorization required")
         }
     }
 
@@ -736,5 +932,63 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
         dialog.show()
         authenticationRequiredDialog = dialog
+    }
+
+    @MainThread
+    private fun exchangeAuthorizationCode(authorizationResponse: AuthorizationResponse) {
+        // displayLoading("Exchanging authorization code")
+        performTokenRequest(
+            authorizationResponse.createTokenExchangeRequest(),
+            this::handleCodeExchangeResponse
+        )
+    }
+
+    @MainThread
+    private fun performTokenRequest(
+        request: TokenRequest,
+        callback: TokenResponseCallback
+    ) {
+        val asm = AuthStateManager.getInstance(applicationContext)
+        val clientAuthentication: ClientAuthentication
+
+        try {
+            clientAuthentication = asm.getCurrent().getClientAuthentication()
+        } catch (ex: UnsupportedAuthenticationMethod) {
+            Log.d(
+                "MainActivity",
+                "Token request cannot be made - endpoint could not be constructed (%s)",
+                ex
+            )
+            // TODO displayNotAuthorized("Client authentication method is unsupported")
+            return
+        }
+
+        val authService = AuthorizationService(applicationContext)
+        authService.performTokenRequest(
+            request,
+            clientAuthentication,
+            callback
+        )
+    }
+
+    @WorkerThread
+    private fun handleCodeExchangeResponse(
+        tokenResponse: TokenResponse?,
+        authException: AuthorizationException?
+    ) {
+        val asm = AuthStateManager.getInstance(applicationContext)
+        asm.updateAfterTokenResponse(tokenResponse, authException)
+        if (!asm.getCurrent().isAuthorized) {
+            val message = (
+                "Authorization Code exchange failed" +
+                    (if ((authException != null)) authException.error else "")
+                )
+
+            Log.d("MainActivity", message)
+            // WrongThread inference is incorrect for lambdas
+            // TODO: runOnUiThread { displayNotAuthorized(message) }
+        } else {
+            // TODO: runOnUiThread(this::displayAuthorized)
+        }
     }
 }
