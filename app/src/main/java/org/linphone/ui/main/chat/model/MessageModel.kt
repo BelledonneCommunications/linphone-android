@@ -19,10 +19,12 @@
  */
 package org.linphone.ui.main.chat.model
 
+import android.graphics.Typeface
 import android.os.CountDownTimer
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.Spanned
+import android.text.style.StyleSpan
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MediatorLiveData
@@ -74,6 +76,7 @@ class MessageModel @WorkerThread constructor(
     val isForward: Boolean,
     isGroupedWithPreviousOne: Boolean,
     isGroupedWithNextOne: Boolean,
+    private val currentFilter: String = "",
     private val onContentClicked: ((fileModel: FileModel) -> Unit)? = null,
     private val onJoinConferenceClicked: ((uri: String) -> Unit)? = null,
     private val onWebUrlClicked: ((url: String) -> Unit)? = null,
@@ -163,6 +166,8 @@ class MessageModel @WorkerThread constructor(
     val dismissLongPressMenuEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
+
+    var isTextHighlighted = false
 
     private var voiceRecordAudioFocusRequest: AudioFocusRequestCompat? = null
 
@@ -354,7 +359,7 @@ class MessageModel @WorkerThread constructor(
                 displayableContentFound = true
             } else if (content.isText && !content.isFile) {
                 Log.d("$TAG Found plain text content")
-                computeTextContent(content)
+                computeTextContent(content, currentFilter)
 
                 displayableContentFound = true
             } else if (content.isVoiceRecording) {
@@ -554,9 +559,38 @@ class MessageModel @WorkerThread constructor(
     }
 
     @WorkerThread
-    private fun computeTextContent(content: Content) {
+    fun highlightText(highlight: String) {
+        if (isTextHighlighted && highlight.isEmpty()) {
+            isTextHighlighted = false
+        }
+
+        val textContent = chatMessage.contents.find {
+            it.isText
+        }
+        if (textContent != null) {
+            computeTextContent(textContent, highlight)
+        }
+    }
+
+    @WorkerThread
+    private fun computeTextContent(content: Content, highlight: String) {
         val textContent = content.utf8Text.orEmpty().trim()
         val spannableBuilder = SpannableStringBuilder(textContent)
+
+        // Check for search
+        if (highlight.isNotEmpty()) {
+            val indexStart = textContent.indexOf(highlight, 0, ignoreCase = true)
+            if (indexStart >= 0) {
+                isTextHighlighted = true
+                val indexEnd = indexStart + highlight.length
+                spannableBuilder.setSpan(
+                    StyleSpan(Typeface.BOLD),
+                    indexStart,
+                    indexEnd,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
+        }
 
         // Check for mentions
         val chatRoom = chatMessage.chatRoom

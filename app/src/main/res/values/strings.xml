@@ -500,6 +500,8 @@
     <string name="conversation_group_left_toast">You have left the group</string>
     <string name="conversation_no_app_registered_to_handle_content_type_error_toast">No app found to open this kind of file</string>
     <string name="conversation_to_display_no_found_toast">Conversation was not found</string>
+    <string name="conversation_search_no_match_found">No matching result found</string>
+    <string name="conversation_search_no_more_match">Last matching result reached</string>
 
     <string name="conversation_info_participants_list_title">Group members</string>
     <string name="conversation_info_add_participants_label">Add participants</string>

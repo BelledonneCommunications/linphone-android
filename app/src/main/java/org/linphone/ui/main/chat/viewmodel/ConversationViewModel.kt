@@ -33,6 +33,7 @@ import org.linphone.core.Address
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessageReaction
 import org.linphone.core.ChatRoom
+import org.linphone.core.ChatRoom.HistoryFilter
 import org.linphone.core.ChatRoomListenerStub
 import org.linphone.core.ConferenceScheduler
 import org.linphone.core.ConferenceSchedulerListenerStub
@@ -41,6 +42,7 @@ import org.linphone.core.Factory
 import org.linphone.core.Friend
 import org.linphone.core.Participant
 import org.linphone.core.ParticipantInfo
+import org.linphone.core.SearchDirection
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.chat.model.EventLogModel
 import org.linphone.ui.main.chat.model.FileModel
@@ -59,6 +61,8 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
 
         const val MAX_TIME_TO_GROUP_MESSAGES = 60 // 1 minute
         const val SCROLLING_POSITION_NOT_SET = -1
+
+        const val ITEMS_TO_LOAD_BEFORE_SEARCH_RESULT = 6
     }
 
     val showBackButton = MutableLiveData<Boolean>()
@@ -89,9 +93,13 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
 
     val searchFilter = MutableLiveData<String>()
 
-    val isUserScrollingUp = MutableLiveData<Boolean>()
+    val searchInProgress = MutableLiveData<Boolean>()
 
-    val noMatchingResultForFilter = MutableLiveData<Boolean>()
+    val canSearchDown = MutableLiveData<Boolean>()
+
+    val itemToScrollTo = MutableLiveData<Int>()
+
+    val isUserScrollingUp = MutableLiveData<Boolean>()
 
     val unreadMessagesCount = MutableLiveData<Int>()
 
@@ -126,6 +134,8 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
     }
 
     var eventsList = arrayListOf<EventLogModel>()
+
+    private var latestMatch: EventLog? = null
 
     private val chatRoomListener = object : ChatRoomListenerStub() {
         @WorkerThread
@@ -308,6 +318,9 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         searchBarVisible.value = false
         isUserScrollingUp.value = false
         isDisabledBecauseNotSecured.value = false
+        searchInProgress.value = false
+        canSearchDown.value = false
+        itemToScrollTo.value = -1
     }
 
     override fun onCleared() {
@@ -341,14 +354,33 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
 
     @UiThread
     fun closeSearchBar() {
-        clearFilter()
+        searchFilter.value = ""
         searchBarVisible.value = false
         focusSearchBarEvent.value = Event(false)
+        latestMatch = null
+        canSearchDown.value = false
+
+        coreContext.postOnCoreThread {
+            for (eventLog in eventsList) {
+                if ((eventLog.model as? MessageModel)?.isTextHighlighted == true) {
+                    eventLog.model.highlightText("")
+                }
+            }
+        }
     }
 
     @UiThread
-    fun clearFilter() {
-        searchFilter.value = ""
+    fun searchUp() {
+        coreContext.postOnCoreThread {
+            searchChatMessage(SearchDirection.Up)
+        }
+    }
+
+    @UiThread
+    fun searchDown() {
+        coreContext.postOnCoreThread {
+            searchChatMessage(SearchDirection.Down)
+        }
     }
 
     @UiThread
@@ -360,9 +392,9 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
     }
 
     @UiThread
-    fun applyFilter(filter: String) {
+    fun applyFilter() {
         coreContext.postOnCoreThread {
-            computeEvents(filter)
+            computeEvents()
         }
     }
 
@@ -471,7 +503,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
                 }
 
                 val history = chatRoom.getHistoryRangeEvents(totalItemsCount, upperBound)
-                val list = getEventsListFromHistory(history, searchFilter.value.orEmpty())
+                val list = getEventsListFromHistory(history)
 
                 val lastEvent = list.lastOrNull()
                 val newEvent = eventsList.firstOrNull()
@@ -574,21 +606,15 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
     }
 
     @WorkerThread
-    private fun computeEvents(filter: String = "") {
+    private fun computeEvents() {
         eventsList.forEach(EventLogModel::destroy)
 
         val history = chatRoom.getHistoryEvents(MESSAGES_PER_PAGE)
-        val list = getEventsListFromHistory(history, filter)
+        val list = getEventsListFromHistory(history)
         Log.i("$TAG Extracted [${list.size}] events from conversation history in database")
         eventsList = list
         updateEvents.postValue(Event(true))
         isEmpty.postValue(eventsList.isEmpty())
-
-        if (filter.isNotEmpty() && eventsList.isEmpty()) {
-            noMatchingResultForFilter.postValue(true)
-        } else {
-            noMatchingResultForFilter.postValue(false)
-        }
     }
 
     @WorkerThread
@@ -619,8 +645,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         }
 
         val newList = getEventsListFromHistory(
-            eventsToAdd.toTypedArray(),
-            searchFilter.value.orEmpty().trim()
+            eventsToAdd.toTypedArray()
         )
         val newEvent = newList.firstOrNull()
 
@@ -634,6 +659,38 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         }
 
         list.addAll(newList)
+        eventsList = list
+        updateEvents.postValue(Event(true))
+        isEmpty.postValue(eventsList.isEmpty())
+    }
+
+    @WorkerThread
+    private fun prependEvents(eventLogs: Array<EventLog>) {
+        Log.i("$TAG Prepending [${eventLogs.size}] events")
+        // Need to use a new list, otherwise ConversationFragment's dataObserver isn't triggered...
+        val list = arrayListOf<EventLogModel>()
+        val firstEvent = eventsList.firstOrNull()
+
+        // Prevents message duplicates
+        val eventsToAdd = arrayListOf<EventLog>()
+        eventsToAdd.addAll(eventLogs)
+
+        val newList = getEventsListFromHistory(
+            eventsToAdd.toTypedArray()
+        )
+        val lastEvent = newList.lastOrNull()
+
+        if (lastEvent != null && lastEvent.model is MessageModel && firstEvent != null && firstEvent.model is MessageModel && shouldWeGroupTwoEvents(
+                firstEvent.eventLog,
+                lastEvent.eventLog
+            )
+        ) {
+            lastEvent.model.groupedWithNextMessage.postValue(true)
+            firstEvent.model.groupedWithPreviousMessage.postValue(true)
+        }
+
+        list.addAll(newList)
+        list.addAll(eventsList)
         eventsList = list
         updateEvents.postValue(Event(true))
         isEmpty.postValue(eventsList.isEmpty())
@@ -657,6 +714,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
                 groupChatRoom,
                 index > 0,
                 index != groupedEventLogs.size - 1,
+                searchFilter.value.orEmpty(),
                 { fileModel ->
                     fileToDisplayEvent.postValue(Event(fileModel))
                 },
@@ -683,8 +741,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
 
     @WorkerThread
     private fun getEventsListFromHistory(
-        history: Array<EventLog>,
-        filter: String = ""
+        history: Array<EventLog>
     ): ArrayList<EventLogModel> {
         val eventsList = arrayListOf<EventLogModel>()
         val groupedEventLogs = arrayListOf<EventLog>()
@@ -695,25 +752,6 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
             eventsList.addAll(processGroupedEvents(arrayListOf(event)))
         } else {
             for (event in history) {
-                if (filter.isNotEmpty()) {
-                    if (event.type == EventLog.Type.ConferenceChatMessage) {
-                        val message = event.chatMessage ?: continue
-                        val fromAddress = message.fromAddress
-                        val model = coreContext.contactsManager.getContactAvatarModelForAddress(
-                            fromAddress
-                        )
-                        if (
-                            !model.name.value.orEmpty().contains(filter, ignoreCase = true) &&
-                            !fromAddress.asStringUriOnly().contains(filter, ignoreCase = true) &&
-                            !message.utf8Text.orEmpty().contains(filter, ignoreCase = true)
-                        ) {
-                            continue
-                        }
-                    } else {
-                        continue
-                    }
-                }
-
                 if (groupedEventLogs.isEmpty()) {
                     groupedEventLogs.add(event)
                     continue
@@ -811,6 +849,75 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
             composingLabel.postValue(format)
         } else {
             composingLabel.postValue("")
+        }
+    }
+
+    @WorkerThread
+    private fun searchChatMessage(direction: SearchDirection) {
+        searchInProgress.postValue(true)
+
+        val textToSearch = searchFilter.value.orEmpty().trim()
+        val match = chatRoom.searchChatMessageByText(textToSearch, latestMatch, direction)
+        if (match == null) {
+            Log.i(
+                "$TAG No match found while looking up for message with text [$textToSearch] in direction [$direction] starting from message [${latestMatch?.chatMessage?.messageId}]"
+            )
+            searchInProgress.postValue(false)
+            val message = if (latestMatch == null) {
+                R.string.conversation_search_no_match_found
+            } else {
+                R.string.conversation_search_no_more_match
+            }
+            showRedToastEvent.postValue(
+                Event(
+                    Pair(message, R.drawable.magnifying_glass)
+                )
+            )
+        } else {
+            Log.i(
+                "$TAG Found result [${match.chatMessage?.messageId}] while looking up for message with text [$textToSearch] in direction [$direction] starting from message [${latestMatch?.chatMessage?.messageId}]"
+            )
+            latestMatch = match
+
+            val found = eventsList.find {
+                it.eventLog == match
+            }
+            if (found == null) {
+                Log.i("$TAG Found result isn't in currently loaded history, loading missing events")
+                val historyToAdd = chatRoom.getHistoryRangeBetween(
+                    latestMatch,
+                    eventsList[0].eventLog,
+                    HistoryFilter.None.toInt()
+                )
+                Log.i("$TAG Loaded [${historyToAdd.size}] items from history")
+
+                Log.i(
+                    "$TAG Also loading [$ITEMS_TO_LOAD_BEFORE_SEARCH_RESULT] items before the match"
+                )
+                val previousMessages = chatRoom.getHistoryRangeNear(
+                    ITEMS_TO_LOAD_BEFORE_SEARCH_RESULT,
+                    0,
+                    match,
+                    HistoryFilter.None.toInt()
+                )
+
+                itemToScrollTo.postValue(previousMessages.size - 1)
+                val toAdd = previousMessages.plus(historyToAdd)
+                prependEvents(toAdd)
+            } else {
+                Log.i("$TAG Found result is already in history, no need to load more history")
+                (found.model as? MessageModel)?.highlightText(textToSearch)
+                val index = eventsList.indexOf(found)
+                if (direction == SearchDirection.Down && index < eventsList.size - 1) {
+                    // Go to next message to prevent the message we are looking for to be behind the scroll to bottom button
+                    itemToScrollTo.postValue(index + 1)
+                } else {
+                    itemToScrollTo.postValue(index)
+                }
+                searchInProgress.postValue(false)
+            }
+
+            canSearchDown.postValue(true)
         }
     }
 

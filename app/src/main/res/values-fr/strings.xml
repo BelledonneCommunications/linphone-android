@@ -462,6 +462,8 @@
     <string name="conversation_group_left_toast">Vous avez quitté la conversation</string>
     <string name="conversation_no_app_registered_to_handle_content_type_error_toast">Aucune application trouvée pour lire ce fichier</string>
     <string name="conversation_to_display_no_found_toast">Conversation non trouvée</string>
+    <string name="conversation_search_no_match_found">Aucun résultat trouvé</string>
+    <string name="conversation_search_no_more_match">Dernier résultat atteint</string>
 
     <string name="conversation_info_participants_list_title">Membres du groupe</string>
     <string name="conversation_info_add_participants_label">Ajouter des membres</string>

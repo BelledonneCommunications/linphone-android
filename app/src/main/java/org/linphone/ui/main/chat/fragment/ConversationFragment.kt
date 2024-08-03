@@ -34,6 +34,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.view.inputmethod.EditorInfo
 import android.widget.PopupWindow
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -108,7 +109,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
 
     protected lateinit var sendMessageViewModel: SendMessageInConversationViewModel
 
-    protected lateinit var messageLongPressViewModel: ChatMessageLongPressViewModel
+    private lateinit var messageLongPressViewModel: ChatMessageLongPressViewModel
 
     private lateinit var adapter: ConversationEventAdapter
 
@@ -211,6 +212,12 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
             if (positionStart > 0) {
                 adapter.notifyItemChanged(positionStart - 1) // For grouping purposes
+            } else if (adapter.itemCount != itemCount) {
+                if (viewModel.searchInProgress.value == true) {
+                    val recyclerView = binding.eventsList
+                    recyclerView.scrollToPosition(viewModel.itemToScrollTo.value ?: 0)
+                    viewModel.searchInProgress.postValue(false)
+                }
             }
 
             if (viewModel.isUserScrollingUp.value == true) {
@@ -567,6 +574,15 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             showUnsafeConversationDetailsBottomSheet()
         }
 
+        binding.searchField.setOnEditorActionListener { view, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                view.hideKeyboard()
+                viewModel.searchUp()
+                return@setOnEditorActionListener true
+            }
+            false
+        }
+
         sendMessageViewModel.emojiToAddEvent.observe(viewLifecycleOwner) {
             it.consume { emoji ->
                 binding.sendArea.messageToSend.addCharacterAtPosition(emoji)
@@ -592,10 +608,6 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                 Log.w("$TAG Asking for RECORD_AUDIO permission")
                 requestRecordAudioPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
             }
-        }
-
-        viewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
-            viewModel.applyFilter(filter.trim())
         }
 
         viewModel.focusSearchBarEvent.observe(viewLifecycleOwner) {
@@ -662,6 +674,13 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                 val icon = R.drawable.trash_simple
                 (requireActivity() as GenericActivity).showGreenToast(message, icon)
                 sharedViewModel.forceRefreshConversations.value = Event(true)
+            }
+        }
+
+        viewModel.itemToScrollTo.observe(viewLifecycleOwner) { position ->
+            if (position >= 0) {
+                val recyclerView = binding.eventsList
+                recyclerView.scrollToPosition(position)
             }
         }
 
@@ -757,7 +776,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         sharedViewModel.forceRefreshConversationEvents.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG Force refreshing messages list")
-                viewModel.applyFilter("")
+                viewModel.applyFilter()
             }
         }
 
@@ -788,7 +807,9 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         scrollListener = object : ConversationScrollListener(layoutManager) {
             @UiThread
             override fun onLoadMore(totalItemsCount: Int) {
-                viewModel.loadMoreData(totalItemsCount)
+                if (viewModel.searchInProgress.value == false) {
+                    viewModel.loadMoreData(totalItemsCount)
+                }
             }
 
             @UiThread
