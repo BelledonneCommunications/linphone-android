@@ -193,7 +193,17 @@ class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
                     newParams.mwiServerAddress = null
                 }
 
-                newParams.expires = expire.value?.toInt() ?: 31536000
+                val expire = expire.value.orEmpty()
+                val expireInt = if (expire.isEmpty()) {
+                    31536000
+                } else {
+                    try {
+                        expire.toInt()
+                    } catch (_: NumberFormatException) {
+                        31536000
+                    }
+                }
+                newParams.expires = expireInt
 
                 val conferenceUri = conferenceFactoryUri.value.orEmpty()
                 if (conferenceUri.isNotEmpty()) {

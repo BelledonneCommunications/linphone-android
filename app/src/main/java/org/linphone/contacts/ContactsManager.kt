@@ -673,7 +673,11 @@ fun Friend.getNativeContactPictureUri(): Uri? {
                     fd.close()
                     return pictureUri
                 }
-            } catch (_: IOException) { }
+            } catch (ioe: IOException) {
+                Log.e("[Contacts Manager] Can't open [$pictureUri]: $ioe")
+            } catch (se: SecurityException) {
+                Log.e("[Contacts Manager] Can't open [$pictureUri]: $se")
+            }
 
             // Fallback to thumbnail
             return Uri.withAppendedPath(
