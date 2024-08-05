@@ -137,6 +137,7 @@
                 android:textSize="16sp"
                 android:inputType="text"
                 android:paddingVertical="1dp"
+                android:imeOptions="actionSearch"
                 android:text="@={viewModel.searchFilter}"
                 android:background="@android:color/transparent" />
 

@@ -23,6 +23,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import androidx.annotation.IdRes
 import androidx.annotation.UiThread
 import androidx.core.view.doOnPreDraw
@@ -197,6 +198,14 @@ abstract class AbstractMainFragment : GenericMainFragment() {
     }
 
     private fun initSearchBar(searchBar: TextInputLayout) {
+        searchBar.editText?.setOnEditorActionListener { view, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                view.hideKeyboard()
+                return@setOnEditorActionListener true
+            }
+            false
+        }
+
         viewModel.focusSearchBarEvent.observe(viewLifecycleOwner) {
             it.consume { show ->
                 if (show) {
