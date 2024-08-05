@@ -29,6 +29,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.contacts.ContactsManager
 import org.linphone.core.Address
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessageReaction
@@ -314,7 +315,19 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         }
     }
 
+    private val contactsListener = object : ContactsManager.ContactsListener {
+        @WorkerThread
+        override fun onContactsLoaded() {
+            Log.i("$TAG Contacts have been (re)loaded, updating list")
+            computeParticipantsInfo()
+        }
+    }
+
     init {
+        coreContext.postOnCoreThread {
+            coreContext.contactsManager.addListener(contactsListener)
+        }
+
         searchBarVisible.value = false
         isUserScrollingUp.value = false
         isDisabledBecauseNotSecured.value = false
@@ -327,6 +340,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         super.onCleared()
 
         coreContext.postOnCoreThread {
+            coreContext.contactsManager.removeListener(contactsListener)
             if (isChatRoomInitialized()) {
                 chatRoom.removeListener(chatRoomListener)
             }
@@ -574,6 +588,15 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
 
         subject.postValue(chatRoom.subject)
 
+        computeParticipantsInfo()
+
+        ephemeralLifetime.postValue(
+            if (!chatRoom.isEphemeralEnabled) 0L else chatRoom.ephemeralLifetime
+        )
+    }
+
+    @WorkerThread
+    private fun computeParticipantsInfo() {
         val friends = arrayListOf<Friend>()
         val address = if (chatRoom.hasCapability(ChatRoom.Capabilities.Basic.toInt())) {
             chatRoom.peerAddress
@@ -589,7 +612,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
             firstParticipant?.address ?: chatRoom.peerAddress
         }
 
-        val avatar = if (group) {
+        val avatar = if (LinphoneUtils.isChatRoomAGroup(chatRoom)) {
             val fakeFriend = coreContext.core.createFriend()
             fakeFriend.name = chatRoom.subject
             val model = ContactAvatarModel(fakeFriend)
@@ -599,10 +622,6 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
             coreContext.contactsManager.getContactAvatarModelForAddress(address)
         }
         avatarModel.postValue(avatar)
-
-        ephemeralLifetime.postValue(
-            if (!chatRoom.isEphemeralEnabled) 0L else chatRoom.ephemeralLifetime
-        )
     }
 
     @WorkerThread

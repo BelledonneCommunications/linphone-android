@@ -26,6 +26,7 @@ import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.contacts.ContactsManager
 import org.linphone.core.Address
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomListenerStub
@@ -232,7 +233,19 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
         }
     }
 
+    private val contactsListener = object : ContactsManager.ContactsListener {
+        @WorkerThread
+        override fun onContactsLoaded() {
+            Log.i("$TAG Contacts have been (re)loaded, updating list")
+            computeParticipantsList()
+        }
+    }
+
     init {
+        coreContext.postOnCoreThread {
+            coreContext.contactsManager.addListener(contactsListener)
+        }
+
         expandParticipants.value = true
     }
 
@@ -240,6 +253,7 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
         super.onCleared()
 
         coreContext.postOnCoreThread {
+            coreContext.contactsManager.removeListener(contactsListener)
             if (isChatRoomInitialized()) {
                 chatRoom.removeListener(chatRoomListener)
             }
