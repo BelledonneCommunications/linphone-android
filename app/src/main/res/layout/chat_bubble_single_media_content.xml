@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
@@ -62,6 +63,23 @@
             app:layout_constraintStart_toStartOf="@id/image"
             app:layout_constraintEnd_toEndOf="@id/image"
             app:tint="@color/white" />
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/transfer_progress"
+            android:layout_width="@dimen/chat_bubble_grid_image_size"
+            android:layout_height="@dimen/chat_bubble_grid_image_size"
+            android:padding="18dp"
+            android:indeterminate="false"
+            android:progress="@{model.transferProgress}"
+            android:max="100"
+            android:visibility="@{model.transferProgress == -1 || model.transferProgress >= 100 ? View.GONE : View.VISIBLE}"
+            app:trackColor="?attr/color_main1_100"
+            app:indicatorColor="?attr/color_main1_500"
+            app:layout_constraintTop_toTopOf="@id/image"
+            app:layout_constraintBottom_toBottomOf="@id/image"
+            app:layout_constraintStart_toStartOf="@id/image"
+            app:layout_constraintEnd_toEndOf="@id/image"
+            tools:progress="40" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

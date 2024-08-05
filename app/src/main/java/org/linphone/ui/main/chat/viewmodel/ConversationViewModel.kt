@@ -647,7 +647,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         // Prevents message duplicates
         val eventsToAdd = arrayListOf<EventLog>()
         for (event in eventLogs) {
-            if (event.chatMessage != null) {
+            if (event.chatMessage != null && event.chatMessage?.messageId.orEmpty().isNotEmpty()) {
                 val found = list.find {
                     it.model is MessageModel && it.model.chatMessage.messageId == event.chatMessage?.messageId
                 }
