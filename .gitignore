@@ -25,5 +25,5 @@ app/debug
 app/release
 app/releaseAppBundle
 app/releaseWithCrashlytics
-keystore.properties
+app/keystore.properties
 app/src/main/res/xml/contacts.xml

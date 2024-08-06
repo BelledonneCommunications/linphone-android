@@ -1,54 +1,46 @@
 {
   "project_info": {
-    "project_number": "929724111839",
-    "firebase_url": "https://linphone-android-8a563.firebaseio.com",
-    "project_id": "linphone-android-8a563",
-    "storage_bucket": "linphone-android-8a563.appspot.com"
+    "project_number": "214608078221",
+    "firebase_url": "https://dimensions-mobile.firebaseio.com",
+    "project_id": "dimensions-mobile",
+    "storage_bucket": "dimensions-mobile.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:929724111839:android:4662ea9a056188c4",
+        "mobilesdk_app_id": "1:214608078221:android:5eca3bb5ab5a4f864a09c4",
         "android_client_info": {
-          "package_name": "org.linphone"
+          "package_name": "cloud.xarios.dimensions"
         }
       },
       "oauth_client": [
         {
-          "client_id": "929724111839-co5kffto4j7dets7oolvfv0056cvpfbl.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "org.linphone",
-            "certificate_hash": "85463a95603f7b6331899b74b85d53d043dcd500"
-          }
-        },
-        {
-          "client_id": "929724111839-v5so1tcd65iil7dd7sde8jgii44h8luf.apps.googleusercontent.com",
+          "client_id": "214608078221-1qkm3tc5mpnorpd75sht5lgj4vjlrt69.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCKrwWhkbA7Iy3wpEI8_ZvKOMp5jf6vV6A"
+          "current_key": "AIzaSyA7qD4X9YlCqyqClLQMg_KZGfU52gG35c0"
         }
       ]
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:929724111839:android:3cf90ee1d2f8fcb6",
+        "mobilesdk_app_id": "1:214608078221:android:5eca3bb5ab5a4f864a09c4",
         "android_client_info": {
-          "package_name": "org.linphone.debug"
+          "package_name": "cloud.xarios.dimensions.debug"
         }
       },
       "oauth_client": [
         {
-          "client_id": "929724111839-v5so1tcd65iil7dd7sde8jgii44h8luf.apps.googleusercontent.com",
+          "client_id": "214608078221-1qkm3tc5mpnorpd75sht5lgj4vjlrt69.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCKrwWhkbA7Iy3wpEI8_ZvKOMp5jf6vV6A"
+          "current_key": "AIzaSyA7qD4X9YlCqyqClLQMg_KZGfU52gG35c0"
         }
       ]
     }

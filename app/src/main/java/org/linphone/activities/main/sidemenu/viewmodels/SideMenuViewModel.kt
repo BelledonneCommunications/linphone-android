@@ -19,6 +19,7 @@
  */
 package org.linphone.activities.main.sidemenu.viewmodels
 
+import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -35,6 +36,7 @@ class SideMenuViewModel : ViewModel() {
     val showRecordings: Boolean = corePreferences.showRecordingsInSideMenu
     val showScheduledConferences = MutableLiveData<Boolean>()
     val showAbout: Boolean = corePreferences.showAboutInSideMenu
+    val showLogout: Boolean = true // TODO: tie into AuthState
     val showQuit: Boolean = corePreferences.showQuitInSideMenu
 
     val defaultAccountViewModel = MutableLiveData<AccountSettingsViewModel>()
@@ -44,6 +46,8 @@ class SideMenuViewModel : ViewModel() {
     val accounts = MutableLiveData<ArrayList<AccountSettingsViewModel>>()
 
     val presenceStatus = MutableLiveData<ConsolidatedPresence>()
+
+    val userName = ObservableField<String>()
 
     lateinit var accountsSettingsListener: SettingListenerStub
 
