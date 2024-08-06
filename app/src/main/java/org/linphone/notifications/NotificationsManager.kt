@@ -1000,6 +1000,9 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             setSmallIcon(smallIcon)
             setCategory(NotificationCompat.CATEGORY_CALL)
             setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            if (isIncoming) {
+                setPriority(NotificationCompat.PRIORITY_MAX)
+            }
             setWhen(System.currentTimeMillis())
             setAutoCancel(false)
             setOngoing(true)
@@ -1270,14 +1273,27 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
         val service = keepAliveService
         if (service != null) {
+            val pendingIntent = TaskStackBuilder.create(context).run {
+                addNextIntentWithParentStack(
+                    Intent(context, MainActivity::class.java).apply {
+                        setAction(Intent.ACTION_MAIN) // Needed as well
+                    }
+                )
+                getPendingIntent(
+                    KEEP_ALIVE_FOR_THIRD_PARTY_ACCOUNTS_ID,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )!!
+            }
+
             val builder = NotificationCompat.Builder(context, channelId)
-                .setContentTitle(context.getString(R.string.app_name))
                 .setSmallIcon(R.drawable.linphone_notification)
                 .setAutoCancel(false)
                 .setOngoing(true)
                 .setCategory(NotificationCompat.CATEGORY_SERVICE)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setShowWhen(false)
+                .setContentIntent(pendingIntent)
             val notification = builder.build()
 
             Log.i(
