@@ -1,0 +1,44 @@
+pool:
+  vmImage: 'ubuntu-latest'
+  
+steps:
+- checkout: self
+
+- task: DownloadSecureFile@1
+  displayName: "Download keystore"
+  name: "keystore"
+  inputs:
+    secureFile: 'linphone-keystore.jks'
+
+- task: JavaToolInstaller@0
+  displayName: "Install Java"
+  inputs:
+    versionSpec: '17'
+    jdkArchitectureOption: 'x64'
+    jdkSourceOption: 'PreInstalled'
+- task: Bash@3
+  displayName: "Generate keystore.properties"
+  inputs:
+    targetType: 'inline'
+    script: |
+      echo storePassword=$(KEYSTORE_PASSWORD) >> keystore.properties
+      echo keyPassword=$(KEYSTORE_PASSWORD) >> keystore.properties
+      echo keyAlias=linphone >> keystore.properties
+      echo storeFile=$(KEYSTORE.SECUREFILEPATH) >> keystore.properties
+
+- task: Gradle@3
+  displayName: "Build SDK"
+  inputs:
+    gradleWrapperFile: 'gradlew'
+    tasks: 'assembleRelease'
+    publishJUnitResults: false
+    javaHomeOption: 'JDKVersion'
+    sonarQubeRunAnalysis: false
+    spotBugsAnalysis: false
+
+- task: PublishBuildArtifacts@1
+  displayName: "Publish SDK"
+  inputs:
+    PathtoPublish: 'app/build/outputs'
+    ArtifactName: 'apk-release'
+    publishLocation: 'container'

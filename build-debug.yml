@@ -1,0 +1,40 @@
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- checkout: self
+
+- task: JavaToolInstaller@0
+  displayName: "Install Java"
+  inputs:
+    versionSpec: '17'
+    jdkArchitectureOption: 'x64'
+    jdkSourceOption: 'PreInstalled'
+
+# Need keystore.properties present even if build isn't using it
+- task: Bash@3
+  displayName: "Generate keystore.properties"
+  inputs:
+    targetType: 'inline'
+    script: |
+      echo storePassword=password >> keystore.properties
+      echo keyPassword=passsword >> keystore.properties
+      echo keyAlias=alias >> keystore.properties
+      echo storeFile=file >> keystore.properties
+
+- task: Gradle@3
+  displayName: "Build SDK"
+  inputs:
+    gradleWrapperFile: 'gradlew'
+    tasks: 'assembleDebug'
+    publishJUnitResults: false
+    javaHomeOption: 'JDKVersion'
+    sonarQubeRunAnalysis: false
+    spotBugsAnalysis: false
+
+- task: PublishBuildArtifacts@1
+  displayName: "Publish SDK"
+  inputs:
+    PathtoPublish: 'app/build/outputs'
+    ArtifactName: 'apk-debug'
+    publishLocation: 'container'
