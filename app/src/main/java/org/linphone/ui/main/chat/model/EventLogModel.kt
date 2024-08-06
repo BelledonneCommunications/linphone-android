@@ -23,12 +23,10 @@ import androidx.annotation.WorkerThread
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.EventLog
 import org.linphone.core.tools.Log
-import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.LinphoneUtils
 
 class EventLogModel @WorkerThread constructor(
     val eventLog: EventLog,
-    val avatarModel: ContactAvatarModel,
     isFromGroup: Boolean = false,
     isGroupedWithPreviousOne: Boolean = false,
     isGroupedWithNextOne: Boolean = false,
@@ -74,7 +72,6 @@ class EventLogModel @WorkerThread constructor(
 
         MessageModel(
             chatMessage,
-            avatarModel,
             isFromGroup,
             isReply,
             replyTo,

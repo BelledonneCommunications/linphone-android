@@ -67,7 +67,6 @@ import org.linphone.utils.TimestampUtils
 
 class MessageModel @WorkerThread constructor(
     val chatMessage: ChatMessage,
-    val avatarModel: ContactAvatarModel,
     val isFromGroup: Boolean,
     val isReply: Boolean,
     val replyTo: String,
@@ -105,6 +104,8 @@ class MessageModel @WorkerThread constructor(
 
     val chatRoomIsReadOnly = chatMessage.chatRoom.isReadOnly ||
         (!chatMessage.chatRoom.hasCapability(ChatRoom.Capabilities.Encrypted.toInt()) && isEndToEndEncryptionMandatory())
+
+    val avatarModel = MutableLiveData<ContactAvatarModel>()
 
     val groupedWithNextMessage = MutableLiveData<Boolean>()
 
@@ -257,6 +258,8 @@ class MessageModel @WorkerThread constructor(
     }
 
     init {
+        updateAvatarModel()
+
         groupedWithNextMessage.postValue(isGroupedWithNextOne)
         groupedWithPreviousMessage.postValue(isGroupedWithPreviousOne)
         isPlayingVoiceRecord.postValue(false)
@@ -335,6 +338,14 @@ class MessageModel @WorkerThread constructor(
                 pauseVoiceRecordPlayer()
             }
         }
+    }
+
+    @WorkerThread
+    fun updateAvatarModel() {
+        val avatar = coreContext.contactsManager.getContactAvatarModelForAddress(
+            chatMessage.fromAddress
+        )
+        avatarModel.postValue(avatar)
     }
 
     @WorkerThread

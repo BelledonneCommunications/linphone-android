@@ -320,6 +320,12 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         override fun onContactsLoaded() {
             Log.i("$TAG Contacts have been (re)loaded, updating list")
             computeParticipantsInfo()
+
+            if (isGroup.value == true) {
+                for (event in eventsList) {
+                    (event.model as? MessageModel)?.updateAvatarModel()
+                }
+            }
         }
     }
 
@@ -724,12 +730,8 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
 
         var index = 0
         for (groupedEvent in groupedEventLogs) {
-            val avatar = coreContext.contactsManager.getContactAvatarModelForAddress(
-                groupedEvent.chatMessage?.fromAddress
-            )
             val model = EventLogModel(
                 groupedEvent,
-                avatar,
                 groupChatRoom,
                 index > 0,
                 index != groupedEventLogs.size - 1,

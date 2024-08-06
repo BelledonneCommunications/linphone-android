@@ -210,7 +210,7 @@ class SendMessageInConversationViewModel @UiThread constructor() : GenericViewMo
             val message = model.chatMessage
             Log.i("$TAG Pending reply to message [${message.messageId}]")
             chatMessageToReplyTo = message
-            isReplyingTo.postValue(model.avatarModel.friend.name)
+            isReplyingTo.postValue(model.avatarModel.value?.friend?.name)
             isReplyingToMessage.postValue(LinphoneUtils.getTextDescribingMessage(message))
             isReplying.postValue(true)
         }
