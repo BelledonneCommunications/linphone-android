@@ -5,7 +5,6 @@
 
     <data>
         <import type="android.view.View" />
-        <import type="android.graphics.Typeface" />
         <variable
             name="deleteAllHistoryClickListener"
             type="View.OnClickListener" />

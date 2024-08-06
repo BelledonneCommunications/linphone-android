@@ -16,7 +16,9 @@
         android:layout_height="wrap_content"
         android:background="?attr/color_main2_000"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp">
+        android:layout_marginEnd="16dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
 
         <include
             android:id="@+id/avatar"

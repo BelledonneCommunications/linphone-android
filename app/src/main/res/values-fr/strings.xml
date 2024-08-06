@@ -286,7 +286,7 @@
     <string name="manage_account_device_remove">Supprimer</string>
     <string name="manage_account_device_last_connection">Dernière connexion :</string>
     <string name="manage_account_dialog_remove_account_title">Supprimer %s ?</string>
-    <string name="manage_account_dialog_remove_account_message">Vous pouvez vous reconnecter à tout moment en cliquant sur "Ajouter un compte".Cependant toutes les informations stockées sur ce périphérique seront supprimées.</string>
+    <string name="manage_account_dialog_remove_account_message">Vous pouvez vous reconnecter à tout moment en cliquant sur \"Ajouter un compte\" dans le menu latéral.\nCependant toutes les informations stockées sur ce périphérique seront supprimées.</string>
 
     <string name="account_settings_title">Paramètres de compte</string>
     <string name="account_settings_push_notification_title">Autoriser les notifications poussées</string>
@@ -302,7 +302,7 @@
     <string name="account_settings_audio_video_conference_factory_uri_title">URI de l\'usine à réunions</string>
     <string name="account_settings_lime_server_url_title">URL du serveur d\'échange de clés de chiffrement</string>
     <string name="account_settings_bundle_mode_title">Mode "bundle"</string>
-    <string name="account_settings_cpim_in_basic_conversations_title">Utiliser CPIM dans les conversations "basiques"</string>
+    <string name="account_settings_cpim_in_basic_conversations_title">Utiliser CPIM dans les conversations \"basiques\"</string>
     <string name="account_settings_mwi_uri_title">URI du serveur de messagerie vocale</string>
 
     <string name="account_settings_dialog_invalid_password_title">Autentification requise</string>

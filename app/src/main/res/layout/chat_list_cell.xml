@@ -5,7 +5,7 @@
 
     <data>
         <import type="android.view.View" />
-        <import type="android.graphics.Typeface" />
+        <import type="org.linphone.ui.NotoSansFont" />
         <variable
             name="model"
             type="org.linphone.ui.main.chat.model.ConversationModel" />
@@ -22,8 +22,8 @@
         android:onLongClickListener="@{onLongClickListener}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:background="@drawable/primary_cell_background">
@@ -33,6 +33,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             layout="@layout/contact_avatar"
             bind:model="@{model.avatarModel}"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -61,18 +63,18 @@
             app:constraint_referenced_ids="notifications_count, warning_not_secured, ephemeral, muted, date_time, last_sent_message_status" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style"
-            android:id="@+id/name"
+            style="@style/default_text_style_500"
+            android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:layout_marginStart="10dp"
             android:maxLines="1"
             android:ellipsize="end"
             android:text="@{model.isGroup ? model.subject : model.avatarModel.name, default=`John Doe`}"
             android:textSize="14sp"
             android:textColor="?attr/color_main2_800"
-            android:textStyle="@{model.unreadMessageCount > 0 ? Typeface.BOLD : Typeface.NORMAL}"
+            textFont="@{model.unreadMessageCount > 0 ? NotoSansFont.NotoSansExtraBold : NotoSansFont.NotoSansMedium}"
+            app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintStart_toEndOf="@id/avatar"
             app:layout_constraintEnd_toStartOf="@id/right_border"
             app:layout_constraintTop_toTopOf="parent"
@@ -83,17 +85,16 @@
             android:id="@+id/last_message_or_composing"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:gravity="center_vertical|start"
-            android:maxLines="2"
+            android:maxLines="1"
             android:ellipsize="end"
             android:text="@{model.isBeingDeleted ? @string/conversations_list_is_being_removed_label : model.isComposing ? model.composingLabel : model.lastMessageText, default=`Hello there!`}"
             android:textSize="14sp"
             android:textColor="?attr/color_main2_400"
-            android:textStyle="@{model.isBeingDeleted || model.unreadMessageCount > 0 || model.isComposing ? Typeface.BOLD : Typeface.NORMAL}"
-            app:layout_constraintStart_toStartOf="@id/name"
+            textFont="@{model.isBeingDeleted || model.unreadMessageCount > 0 || model.isComposing ? NotoSansFont.NotoSansBold : NotoSansFont.NotoSansRegular}"
+            app:layout_constraintStart_toStartOf="@id/title"
             app:layout_constraintEnd_toStartOf="@id/right_border"
-            app:layout_constraintTop_toBottomOf="@id/name"
+            app:layout_constraintTop_toBottomOf="@id/title"
             app:layout_constraintBottom_toTopOf="@id/separator" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -106,8 +107,8 @@
             android:textSize="12sp"
             android:textColor="?attr/color_main2_500"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/name"
-            app:layout_constraintBottom_toBottomOf="@id/name" />
+            app:layout_constraintTop_toTopOf="@id/title"
+            app:layout_constraintBottom_toBottomOf="@id/title" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
@@ -185,7 +186,7 @@
             android:layout_marginEnd="10dp"
             android:background="?attr/color_main2_200"
             android:visibility="gone"
-            app:layout_constraintStart_toStartOf="@id/name"
+            app:layout_constraintStart_toStartOf="@id/title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 

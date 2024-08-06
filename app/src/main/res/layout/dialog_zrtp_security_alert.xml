@@ -5,7 +5,6 @@
 
     <data>
         <import type="android.view.View" />
-        <import type="android.graphics.Typeface" />
         <variable
             name="viewModel"
             type="org.linphone.ui.call.model.ZrtpAlertDialogModel" />

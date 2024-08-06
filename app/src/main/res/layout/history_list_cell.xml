@@ -5,7 +5,6 @@
 
     <data>
         <import type="android.view.View" />
-        <import type="android.graphics.Typeface" />
         <variable
             name="model"
             type="org.linphone.ui.main.history.model.CallLogModel" />
@@ -25,6 +24,8 @@
         android:onLongClickListener="@{onLongClickListener}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:background="@drawable/primary_cell_background">
@@ -47,7 +48,6 @@
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:layout_marginStart="10dp"
             android:text="@{model.avatarModel.name, default=`John Doe`}"
             android:textSize="14sp"
@@ -60,19 +60,17 @@
             android:id="@+id/call_status"
             android:layout_width="12dp"
             android:layout_height="12dp"
-            android:layout_marginBottom="10dp"
             android:src="@{model.iconResId, default=@drawable/outgoing_call}"
             android:contentDescription="@null"
             app:layout_constraintStart_toStartOf="@id/name"
-            app:layout_constraintTop_toBottomOf="@id/name"
-            app:layout_constraintBottom_toTopOf="@id/separator" />
+            app:layout_constraintTop_toTopOf="@id/date_time"
+            app:layout_constraintBottom_toBottomOf="@id/date_time" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_300"
             android:id="@+id/date_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:layout_marginStart="5dp"
             android:gravity="center"
             android:text="@{model.dateTime, default=`13 aout 2023`}"

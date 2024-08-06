@@ -41,6 +41,7 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
@@ -63,6 +64,7 @@ import org.linphone.contacts.AbstractAvatarModel
 import org.linphone.contacts.AvatarGenerator
 import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.tools.Log
+import org.linphone.ui.NotoSansFont
 import org.linphone.ui.call.conference.model.ConferenceParticipantDeviceModel
 import org.linphone.ui.call.view.RoundCornersTextureView
 
@@ -233,6 +235,16 @@ fun AppCompatTextView.setTypeface(typeface: Int) {
 fun AppCompatTextView.setDrawableTint(@ColorInt color: Int) {
     for (drawable in compoundDrawablesRelative) {
         drawable?.setTint(color)
+    }
+}
+
+@UiThread
+@BindingAdapter("textFont")
+fun AppCompatTextView.font(type: NotoSansFont) {
+    try {
+        typeface = ResourcesCompat.getFont(context, type.fontRes)
+    } catch (e: Exception) {
+        Log.e("$TAG Can't load font: $e")
     }
 }
 

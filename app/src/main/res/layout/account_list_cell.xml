@@ -5,7 +5,6 @@
 
     <data>
         <import type="android.view.View" />
-        <import type="android.graphics.Typeface" />
         <import type="org.linphone.core.RegistrationState" />
         <variable
             name="model"
