@@ -277,6 +277,13 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
                 newModel.picturePath.postValue(path)
                 accountModel.postValue(newModel)
 
+                // Also update friend & contact avatar model for ourselves
+                val model = coreContext.contactsManager.getContactAvatarModelForAddress(
+                    params.identityAddress
+                )
+                model.friend.photo = path
+                model.picturePath.postValue(path)
+
                 account.params = copy
                 account.refreshRegister()
             }
