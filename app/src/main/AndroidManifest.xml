@@ -34,8 +34,13 @@
     without it app won't be able to access network if data saver is ON (for example) -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
     <!-- Needed to keep a permanent foreground service and keep app alive to be able to receive
-    messages & calls for third party accounts for which push notifications aren't available -->
+    messages & calls for third party accounts for which push notifications aren't available,
+    and starting Android 15 dataSync is limited to 6 hours per day
+    and can't be used with RECEIVE_BOOT_COMPLETED intent either -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+
+    <!-- Needed for auto start at boot if keep alive service is enabled -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".LinphoneApplication"
@@ -202,6 +207,14 @@
             android:name=".notifications.NotificationBroadcastReceiver"
             android:enabled="true"
             android:exported="false" />
+
+        <receiver android:name=".core.BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
 
         <!-- Providers -->
 

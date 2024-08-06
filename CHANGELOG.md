@@ -29,9 +29,11 @@ Group changes to describe their impact on the project, as follows:
 ### Added
 - Contacts trust: contacts for which all devices have been validated through a ZRTP call with SAS exchange are now highlighted with a blue circle (and with a red one in case of mistrust). That trust is now handled at contact level (instead of conversation level in previous versions). 
 - Media & documents exchanged in a conversation can be easily found through a dedicated screen.
+- A brand new chat message research has been added to conversations.
 - You can now react to a chat message using any emoji.
 - Screen sharing in conference: only desktop app starting with 6.0 version is able to start it, but on mobiles you'll be able to see it.
 - Chat while in call: a shortcut to a conversation screen with the remote.
+- You can choose whatever ringtone you'd like for incoming calls (in Android notification channel settings).
 - Security focus: security & trust is more visible than ever, and unsecure conversations & calls are even more visible than before.
 - CardDAV: you can configure as many CardDAV servers you want to synchronize you contacts in Linphone (in addition or in replacement of native addressbook import).
 - OpenID: when used with a SSO compliant SIP server (such as Flexisip), we support single-sign-on login.
@@ -46,6 +48,7 @@ Group changes to describe their impact on the project, as follows:
 
 ### Fixed
 - No longer trying to play vocal messages & call recordings using bluetooth when connected to an Android Auto car, causing playback issues.
+- AAudio driver no longer causes delay when switching between devices (SDK fix).
 
 ## [5.2.5] - 2024-05-03
 
