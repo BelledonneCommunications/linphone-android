@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
+<layout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -20,20 +20,13 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/header_style"
             android:id="@+id/name"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="34dp"
-            android:layout_marginEnd="5dp"
             android:text="@{model.name, default=`Pixel 6 Pro`}"
-            android:maxLines="1"
-            android:ellipsize="end"
             android:drawableStart="@{model.isMobileDevice ? @drawable/device_mobile_camera : @drawable/desktop, default=@drawable/device_mobile_camera}"
             android:drawablePadding="6dp"
             app:drawableTint="?attr/color_main2_700"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/remove"/>
+            tools:ignore="MissingConstraints" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/tertiary_button_label_style"
@@ -41,7 +34,6 @@
             android:onClick="@{() -> model.removeDevice()}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
             android:background="@drawable/tertiary_button_background"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
@@ -54,9 +46,24 @@
             android:drawableStart="@drawable/trash_simple"
             android:drawableTint="@color/tertiary_button_label_color"
             android:drawablePadding="8dp"
+            tools:ignore="MissingConstraints" />
+
+        <androidx.constraintlayout.helper.widget.Flow
+            android:id="@+id/device_flow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="34dp"
+            app:flow_wrapMode="chain"
+            app:flow_horizontalGap="5dp"
+            app:flow_verticalGap="10dp"
+            app:flow_horizontalStyle="spread_inside"
+            app:flow_horizontalBias="0"
+            app:constraint_referenced_ids="name, remove"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/name"
-            app:layout_constraintBottom_toBottomOf="@id/name"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/header_style"
@@ -64,10 +71,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="16dp"
             android:text="@string/manage_account_device_last_connection"
             app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintTop_toBottomOf="@id/name"
+            app:layout_constraintTop_toBottomOf="@id/device_flow"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -94,7 +101,7 @@
             android:id="@+id/last_connection_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="10dp"
             android:text="@{model.lastConnectionTime, default=`9h25`}"
             android:textSize="14sp"
