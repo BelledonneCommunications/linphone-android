@@ -853,4 +853,17 @@
     <string name="content_description_ldap_delete">Delete this LDAP configuration</string>
     <string name="content_description_ldap_save">Save LDAP configuration</string>
     <string name="content_description_play_call_recording">Plays the call recording</string>
+
+    <!-- Copy of private hosts_allowlist_sample in androidx.car.app:app:1.7.0-beta01, as they recommend it.
+     I removed android automotive hosts to only keep Android Auto ones for now -->
+    <string-array name="hosts_allowlist_sample_copy" translatable="false">
+        <item>fdb00c43dbde8b51cb312aa81d3b5fa17713adb94b28f598d77f8eb89daceedf,
+            com.google.android.projection.gearhead</item>
+
+        <item>70811a3eacfd2e83e18da9bfede52df16ce91f2e69a44d21f18ab66991130771,
+            com.google.android.projection.gearhead</item>
+
+        <item>1975b2f17177bc89a5dff31f9e64a6cae281a53dc1d1d59b1d147fe1c82afa00,
+            com.google.android.projection.gearhead</item>
+        </string-array>
 </resources>

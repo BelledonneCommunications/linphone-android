@@ -194,6 +194,15 @@
                 android:value="Needed to keep app alive to be able to receive messages and calls from third party SIP servers for which push notifications aren't available." />
         </service>
 
+        <service
+            android:name=".telecom.TelecomAndroidAutoService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="androidx.car.app.CarAppService"/>
+                <category android:name="androidx.car.app.category.CALLING"/>
+            </intent-filter>
+        </service>
+
         <!-- Receivers -->
 
         <receiver android:name=".core.CorePushReceiver"
