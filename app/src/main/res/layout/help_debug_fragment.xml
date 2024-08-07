@@ -50,13 +50,10 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/tertiary_button_label_style"
-                android:onClick="@{() -> viewModel.cleanLogs()}"
                 android:id="@+id/clean_logs"
+                android:onClick="@{() -> viewModel.cleanLogs()}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="20dp"
                 android:background="@drawable/tertiary_button_background"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
@@ -66,18 +63,14 @@
                 android:text="@string/help_troubleshooting_clean_logs"
                 android:maxLines="1"
                 android:ellipsize="end"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/title"/>
+                bind:ignore="MissingConstraints"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/tertiary_button_label_style"
-                android:onClick="@{() -> viewModel.shareLogs()}"
                 android:id="@+id/send_logs"
+                android:onClick="@{() -> viewModel.shareLogs()}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="20dp"
                 android:background="@drawable/tertiary_button_background"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
@@ -88,8 +81,22 @@
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:visibility="@{viewModel.uploadLogsAvailable ? View.VISIBLE : View.GONE}"
-                app:layout_constraintStart_toEndOf="@id/clean_logs"
-                app:layout_constraintTop_toBottomOf="@id/title"/>
+                bind:ignore="MissingConstraints" />
+
+            <androidx.constraintlayout.helper.widget.Flow
+                android:id="@+id/logs_flow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="20dp"
+                app:flow_wrapMode="chain"
+                app:flow_horizontalGap="16dp"
+                app:flow_verticalGap="10dp"
+                app:flow_horizontalStyle="spread_inside"
+                app:constraint_referenced_ids="clean_logs, send_logs"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title" />
 
             <ImageView
                 android:id="@+id/app_version_icon"
@@ -102,7 +109,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/app_version_title"
                 app:layout_constraintTop_toTopOf="@id/app_version_title"
-                app:layout_constraintBottom_toBottomOf="@id/app_version_subtitle"/>
+                app:layout_constraintBottom_toBottomOf="@id/app_version_title" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/header_style"
@@ -113,7 +120,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="24dp"
                 android:text="@string/help_troubleshooting_app_version_title"
-                app:layout_constraintTop_toBottomOf="@id/clean_logs"
+                app:layout_constraintTop_toBottomOf="@id/logs_flow"
                 app:layout_constraintStart_toEndOf="@id/app_version_icon"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -142,7 +149,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/sdk_version_title"
                 app:layout_constraintTop_toTopOf="@id/sdk_version_title"
-                app:layout_constraintBottom_toBottomOf="@id/sdk_version_subtitle"/>
+                app:layout_constraintBottom_toBottomOf="@id/sdk_version_title" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/header_style"
@@ -151,9 +158,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="20dp"
                 android:text="@string/help_troubleshooting_sdk_version_title"
-                app:layout_constraintTop_toBottomOf="@id/app_version_icon"
+                app:layout_constraintTop_toBottomOf="@id/app_version_subtitle"
                 app:layout_constraintStart_toEndOf="@id/sdk_version_icon"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
