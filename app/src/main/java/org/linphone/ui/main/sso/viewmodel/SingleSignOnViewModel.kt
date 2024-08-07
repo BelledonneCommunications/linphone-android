@@ -35,6 +35,7 @@ import net.openid.appauth.AuthorizationServiceConfiguration
 import net.openid.appauth.ResponseTypeValues
 import org.json.JSONObject
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.Factory
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
@@ -136,7 +137,8 @@ class SingleSignOnViewModel : GenericViewModel() {
                 // an invalid grant error with description "Session not active"
                 authRequestBuilder.setScopes("offline_access")
 
-                if (username.isNotEmpty()) {
+                if (username.isNotEmpty() && corePreferences.useUsernameAsSingleSignOnLoginHint) {
+                    Log.i("$TAG Using username [$username] as login hint")
                     authRequestBuilder.setLoginHint(username)
                 }
 
