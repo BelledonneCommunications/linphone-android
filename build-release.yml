@@ -8,7 +8,7 @@ steps:
   displayName: "Download keystore"
   name: "keystore"
   inputs:
-    secureFile: 'linphone-keystore.jks'
+    secureFile: 'UconnectAndroidAd-Hoc.keystore'
 
 - task: JavaToolInstaller@0
   displayName: "Install Java"
@@ -24,7 +24,7 @@ steps:
     script: |
       echo storePassword=$(KEYSTORE_PASSWORD) >> keystore.properties
       echo keyPassword=$(KEYSTORE_PASSWORD) >> keystore.properties
-      echo keyAlias=linphone >> keystore.properties
+      echo keyAlias=uconnect android ad-hoc >> keystore.properties
       echo storeFile=$(KEYSTORE.SECUREFILEPATH) >> keystore.properties
       
 - task: UpdateAndroidVersionGradle@1
