@@ -23,15 +23,32 @@ import android.content.pm.ApplicationInfo
 import androidx.car.app.CarAppService
 import androidx.car.app.validation.HostValidator
 import org.linphone.R
+import org.linphone.core.tools.Log
 
 class TelecomAndroidAutoService : CarAppService() {
+    companion object {
+        private const val TAG = "[Telecom Android Auto Service]"
+    }
+
     override fun createHostValidator(): HostValidator {
+        val host = hostInfo
+        Log.e("$TAG Host is [${host?.packageName}] with UID [${host?.uid}]")
+
+        val validator = HostValidator.Builder(applicationContext)
+            .addAllowedHosts(R.array.hosts_allowlist_sample_copy) // androidx.car.app.R.array.hosts_allowlist_sampl
+            .build()
+        if (host != null) {
+            val allowed = validator.isValidHost(host)
+            Log.i("$TAG Host is [${if (allowed) "allowed" else "not allowed"}] in our validator")
+        } else {
+            Log.w("$TAG Host is null!")
+        }
+
         return if ((applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0) {
+            Log.w("$TAG App is in debug mode, allowing all hosts")
             HostValidator.ALLOW_ALL_HOSTS_VALIDATOR
         } else {
-            HostValidator.Builder(applicationContext)
-                .addAllowedHosts(R.array.hosts_allowlist_sample_copy)
-                .build()
+            validator
         }
     }
 }

@@ -36,6 +36,7 @@ import org.linphone.core.Call
 import org.linphone.core.CallListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.utils.AudioUtils
+import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
 class TelecomCallControlCallback(
@@ -157,6 +158,7 @@ class TelecomCallControlCallback(
                 // This is to prevent mic not muted when joining conference if user decided to join as muted
                 if (muted || !LinphoneUtils.isCallOutgoing(callState, false)) {
                     call.microphoneMuted = muted
+                    coreContext.refreshMicrophoneMuteStateEvent.postValue(Event(true))
                 } else {
                     Log.w("$TAG Not following unmute request because call is in state [$callState]")
                 }

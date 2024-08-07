@@ -295,6 +295,15 @@ class CallActivity : GenericActivity() {
                 hideUI(hide)
             }
         }
+
+        coreContext.refreshMicrophoneMuteStateEvent.observe(this) {
+            it.consume {
+                Log.i(
+                    "$TAG Refreshing microphone mute state, probably to sync with Android Auto action"
+                )
+                callViewModel.refreshMicrophoneState()
+            }
+        }
     }
 
     override fun onStart() {

@@ -650,6 +650,23 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
     }
 
     @UiThread
+    fun refreshMicrophoneState() {
+        coreContext.postOnCoreThread {
+            val micMuted = if (currentCall.conference != null) {
+                currentCall.conference?.microphoneMuted ?: false
+            } else {
+                currentCall.microphoneMuted
+            }
+            if (currentCall.conference != null) {
+                currentCall.conference?.microphoneMuted = !micMuted
+            } else {
+                currentCall.microphoneMuted = !micMuted
+            }
+            isMicrophoneMuted.postValue(micMuted)
+        }
+    }
+
+    @UiThread
     fun changeAudioOutputDevice() {
         val routeAudioToSpeaker = isSpeakerEnabled.value != true
 

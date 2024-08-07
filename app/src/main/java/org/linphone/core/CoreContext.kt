@@ -85,6 +85,10 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         MutableLiveData<Event<String>>()
     }
 
+    val refreshMicrophoneMuteStateEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     val showGreenToastEvent: MutableLiveData<Event<Pair<Int, Int>>> by lazy {
         MutableLiveData<Event<Pair<Int, Int>>>()
     }
