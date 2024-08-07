@@ -20,6 +20,9 @@
 package org.linphone.ui.main.help.fragment
 
 import android.content.ActivityNotFoundException
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -63,6 +66,22 @@ class DebugFragment : GenericMainFragment() {
 
         binding.setBackClickListener {
             goBack()
+        }
+
+        binding.setAppVersionClickListener {
+            val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val label = getString(R.string.help_troubleshooting_app_version_title)
+            clipboard.setPrimaryClip(
+                ClipData.newPlainText(label, viewModel.appVersion.value.orEmpty())
+            )
+        }
+
+        binding.setSdkVersionClickListener {
+            val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val label = getString(R.string.help_troubleshooting_sdk_version_title)
+            clipboard.setPrimaryClip(
+                ClipData.newPlainText(label, viewModel.sdkVersion.value.orEmpty())
+            )
         }
 
         viewModel.debugLogsCleanedEvent.observe(viewLifecycleOwner) {

@@ -9,6 +9,12 @@
             name="backClickListener"
             type="View.OnClickListener" />
         <variable
+            name="appVersionClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="sdkVersionClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.main.help.viewmodel.HelpViewModel" />
     </data>
@@ -100,6 +106,7 @@
 
             <ImageView
                 android:id="@+id/app_version_icon"
+                android:onClick="@{appVersionClickListener}"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginStart="16dp"
@@ -114,6 +121,7 @@
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/header_style"
                 android:id="@+id/app_version_title"
+                android:onClick="@{appVersionClickListener}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -127,6 +135,7 @@
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style"
                 android:id="@+id/app_version_subtitle"
+                android:onClick="@{appVersionClickListener}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -140,6 +149,7 @@
 
             <ImageView
                 android:id="@+id/sdk_version_icon"
+                android:onClick="@{sdkVersionClickListener}"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginStart="16dp"
@@ -154,6 +164,7 @@
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/header_style"
                 android:id="@+id/sdk_version_title"
+                android:onClick="@{sdkVersionClickListener}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -167,6 +178,7 @@
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style"
                 android:id="@+id/sdk_version_subtitle"
+                android:onClick="@{sdkVersionClickListener}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
