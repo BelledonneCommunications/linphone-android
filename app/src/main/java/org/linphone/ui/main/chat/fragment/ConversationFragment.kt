@@ -886,6 +886,8 @@ open class ConversationFragment : SlidingPaneChildFragment() {
 
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.messageBottomSheet.root)
         bottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        currentChatMessageModelForBottomSheet?.isSelected?.value = false
         currentChatMessageModelForBottomSheet = null
     }
 
