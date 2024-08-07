@@ -47,6 +47,7 @@
     <string name="sip_address_display_name">Display name</string>
     <string name="sip_address_domain">Domain</string>
     <string name="username">Username</string>
+    <string name="authentication_id">Authentication ID (if different)</string>
     <string name="password">Password</string>
     <string name="phone_number">Phone number</string>
     <string name="or">or</string>

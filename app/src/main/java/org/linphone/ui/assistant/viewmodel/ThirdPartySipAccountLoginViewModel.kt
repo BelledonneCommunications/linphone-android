@@ -47,6 +47,8 @@ class ThirdPartySipAccountLoginViewModel @UiThread constructor() : GenericViewMo
 
     val username = MutableLiveData<String>()
 
+    val authId = MutableLiveData<String>()
+
     val password = MutableLiveData<String>()
 
     val domain = MutableLiveData<String>()
@@ -151,6 +153,7 @@ class ThirdPartySipAccountLoginViewModel @UiThread constructor() : GenericViewMo
             // Allow to enter SIP identity instead of simply username
             // in case identity domain doesn't match proxy domain
             val user = username.value.orEmpty().trim()
+            val userId = authId.value.orEmpty().trim()
             val identity = if (user.startsWith("sip:")) {
                 if (user.contains("@")) {
                     user
@@ -168,7 +171,7 @@ class ThirdPartySipAccountLoginViewModel @UiThread constructor() : GenericViewMo
 
             newlyCreatedAuthInfo = Factory.instance().createAuthInfo(
                 user,
-                null,
+                userId,
                 password.value.orEmpty().trim(),
                 null,
                 null,

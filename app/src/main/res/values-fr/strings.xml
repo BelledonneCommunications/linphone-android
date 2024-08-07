@@ -11,6 +11,7 @@
     <string name="sip_address_display_name">Nom d\'affichage</string>
     <string name="sip_address_domain">Domaine</string>
     <string name="username">Nom d\'utilisateur</string>
+    <string name="authentication_id">Identifiant de connexion (si différent)</string>
     <string name="password">Mot de passe</string>
     <string name="phone_number">Numéro de téléphone</string>
     <string name="or">ou</string>

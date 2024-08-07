@@ -95,6 +95,38 @@
                 app:layout_constraintEnd_toEndOf="parent"/>
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/authentication_id_label"
+                style="@style/header_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/authentication_id"
+                app:layout_constraintTop_toBottomOf="@id/username"
+                app:layout_constraintStart_toStartOf="@id/authentication_id"/>
+
+            <androidx.appcompat.widget.AppCompatEditText
+                style="@style/default_text_style"
+                android:id="@+id/authentication_id"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@={viewModel.authId}"
+                android:textSize="14sp"
+                android:textColor="?attr/color_main2_600"
+                android:background="@drawable/edit_text_background"
+                android:inputType="text"
+                android:hint="@string/authentication_id"
+                app:layout_constraintWidth_max="@dimen/text_input_max_width"
+                app:layout_constraintTop_toBottomOf="@id/authentication_id_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/password_label"
                 style="@style/header_style"
                 android:layout_width="wrap_content"
@@ -103,7 +135,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/password"
-                app:layout_constraintTop_toBottomOf="@id/username"
+                app:layout_constraintTop_toBottomOf="@id/authentication_id"
                 app:layout_constraintStart_toStartOf="@id/password"/>
 
             <androidx.appcompat.widget.AppCompatEditText
