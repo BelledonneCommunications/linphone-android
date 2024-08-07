@@ -29,6 +29,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
@@ -97,6 +98,38 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
             else -> {
                 view.performClick()
                 false
+            }
+        }
+    }
+
+    private val backPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            val actionsBottomSheetBehavior = BottomSheetBehavior.from(binding.bottomBar.root)
+            if (actionsBottomSheetBehavior.state != BottomSheetBehavior.STATE_COLLAPSED) {
+                actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                return
+            }
+
+            val callStatsBottomSheetBehavior = BottomSheetBehavior.from(binding.callStats.root)
+            if (callStatsBottomSheetBehavior.state != BottomSheetBehavior.STATE_HIDDEN) {
+                callStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                return
+            }
+
+            val callMediaEncryptionStatsBottomSheetBehavior = BottomSheetBehavior.from(
+                binding.callMediaEncryptionStats.root
+            )
+            if (callMediaEncryptionStatsBottomSheetBehavior.state != BottomSheetBehavior.STATE_HIDDEN) {
+                callMediaEncryptionStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                return
+            }
+
+            Log.i("$TAG Back gesture/click detected, no bottom sheet is expanded, going back")
+            isEnabled = false
+            try {
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            } catch (ise: IllegalStateException) {
+                Log.w("$TAG Can't go back: $ise")
             }
         }
     }
@@ -240,6 +273,11 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
             callStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             callMediaEncryptionStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            backPressedCallback
+        )
     }
 
     @SuppressLint("ClickableViewAccessibility")
