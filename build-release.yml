@@ -30,6 +30,8 @@ steps:
 - task: UpdateAndroidVersionGradle@1
   inputs:
     buildGradlePath: '$(Build.SourcesDirectory)/app/build.gradle'
+    versionCode: '20$(Year:yyyy)$(DayOfYear)$(rev:r)'
+    versionName: '$(major).$(minor).$(Year:yy)$(DayOfYear).$(rev:r)'
     
 - task: Gradle@3
   displayName: "Build SDK"
