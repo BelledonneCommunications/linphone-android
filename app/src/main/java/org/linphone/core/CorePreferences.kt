@@ -220,6 +220,10 @@ class CorePreferences @UiThread constructor(private val context: Context) {
     val useUsernameAsSingleSignOnLoginHint: Boolean
         get() = config.getBool("ui", "use_username_as_sso_login_hint", true)
 
+    @get:WorkerThread
+    val automaticallyShowDialpad: Boolean
+        get() = config.getBool("ui", "automatically_show_dialpad", false)
+
     /* Paths */
 
     @get:WorkerThread

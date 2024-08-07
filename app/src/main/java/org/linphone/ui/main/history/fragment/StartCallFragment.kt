@@ -29,6 +29,7 @@ import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.Address
 import org.linphone.core.Friend
@@ -167,6 +168,16 @@ class StartCallFragment : GenericAddressPickerFragment() {
     override fun onSingleAddressSelected(address: Address, friend: Friend) {
         coreContext.startAudioCall(address)
         viewModel.leaveFragmentEvent.postValue(Event(true))
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        coreContext.postOnCoreThread {
+            if (corePreferences.automaticallyShowDialpad) {
+                viewModel.isNumpadVisible.postValue(true)
+            }
+        }
     }
 
     override fun onPause() {
