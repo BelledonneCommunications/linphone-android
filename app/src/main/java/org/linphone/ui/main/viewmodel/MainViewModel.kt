@@ -102,7 +102,11 @@ class MainViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    var accountsFound = -1
+    val lastAccountRemovedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    private var accountsFound = -1
 
     var mainIntentHandled = false
 
@@ -264,6 +268,11 @@ class MainViewModel @UiThread constructor() : ViewModel() {
             removeAlert(NON_DEFAULT_ACCOUNT_NOT_CONNECTED)
             core.refreshRegisters()
             computeNonDefaultAccountNotificationsCount()
+
+            if (core.accountList.isEmpty()) {
+                Log.w("$TAG No more account configured, going into assistant")
+                lastAccountRemovedEvent.postValue(Event(true))
+            }
         }
     }
 

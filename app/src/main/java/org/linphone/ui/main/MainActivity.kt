@@ -220,6 +220,12 @@ class MainActivity : GenericActivity() {
             }
         }
 
+        viewModel.lastAccountRemovedEvent.observe(this) {
+            it.consume {
+                startActivity(Intent(this, AssistantActivity::class.java))
+            }
+        }
+
         // Wait for latest visited fragment to be displayed before hiding the splashscreen
         binding.root.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
             override fun onPreDraw(): Boolean {
