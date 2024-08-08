@@ -35,7 +35,7 @@ steps:
 
 - task: CmdLine@2
   inputs:
-    script: 'type build.gradle'
+    script: 'cat build.gradle'
     workingDirectory: '$(Build.SourcesDirectory)/app/'
     
 - task: Gradle@3
