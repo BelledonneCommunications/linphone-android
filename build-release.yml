@@ -32,6 +32,11 @@ steps:
     buildGradlePath: '$(Build.SourcesDirectory)/app/build.gradle'
     versionCode: '20$(Year:yyyy)$(DayOfYear)$(rev:r)'
     versionName: '$(major).$(minor).$(Year:yy)$(DayOfYear).$(rev:r)'
+
+- task: CmdLine@2
+  inputs:
+    script: 'type build.gradle'
+    workingDirectory: '$(Build.SourcesDirectory)/app/'
     
 - task: Gradle@3
   displayName: "Build SDK"
