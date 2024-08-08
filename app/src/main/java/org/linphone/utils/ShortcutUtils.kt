@@ -74,7 +74,7 @@ class ShortcutUtils {
                     continue
                 }
 
-                if (count >= 5) {
+                if (count >= 4) {
                     Log.i("$TAG We already created [$count] shortcuts, stopping here")
                     break
                 }
@@ -113,28 +113,28 @@ class ShortcutUtils {
                         ChatRoom.Capabilities.Basic.toInt()
                     )
                 ) {
-                    val contact =
-                        coreContext.contactsManager.findContactByAddress(peerAddress)
-                    val person = contact?.getPerson()
-                    if (person != null) {
-                        personsList.add(person)
-                    }
+                    val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
+                        peerAddress
+                    )
+                    val contact = avatarModel.friend
+                    val person = contact.getPerson()
+                    personsList.add(person)
 
-                    subject = contact?.name ?: LinphoneUtils.getDisplayName(peerAddress)
-                    person?.icon ?: AvatarGenerator(context).setInitials(
+                    subject = contact.name ?: LinphoneUtils.getDisplayName(peerAddress)
+                    person.icon ?: AvatarGenerator(context).setInitials(
                         AppUtils.getInitials(subject)
                     ).buildIcon()
                 } else if (chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt()) && chatRoom.participants.isNotEmpty()) {
                     val address = chatRoom.participants.first().address
-                    val contact =
-                        coreContext.contactsManager.findContactByAddress(address)
-                    val person = contact?.getPerson()
-                    if (person != null) {
-                        personsList.add(person)
-                    }
+                    val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
+                        address
+                    )
+                    val contact = avatarModel.friend
+                    val person = contact.getPerson()
+                    personsList.add(person)
 
-                    subject = contact?.name ?: LinphoneUtils.getDisplayName(address)
-                    person?.icon ?: AvatarGenerator(context).setInitials(
+                    subject = contact.name ?: LinphoneUtils.getDisplayName(address)
+                    person.icon ?: AvatarGenerator(context).setInitials(
                         AppUtils.getInitials(subject)
                     ).buildIcon()
                 } else {
