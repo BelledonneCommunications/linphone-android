@@ -121,6 +121,12 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                     )
                     showCallNotification(call, true)
                 }
+                Call.State.OutgoingInit -> {
+                    Log.i(
+                        "$TAG Showing outgoing call notification for [${call.remoteAddress.asStringUriOnly()}]"
+                    )
+                    showCallNotification(call, false)
+                }
                 Call.State.Connected -> {
                     if (call.dir == Call.Dir.Incoming) {
                         Log.i(

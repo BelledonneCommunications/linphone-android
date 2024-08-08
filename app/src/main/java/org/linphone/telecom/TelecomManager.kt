@@ -86,7 +86,7 @@ class TelecomManager @WorkerThread constructor(context: Context) {
 
     @WorkerThread
     fun onCallCreated(call: Call) {
-        Log.i("$TAG Call created: $call")
+        Log.i("$TAG Call to [${call.remoteAddress.asStringUriOnly()}] created")
 
         val address = call.callLog.remoteAddress
         val friend = coreContext.contactsManager.findContactByAddress(address)
