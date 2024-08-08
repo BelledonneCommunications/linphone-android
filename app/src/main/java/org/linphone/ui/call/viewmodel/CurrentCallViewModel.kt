@@ -56,7 +56,6 @@ import org.linphone.ui.call.model.CallMediaEncryptionModel
 import org.linphone.ui.call.model.CallStatsModel
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.history.model.NumpadModel
-import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.utils.AppUtils
 import org.linphone.utils.AudioUtils
 import org.linphone.utils.Event
@@ -1311,9 +1310,7 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
         val localAddress = call.callLog.localAddress
         val remoteAddress = call.remoteAddress
         val core = call.core
-        val account = core.accountList.find {
-            it.params.identityAddress?.weakEqual(localAddress) == true
-        } ?: LinphoneUtils.getDefaultAccount() ?: return null
+        val account = LinphoneUtils.getAccountForAddress(localAddress) ?: LinphoneUtils.getDefaultAccount() ?: return null
 
         val params: ChatRoomParams = core.createDefaultChatRoomParams()
         params.isGroupEnabled = false
@@ -1321,13 +1318,13 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
         params.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
 
         val sameDomain = remoteAddress.domain == corePreferences.defaultDomain && remoteAddress.domain == account.params.domain
-        if (isEndToEndEncryptionMandatory() && sameDomain) {
+        if (account.params.instantMessagingEncryptionMandatory && sameDomain) {
             Log.i(
                 "$TAG Account is in secure mode & domain matches, requesting E2E encryption"
             )
             params.backend = ChatRoom.Backend.FlexisipChat
             params.isEncryptionEnabled = true
-        } else if (!isEndToEndEncryptionMandatory()) {
+        } else if (!account.params.instantMessagingEncryptionMandatory) {
             if (LinphoneUtils.isEndToEndEncryptedChatAvailable(core)) {
                 Log.i(
                     "$TAG Account is in interop mode but LIME is available, requesting E2E encryption"

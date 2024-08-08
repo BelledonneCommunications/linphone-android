@@ -37,7 +37,6 @@ import org.linphone.core.ChatRoom
 import org.linphone.core.tools.Log
 import org.linphone.mediastream.Version
 import org.linphone.ui.main.MainActivity
-import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 
 class ShortcutUtils {
     companion object {
@@ -66,7 +65,7 @@ class ShortcutUtils {
 
             var count = 0
             for (chatRoom in defaultAccount.chatRooms) {
-                if (isEndToEndEncryptionMandatory() && !chatRoom.currentParams.isEncryptionEnabled) {
+                if (defaultAccount.params.instantMessagingEncryptionMandatory && !chatRoom.currentParams.isEncryptionEnabled) {
                     Log.w(
                         "$TAG Account is in secure mode, skipping not encrypted conversation [${LinphoneUtils.getChatRoomId(
                             chatRoom

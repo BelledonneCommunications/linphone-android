@@ -49,7 +49,6 @@ import org.linphone.ui.main.chat.model.EventLogModel
 import org.linphone.ui.main.chat.model.FileModel
 import org.linphone.ui.main.chat.model.MessageModel
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
-import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
@@ -548,7 +547,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
     @WorkerThread
     fun checkIfConversationShouldBeDisabledForSecurityReasons() {
         if (!chatRoom.hasCapability(ChatRoom.Capabilities.Encrypted.toInt())) {
-            if (isEndToEndEncryptionMandatory()) {
+            if (LinphoneUtils.getAccountForAddress(chatRoom.localAddress)?.params?.instantMessagingEncryptionMandatory == true) {
                 Log.w(
                     "$TAG Conversation with subject [${chatRoom.subject}] has been disabled because it isn't encrypted and default account is in secure mode"
                 )

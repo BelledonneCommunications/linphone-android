@@ -56,6 +56,13 @@ class LinphoneUtils {
         }
 
         @WorkerThread
+        fun getAccountForAddress(address: Address): Account? {
+            return coreContext.core.accountList.find {
+                it.params.identityAddress?.weakEqual(address) == true
+            }
+        }
+
+        @WorkerThread
         fun applyInternationalPrefix(account: Account? = null): Boolean {
             return account?.params?.useInternationalPrefixForCallsAndChats
                 ?: (getDefaultAccount()?.params?.useInternationalPrefixForCallsAndChats ?: false)

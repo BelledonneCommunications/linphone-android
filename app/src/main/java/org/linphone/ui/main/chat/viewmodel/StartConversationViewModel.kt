@@ -31,7 +31,6 @@ import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomListenerStub
 import org.linphone.core.ChatRoomParams
 import org.linphone.core.tools.Log
-import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.ui.main.viewmodel.AddressSelectionViewModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
@@ -193,11 +192,11 @@ class StartConversationViewModel @UiThread constructor() : AddressSelectionViewM
         params.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
 
         val sameDomain = remote.domain == corePreferences.defaultDomain && remote.domain == account.params.domain
-        if (isEndToEndEncryptionMandatory() && sameDomain) {
+        if (account.params.instantMessagingEncryptionMandatory && sameDomain) {
             Log.i("$TAG Account is in secure mode & domain matches, creating a E2E conversation")
             params.backend = ChatRoom.Backend.FlexisipChat
             params.isEncryptionEnabled = true
-        } else if (!isEndToEndEncryptionMandatory()) {
+        } else if (!account.params.instantMessagingEncryptionMandatory) {
             if (LinphoneUtils.isEndToEndEncryptedChatAvailable(core)) {
                 Log.i(
                     "$TAG Account is in interop mode but LIME is available, creating a E2E conversation"
