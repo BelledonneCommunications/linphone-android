@@ -47,7 +47,6 @@ import androidx.navigation.findNavController
 import androidx.window.layout.FoldingFeature
 import coil.imageLoader
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.messaging.FirebaseMessaging
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
 import kotlin.math.abs
@@ -56,8 +55,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.tasks.await
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationResponse
 import net.openid.appauth.AuthorizationService
@@ -91,16 +88,18 @@ import org.linphone.core.CoreListenerStub
 import org.linphone.core.CorePreferences
 import org.linphone.core.Factory
 import org.linphone.core.TransportType
-import org.linphone.core.tools.Log
 import org.linphone.databinding.MainActivityBinding
 import org.linphone.environment.DimensionsEnvironmentService
+import org.linphone.middleware.FileTree
 import org.linphone.models.UserDevice
 import org.linphone.services.APIClientService
+import org.linphone.services.BrandingService
 import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.Log
 import org.linphone.utils.PermissionHelper
 import org.linphone.utils.ShortcutsHelper
 import org.linphone.utils.hideKeyboard
@@ -108,6 +107,7 @@ import org.linphone.utils.setKeyboardInsetListener
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import timber.log.Timber
 
 class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestinationChangedListener {
     private lateinit var binding: MainActivityBinding
@@ -179,8 +179,38 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        Timber.plant(Timber.DebugTree(), FileTree(applicationContext))
+        Timber.tag("cloud.dimensions.uconnect")
+        Timber.d("OnCreate")
+        Log.d("OnCreate")
+
         // Must be done before the setContentView
         installSplashScreen()
+
+        val dimensionsEnvironment = DimensionsEnvironmentService.getInstance(applicationContext).getCurrentEnvironment()
+        val asm = AuthStateManager.getInstance(applicationContext)
+
+        apiClientService = APIClientService()
+        apiClientService.getUCGatewayService(
+            this.applicationContext,
+            dimensionsEnvironment!!.gatewayApiUri
+        ).doGetUserDevices(
+            userID = asm.fetchUserId()
+        )
+            .enqueue(object : Callback<List<UserDevice>> {
+                override fun onFailure(call: Call<List<UserDevice>>, t: Throwable) {
+                }
+
+                override fun onResponse(
+                    call: Call<List<UserDevice>>,
+                    response: Response<List<UserDevice>>
+                ) {
+                    val userDevices = response.body()
+                    if (!userDevices.isNullOrEmpty()) {
+                        registerSipEndpoints(userDevices)
+                    }
+                }
+            })
 
         binding = DataBindingUtil.setContentView(this, R.layout.main_activity)
         binding.lifecycleOwner = this
@@ -236,6 +266,16 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                 Log.e("[Main Activity] Security exception when doing reportFullyDrawn(): $se")
             }
         }
+
+        BrandingService.getInstance(applicationContext)
+            .brand
+            .subscribe { brand ->
+                Log.i("Got brand: " + brand.value?.brandName)
+
+                // DynamicColors.applyToActivityIfAvailable(this, DynamicColorsOptions.Builder().setThemeOverlay(Color.CYAN))
+                // val primary = resources.getColor(R.color.primary_color)
+                // window.navigationBarColor = Color.CYAN
+            }
     }
 
     private fun registerSipEndpoints(userDeviceList: List<UserDevice>) {
@@ -252,10 +292,6 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
         if (coreContext.core.accountList.any()) {
             coreContext.core.defaultAccount = coreContext.core.accountList.first()
-            coreContext.core.refreshRegisters()
-            Log.i(
-                "RegisterSipEndpoints::${coreContext.core.defaultAccount!!.params.identityAddress?.username}::Default=True"
-            )
         }
     }
 
@@ -310,17 +346,10 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             accountParams.natPolicy!!.isTcpTurnTransportEnabled = false
             accountParams.natPolicy!!.isTlsTurnTransportEnabled = false
 
-            // FIXME: this feels rotten to the core
-            runBlocking {
-                val pushToken = FirebaseMessaging.getInstance().token.await()
-                if (!pushToken.isNullOrEmpty()) {
-                    Log.i("RegisterSipAccount: We have a push token, setting contact")
-                    accountParams.contactParameters = "app-id=cloud.xarios.dimensions;pn-tok=$pushToken;pn-type=firebase"
-                }
-            }
+            // TODO createPushToken service
+            // val pushToken = pushTokenService.GetVoipToken()
 
             val account = coreContext.core.createAccount(accountParams)
-            Log.i("RegisterSipEndpoints::${account.params.identityAddress?.username}")
             coreContext.core.addAccount(account)
         }
     }
@@ -347,14 +376,14 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         }
     }
 
-//    override fun onNewIntent(intent: Intent?) {
-//        super.onNewIntent(intent)
-//
-//        if (intent != null) {
-//            Log.d("[Main Activity] Found new intent")
-//            handleIntentParams(intent)
-//        }
-//    }
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+
+        if (intent != null) {
+            Log.d("[Main Activity] Found new intent")
+            handleIntentParams(intent)
+        }
+    }
 
     override fun onStart() {
         super.onStart()
@@ -365,12 +394,10 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         val ex = AuthorizationException.fromIntent(intent)
         val asm = AuthStateManager.getInstance(applicationContext)
 
+        Log.i("isAuthorised: " + asm.current.isAuthorized)
+
         if (asm.current.isAuthorized) {
             // displayAuthorized();
-            Log.d(
-                "MainActivity",
-                "isAuthorised: " + asm.current.idToken + " | " + asm.current.accessToken
-            )
             return
         }
 
@@ -379,7 +406,6 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         }
 
         if (response?.authorizationCode != null) {
-            Log.d("MainActivity", "isAuthorised")
             // authorization code exchange is required
             asm.updateAfterAuthorization(response, ex)
             exchangeAuthorizationCode(response)
@@ -394,31 +420,6 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         super.onResume()
         coreContext.contactsManager.addListener(listener)
         coreContext.core.addListener(coreListener)
-
-        val dimensionsEnvironment = DimensionsEnvironmentService.getInstance(applicationContext).getCurrentEnvironment()
-        val asm = AuthStateManager.getInstance(applicationContext)
-
-        apiClientService = APIClientService()
-        apiClientService.getUCGatewayService(
-            this.applicationContext,
-            dimensionsEnvironment!!.gatewayApiUri
-        ).doGetUserDevices(
-            userID = asm.fetchUserId()
-        )
-            .enqueue(object : Callback<List<UserDevice>> {
-                override fun onFailure(call: Call<List<UserDevice>>, t: Throwable) {
-                }
-
-                override fun onResponse(
-                    call: Call<List<UserDevice>>,
-                    response: Response<List<UserDevice>>
-                ) {
-                    val userDevices = response.body()
-                    if (!userDevices.isNullOrEmpty()) {
-                        registerSipEndpoints(userDevices)
-                    }
-                }
-            })
     }
 
     override fun onPause() {
@@ -968,11 +969,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         try {
             clientAuthentication = asm.getCurrent().getClientAuthentication()
         } catch (ex: UnsupportedAuthenticationMethod) {
-            Log.d(
-                "MainActivity",
-                "Token request cannot be made - endpoint could not be constructed (%s)",
-                ex
-            )
+            Log.i("Token request cannot be made - endpoint could not be constructed (%s)", ex)
             // TODO displayNotAuthorized("Client authentication method is unsupported")
             return
         }
@@ -998,7 +995,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                     (if ((authException != null)) authException.error else "")
                 )
 
-            Log.d("MainActivity", message)
+            Log.i(message)
             // WrongThread inference is incorrect for lambdas
             // TODO: runOnUiThread { displayNotAuthorized(message) }
         } else {

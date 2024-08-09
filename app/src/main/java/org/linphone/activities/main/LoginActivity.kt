@@ -10,7 +10,6 @@ import android.os.Looper
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Spinner
@@ -45,6 +44,7 @@ import org.linphone.authentication.AuthConfiguration.InvalidConfigurationExcepti
 import org.linphone.authentication.AuthStateManager
 import org.linphone.environment.DimensionsEnvironmentService.Companion.getInstance
 import org.linphone.environment.EnvironmentSelectionAdapter
+import org.linphone.utils.Log
 
 /**
  * Demonstrates the usage of the AppAuth to authorize a user with an OAuth2 / OpenID Connect
@@ -94,27 +94,13 @@ class LoginActivity : AppCompatActivity() {
 
         configureEnvironmentSelector()
 
-// For debug purposes till the selector is ready
-//        Set initial environment
-//        val environment = DimensionsEnvironmentService.Companion.getInstance(this).getEnvironmentById(
-//            "Stg"
-//        )
-//        if (environment != null) {
-//            DimensionsEnvironmentService.Companion.getInstance(this).setCurrentEnvironment(
-//                environment
-//            )
-//        }
-
-//        Clear the session
-//        mAuthStateManager.replace(null);
-
         val dimensionsEnvironment = getInstance(applicationContext).getCurrentEnvironment()
 
         if (dimensionsEnvironment == null) {
             displayAuthOptions()
             return
         } else if (mAuthStateManager!!.getCurrent().isAuthorized && !mConfiguration!!.hasConfigurationChanged()) {
-            Log.i(TAG, "User is already authenticated, proceeding to token activity")
+            Log.i("User is already authenticated, proceeding to token activity")
             startActivity(Intent(this, MainActivity::class.java))
             finish()
             return
@@ -127,7 +113,7 @@ class LoginActivity : AppCompatActivity() {
 
         if (mConfiguration!!.hasConfigurationChanged()) {
             // discard any existing authorization state due to the change of configuration
-            Log.i(TAG, "Configuration change detected, discarding old state")
+            Log.i("Configuration change detected, discarding old state")
             mAuthStateManager!!.replace(AuthState())
             mConfiguration!!.acceptConfiguration()
         }
@@ -186,6 +172,8 @@ class LoginActivity : AppCompatActivity() {
         val asm = AuthStateManager.getInstance(applicationContext)
 
         if (intent != null && intent.extras != null && intent.extras!!.getString("auth") == "logout") {
+            Log.i("AuthState logout")
+            asm.updateAfterAuthorization(null, null)
             displayAuthOptions()
 
             val isAuthorised = mAuthStateManager!!.getCurrent().isAuthorized
@@ -207,10 +195,10 @@ class LoginActivity : AppCompatActivity() {
         val dimensionsEnvironment = getInstance(applicationContext).getCurrentEnvironment()
 
         if (dimensionsEnvironment == null) {
-            Log.i(TAG, "Start auth: no environment")
+            Log.i("Start auth: no environment")
             displayAuthOptions()
         } else {
-            Log.i(TAG, "Start auth: " + dimensionsEnvironment.name)
+            Log.i("Start auth: " + dimensionsEnvironment.name)
 
             // WrongThread inference is incorrect for lambdas
             // noinspection WrongThread
@@ -224,12 +212,12 @@ class LoginActivity : AppCompatActivity() {
      */
     @WorkerThread
     private fun initializeAppAuth() {
-        Log.i(TAG, "Initializing AppAuth")
+        Log.i("Initializing AppAuth")
         recreateAuthorizationService()
 
         if (mAuthStateManager!!.current.authorizationServiceConfiguration != null) {
             // configuration is already created, skip to client initialization
-            Log.i(TAG, "auth config already established")
+            Log.i("auth config already established")
             initializeClient()
             // return;
         }
@@ -237,7 +225,7 @@ class LoginActivity : AppCompatActivity() {
         // if we are not using discovery, build the authorization service configuration directly
         // from the static configuration values.
         if (mConfiguration!!.discoveryUri == null) {
-            Log.i(TAG, "Creating auth config from res/raw/auth_config.json")
+            Log.i("Creating auth config from res/raw/auth_config.json")
             val config = AuthorizationServiceConfiguration(
                 mConfiguration!!.authEndpointUri!!,
                 mConfiguration!!.tokenEndpointUri!!,
@@ -253,7 +241,7 @@ class LoginActivity : AppCompatActivity() {
         // WrongThread inference is incorrect for lambdas
         // noinspection WrongThread
         runOnUiThread { displayLoading("Retrieving discovery document") }
-        Log.i(TAG, "Retrieving OpenID discovery doc from " + mConfiguration!!.discoveryUri)
+        Log.i("Retrieving OpenID discovery doc from " + mConfiguration!!.discoveryUri)
         AuthorizationServiceConfiguration.fetchFromUrl(
             mConfiguration!!.discoveryUri!!,
             {
@@ -274,12 +262,12 @@ class LoginActivity : AppCompatActivity() {
         ex: AuthorizationException?
     ) {
         if (config == null) {
-            Log.i(TAG, "Failed to retrieve discovery document", ex)
+            Log.i("Failed to retrieve discovery document", ex)
             displayError("""Failed to retrieve discovery document: ${ex!!.message} """, true)
             return
         }
 
-        Log.i(TAG, "Discovery document retrieved")
+        Log.i("Discovery document retrieved")
         mAuthStateManager!!.replace(AuthState(config))
         mExecutor.submit { this.initializeClient() }
     }
@@ -291,7 +279,7 @@ class LoginActivity : AppCompatActivity() {
     @WorkerThread
     private fun initializeClient() {
         if (mConfiguration!!.clientId != null) {
-            Log.i(TAG, "Using static client ID: " + mConfiguration!!.clientId)
+            Log.i("Using static client ID: " + mConfiguration!!.clientId)
             // use a statically configured client ID
             mClientId.set(mConfiguration!!.clientId)
             runOnUiThread { this.initializeAuthRequest() }
@@ -301,7 +289,7 @@ class LoginActivity : AppCompatActivity() {
         val lastResponse = mAuthStateManager!!.current.lastRegistrationResponse
 
         if (lastResponse != null) {
-            Log.i(TAG, "Using dynamic client ID: " + lastResponse.clientId)
+            Log.i("Using dynamic client ID: " + lastResponse.clientId)
             // already dynamically registered a client ID
             mClientId.set(lastResponse.clientId)
             runOnUiThread { this.initializeAuthRequest() }
@@ -311,7 +299,7 @@ class LoginActivity : AppCompatActivity() {
         // WrongThread inference is incorrect for lambdas
         // noinspection WrongThread
         runOnUiThread { displayLoading("Dynamically registering client") }
-        Log.i(TAG, "Dynamically registering client")
+        Log.i("Dynamically registering client")
 
         val registrationRequest = RegistrationRequest.Builder(
             mAuthStateManager!!.current.authorizationServiceConfiguration!!,
@@ -337,12 +325,12 @@ class LoginActivity : AppCompatActivity() {
     ) {
         mAuthStateManager!!.updateAfterRegistration(response, ex)
         if (response == null) {
-            Log.i(TAG, "Failed to dynamically register client", ex)
+            Log.i("Failed to dynamically register client", ex)
             displayErrorLater("Failed to register client: " + ex!!.message, true)
             return
         }
 
-        Log.i(TAG, "Dynamically registered client: " + response.clientId)
+        Log.i("Dynamically registered client: " + response.clientId)
         mClientId.set(response.clientId)
         initializeAuthRequest()
     }
@@ -396,7 +384,7 @@ class LoginActivity : AppCompatActivity() {
         try {
             mAuthIntentLatch.await()
         } catch (ex: InterruptedException) {
-            Log.w(TAG, "Interrupted while waiting for auth intent")
+            Log.w("Interrupted while waiting for auth intent")
         }
 
         if (mUsePendingIntents) {
@@ -433,7 +421,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         if (mAuthService != null) {
-            Log.i(TAG, "Discarding existing AuthService instance")
+            Log.i("Discarding existing AuthService instance")
             mAuthService!!.dispose()
         }
         mAuthService = createAuthorizationService()
@@ -442,7 +430,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun createAuthorizationService(): AuthorizationService {
-        Log.i(TAG, "Creating authorization service")
+        Log.i("Creating authorization service")
         val builder = AppAuthConfiguration.Builder()
         builder.setBrowserMatcher(AnyBrowserMatcher.INSTANCE)
         builder.setConnectionBuilder(mConfiguration!!.connectionBuilder)
@@ -504,7 +492,7 @@ class LoginActivity : AppCompatActivity() {
     private fun warmUpBrowser() {
         mAuthIntentLatch = CountDownLatch(1)
         mExecutor!!.execute {
-            Log.i(TAG, "Warming up browser instance for auth request")
+            Log.i("Warming up browser instance for auth request")
             val intentBuilder =
                 mAuthService!!.createCustomTabsIntentBuilder(mAuthRequest.get()!!.toUri())
             intentBuilder.setToolbarColor(getColorCompat(R.color.primary_color))
@@ -514,7 +502,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun createAuthRequest(loginHint: String?) {
-        Log.i(TAG, "Creating auth request for login hint: $loginHint")
+        Log.i("Creating auth request for login hint: $loginHint")
         val authRequestBuilder = AuthorizationRequest.Builder(
             mAuthStateManager!!.current.authorizationServiceConfiguration!!,
             mClientId.get()!!,
