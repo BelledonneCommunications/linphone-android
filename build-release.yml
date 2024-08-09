@@ -1,6 +1,9 @@
+name: $(major).$(minor).$(Year:yy)$(DayOfYear).$(rev:r)
 pool:
   vmImage: 'ubuntu-latest'
-  
+variables:
+  appVersionName: $(major).$(minor).$(Year:yy)$(DayOfYear).$(rev:r)
+  appVersionCode: $(major)$(minor)$(Year:yy)$(DayOfYear)$(rev:r)
 steps:
 - checkout: self
 
@@ -27,11 +30,13 @@ steps:
       echo keyAlias=uconnect android ad-hoc >> keystore.properties
       echo storeFile=$(KEYSTORE.SECUREFILEPATH) >> keystore.properties
       
-- task: UpdateAndroidVersionGradle@1
+- task: Bash@3
   inputs:
-    buildGradlePath: '$(Build.SourcesDirectory)/app/build.gradle'
-    versionCode: '20$(Year:yyyy)$(DayOfYear)$(rev:r)'
-    versionName: '$(major).$(minor).$(Year:yy)$(DayOfYear).$(rev:r)'
+    targetType: 'inline'
+    script: |
+      find . -name "build.gradle" | xargs sed 's/versionCode appVersionCode/versionCode $APPVERSIONCODE'
+      find . -name "build.gradle" | xargs sed 's/versionName "${project.version}"/versionName $APPVERSIONNAME'
+    workingDirectory: '$(Build.SourcesDirectory)/app/'
 
 - task: CmdLine@2
   inputs:
