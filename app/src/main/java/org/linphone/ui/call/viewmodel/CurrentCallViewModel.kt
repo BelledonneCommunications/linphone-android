@@ -436,6 +436,10 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
                 configureCall(call)
             }
 
+            if (LinphoneUtils.isCallEnding(call.state)) {
+                waitingForEncryptionInfo.postValue(false)
+            }
+
             updateProximitySensor()
         }
 
