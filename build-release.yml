@@ -2,7 +2,7 @@ name: $(major).$(minor).$(Year:yy)$(DayOfYear).$(rev:r)
 pool:
   vmImage: 'ubuntu-latest'
 variables:
-  appVersionCode: $(major)$(minor)$(Year:yy)$(DayOfYear)$(rev:r)
+  appVersionCode: $(MAJOR)$(MINOR)$(YEAR:yy)$(DAYOFYEAR)$(REV:r)
 steps:
 - checkout: self
 
