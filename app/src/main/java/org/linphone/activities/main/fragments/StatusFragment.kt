@@ -61,5 +61,9 @@ class StatusFragment : GenericFragment<StatusFragmentBinding>() {
         binding.setRefreshClickListener {
             viewModel.refreshRegister()
         }
+
+        binding.setVoicemailClickListener {
+            viewModel.dialVoicemail()
+        }
     }
 }

@@ -77,6 +77,7 @@ open class StatusViewModel : ViewModel() {
         core.addListener(listener)
 
         var state: RegistrationState = RegistrationState.None
+
         val defaultAccount = core.defaultAccount
         if (defaultAccount != null) {
             state = defaultAccount.state
@@ -91,6 +92,10 @@ open class StatusViewModel : ViewModel() {
 
     fun refreshRegister() {
         coreContext.core.refreshRegisters()
+    }
+
+    fun dialVoicemail() {
+        coreContext.dialVoicemail()
     }
 
     fun updateDefaultAccountRegistrationStatus(state: RegistrationState) {

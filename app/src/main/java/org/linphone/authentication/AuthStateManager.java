@@ -33,7 +33,6 @@ import net.openid.appauth.TokenResponse;
 import org.json.JSONException;
 
 import java.lang.ref.WeakReference;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -57,6 +56,7 @@ public class AuthStateManager {
 
     private static final String STORE_NAME = "AuthState";
     private static final String KEY_STATE = "state";
+
 
     private final SharedPreferences mPrefs;
     private final ReentrantLock mPrefsLock;

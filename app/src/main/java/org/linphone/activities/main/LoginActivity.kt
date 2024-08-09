@@ -27,22 +27,19 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
-import net.openid.appauth.AppAuthConfiguration
 import net.openid.appauth.AuthState
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationResponse
-import net.openid.appauth.AuthorizationService
 import net.openid.appauth.AuthorizationServiceConfiguration
 import net.openid.appauth.ClientSecretBasic
 import net.openid.appauth.RegistrationRequest
 import net.openid.appauth.RegistrationResponse
 import net.openid.appauth.ResponseTypeValues
-import net.openid.appauth.browser.AnyBrowserMatcher
 import org.linphone.R
 import org.linphone.authentication.AuthConfiguration
-import org.linphone.authentication.AuthConfiguration.InvalidConfigurationException
 import org.linphone.authentication.AuthStateManager
+import org.linphone.authentication.AuthorizationServiceManager
 import org.linphone.environment.DimensionsEnvironmentService.Companion.getInstance
 import org.linphone.environment.EnvironmentSelectionAdapter
 
@@ -62,7 +59,6 @@ import org.linphone.environment.EnvironmentSelectionAdapter
  * instructions.
  */
 class LoginActivity : AppCompatActivity() {
-    private var mAuthService: AuthorizationService? = null
     private var mAuthStateManager: AuthStateManager? = null
     private var mConfiguration: AuthConfiguration? = null
 
@@ -152,15 +148,11 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        mExecutor!!.shutdownNow()
+        mExecutor.shutdownNow()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-
-        if (mAuthService != null) {
-            mAuthService!!.dispose()
-        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -225,7 +217,7 @@ class LoginActivity : AppCompatActivity() {
     @WorkerThread
     private fun initializeAppAuth() {
         Log.i(TAG, "Initializing AppAuth")
-        recreateAuthorizationService()
+        Clear()
 
         if (mAuthStateManager!!.current.authorizationServiceConfiguration != null) {
             // configuration is already created, skip to client initialization
@@ -320,7 +312,7 @@ class LoginActivity : AppCompatActivity() {
             .setTokenEndpointAuthenticationMethod(ClientSecretBasic.NAME)
             .build()
 
-        mAuthService!!.performRegistrationRequest(
+        AuthorizationServiceManager.getInstance(applicationContext).authorizationServiceInstance.performRegistrationRequest(
             registrationRequest
         ) { response: RegistrationResponse?, ex: AuthorizationException? ->
             this.handleRegistrationResponse(
@@ -399,6 +391,8 @@ class LoginActivity : AppCompatActivity() {
             Log.w(TAG, "Interrupted while waiting for auth intent")
         }
 
+        val authService = AuthorizationServiceManager.getInstance(applicationContext).authorizationServiceInstance
+
         if (mUsePendingIntents) {
             val completionIntent = Intent(this, MainActivity::class.java)
             val cancelIntent = Intent(this, LoginActivity::class.java)
@@ -410,14 +404,14 @@ class LoginActivity : AppCompatActivity() {
                 flags = flags or PendingIntent.FLAG_MUTABLE
             }
 
-            mAuthService!!.performAuthorizationRequest(
+            authService!!.performAuthorizationRequest(
                 mAuthRequest.get()!!,
                 PendingIntent.getActivity(this, 0, completionIntent, flags),
                 PendingIntent.getActivity(this, 0, cancelIntent, flags),
                 mAuthIntent.get()!!
             )
         } else {
-            val intent = mAuthService!!.getAuthorizationRequestIntent(
+            val intent = authService!!.getAuthorizationRequestIntent(
                 mAuthRequest.get()!!,
                 mAuthIntent.get()!!
             )
@@ -425,29 +419,11 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun recreateAuthorizationService() {
-        try {
-            mConfiguration!!.readConfiguration()
-        } catch (e: InvalidConfigurationException) {
-            displayError("Failed to reload auth configuration.", true)
-        }
+    private fun Clear() {
+        AuthorizationServiceManager.getInstance(applicationContext).clearAuthorizationServiceInstance()
 
-        if (mAuthService != null) {
-            Log.i(TAG, "Discarding existing AuthService instance")
-            mAuthService!!.dispose()
-        }
-        mAuthService = createAuthorizationService()
         mAuthRequest.set(null)
         mAuthIntent.set(null)
-    }
-
-    private fun createAuthorizationService(): AuthorizationService {
-        Log.i(TAG, "Creating authorization service")
-        val builder = AppAuthConfiguration.Builder()
-        builder.setBrowserMatcher(AnyBrowserMatcher.INSTANCE)
-        builder.setConnectionBuilder(mConfiguration!!.connectionBuilder)
-
-        return AuthorizationService(this, builder.build())
     }
 
     @MainThread
@@ -506,7 +482,9 @@ class LoginActivity : AppCompatActivity() {
         mExecutor!!.execute {
             Log.i(TAG, "Warming up browser instance for auth request")
             val intentBuilder =
-                mAuthService!!.createCustomTabsIntentBuilder(mAuthRequest.get()!!.toUri())
+                AuthorizationServiceManager.getInstance(applicationContext).authorizationServiceInstance.createCustomTabsIntentBuilder(
+                    mAuthRequest.get()!!.toUri()
+                )
             intentBuilder.setToolbarColor(getColorCompat(R.color.primary_color))
             mAuthIntent.set(intentBuilder.build())
             mAuthIntentLatch.countDown()

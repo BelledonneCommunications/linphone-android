@@ -10,6 +10,10 @@
             name="refreshClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
+            name="voicemailClickListener"
+            type="android.view.View.OnClickListener" />
+
+        <variable
             name="viewModel"
             type="org.linphone.activities.main.viewmodels.StatusViewModel" />
     </data>
@@ -57,6 +61,8 @@
             android:paddingLeft="5dp" />
 
         <ImageView
+            android:id="@+id/voicemail_icon"
+            android:onClick="@{voicemailClickListener}"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:contentDescription="@string/content_description_voice_mail"
@@ -68,6 +74,7 @@
 
         <TextView
             android:id="@+id/voice_mail_count"
+            android:onClick="@{voicemailClickListener}"
             android:text="@{viewModel.voiceMailCount.toString()}"
             android:visibility="@{viewModel.voiceMailCount > 0 ? View.VISIBLE : View.GONE, default=gone}"
             android:textColor="?attr/secondaryTextColor"

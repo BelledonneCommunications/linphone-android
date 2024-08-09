@@ -47,7 +47,6 @@ import androidx.navigation.findNavController
 import androidx.window.layout.FoldingFeature
 import coil.imageLoader
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.messaging.FirebaseMessaging
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
 import kotlin.math.abs
@@ -56,8 +55,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.tasks.await
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationResponse
 import net.openid.appauth.AuthorizationService
@@ -83,18 +80,13 @@ import org.linphone.activities.navigateToDialer
 import org.linphone.authentication.AuthStateManager
 import org.linphone.compatibility.Compatibility
 import org.linphone.contact.ContactsUpdatedListenerStub
-import org.linphone.core.AVPFMode
 import org.linphone.core.AuthInfo
 import org.linphone.core.AuthMethod
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.CorePreferences
-import org.linphone.core.Factory
-import org.linphone.core.TransportType
 import org.linphone.core.tools.Log
 import org.linphone.databinding.MainActivityBinding
-import org.linphone.environment.DimensionsEnvironmentService
-import org.linphone.models.UserDevice
 import org.linphone.services.APIClientService
 import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
@@ -105,9 +97,6 @@ import org.linphone.utils.PermissionHelper
 import org.linphone.utils.ShortcutsHelper
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.setKeyboardInsetListener
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestinationChangedListener {
     private lateinit var binding: MainActivityBinding
@@ -238,115 +227,6 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         }
     }
 
-    private fun registerSipEndpoints(userDeviceList: List<UserDevice>) {
-        setAudioPayloadTypes()
-        setVideoPayloadTypes()
-
-        coreContext.core.clearAllAuthInfo()
-        coreContext.core.clearProxyConfig()
-        coreContext.core.clearAccounts()
-
-        userDeviceList.forEach {
-            RegisterSipEndpoint(it)
-        }
-
-        if (coreContext.core.accountList.any()) {
-            coreContext.core.defaultAccount = coreContext.core.accountList.first()
-            coreContext.core.refreshRegisters()
-            Log.i(
-                "RegisterSipEndpoints::${coreContext.core.defaultAccount!!.params.identityAddress?.username}::Default=True"
-            )
-        }
-    }
-
-    private fun RegisterSipEndpoint(userDevice: UserDevice) {
-        if (userDevice.hasCredentials()) {
-            val accountParams = coreContext.core.createAccountParams()
-            val identityUri = "${userDevice.sipUsername} <sip:${userDevice.sipUsername}@${userDevice.sipRealm}>"
-
-            accountParams.identityAddress = coreContext.core.interpretUrl(identityUri, false)
-
-            var enableOutboundProxy = false
-            if (userDevice.sipOutboundProxy.isNotBlank()) {
-                enableOutboundProxy = true
-            }
-
-            var sipTransport = userDevice.sipTransport
-            if (sipTransport.isBlank()) {
-                sipTransport = "tls"
-            }
-
-            var serverUri = "<sip:${userDevice.sipOutboundProxy};transport=${stringToTransportType(
-                sipTransport
-            )}>"
-            accountParams.serverAddress = coreContext.core.interpretUrl(serverUri, false)
-
-            accountParams.isOutboundProxyEnabled = enableOutboundProxy
-            accountParams.isRegisterEnabled = true
-            accountParams.avpfMode = AVPFMode.Disabled // This is always disabled in PlumMobile
-            accountParams.expires = userDevice.sipRegisterTimeout
-            accountParams.pushNotificationAllowed = false
-            accountParams.remotePushNotificationAllowed = false
-
-            val auth = Factory.instance().createAuthInfo(
-                userDevice.sipUsername,
-                userDevice.sipUsername,
-                userDevice.sipUserPassword,
-                "",
-                "",
-                userDevice.sipRealm
-            )
-            coreContext.core.addAuthInfo(auth)
-
-            if (accountParams.natPolicy == null) {
-                accountParams.natPolicy = coreContext.core.createNatPolicy()
-            }
-
-            accountParams.natPolicy!!.isIceEnabled = false
-            accountParams.natPolicy!!.isStunEnabled = false
-            accountParams.natPolicy!!.stunServerUsername = null
-            accountParams.natPolicy!!.isTurnEnabled = false
-            accountParams.natPolicy!!.isUdpTurnTransportEnabled = false
-            accountParams.natPolicy!!.isTcpTurnTransportEnabled = false
-            accountParams.natPolicy!!.isTlsTurnTransportEnabled = false
-
-            // FIXME: this feels rotten to the core
-            runBlocking {
-                val pushToken = FirebaseMessaging.getInstance().token.await()
-                if (!pushToken.isNullOrEmpty()) {
-                    Log.i("RegisterSipAccount: We have a push token, setting contact")
-                    accountParams.contactParameters = "app-id=cloud.xarios.dimensions;pn-tok=$pushToken;pn-type=firebase"
-                }
-            }
-
-            val account = coreContext.core.createAccount(accountParams)
-            Log.i("RegisterSipEndpoints::${account.params.identityAddress?.username}")
-            coreContext.core.addAccount(account)
-        }
-    }
-
-    private fun stringToTransportType(sipTransport: String): TransportType {
-        if (sipTransport.lowercase() == "udp") return TransportType.Udp
-        if (sipTransport.lowercase() == "tcp") return TransportType.Tcp
-
-        return TransportType.Tls
-    }
-
-    private fun setVideoPayloadTypes() {
-//        for (payloadType in coreContext.core.videoPayloadTypes) {
-//        }
-    }
-
-    private fun setAudioPayloadTypes() {
-        for (payloadType in coreContext.core.audioPayloadTypes) {
-            if (payloadType.mimeType.equals("PCMA", true) ||
-                payloadType.mimeType.equals("PCMU", true)
-            ) {
-                payloadType.enable(true)
-            }
-        }
-    }
-
 //    override fun onNewIntent(intent: Intent?) {
 //        super.onNewIntent(intent)
 //
@@ -394,31 +274,6 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         super.onResume()
         coreContext.contactsManager.addListener(listener)
         coreContext.core.addListener(coreListener)
-
-        val dimensionsEnvironment = DimensionsEnvironmentService.getInstance(applicationContext).getCurrentEnvironment()
-        val asm = AuthStateManager.getInstance(applicationContext)
-
-        apiClientService = APIClientService()
-        apiClientService.getUCGatewayService(
-            this.applicationContext,
-            dimensionsEnvironment!!.gatewayApiUri
-        ).doGetUserDevices(
-            userID = asm.fetchUserId()
-        )
-            .enqueue(object : Callback<List<UserDevice>> {
-                override fun onFailure(call: Call<List<UserDevice>>, t: Throwable) {
-                }
-
-                override fun onResponse(
-                    call: Call<List<UserDevice>>,
-                    response: Response<List<UserDevice>>
-                ) {
-                    val userDevices = response.body()
-                    if (!userDevices.isNullOrEmpty()) {
-                        registerSipEndpoints(userDevices)
-                    }
-                }
-            })
     }
 
     override fun onPause() {

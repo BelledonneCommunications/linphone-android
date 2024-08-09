@@ -39,6 +39,7 @@ import android.webkit.MimeTypeMap
 import androidx.lifecycle.*
 import androidx.loader.app.LoaderManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.google.firebase.messaging.FirebaseMessaging
 import java.io.File
 import java.math.BigInteger
 import java.nio.charset.StandardCharsets
@@ -52,20 +53,30 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 import kotlin.math.abs
 import kotlinx.coroutines.*
+import kotlinx.coroutines.tasks.await
 import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.authentication.AuthStateManager
+import org.linphone.authentication.AuthorizationServiceManager
 import org.linphone.compatibility.Compatibility
 import org.linphone.compatibility.PhoneStateInterface
 import org.linphone.contact.ContactLoader
 import org.linphone.contact.ContactsManager
 import org.linphone.contact.getContactForPhoneNumberOrAddress
 import org.linphone.core.tools.Log
+import org.linphone.environment.DimensionsEnvironmentService
 import org.linphone.mediastream.Version
+import org.linphone.models.UserDevice
+import org.linphone.models.UserInfo
 import org.linphone.notifications.NotificationsManager
+import org.linphone.services.APIClientService
 import org.linphone.telecom.TelecomHelper
 import org.linphone.utils.*
 import org.linphone.utils.Event
+import retrofit2.Call as retrofitCall
+import retrofit2.Callback as retrofitCallBack
+import retrofit2.Response as retrofitResponse
 
 class CoreContext(
     val context: Context,
@@ -100,6 +111,8 @@ class CoreContext(
         val appBuildType = BuildConfig.BUILD_TYPE
         "$appVersion ($appBranch, $appBuildType)"
     }
+
+    var userInfo: UserInfo? = null
 
     val sdkVersion: String by lazy {
         val sdkVersion = context.getString(org.linphone.core.R.string.linphone_sdk_version)
@@ -151,6 +164,8 @@ class CoreContext(
                 }
 
                 fetchContacts()
+
+                loadDimensionsAccounts()
             }
         }
 
@@ -392,6 +407,7 @@ class CoreContext(
         configureCore()
 
         core.start()
+
         _lifecycleRegistry.currentState = Lifecycle.State.STARTED
 
         initPhoneStateListener()
@@ -420,6 +436,170 @@ class CoreContext(
         val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         audioManager.registerAudioDeviceCallback(audioDeviceCallback, handler)
         Log.i("[Context] Started")
+    }
+
+    fun loadDimensionsAccounts() {
+        val dimensionsEnvironment = DimensionsEnvironmentService.getInstance(context).getCurrentEnvironment()
+        val asm = AuthStateManager.getInstance(context)
+
+        val apiClientService = APIClientService()
+        val ucGatewayService = apiClientService.getUCGatewayService(
+            context,
+            dimensionsEnvironment!!.gatewayApiUri,
+            AuthorizationServiceManager.getInstance(context).getAuthorizationServiceInstance(),
+            asm
+        )
+
+        ucGatewayService.doGetUserDevices(userID = asm.fetchUserId()).enqueue(object : retrofitCallBack<List<UserDevice>> {
+            override fun onFailure(call: retrofitCall<List<UserDevice>>, t: Throwable) {
+                Log.e("loadDimensionsAccounts::doGetUserInfo::onFailure::${t.message}")
+            }
+
+            override fun onResponse(
+                call: retrofitCall<List<UserDevice>>,
+                response: retrofitResponse<List<UserDevice>>
+            ) {
+                if (response.isSuccessful) {
+                    registerSipEndpoints(response.body())
+                } else {
+                    Log.e(
+                        "loadDimensionsAccounts::doGetUserDevices::onResponse::${response.message()}"
+                    )
+                }
+            }
+        })
+
+        ucGatewayService.doGetUserInfo().enqueue(object : retrofitCallBack<UserInfo> {
+            override fun onFailure(call: retrofitCall<UserInfo>, t: Throwable) {
+                Log.e("loadDimensionsAccounts::doGetUserInfo::onFailure::${t.message}")
+            }
+
+            override fun onResponse(
+                call: retrofitCall<UserInfo>,
+                response: retrofitResponse<UserInfo>
+            ) {
+                if (response.isSuccessful) {
+                    userInfo = response.body()
+                } else {
+                    Log.e(
+                        "loadDimensionsAccounts::doGetUserInfo::onResponse::${response.message()}"
+                    )
+                }
+            }
+        })
+    }
+
+    private fun registerSipEndpoints(userDeviceList: List<UserDevice>?) {
+        if (userDeviceList != null) {
+            setAudioPayloadTypes()
+            setVideoPayloadTypes()
+
+            core.clearAllAuthInfo()
+            core.clearProxyConfig()
+            core.clearAccounts()
+
+            userDeviceList.forEach {
+                registerSipEndpoint(it)
+            }
+
+            if (core.accountList.any() && core.defaultAccount != core.accountList.first()) {
+                core.defaultAccount = core.accountList.first()
+                core.refreshRegisters()
+
+                Log.i(
+                    "RegisterSipEndpoints::${core.defaultAccount!!.params.identityAddress?.username}::Default=True"
+                )
+            }
+        }
+    }
+
+    private fun registerSipEndpoint(userDevice: UserDevice) {
+        if (userDevice.hasCredentials()) {
+            val accountParams = core.createAccountParams()
+            val identityUri = "${userDevice.sipUsername} <sip:${userDevice.sipUsername}@${userDevice.sipRealm}>"
+
+            accountParams.identityAddress = core.interpretUrl(identityUri, false)
+            accountParams.limeServerUrl = ""
+
+            var enableOutboundProxy = false
+            if (userDevice.sipOutboundProxy.isNotBlank()) {
+                enableOutboundProxy = true
+            }
+
+            var sipTransport = userDevice.sipTransport
+            if (sipTransport.isBlank()) {
+                sipTransport = "tls"
+            }
+
+            val serverUri = "<sip:${userDevice.sipOutboundProxy};transport=${stringToTransportType(
+                sipTransport
+            )}>"
+            accountParams.serverAddress = core.interpretUrl(serverUri, false)
+
+            accountParams.isOutboundProxyEnabled = enableOutboundProxy
+            accountParams.isRegisterEnabled = true
+            accountParams.avpfMode = AVPFMode.Disabled // This is always disabled in PlumMobile
+            accountParams.expires = userDevice.sipRegisterTimeout
+            accountParams.pushNotificationAllowed = false
+            accountParams.remotePushNotificationAllowed = false
+
+            val auth = Factory.instance().createAuthInfo(
+                userDevice.sipUsername,
+                userDevice.sipUsername,
+                userDevice.sipUserPassword,
+                "",
+                "",
+                userDevice.sipRealm
+            )
+            core.addAuthInfo(auth)
+
+            if (accountParams.natPolicy == null) {
+                accountParams.natPolicy = core.createNatPolicy()
+            }
+
+            accountParams.natPolicy!!.isIceEnabled = false
+            accountParams.natPolicy!!.isStunEnabled = false
+            accountParams.natPolicy!!.stunServerUsername = null
+            accountParams.natPolicy!!.isTurnEnabled = false
+            accountParams.natPolicy!!.isUdpTurnTransportEnabled = false
+            accountParams.natPolicy!!.isTcpTurnTransportEnabled = false
+            accountParams.natPolicy!!.isTlsTurnTransportEnabled = false
+
+            // FIXME: this feels rotten to the core
+            runBlocking {
+                val pushToken = FirebaseMessaging.getInstance().token.await()
+                if (!pushToken.isNullOrEmpty()) {
+                    Log.i("RegisterSipAccount: We have a push token, setting contact")
+                    accountParams.contactParameters = "app-id=cloud.xarios.dimensions;pn-tok=$pushToken;pn-type=firebase"
+                }
+            }
+
+            val account = core.createAccount(accountParams)
+            Log.i("RegisterSipEndpoints::${account.params.identityAddress?.username}")
+            core.addAccount(account)
+        }
+    }
+
+    private fun stringToTransportType(sipTransport: String): TransportType {
+        if (sipTransport.lowercase() == "udp") return TransportType.Udp
+        if (sipTransport.lowercase() == "tcp") return TransportType.Tcp
+
+        return TransportType.Tls
+    }
+
+    private fun setVideoPayloadTypes() {
+//        for (payloadType in coreContext.core.videoPayloadTypes) {
+//        }
+    }
+
+    private fun setAudioPayloadTypes() {
+        for (payloadType in core.audioPayloadTypes) {
+            if (payloadType.mimeType.equals("PCMA", true) ||
+                payloadType.mimeType.equals("PCMU", true)
+            ) {
+                payloadType.enable(true)
+            }
+        }
     }
 
     fun stop() {
@@ -485,11 +665,11 @@ class CoreContext(
         }
 
         // Now LIME server URL is set on accounts
-        val limeServerUrl = core.limeX3DhServerUrl.orEmpty()
-        if (limeServerUrl.isNotEmpty()) {
-            Log.w("[Context] Removing LIME X3DH server URL from Core config")
-            core.limeX3DhServerUrl = null
-        }
+//        val limeServerUrl = core.limeX3DhServerUrl.orEmpty()
+//        if (limeServerUrl.isNotEmpty()) {
+//            Log.w("[Context] Removing LIME X3DH server URL from Core config")
+//            core.limeX3DhServerUrl = null
+//        }
 
         // Disable Telecom Manager on Android < 10 to prevent crash due to OS bug in Android 9
         if (Version.sdkStrictlyBelow(Version.API29_ANDROID_10)) {
@@ -616,21 +796,21 @@ class CoreContext(
                     )
                 }
 
-                if (account.params.limeServerUrl.isNullOrEmpty()) {
-                    if (limeServerUrl.isNotEmpty()) {
-                        params.limeServerUrl = limeServerUrl
-                        paramsChanged = true
-                        Log.i(
-                            "[Context] Moving Core's LIME X3DH server URL [$limeServerUrl] on account ${params.identityAddress?.asString()}"
-                        )
-                    } else {
-                        params.limeServerUrl = corePreferences.limeServerUrl
-                        paramsChanged = true
-                        Log.w(
-                            "[Context] Linphone account [${params.identityAddress?.asString()}] didn't have a LIME X3DH server URL, setting one: ${corePreferences.limeServerUrl}"
-                        )
-                    }
-                }
+//                if (account.params.limeServerUrl.isNullOrEmpty()) {
+//                    if (limeServerUrl.isNotEmpty()) {
+//                        params.limeServerUrl = limeServerUrl
+//                        paramsChanged = true
+//                        Log.i(
+//                            "[Context] Moving Core's LIME X3DH server URL [$limeServerUrl] on account ${params.identityAddress?.asString()}"
+//                        )
+//                    } else {
+//                        params.limeServerUrl = corePreferences.limeServerUrl
+//                        paramsChanged = true
+//                        Log.w(
+//                            "[Context] Linphone account [${params.identityAddress?.asString()}] didn't have a LIME X3DH server URL, setting one: ${corePreferences.limeServerUrl}"
+//                        )
+//                    }
+//                }
 
                 if (paramsChanged) {
                     Log.i("[Context] Account params have been updated, apply changes")
@@ -1194,6 +1374,15 @@ class CoreContext(
         // This flag is required to start an Activity from a Service context
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
         context.startActivity(intent)
+    }
+
+    fun dialVoicemail() {
+        if (userInfo == null || userInfo!!.presenceId.isBlank()) {
+            Log.w("[Context] CallVoicemail executed with no userInfo")
+            return
+        } else {
+            core.invite(userInfo!!.presenceId)
+        }
     }
 
     /* VFS */
