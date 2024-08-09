@@ -32,9 +32,10 @@ steps:
 - task: Bash@3
   inputs:
     targetType: 'inline'
-    script: 'find . -name "build.gradle" | xargs sed -i "s/versionCode appVersionCode/versionCode $APPVERSIONCODE/g"'
+    script: |
+      current_timestamp=`date +%s`
+      find . -name "build.gradle" | xargs sed -i "s/versionCode appVersionCode/versionCode ${current_timestamp}/g"
     workingDirectory: '$(Build.SourcesDirectory)/app/'
-
 - task: Bash@3
   inputs:
     targetType: 'inline'
