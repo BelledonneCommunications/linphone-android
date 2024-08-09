@@ -28,9 +28,9 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.AccountCreator
 import org.linphone.core.AccountCreatorListenerStub
-import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
+import org.linphone.utils.Log
 
 class PhoneAccountCreationViewModelFactory(private val accountCreator: AccountCreator) :
     ViewModelProvider.NewInstanceFactory() {

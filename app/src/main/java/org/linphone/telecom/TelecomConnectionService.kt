@@ -30,7 +30,7 @@ import org.linphone.LinphoneApplication.Companion.ensureCoreExists
 import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
-import org.linphone.core.tools.Log
+import org.linphone.utils.Log
 
 @TargetApi(29)
 class TelecomConnectionService : ConnectionService() {

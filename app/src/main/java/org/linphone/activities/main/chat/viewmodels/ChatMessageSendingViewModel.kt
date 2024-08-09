@@ -40,9 +40,9 @@ import org.linphone.activities.main.chat.data.ChatMessageAttachmentData
 import org.linphone.activities.main.chat.data.ChatMessageData
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.*
-import org.linphone.core.tools.Log
 import org.linphone.utils.*
 import org.linphone.utils.Event
+import org.linphone.utils.Log
 
 class ChatMessageSendingViewModelFactory(private val chatRoom: ChatRoom) :
     ViewModelProvider.NewInstanceFactory() {

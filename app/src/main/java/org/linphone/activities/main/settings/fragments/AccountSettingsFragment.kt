@@ -30,10 +30,10 @@ import org.linphone.activities.main.settings.viewmodels.AccountSettingsViewModel
 import org.linphone.activities.main.settings.viewmodels.AccountSettingsViewModelFactory
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.navigateToPhoneLinking
-import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsAccountFragmentBinding
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
+import org.linphone.utils.Log
 
 class AccountSettingsFragment : GenericSettingFragment<SettingsAccountFragmentBinding>() {
     private lateinit var viewModel: AccountSettingsViewModel

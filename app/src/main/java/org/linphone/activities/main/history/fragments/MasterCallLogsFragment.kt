@@ -46,9 +46,9 @@ import org.linphone.activities.navigateToCallHistory
 import org.linphone.activities.navigateToConferenceCallHistory
 import org.linphone.activities.navigateToDialer
 import org.linphone.core.ConferenceInfo
-import org.linphone.core.tools.Log
 import org.linphone.databinding.HistoryMasterFragmentBinding
 import org.linphone.utils.*
+import org.linphone.utils.Log
 
 class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, CallLogsListAdapter>() {
     override val dialogConfirmationMessageBeforeRemoval = R.plurals.history_delete_dialog

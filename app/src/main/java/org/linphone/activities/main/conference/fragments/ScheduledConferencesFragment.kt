@@ -39,9 +39,9 @@ import org.linphone.activities.main.fragments.MasterFragment
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.navigateToConferenceScheduling
 import org.linphone.activities.navigateToConferenceWaitingRoom
-import org.linphone.core.tools.Log
 import org.linphone.databinding.ConferencesScheduledFragmentBinding
 import org.linphone.utils.*
+import org.linphone.utils.Log
 
 class ScheduledConferencesFragment : MasterFragment<ConferencesScheduledFragmentBinding, ScheduledConferencesAdapter>() {
     override val dialogConfirmationMessageBeforeRemoval = R.plurals.conference_scheduled_delete_dialog

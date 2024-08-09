@@ -28,9 +28,9 @@ import org.linphone.R
 import org.linphone.activities.main.viewmodels.MessageNotifierViewModel
 import org.linphone.activities.voip.ConferenceDisplayMode
 import org.linphone.core.*
-import org.linphone.core.tools.Log
 import org.linphone.utils.*
 import org.linphone.utils.Event
+import org.linphone.utils.Log
 
 class ConferenceWaitingRoomViewModel : MessageNotifierViewModel() {
     val subject = MutableLiveData<String>()

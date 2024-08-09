@@ -29,9 +29,9 @@ import org.linphone.activities.main.chat.adapters.ImdnAdapter
 import org.linphone.activities.main.chat.viewmodels.ImdnViewModel
 import org.linphone.activities.main.chat.viewmodels.ImdnViewModelFactory
 import org.linphone.activities.main.fragments.SecureFragment
-import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatRoomImdnFragmentBinding
 import org.linphone.utils.AppUtils
+import org.linphone.utils.Log
 import org.linphone.utils.RecyclerViewHeaderDecoration
 
 class ImdnFragment : SecureFragment<ChatRoomImdnFragmentBinding>() {

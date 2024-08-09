@@ -26,7 +26,7 @@ import androidx.core.app.NotificationManagerCompat
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.compatibility.Compatibility
-import org.linphone.core.tools.Log
+import org.linphone.utils.Log
 
 class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {

@@ -35,10 +35,10 @@ import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.navigateToChatRoom
 import org.linphone.activities.navigateToContactEditor
 import org.linphone.activities.navigateToDialer
-import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactDetailFragmentBinding
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
+import org.linphone.utils.Log
 
 class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
     private lateinit var viewModel: ContactViewModel

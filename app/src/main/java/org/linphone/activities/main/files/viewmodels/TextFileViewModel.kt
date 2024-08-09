@@ -30,7 +30,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.linphone.core.Content
-import org.linphone.core.tools.Log
+import org.linphone.utils.Log
 
 class TextFileViewModelFactory(private val content: Content) :
     ViewModelProvider.NewInstanceFactory() {

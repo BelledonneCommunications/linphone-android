@@ -26,8 +26,8 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.activities.main.viewmodels.MessageNotifierViewModel
 import org.linphone.core.*
-import org.linphone.core.tools.Log
 import org.linphone.utils.Event
+import org.linphone.utils.Log
 
 open class ContactsSelectionViewModel : MessageNotifierViewModel() {
     val contactsList = MutableLiveData<ArrayList<SearchResult>>()

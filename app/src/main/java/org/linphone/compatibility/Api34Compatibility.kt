@@ -30,7 +30,7 @@ import android.content.pm.ServiceInfo
 import android.net.Uri
 import android.provider.Settings
 import androidx.core.content.ContextCompat
-import org.linphone.core.tools.Log
+import org.linphone.utils.Log
 import org.linphone.utils.PermissionHelper
 
 @TargetApi(34)

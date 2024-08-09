@@ -40,9 +40,9 @@ import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomListenerStub
 import org.linphone.core.EventLog
 import org.linphone.core.Factory
-import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatBubbleActivityBinding
 import org.linphone.utils.FileUtils
+import org.linphone.utils.Log
 
 class ChatBubbleActivity : GenericActivity() {
     private lateinit var binding: ChatBubbleActivityBinding

@@ -31,9 +31,9 @@ import org.linphone.R
 import org.linphone.activities.main.adapters.SelectionListAdapter
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
-import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
+import org.linphone.utils.Log
 import org.linphone.utils.hideKeyboard
 
 /**

@@ -47,8 +47,8 @@ import org.linphone.compatibility.Compatibility
 import org.linphone.contact.getPerson
 import org.linphone.contact.getThumbnailUri
 import org.linphone.core.*
-import org.linphone.core.tools.Log
 import org.linphone.utils.*
+import org.linphone.utils.Log
 
 class Notifiable(val notificationId: Int) {
     val messages: ArrayList<NotifiableMessage> = arrayListOf()

@@ -25,8 +25,8 @@ import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
 import org.linphone.activities.main.settings.viewmodels.LdapSettingsViewModel
 import org.linphone.activities.main.settings.viewmodels.LdapSettingsViewModelFactory
-import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsLdapFragmentBinding
+import org.linphone.utils.Log
 
 class LdapSettingsFragment : GenericSettingFragment<SettingsLdapFragmentBinding>() {
     private lateinit var viewModel: LdapSettingsViewModel

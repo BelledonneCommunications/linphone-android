@@ -29,8 +29,8 @@ import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.files.viewmodels.ImageFileViewModel
 import org.linphone.activities.main.files.viewmodels.ImageFileViewModelFactory
 import org.linphone.compatibility.Compatibility
-import org.linphone.core.tools.Log
 import org.linphone.databinding.FileImageViewerFragmentBinding
+import org.linphone.utils.Log
 
 class ImageViewerFragment : GenericViewerFragment<FileImageViewerFragmentBinding>() {
     private lateinit var viewModel: ImageFileViewModel

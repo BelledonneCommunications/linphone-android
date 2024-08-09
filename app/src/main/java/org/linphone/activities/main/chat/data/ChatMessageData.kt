@@ -32,9 +32,9 @@ import org.linphone.core.Address
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessageListenerStub
 import org.linphone.core.ChatMessageReaction
-import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
+import org.linphone.utils.Log
 import org.linphone.utils.PatternClickableSpan
 import org.linphone.utils.TimestampUtils
 

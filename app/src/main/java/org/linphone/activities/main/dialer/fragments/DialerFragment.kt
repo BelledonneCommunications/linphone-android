@@ -47,13 +47,13 @@ import org.linphone.activities.navigateToConferenceScheduling
 import org.linphone.activities.navigateToConfigFileViewer
 import org.linphone.activities.navigateToContacts
 import org.linphone.compatibility.Compatibility
-import org.linphone.core.tools.Log
 import org.linphone.databinding.DialerFragmentBinding
 import org.linphone.mediastream.Version
 import org.linphone.telecom.TelecomHelper
 import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
+import org.linphone.utils.Log
 import org.linphone.utils.PermissionHelper
 
 class DialerFragment : SecureFragment<DialerFragmentBinding>() {

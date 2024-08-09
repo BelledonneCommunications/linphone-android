@@ -25,9 +25,9 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.activities.main.history.data.GroupedCallLogData
 import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.core.*
-import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.Log
 import org.linphone.utils.TimestampUtils
 
 class CallLogsListViewModel : ViewModel() {

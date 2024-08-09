@@ -31,9 +31,9 @@ import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.conference.viewmodels.ConferenceSchedulingViewModel
 import org.linphone.activities.navigateToSummary
 import org.linphone.contact.ContactsSelectionAdapter
-import org.linphone.core.tools.Log
 import org.linphone.databinding.ConferenceSchedulingParticipantsListFragmentBinding
 import org.linphone.utils.AppUtils
+import org.linphone.utils.Log
 import org.linphone.utils.PermissionHelper
 
 class ConferenceSchedulingParticipantsListFragment : GenericFragment<ConferenceSchedulingParticipantsListFragmentBinding>() {

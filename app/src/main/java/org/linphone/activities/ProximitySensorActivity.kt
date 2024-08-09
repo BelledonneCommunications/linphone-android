@@ -23,7 +23,7 @@ import android.content.Context
 import android.os.Bundle
 import android.os.PowerManager
 import android.os.PowerManager.RELEASE_FLAG_WAIT_FOR_NO_PROXIMITY
-import org.linphone.core.tools.Log
+import org.linphone.utils.Log
 
 abstract class ProximitySensorActivity : GenericActivity() {
     private lateinit var proximityWakeLock: PowerManager.WakeLock

@@ -27,8 +27,8 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.core.Ldap
-import org.linphone.core.tools.Log
 import org.linphone.utils.Event
+import org.linphone.utils.Log
 
 class LdapSettingsViewModelFactory(private val index: Int) :
     ViewModelProvider.NewInstanceFactory() {

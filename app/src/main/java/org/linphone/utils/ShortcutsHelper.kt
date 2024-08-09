@@ -38,7 +38,6 @@ import org.linphone.core.Address
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoom.Capabilities
 import org.linphone.core.Friend
-import org.linphone.core.tools.Log
 import org.linphone.mediastream.Version
 
 @TargetApi(25)

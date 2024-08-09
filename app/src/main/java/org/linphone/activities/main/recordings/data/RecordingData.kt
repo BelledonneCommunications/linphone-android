@@ -31,9 +31,9 @@ import kotlinx.coroutines.channels.ticker
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Player
 import org.linphone.core.PlayerListener
-import org.linphone.core.tools.Log
 import org.linphone.utils.AudioRouteUtils
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.Log
 
 class RecordingData(val path: String, private val recordingListener: RecordingListener) : Comparable<RecordingData> {
     companion object {

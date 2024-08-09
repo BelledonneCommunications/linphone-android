@@ -26,9 +26,9 @@ import org.linphone.activities.main.chat.data.ChatRoomData
 import org.linphone.activities.main.viewmodels.MessageNotifierViewModel
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.*
-import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.Log
 
 class ChatRoomsListViewModel : MessageNotifierViewModel() {
     val chatRooms = MutableLiveData<ArrayList<ChatRoomData>>()

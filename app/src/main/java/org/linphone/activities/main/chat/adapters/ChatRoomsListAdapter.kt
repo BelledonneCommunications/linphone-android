@@ -31,9 +31,9 @@ import org.linphone.activities.main.adapters.SelectionListAdapter
 import org.linphone.activities.main.chat.data.ChatRoomData
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 import org.linphone.core.ChatRoom
-import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatRoomListCellBinding
 import org.linphone.utils.Event
+import org.linphone.utils.Log
 
 class ChatRoomsListAdapter(
     selectionVM: ListTopBarViewModel,

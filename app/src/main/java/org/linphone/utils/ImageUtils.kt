@@ -25,7 +25,6 @@ import android.net.Uri
 import android.util.Base64
 import java.io.FileNotFoundException
 import org.linphone.compatibility.Compatibility
-import org.linphone.core.tools.Log
 
 class ImageUtils {
     companion object {

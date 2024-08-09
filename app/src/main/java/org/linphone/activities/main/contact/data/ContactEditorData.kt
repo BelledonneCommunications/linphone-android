@@ -34,9 +34,9 @@ import org.linphone.contact.*
 import org.linphone.core.ChatRoom.SecurityLevel
 import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.Friend
-import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.ImageUtils
+import org.linphone.utils.Log
 import org.linphone.utils.PermissionHelper
 
 class ContactEditorData(val friend: Friend?) : ContactDataInterface {

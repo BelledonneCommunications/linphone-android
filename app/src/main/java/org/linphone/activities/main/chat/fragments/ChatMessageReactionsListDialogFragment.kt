@@ -28,9 +28,9 @@ import com.google.android.material.tabs.TabLayout
 import org.linphone.R
 import org.linphone.activities.main.chat.data.ChatMessageReactionsListData
 import org.linphone.core.ChatMessage
-import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatMessageReactionsListDialogBinding
 import org.linphone.utils.AppUtils
+import org.linphone.utils.Log
 
 class ChatMessageReactionsListDialogFragment() : BottomSheetDialogFragment() {
     companion object {

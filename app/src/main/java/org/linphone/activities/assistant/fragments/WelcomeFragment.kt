@@ -39,9 +39,9 @@ import org.linphone.activities.assistant.viewmodels.WelcomeViewModel
 import org.linphone.activities.navigateToAccountLogin
 import org.linphone.activities.navigateToEmailAccountCreation
 import org.linphone.activities.navigateToRemoteProvisioning
-import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantWelcomeFragmentBinding
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.Log
 
 class WelcomeFragment : GenericFragment<AssistantWelcomeFragmentBinding>() {
     private lateinit var viewModel: WelcomeViewModel

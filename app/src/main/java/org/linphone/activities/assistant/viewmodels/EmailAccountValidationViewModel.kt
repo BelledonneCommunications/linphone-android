@@ -26,9 +26,9 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.AccountCreator
 import org.linphone.core.AccountCreatorListenerStub
-import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
+import org.linphone.utils.Log
 import org.linphone.utils.PhoneNumberUtils
 
 class EmailAccountValidationViewModelFactory(private val accountCreator: AccountCreator) :
