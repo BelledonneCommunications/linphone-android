@@ -33,9 +33,13 @@ steps:
 - task: Bash@3
   inputs:
     targetType: 'inline'
-    script: |
-      find . -name "build.gradle" | xargs sed 's/versionCode appVersionCode/versionCode $APPVERSIONCODE/g'
-      find . -name "build.gradle" | xargs sed 's/versionName "${project.version}"/versionName $APPVERSIONNAME/g'
+    script: 'find . -name "build.gradle" | xargs sed -i "s/versionCode appVersionCode/versionCode $APPVERSIONCODE/g"'
+    workingDirectory: '$(Build.SourcesDirectory)/app/'
+
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: "find . -name 'build.gradle' | xargs sed -i 's/versionName \"${project.version}\"/versionName $APPVERSIONNAME/g'"
     workingDirectory: '$(Build.SourcesDirectory)/app/'
 
 - task: CmdLine@2
