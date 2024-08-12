@@ -24,6 +24,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.IdRes
 import androidx.annotation.UiThread
 import androidx.core.view.doOnPreDraw
@@ -57,10 +58,33 @@ abstract class AbstractMainFragment : GenericMainFragment() {
 
     private lateinit var viewModel: AbstractMainViewModel
 
+    private val backPressedCallback = object : OnBackPressedCallback(false) {
+        override fun handleOnBackPressed() {
+            if (viewModel.searchBarVisible.value == true) {
+                viewModel.closeSearchBar()
+                return
+            }
+
+            Log.i("$TAG Search bar is closed, going back")
+            isEnabled = false
+            try {
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            } catch (ise: IllegalStateException) {
+                Log.w("$TAG Can't go back: $ise")
+            }
+        }
+    }
+
     abstract fun onDefaultAccountChanged()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         postponeEnterTransition()
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            backPressedCallback
+        )
+
         super.onViewCreated(view, savedInstanceState)
     }
 
@@ -204,6 +228,10 @@ abstract class AbstractMainFragment : GenericMainFragment() {
                 return@setOnEditorActionListener true
             }
             false
+        }
+
+        viewModel.searchBarVisible.observe(viewLifecycleOwner) { visible ->
+            backPressedCallback.isEnabled = visible
         }
 
         viewModel.focusSearchBarEvent.observe(viewLifecycleOwner) {

@@ -36,6 +36,7 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.inputmethod.EditorInfo
 import android.widget.PopupWindow
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
@@ -309,6 +310,23 @@ open class ConversationFragment : SlidingPaneChildFragment() {
     private var bottomSheetDeliveryModel: MessageDeliveryModel? = null
 
     private var bottomSheetReactionsModel: MessageReactionsModel? = null
+
+    private val backPressedCallback = object : OnBackPressedCallback(false) {
+        override fun handleOnBackPressed() {
+            if (viewModel.searchBarVisible.value == true) {
+                viewModel.closeSearchBar()
+                return
+            }
+
+            Log.i("$TAG Search bar is closed, going back")
+            isEnabled = false
+            try {
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            } catch (ise: IllegalStateException) {
+                Log.w("$TAG Can't go back: $ise")
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -826,6 +844,11 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                 }
             }
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            backPressedCallback
+        )
     }
 
     override fun onResume() {
@@ -1011,6 +1034,8 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         popupView.setSearchClickListener {
             Log.i("$TAG Opening search bar")
             viewModel.openSearchBar()
+            backPressedCallback.isEnabled = true
+
             popupWindow.dismiss()
         }
 
