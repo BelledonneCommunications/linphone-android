@@ -138,7 +138,7 @@ class MainActivity : GenericActivity() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.inCallTopBar.root) { v, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.updatePadding(0, insets.top, 0, 0)
-            WindowInsetsCompat.CONSUMED
+            windowInsets
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.mainNavContainer) { v, windowInsets ->
