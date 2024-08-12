@@ -48,7 +48,7 @@ class AvatarGenerator(private val context: Context) {
         initials = label
     }
 
-    private fun preBuild(): Bitmap {
+    fun buildBitmap(): Bitmap {
         val textPainter = getTextPainter()
         val painter = getPainter()
 
@@ -68,12 +68,12 @@ class AvatarGenerator(private val context: Context) {
         return bitmap
     }
 
-    fun build(): BitmapDrawable {
-        return BitmapDrawable(context.resources, preBuild())
+    fun buildDrawable(): BitmapDrawable {
+        return BitmapDrawable(context.resources, buildBitmap())
     }
 
     fun buildIcon(): IconCompat {
-        return IconCompat.createWithAdaptiveBitmap(preBuild())
+        return IconCompat.createWithAdaptiveBitmap(buildBitmap())
     }
 
     private fun getTextPainter(): TextPaint {

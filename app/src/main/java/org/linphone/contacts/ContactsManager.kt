@@ -647,11 +647,12 @@ class ContactsManager @UiThread constructor() {
 }
 
 @WorkerThread
-fun Friend.getAvatarBitmap(): Bitmap? {
+fun Friend.getAvatarBitmap(round: Boolean = false): Bitmap? {
     try {
         return ImageUtils.getBitmap(
             coreContext.context,
-            photo ?: getNativeContactPictureUri()?.toString()
+            photo ?: getNativeContactPictureUri()?.toString(),
+            round
         )
     } catch (numberFormatException: NumberFormatException) {
         // Expected for contacts created by Linphone

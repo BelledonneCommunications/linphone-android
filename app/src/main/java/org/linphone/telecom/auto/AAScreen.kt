@@ -31,9 +31,11 @@ import androidx.car.app.model.Template
 import androidx.core.graphics.drawable.IconCompat
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
-import org.linphone.contacts.getNativeContactPictureUri
+import org.linphone.contacts.AvatarGenerator
+import org.linphone.contacts.getAvatarBitmap
 import org.linphone.core.MagicSearch
 import org.linphone.core.tools.Log
+import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils
 
 class AAScreen(context: CarContext) : Screen(context) {
@@ -63,20 +65,20 @@ class AAScreen(context: CarContext) : Screen(context) {
                 val friend = result.friend ?: continue
 
                 builder.setTitle(friend.name)
-                val pictureUri = friend.getNativeContactPictureUri()
-                if (pictureUri != null) {
-                    Log.i(
-                        "$TAG Creating car icon for friend [${friend.name}] with URI [$pictureUri]"
+                Log.i("$TAG Creating car icon for friend [${friend.name}]")
+                try {
+                    val bitmap = friend.getAvatarBitmap(true) ?: AvatarGenerator(
+                        coreContext.context
+                    ).setInitials(
+                        AppUtils.getInitials(friend.name.orEmpty())
+                    ).buildBitmap()
+                    builder.setImage(
+                        CarIcon.Builder(IconCompat.createWithBitmap(bitmap))
+                            .build(),
+                        GridItem.IMAGE_TYPE_LARGE
                     )
-                    try {
-                        builder.setImage(
-                            CarIcon.Builder(IconCompat.createWithContentUri(pictureUri))
-                                .build(),
-                            GridItem.IMAGE_TYPE_LARGE
-                        )
-                    } catch (e: Exception) {
-                        Log.e("$TAG Exception trying to create CarIcon: $e")
-                    }
+                } catch (e: Exception) {
+                    Log.e("$TAG Exception trying to create CarIcon: $e")
                 }
 
                 builder.setOnClickListener {
@@ -86,8 +88,12 @@ class AAScreen(context: CarContext) : Screen(context) {
                         coreContext.startAudioCall(address)
                     }
                 }
-                val item = builder.build()
-                favorites.add(item)
+                try {
+                    val item = builder.build()
+                    favorites.add(item)
+                } catch (e: Exception) {
+                    Log.e("$TAG Failed to build grid item: $e")
+                }
             }
             loading = false
             Log.i("$TAG Processed [${favorites.size}] favorites")

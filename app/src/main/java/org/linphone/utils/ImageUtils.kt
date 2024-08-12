@@ -21,7 +21,12 @@ package org.linphone.utils
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.ImageDecoder
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
+import android.graphics.Rect
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import androidx.annotation.AnyThread
@@ -46,13 +51,14 @@ class ImageUtils {
             if (textSize > 0) {
                 builder.setTextSize(AppUtils.getDimension(textSize))
             }
-            return builder.build()
+            return builder.buildDrawable()
         }
 
         @WorkerThread
         fun getBitmap(
             context: Context,
-            path: String?
+            path: String?,
+            round: Boolean = false
         ): Bitmap? {
             Log.d("$TAG Trying to create Bitmap from path [$path]")
             if (path != null) {
@@ -64,12 +70,17 @@ class ImageUtils {
                     }
 
                     // We make a copy to ensure Bitmap will be Software and not Hardware, required for shortcuts
-                    return ImageDecoder.decodeBitmap(
+                    val bitmap = ImageDecoder.decodeBitmap(
                         ImageDecoder.createSource(context.contentResolver, fromPictureUri)
                     ).copy(
                         Bitmap.Config.ARGB_8888,
                         true
                     )
+                    return if (round) {
+                        getRoundBitmap(bitmap)
+                    } else {
+                        bitmap
+                    }
                 } catch (fnfe: FileNotFoundException) {
                     Log.e("$TAG File [$path] not found: $fnfe")
                     return null
@@ -81,6 +92,29 @@ class ImageUtils {
 
             Log.e("$TAG Can't get bitmap from null URI")
             return null
+        }
+
+        @AnyThread
+        private fun getRoundBitmap(bitmap: Bitmap): Bitmap {
+            val output =
+                Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(output)
+            val color = -0xbdbdbe
+            val paint = Paint()
+            val rect =
+                Rect(0, 0, bitmap.width, bitmap.height)
+            paint.isAntiAlias = true
+            canvas.drawARGB(0, 0, 0, 0)
+            paint.color = color
+            canvas.drawCircle(
+                bitmap.width / 2.toFloat(),
+                bitmap.height / 2.toFloat(),
+                bitmap.width / 2.toFloat(),
+                paint
+            )
+            paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+            canvas.drawBitmap(bitmap, rect, rect, paint)
+            return output
         }
     }
 }

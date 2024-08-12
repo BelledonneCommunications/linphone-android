@@ -414,7 +414,7 @@ fun ImageView.loadCallAvatarWithCoil(model: AbstractAvatarModel?) {
 fun ImageView.loadInitialsAvatarWithCoil(initials: String?) {
     val builder = AvatarGenerator(context)
     builder.setInitials(initials.orEmpty())
-    load(builder.build())
+    load(builder.buildDrawable())
 }
 
 @SuppressLint("ResourceType")
