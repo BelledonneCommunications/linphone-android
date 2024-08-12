@@ -77,7 +77,6 @@ import org.linphone.utils.Event
 import retrofit2.Call as retrofitCall
 import retrofit2.Callback as retrofitCallBack
 import retrofit2.Response as retrofitResponse
-import org.linphone.utils.Log
 
 class CoreContext(
     val context: Context,
