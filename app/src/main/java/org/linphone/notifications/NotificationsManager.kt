@@ -1008,6 +1008,8 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             if (isIncoming) {
                 setPriority(NotificationCompat.PRIORITY_MAX)
+            } else {
+                setPriority(NotificationCompat.PRIORITY_HIGH)
             }
             setWhen(System.currentTimeMillis())
             setAutoCancel(false)
