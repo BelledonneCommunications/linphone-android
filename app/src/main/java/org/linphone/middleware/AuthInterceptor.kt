@@ -11,6 +11,7 @@ class AuthInterceptor(context: Context) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val requestBuilder = chain.request().newBuilder()
 
+        requestBuilder.addHeader("Accept", "application/json")
         requestBuilder.addHeader("Authorization", "Bearer ${asm.current.accessToken}")
 
         return chain.proceed(requestBuilder.build())

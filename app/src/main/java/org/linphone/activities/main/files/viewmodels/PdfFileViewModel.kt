@@ -33,8 +33,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Content
-import org.linphone.core.tools.Log
 import org.linphone.utils.Event
+import org.linphone.utils.Log
 
 class PdfFileViewModelFactory(private val content: Content) :
     ViewModelProvider.NewInstanceFactory() {

@@ -34,7 +34,6 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.*
-import org.linphone.core.tools.Log
 
 /**
  * Various utility methods for Linphone SDK

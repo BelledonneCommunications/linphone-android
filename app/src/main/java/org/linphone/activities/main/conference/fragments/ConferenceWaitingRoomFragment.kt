@@ -29,8 +29,8 @@ import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.conference.viewmodels.ConferenceWaitingRoomViewModel
-import org.linphone.core.tools.Log
 import org.linphone.databinding.ConferenceWaitingRoomFragmentBinding
+import org.linphone.utils.Log
 import org.linphone.utils.PermissionHelper
 
 class ConferenceWaitingRoomFragment : GenericFragment<ConferenceWaitingRoomFragmentBinding>() {

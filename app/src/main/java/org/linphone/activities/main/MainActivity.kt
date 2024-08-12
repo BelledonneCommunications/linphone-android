@@ -80,23 +80,35 @@ import org.linphone.activities.navigateToDialer
 import org.linphone.authentication.AuthStateManager
 import org.linphone.compatibility.Compatibility
 import org.linphone.contact.ContactsUpdatedListenerStub
+import org.linphone.core.AVPFMode
 import org.linphone.core.AuthInfo
 import org.linphone.core.AuthMethod
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.CorePreferences
 import org.linphone.core.tools.Log
+import org.linphone.core.Factory
+import org.linphone.core.TransportType
 import org.linphone.databinding.MainActivityBinding
+import org.linphone.environment.DimensionsEnvironmentService
+import org.linphone.middleware.FileTree
+import org.linphone.models.UserDevice
 import org.linphone.services.APIClientService
+import org.linphone.services.BrandingService
 import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.Log
 import org.linphone.utils.PermissionHelper
 import org.linphone.utils.ShortcutsHelper
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.setKeyboardInsetListener
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import timber.log.Timber
 
 class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestinationChangedListener {
     private lateinit var binding: MainActivityBinding
@@ -168,8 +180,38 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        Timber.plant(Timber.DebugTree(), FileTree(applicationContext))
+        Timber.tag("cloud.dimensions.uconnect")
+        Timber.d("OnCreate")
+        Log.d("OnCreate")
+
         // Must be done before the setContentView
         installSplashScreen()
+
+        val dimensionsEnvironment = DimensionsEnvironmentService.getInstance(applicationContext).getCurrentEnvironment()
+        val asm = AuthStateManager.getInstance(applicationContext)
+
+        apiClientService = APIClientService()
+        apiClientService.getUCGatewayService(
+            this.applicationContext,
+            dimensionsEnvironment!!.gatewayApiUri
+        ).doGetUserDevices(
+            userID = asm.fetchUserId()
+        )
+            .enqueue(object : Callback<List<UserDevice>> {
+                override fun onFailure(call: Call<List<UserDevice>>, t: Throwable) {
+                }
+
+                override fun onResponse(
+                    call: Call<List<UserDevice>>,
+                    response: Response<List<UserDevice>>
+                ) {
+                    val userDevices = response.body()
+                    if (!userDevices.isNullOrEmpty()) {
+                        registerSipEndpoints(userDevices)
+                    }
+                }
+            })
 
         binding = DataBindingUtil.setContentView(this, R.layout.main_activity)
         binding.lifecycleOwner = this
@@ -225,6 +267,16 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                 Log.e("[Main Activity] Security exception when doing reportFullyDrawn(): $se")
             }
         }
+
+        BrandingService.getInstance(applicationContext)
+            .brand
+            .subscribe { brand ->
+                Log.i("Got brand: " + brand.value?.brandName)
+
+                // DynamicColors.applyToActivityIfAvailable(this, DynamicColorsOptions.Builder().setThemeOverlay(Color.CYAN))
+                // val primary = resources.getColor(R.color.primary_color)
+                // window.navigationBarColor = Color.CYAN
+            }
     }
 
 //    override fun onNewIntent(intent: Intent?) {
@@ -236,6 +288,113 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 //        }
 //    }
 
+    private fun registerSipEndpoints(userDeviceList: List<UserDevice>) {
+        setAudioPayloadTypes()
+        setVideoPayloadTypes()
+
+        coreContext.core.clearAllAuthInfo()
+        coreContext.core.clearProxyConfig()
+        coreContext.core.clearAccounts()
+
+        userDeviceList.forEach {
+            RegisterSipEndpoint(it)
+        }
+
+        if (coreContext.core.accountList.any()) {
+            coreContext.core.defaultAccount = coreContext.core.accountList.first()
+        }
+    }
+
+    private fun RegisterSipEndpoint(userDevice: UserDevice) {
+        if (userDevice.hasCredentials()) {
+            val accountParams = coreContext.core.createAccountParams()
+            val identityUri = "${userDevice.sipUsername} <sip:${userDevice.sipUsername}@${userDevice.sipRealm}>"
+
+            accountParams.identityAddress = coreContext.core.interpretUrl(identityUri, false)
+
+            var enableOutboundProxy = false
+            if (userDevice.sipOutboundProxy.isNotBlank()) {
+                enableOutboundProxy = true
+            }
+
+            var sipTransport = userDevice.sipTransport
+            if (sipTransport.isBlank()) {
+                sipTransport = "tls"
+            }
+
+            var serverUri = "<sip:${userDevice.sipOutboundProxy};transport=${stringToTransportType(
+                sipTransport
+            )}>"
+            accountParams.serverAddress = coreContext.core.interpretUrl(serverUri, false)
+
+            accountParams.isOutboundProxyEnabled = enableOutboundProxy
+            accountParams.isRegisterEnabled = true
+            accountParams.avpfMode = AVPFMode.Disabled // This is always disabled in PlumMobile
+            accountParams.expires = userDevice.sipRegisterTimeout
+            accountParams.pushNotificationAllowed = false
+            accountParams.remotePushNotificationAllowed = false
+
+            val auth = Factory.instance().createAuthInfo(
+                userDevice.sipUsername,
+                userDevice.sipUsername,
+                userDevice.sipUserPassword,
+                "",
+                "",
+                userDevice.sipRealm
+            )
+            coreContext.core.addAuthInfo(auth)
+
+            if (accountParams.natPolicy == null) {
+                accountParams.natPolicy = coreContext.core.createNatPolicy()
+            }
+
+            accountParams.natPolicy!!.isIceEnabled = false
+            accountParams.natPolicy!!.isStunEnabled = false
+            accountParams.natPolicy!!.stunServerUsername = null
+            accountParams.natPolicy!!.isTurnEnabled = false
+            accountParams.natPolicy!!.isUdpTurnTransportEnabled = false
+            accountParams.natPolicy!!.isTcpTurnTransportEnabled = false
+            accountParams.natPolicy!!.isTlsTurnTransportEnabled = false
+
+            // TODO createPushToken service
+            // val pushToken = pushTokenService.GetVoipToken()
+
+            val account = coreContext.core.createAccount(accountParams)
+            coreContext.core.addAccount(account)
+        }
+    }
+
+    private fun stringToTransportType(sipTransport: String): TransportType {
+        if (sipTransport.lowercase() == "udp") return TransportType.Udp
+        if (sipTransport.lowercase() == "tcp") return TransportType.Tcp
+
+        return TransportType.Tls
+    }
+
+    private fun setVideoPayloadTypes() {
+//        for (payloadType in coreContext.core.videoPayloadTypes) {
+//        }
+    }
+
+    private fun setAudioPayloadTypes() {
+        for (payloadType in coreContext.core.audioPayloadTypes) {
+            if (payloadType.mimeType.equals("PCMA", true) ||
+                payloadType.mimeType.equals("PCMU", true)
+            ) {
+                payloadType.enable(true)
+            }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+
+        if (intent != null) {
+            Log.d("[Main Activity] Found new intent")
+            handleIntentParams(intent)
+        }
+    }
+
     override fun onStart() {
         super.onStart()
 
@@ -245,12 +404,10 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         val ex = AuthorizationException.fromIntent(intent)
         val asm = AuthStateManager.getInstance(applicationContext)
 
+        Log.i("isAuthorised: " + asm.current.isAuthorized)
+
         if (asm.current.isAuthorized) {
             // displayAuthorized();
-            Log.d(
-                "MainActivity",
-                "isAuthorised: " + asm.current.idToken + " | " + asm.current.accessToken
-            )
             return
         }
 
@@ -259,7 +416,6 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         }
 
         if (response?.authorizationCode != null) {
-            Log.d("MainActivity", "isAuthorised")
             // authorization code exchange is required
             asm.updateAfterAuthorization(response, ex)
             exchangeAuthorizationCode(response)
@@ -823,11 +979,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         try {
             clientAuthentication = asm.getCurrent().getClientAuthentication()
         } catch (ex: UnsupportedAuthenticationMethod) {
-            Log.d(
-                "MainActivity",
-                "Token request cannot be made - endpoint could not be constructed (%s)",
-                ex
-            )
+            Log.i("Token request cannot be made - endpoint could not be constructed (%s)", ex)
             // TODO displayNotAuthorized("Client authentication method is unsupported")
             return
         }
@@ -853,7 +1005,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                     (if ((authException != null)) authException.error else "")
                 )
 
-            Log.d("MainActivity", message)
+            Log.i(message)
             // WrongThread inference is incorrect for lambdas
             // TODO: runOnUiThread { displayNotAuthorized(message) }
         } else {

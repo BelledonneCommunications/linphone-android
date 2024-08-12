@@ -32,7 +32,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.AccountCreator
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
-import org.linphone.core.tools.Log
+import org.linphone.utils.Log
 
 abstract class AbstractPushTokenViewModel(val accountCreator: AccountCreator) : ViewModel() {
     private var waitingForPushToken = false

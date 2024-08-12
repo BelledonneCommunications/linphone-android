@@ -24,7 +24,7 @@ import androidx.lifecycle.MutableLiveData
 import org.linphone.activities.assistant.fragments.CountryPickerFragment
 import org.linphone.core.AccountCreator
 import org.linphone.core.DialPlan
-import org.linphone.core.tools.Log
+import org.linphone.utils.Log
 import org.linphone.utils.PhoneNumberUtils
 
 abstract class AbstractPhoneViewModel(accountCreator: AccountCreator) :

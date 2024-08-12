@@ -37,8 +37,8 @@ import org.linphone.activities.navigateToAccountSettings
 import org.linphone.activities.navigateToAudioSettings
 import org.linphone.activities.navigateToTunnelSettings
 import org.linphone.activities.navigateToVideoSettings
-import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsFragmentBinding
+import org.linphone.utils.Log
 
 class SettingsFragment : SecureFragment<SettingsFragmentBinding>() {
     private lateinit var viewModel: SettingsViewModel

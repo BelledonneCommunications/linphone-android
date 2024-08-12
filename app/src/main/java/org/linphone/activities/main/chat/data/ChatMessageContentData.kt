@@ -40,10 +40,10 @@ import kotlinx.coroutines.flow.onEach
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.*
-import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.AudioRouteUtils
 import org.linphone.utils.FileUtils
+import org.linphone.utils.Log
 import org.linphone.utils.TimestampUtils
 
 class ChatMessageContentData(

@@ -32,9 +32,9 @@ import org.linphone.activities.GenericFragment
 import org.linphone.activities.SnackBarActivity
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.Content
-import org.linphone.core.tools.Log
 import org.linphone.databinding.FileViewerTopBarFragmentBinding
 import org.linphone.utils.FileUtils
+import org.linphone.utils.Log
 import org.linphone.utils.PermissionHelper
 
 class TopBarFragment : GenericFragment<FileViewerTopBarFragmentBinding>() {

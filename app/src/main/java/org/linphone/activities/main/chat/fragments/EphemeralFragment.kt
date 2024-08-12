@@ -27,9 +27,9 @@ import org.linphone.R
 import org.linphone.activities.main.chat.viewmodels.EphemeralViewModel
 import org.linphone.activities.main.chat.viewmodels.EphemeralViewModelFactory
 import org.linphone.activities.main.fragments.SecureFragment
-import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatRoomEphemeralFragmentBinding
 import org.linphone.utils.Event
+import org.linphone.utils.Log
 
 class EphemeralFragment : SecureFragment<ChatRoomEphemeralFragmentBinding>() {
     private lateinit var viewModel: EphemeralViewModel

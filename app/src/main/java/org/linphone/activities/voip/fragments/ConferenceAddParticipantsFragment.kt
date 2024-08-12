@@ -33,9 +33,9 @@ import org.linphone.activities.voip.viewmodels.ConferenceParticipantsViewModel
 import org.linphone.activities.voip.viewmodels.ConferenceParticipantsViewModelFactory
 import org.linphone.activities.voip.viewmodels.ConferenceViewModel
 import org.linphone.contact.ContactsSelectionAdapter
-import org.linphone.core.tools.Log
 import org.linphone.databinding.VoipConferenceParticipantsAddFragmentBinding
 import org.linphone.utils.AppUtils
+import org.linphone.utils.Log
 import org.linphone.utils.PermissionHelper
 
 class ConferenceAddParticipantsFragment : GenericFragment<VoipConferenceParticipantsAddFragmentBinding>() {

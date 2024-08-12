@@ -25,7 +25,7 @@ import android.os.Looper
 import android.telephony.TelephonyCallback
 import android.telephony.TelephonyManager
 import java.util.concurrent.Executor
-import org.linphone.core.tools.Log
+import org.linphone.utils.Log
 
 @TargetApi(31)
 class TelephonyListener(private val telephonyManager: TelephonyManager) : PhoneStateInterface {

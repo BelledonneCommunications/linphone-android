@@ -27,8 +27,8 @@ import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.assistant.viewmodels.AbstractPhoneViewModel
 import org.linphone.compatibility.Compatibility
-import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.Log
 import org.linphone.utils.PermissionHelper
 import org.linphone.utils.PhoneNumberUtils
 

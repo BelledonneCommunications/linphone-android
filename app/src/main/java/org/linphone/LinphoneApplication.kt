@@ -31,8 +31,8 @@ import coil.decode.VideoFrameDecoder
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import org.linphone.core.*
-import org.linphone.core.tools.Log
 import org.linphone.mediastream.Version
+import org.linphone.utils.Log
 
 class LinphoneApplication : Application(), ImageLoaderFactory {
     companion object {

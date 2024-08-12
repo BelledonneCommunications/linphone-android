@@ -23,8 +23,8 @@ import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.core.ConsolidatedPresence
-import org.linphone.core.tools.Log
 import org.linphone.utils.Event
+import org.linphone.utils.Log
 import org.linphone.utils.PermissionHelper
 
 class ContactsSettingsViewModel : GenericSettingsViewModel() {

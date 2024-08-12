@@ -30,9 +30,9 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.*
-import org.linphone.core.tools.Log
 import org.linphone.utils.*
 import org.linphone.utils.Event
+import org.linphone.utils.Log
 
 class ControlsViewModel : ViewModel() {
     val isSpeakerSelected = MutableLiveData<Boolean>()

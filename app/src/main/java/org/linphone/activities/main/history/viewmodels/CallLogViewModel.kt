@@ -29,10 +29,10 @@ import org.linphone.R
 import org.linphone.activities.main.conference.data.ConferenceSchedulingParticipantData
 import org.linphone.contact.GenericContactViewModel
 import org.linphone.core.*
-import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.Log
 import org.linphone.utils.TimestampUtils
 
 class CallLogViewModel(val callLog: CallLog, private val isRelated: Boolean = false) : GenericContactViewModel(

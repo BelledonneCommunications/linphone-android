@@ -25,10 +25,10 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.contact.ContactsSelectionViewModel
 import org.linphone.core.*
-import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.Log
 
 class ChatRoomCreationViewModel : ContactsSelectionViewModel() {
     val chatRoomCreatedEvent: MutableLiveData<Event<ChatRoom>> by lazy {

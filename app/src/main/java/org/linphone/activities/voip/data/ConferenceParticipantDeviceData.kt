@@ -25,7 +25,7 @@ import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.contact.GenericContactData
 import org.linphone.core.*
-import org.linphone.core.tools.Log
+import org.linphone.utils.Log
 
 class ConferenceParticipantDeviceData(
     val participantDevice: ParticipantDevice,

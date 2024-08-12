@@ -29,8 +29,8 @@ import org.linphone.R
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.activities.main.settings.viewmodels.ContactsSettingsViewModel
 import org.linphone.activities.navigateToLdapSettings
-import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsContactsFragmentBinding
+import org.linphone.utils.Log
 import org.linphone.utils.PermissionHelper
 import org.linphone.utils.ShortcutsHelper
 

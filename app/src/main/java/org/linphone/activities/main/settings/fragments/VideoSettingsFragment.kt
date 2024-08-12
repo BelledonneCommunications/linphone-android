@@ -31,8 +31,8 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.activities.main.settings.viewmodels.VideoSettingsViewModel
-import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsVideoFragmentBinding
+import org.linphone.utils.Log
 import org.linphone.utils.PermissionHelper
 
 class VideoSettingsFragment : GenericSettingFragment<SettingsVideoFragmentBinding>() {

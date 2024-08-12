@@ -24,8 +24,8 @@ import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.activities.main.conference.data.ScheduledConferenceData
 import org.linphone.core.*
-import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.Log
 
 class ScheduledConferencesViewModel : ViewModel() {
     val conferences = MutableLiveData<ArrayList<ScheduledConferenceData>>()

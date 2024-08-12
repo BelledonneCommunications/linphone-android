@@ -44,9 +44,9 @@ import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import org.linphone.R
 import org.linphone.core.Content
-import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.FileUtils
+import org.linphone.utils.Log
 import org.linphone.utils.PermissionHelper
 
 class Api23Compatibility {

@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.activities.GenericFragment
-import org.linphone.core.tools.Log
+import org.linphone.utils.Log
 
 abstract class SecureFragment<T : ViewDataBinding> : GenericFragment<T>() {
     protected var isSecure: Boolean = false

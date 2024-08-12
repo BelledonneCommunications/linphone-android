@@ -28,9 +28,9 @@ import org.linphone.activities.*
 import org.linphone.activities.main.*
 import org.linphone.activities.main.history.viewmodels.CallLogViewModel
 import org.linphone.activities.navigateToContacts
-import org.linphone.core.tools.Log
 import org.linphone.databinding.HistoryDetailFragmentBinding
 import org.linphone.utils.Event
+import org.linphone.utils.Log
 
 class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
     private lateinit var viewModel: CallLogViewModel

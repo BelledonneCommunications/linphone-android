@@ -24,8 +24,8 @@ import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
-import org.linphone.core.tools.Log
 import org.linphone.utils.Event
+import org.linphone.utils.Log
 
 class QrCodeViewModel : ViewModel() {
     val qrCodeFoundEvent = MutableLiveData<Event<String>>()

@@ -44,7 +44,6 @@ import org.linphone.activities.main.chat.data.EventLogData
 import org.linphone.activities.main.chat.data.OnContentClickedListener
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 import org.linphone.core.*
-import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatEventListCellBinding
 import org.linphone.databinding.ChatMessageListCellBinding
 import org.linphone.databinding.ChatMessageLongPressMenuBindingImpl
@@ -52,6 +51,7 @@ import org.linphone.databinding.ChatUnreadMessagesListHeaderBinding
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.HeaderAdapter
+import org.linphone.utils.Log
 
 class ChatMessagesListAdapter(
     selectionVM: ListTopBarViewModel,

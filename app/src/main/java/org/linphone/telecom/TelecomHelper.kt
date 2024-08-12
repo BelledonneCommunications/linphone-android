@@ -36,8 +36,8 @@ import org.linphone.R
 import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
-import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.Log
 import org.linphone.utils.PermissionHelper
 import org.linphone.utils.SingletonHolder
 

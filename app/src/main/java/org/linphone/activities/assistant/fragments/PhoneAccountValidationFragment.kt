@@ -35,8 +35,8 @@ import org.linphone.activities.assistant.viewmodels.SharedAssistantViewModel
 import org.linphone.activities.navigateToAccountSettings
 import org.linphone.activities.navigateToEchoCancellerCalibration
 import org.linphone.compatibility.Compatibility
-import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantPhoneAccountValidationFragmentBinding
+import org.linphone.utils.Log
 
 class PhoneAccountValidationFragment : GenericFragment<AssistantPhoneAccountValidationFragmentBinding>() {
     private lateinit var sharedAssistantViewModel: SharedAssistantViewModel

@@ -29,8 +29,8 @@ import org.linphone.activities.main.chat.GroupChatRoomMember
 import org.linphone.activities.main.chat.data.GroupInfoParticipantData
 import org.linphone.activities.main.viewmodels.MessageNotifierViewModel
 import org.linphone.core.*
-import org.linphone.core.tools.Log
 import org.linphone.utils.Event
+import org.linphone.utils.Log
 
 class GroupInfoViewModelFactory(private val chatRoom: ChatRoom?) :
     ViewModelProvider.NewInstanceFactory() {

@@ -25,7 +25,7 @@ import android.util.AttributeSet
 import android.widget.GridLayout
 import androidx.core.view.children
 import org.linphone.LinphoneApplication.Companion.corePreferences
-import org.linphone.core.tools.Log
+import org.linphone.utils.Log
 
 class GridBoxLayout : GridLayout {
     companion object {

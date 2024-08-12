@@ -28,8 +28,8 @@ import org.linphone.activities.SnackBarActivity
 import org.linphone.activities.assistant.viewmodels.*
 import org.linphone.activities.navigateToEchoCancellerCalibration
 import org.linphone.activities.navigateToPhoneAccountValidation
-import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantPhoneAccountLinkingFragmentBinding
+import org.linphone.utils.Log
 
 class PhoneAccountLinkingFragment : AbstractPhoneFragment<AssistantPhoneAccountLinkingFragmentBinding>() {
     private lateinit var sharedAssistantViewModel: SharedAssistantViewModel

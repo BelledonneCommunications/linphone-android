@@ -24,8 +24,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.core.AccountCreator
 import org.linphone.core.AccountCreatorListenerStub
-import org.linphone.core.tools.Log
 import org.linphone.utils.Event
+import org.linphone.utils.Log
 
 class PhoneAccountValidationViewModelFactory(private val accountCreator: AccountCreator) :
     ViewModelProvider.NewInstanceFactory() {

@@ -27,8 +27,8 @@ import org.linphone.R
 import org.linphone.activities.main.chat.viewmodels.DevicesListViewModel
 import org.linphone.activities.main.chat.viewmodels.DevicesListViewModelFactory
 import org.linphone.activities.main.fragments.SecureFragment
-import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatRoomDevicesFragmentBinding
+import org.linphone.utils.Log
 
 class DevicesFragment : SecureFragment<ChatRoomDevicesFragmentBinding>() {
     private lateinit var listViewModel: DevicesListViewModel

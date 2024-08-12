@@ -41,10 +41,10 @@ import org.linphone.activities.main.contact.data.NumberOrAddressEditorData
 import org.linphone.activities.main.contact.viewmodels.*
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.navigateToContact
-import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactEditorFragmentBinding
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.FileUtils
+import org.linphone.utils.Log
 import org.linphone.utils.PermissionHelper
 
 class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), SyncAccountPickerFragment.SyncAccountPickedListener {

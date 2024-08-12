@@ -28,7 +28,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.ensureCoreExists
 import org.linphone.core.Call
 import org.linphone.core.Core
-import org.linphone.core.tools.Log
+import org.linphone.utils.Log
 
 class NotificationBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {

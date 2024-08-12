@@ -38,10 +38,10 @@ import androidx.core.app.NotificationManagerCompat
 import org.linphone.R
 import org.linphone.core.ChatRoom
 import org.linphone.core.Content
-import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.Log
 
 @TargetApi(29)
 class Api29Compatibility {

@@ -33,8 +33,8 @@ import android.widget.ScrollView
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 import org.linphone.R
-import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
+import org.linphone.utils.Log
 
 class ScrollDotsView : View {
     private var count = 2

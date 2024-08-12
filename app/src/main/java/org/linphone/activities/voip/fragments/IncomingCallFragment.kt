@@ -30,8 +30,8 @@ import org.linphone.activities.GenericFragment
 import org.linphone.activities.navigateToActiveCall
 import org.linphone.activities.voip.viewmodels.CallsViewModel
 import org.linphone.activities.voip.viewmodels.ControlsViewModel
-import org.linphone.core.tools.Log
 import org.linphone.databinding.VoipCallIncomingFragmentBinding
+import org.linphone.utils.Log
 
 class IncomingCallFragment : GenericFragment<VoipCallIncomingFragmentBinding>() {
     private val controlsViewModel: ControlsViewModel by navGraphViewModels(R.id.call_nav_graph)

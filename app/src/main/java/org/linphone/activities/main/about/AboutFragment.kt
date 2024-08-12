@@ -25,9 +25,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
+import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.fragments.SecureFragment
-import org.linphone.core.tools.Log
 import org.linphone.databinding.AboutFragmentBinding
+import org.linphone.services.DiagnosticsService
+import org.linphone.utils.Log
 
 class AboutFragment : SecureFragment<AboutFragmentBinding>() {
     private lateinit var viewModel: AboutViewModel
@@ -75,6 +77,34 @@ class AboutFragment : SecureFragment<AboutFragmentBinding>() {
                 startActivity(browserIntent)
             } catch (se: SecurityException) {
                 Log.e("[About] Failed to start browser intent, $se")
+            }
+        }
+
+        binding.setUploadLogsClickListener {
+            try {
+                DiagnosticsService.uploadDiagnostics(requireContext())
+
+                val activity = requireActivity() as MainActivity
+                activity.showSnackBar("Logs uploaded to server")
+            } catch (se: SecurityException) {
+                Log.e("[About] Failed to start browser intent, $se")
+
+                val activity = requireActivity() as MainActivity
+                activity.showSnackBar("Failed to upload logs to server!")
+            }
+        }
+
+        binding.setClearLogsClickListener {
+            try {
+                DiagnosticsService.clearLogs(requireContext())
+
+                val activity = requireActivity() as MainActivity
+                activity.showSnackBar("Logs have been cleared")
+            } catch (se: SecurityException) {
+                Log.e("[About] Failed to start browser intent, $se")
+
+                val activity = requireActivity() as MainActivity
+                activity.showSnackBar("Failed to clear logs!")
             }
         }
     }

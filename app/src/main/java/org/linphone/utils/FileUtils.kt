@@ -42,7 +42,6 @@ import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
-import org.linphone.core.tools.Log
 
 class FileUtils {
     enum class MimeType {

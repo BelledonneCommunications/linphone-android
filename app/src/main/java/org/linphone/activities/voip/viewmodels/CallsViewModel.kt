@@ -27,9 +27,9 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.voip.data.CallData
 import org.linphone.core.*
-import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
+import org.linphone.utils.Log
 import org.linphone.utils.PermissionHelper
 
 class CallsViewModel : ViewModel() {

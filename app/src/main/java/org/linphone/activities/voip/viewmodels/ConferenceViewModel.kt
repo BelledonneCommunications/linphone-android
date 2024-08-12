@@ -29,10 +29,10 @@ import org.linphone.activities.voip.ConferenceDisplayMode
 import org.linphone.activities.voip.data.ConferenceParticipantData
 import org.linphone.activities.voip.data.ConferenceParticipantDeviceData
 import org.linphone.core.*
-import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.Log
 
 class ConferenceViewModel : ViewModel() {
     val conferenceExists = MutableLiveData<Boolean>()

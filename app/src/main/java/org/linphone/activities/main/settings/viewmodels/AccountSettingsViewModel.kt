@@ -29,9 +29,9 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.core.*
-import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.Log
 
 class AccountSettingsViewModelFactory(private val identity: String) :
     ViewModelProvider.NewInstanceFactory() {

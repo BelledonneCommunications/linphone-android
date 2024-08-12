@@ -57,11 +57,11 @@ import org.linphone.activities.main.fragments.MasterFragment
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.*
-import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatRoomDetailFragmentBinding
 import org.linphone.databinding.ChatRoomMenuBindingImpl
 import org.linphone.utils.*
 import org.linphone.utils.Event
+import org.linphone.utils.Log
 
 class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, ChatMessagesListAdapter>() {
     private lateinit var viewModel: ChatRoomViewModel

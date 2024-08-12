@@ -39,7 +39,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.LinphoneApplication.Companion.ensureCoreExists
 import org.linphone.R
-import org.linphone.core.tools.Log
+import org.linphone.utils.Log
 
 abstract class GenericActivity : AppCompatActivity() {
     private var timer: Timer? = null

@@ -30,8 +30,8 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.core.*
-import org.linphone.core.tools.Log
 import org.linphone.utils.Event
+import org.linphone.utils.Log
 
 class ContactsListViewModel : ViewModel() {
     val sipContactsSelected = MutableLiveData<Boolean>()

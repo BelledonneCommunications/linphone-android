@@ -43,9 +43,9 @@ import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.ChatRoom
 import org.linphone.core.Factory
-import org.linphone.core.tools.Log
 import org.linphone.databinding.VoipChatFragmentBinding
 import org.linphone.utils.FileUtils
+import org.linphone.utils.Log
 import org.linphone.utils.PermissionHelper
 
 class ChatFragment : GenericFragment<VoipChatFragmentBinding>() {

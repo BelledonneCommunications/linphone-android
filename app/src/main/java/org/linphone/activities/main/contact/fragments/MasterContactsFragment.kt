@@ -45,9 +45,9 @@ import org.linphone.activities.navigateToContact
 import org.linphone.activities.navigateToContactEditor
 import org.linphone.core.Factory
 import org.linphone.core.Friend
-import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactMasterFragmentBinding
 import org.linphone.utils.*
+import org.linphone.utils.Log
 
 class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, ContactsListAdapter>() {
     override val dialogConfirmationMessageBeforeRemoval = R.plurals.contact_delete_dialog

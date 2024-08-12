@@ -29,8 +29,8 @@ import java.io.FileOutputStream
 import java.security.KeyStoreException
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.compatibility.Compatibility
-import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.Log
 
 class CorePreferences constructor(private val context: Context) {
     private var _config: Config? = null

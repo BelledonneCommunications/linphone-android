@@ -31,10 +31,10 @@ import org.linphone.activities.main.fragments.MasterFragment
 import org.linphone.activities.main.recordings.adapters.RecordingsListAdapter
 import org.linphone.activities.main.recordings.data.RecordingData
 import org.linphone.activities.main.recordings.viewmodels.RecordingsViewModel
-import org.linphone.core.tools.Log
 import org.linphone.databinding.RecordingsFragmentBinding
 import org.linphone.utils.AppUtils
 import org.linphone.utils.FileUtils
+import org.linphone.utils.Log
 import org.linphone.utils.RecyclerViewHeaderDecoration
 
 class RecordingsFragment : MasterFragment<RecordingsFragmentBinding, RecordingsListAdapter>() {

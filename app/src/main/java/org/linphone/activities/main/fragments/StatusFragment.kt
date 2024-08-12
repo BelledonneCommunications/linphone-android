@@ -26,9 +26,9 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.viewmodels.StatusViewModel
-import org.linphone.core.tools.Log
 import org.linphone.databinding.StatusFragmentBinding
 import org.linphone.utils.Event
+import org.linphone.utils.Log
 
 class StatusFragment : GenericFragment<StatusFragmentBinding>() {
     private lateinit var viewModel: StatusViewModel

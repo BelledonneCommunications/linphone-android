@@ -26,7 +26,7 @@ import androidx.core.util.component1
 import androidx.core.util.component2
 import androidx.core.view.ContentInfoCompat
 import androidx.core.view.OnReceiveContentListener
-import org.linphone.core.tools.Log
+import org.linphone.utils.Log
 
 class RichContentReceiver(private val contentReceived: (uri: Uri) -> Unit) : OnReceiveContentListener {
     companion object {

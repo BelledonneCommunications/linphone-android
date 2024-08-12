@@ -23,8 +23,8 @@ package org.linphone.activities.assistant.viewmodels
 import androidx.lifecycle.*
 import org.linphone.core.AccountCreator
 import org.linphone.core.AccountCreatorListenerStub
-import org.linphone.core.tools.Log
 import org.linphone.utils.Event
+import org.linphone.utils.Log
 
 class PhoneAccountLinkingViewModelFactory(private val accountCreator: AccountCreator) :
     ViewModelProvider.NewInstanceFactory() {
