@@ -177,8 +177,6 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    var zrtpSasValidationAttempts = 0
-
     var isZrtpDialogVisible: Boolean = false
     var isZrtpAlertDialogVisible: Boolean = false
 
@@ -251,7 +249,6 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
             Log.w(
                 "$TAG Notified that authentication token is [${if (verified) "verified" else "not verified!"}]"
             )
-            zrtpSasValidationAttempts += 1
             isZrtpSasValidationRequired.postValue(!verified)
             zrtpAuthTokenVerifiedEvent.postValue(Event(verified))
             if (verified) {
@@ -1022,7 +1019,6 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
         contact.value?.destroy()
 
         terminatedByUsed = false
-        zrtpSasValidationAttempts = 0
         currentCall = call
         callStatsModel.update(call, call.audioStats)
         callMediaEncryptionModel.update(call)

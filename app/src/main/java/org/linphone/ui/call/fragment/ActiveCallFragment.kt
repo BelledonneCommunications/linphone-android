@@ -281,7 +281,7 @@ class ActiveCallFragment : GenericCallFragment() {
                     )
                 } else {
                     // Only allow "trying again" once
-                    showZrtpAlertDialog(callViewModel.zrtpSasValidationAttempts == 1)
+                    showZrtpAlertDialog(false)
                 }
             }
         }
@@ -432,7 +432,7 @@ class ActiveCallFragment : GenericCallFragment() {
 
         if (callViewModel.isZrtpAlertDialogVisible) {
             Log.i("$TAG Fragment resuming, showing ZRTP alert dialog")
-            showZrtpAlertDialog(callViewModel.zrtpSasValidationAttempts == 1)
+            showZrtpAlertDialog(false)
         } else if (callViewModel.isZrtpDialogVisible) {
             Log.i("$TAG Fragment resuming, showing ZRTP SAS validation dialog")
             callViewModel.showZrtpSasDialogIfPossible()
