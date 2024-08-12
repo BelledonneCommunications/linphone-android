@@ -24,7 +24,6 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.AudioDevice
 import org.linphone.core.Call
-import org.linphone.core.tools.Log
 import org.linphone.telecom.TelecomHelper
 
 class AudioRouteUtils {

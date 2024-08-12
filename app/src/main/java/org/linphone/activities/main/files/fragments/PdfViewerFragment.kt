@@ -27,8 +27,8 @@ import org.linphone.R
 import org.linphone.activities.main.files.adapters.PdfPagesListAdapter
 import org.linphone.activities.main.files.viewmodels.PdfFileViewModel
 import org.linphone.activities.main.files.viewmodels.PdfFileViewModelFactory
-import org.linphone.core.tools.Log
 import org.linphone.databinding.FilePdfViewerFragmentBinding
+import org.linphone.utils.Log
 
 class PdfViewerFragment : GenericViewerFragment<FilePdfViewerFragmentBinding>() {
     private lateinit var viewModel: PdfFileViewModel

@@ -30,9 +30,9 @@ import org.linphone.activities.main.dialer.NumpadDigitListener
 import org.linphone.activities.main.viewmodels.LogsUploadViewModel
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.*
-import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.Log
 
 class DialerViewModel : LogsUploadViewModel() {
     val enteredUri = MutableLiveData<String>()

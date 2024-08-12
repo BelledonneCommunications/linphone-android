@@ -22,7 +22,6 @@ package org.linphone.utils
 import android.Manifest
 import android.content.Context
 import org.linphone.compatibility.Compatibility
-import org.linphone.core.tools.Log
 import org.linphone.mediastream.Version
 
 /**

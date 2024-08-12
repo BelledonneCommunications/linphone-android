@@ -34,8 +34,8 @@ import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.conference.viewmodels.ConferenceSchedulingViewModel
 import org.linphone.activities.navigateToParticipantsList
 import org.linphone.core.Factory
-import org.linphone.core.tools.Log
 import org.linphone.databinding.ConferenceSchedulingFragmentBinding
+import org.linphone.utils.Log
 
 class ConferenceSchedulingFragment : GenericFragment<ConferenceSchedulingFragmentBinding>() {
     private val viewModel: ConferenceSchedulingViewModel by navGraphViewModels(

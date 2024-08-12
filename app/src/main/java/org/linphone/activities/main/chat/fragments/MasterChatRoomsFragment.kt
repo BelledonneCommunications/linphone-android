@@ -45,9 +45,9 @@ import org.linphone.activities.navigateToChatRoom
 import org.linphone.activities.navigateToChatRoomCreation
 import org.linphone.core.ChatRoom
 import org.linphone.core.Factory
-import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatRoomMasterFragmentBinding
 import org.linphone.utils.*
+import org.linphone.utils.Log
 
 class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, ChatRoomsListAdapter>() {
     override val dialogConfirmationMessageBeforeRemoval = R.plurals.chat_room_delete_dialog

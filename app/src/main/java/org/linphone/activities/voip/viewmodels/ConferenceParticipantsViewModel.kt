@@ -24,7 +24,7 @@ import androidx.lifecycle.ViewModelProvider
 import org.linphone.contact.ContactsSelectionViewModel
 import org.linphone.core.Address
 import org.linphone.core.Conference
-import org.linphone.core.tools.Log
+import org.linphone.utils.Log
 
 class ConferenceParticipantsViewModelFactory(private val conference: Conference) :
     ViewModelProvider.NewInstanceFactory() {

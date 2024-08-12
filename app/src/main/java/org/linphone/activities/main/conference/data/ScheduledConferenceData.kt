@@ -26,8 +26,8 @@ import org.linphone.R
 import org.linphone.core.ConferenceInfo
 import org.linphone.core.ConferenceInfo.State
 import org.linphone.core.Participant
-import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.Log
 import org.linphone.utils.TimestampUtils
 
 class ScheduledConferenceData(val conferenceInfo: ConferenceInfo, private val isFinished: Boolean) {

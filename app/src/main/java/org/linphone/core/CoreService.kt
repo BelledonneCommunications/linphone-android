@@ -24,8 +24,8 @@ import org.linphone.LinphoneApplication
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.LinphoneApplication.Companion.ensureCoreExists
-import org.linphone.core.tools.Log
 import org.linphone.core.tools.service.CoreService
+import org.linphone.utils.Log
 
 class CoreService : CoreService() {
     override fun onCreate() {

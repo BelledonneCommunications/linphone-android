@@ -26,9 +26,9 @@ import java.util.*
 import kotlin.math.max
 import org.linphone.activities.main.chat.data.EventLogData
 import org.linphone.core.*
-import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.Log
 import org.linphone.utils.PermissionHelper
 
 class ChatMessagesListViewModelFactory(private val chatRoom: ChatRoom) :

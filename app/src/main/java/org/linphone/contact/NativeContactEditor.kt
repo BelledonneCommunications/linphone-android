@@ -29,8 +29,8 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.main.contact.data.NumberOrAddressEditorData
 import org.linphone.core.Friend
-import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
+import org.linphone.utils.Log
 import org.linphone.utils.PermissionHelper
 
 class NativeContactEditor(val friend: Friend) {

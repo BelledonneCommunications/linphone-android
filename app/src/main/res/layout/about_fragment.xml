@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:linphone="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View"/>
@@ -11,6 +13,12 @@
             type="android.view.View.OnClickListener"/>
         <variable
             name="weblateClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="uploadLogsClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="clearLogsClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
             name="viewModel"
@@ -133,6 +141,36 @@
                     android:orientation="vertical"
                     android:background="?attr/backgroundColor"
                     android:padding="10dp">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_marginHorizontal="10dp"
+                        android:gravity="center_horizontal">
+
+                        <Button
+                            android:id="@+id/upload_logs_btn"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:onClick="@{uploadLogsClickListener}"
+                            android:text="Upload logs" />
+
+                        <Space
+                            android:layout_width="10dp"
+                            android:layout_height="match_parent"/>
+
+                        <Button
+                            android:id="@+id/uclear_logs_btn"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:onClick="@{clearLogsClickListener}"
+                            android:text="Clear logs" />
+                    </LinearLayout>
+
 
                     <TextView
                         android:textColor="?attr/accentColor"

@@ -24,7 +24,7 @@ import org.linphone.core.Address
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessageListenerStub
 import org.linphone.core.ChatMessageReaction
-import org.linphone.core.tools.Log
+import org.linphone.utils.Log
 
 class ChatMessageReactionsListData(private val chatMessage: ChatMessage) {
     val reactions = MutableLiveData<ArrayList<ChatMessageReaction>>()

@@ -25,7 +25,7 @@ import java.util.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.*
-import org.linphone.core.tools.Log
+import org.linphone.utils.Log
 
 open class StatusViewModel : ViewModel() {
     val registrationStatusText = MutableLiveData<Int>()

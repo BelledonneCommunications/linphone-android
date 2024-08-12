@@ -48,7 +48,7 @@ import org.linphone.activities.main.settings.fragments.*
 import org.linphone.activities.main.sidemenu.fragments.SideMenuFragment
 import org.linphone.activities.voip.CallActivity
 import org.linphone.activities.voip.fragments.*
-import org.linphone.core.tools.Log
+import org.linphone.utils.Log
 
 internal fun Fragment.findMasterNavController(): NavController {
     return parentFragment?.parentFragment?.findNavController() ?: findNavController()

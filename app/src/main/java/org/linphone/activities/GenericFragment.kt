@@ -35,7 +35,7 @@ import com.google.android.material.transition.MaterialSharedAxis
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
-import org.linphone.core.tools.Log
+import org.linphone.utils.Log
 
 abstract class GenericFragment<T : ViewDataBinding> : Fragment() {
     companion object {

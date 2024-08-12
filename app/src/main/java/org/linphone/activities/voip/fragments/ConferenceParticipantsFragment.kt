@@ -27,8 +27,8 @@ import org.linphone.R
 import org.linphone.activities.navigateToAddParticipants
 import org.linphone.activities.voip.viewmodels.ConferenceViewModel
 import org.linphone.activities.voip.viewmodels.ControlsViewModel
-import org.linphone.core.tools.Log
 import org.linphone.databinding.VoipConferenceParticipantsFragmentBinding
+import org.linphone.utils.Log
 
 class ConferenceParticipantsFragment : GenericVideoPreviewFragment<VoipConferenceParticipantsFragmentBinding>() {
     private val conferenceViewModel: ConferenceViewModel by navGraphViewModels(R.id.call_nav_graph)

@@ -30,9 +30,9 @@ import org.linphone.R
 import org.linphone.compatibility.Compatibility
 import org.linphone.contact.GenericContactData
 import org.linphone.core.*
-import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.Log
 
 open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
     interface CallContextMenuClickListener {

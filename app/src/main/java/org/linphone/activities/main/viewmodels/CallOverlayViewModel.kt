@@ -26,7 +26,7 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
-import org.linphone.core.tools.Log
+import org.linphone.utils.Log
 
 class CallOverlayViewModel : ViewModel() {
     val displayCallOverlay = MutableLiveData<Boolean>()

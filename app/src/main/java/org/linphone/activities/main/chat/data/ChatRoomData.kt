@@ -32,10 +32,10 @@ import org.linphone.R
 import org.linphone.contact.ContactDataInterface
 import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.core.*
-import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.Log
 import org.linphone.utils.TimestampUtils
 
 class ChatRoomData(val chatRoom: ChatRoom) : ContactDataInterface {

@@ -29,7 +29,6 @@ import android.util.TypedValue
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import org.linphone.core.tools.Log
 
 /**
  * Helper class to properly display swipe actions in list items.

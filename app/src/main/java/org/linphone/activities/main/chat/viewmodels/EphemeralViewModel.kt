@@ -26,7 +26,7 @@ import org.linphone.R
 import org.linphone.activities.main.chat.data.DurationItemClicked
 import org.linphone.activities.main.chat.data.EphemeralDurationData
 import org.linphone.core.ChatRoom
-import org.linphone.core.tools.Log
+import org.linphone.utils.Log
 
 class EphemeralViewModelFactory(private val chatRoom: ChatRoom) :
     ViewModelProvider.NewInstanceFactory() {

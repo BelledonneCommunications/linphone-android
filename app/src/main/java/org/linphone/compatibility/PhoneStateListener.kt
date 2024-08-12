@@ -21,7 +21,7 @@ package org.linphone.compatibility
 
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
-import org.linphone.core.tools.Log
+import org.linphone.utils.Log
 
 class PhoneStateListener(private val telephonyManager: TelephonyManager) : PhoneStateInterface {
     private var gsmCallActive = false

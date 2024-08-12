@@ -26,7 +26,6 @@ import android.provider.ContactsContract
 import android.telephony.TelephonyManager
 import org.linphone.core.DialPlan
 import org.linphone.core.Factory
-import org.linphone.core.tools.Log
 
 class PhoneNumberUtils {
     companion object {

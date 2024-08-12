@@ -30,11 +30,11 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.contact.getThumbnailUri
 import org.linphone.core.Call
-import org.linphone.core.tools.Log
 import org.linphone.notifications.Notifiable
 import org.linphone.notifications.NotificationsManager
 import org.linphone.utils.ImageUtils
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.Log
 
 @TargetApi(31)
 class Api31Compatibility {

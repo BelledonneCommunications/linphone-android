@@ -30,10 +30,10 @@ import org.linphone.activities.main.conference.data.Duration
 import org.linphone.activities.main.conference.data.TimeZoneData
 import org.linphone.contact.ContactsSelectionViewModel
 import org.linphone.core.*
-import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.Log
 import org.linphone.utils.TimestampUtils
 
 class ConferenceSchedulingViewModel : ContactsSelectionViewModel() {

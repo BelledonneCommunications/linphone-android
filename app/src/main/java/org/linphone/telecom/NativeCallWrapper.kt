@@ -29,8 +29,8 @@ import android.telecom.StatusHints
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Call
-import org.linphone.core.tools.Log
 import org.linphone.utils.AudioRouteUtils
+import org.linphone.utils.Log
 
 @TargetApi(29)
 class NativeCallWrapper(var callId: String) : Connection() {

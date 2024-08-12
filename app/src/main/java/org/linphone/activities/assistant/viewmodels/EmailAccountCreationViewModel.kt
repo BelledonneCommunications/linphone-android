@@ -26,9 +26,9 @@ import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
 import org.linphone.core.AccountCreator
 import org.linphone.core.AccountCreatorListenerStub
-import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
+import org.linphone.utils.Log
 
 class EmailAccountCreationViewModelFactory(private val accountCreator: AccountCreator) :
     ViewModelProvider.NewInstanceFactory() {

@@ -25,7 +25,7 @@ import java.util.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.*
-import org.linphone.core.tools.Log
+import org.linphone.utils.Log
 
 class SharedAssistantViewModel : ViewModel() {
     val remoteProvisioningUrl = MutableLiveData<String>()

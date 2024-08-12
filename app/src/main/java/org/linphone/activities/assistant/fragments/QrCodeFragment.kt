@@ -29,8 +29,8 @@ import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.assistant.viewmodels.QrCodeViewModel
 import org.linphone.activities.assistant.viewmodels.SharedAssistantViewModel
-import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantQrCodeFragmentBinding
+import org.linphone.utils.Log
 import org.linphone.utils.PermissionHelper
 
 class QrCodeFragment : GenericFragment<AssistantQrCodeFragmentBinding>() {

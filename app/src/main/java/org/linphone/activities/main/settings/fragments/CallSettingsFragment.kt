@@ -31,10 +31,10 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.settings.viewmodels.CallSettingsViewModel
 import org.linphone.compatibility.Compatibility
-import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsCallFragmentBinding
 import org.linphone.mediastream.Version
 import org.linphone.telecom.TelecomHelper
+import org.linphone.utils.Log
 
 class CallSettingsFragment : GenericSettingFragment<SettingsCallFragmentBinding>() {
     private lateinit var viewModel: CallSettingsViewModel

@@ -42,9 +42,9 @@ import org.linphone.activities.voip.viewmodels.StatisticsListViewModel
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.Call
 import org.linphone.core.GlobalState
-import org.linphone.core.tools.Log
 import org.linphone.databinding.VoipActivityBinding
 import org.linphone.mediastream.Version
+import org.linphone.utils.Log
 import org.linphone.utils.PermissionHelper
 
 class CallActivity : ProximitySensorActivity() {

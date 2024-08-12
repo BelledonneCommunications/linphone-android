@@ -26,8 +26,8 @@ import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.activities.main.files.viewmodels.TextFileViewModel
 import org.linphone.activities.main.files.viewmodels.TextFileViewModelFactory
-import org.linphone.core.tools.Log
 import org.linphone.databinding.FileTextViewerFragmentBinding
+import org.linphone.utils.Log
 
 class TextViewerFragment : GenericViewerFragment<FileTextViewerFragmentBinding>() {
     private lateinit var viewModel: TextFileViewModel
