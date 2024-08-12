@@ -7,6 +7,7 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.util.concurrent.atomic.AtomicReference
 import org.linphone.authentication.AuthStateManager
+import org.linphone.authentication.AuthorizationServiceManager
 import org.linphone.environment.DimensionsEnvironmentService
 import org.linphone.models.TenantBrandingDefinition
 import org.linphone.utils.Log
@@ -71,7 +72,9 @@ class BrandingService(val context: Context) : DefaultLifecycleObserver {
 
         apiClient.getUCGatewayService(
             context,
-            dimensionsEnvironment!!.gatewayApiUri
+            dimensionsEnvironment!!.gatewayApiUri,
+            AuthorizationServiceManager.getInstance(context).authorizationServiceInstance,
+            AuthStateManager.getInstance(context)
         ).doGetUserBranding()
             .enqueue(object : Callback<TenantBrandingDefinition> {
                 override fun onFailure(call: Call<TenantBrandingDefinition>, t: Throwable) {

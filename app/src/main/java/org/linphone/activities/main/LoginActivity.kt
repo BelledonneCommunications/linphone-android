@@ -390,14 +390,14 @@ class LoginActivity : AppCompatActivity() {
                 flags = flags or PendingIntent.FLAG_MUTABLE
             }
 
-            mAuthService!!.performAuthorizationRequest(
+            AuthorizationServiceManager.getInstance(this).authorizationServiceInstance.performAuthorizationRequest(
                 mAuthRequest.get()!!,
                 PendingIntent.getActivity(this, 0, completionIntent, flags),
                 PendingIntent.getActivity(this, 0, cancelIntent, flags),
                 mAuthIntent.get()!!
             )
         } else {
-            val intent = mAuthService!!.getAuthorizationRequestIntent(
+            val intent = AuthorizationServiceManager.getInstance(this).authorizationServiceInstance.getAuthorizationRequestIntent(
                 mAuthRequest.get()!!,
                 mAuthIntent.get()!!
             )
@@ -408,26 +408,17 @@ class LoginActivity : AppCompatActivity() {
     private fun recreateAuthorizationService() {
         try {
             mConfiguration!!.readConfiguration()
-        } catch (e: InvalidConfigurationException) {
+        } catch (e: AuthConfiguration.InvalidConfigurationException) {
             displayError("Failed to reload auth configuration.", true)
         }
 
-        if (mAuthService != null) {
+        if (AuthorizationServiceManager.getInstance(this).authorizationServiceInstance != null) {
             Log.i(TAG, "Discarding existing AuthService instance")
-            mAuthService!!.dispose()
+            AuthorizationServiceManager.getInstance(this).authorizationServiceInstance!!.dispose()
         }
-        mAuthService = createAuthorizationService()
+
         mAuthRequest.set(null)
         mAuthIntent.set(null)
-    }
-
-    private fun createAuthorizationService(): AuthorizationService {
-        Log.i(TAG, "Creating authorization service")
-        val builder = AppAuthConfiguration.Builder()
-        builder.setBrowserMatcher(AnyBrowserMatcher.INSTANCE)
-        builder.setConnectionBuilder(mConfiguration!!.connectionBuilder)
-
-        return AuthorizationService(this, builder.build())
     }
 
     @MainThread
@@ -483,10 +474,12 @@ class LoginActivity : AppCompatActivity() {
 
     private fun warmUpBrowser() {
         mAuthIntentLatch = CountDownLatch(1)
-        mExecutor!!.execute {
+        mExecutor.execute {
             Log.i(TAG, "Warming up browser instance for auth request")
             val intentBuilder =
-                mAuthService!!.createCustomTabsIntentBuilder(mAuthRequest.get()!!.toUri())
+                AuthorizationServiceManager.getInstance(this).authorizationServiceInstance.createCustomTabsIntentBuilder(
+                    mAuthRequest.get()!!.toUri()
+                )
             intentBuilder.setToolbarColor(getColorCompat(R.color.primary_color))
             mAuthIntent.set(intentBuilder.build())
             mAuthIntentLatch.countDown()

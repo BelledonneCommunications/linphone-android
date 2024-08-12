@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config xmlns="http://www.linphone.org/xsds/lpconfig.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.linphone.org/xsds/lpconfig.xsd lpconfig.xsd">
+<!--
   <section name="proxy_default_values">
     <entry name="avpf" overwrite="true">1</entry>
     <entry name="dial_escape_plus" overwrite="true">0</entry>
@@ -26,6 +27,7 @@
     <entry name="stun_server" overwrite="true">stun.linphone.org</entry>
     <entry name="protocols" overwrite="true">stun,ice</entry>
   </section>
+-->
   <section name="net">
     <entry name="friendlist_subscription_enabled" overwrite="true">1</entry>
   </section>

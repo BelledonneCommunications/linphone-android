@@ -17,6 +17,7 @@ import okhttp3.ResponseBody
 import org.json.JSONArray
 import org.json.JSONObject
 import org.linphone.authentication.AuthStateManager
+import org.linphone.authentication.AuthorizationServiceManager
 import org.linphone.environment.DimensionsEnvironmentService
 import org.linphone.interfaces.CTGatewayService
 import org.linphone.middleware.FileTree
@@ -36,7 +37,12 @@ class DiagnosticsService {
                 ?: throw NullPointerException("No environment selected.")
 
             return APIClientService()
-                .getUCGatewayService(context, env.gatewayApiUri)
+                .getUCGatewayService(
+                    context,
+                    env.gatewayApiUri,
+                    AuthorizationServiceManager.getInstance(context).authorizationServiceInstance,
+                    AuthStateManager.getInstance(context)
+                )
         }
 
         private fun getUploadName(context: Context): String {

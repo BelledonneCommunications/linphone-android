@@ -78,6 +78,7 @@ import org.linphone.activities.navigateToContact
 import org.linphone.activities.navigateToContacts
 import org.linphone.activities.navigateToDialer
 import org.linphone.authentication.AuthStateManager
+import org.linphone.authentication.AuthorizationServiceManager
 import org.linphone.compatibility.Compatibility
 import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.core.AVPFMode
@@ -86,9 +87,9 @@ import org.linphone.core.AuthMethod
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.CorePreferences
-import org.linphone.core.tools.Log
 import org.linphone.core.Factory
 import org.linphone.core.TransportType
+import org.linphone.core.tools.Log
 import org.linphone.databinding.MainActivityBinding
 import org.linphone.environment.DimensionsEnvironmentService
 import org.linphone.middleware.FileTree
@@ -100,7 +101,6 @@ import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
-import org.linphone.utils.Log
 import org.linphone.utils.PermissionHelper
 import org.linphone.utils.ShortcutsHelper
 import org.linphone.utils.hideKeyboard
@@ -194,7 +194,9 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         apiClientService = APIClientService()
         apiClientService.getUCGatewayService(
             this.applicationContext,
-            dimensionsEnvironment!!.gatewayApiUri
+            dimensionsEnvironment!!.gatewayApiUri,
+            AuthorizationServiceManager.getInstance(this).authorizationServiceInstance,
+            AuthStateManager.getInstance(this)
         ).doGetUserDevices(
             userID = asm.fetchUserId()
         )
