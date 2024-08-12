@@ -678,6 +678,10 @@
     <string name="recordings_title">Enregistrements</string>
     <string name="recordings_list_empty">Aucun appel enregistré…</string>
 
+    <!-- Android Auto UI texts -->
+    <string name="car_favorites_contacts_title">Favoris</string>
+    <string name="car_favorites_contacts_list_empty">Aucun contact dans la liste des favoris</string>
+
     <!-- Various menu entries -->
     <string name="menu_add_address_to_contacts">Ajouter aux contacts</string>
     <string name="menu_see_existing_contact">Voir le contact</string>

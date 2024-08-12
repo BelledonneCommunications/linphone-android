@@ -17,17 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.telecom
+package org.linphone.telecom.auto
 
 import android.content.pm.ApplicationInfo
 import androidx.car.app.CarAppService
+import androidx.car.app.Session
 import androidx.car.app.validation.HostValidator
 import org.linphone.R
 import org.linphone.core.tools.Log
 
-class TelecomAndroidAutoService : CarAppService() {
+class AAService : CarAppService() {
     companion object {
-        private const val TAG = "[Telecom Android Auto Service]"
+        private const val TAG = "[Android Auto Service]"
     }
 
     override fun createHostValidator(): HostValidator {
@@ -50,5 +51,10 @@ class TelecomAndroidAutoService : CarAppService() {
         } else {
             validator
         }
+    }
+
+    override fun onCreateSession(): Session {
+        Log.i("$TAG Creating Session object")
+        return AASession()
     }
 }

@@ -55,10 +55,13 @@
         android:theme="@style/Theme.Linphone"
         tools:targetApi="35">
 
-        <!-- Required for call & chat message notifications to be displayed in Android auto -->
+        <!-- Required for chat message & call notifications to be displayed in Android auto -->
         <meta-data
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc"/>
+        <meta-data
+            android:name="androidx.car.app.minCarApiLevel"
+            android:value="1"/>
 
         <activity
             android:name=".ui.main.MainActivity"
@@ -195,7 +198,7 @@
         </service>
 
         <service
-            android:name=".telecom.TelecomAndroidAutoService"
+            android:name=".telecom.auto.AAService"
             android:exported="true">
             <intent-filter>
                 <action android:name="androidx.car.app.CarAppService"/>

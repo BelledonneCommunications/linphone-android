@@ -716,6 +716,10 @@
     <string name="recordings_title">Recordings</string>
     <string name="recordings_list_empty">No recording for the moment…</string>
 
+    <!-- Android Auto UI texts -->
+    <string name="car_favorites_contacts_title">Favorites</string>
+    <string name="car_favorites_contacts_list_empty">No favorite contact yet</string>
+
     <!-- Various menu entries -->
     <string name="menu_add_address_to_contacts">Add to contacts</string>
     <string name="menu_see_existing_contact">See contact</string>
