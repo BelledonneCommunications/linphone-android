@@ -90,7 +90,7 @@ class LandingFragment : GenericFragment() {
 
         binding.setThirdPartySipAccountLoginClickListener {
             if (viewModel.conditionsAndPrivacyPolicyAccepted) {
-                goToLoginThirdPartySipAccountFragment()
+                goToLoginThirdPartySipAccountFragment(false)
             } else {
                 showAcceptConditionsAndPrivacyDialog(goToThirdPartySipAccountLogin = true)
             }
@@ -116,7 +116,7 @@ class LandingFragment : GenericFragment() {
         }
 
         viewModel.accountLoggedInEvent.observe(viewLifecycleOwner) {
-            it.consume { firstAccount ->
+            it.consume {
                 Log.i("$TAG Account successfully logged-in, leaving assistant")
                 requireActivity().finish()
             }
@@ -128,6 +128,12 @@ class LandingFragment : GenericFragment() {
                     message,
                     R.drawable.warning_circle
                 )
+            }
+        }
+
+        viewModel.skipLandingToThirdPartySipAccountEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                goToLoginThirdPartySipAccountFragment(true)
             }
         }
 
@@ -145,8 +151,12 @@ class LandingFragment : GenericFragment() {
         findNavController().navigate(action)
     }
 
-    private fun goToLoginThirdPartySipAccountFragment() {
-        val action = LandingFragmentDirections.actionLandingFragmentToThirdPartySipAccountWarningFragment()
+    private fun goToLoginThirdPartySipAccountFragment(skipWarning: Boolean) {
+        val action = if (skipWarning) {
+            LandingFragmentDirections.actionLandingFragmentToThirdPartySipAccountLoginFragment()
+        } else {
+            LandingFragmentDirections.actionLandingFragmentToThirdPartySipAccountWarningFragment()
+        }
         findNavController().navigate(action)
     }
 
@@ -177,7 +187,7 @@ class LandingFragment : GenericFragment() {
                 if (goToAccountCreate) {
                     goToRegisterFragment()
                 } else if (goToThirdPartySipAccountLogin) {
-                    goToLoginThirdPartySipAccountFragment()
+                    goToLoginThirdPartySipAccountFragment(false)
                 }
             }
         }

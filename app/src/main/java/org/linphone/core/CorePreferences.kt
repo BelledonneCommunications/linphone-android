@@ -221,6 +221,22 @@ class CorePreferences @UiThread constructor(private val context: Context) {
         get() = config.getBool("ui", "use_username_as_sso_login_hint", true)
 
     @get:WorkerThread
+    val thirdPartySipAccountDefaultTransport: String
+        get() = config.getString("ui", "assistant_third_party_sip_account_transport", "tls")!!
+
+    @get:WorkerThread
+    val thirdPartySipAccountDefaultDomain: String
+        get() = config.getString("ui", "assistant_third_party_sip_account_domain", "")!!
+
+    @get:WorkerThread
+    val assistantDirectlyGoToThirdPartySipAccountLogin: Boolean
+        get() = config.getBool(
+            "ui",
+            "assistant_go_directly_to_third_party_sip_account_login",
+            false
+        )
+
+    @get:WorkerThread
     val automaticallyShowDialpad: Boolean
         get() = config.getBool("ui", "automatically_show_dialpad", false)
 

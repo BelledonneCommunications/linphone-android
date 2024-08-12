@@ -32,10 +32,10 @@ class TelecomAndroidAutoService : CarAppService() {
 
     override fun createHostValidator(): HostValidator {
         val host = hostInfo
-        Log.e("$TAG Host is [${host?.packageName}] with UID [${host?.uid}]")
+        Log.i("$TAG Host is [${host?.packageName}] with UID [${host?.uid}]")
 
         val validator = HostValidator.Builder(applicationContext)
-            .addAllowedHosts(R.array.hosts_allowlist_sample_copy) // androidx.car.app.R.array.hosts_allowlist_sampl
+            .addAllowedHosts(R.array.hosts_allowlist_sample_copy) // androidx.car.app.R.array.hosts_allowlist_sample
             .build()
         if (host != null) {
             val allowed = validator.isValidHost(host)

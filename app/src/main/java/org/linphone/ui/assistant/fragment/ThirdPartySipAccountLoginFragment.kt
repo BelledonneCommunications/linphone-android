@@ -88,7 +88,6 @@ class ThirdPartySipAccountLoginFragment : GenericFragment() {
         adapter.setDropDownViewResource(R.layout.generic_dropdown_cell)
         binding.transport.adapter = adapter
         binding.transport.onItemSelectedListener = dropdownListener
-        binding.transport.setSelection(viewModel.availableTransports.size - 1)
 
         binding.viewModel = viewModel
         observeToastEvents(viewModel)
@@ -117,6 +116,12 @@ class ThirdPartySipAccountLoginFragment : GenericFragment() {
                     message,
                     R.drawable.warning_circle
                 )
+            }
+        }
+
+        viewModel.defaultTransportIndexEvent.observe(viewLifecycleOwner) {
+            it.consume { index ->
+                binding.transport.setSelection(index)
             }
         }
 

@@ -73,6 +73,10 @@ open class AccountLoginViewModel @UiThread constructor() : GenericViewModel() {
         MutableLiveData<Event<String>>()
     }
 
+    val skipLandingToThirdPartySipAccountEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     var conditionsAndPrivacyPolicyAccepted = false
 
     private lateinit var newlyCreatedAuthInfo: AuthInfo
@@ -129,6 +133,10 @@ open class AccountLoginViewModel @UiThread constructor() : GenericViewModel() {
             hideScanQrCode.postValue(corePreferences.hideAssistantScanQrCode)
             hideThirdPartyAccount.postValue(corePreferences.hideAssistantThirdPartySipAccount)
             conditionsAndPrivacyPolicyAccepted = corePreferences.conditionsAndPrivacyPolicyAccepted
+
+            if (corePreferences.assistantDirectlyGoToThirdPartySipAccountLogin) {
+                skipLandingToThirdPartySipAccountEvent.postValue(Event(true))
+            }
         }
 
         showPassword.value = false
