@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="@{viewModel.isVoiceRecording ? View.INVISIBLE : (viewModel.isKeyboardOpen || viewModel.isInCallConversation || !viewModel.isFileTransferServerAvailable) ? View.GONE : View.VISIBLE}"
-            app:constraint_referenced_ids="attach_file, capture_image" />
+            app:constraint_referenced_ids="emoji_picker_toggle, capture_image" />
 
         <include
             android:id="@+id/reply_area"
