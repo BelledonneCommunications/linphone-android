@@ -216,7 +216,12 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             } else if (adapter.itemCount != itemCount) {
                 if (viewModel.searchInProgress.value == true) {
                     val recyclerView = binding.eventsList
-                    recyclerView.scrollToPosition(viewModel.itemToScrollTo.value ?: 0)
+                    var indexToScrollTo = viewModel.itemToScrollTo.value ?: 0
+                    if (indexToScrollTo < 0) indexToScrollTo = 0
+                    Log.i(
+                        "$TAG User has loaded more history to go to a specific message, scrolling to index [$indexToScrollTo]"
+                    )
+                    recyclerView.scrollToPosition(indexToScrollTo)
                     viewModel.searchInProgress.postValue(false)
                 }
             }
@@ -516,18 +521,21 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                 val repliedMessageId = model.replyToMessageId
                 if (repliedMessageId.isNullOrEmpty()) {
                     Log.w("$TAG Message [${model.id}] doesn't have a reply to ID!")
+                    return@consume
+                }
+
+                val originalMessage = adapter.currentList.find { eventLog ->
+                    !eventLog.isEvent && (eventLog.model as MessageModel).id == repliedMessageId
+                }
+                if (originalMessage != null) {
+                    val position = adapter.currentList.indexOf(originalMessage)
+                    Log.i("$TAG Scrolling to position [$position]")
+                    binding.eventsList.scrollToPosition(position)
                 } else {
-                    val originalMessage = adapter.currentList.find { eventLog ->
-                        !eventLog.isEvent && (eventLog.model as MessageModel).id == repliedMessageId
-                    }
-                    if (originalMessage != null) {
-                        val position = adapter.currentList.indexOf(originalMessage)
-                        Log.i("$TAG Scrolling to position [$position]")
-                        binding.eventsList.scrollToPosition(position)
-                    } else {
-                        Log.w("$TAG Failed to find matching message in adapter's items!")
-                        // TODO FIXME: load original message & messages in between, then scroll to it
-                    }
+                    Log.w(
+                        "$TAG Failed to find message with ID [$repliedMessageId] in already loaded history, loading missing items"
+                    )
+                    viewModel.loadDataUpUntilToMessageId(model.replyToMessageId)
                 }
             }
         }
@@ -1096,6 +1104,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
 
     @UiThread
     private fun showChatMessageLongPressMenu(chatMessageModel: MessageModel) {
+        binding.sendArea.messageToSend.hideKeyboard()
         Compatibility.setBlurRenderEffect(binding.coordinatorLayout)
         messageLongPressViewModel.setMessage(chatMessageModel)
         chatMessageModel.dismissLongPressMenuEvent.observe(viewLifecycleOwner) {

@@ -560,6 +560,25 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         }
     }
 
+    @UiThread
+    fun loadDataUpUntilToMessageId(messageId: String?) {
+        messageId ?: return
+
+        coreContext.postOnCoreThread {
+            searchInProgress.postValue(true)
+            val eventLog = chatRoom.findEventLog(messageId)
+            if (eventLog != null) {
+                Log.i("$TAG Found event log [$eventLog] with message ID [$messageId]")
+                loadMessagesUpTo(eventLog)
+            } else {
+                Log.e(
+                    "$TAG Failed to find event log with message ID [$messageId] in chat room history!"
+                )
+                searchInProgress.postValue(false)
+            }
+        }
+    }
+
     @WorkerThread
     private fun configureChatRoom() {
         scrollingPosition = SCROLLING_POSITION_NOT_SET
@@ -873,6 +892,30 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
     }
 
     @WorkerThread
+    private fun loadMessagesUpTo(targetEvent: EventLog) {
+        val historyToAdd = chatRoom.getHistoryRangeBetween(
+            targetEvent,
+            eventsList[0].eventLog,
+            HistoryFilter.None.toInt()
+        )
+        Log.i(
+            "$TAG Loaded [${historyToAdd.size}] items from history to go to event log [$targetEvent]"
+        )
+
+        Log.i("$TAG Loading [$ITEMS_TO_LOAD_BEFORE_SEARCH_RESULT] items before the target")
+        val previousMessages = chatRoom.getHistoryRangeNear(
+            ITEMS_TO_LOAD_BEFORE_SEARCH_RESULT,
+            0,
+            targetEvent,
+            HistoryFilter.None.toInt()
+        )
+
+        itemToScrollTo.postValue(previousMessages.size - 2) // To go to the item before the target event
+        val toAdd = previousMessages.plus(historyToAdd)
+        prependEvents(toAdd)
+    }
+
+    @WorkerThread
     private fun searchChatMessage(direction: SearchDirection) {
         searchInProgress.postValue(true)
 
@@ -904,26 +947,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
             }
             if (found == null) {
                 Log.i("$TAG Found result isn't in currently loaded history, loading missing events")
-                val historyToAdd = chatRoom.getHistoryRangeBetween(
-                    latestMatch,
-                    eventsList[0].eventLog,
-                    HistoryFilter.None.toInt()
-                )
-                Log.i("$TAG Loaded [${historyToAdd.size}] items from history")
-
-                Log.i(
-                    "$TAG Also loading [$ITEMS_TO_LOAD_BEFORE_SEARCH_RESULT] items before the match"
-                )
-                val previousMessages = chatRoom.getHistoryRangeNear(
-                    ITEMS_TO_LOAD_BEFORE_SEARCH_RESULT,
-                    0,
-                    match,
-                    HistoryFilter.None.toInt()
-                )
-
-                itemToScrollTo.postValue(previousMessages.size - 1)
-                val toAdd = previousMessages.plus(historyToAdd)
-                prependEvents(toAdd)
+                loadMessagesUpTo(match)
             } else {
                 Log.i("$TAG Found result is already in history, no need to load more history")
                 (found.model as? MessageModel)?.highlightText(textToSearch)
@@ -932,7 +956,8 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
                     // Go to next message to prevent the message we are looking for to be behind the scroll to bottom button
                     itemToScrollTo.postValue(index + 1)
                 } else {
-                    itemToScrollTo.postValue(index)
+                    // Go to previous message so target message won't be displayed stuck to the top
+                    itemToScrollTo.postValue(index - 1)
                 }
                 searchInProgress.postValue(false)
             }
