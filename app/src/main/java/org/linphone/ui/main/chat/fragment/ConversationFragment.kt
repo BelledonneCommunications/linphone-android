@@ -526,6 +526,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                         binding.eventsList.scrollToPosition(position)
                     } else {
                         Log.w("$TAG Failed to find matching message in adapter's items!")
+                        // TODO FIXME: load original message & messages in between, then scroll to it
                     }
                 }
             }

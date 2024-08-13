@@ -189,8 +189,16 @@ class ConversationsListViewModel @UiThread constructor() : AbstractMainViewModel
         }
 
         val currentList = conversations.value.orEmpty()
-        val newList = arrayListOf<ConversationModel>()
+        val peerAddress = chatRoom.peerAddress
+        val found = currentList.find {
+            it.chatRoom.peerAddress.weakEqual(peerAddress)
+        }
+        if (found != null) {
+            Log.w("$TAG Created chat room is already in the list, skipping")
+            return
+        }
 
+        val newList = arrayListOf<ConversationModel>()
         val model = createConversationModel(chatRoom)
         if (model != null) {
             newList.add(model)
@@ -207,18 +215,21 @@ class ConversationsListViewModel @UiThread constructor() : AbstractMainViewModel
     @WorkerThread
     private fun removeChatRoom(chatRoom: ChatRoom) {
         val currentList = conversations.value.orEmpty()
+        val peerAddress = chatRoom.peerAddress
         val found = currentList.find {
-            it.chatRoom == chatRoom
+            it.chatRoom.peerAddress.weakEqual(peerAddress)
         }
         if (found != null) {
             val newList = arrayListOf<ConversationModel>()
             newList.addAll(currentList)
             newList.remove(found)
             found.destroy()
-            Log.i("$TAG Removing chat room from list")
+            Log.i("$TAG Removing chat room [${peerAddress.asStringUriOnly()}] from list")
             conversations.postValue(newList)
         } else {
-            Log.w("$TAG Failed to find item in list matching deleted chat room")
+            Log.w(
+                "$TAG Failed to find item in list matching deleted chat room peer address [${peerAddress.asStringUriOnly()}]"
+            )
         }
 
         showGreenToastEvent.postValue(
