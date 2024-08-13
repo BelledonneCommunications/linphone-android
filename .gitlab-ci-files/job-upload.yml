@@ -9,4 +9,4 @@ job-android-upload:
     - job-android
 
   script:
-    - cd app/build/outputs/apk/ && rsync ./debug/*.apk $DEPLOY_SERVER:$ANDROID_DEPLOY_DIRECTORY
+    - cd app/build/outputs/apk/ && rsync ./release/*.apk $DEPLOY_SERVER:$ANDROID_DEPLOY_DIRECTORY
