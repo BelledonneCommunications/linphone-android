@@ -277,7 +277,10 @@ class MessageModel @WorkerThread constructor(
 
         coreContext.postOnMainThread {
             firstFileModel.addSource(filesList) {
-                firstFileModel.value = it.firstOrNull()
+                val first = it.firstOrNull()
+                if (first != null) {
+                    firstFileModel.value = first!!
+                }
             }
         }
     }

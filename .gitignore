@@ -10,3 +10,4 @@ local.properties
 app/debug/
 app/release/
 .idea/
+app/bc-android.keystore

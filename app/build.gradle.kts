@@ -116,10 +116,17 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = File(keystoreProperties["storeFile"].toString())
-            storePassword = keystoreProperties["storePassword"].toString()
-            keyAlias = keystoreProperties["keyAlias"].toString()
-            keyPassword = keystoreProperties["keyPassword"].toString()
+            val keyStorePath = keystoreProperties["storeFile"] as String
+            val keyStore = project.file(keyStorePath)
+            if (keyStore.exists()) {
+                storeFile = keyStore
+                storePassword = keystoreProperties["storePassword"] as String
+                keyAlias = keystoreProperties["keyAlias"] as String
+                keyPassword = keystoreProperties["keyPassword"] as String
+                println("Signing config release is using keystore [$storeFile]")
+            } else {
+                println("Keystore [$storeFile] doesn't exists!")
+            }
         }
     }
 
@@ -153,6 +160,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
 
             resValue("string", "file_provider", "$packageName.fileprovider")
             resValue("string", "linphone_app_version", gitVersion.trim())
