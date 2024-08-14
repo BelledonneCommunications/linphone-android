@@ -197,6 +197,13 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
     }
 
     @UiThread
+    fun updateUnreadCount() {
+        coreContext.postOnCoreThread {
+            unreadMessageCount.postValue(chatRoom.unreadMessagesCount)
+        }
+    }
+
+    @UiThread
     fun toggleMute() {
         coreContext.postOnCoreThread {
             chatRoom.muted = !chatRoom.muted

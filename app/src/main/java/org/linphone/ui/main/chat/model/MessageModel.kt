@@ -346,6 +346,14 @@ class MessageModel @WorkerThread constructor(
         }
     }
 
+    @UiThread
+    fun markAsRead() {
+        coreContext.postOnCoreThread {
+            Log.i("$TAG Marking chat message with ID [$id] as read")
+            chatMessage.markAsRead()
+        }
+    }
+
     @WorkerThread
     fun updateAvatarModel() {
         val avatar = coreContext.contactsManager.getContactAvatarModelForAddress(

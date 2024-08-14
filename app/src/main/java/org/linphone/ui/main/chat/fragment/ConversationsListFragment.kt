@@ -281,6 +281,21 @@ class ConversationsListFragment : AbstractMainFragment() {
             }
         }
 
+        sharedViewModel.updateUnreadMessageCountForCurrentConversationEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                val displayChatRoom = sharedViewModel.displayedChatRoom
+                if (displayChatRoom != null) {
+                    val found = listViewModel.conversations.value.orEmpty().find { model ->
+                        model.chatRoom == displayChatRoom
+                    }
+                    found?.updateUnreadCount()
+                }
+                listViewModel.updateUnreadMessagesCount()
+            }
+        }
+
         // AbstractMainFragment related
 
         listViewModel.title.value = getString(R.string.bottom_navigation_conversations_label)

@@ -410,12 +410,9 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
     }
 
     @UiThread
-    fun markFirstUnreadMessageAsRead() {
-        // As we can't mark a single message as read in our SDK, small workaround
-        // TODO FIXME: when SDK will support chatMessage.markAsRead(), use it
-        val unreadCount = unreadMessagesCount.value ?: 0
-        if (unreadCount > 1) {
-            unreadMessagesCount.value = unreadCount - 1
+    fun updateUnreadMessageCount() {
+        coreContext.postOnCoreThread {
+            unreadMessagesCount.postValue(chatRoom.unreadMessagesCount)
         }
     }
 
@@ -476,6 +473,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
     @UiThread
     fun markAsRead() {
         coreContext.postOnCoreThread {
+            if (chatRoom.unreadMessagesCount == 0) return@postOnCoreThread
             Log.i("$TAG Marking chat room as read")
             chatRoom.markAsRead()
         }

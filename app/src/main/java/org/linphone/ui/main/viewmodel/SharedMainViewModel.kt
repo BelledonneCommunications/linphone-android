@@ -111,7 +111,9 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
 
     val filesToShareFromIntent = MutableLiveData<ArrayList<String>>()
 
-    val messageToForwardEvent = MutableLiveData<Event<MessageModel>>()
+    val messageToForwardEvent: MutableLiveData<Event<MessageModel>> by lazy {
+        MutableLiveData<Event<MessageModel>>()
+    }
 
     var displayedChatRoom: ChatRoom? = null // Prevents the need to go look for the chat room
     val showConversationEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
@@ -139,6 +141,10 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
 
     val newChatMessageEphemeralLifetimeToSet: MutableLiveData<Event<Long>> by lazy {
         MutableLiveData<Event<Long>>()
+    }
+
+    val updateUnreadMessageCountForCurrentConversationEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
     }
 
     /* Meetings related */

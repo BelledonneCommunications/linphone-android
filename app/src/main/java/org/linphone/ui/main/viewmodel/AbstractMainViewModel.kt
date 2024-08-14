@@ -117,12 +117,12 @@ open class AbstractMainViewModel @UiThread constructor() : GenericViewModel() {
             chatRoom: ChatRoom,
             messages: Array<out ChatMessage>
         ) {
-            updateUnreadMessagesCount()
+            computeUnreadMessagesCount()
         }
 
         @WorkerThread
         override fun onChatRoomRead(core: Core, chatRoom: ChatRoom) {
-            updateUnreadMessagesCount()
+            computeUnreadMessagesCount()
         }
 
         @WorkerThread
@@ -157,7 +157,7 @@ open class AbstractMainViewModel @UiThread constructor() : GenericViewModel() {
                 account.postValue(AccountModel(defaultAccount))
             }
 
-            updateUnreadMessagesCount()
+            computeUnreadMessagesCount()
             updateMissedCallsCount()
             updateAvailableMenus()
 
@@ -251,6 +251,13 @@ open class AbstractMainViewModel @UiThread constructor() : GenericViewModel() {
         navigateToMeetingsEvent.value = Event(true)
     }
 
+    @UiThread
+    fun updateUnreadMessagesCount() {
+        coreContext.postOnCoreThread {
+            computeUnreadMessagesCount()
+        }
+    }
+
     @WorkerThread
     fun updateMissedCallsCount() {
         val account = LinphoneUtils.getDefaultAccount()
@@ -263,7 +270,7 @@ open class AbstractMainViewModel @UiThread constructor() : GenericViewModel() {
     }
 
     @WorkerThread
-    fun updateUnreadMessagesCount() {
+    fun computeUnreadMessagesCount() {
         val account = LinphoneUtils.getDefaultAccount()
         val count = account?.unreadChatMessageCount ?: coreContext.core.unreadChatMessageCount
         val moreThanOne = count > 1
@@ -305,7 +312,7 @@ open class AbstractMainViewModel @UiThread constructor() : GenericViewModel() {
             account.value?.destroy()
             account.postValue(AccountModel(defaultAccount ?: core.accountList.first()))
 
-            updateUnreadMessagesCount()
+            computeUnreadMessagesCount()
             updateMissedCallsCount()
         } else {
             Log.e("$TAG Accounts list no supposed to be empty!")

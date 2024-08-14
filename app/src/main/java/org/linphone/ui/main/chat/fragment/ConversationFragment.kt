@@ -973,8 +973,14 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             viewModel.markAsRead()
         } else {
             val firstUnread = adapter.currentList[firstUnreadMessagePosition]
-            (firstUnread.model as MessageModel).isRead = true
-            viewModel.markFirstUnreadMessageAsRead()
+            if (firstUnread.model is MessageModel) {
+                Log.i("$TAG Marking only first message (to which user scrolled to) as read")
+                firstUnread.model.markAsRead()
+                viewModel.updateUnreadMessageCount()
+                sharedViewModel.updateUnreadMessageCountForCurrentConversationEvent.postValue(
+                    Event(true)
+                )
+            }
         }
     }
 
