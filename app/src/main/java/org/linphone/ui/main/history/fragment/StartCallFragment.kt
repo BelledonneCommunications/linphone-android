@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.history.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -66,6 +67,7 @@ class StartCallFragment : GenericAddressPickerFragment() {
         return binding.root
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(this)[StartCallViewModel::class.java]
 

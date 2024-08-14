@@ -31,6 +31,7 @@
                 android:layout_height="@dimen/icon_size"
                 android:layout_marginTop="10dp"
                 android:src="@drawable/trusted_white"
+                android:contentDescription="@null"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />

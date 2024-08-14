@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.meetings.model
 
+import java.util.Locale
 import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
@@ -34,9 +35,9 @@ class TimeZoneModel(timeZone: TimeZone) : Comparable<TimeZoneModel> {
     )
 
     private val gmt: String = if (hours >= 0) {
-        String.format("GMT+%02d:%02d - %s", hours, minutes, timeZone.id)
+        String.format(Locale.getDefault(), "GMT+%02d:%02d - %s", hours, minutes, timeZone.id)
     } else {
-        String.format("GMT%02d:%02d - %s", hours, minutes, timeZone.id)
+        String.format(Locale.getDefault(), "GMT%02d:%02d - %s", hours, minutes, timeZone.id)
     }
 
     override fun toString(): String {

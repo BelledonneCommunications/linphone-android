@@ -39,6 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
+            android:background="@color/white"
             android:visibility="@{viewModel.isPdf ? View.VISIBLE : View.GONE, default=gone}" />
 
         <androidx.appcompat.widget.AppCompatTextView

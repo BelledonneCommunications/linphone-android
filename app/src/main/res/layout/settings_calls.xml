@@ -146,7 +146,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/settings_title_style"
-            android:id="@+id/advanced_settings"
+            android:id="@+id/change_ringtone"
             android:onClick="@{() -> viewModel.changeRingtone()}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

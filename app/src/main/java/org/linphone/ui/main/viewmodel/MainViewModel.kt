@@ -292,8 +292,6 @@ class MainViewModel @UiThread constructor() : ViewModel() {
                 addAlert(NETWORK_NOT_REACHABLE, label)
             }
 
-            updatePostNotificationsPermission()
-
             if (core.callsNb > 0) {
                 updateCallAlert()
             }
@@ -303,6 +301,8 @@ class MainViewModel @UiThread constructor() : ViewModel() {
                 triggerNativeAddressBookImport()
             }
         }
+
+        updatePostNotificationsPermission()
 
         if (VFS.isEnabled(coreContext.context)) {
             val cache = corePreferences.vfsCachePath

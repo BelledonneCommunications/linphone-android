@@ -119,6 +119,7 @@ class MainActivity : GenericActivity() {
         }
     }
 
+    @SuppressLint("InlinedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         // Must be done before the setContentView
         installSplashScreen()
