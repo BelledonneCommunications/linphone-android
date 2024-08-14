@@ -61,6 +61,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
 
     @MainThread
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
+        Log.i("$TAG Creating and starting cursor loader")
         val mimeType = ContactsContract.Data.MIMETYPE
         val mimeSelection = "$mimeType = ? OR $mimeType = ? OR $mimeType = ? OR $mimeType = ?"
 
@@ -325,13 +326,12 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                 for (localFriend in friendsList.friends) {
                     val newlyFetchedFriend = friends[localFriend.refKey]
                     if (newlyFetchedFriend != null) {
-                        Log.d(
-                            "$TAG Friend [${localFriend.name}] with ref key [${localFriend.refKey}] found in newly fetched batch"
-                        )
-                        localFriend.edit()
+                        friends.remove(localFriend.refKey)
                         localFriend.nativeUri =
                             newlyFetchedFriend.nativeUri // Native URI isn't stored in linphone database, needs to be updated
+                        if (newlyFetchedFriend.vcard?.asVcard4String() == localFriend.vcard?.asVcard4String()) continue
 
+                        localFriend.edit()
                         // Update basic fields that may have changed
                         localFriend.name = newlyFetchedFriend.name
                         localFriend.organization = newlyFetchedFriend.organization
