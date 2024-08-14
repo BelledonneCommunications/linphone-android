@@ -117,10 +117,6 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
         }
 
         try {
-            val friendsPhoneNumbers = arrayListOf<String>()
-            val friendsAddresses = arrayListOf<Address>()
-            var previousId = ""
-
             val contactIdColumn = cursor.getColumnIndexOrThrow(ContactsContract.Data.CONTACT_ID)
             val mimetypeColumn = cursor.getColumnIndexOrThrow(ContactsContract.Data.MIMETYPE)
             val displayNameColumn = cursor.getColumnIndexOrThrow(
@@ -162,34 +158,30 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                     val id: String = cursor.getString(contactIdColumn)
                     val mime: String? = cursor.getString(mimetypeColumn)
 
-                    if (previousId.isEmpty() || previousId != id) {
-                        friendsPhoneNumbers.clear()
-                        friendsAddresses.clear()
-                        previousId = id
-                    }
-
                     val friend = friends[id] ?: core.createFriend()
                     friend.refKey = id
                     if (friend.name.isNullOrEmpty()) {
                         val displayName: String? = cursor.getString(displayNameColumn)
-                        friend.name = displayName
+                        if (!displayName.isNullOrEmpty()) {
+                            friend.name = displayName
 
-                        val uri = friend.getNativeContactPictureUri()
-                        if (uri != null) {
-                            friend.photo = uri.toString()
+                            val uri = friend.getNativeContactPictureUri()
+                            if (uri != null) {
+                                friend.photo = uri.toString()
+                            }
+
+                            val starred = cursor.getInt(starredColumn) == 1
+                            friend.starred = starred
+
+                            val lookupKey =
+                                cursor.getString(lookupColumn)
+                            friend.nativeUri =
+                                "${ContactsContract.Contacts.CONTENT_LOOKUP_URI}/$lookupKey"
+
+                            friend.isSubscribesEnabled = false
+                            // Disable peer to peer short term presence
+                            friend.incSubscribePolicy = SubscribePolicy.SPDeny
                         }
-
-                        val starred = cursor.getInt(starredColumn) == 1
-                        friend.starred = starred
-
-                        val lookupKey =
-                            cursor.getString(lookupColumn)
-                        friend.nativeUri =
-                            "${ContactsContract.Contacts.CONTENT_LOOKUP_URI}/$lookupKey"
-
-                        friend.isSubscribesEnabled = false
-                        // Disable peer to peer short term presence
-                        friend.incSubscribePolicy = SubscribePolicy.SPDeny
                     }
 
                     when (mime) {
@@ -216,32 +208,17 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                                 }
 
                             if (number != null) {
-                                if (
-                                    friendsPhoneNumbers.find {
-                                        PhoneNumberUtils.arePhoneNumberWeakEqual(
-                                            it,
-                                            number
-                                        )
-                                    } == null
-                                ) {
-                                    val phoneNumber = Factory.instance()
-                                        .createFriendPhoneNumber(number, label)
-                                    friend.addPhoneNumberWithLabel(phoneNumber)
-                                    friendsPhoneNumbers.add(number)
-                                }
+                                val phoneNumber = Factory.instance()
+                                    .createFriendPhoneNumber(number, label)
+                                friend.addPhoneNumberWithLabel(phoneNumber)
                             }
                         }
                         ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE -> {
                             val sipAddress: String? = cursor.getString(sipAddressColumn)
                             if (sipAddress != null) {
                                 val address = core.interpretUrl(sipAddress, false)
-                                if (address != null &&
-                                    friendsAddresses.find {
-                                        it.weakEqual(address)
-                                    } == null
-                                ) {
+                                if (address != null) {
                                     friend.addAddress(address)
-                                    friendsAddresses.add(address)
                                 }
                             }
                         }
@@ -366,12 +343,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
 
                         // Adding only newly added SIP address(es) in native contact if any
                         for (sipAddress in newlyFetchedFriend.addresses) {
-                            val found = localFriend.addresses.find {
-                                it.weakEqual(sipAddress)
-                            }
-                            if (found == null) {
-                                localFriend.addAddress(sipAddress)
-                            }
+                            localFriend.addAddress(sipAddress)
                         }
                         localFriend.done()
                     } else {
