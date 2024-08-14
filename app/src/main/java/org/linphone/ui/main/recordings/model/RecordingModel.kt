@@ -66,10 +66,16 @@ class RecordingModel @WorkerThread constructor(
             }
 
             val parsedDate = fileName.split("_")[1]
-            val date = SimpleDateFormat("dd-MM-yyyy-HH-mm-ss", Locale.getDefault()).parse(
-                parsedDate
-            )
-            timestamp = date?.time ?: 0L
+            var parsedTimestamp = 0L
+            try {
+                val date = SimpleDateFormat("dd-MM-yyyy-HH-mm-ss", Locale.getDefault()).parse(
+                    parsedDate
+                )
+                parsedTimestamp = date?.time ?: 0L
+            } catch (e: Exception) {
+                Log.e("$TAG Failed to parse legacy timestamp [$parsedDate]")
+            }
+            timestamp = parsedTimestamp
         } else {
             val withoutHeader = fileName.substring(LinphoneUtils.RECORDING_FILE_NAME_HEADER.length)
             val indexOfSeparator = withoutHeader.indexOf(
