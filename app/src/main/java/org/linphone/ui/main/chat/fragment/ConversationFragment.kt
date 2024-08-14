@@ -971,6 +971,10 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         viewModel.isUserScrollingUp.value = !bottomReached
         if (bottomReached) {
             viewModel.markAsRead()
+        } else {
+            val firstUnread = adapter.currentList[firstUnreadMessagePosition]
+            (firstUnread.model as MessageModel).isRead = true
+            viewModel.markFirstUnreadMessageAsRead()
         }
     }
 

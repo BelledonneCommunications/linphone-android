@@ -178,9 +178,8 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
             Log.i("$TAG Received [${eventLogs.size}] new message(s)")
             computeComposingLabel()
 
-            addEvents(eventLogs)
-
             unreadMessagesCount.postValue(chatRoom.unreadMessagesCount)
+            addEvents(eventLogs)
         }
 
         @WorkerThread
@@ -407,6 +406,16 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         coreContext.postOnCoreThread {
             Log.i("$TAG Refreshing conversation info (subject, participants, etc...)")
             computeConversationInfo()
+        }
+    }
+
+    @UiThread
+    fun markFirstUnreadMessageAsRead() {
+        // As we can't mark a single message as read in our SDK, small workaround
+        // TODO FIXME: when SDK will support chatMessage.markAsRead(), use it
+        val unreadCount = unreadMessagesCount.value ?: 0
+        if (unreadCount > 1) {
+            unreadMessagesCount.value = unreadCount - 1
         }
     }
 
