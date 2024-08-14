@@ -29,7 +29,7 @@
             app:flexWrap="wrap"
             app:justifyContent="flex_start"
             entries="@{viewModel.attachments}"
-            layout="@{@layout/chat_bubble_content_grid_cell}"
+            layout="@{@layout/chat_conversation_attachments_area_cell}"
             app:layout_constraintTop_toBottomOf="@id/attachments_separator"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>

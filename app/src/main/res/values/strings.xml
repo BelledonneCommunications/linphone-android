@@ -807,6 +807,7 @@
     <string name="content_description_chat_bubble_forward">This message was forwarded from another conversation</string>
     <string name="content_description_chat_bubble_delivery_status">Click to have delivery status</string>
     <string name="content_description_chat_bubble_toggle_voice_message_play_pause">Plays/pauses the voice message playback</string>
+    <string name="content_description_chat_remove_attachment">Remove this file from attachments</string>
     <string name="content_description_chat_remove_attachments">Close attachments</string>
     <string name="content_description_chat_muted">Conversation has been silenced</string>
     <string name="content_description_chat_ephemeral_enabled">Ephemeral messages are enabled</string>
