@@ -78,7 +78,6 @@ import org.linphone.activities.navigateToContact
 import org.linphone.activities.navigateToContacts
 import org.linphone.activities.navigateToDialer
 import org.linphone.authentication.AuthStateManager
-import org.linphone.authentication.AuthorizationServiceManager
 import org.linphone.compatibility.Compatibility
 import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.core.AVPFMode
@@ -91,7 +90,6 @@ import org.linphone.core.Factory
 import org.linphone.core.TransportType
 import org.linphone.core.tools.Log
 import org.linphone.databinding.MainActivityBinding
-import org.linphone.environment.DimensionsEnvironmentService
 import org.linphone.middleware.FileTree
 import org.linphone.models.UserDevice
 import org.linphone.services.APIClientService
@@ -105,9 +103,6 @@ import org.linphone.utils.PermissionHelper
 import org.linphone.utils.ShortcutsHelper
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.setKeyboardInsetListener
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import timber.log.Timber
 
 class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestinationChangedListener {
@@ -188,33 +183,6 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         // Must be done before the setContentView
         installSplashScreen()
 
-        val dimensionsEnvironment = DimensionsEnvironmentService.getInstance(applicationContext).getCurrentEnvironment()
-        val asm = AuthStateManager.getInstance(applicationContext)
-
-        apiClientService = APIClientService()
-        apiClientService.getUCGatewayService(
-            this.applicationContext,
-            dimensionsEnvironment!!.gatewayApiUri,
-            AuthorizationServiceManager.getInstance(this).authorizationServiceInstance,
-            AuthStateManager.getInstance(this)
-        ).doGetUserDevices(
-            userID = asm.fetchUserId()
-        )
-            .enqueue(object : Callback<List<UserDevice>> {
-                override fun onFailure(call: Call<List<UserDevice>>, t: Throwable) {
-                }
-
-                override fun onResponse(
-                    call: Call<List<UserDevice>>,
-                    response: Response<List<UserDevice>>
-                ) {
-                    val userDevices = response.body()
-                    if (!userDevices.isNullOrEmpty()) {
-                        registerSipEndpoints(userDevices)
-                    }
-                }
-            })
-
         binding = DataBindingUtil.setContentView(this, R.layout.main_activity)
         binding.lifecycleOwner = this
 
@@ -252,11 +220,12 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             }
         }
 
-        if (coreContext.core.accountList.isEmpty()) {
-            if (corePreferences.firstStart) {
-                startActivity(Intent(this, AssistantActivity::class.java))
-            }
-        }
+// TODO: add this back if we're planning to let people do their own registrations
+//        if (coreContext.core.accountList.isEmpty()) {
+//            if (corePreferences.firstStart) {
+//                startActivity(Intent(this, AssistantActivity::class.java))
+//            }
+//        }
 
         tabsFragment = findViewById(R.id.tabs_fragment)
         statusFragment = findViewById(R.id.status_fragment)

@@ -54,11 +54,8 @@ public class AuthStateManager {
     private static final AtomicReference<WeakReference<AuthStateManager>> INSTANCE_REF =
             new AtomicReference<>(new WeakReference<>(null));
 
-    private static final String TAG = "AuthStateManager";
-
     private static final String STORE_NAME = "AuthState";
     private static final String KEY_STATE = "state";
-
 
     private final SharedPreferences mPrefs;
     private final ReentrantLock mPrefsLock;
@@ -143,6 +140,7 @@ public class AuthStateManager {
             return current;
         }
         current.update(response);
+
         return replace(current);
     }
 

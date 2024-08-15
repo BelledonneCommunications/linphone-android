@@ -164,8 +164,6 @@ class CoreContext(
                 }
 
                 fetchContacts()
-
-                loadDimensionsAccounts()
             }
         }
 
@@ -494,9 +492,10 @@ class CoreContext(
             setAudioPayloadTypes()
             setVideoPayloadTypes()
 
+            // Clear accounts before auth info or you'll get password errors
+            core.clearAccounts()
             core.clearAllAuthInfo()
             core.clearProxyConfig()
-            core.clearAccounts()
 
             userDeviceList.forEach {
                 registerSipEndpoint(it)

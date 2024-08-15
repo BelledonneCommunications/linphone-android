@@ -20,7 +20,6 @@
 package org.linphone.activities.main.sidemenu.fragments
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
@@ -45,7 +44,6 @@ import org.linphone.core.Factory
 import org.linphone.databinding.SideMenuFragmentBinding
 import org.linphone.services.UserService
 import org.linphone.utils.*
-import org.linphone.utils.Log
 
 class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
     private lateinit var viewModel: SideMenuViewModel
@@ -151,10 +149,15 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
             // authManager.userName.subscribe({ user -> viewModel.userName.set("TOKEN:\n" + user) })
 
             val userIdentity = UserService.getInstance(requireContext()).user
-            userIdentity.subscribe { user ->
+            val subscribe = userIdentity.subscribe { user ->
                 viewModel.userName.set(
                     user.name + " (" + user.id + ")"
                 )
+
+                //FIXME: we shouldn't be hosting this kind of logic here
+                if (!user.name.isNullOrBlank()) {
+                    coreContext.loadDimensionsAccounts()
+                }
             }
         }
     }
@@ -174,24 +177,24 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
         }
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        val authManager = AuthStateManager.getInstance(requireContext())
-
-        // authManager.userName.subscribe({ user -> viewModel.userName = user })
-        /*
-        if (authManager.userName == null) {
-            binding.userName.text = "Null observable!"
-        } else {
-            authManager.userName.subscribe(
-                { user -> if (binding != null) binding.userName.text = user },
-                { error -> viewModel.userName = "ERROR" }
-            )
-        }
-        */
-        // viewModel.userName.set("TEST!")
-    }
+//    override fun onAttach(context: Context) {
+//        super.onAttach(context)
+//
+//        val authManager = AuthStateManager.getInstance(requireContext())
+//
+//         authManager.userName.subscribe({ user -> viewModel.userName = user })
+//
+//        if (authManager.userName == null) {
+//            binding.userName.text = "Null observable!"
+//        } else {
+//            authManager.userName.subscribe(
+//                { user -> if (binding != null) binding.userName.text = user },
+//                { error -> viewModel.userName = "ERROR" }
+//            )
+//        }
+//
+//         viewModel.userName.set("TEST!")
+//    }
 
     private fun pickFile() {
         val cameraIntents = ArrayList<Intent>()
@@ -306,7 +309,7 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
         dialog.show()
     }
 
-    public fun logout() {
+    private fun logout() {
         val authManager = AuthStateManager.getInstance(requireContext())
         authManager.logout(context)
         sharedViewModel.toggleDrawerEvent.value = Event(true)
