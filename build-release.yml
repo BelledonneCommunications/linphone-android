@@ -61,6 +61,7 @@ steps:
     spotBugsAnalysis: false
 
 - task: PublishBuildArtifacts@1
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   displayName: "Publish App"
   inputs:
     PathtoPublish: 'app/build/outputs'
