@@ -68,7 +68,6 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.GenericActivity
 import org.linphone.activities.SnackBarActivity
-import org.linphone.activities.assistant.AssistantActivity
 import org.linphone.activities.main.viewmodels.CallOverlayViewModel
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
@@ -326,9 +325,6 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             accountParams.natPolicy!!.isUdpTurnTransportEnabled = false
             accountParams.natPolicy!!.isTcpTurnTransportEnabled = false
             accountParams.natPolicy!!.isTlsTurnTransportEnabled = false
-
-            // TODO createPushToken service
-            // val pushToken = pushTokenService.GetVoipToken()
 
             val account = coreContext.core.createAccount(accountParams)
             coreContext.core.addAccount(account)

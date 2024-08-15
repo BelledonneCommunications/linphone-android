@@ -196,6 +196,9 @@ public final class AuthConfiguration {
                     "Unable to parse configuration: " + ex.getMessage());
         }
         mConfigHash = configData.sha256().base64();
+        if (getLastKnownConfigHash() == null) {
+            acceptConfiguration();
+        }
     }
 
     public void readConfiguration() throws InvalidConfigurationException {

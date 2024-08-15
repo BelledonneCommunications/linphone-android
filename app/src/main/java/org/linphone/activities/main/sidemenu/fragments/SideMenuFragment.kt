@@ -148,16 +148,10 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
             // var x = authManager.current
             // authManager.userName.subscribe({ user -> viewModel.userName.set("TOKEN:\n" + user) })
 
-            val userIdentity = UserService.getInstance(requireContext()).user
-            val subscribe = userIdentity.subscribe { user ->
+            val userIdentity = UserService.getInstance(requireContext()).user.subscribe { user ->
                 viewModel.userName.set(
                     user.name + " (" + user.id + ")"
                 )
-
-                //FIXME: we shouldn't be hosting this kind of logic here
-                if (!user.name.isNullOrBlank()) {
-                    coreContext.loadDimensionsAccounts()
-                }
             }
         }
     }

@@ -2,6 +2,10 @@ package org.linphone.models
 
 import com.google.gson.annotations.SerializedName
 
+data class SubscribableUserDeviceList(val userDevices: List<UserDevice>?) {
+    var hasValue = userDevices != null
+}
+
 data class UserDevice(
     @SerializedName("deviceId")
     var deviceId: String,

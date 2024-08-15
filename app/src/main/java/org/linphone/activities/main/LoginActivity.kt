@@ -226,6 +226,8 @@ class LoginActivity : AppCompatActivity() {
             )
 
             mAuthStateManager!!.replace(AuthState(config))
+            mAuthStateManager!!.performAuthAction(false, mAuthStateManager!!.current.isAuthorized())
+
             initializeClient()
             return
         }
@@ -261,6 +263,8 @@ class LoginActivity : AppCompatActivity() {
 
         Log.i("Discovery document retrieved")
         mAuthStateManager!!.replace(AuthState(config))
+        mAuthStateManager!!.performAuthAction(false, mAuthStateManager!!.current.isAuthorized())
+
         mExecutor.submit { this.initializeClient() }
     }
 

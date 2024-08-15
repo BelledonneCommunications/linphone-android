@@ -57,26 +57,19 @@ import kotlinx.coroutines.tasks.await
 import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
-import org.linphone.authentication.AuthStateManager
-import org.linphone.authentication.AuthorizationServiceManager
+import org.linphone.authentication.DimensionsAccountsManager
 import org.linphone.compatibility.Compatibility
 import org.linphone.compatibility.PhoneStateInterface
 import org.linphone.contact.ContactLoader
 import org.linphone.contact.ContactsManager
 import org.linphone.contact.getContactForPhoneNumberOrAddress
 import org.linphone.core.tools.Log
-import org.linphone.environment.DimensionsEnvironmentService
 import org.linphone.mediastream.Version
 import org.linphone.models.UserDevice
-import org.linphone.models.UserInfo
 import org.linphone.notifications.NotificationsManager
-import org.linphone.services.APIClientService
 import org.linphone.telecom.TelecomHelper
 import org.linphone.utils.*
 import org.linphone.utils.Event
-import retrofit2.Call as retrofitCall
-import retrofit2.Callback as retrofitCallBack
-import retrofit2.Response as retrofitResponse
 
 class CoreContext(
     val context: Context,
@@ -111,8 +104,6 @@ class CoreContext(
         val appBuildType = BuildConfig.BUILD_TYPE
         "$appVersion ($appBranch, $appBuildType)"
     }
-
-    var userInfo: UserInfo? = null
 
     val sdkVersion: String by lazy {
         val sdkVersion = context.getString(org.linphone.core.R.string.linphone_sdk_version)
@@ -434,69 +425,27 @@ class CoreContext(
         val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         audioManager.registerAudioDeviceCallback(audioDeviceCallback, handler)
         Log.i("[Context] Started")
+
+        var deviceSubscription = DimensionsAccountsManager.getInstance(context).devicesSubject.subscribe { subscribableDeviceList ->
+            registerSipEndpoints(subscribableDeviceList.userDevices)
+        }
     }
 
-    fun loadDimensionsAccounts() {
-        val dimensionsEnvironment = DimensionsEnvironmentService.getInstance(context).getCurrentEnvironment()
-        val asm = AuthStateManager.getInstance(context)
+    private fun clearAccounts() {
+        setAudioPayloadTypes()
+        setVideoPayloadTypes()
 
-        val apiClientService = APIClientService()
-        val ucGatewayService = apiClientService.getUCGatewayService(
-            context,
-            dimensionsEnvironment!!.gatewayApiUri,
-            AuthorizationServiceManager.getInstance(context).getAuthorizationServiceInstance(),
-            asm
-        )
-
-        ucGatewayService.doGetUserDevices(userID = asm.fetchUserId()).enqueue(object : retrofitCallBack<List<UserDevice>> {
-            override fun onFailure(call: retrofitCall<List<UserDevice>>, t: Throwable) {
-                Log.e("loadDimensionsAccounts::doGetUserInfo::onFailure::${t.message}")
-            }
-
-            override fun onResponse(
-                call: retrofitCall<List<UserDevice>>,
-                response: retrofitResponse<List<UserDevice>>
-            ) {
-                if (response.isSuccessful) {
-                    registerSipEndpoints(response.body())
-                } else {
-                    Log.e(
-                        "loadDimensionsAccounts::doGetUserDevices::onResponse::${response.message()}"
-                    )
-                }
-            }
-        })
-
-        ucGatewayService.doGetUserInfo().enqueue(object : retrofitCallBack<UserInfo> {
-            override fun onFailure(call: retrofitCall<UserInfo>, t: Throwable) {
-                Log.e("loadDimensionsAccounts::doGetUserInfo::onFailure::${t.message}")
-            }
-
-            override fun onResponse(
-                call: retrofitCall<UserInfo>,
-                response: retrofitResponse<UserInfo>
-            ) {
-                if (response.isSuccessful) {
-                    userInfo = response.body()
-                } else {
-                    Log.e(
-                        "loadDimensionsAccounts::doGetUserInfo::onResponse::${response.message()}"
-                    )
-                }
-            }
-        })
+        // Clear accounts before auth info or you'll get password errors
+        core.clearAccounts()
+        core.clearAllAuthInfo()
+        core.clearProxyConfig()
     }
 
     private fun registerSipEndpoints(userDeviceList: List<UserDevice>?) {
+        // FixMe: we shouldn't be clearing accounts if the app has failed to authenticate with CTGateway
+        clearAccounts()
+
         if (userDeviceList != null) {
-            setAudioPayloadTypes()
-            setVideoPayloadTypes()
-
-            // Clear accounts before auth info or you'll get password errors
-            core.clearAccounts()
-            core.clearAllAuthInfo()
-            core.clearProxyConfig()
-
             userDeviceList.forEach {
                 registerSipEndpoint(it)
             }
@@ -1376,11 +1325,13 @@ class CoreContext(
     }
 
     fun dialVoicemail() {
-        if (userInfo == null || userInfo!!.presenceId.isBlank()) {
+        val userInfoSubjectValue = DimensionsAccountsManager.getInstance(context).userInfoSubject.value
+
+        if (userInfoSubjectValue == null || !userInfoSubjectValue.hasValue) {
             Log.w("[Context] CallVoicemail executed with no userInfo")
             return
         } else {
-            core.invite(userInfo!!.presenceId)
+            core.invite(userInfoSubjectValue.userInfo!!.presenceId)
         }
     }
 
