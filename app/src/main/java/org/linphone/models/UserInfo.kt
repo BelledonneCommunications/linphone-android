@@ -2,6 +2,10 @@ package org.linphone.models
 
 import com.google.gson.annotations.SerializedName
 
+data class SubscribableUserInfo(var userInfo: UserInfo?) {
+    var hasValue = userInfo != null
+}
+
 data class UserInfo(
     @SerializedName("permissions")
     var permissions: List<String>,

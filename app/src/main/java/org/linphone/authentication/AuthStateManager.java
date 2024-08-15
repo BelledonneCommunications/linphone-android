@@ -51,12 +51,19 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject;
  */
 public class AuthStateManager {
 
+    enum authStateChangeAction {
+        None,
+        Logout,
+        LogIn
+    }
+
     private static final AtomicReference<WeakReference<AuthStateManager>> INSTANCE_REF =
             new AtomicReference<>(new WeakReference<>(null));
 
     private static final String STORE_NAME = "AuthState";
     private static final String KEY_STATE = "state";
 
+    private final Context mContext;
     private final SharedPreferences mPrefs;
     private final ReentrantLock mPrefsLock;
     private final AtomicReference<AuthState> mCurrentAuthState;
@@ -76,6 +83,7 @@ public class AuthStateManager {
     }
 
     private AuthStateManager(Context context) {
+        mContext = context;
         mPrefs = context.getSharedPreferences(STORE_NAME, Context.MODE_PRIVATE);
         mPrefsLock = new ReentrantLock();
         mCurrentAuthState = new AtomicReference<>();
@@ -106,13 +114,49 @@ public class AuthStateManager {
         return state;
     }
 
+    public void performAuthAction(boolean wasAuthed, boolean isAuthed) {
+        switch (GetAuthAction(wasAuthed, isAuthed)) {
+            case LogIn -> {
+                Log.Log.i("performAuthAction::Loading accounts");
+                DimensionsAccountsManager.Companion.getInstance(mContext).load();
+            }
+
+            case Logout -> {
+                Log.Log.i("performAuthAction::Clearing accounts");
+                DimensionsAccountsManager.Companion.getInstance(mContext).clear();
+            }
+
+            default -> { }
+        }
+    }
+
+    private authStateChangeAction GetAuthAction(Boolean wasAuthed, Boolean isAuthed) {
+        Log.Log.i(String.format("GetAuthAction::WasAuthed(%s)::IsAuthed(%s)", wasAuthed, isAuthed));
+
+        if (!wasAuthed && isAuthed)
+            return authStateChangeAction.LogIn;
+        if (!isAuthed && wasAuthed)
+            return authStateChangeAction.Logout;
+
+        return authStateChangeAction.None;
+    }
+
     @AnyThread
     @NonNull
     public AuthState updateAfterAuthorization(
             @Nullable AuthorizationResponse response,
             @Nullable AuthorizationException ex) {
         AuthState current = getCurrent();
-        current.update(response, ex);
+
+        var wasAuthed = current.isAuthorized();
+        if (response != null || ex != null) {
+            current.update(response, ex);
+            performAuthAction(wasAuthed, current.isAuthorized());
+        }
+        else {
+            performAuthAction(wasAuthed, false);
+        }
+
         if (response != null) {
             Log.Log.d("access token: " + response.accessToken);
         }
@@ -126,7 +170,11 @@ public class AuthStateManager {
             @Nullable TokenResponse response,
             @Nullable AuthorizationException ex) {
         AuthState current = getCurrent();
+
+        var wasAuthed = current.isAuthorized();
         current.update(response, ex);
+        performAuthAction(wasAuthed, current.isAuthorized());
+
         return replace(current);
     }
 
@@ -139,7 +187,10 @@ public class AuthStateManager {
         if (ex != null) {
             return current;
         }
+
+        var wasAuthed = current.isAuthorized();
         current.update(response);
+        performAuthAction(wasAuthed, current.isAuthorized());
 
         return replace(current);
     }
@@ -186,20 +237,23 @@ public class AuthStateManager {
     }
 
     public void logout(Context context) {
-        final var state = getCurrent();
+        final var current = getCurrent();
         final var authService = new AuthorizationService(context);
         final var config = AuthConfiguration.getInstance(context);
-        final var authConfig = state.getAuthorizationServiceConfiguration();
+        final var authConfig = current.getAuthorizationServiceConfiguration();
         if (authConfig == null) {
             // TODO: handle this
             return;
         }
 
+        var wasAuthed = current.isAuthorized();
+        performAuthAction(wasAuthed, false);
+
         replace(new AuthState());
 
         EndSessionRequest endSessionRequest =
                 new EndSessionRequest.Builder(authConfig)
-                        .setIdTokenHint(state.getIdToken())
+                        .setIdTokenHint(current.getIdToken())
                         .setPostLogoutRedirectUri(config.getEndSessionRedirectUri())
                         .build();
 
