@@ -72,6 +72,7 @@ public class AuthorizationServiceManager {
     }
 
     public void clearAuthorizationServiceInstance() {
+        AuthorizationServiceInstance.dispose();
         AuthorizationServiceInstance = null;
     }
 }

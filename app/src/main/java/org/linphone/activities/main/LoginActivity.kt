@@ -414,7 +414,7 @@ class LoginActivity : AppCompatActivity() {
 
         if (AuthorizationServiceManager.getInstance(this).authorizationServiceInstance != null) {
             Log.i(TAG, "Discarding existing AuthService instance")
-            AuthorizationServiceManager.getInstance(this).authorizationServiceInstance!!.dispose()
+            AuthorizationServiceManager.getInstance(this).clearAuthorizationServiceInstance()
         }
 
         mAuthRequest.set(null)
