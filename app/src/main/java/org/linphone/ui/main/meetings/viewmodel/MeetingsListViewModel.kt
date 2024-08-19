@@ -154,8 +154,10 @@ class MeetingsListViewModel @UiThread constructor() : AbstractMainViewModel() {
                         val first = previousModelWeekLabel != todayWeekLabel
                         list.add(MeetingListItemModel(null, first))
                         meetingForTodayFound = true
-                        previousModelWeekLabel = todayWeekLabel
-                        firstMeetingOfTheWeek = false
+
+                        // Consider next meeting is first of the week (do not count "no meeting today" as first)
+                        previousModelWeekLabel = model.weekLabel
+                        firstMeetingOfTheWeek = true
                     }
                 } else {
                     previousModelWeekLabel = model.weekLabel
