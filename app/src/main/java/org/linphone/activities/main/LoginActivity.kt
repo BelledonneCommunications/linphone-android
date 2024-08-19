@@ -163,20 +163,30 @@ class LoginActivity : AppCompatActivity() {
     private fun handleAuthIntents() {
         val asm = AuthStateManager.getInstance(applicationContext)
 
-        if (intent != null && intent.extras != null && intent.extras!!.getString("auth") == "logout") {
-            Log.i("AuthState logout")
+        if (intent != null && intent.extras != null && intent.extras!!.getString(
+                AuthStateManager.AUTH_KEY
+            ) == AuthStateManager.LOGOUT_VALUE
+        ) {
+            Log.i("LoginActivity.handleAuthIntents::logout::(unset),(unset)")
+
             asm.updateAfterAuthorization(null, null)
             displayAuthOptions()
 
-            val isAuthorised = mAuthStateManager!!.getCurrent().isAuthorized
-            if (isAuthorised) return
+//            val isAuthorised = mAuthStateManager!!.getCurrent().isAuthorized
+//            if (isAuthorised) return
         } else {
             val response = AuthorizationResponse.fromIntent(intent)
             val ex = AuthorizationException.fromIntent(intent)
 
-            if (response != null || ex != null) {
-                asm.updateAfterAuthorization(response, ex)
-            }
+            Log.i(
+                String.format(
+                    "LoginActivity.handleAuthIntents::logout::(%s),(%s)",
+                    response,
+                    ex
+                )
+            )
+
+            asm.updateAfterAuthorization(response, ex)
         }
     }
 
@@ -204,7 +214,8 @@ class LoginActivity : AppCompatActivity() {
      */
     @WorkerThread
     private fun initializeAppAuth() {
-        Log.i("Initializing AppAuth")
+        Log.i("LoginActivity.initializeAppAuth")
+
         recreateAuthorizationService()
 
         if (mAuthStateManager!!.current.authorizationServiceConfiguration != null) {
@@ -255,6 +266,7 @@ class LoginActivity : AppCompatActivity() {
         config: AuthorizationServiceConfiguration?,
         ex: AuthorizationException?
     ) {
+        Log.i("LoginActivity.handleConfigurationRetrievalResult")
         if (config == null) {
             Log.i("Failed to retrieve discovery document", ex)
             displayError("""Failed to retrieve discovery document: ${ex!!.message} """, true)
@@ -349,7 +361,6 @@ class LoginActivity : AppCompatActivity() {
                 id: Long
             ) {
                 val env = adapter.getItem(position)
-
                 if (env != null) {
                     Log.i(
                         TAG,
@@ -361,6 +372,7 @@ class LoginActivity : AppCompatActivity() {
                     )
                     environmentService.setCurrentEnvironment(env)
                     mAuthStateManager!!.replace(AuthState())
+
                     initializeAppAuth()
                 }
             }

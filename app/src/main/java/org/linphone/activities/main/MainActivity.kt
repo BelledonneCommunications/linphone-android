@@ -27,7 +27,6 @@ import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
-import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -35,6 +34,7 @@ import androidx.annotation.MainThread
 import androidx.annotation.StringRes
 import androidx.annotation.WorkerThread
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.GravityCompat
 import androidx.core.view.doOnAttach
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentContainerView
@@ -79,19 +79,14 @@ import org.linphone.activities.navigateToDialer
 import org.linphone.authentication.AuthStateManager
 import org.linphone.compatibility.Compatibility
 import org.linphone.contact.ContactsUpdatedListenerStub
-import org.linphone.core.AVPFMode
 import org.linphone.core.AuthInfo
 import org.linphone.core.AuthMethod
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.CorePreferences
-import org.linphone.core.Factory
-import org.linphone.core.TransportType
 import org.linphone.core.tools.Log
 import org.linphone.databinding.MainActivityBinding
 import org.linphone.middleware.FileTree
-import org.linphone.models.UserDevice
-import org.linphone.services.APIClientService
 import org.linphone.services.BrandingService
 import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
@@ -169,8 +164,6 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
     private val keyboardVisibilityListeners = arrayListOf<AppUtils.KeyboardVisibilityListener>()
 
-    private lateinit var apiClientService: APIClientService
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -195,7 +188,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             this
         ) {
             it.consume {
-                if (binding.sideMenu.isDrawerOpen(Gravity.LEFT)) {
+                if (binding.sideMenu.isDrawerOpen(GravityCompat.START)) {
                     binding.sideMenu.closeDrawer(binding.sideMenuContent, true)
                 } else {
                     binding.sideMenu.openDrawer(binding.sideMenuContent, true)
@@ -238,7 +231,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             }
         }
 
-        BrandingService.getInstance(applicationContext)
+        var subscription = BrandingService.getInstance(applicationContext)
             .brand
             .subscribe { brand ->
                 Log.i("Got brand: " + brand.value?.brandName)
@@ -258,110 +251,6 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 //        }
 //    }
 
-    private fun registerSipEndpoints(userDeviceList: List<UserDevice>) {
-        setAudioPayloadTypes()
-        setVideoPayloadTypes()
-
-        coreContext.core.clearAllAuthInfo()
-        coreContext.core.clearProxyConfig()
-        coreContext.core.clearAccounts()
-
-        userDeviceList.forEach {
-            RegisterSipEndpoint(it)
-        }
-
-        if (coreContext.core.accountList.any()) {
-            coreContext.core.defaultAccount = coreContext.core.accountList.first()
-        }
-    }
-
-    private fun RegisterSipEndpoint(userDevice: UserDevice) {
-        if (userDevice.hasCredentials()) {
-            val accountParams = coreContext.core.createAccountParams()
-            val identityUri = "${userDevice.sipUsername} <sip:${userDevice.sipUsername}@${userDevice.sipRealm}>"
-
-            accountParams.identityAddress = coreContext.core.interpretUrl(identityUri, false)
-
-            var enableOutboundProxy = false
-            if (userDevice.sipOutboundProxy.isNotBlank()) {
-                enableOutboundProxy = true
-            }
-
-            var sipTransport = userDevice.sipTransport
-            if (sipTransport.isBlank()) {
-                sipTransport = "tls"
-            }
-
-            var serverUri = "<sip:${userDevice.sipOutboundProxy};transport=${stringToTransportType(
-                sipTransport
-            )}>"
-            accountParams.serverAddress = coreContext.core.interpretUrl(serverUri, false)
-
-            accountParams.isOutboundProxyEnabled = enableOutboundProxy
-            accountParams.isRegisterEnabled = true
-            accountParams.avpfMode = AVPFMode.Disabled // This is always disabled in PlumMobile
-            accountParams.expires = userDevice.sipRegisterTimeout
-            accountParams.pushNotificationAllowed = false
-            accountParams.remotePushNotificationAllowed = false
-
-            val auth = Factory.instance().createAuthInfo(
-                userDevice.sipUsername,
-                userDevice.sipUsername,
-                userDevice.sipUserPassword,
-                "",
-                "",
-                userDevice.sipRealm
-            )
-            coreContext.core.addAuthInfo(auth)
-
-            if (accountParams.natPolicy == null) {
-                accountParams.natPolicy = coreContext.core.createNatPolicy()
-            }
-
-            accountParams.natPolicy!!.isIceEnabled = false
-            accountParams.natPolicy!!.isStunEnabled = false
-            accountParams.natPolicy!!.stunServerUsername = null
-            accountParams.natPolicy!!.isTurnEnabled = false
-            accountParams.natPolicy!!.isUdpTurnTransportEnabled = false
-            accountParams.natPolicy!!.isTcpTurnTransportEnabled = false
-            accountParams.natPolicy!!.isTlsTurnTransportEnabled = false
-
-            val account = coreContext.core.createAccount(accountParams)
-            coreContext.core.addAccount(account)
-        }
-    }
-
-    private fun stringToTransportType(sipTransport: String): TransportType {
-        if (sipTransport.lowercase() == "udp") return TransportType.Udp
-        if (sipTransport.lowercase() == "tcp") return TransportType.Tcp
-
-        return TransportType.Tls
-    }
-
-    private fun setVideoPayloadTypes() {
-//        for (payloadType in coreContext.core.videoPayloadTypes) {
-//        }
-    }
-
-    private fun setAudioPayloadTypes() {
-        for (payloadType in coreContext.core.audioPayloadTypes) {
-            if (payloadType.mimeType.equals("PCMA", true) ||
-                payloadType.mimeType.equals("PCMU", true)
-            ) {
-                payloadType.enable(true)
-            }
-        }
-    }
-
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-
-        if (intent != null) {
-            Log.d("[Main Activity] Found new intent")
-            handleIntentParams(intent)
-        }
-    }
-
     override fun onStart() {
         super.onStart()
 
@@ -369,6 +258,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         // the authorization flow from the browser.
         val response = AuthorizationResponse.fromIntent(intent)
         val ex = AuthorizationException.fromIntent(intent)
+
         val asm = AuthStateManager.getInstance(applicationContext)
 
         Log.i("isAuthorised: " + asm.current.isAuthorized)
@@ -386,15 +276,12 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             // authorization code exchange is required
             asm.updateAfterAuthorization(response, ex)
             exchangeAuthorizationCode(response)
-        } else if (ex != null) {
-            // displayNotAuthorized("Authorization flow failed: " + ex.message)
-        } else {
-            // displayNotAuthorized("No authorization state retained - reauthorization required")
         }
     }
 
     override fun onResume() {
         super.onResume()
+
         coreContext.contactsManager.addListener(listener)
         coreContext.core.addListener(coreListener)
     }
