@@ -50,6 +50,8 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject;
  * mutation.
  */
 public class AuthStateManager {
+    public static final String AUTH_KEY = "auth";
+    public static final String LOGOUT_VALUE = "logout";
 
     enum authStateChangeAction {
         None,
@@ -146,6 +148,7 @@ public class AuthStateManager {
     public AuthState updateAfterAuthorization(
             @Nullable AuthorizationResponse response,
             @Nullable AuthorizationException ex) {
+        Log.Log.i(String.format("updateAfterAuthorization::Response(%s)::Ex(%s)", response, ex));
         AuthState current = getCurrent();
 
         var wasAuthed = current.isAuthorized();
@@ -169,6 +172,8 @@ public class AuthStateManager {
     public AuthState updateAfterTokenResponse(
             @Nullable TokenResponse response,
             @Nullable AuthorizationException ex) {
+        Log.Log.i(String.format("updateAfterTokenResponse::Response(%s)::Ex(%s)", response, ex));
+
         AuthState current = getCurrent();
 
         var wasAuthed = current.isAuthorized();
@@ -183,6 +188,8 @@ public class AuthStateManager {
     public AuthState updateAfterRegistration(
             RegistrationResponse response,
             AuthorizationException ex) {
+        Log.Log.i(String.format("updateAfterRegistration::Response(%s)::Ex(%s)", response, ex));
+
         AuthState current = getCurrent();
         if (ex != null) {
             return current;
@@ -245,7 +252,7 @@ public class AuthStateManager {
             // TODO: handle this
             return;
         }
-
+        Log.Log.i("AuthStateManager.logout");
         var wasAuthed = current.isAuthorized();
         performAuthAction(wasAuthed, false);
 
@@ -258,7 +265,7 @@ public class AuthStateManager {
                         .build();
 
         var endSessionIntent = new Intent(context, LoginActivity.class);
-        endSessionIntent.putExtra("auth", "logout");
+        endSessionIntent.putExtra(AUTH_KEY, LOGOUT_VALUE);
         endSessionIntent.setAction(Intent.ACTION_MANAGED_PROFILE_REMOVED);
 
         var logoutIntent = PendingIntent.getActivity(context, 0, endSessionIntent, PendingIntent.FLAG_IMMUTABLE);
