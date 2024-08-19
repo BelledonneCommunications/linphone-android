@@ -28,6 +28,8 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.contacts.ContactsManager
+import org.linphone.core.ChatRoom
+import org.linphone.core.Friend
 import org.linphone.core.MagicSearch
 import org.linphone.core.MagicSearchListenerStub
 import org.linphone.core.SearchResult
@@ -238,56 +240,10 @@ abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccoun
     private fun processMagicSearchResults(results: Array<SearchResult>) {
         Log.i("$TAG Processing [${results.size}] results")
 
-        val conversationsList = arrayListOf<ConversationContactOrSuggestionModel>()
-        if (!skipConversation) {
-            for (chatRoom in LinphoneUtils.getDefaultAccount()?.chatRooms.orEmpty()) {
-                // Only get group conversations
-                if (!chatRoom.currentParams.isGroupEnabled) {
-                    continue
-                }
-
-                val found = if (currentFilter.isEmpty()) {
-                    null
-                } else {
-                    chatRoom.participants.find {
-                        // Search in address but also in contact name if exists
-                        val model =
-                            coreContext.contactsManager.getContactAvatarModelForAddress(it.address)
-                        model.contactName?.contains(
-                            currentFilter,
-                            ignoreCase = true
-                        ) == true || it.address.asStringUriOnly().contains(
-                            currentFilter,
-                            ignoreCase = true
-                        )
-                    }
-                }
-                if (
-                    currentFilter.isEmpty() ||
-                    found != null ||
-                    chatRoom.peerAddress.asStringUriOnly().contains(
-                        currentFilter,
-                        ignoreCase = true
-                    ) ||
-                    chatRoom.subject.orEmpty().contains(currentFilter, ignoreCase = true)
-                ) {
-                    val localAddress = chatRoom.localAddress
-                    val remoteAddress = chatRoom.peerAddress
-                    val model = ConversationContactOrSuggestionModel(
-                        remoteAddress,
-                        localAddress,
-                        chatRoom.subject
-                    )
-
-                    val fakeFriend = coreContext.core.createFriend()
-                    fakeFriend.name = chatRoom.subject
-                    val avatarModel = ContactAvatarModel(fakeFriend)
-                    avatarModel.defaultToConversationIcon.postValue(true)
-
-                    model.avatarModel.postValue(avatarModel)
-                    conversationsList.add(model)
-                }
-            }
+        val conversationsList = if (!skipConversation) {
+            getConversationsList(currentFilter)
+        } else {
+            arrayListOf()
         }
 
         val contactsList = arrayListOf<ConversationContactOrSuggestionModel>()
@@ -350,5 +306,102 @@ abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccoun
         Log.i(
             "$TAG Processed [${results.size}] results: [${conversationsList.size}] conversations, [${contactsList.size}] contacts and [${suggestionsList.size}] suggestions"
         )
+    }
+
+    @WorkerThread
+    private fun getConversationsList(filter: String): ArrayList<ConversationContactOrSuggestionModel> {
+        val conversationsList = arrayListOf<ConversationContactOrSuggestionModel>()
+        for (chatRoom in LinphoneUtils.getDefaultAccount()?.chatRooms.orEmpty()) {
+            // Do not list conversations in which we can't send a message
+            val isBasic = chatRoom.hasCapability(ChatRoom.Capabilities.Basic.toInt())
+            if (chatRoom.isReadOnly || (!isBasic && chatRoom.participants.isEmpty())) continue
+
+            val isOneToOne = chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt())
+            val remoteAddress = chatRoom.peerAddress
+            val matchesFilter: Any? = if (filter.isEmpty()) {
+                null
+            } else {
+                if (isBasic) {
+                    // Search in address but also in contact name if exists
+                    val model =
+                        coreContext.contactsManager.getContactAvatarModelForAddress(remoteAddress)
+                    if (model.contactName?.contains(filter, ignoreCase = true) == true ||
+                        remoteAddress.asStringUriOnly().contains(
+                                filter,
+                                ignoreCase = true
+                            )
+                    ) {
+                        model
+                    } else {
+                        null
+                    }
+                } else {
+                    if (chatRoom.subject.orEmpty().contains(filter, ignoreCase = true)) {
+                        chatRoom
+                    } else {
+                        chatRoom.participants.find {
+                            // Search in address but also in contact name if exists
+                            val model =
+                                coreContext.contactsManager.getContactAvatarModelForAddress(
+                                    it.address
+                                )
+                            model.contactName?.contains(
+                                filter,
+                                ignoreCase = true
+                            ) == true || it.address.asStringUriOnly().contains(
+                                filter,
+                                ignoreCase = true
+                            )
+                        }
+                    }
+                }
+            }
+            if (filter.isEmpty() || matchesFilter != null) {
+                val localAddress = chatRoom.localAddress
+                val friend = if (isBasic) {
+                    coreContext.contactsManager.findContactByAddress(remoteAddress)
+                } else {
+                    val participantAddress = chatRoom.participants.firstOrNull()?.address
+                    if (participantAddress != null) {
+                        val friendFound = coreContext.contactsManager.findContactByAddress(
+                            participantAddress
+                        )
+                        if (friendFound == null) {
+                            val fakeFriend = coreContext.core.createFriend()
+                            fakeFriend.name = LinphoneUtils.getDisplayName(participantAddress)
+                            fakeFriend
+                        } else {
+                            friendFound
+                        }
+                    } else {
+                        null
+                    }
+                }
+                val subject = if (isOneToOne) {
+                    friend?.name
+                } else {
+                    chatRoom.subject
+                }
+                val model = ConversationContactOrSuggestionModel(
+                    remoteAddress,
+                    localAddress,
+                    subject,
+                    friend
+                )
+
+                val avatarModel = if (!isOneToOne) {
+                    val fakeFriend = coreContext.core.createFriend()
+                    fakeFriend.name = chatRoom.subject
+                    val avatarModel = ContactAvatarModel(fakeFriend)
+                    avatarModel.defaultToConversationIcon.postValue(true)
+                    avatarModel
+                } else {
+                    coreContext.contactsManager.getContactAvatarModelForFriend(friend)
+                }
+                model.avatarModel.postValue(avatarModel)
+                conversationsList.add(model)
+            }
+        }
+        return conversationsList
     }
 }
