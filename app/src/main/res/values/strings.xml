@@ -232,6 +232,7 @@
     <string name="settings_contacts_carddav_username_title">Username</string>
     <string name="settings_contacts_carddav_password_title">Password</string>
     <string name="settings_contacts_carddav_realm_title">Auth realm</string>
+    <string name="settings_contacts_carddav_use_as_default_title">Store newly created contacts in it</string>
     <string name="settings_contacts_carddav_sync_successful_toast">Synchronization was successful</string>
     <string name="settings_contacts_carddav_sync_error_toast">Synchronization error!</string>
     <string name="settings_contacts_carddav_deleted_toast">CardDAV account removed</string>

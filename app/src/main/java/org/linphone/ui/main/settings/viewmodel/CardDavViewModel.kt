@@ -23,7 +23,9 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.contacts.ContactLoader.Companion.LINPHONE_ADDRESS_BOOK_FRIEND_LIST
 import org.linphone.core.Factory
 import org.linphone.core.FriendList
 import org.linphone.core.FriendListListenerStub
@@ -31,7 +33,7 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
 import org.linphone.utils.Event
 
-class CardDavViewModel : GenericViewModel() {
+class CardDavViewModel @UiThread constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[CardDAV ViewModel]"
     }
@@ -52,9 +54,15 @@ class CardDavViewModel : GenericViewModel() {
 
     val syncInProgress = MutableLiveData<Boolean>()
 
-    val syncSuccessfulEvent = MutableLiveData<Event<Boolean>>()
+    val storeNewContactsInIt = MutableLiveData<Boolean>()
 
-    val friendListRemovedEvent = MutableLiveData<Event<Boolean>>()
+    val syncSuccessfulEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    val friendListRemovedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
 
     private lateinit var friendList: FriendList
 
@@ -110,6 +118,7 @@ class CardDavViewModel : GenericViewModel() {
         isEdit.value = false
         showPassword.value = false
         syncInProgress.value = false
+        storeNewContactsInIt.value = false
     }
 
     override fun onCleared() {
@@ -134,6 +143,9 @@ class CardDavViewModel : GenericViewModel() {
             friendList.addListener(friendListListener)
 
             displayName.postValue(name)
+            storeNewContactsInIt.postValue(
+                name == corePreferences.friendListInWhichStoreNewlyCreatedFriends
+            )
             serverUrl.postValue(friendList.uri)
             Log.i("$TAG Existing friend list CardDAV values loaded")
         }
@@ -144,6 +156,12 @@ class CardDavViewModel : GenericViewModel() {
         coreContext.postOnCoreThread { core ->
             if (isEdit.value == true && ::friendList.isInitialized) {
                 val name = friendList.displayName
+                if (name == corePreferences.friendListInWhichStoreNewlyCreatedFriends) {
+                    Log.i(
+                        "$TAG Deleting friend list configured to be used to store newly created friends, updating default friend list back to [$LINPHONE_ADDRESS_BOOK_FRIEND_LIST]"
+                    )
+                    corePreferences.friendListInWhichStoreNewlyCreatedFriends = LINPHONE_ADDRESS_BOOK_FRIEND_LIST
+                }
                 core.removeFriendList(friendList)
                 Log.i("$TAG Removed friends list with display name [$name]")
                 showGreenToastEvent.postValue(
@@ -225,7 +243,11 @@ class CardDavViewModel : GenericViewModel() {
                 friendList = core.createFriendList()
                 friendList.displayName = name
                 friendList.type = FriendList.Type.CardDAV
-                friendList.uri = server
+                friendList.uri = if (server.startsWith("http://") || server.startsWith("https://")) {
+                    server
+                } else {
+                    "https://$server"
+                }
                 friendList.isDatabaseStorageEnabled = true
                 friendList.addListener(friendListListener)
                 core.addFriendList(friendList)
@@ -233,6 +255,19 @@ class CardDavViewModel : GenericViewModel() {
                 Log.i(
                     "$TAG CardDAV friend list [$name] created with server URL [$server], synchronizing it"
                 )
+            }
+
+            if (storeNewContactsInIt.value == true) {
+                val previous = corePreferences.friendListInWhichStoreNewlyCreatedFriends
+                Log.i(
+                    "$TAG Updating default friend list to store newly created contacts from [$previous] to [$name]"
+                )
+                corePreferences.friendListInWhichStoreNewlyCreatedFriends = name
+            } else if (storeNewContactsInIt.value == false) {
+                Log.i(
+                    "$TAG No longer using friend list [$name] as default friend list, switching back to [$LINPHONE_ADDRESS_BOOK_FRIEND_LIST]"
+                )
+                corePreferences.friendListInWhichStoreNewlyCreatedFriends = LINPHONE_ADDRESS_BOOK_FRIEND_LIST
             }
 
             syncInProgress.postValue(true)

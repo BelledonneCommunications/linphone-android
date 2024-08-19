@@ -195,6 +195,7 @@
     <string name="settings_contacts_carddav_username_title">Nom d\'utilisateur</string>
     <string name="settings_contacts_carddav_password_title">Mot de passe</string>
     <string name="settings_contacts_carddav_realm_title">Domaine d\'authentification</string>
+    <string name="settings_contacts_carddav_use_as_default_title">Stocker ici les contacts nouvellement crées</string>
     <string name="settings_contacts_carddav_sync_successful_toast">Synchronization réussie</string>
     <string name="settings_contacts_carddav_sync_error_toast">Erreur de synchronization !</string>
     <string name="settings_contacts_carddav_deleted_toast">Compte CardDAV supprimé</string>

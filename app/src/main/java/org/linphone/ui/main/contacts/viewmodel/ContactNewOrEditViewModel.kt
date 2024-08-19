@@ -27,11 +27,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.contacts.ContactLoader.Companion.LINPHONE_ADDRESS_BOOK_FRIEND_LIST
 import org.linphone.core.Address
 import org.linphone.core.Factory
 import org.linphone.core.Friend
+import org.linphone.core.FriendList
 import org.linphone.core.FriendList.Status
 import org.linphone.core.FriendPhoneNumber
 import org.linphone.core.SubscribePolicy
@@ -224,18 +226,44 @@ class ContactNewOrEditViewModel @UiThread constructor() : GenericViewModel() {
 
                 friend.done()
 
-                val fl = core.getFriendListByName(LINPHONE_ADDRESS_BOOK_FRIEND_LIST) ?: core.createFriendList()
-                if (fl.displayName.isNullOrEmpty()) {
-                    Log.i(
-                        "$TAG Locally saved friend list [$LINPHONE_ADDRESS_BOOK_FRIEND_LIST] didn't exist yet, let's create it"
-                    )
+                val friendListNameToStoreFriends = corePreferences.friendListInWhichStoreNewlyCreatedFriends
+                Log.i(
+                    "$TAG Looking for friend list with name [$friendListNameToStoreFriends] to use to store newly created contact"
+                )
+                val friendList = core.getFriendListByName(friendListNameToStoreFriends) ?: core.getFriendListByName(
+                    LINPHONE_ADDRESS_BOOK_FRIEND_LIST
+                )
+                val fl = friendList ?: core.createFriendList()
+                if (friendList == null) {
+                    if (friendListNameToStoreFriends != LINPHONE_ADDRESS_BOOK_FRIEND_LIST) {
+                        Log.w(
+                            "$TAG Locally saved friend list [$friendListNameToStoreFriends] didn't exist yet (nor [$LINPHONE_ADDRESS_BOOK_FRIEND_LIST]), let's create it"
+                        )
+                    } else {
+                        Log.w(
+                            "$TAG Locally saved friend list [$friendListNameToStoreFriends] didn't exist yet, let's create it"
+                        )
+                    }
                     fl.isDatabaseStorageEnabled = true // We do want to store friends created in app in DB
                     fl.displayName = LINPHONE_ADDRESS_BOOK_FRIEND_LIST
                     core.addFriendList(fl)
                 }
                 status = fl.addFriend(friend)
-                fl.updateSubscriptions()
+                if (status == Status.OK) {
+                    Log.i("$TAG Contact successfully created, updating subscriptions")
+                    fl.updateSubscriptions()
+
+                    if (fl.type == FriendList.Type.CardDAV) {
+                        Log.i(
+                            "$TAG Contact successfully created into CardDAV friend list, synchronizing it"
+                        )
+                        fl.synchronizeFriendsFromServer()
+                    }
+                } else {
+                    Log.e("$TAG Failed to add contact to friend list [${fl.displayName}]!")
+                }
             } else {
+                Log.i("$TAG Finished applying changes to existing friend")
                 friend.done()
             }
 

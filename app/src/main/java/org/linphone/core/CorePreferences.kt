@@ -26,6 +26,7 @@ import androidx.annotation.WorkerThread
 import java.io.File
 import java.io.FileOutputStream
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.contacts.ContactLoader.Companion.LINPHONE_ADDRESS_BOOK_FRIEND_LIST
 
 class CorePreferences @UiThread constructor(private val context: Context) {
     companion object {
@@ -127,6 +128,16 @@ class CorePreferences @UiThread constructor(private val context: Context) {
         get() = config.getBool("ui", "show_favorites_contacts", true)
         set(value) {
             config.setBool("ui", "show_favorites_contacts", value)
+        }
+
+    var friendListInWhichStoreNewlyCreatedFriends: String
+        get() = config.getString(
+            "app",
+            "friend_list_to_store_newly_created_contacts",
+            LINPHONE_ADDRESS_BOOK_FRIEND_LIST
+        )!!
+        set(value) {
+            config.setString("app", "friend_list_to_store_newly_created_contacts", value)
         }
 
     /* Voice recordings related */
