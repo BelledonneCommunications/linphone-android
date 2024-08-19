@@ -644,6 +644,11 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
                 } else {
                     currentCall.microphoneMuted = !micMuted
                 }
+                if (micMuted) {
+                    Log.w("$TAG Muting microphone")
+                } else {
+                    Log.i("$TAG Un-muting microphone")
+                }
                 isMicrophoneMuted.postValue(!micMuted)
             }
         }
@@ -663,7 +668,14 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
                 } else {
                     currentCall.microphoneMuted = !micMuted
                 }
-                isMicrophoneMuted.postValue(micMuted)
+                if (micMuted != isMicrophoneMuted.value) {
+                    if (micMuted) {
+                        Log.w("$TAG Microphone is muted, updating button state accordingly")
+                    } else {
+                        Log.i("$TAG Microphone is not muted, updating button state accordingly")
+                    }
+                    isMicrophoneMuted.postValue(micMuted)
+                }
             }
         }
     }
@@ -1080,7 +1092,11 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
             )
             isMicrophoneMuted.postValue(true)
         } else {
-            isMicrophoneMuted.postValue(call.conference?.microphoneMuted ?: call.microphoneMuted)
+            val micMuted = call.conference?.microphoneMuted ?: call.microphoneMuted
+            if (micMuted) {
+                Log.w("$TAG Microphone is currently muted")
+            }
+            isMicrophoneMuted.postValue(micMuted)
         }
 
         val audioDevice = call.outputAudioDevice
