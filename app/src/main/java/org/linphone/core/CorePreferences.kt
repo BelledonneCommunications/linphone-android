@@ -130,6 +130,7 @@ class CorePreferences @UiThread constructor(private val context: Context) {
             config.setBool("ui", "show_favorites_contacts", value)
         }
 
+    @get:WorkerThread @set:WorkerThread
     var friendListInWhichStoreNewlyCreatedFriends: String
         get() = config.getString(
             "app",
@@ -246,6 +247,10 @@ class CorePreferences @UiThread constructor(private val context: Context) {
             "assistant_go_directly_to_third_party_sip_account_login",
             false
         )
+
+    @get:WorkerThread
+    val fetchContactsFromDefaultDirectory: Boolean
+        get() = config.getBool("app", "fetch_contacts_from_default_directory", true)
 
     @get:WorkerThread
     val automaticallyShowDialpad: Boolean

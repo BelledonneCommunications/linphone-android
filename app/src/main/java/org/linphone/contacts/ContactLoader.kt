@@ -65,7 +65,14 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
         val mimeType = ContactsContract.Data.MIMETYPE
         val mimeSelection = "$mimeType = ? OR $mimeType = ? OR $mimeType = ? OR $mimeType = ?"
 
-        val selection = ContactsContract.Data.IN_DEFAULT_DIRECTORY + " == 1 AND ($mimeSelection)"
+        val selection = if (args?.getBoolean("defaultDirectory", true) == true) {
+            Log.i("$TAG Only fetching contacts from default directory")
+            ContactsContract.Data.IN_DEFAULT_DIRECTORY + " == 1 AND ($mimeSelection)"
+        } else {
+            Log.i("$TAG Fetching all available contacts")
+            mimeSelection
+        }
+
         val selectionArgs = arrayOf(
             ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE,
             ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE,

@@ -25,6 +25,7 @@ import android.content.pm.PackageManager
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Bundle
 import android.provider.ContactsContract
 import androidx.annotation.MainThread
 import androidx.annotation.UiThread
@@ -42,6 +43,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.Account
 import org.linphone.core.Address
 import org.linphone.core.ConferenceInfo
@@ -84,6 +86,8 @@ class ContactsManager @UiThread constructor() {
 
     private val coroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var reloadContactsJob: Job? = null
+
+    private var loadContactsOnlyFromDefaultDirectory = true
 
     private val friendListListener: FriendListListenerStub = object : FriendListListenerStub() {
         @WorkerThread
@@ -147,7 +151,9 @@ class ContactsManager @UiThread constructor() {
     fun loadContacts(activity: MainActivity) {
         Log.i("$TAG Starting contacts loader")
         val manager = LoaderManager.getInstance(activity)
-        manager.restartLoader(0, null, ContactLoader())
+        val args = Bundle()
+        args.putBoolean("defaultDirectory", loadContactsOnlyFromDefaultDirectory)
+        manager.restartLoader(0, args, ContactLoader())
     }
 
     @WorkerThread
@@ -432,6 +438,8 @@ class ContactsManager @UiThread constructor() {
 
     @WorkerThread
     fun onCoreStarted(core: Core) {
+        loadContactsOnlyFromDefaultDirectory = corePreferences.fetchContactsFromDefaultDirectory
+
         core.addListener(coreListener)
         for (list in core.friendsLists) {
             list.addListener(friendListListener)
