@@ -727,15 +727,17 @@ fun Friend.getListOfSipAddressesAndPhoneNumbers(listener: ContactNumberOrAddress
     val addressesAndNumbers = arrayListOf<ContactNumberOrAddressModel>()
 
     for (address in addresses) {
-        val data = ContactNumberOrAddressModel(
-            this,
-            address,
-            address.asStringUriOnly(),
-            true, // SIP addresses are always enabled
-            listener,
-            true
-        )
-        addressesAndNumbers.add(data)
+        if (addressesAndNumbers.find { it.address?.weakEqual(address) == true } == null) {
+            val data = ContactNumberOrAddressModel(
+                this,
+                address,
+                address.asStringUriOnly(),
+                true, // SIP addresses are always enabled
+                listener,
+                true
+            )
+            addressesAndNumbers.add(data)
+        }
     }
     val indexOfLastSipAddress = addressesAndNumbers.count()
 
@@ -748,32 +750,26 @@ fun Friend.getListOfSipAddressesAndPhoneNumbers(listener: ContactNumberOrAddress
             Log.d("[Friend] Phone number [${number.phoneNumber}] has presence information")
             // Show linked SIP address if not already stored as-is
             val contact = presenceModel.contact
-            val found = addressesAndNumbers.find {
-                it.displayedValue == contact
-            }
-            if (!contact.isNullOrEmpty() && found == null) {
+            if (!contact.isNullOrEmpty()) {
                 val address = core.interpretUrl(contact, false)
                 if (address != null) {
                     address.clean() // To remove ;user=phone
                     presenceAddress = address
-                    val data = ContactNumberOrAddressModel(
-                        this,
-                        address,
-                        address.asStringUriOnly(),
-                        true, // SIP addresses are always enabled
-                        listener,
-                        true
-                    )
-                    addressesAndNumbers.add(indexOfLastSipAddress, data)
+                    if (addressesAndNumbers.find { it.address?.weakEqual(address) == true } == null) {
+                        val data = ContactNumberOrAddressModel(
+                            this,
+                            address,
+                            address.asStringUriOnly(),
+                            true, // SIP addresses are always enabled
+                            listener,
+                            true
+                        )
+                        addressesAndNumbers.add(indexOfLastSipAddress, data)
+                    }
                     Log.d(
                         "[Friend] Phone number [${number.phoneNumber}] is linked to SIP address [${presenceAddress.asStringUriOnly()}]"
                     )
                 }
-            } else if (found != null) {
-                presenceAddress = found.address
-                Log.d(
-                    "[Friend] Phone number [${number.phoneNumber}] is linked to existing SIP address [${presenceAddress?.asStringUriOnly()}]"
-                )
             }
         }
 
