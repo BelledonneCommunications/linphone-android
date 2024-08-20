@@ -100,6 +100,10 @@ import org.linphone.utils.setKeyboardInsetListener
 import timber.log.Timber
 
 class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestinationChangedListener {
+    companion object {
+        var Instance: MainActivity? = null
+    }
+
     private lateinit var binding: MainActivityBinding
     private lateinit var sharedViewModel: SharedMainViewModel
     private lateinit var callOverlayViewModel: CallOverlayViewModel
@@ -166,6 +170,8 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Instance = this
 
         Timber.plant(Timber.DebugTree(), FileTree(applicationContext))
         Timber.tag("cloud.dimensions.uconnect")
