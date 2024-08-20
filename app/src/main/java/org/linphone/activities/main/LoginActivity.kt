@@ -73,6 +73,11 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        if (MainActivity.Companion.Instance != null) {
+            MainActivity.Companion.Instance?.finish()
+            MainActivity.Companion.Instance = null
+        }
+
         // mExecutor = Executors.newSingleThreadExecutor()
         mAuthStateManager = AuthStateManager.getInstance(this)
         mConfiguration = AuthConfiguration.getInstance(this)
@@ -180,7 +185,7 @@ class LoginActivity : AppCompatActivity() {
 
             Log.i(
                 String.format(
-                    "LoginActivity.handleAuthIntents::logout::(%s),(%s)",
+                    "LoginActivity.handleAuthIntents::(%s),(%s)",
                     response,
                     ex
                 )
