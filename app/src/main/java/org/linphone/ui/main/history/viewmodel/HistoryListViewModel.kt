@@ -27,6 +27,7 @@ import org.linphone.contacts.ContactsManager
 import org.linphone.core.CallLog
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
+import org.linphone.core.GlobalState
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.history.model.CallLogModel
 import org.linphone.ui.main.viewmodel.AbstractMainViewModel
@@ -47,7 +48,15 @@ class HistoryListViewModel @UiThread constructor() : AbstractMainViewModel() {
     }
 
     private val coreListener = object : CoreListenerStub() {
+        override fun onGlobalStateChanged(core: Core, state: GlobalState?, message: String) {
+            if (state == GlobalState.On) {
+                Log.i("$TAG Core just started, fetching history")
+                computeCallLogsList(currentFilter)
+            }
+        }
+
         override fun onCallLogUpdated(core: Core, callLog: CallLog) {
+            Log.i("$TAG A call log was updated, updating list")
             computeCallLogsList(currentFilter)
         }
     }
@@ -107,6 +116,11 @@ class HistoryListViewModel @UiThread constructor() : AbstractMainViewModel() {
 
     @WorkerThread
     private fun computeCallLogsList(filter: String) {
+        if (coreContext.core.globalState != GlobalState.On) {
+            Log.e("$TAG Core isn't ON yet, do not attempt to get calls history")
+            return
+        }
+
         if (callLogs.value.orEmpty().isEmpty()) {
             fetchInProgress.postValue(true)
         }
@@ -128,6 +142,7 @@ class HistoryListViewModel @UiThread constructor() : AbstractMainViewModel() {
             }
         }
 
+        Log.i("$TAG Fetched [${list.size}] call log(s)")
         callLogs.postValue(list)
     }
 }
