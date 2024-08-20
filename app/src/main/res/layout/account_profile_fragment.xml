@@ -18,6 +18,9 @@
             name="copySipUriClickListener"
             type="View.OnClickListener" />
         <variable
+            name="copyDeviceIdClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="prefixTooltipClickListener"
             type="View.OnClickListener" />
         <variable
@@ -59,14 +62,22 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/top_bar_height"
                 android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
                 android:gravity="center_vertical"
                 android:text="@string/manage_account_title"
                 android:textColor="?attr/color_main1_500"
                 android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/show_menu"
                 app:layout_constraintStart_toEndOf="@id/back"
                 app:layout_constraintTop_toTopOf="parent"/>
+
+            <ImageView
+                android:id="@+id/show_menu"
+                android:onLongClick="@{() -> viewModel.showDebugInfo()}"
+                android:layout_width="@dimen/top_bar_height"
+                android:layout_height="@dimen/top_bar_height"
+                android:contentDescription="@string/content_description_show_popup_menu"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
             <ScrollView
                 android:layout_width="0dp"
@@ -219,10 +230,48 @@
                         android:ellipsize="end"
                         android:drawableEnd="@drawable/copy"
                         android:drawablePadding="5dp"
+                        app:drawableTint="?attr/color_main2_600"
                         app:layout_constraintStart_toEndOf="@id/sip_address_label"
                         app:layout_constraintEnd_toEndOf="@id/details_background"
                         app:layout_constraintTop_toTopOf="@id/sip_address_label"
                         app:layout_constraintBottom_toBottomOf="@id/sip_address_label"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/header_style"
+                        android:id="@+id/device_id_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="20dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:text="@string/device_id"
+                        android:visibility="@{viewModel.showDeviceId ? View.VISIBLE : View.GONE, default=gone}"
+                        app:layout_constraintStart_toStartOf="@id/details_background"
+                        app:layout_constraintTop_toBottomOf="@id/sip_address"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/default_text_style"
+                        android:id="@+id/device_id"
+                        android:onClick="@{copyDeviceIdClickListener}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:text="@={viewModel.deviceId, default=`1234`}"
+                        android:textSize="13sp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:drawableEnd="@drawable/copy"
+                        android:drawablePadding="5dp"
+                        app:drawableTint="?attr/color_main2_600"
+                        android:visibility="@{viewModel.showDeviceId ? View.VISIBLE : View.GONE, default=gone}"
+                        app:layout_constraintStart_toEndOf="@id/device_id_label"
+                        app:layout_constraintEnd_toEndOf="@id/details_background"
+                        app:layout_constraintTop_toTopOf="@id/device_id_label"
+                        app:layout_constraintBottom_toBottomOf="@id/device_id_label"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/header_style"
@@ -235,7 +284,7 @@
                         android:paddingBottom="8dp"
                         android:text="@string/sip_address_display_name"
                         app:layout_constraintStart_toStartOf="@id/details_background"
-                        app:layout_constraintTop_toBottomOf="@id/sip_address"/>
+                        app:layout_constraintTop_toBottomOf="@id/device_id"/>
 
                     <androidx.appcompat.widget.AppCompatEditText
                         style="@style/default_text_style"

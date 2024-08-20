@@ -43,6 +43,7 @@
 
     <!-- Common words -->
     <string name="sip_address">SIP address</string>
+    <string name="device_id">Device ID</string>
     <string name="sip_address_hint">username@domain</string>
     <string name="sip_address_display_name">Display name</string>
     <string name="sip_address_domain">Domain</string>

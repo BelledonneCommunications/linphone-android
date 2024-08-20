@@ -138,6 +138,10 @@ class AccountProfileFragment : GenericMainFragment() {
             copyAddressToClipboard(viewModel.sipAddress.value.orEmpty())
         }
 
+        binding.setCopyDeviceIdClickListener {
+            copyAddressToClipboard(viewModel.deviceId.value.orEmpty())
+        }
+
         binding.setPrefixTooltipClickListener {
             showHelpPopup()
         }

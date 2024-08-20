@@ -61,6 +61,10 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
 
     val sipUri = MutableLiveData<String>()
 
+    val peerSipUri = MutableLiveData<String>()
+
+    val showPeerSipUri = MutableLiveData<Boolean>()
+
     val isReadOnly = MutableLiveData<Boolean>()
 
     val isMyselfAdmin = MutableLiveData<Boolean>()
@@ -242,11 +246,12 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
     }
 
     init {
+        expandParticipants.value = true
+        showPeerSipUri.value = false
+
         coreContext.postOnCoreThread {
             coreContext.contactsManager.addListener(contactsListener)
         }
-
-        expandParticipants.value = true
     }
 
     override fun onCleared() {
@@ -492,6 +497,12 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
     }
 
     @UiThread
+    fun showDebugInfo(): Boolean {
+        showPeerSipUri.value = true
+        return true
+    }
+
+    @UiThread
     fun updateSubject(newSubject: String) {
         coreContext.postOnCoreThread {
             if (isChatRoomInitialized()) {
@@ -531,6 +542,7 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
         }
 
         subject.postValue(chatRoom.subject)
+        peerSipUri.postValue(chatRoom.peerAddress.asStringUriOnly())
 
         val firstParticipant = chatRoom.participants.firstOrNull()
         if (firstParticipant != null) {

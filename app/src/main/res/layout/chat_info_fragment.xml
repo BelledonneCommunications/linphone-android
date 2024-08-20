@@ -28,6 +28,12 @@
             name="deleteHistoryClickListener"
             type="View.OnClickListener" />
         <variable
+            name="copySipUriClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="copyPeerSipUriClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.main.chat.viewmodel.ConversationInfoViewModel" />
     </data>
@@ -57,11 +63,18 @@
             android:visibility="invisible"
             android:layout_width="0dp"
             android:layout_height="@dimen/top_bar_height"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/show_menu"
             app:layout_constraintStart_toEndOf="@id/back"
             app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+            android:id="@+id/show_menu"
+            android:onLongClick="@{() -> viewModel.showDebugInfo()}"
+            android:layout_width="@dimen/top_bar_height"
+            android:layout_height="@dimen/top_bar_height"
+            android:contentDescription="@string/content_description_show_popup_menu"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/scrollView"
@@ -123,6 +136,7 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/address"
                     style="@style/default_text_style"
+                    android:onClick="@{copySipUriClickListener}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -132,10 +146,34 @@
                     android:text="@{viewModel.sipUri, default=`sip:john.doe@sip.example.org`}"
                     android:textColor="?attr/color_main2_700"
                     android:textSize="14sp"
+                    android:drawableEnd="@drawable/copy"
+                    android:drawablePadding="5dp"
                     android:visibility="@{viewModel.isGroup ? View.GONE : View.VISIBLE, default=gone}"
+                    app:drawableTint="?attr/color_main2_600"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/title" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/peer_address"
+                    style="@style/default_text_style"
+                    android:onClick="@{copyPeerSipUriClickListener}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:text="@{viewModel.peerSipUri, default=`sip:chatroom-xxxx@sip.example.org`}"
+                    android:textColor="?attr/color_main2_700"
+                    android:textSize="14sp"
+                    android:drawableEnd="@drawable/copy"
+                    android:drawablePadding="5dp"
+                    android:visibility="@{viewModel.showPeerSipUri ? View.VISIBLE : View.GONE, default=gone}"
+                    app:drawableTint="?attr/color_main2_600"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/address" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/status"
@@ -148,7 +186,7 @@
                     android:visibility="@{viewModel.isGroup || viewModel.avatarModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE, default=gone}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/address" />
+                    app:layout_constraintTop_toBottomOf="@id/peer_address" />
 
                 <ImageView
                     android:id="@+id/mute"

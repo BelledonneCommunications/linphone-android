@@ -74,6 +74,10 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
 
     val hideAccountSettings = MutableLiveData<Boolean>()
 
+    val deviceId = MutableLiveData<String>()
+
+    val showDeviceId = MutableLiveData<Boolean>()
+
     val accountRemovedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -146,8 +150,9 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
     init {
         expandDetails.value = true
         expandDevices.value = false
+        showDeviceId.value = false
 
-        coreContext.postOnCoreThread { core ->
+        coreContext.postOnCoreThread {
             hideAccountSettings.postValue(corePreferences.hideAccountSettings)
             dialPlansLabelList.add("") // To allow removing selected dial plan
 
@@ -230,6 +235,7 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
                         selectedDialPlan.postValue(index)
                     }
                 }
+                deviceId.postValue(account.contactAddress?.getUriParam("gr"))
 
                 accountFoundEvent.postValue(Event(true))
             } else {
@@ -365,5 +371,11 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
                 "$TAG Removed international prefix for account [${account.params.identityAddress?.asStringUriOnly()}]"
             )
         }
+    }
+
+    @UiThread
+    fun showDebugInfo(): Boolean {
+        showDeviceId.value = true
+        return true
     }
 }
