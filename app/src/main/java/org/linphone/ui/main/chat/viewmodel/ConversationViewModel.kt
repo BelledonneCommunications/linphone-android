@@ -900,10 +900,11 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
 
     @WorkerThread
     private fun loadMessagesUpTo(targetEvent: EventLog) {
+        val mask = HistoryFilter.ChatMessage.toInt() or HistoryFilter.InfoNoDevice.toInt()
         val historyToAdd = chatRoom.getHistoryRangeBetween(
             targetEvent,
             eventsList[0].eventLog,
-            HistoryFilter.None.toInt()
+            mask
         )
         Log.i(
             "$TAG Loaded [${historyToAdd.size}] items from history to go to event log [$targetEvent]"
@@ -914,7 +915,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
             ITEMS_TO_LOAD_BEFORE_SEARCH_RESULT,
             0,
             targetEvent,
-            HistoryFilter.None.toInt()
+            mask
         )
 
         itemToScrollTo.postValue(previousMessages.size - 2) // To go to the item before the target event
