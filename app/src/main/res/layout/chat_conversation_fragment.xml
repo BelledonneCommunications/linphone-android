@@ -294,7 +294,7 @@
                     android:id="@+id/send_area"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="@{viewModel.isReadOnly || viewModel.isDisabledBecauseNotSecured ? View.GONE : View.VISIBLE}"
+                    android:visibility="@{viewModel.isReadOnly || viewModel.isDisabledBecauseNotSecured || viewModel.searchBarVisible ? View.GONE : View.VISIBLE}"
                     layout="@layout/chat_conversation_send_area"
                     app:layout_constraintBottom_toBottomOf="parent"
                     bind:openFilePickerClickListener="@{openFilePickerClickListener}"
