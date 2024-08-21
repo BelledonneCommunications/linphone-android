@@ -430,30 +430,13 @@ class ContactViewModel @UiThread constructor() : GenericViewModel() {
 
     @UiThread
     fun startAudioCall() {
-        coreContext.postOnCoreThread { core ->
-            val addressesCount = friend.addresses.size
-            val numbersCount = friend.phoneNumbers.size
-
-            // Do not consider phone numbers if default account is in secure mode
-            val enablePhoneNumbers = !isEndToEndEncryptionMandatory()
-
-            if (addressesCount == 1 && (numbersCount == 0 || !enablePhoneNumbers)) {
+        coreContext.postOnCoreThread {
+            val singleAvailableAddress = LinphoneUtils.getSingleAvailableAddressForFriend(friend)
+            if (singleAvailableAddress != null) {
                 Log.i(
-                    "$TAG Only 1 SIP address found for contact [${friend.name}], starting audio call directly"
+                    "$TAG Only 1 SIP address or phone number found for contact [${friend.name}], starting audio call directly"
                 )
-                val address = friend.addresses.first()
-                coreContext.startAudioCall(address)
-            } else if (addressesCount == 0 && numbersCount == 1 && enablePhoneNumbers) {
-                val number = friend.phoneNumbers.first()
-                val address = core.interpretUrl(number, LinphoneUtils.applyInternationalPrefix())
-                if (address != null) {
-                    Log.i(
-                        "$TAG Only 1 phone number found for contact [${friend.name}], starting audio call directly"
-                    )
-                    coreContext.startAudioCall(address)
-                } else {
-                    Log.e("$TAG Failed to interpret phone number [$number] as SIP address")
-                }
+                coreContext.startAudioCall(singleAvailableAddress)
             } else {
                 expectedAction = START_AUDIO_CALL
                 val list = sipAddressesAndPhoneNumbers.value.orEmpty()
@@ -467,30 +450,13 @@ class ContactViewModel @UiThread constructor() : GenericViewModel() {
 
     @UiThread
     fun startVideoCall() {
-        coreContext.postOnCoreThread { core ->
-            val addressesCount = friend.addresses.size
-            val numbersCount = friend.phoneNumbers.size
-
-            // Do not consider phone numbers if default account is in secure mode
-            val enablePhoneNumbers = !isEndToEndEncryptionMandatory()
-
-            if (addressesCount == 1 && (numbersCount == 0 || !enablePhoneNumbers)) {
+        coreContext.postOnCoreThread {
+            val singleAvailableAddress = LinphoneUtils.getSingleAvailableAddressForFriend(friend)
+            if (singleAvailableAddress != null) {
                 Log.i(
-                    "$TAG Only 1 SIP address found for contact [${friend.name}], starting video call directly"
+                    "$TAG Only 1 SIP address or phone number found for contact [${friend.name}], starting video call directly"
                 )
-                val address = friend.addresses.first()
-                coreContext.startVideoCall(address)
-            } else if (addressesCount == 0 && numbersCount == 1 && enablePhoneNumbers) {
-                val number = friend.phoneNumbers.first()
-                val address = core.interpretUrl(number, LinphoneUtils.applyInternationalPrefix())
-                if (address != null) {
-                    Log.i(
-                        "$TAG Only 1 phone number found for contact [${friend.name}], starting video call directly"
-                    )
-                    coreContext.startVideoCall(address)
-                } else {
-                    Log.e("$TAG Failed to interpret phone number [$number] as SIP address")
-                }
+                coreContext.startVideoCall(singleAvailableAddress)
             } else {
                 expectedAction = START_VIDEO_CALL
                 val list = sipAddressesAndPhoneNumbers.value.orEmpty()
@@ -504,29 +470,13 @@ class ContactViewModel @UiThread constructor() : GenericViewModel() {
 
     @UiThread
     fun goToConversation() {
-        coreContext.postOnCoreThread { core ->
-            val addressesCount = friend.addresses.size
-            val numbersCount = friend.phoneNumbers.size
-
-            // Do not consider phone numbers if default account is in secure mode
-            val enablePhoneNumbers = !isEndToEndEncryptionMandatory()
-
-            if (addressesCount == 1 && (numbersCount == 0 || !enablePhoneNumbers)) {
+        coreContext.postOnCoreThread {
+            val singleAvailableAddress = LinphoneUtils.getSingleAvailableAddressForFriend(friend)
+            if (singleAvailableAddress != null) {
                 Log.i(
-                    "$TAG Only 1 SIP address found for contact [${friend.name}], sending message directly"
+                    "$TAG Only 1 SIP address or phone number found for contact [${friend.name}], sending message directly"
                 )
-                goToConversation(friend.addresses.first())
-            } else if (addressesCount == 0 && numbersCount == 1 && enablePhoneNumbers) {
-                val number = friend.phoneNumbers.first()
-                val address = core.interpretUrl(number, LinphoneUtils.applyInternationalPrefix())
-                if (address != null) {
-                    Log.i(
-                        "$TAG Only 1 phone number found for contact [${friend.name}], sending message directly"
-                    )
-                    goToConversation(address)
-                } else {
-                    Log.e("$TAG Failed to interpret phone number [$number] as SIP address")
-                }
+                goToConversation(singleAvailableAddress)
             } else {
                 expectedAction = START_CONVERSATION
                 val list = sipAddressesAndPhoneNumbers.value.orEmpty()

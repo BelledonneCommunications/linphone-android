@@ -215,9 +215,14 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                                 }
 
                             if (number != null) {
-                                val phoneNumber = Factory.instance()
-                                    .createFriendPhoneNumber(number, label)
-                                friend.addPhoneNumberWithLabel(phoneNumber)
+                                if (friend.phoneNumbersWithLabel.find {
+                                    PhoneNumberUtils.arePhoneNumberWeakEqual(it.phoneNumber, number)
+                                } == null
+                                ) {
+                                    val phoneNumber = Factory.instance()
+                                        .createFriendPhoneNumber(number, label)
+                                    friend.addPhoneNumberWithLabel(phoneNumber)
+                                }
                             }
                         }
                         ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE -> {

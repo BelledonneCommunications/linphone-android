@@ -25,6 +25,7 @@ import androidx.annotation.IntegerRes
 import androidx.annotation.WorkerThread
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.contacts.getListOfSipAddresses
 import org.linphone.core.Account
 import org.linphone.core.Address
 import org.linphone.core.Call
@@ -36,9 +37,11 @@ import org.linphone.core.ChatRoom
 import org.linphone.core.ConferenceInfo
 import org.linphone.core.Core
 import org.linphone.core.Factory
+import org.linphone.core.Friend
 import org.linphone.core.Reason
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
+import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 
 class LinphoneUtils {
     companion object {
@@ -93,6 +96,33 @@ class LinphoneUtils {
             }
             // Do not return an empty display name
             return address.displayName ?: address.username ?: address.asString()
+        }
+
+        @WorkerThread
+        fun getSingleAvailableAddressForFriend(friend: Friend): Address? {
+            val addresses = friend.getListOfSipAddresses()
+            val addressesCount = addresses.size
+            val numbersCount = friend.phoneNumbers.size
+
+            // Do not consider phone numbers if default account is in secure mode
+            val enablePhoneNumbers = !isEndToEndEncryptionMandatory()
+
+            if (addressesCount == 1 && (numbersCount == 0 || !enablePhoneNumbers)) {
+                val address = addresses.first()
+                Log.i("$TAG Only 1 SIP address found for contact [${friend.name}], using it")
+                return address
+            } else if (addressesCount == 0 && numbersCount == 1 && enablePhoneNumbers) {
+                val number = friend.phoneNumbers.first()
+                val address = friend.core.interpretUrl(number, applyInternationalPrefix())
+                if (address != null) {
+                    Log.i("$TAG Only 1 phone number found for contact [${friend.name}], using it")
+                    return address
+                } else {
+                    Log.e("$TAG Failed to interpret phone number [$number] as SIP address")
+                }
+            }
+
+            return null
         }
 
         @AnyThread

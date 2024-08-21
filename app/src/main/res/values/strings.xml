@@ -206,6 +206,7 @@
     <string name="help_troubleshooting_debug_logs_cleaned_toast_message">Debug logs have been cleaned</string>
     <string name="help_troubleshooting_debug_logs_upload_error_toast_message">Failed to upload debug logs</string>
     <string name="help_troubleshooting_show_config_file">Show configuration</string>
+    <string name="help_troubleshooting_clear_native_friends_in_database">Clear imported contacts from native address book</string>
 
     <!-- App & SDK settings -->
     <string name="settings_title">Settings</string>

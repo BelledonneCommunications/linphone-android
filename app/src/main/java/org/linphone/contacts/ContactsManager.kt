@@ -731,21 +731,32 @@ fun Friend.getPerson(): Person {
 }
 
 @WorkerThread
+fun Friend.getListOfSipAddresses(): ArrayList<Address> {
+    val addressesList = arrayListOf<Address>()
+
+    for (address in addresses) {
+        if (addressesList.find { it.weakEqual(address) } == null) {
+            addressesList.add(address)
+        }
+    }
+
+    return addressesList
+}
+
+@WorkerThread
 fun Friend.getListOfSipAddressesAndPhoneNumbers(listener: ContactNumberOrAddressClickListener): ArrayList<ContactNumberOrAddressModel> {
     val addressesAndNumbers = arrayListOf<ContactNumberOrAddressModel>()
 
-    for (address in addresses) {
-        if (addressesAndNumbers.find { it.address?.weakEqual(address) == true } == null) {
-            val data = ContactNumberOrAddressModel(
-                this,
-                address,
-                address.asStringUriOnly(),
-                true, // SIP addresses are always enabled
-                listener,
-                true
-            )
-            addressesAndNumbers.add(data)
-        }
+    for (address in getListOfSipAddresses()) {
+        val data = ContactNumberOrAddressModel(
+            this,
+            address,
+            address.asStringUriOnly(),
+            true, // SIP addresses are always enabled
+            listener,
+            true
+        )
+        addressesAndNumbers.add(data)
     }
     val indexOfLastSipAddress = addressesAndNumbers.count()
 

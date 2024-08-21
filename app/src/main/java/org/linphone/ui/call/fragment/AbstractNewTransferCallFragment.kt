@@ -43,7 +43,6 @@ import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.history.viewmodel.StartCallViewModel
 import org.linphone.ui.main.model.ConversationContactOrSuggestionModel
-import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.RecyclerViewHeaderDecoration
@@ -214,36 +213,19 @@ abstract class AbstractNewTransferCallFragment : GenericCallFragment() {
     abstract fun action(address: Address)
 
     private fun startCall(model: ConversationContactOrSuggestionModel) {
-        coreContext.postOnCoreThread { core ->
+        coreContext.postOnCoreThread {
             val friend = model.friend
             if (friend == null) {
                 action(model.address)
                 return@postOnCoreThread
             }
 
-            val addressesCount = friend.addresses.size
-            val numbersCount = friend.phoneNumbers.size
-
-            // Do not consider phone numbers if default account is in secure mode
-            val enablePhoneNumbers = !isEndToEndEncryptionMandatory()
-
-            if (addressesCount == 1 && (numbersCount == 0 || !enablePhoneNumbers)) {
+            val singleAvailableAddress = LinphoneUtils.getSingleAvailableAddressForFriend(friend)
+            if (singleAvailableAddress != null) {
                 Log.i(
-                    "$TAG Only 1 SIP address found for contact [${friend.name}], starting call directly"
+                    "$TAG Only 1 SIP address or phone number found for contact [${friend.name}], starting call directly"
                 )
-                val address = friend.addresses.first()
-                action(address)
-            } else if (addressesCount == 0 && numbersCount == 1 && enablePhoneNumbers) {
-                val number = friend.phoneNumbers.first()
-                val address = core.interpretUrl(number, LinphoneUtils.applyInternationalPrefix())
-                if (address != null) {
-                    Log.i(
-                        "$TAG Only 1 phone number found for contact [${friend.name}], starting call directly"
-                    )
-                    action(address)
-                } else {
-                    Log.e("$TAG Failed to interpret phone number [$number] as SIP address")
-                }
+                action(singleAvailableAddress)
             } else {
                 val list = friend.getListOfSipAddressesAndPhoneNumbers(listener)
                 Log.i(
