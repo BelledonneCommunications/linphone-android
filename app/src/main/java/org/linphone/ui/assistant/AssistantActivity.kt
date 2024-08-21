@@ -93,8 +93,12 @@ class AssistantActivity : GenericActivity() {
                 coreContext.postOnCoreThread { core ->
                     if (core.accountList.isNotEmpty()) {
                         coreContext.postOnMainThread {
-                            Log.w("$TAG At least one account was found, leaving assistant")
-                            finish()
+                            try {
+                                Log.w("$TAG At least one account was found, leaving assistant")
+                                finish()
+                            } catch (ise: IllegalStateException) {
+                                Log.e("$TAG Can't finish activity: $ise")
+                            }
                         }
                     }
                 }

@@ -170,8 +170,6 @@ class ConversationForwardMessageViewModel @UiThread constructor() : AddressSelec
                 )
 
                 showNumberOrAddressPickerDialogEvent.postValue(Event(list))
-                coreContext.postOnMainThread {
-                }
             }
         }
     }

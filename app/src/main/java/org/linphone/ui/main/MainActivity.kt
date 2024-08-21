@@ -509,12 +509,20 @@ class MainActivity : GenericActivity() {
                 Log.i("$TAG First time Linphone 6.0 has been started, showing Welcome activity")
                 corePreferences.firstLaunch = false
                 coreContext.postOnMainThread {
-                    startActivity(Intent(this, WelcomeActivity::class.java))
+                    try {
+                        startActivity(Intent(this, WelcomeActivity::class.java))
+                    } catch (ise: IllegalStateException) {
+                        Log.e("$TAG Can't start activity: $ise")
+                    }
                 }
             } else if (core.accountList.isEmpty()) {
                 Log.w("$TAG No account found, showing Assistant activity")
                 coreContext.postOnMainThread {
-                    startActivity(Intent(this, AssistantActivity::class.java))
+                    try {
+                        startActivity(Intent(this, AssistantActivity::class.java))
+                    } catch (ise: IllegalStateException) {
+                        Log.e("$TAG Can't start activity: $ise")
+                    }
                 }
             } else {
                 if (intent.hasExtra("Chat")) {

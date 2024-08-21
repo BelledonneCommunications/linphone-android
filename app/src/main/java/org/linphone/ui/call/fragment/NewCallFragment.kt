@@ -42,7 +42,11 @@ class NewCallFragment : AbstractNewTransferCallFragment() {
         coreContext.startAudioCall(address)
 
         coreContext.postOnMainThread {
-            findNavController().popBackStack()
+            try {
+                findNavController().popBackStack()
+            } catch (ise: IllegalStateException) {
+                Log.e("$TAG Can't go back: $ise")
+            }
         }
     }
 }
