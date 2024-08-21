@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="@{viewModel.isVoiceRecording ? View.INVISIBLE : View.VISIBLE}"
-            app:constraint_referenced_ids="emoji_picker_toggle, message_area_background, message_to_send" />
+            app:constraint_referenced_ids="attach_file, message_area_background, message_to_send" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/extra_actions"
