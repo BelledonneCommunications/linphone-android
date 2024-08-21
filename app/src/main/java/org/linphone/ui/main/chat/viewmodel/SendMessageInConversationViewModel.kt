@@ -43,6 +43,7 @@ import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomListenerStub
 import org.linphone.core.EventLog
 import org.linphone.core.Factory
+import org.linphone.core.MediaFileFormat
 import org.linphone.core.Player
 import org.linphone.core.PlayerListener
 import org.linphone.core.Recorder
@@ -487,7 +488,7 @@ class SendMessageInConversationViewModel @UiThread constructor() : GenericViewMo
         val core = coreContext.core
         Log.i("$TAG Creating voice message recorder")
         val recorderParams = core.createRecorderParams()
-        recorderParams.fileFormat = Recorder.FileFormat.Mkv
+        recorderParams.fileFormat = MediaFileFormat.Mkv
 
         val recordingAudioDevice = AudioUtils.getAudioRecordingDeviceIdForVoiceMessage()
         recorderParams.audioDevice = recordingAudioDevice
@@ -516,7 +517,8 @@ class SendMessageInConversationViewModel @UiThread constructor() : GenericViewMo
             }
             Recorder.State.Closed -> {
                 val extension = when (voiceMessageRecorder.params.fileFormat) {
-                    Recorder.FileFormat.Mkv -> "mkv"
+                    MediaFileFormat.Smff -> "smff"
+                    MediaFileFormat.Mkv -> "mka"
                     else -> "wav"
                 }
                 val tempFileName = "voice-recording-${System.currentTimeMillis()}.$extension"

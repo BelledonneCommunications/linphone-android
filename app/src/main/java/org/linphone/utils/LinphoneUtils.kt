@@ -56,7 +56,7 @@ class LinphoneUtils {
 
         const val RECORDING_FILE_NAME_HEADER = "call_recording_"
         const val RECORDING_FILE_NAME_URI_TIMESTAMP_SEPARATOR = "_on_"
-        const val RECORDING_FILE_EXTENSION = ".mkv"
+        const val RECORDING_FILE_EXTENSION = ".smff"
 
         private const val CHAT_ROOM_ID_SEPARATOR = "#~#"
 
