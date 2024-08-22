@@ -42,6 +42,7 @@ import org.linphone.activities.main.LoginActivity;
 import org.linphone.models.AuthenticatedUser;
 
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.internal.operators.flowable.FlowableUnsubscribeOn;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 
 /**
@@ -85,6 +86,7 @@ public class AuthStateManager {
     }
 
     private AuthStateManager(Context context) {
+        Log.Log.i("CREATE AuthStateManager");
         mContext = context;
         mPrefs = context.getSharedPreferences(STORE_NAME, Context.MODE_PRIVATE);
         mPrefsLock = new ReentrantLock();
@@ -266,7 +268,7 @@ public class AuthStateManager {
 
         var endSessionIntent = new Intent(context, LoginActivity.class);
         endSessionIntent.putExtra(AUTH_KEY, LOGOUT_VALUE);
-        endSessionIntent.setAction(Intent.ACTION_MANAGED_PROFILE_REMOVED);
+        endSessionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NO_HISTORY);
 
         var logoutIntent = PendingIntent.getActivity(context, 0, endSessionIntent, PendingIntent.FLAG_IMMUTABLE);
 

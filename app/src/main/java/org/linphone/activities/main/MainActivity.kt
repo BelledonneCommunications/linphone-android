@@ -33,7 +33,6 @@ import android.view.inputmethod.InputMethodManager
 import androidx.annotation.MainThread
 import androidx.annotation.StringRes
 import androidx.annotation.WorkerThread
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.GravityCompat
 import androidx.core.view.doOnAttach
 import androidx.databinding.DataBindingUtil
@@ -84,25 +83,20 @@ import org.linphone.core.AuthMethod
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.CorePreferences
-import org.linphone.core.tools.Log
 import org.linphone.databinding.MainActivityBinding
-import org.linphone.middleware.FileTree
 import org.linphone.services.BrandingService
 import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.Log
 import org.linphone.utils.PermissionHelper
 import org.linphone.utils.ShortcutsHelper
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.setKeyboardInsetListener
-import timber.log.Timber
 
 class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestinationChangedListener {
-    companion object {
-        var Instance: MainActivity? = null
-    }
 
     private lateinit var binding: MainActivityBinding
     private lateinit var sharedViewModel: SharedMainViewModel
@@ -171,15 +165,11 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Instance = this
+        Log.i("Auth: onCreate MainActivity")
 
-        Timber.plant(Timber.DebugTree(), FileTree(applicationContext))
-        Timber.tag("cloud.dimensions.uconnect")
-        Timber.d("OnCreate")
-        Log.d("OnCreate")
-
-        // Must be done before the setContentView
-        installSplashScreen()
+        if (parent != null) {
+            parent.finish()
+        }
 
         binding = DataBindingUtil.setContentView(this, R.layout.main_activity)
         binding.lifecycleOwner = this
@@ -236,16 +226,6 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                 Log.e("[Main Activity] Security exception when doing reportFullyDrawn(): $se")
             }
         }
-
-        var subscription = BrandingService.getInstance(applicationContext)
-            .brand
-            .subscribe { brand ->
-                Log.i("Got brand: " + brand.value?.brandName)
-
-                // DynamicColors.applyToActivityIfAvailable(this, DynamicColorsOptions.Builder().setThemeOverlay(Color.CYAN))
-                // val primary = resources.getColor(R.color.primary_color)
-                // window.navigationBarColor = Color.CYAN
-            }
     }
 
 //    override fun onNewIntent(intent: Intent?) {
@@ -259,6 +239,8 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
     override fun onStart() {
         super.onStart()
+
+        Log.i("onStart MainActivity")
 
         // the stored AuthState is incomplete, so check if we are currently receiving the result of
         // the authorization flow from the browser.
@@ -288,11 +270,15 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     override fun onResume() {
         super.onResume()
 
+        Log.i("onResume MainActivity")
+
         coreContext.contactsManager.addListener(listener)
         coreContext.core.addListener(coreListener)
     }
 
     override fun onPause() {
+        Log.i("onPause MainActivity")
+
         coreContext.core.removeListener(coreListener)
         coreContext.contactsManager.removeListener(listener)
         super.onPause()

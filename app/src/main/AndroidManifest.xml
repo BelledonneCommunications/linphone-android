@@ -76,7 +76,7 @@
         <!-- ENTRY POINT -->
         <activity
             android:name=".activities.main.LoginActivity"
-            android:theme="@style/AppTheme"
+            android:theme="@style/AppSplashScreenTheme"
             android:windowSoftInputMode="stateHidden"
             android:exported="true">
             <intent-filter>
@@ -89,7 +89,7 @@
             android:exported="true"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize"
-            android:theme="@style/AppSplashScreenTheme">
+            android:theme="@style/AppTheme">
             <nav-graph android:value="@navigation/main_nav_graph" />
             <!--
                         <intent-filter>
