@@ -129,9 +129,12 @@ class HelpViewModel @UiThread constructor() : GenericViewModel() {
     init {
         val currentVersion = BuildConfig.VERSION_NAME
         version.value = currentVersion
-        appVersion.value = "${AppUtils.getString(R.string.linphone_app_version)} (${AppUtils.getString(
-            R.string.linphone_app_branch
-        )})"
+
+        val versionCode = BuildConfig.VERSION_CODE
+        val appGitDescribe = AppUtils.getString(R.string.linphone_app_version)
+        val appBranch = AppUtils.getString(R.string.linphone_app_branch)
+        appVersion.value = "$versionCode - $appGitDescribe ($appBranch)"
+
         sdkVersion.value = coreContext.sdkVersion
         logsUploadInProgress.value = false
 
