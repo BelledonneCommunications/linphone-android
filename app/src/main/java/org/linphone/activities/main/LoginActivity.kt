@@ -20,6 +20,7 @@ import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.google.android.material.snackbar.Snackbar
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.ExecutorService
@@ -41,7 +42,9 @@ import org.linphone.authentication.AuthStateManager
 import org.linphone.authentication.AuthorizationServiceManager
 import org.linphone.environment.DimensionsEnvironmentService.Companion.getInstance
 import org.linphone.environment.EnvironmentSelectionAdapter
+import org.linphone.middleware.FileTree
 import org.linphone.utils.Log
+import timber.log.Timber
 
 /**
  * Demonstrates the usage of the AppAuth to authorize a user with an OAuth2 / OpenID Connect
@@ -71,16 +74,22 @@ class LoginActivity : AppCompatActivity() {
     private val mUsePendingIntents = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        android.util.Log.i("LoginActivity", "onCreate")
+
         super.onCreate(savedInstanceState)
 
-        if (MainActivity.Companion.Instance != null) {
-            MainActivity.Companion.Instance?.finish()
-            MainActivity.Companion.Instance = null
-        }
-
-        // mExecutor = Executors.newSingleThreadExecutor()
         mAuthStateManager = AuthStateManager.getInstance(this)
         mConfiguration = AuthConfiguration.getInstance(this)
+
+        // Must be done before the setContentView
+        installSplashScreen()
+
+        if (!isLoggingInitialised) {
+            android.util.Log.i("LoginActivity", "Initialise loggers")
+            Timber.plant(Timber.DebugTree(), FileTree(applicationContext))
+            Timber.tag("cloud.dimensions.uconnect")
+            isLoggingInitialised = true
+        }
 
         setContentView(R.layout.login_activity)
 
@@ -124,6 +133,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         displayLoading("Initializing")
+
         mExecutor.submit(Runnable { this.initializeAppAuth() })
     }
 
@@ -168,9 +178,9 @@ class LoginActivity : AppCompatActivity() {
     private fun handleAuthIntents() {
         val asm = AuthStateManager.getInstance(applicationContext)
 
-        if (intent != null && intent.extras != null && intent.extras!!.getString(
-                AuthStateManager.AUTH_KEY
-            ) == AuthStateManager.LOGOUT_VALUE
+        if (intent != null &&
+            intent.extras != null &&
+            intent.extras!!.getString(AuthStateManager.AUTH_KEY) == AuthStateManager.LOGOUT_VALUE
         ) {
             Log.i("LoginActivity.handleAuthIntents::logout::(unset),(unset)")
 
@@ -402,6 +412,10 @@ class LoginActivity : AppCompatActivity() {
 
         if (mUsePendingIntents) {
             val completionIntent = Intent(this, MainActivity::class.java)
+            completionIntent.setFlags(
+                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            )
+
             val cancelIntent = Intent(this, LoginActivity::class.java)
             cancelIntent.putExtra(EXTRA_FAILED, true)
             cancelIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -580,5 +594,7 @@ class LoginActivity : AppCompatActivity() {
         private const val EXTRA_FAILED = "failed"
         private const val RC_AUTH = 100
         private const val DEBOUNCE_DELAY_MS = 500
+
+        private var isLoggingInitialised = false
     }
 }

@@ -3,7 +3,7 @@
   "redirect_uri": "plum.oauth2:/oauth2redirect",
   "end_session_redirect_uri": "plum.oauth2:/oauth2logout",
   "authorization_scope": "openid profile offline_access realtime ucgateway",
-  "discovery_uri": "https://login.stage-env.dev/.well-known/openid-configuration",
+  "discovery_uri": "https://login.xarios.dev/.well-known/openid-configuration",
   "authorization_endpoint_uri": "",
   "token_endpoint_uri": "",
   "registration_endpoint_uri": "",
