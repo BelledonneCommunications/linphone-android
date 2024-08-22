@@ -72,6 +72,8 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
 
     val devicesAvailable = MutableLiveData<Boolean>()
 
+    val devicesFetchInProgress = MutableLiveData<Boolean>()
+
     val hideAccountSettings = MutableLiveData<Boolean>()
 
     val deviceId = MutableLiveData<String>()
@@ -117,6 +119,7 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
                 )
             }
             devices.postValue(devicesList)
+            devicesFetchInProgress.postValue(false)
         }
 
         @WorkerThread
@@ -140,6 +143,7 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
                                 )
                             )
                         )
+                        devicesFetchInProgress.postValue(false)
                     }
                     else -> {}
                 }
@@ -151,6 +155,7 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
         expandDetails.value = true
         expandDevices.value = false
         showDeviceId.value = false
+        devicesFetchInProgress.value = true
 
         coreContext.postOnCoreThread {
             hideAccountSettings.postValue(corePreferences.hideAccountSettings)
