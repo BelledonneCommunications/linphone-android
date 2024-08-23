@@ -19,9 +19,11 @@
  */
 package org.linphone.ui.assistant.fragment
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.telephony.TelephonyManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -168,6 +170,8 @@ class RegisterFragment : GenericFragment() {
             }
         }
 
+        val telephonyManager = requireContext().getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        val countryIso = telephonyManager.networkCountryIso
         coreContext.postOnCoreThread {
             val adapter = object : ArrayAdapter<String>(
                 requireContext(),
@@ -183,7 +187,7 @@ class RegisterFragment : GenericFragment() {
             }
             adapter.setDropDownViewResource(R.layout.assistant_country_picker_dropdown_cell)
 
-            val dialPlan = PhoneNumberUtils.getDeviceDialPlan(requireContext())
+            val dialPlan = PhoneNumberUtils.getDeviceDialPlan(countryIso)
             var default = 0
             if (dialPlan != null) {
                 viewModel.selectedDialPlan.postValue(dialPlan)

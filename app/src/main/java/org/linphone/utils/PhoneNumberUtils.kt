@@ -19,10 +19,8 @@
  */
 package org.linphone.utils
 
-import android.content.Context
 import android.content.res.Resources
 import android.provider.ContactsContract
-import android.telephony.TelephonyManager
 import androidx.annotation.AnyThread
 import androidx.annotation.WorkerThread
 import org.linphone.core.DialPlan
@@ -34,9 +32,7 @@ class PhoneNumberUtils {
         private const val TAG = "[Phone Number Utils]"
 
         @WorkerThread
-        fun getDeviceDialPlan(context: Context): DialPlan? {
-            val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-            val countryIso = telephonyManager.networkCountryIso
+        fun getDeviceDialPlan(countryIso: String): DialPlan? {
             for (dp in Factory.instance().dialPlans) {
                 if (dp.isoCountryCode.equals(countryIso, true)) {
                     val prefix = dp.countryCallingCode
