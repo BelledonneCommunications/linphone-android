@@ -68,8 +68,18 @@ class PhoneNumberUtils {
                 ContactsContract.CommonDataKinds.Phone.TYPE_WORK -> "work"
                 ContactsContract.CommonDataKinds.Phone.TYPE_WORK_MOBILE -> "work,cell"
                 ContactsContract.CommonDataKinds.Phone.TYPE_WORK_PAGER -> "work,pager"
-                ContactsContract.CommonDataKinds.BaseTypes.TYPE_CUSTOM -> default ?: "custom"
-                else -> default ?: type.toString()
+                ContactsContract.CommonDataKinds.BaseTypes.TYPE_CUSTOM -> {
+                    Log.i(
+                        "$TAG Found custom phone label type using default value [$default] or 'custom' if null"
+                    )
+                    default ?: "custom"
+                }
+                else -> {
+                    Log.w(
+                        "$TAG Can't translate phone label type [$type], using default value [$default]"
+                    )
+                    default ?: type.toString()
+                }
             }
         }
 
