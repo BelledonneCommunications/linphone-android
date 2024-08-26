@@ -105,11 +105,19 @@ abstract class AbstractConversationViewModel : GenericViewModel() {
                     )
                 )
                 if (found != null) {
-                    chatRoom = found
+                    if (::chatRoom.isInitialized && chatRoom == found) {
+                        Log.i("$TAG Conversation object already in memory, keeping it")
+                        beforeNotifyingChatRoomFound(sameOne = true)
+                        chatRoomFoundEvent.postValue(Event(true))
+                        afterNotifyingChatRoomFound(sameOne = true)
+                    } else {
+                        chatRoom = found
+                        Log.i("$TAG Found conversation in Core, using it")
 
-                    beforeNotifyingChatRoomFound(sameOne = false)
-                    chatRoomFoundEvent.postValue(Event(true))
-                    afterNotifyingChatRoomFound(sameOne = false)
+                        beforeNotifyingChatRoomFound(sameOne = false)
+                        chatRoomFoundEvent.postValue(Event(true))
+                        afterNotifyingChatRoomFound(sameOne = false)
+                    }
                 } else {
                     Log.e("$TAG Failed to find conversation given local & remote addresses!")
                     chatRoomFoundEvent.postValue(Event(false))
