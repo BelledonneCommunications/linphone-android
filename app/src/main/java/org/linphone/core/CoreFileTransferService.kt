@@ -23,6 +23,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.IBinder
+import androidx.annotation.AnyThread
 import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
 import androidx.core.app.ActivityCompat
@@ -92,6 +93,7 @@ class CoreFileTransferService : FileTransferService() {
             .setOngoing(true)
             .setProgress(0, 0, true)
             .build()
+        postNotification()
 
         coreContext.postOnCoreThread { core ->
             val downloadingFilesCount = core.remainingDownloadFileCount
@@ -128,17 +130,26 @@ class CoreFileTransferService : FileTransferService() {
         } else if (uploadingFilesCount > 0) {
             uploadText
         } else {
-            ""
+            getString(R.string.notification_file_transfer_title)
         }
 
         mServiceNotification = builder.setContentText(message).build()
+        postNotification()
+    }
+
+    @AnyThread
+    private fun postNotification() {
         val notificationsManager = NotificationManagerCompat.from(this)
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.POST_NOTIFICATIONS
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            notificationsManager.notify(SERVICE_NOTIF_ID, mServiceNotification)
+            if (mServiceNotification != null) {
+                notificationsManager.notify(SERVICE_NOTIF_ID, mServiceNotification)
+            } else {
+                Log.e("$TAG Notification content hasn't been computed yet!")
+            }
         } else {
             Log.e("$TAG POST_NOTIFICATIONS permission wasn't granted!")
         }
