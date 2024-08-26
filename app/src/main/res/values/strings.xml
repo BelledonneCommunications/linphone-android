@@ -573,6 +573,7 @@
     <string name="meeting_info_created_toast">Meeting has been created</string>
     <string name="meeting_info_updated_toast">Meeting has been updated</string>
     <string name="meeting_info_cancelled_toast">Meeting has been cancelled</string>
+    <string name="meeting_info_cancelled">Meeting cancelled</string>
     <string name="meeting_failed_to_schedule_toast">Failed to schedule meeting!</string>
     <string name="meeting_schedule_mandatory_field_not_filled_toast">A least a mandatory field wasn\'t filled</string>
     <string name="meeting_failed_to_send_invites_toast">Failed to send all invites to meeting!</string>

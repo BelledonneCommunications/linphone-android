@@ -535,6 +535,7 @@
     <string name="meeting_info_created_toast">La réunion a été créée</string>
     <string name="meeting_info_updated_toast">La réunion a été mise à jour</string>
     <string name="meeting_info_cancelled_toast">La réunion a été annulée</string>
+    <string name="meeting_info_cancelled">Réunion annulée</string>
     <string name="meeting_failed_to_schedule_toast">Échec de la création de la réunion !</string>
     <string name="meeting_schedule_mandatory_field_not_filled_toast">Au moins un champ obligatoire n\'a pas été rempli</string>
     <string name="meeting_failed_to_send_invites_toast">Échec de l\'envoi des invitations à la réunion !</string>

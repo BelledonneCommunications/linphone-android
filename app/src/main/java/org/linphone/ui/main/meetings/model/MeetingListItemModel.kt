@@ -26,7 +26,7 @@ class MeetingListItemModel @WorkerThread constructor(
     meetingModel: MeetingModel?,
     val firstMeetingOfTheWeek: Boolean
 ) {
-    val isToday = meetingModel == null
+    val isToday = meetingModel == null || meetingModel.isToday
 
     val month = meetingModel?.month ?: TimestampUtils.month(System.currentTimeMillis(), false)
 

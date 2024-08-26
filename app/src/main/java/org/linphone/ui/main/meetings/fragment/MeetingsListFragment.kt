@@ -128,10 +128,14 @@ class MeetingsListFragment : AbstractMainFragment() {
 
         adapter.meetingClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
-                Log.i("$TAG Show conversation with ID [${model.id}]")
-                sharedViewModel.displayedMeeting = model.conferenceInfo
-                val action = MeetingFragmentDirections.actionGlobalMeetingFragment(model.id)
-                binding.meetingsNavContainer.findNavController().navigate(action)
+                if (model.isCancelled) {
+                    Log.w("$TAG Meeting with ID [${model.id}] is cancelled, can't show the details")
+                } else {
+                    Log.i("$TAG Show meeting with ID [${model.id}]")
+                    sharedViewModel.displayedMeeting = model.conferenceInfo
+                    val action = MeetingFragmentDirections.actionGlobalMeetingFragment(model.id)
+                    binding.meetingsNavContainer.findNavController().navigate(action)
+                }
             }
         }
 

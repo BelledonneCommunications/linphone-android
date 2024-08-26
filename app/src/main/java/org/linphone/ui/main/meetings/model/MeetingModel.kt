@@ -63,6 +63,8 @@ class MeetingModel @WorkerThread constructor(val conferenceInfo: ConferenceInfo)
 
     val firstMeetingOfTheWeek = MutableLiveData<Boolean>()
 
+    val isCancelled = conferenceInfo.state == ConferenceInfo.State.Cancelled
+
     init {
         subject.postValue(conferenceInfo.subject)
 

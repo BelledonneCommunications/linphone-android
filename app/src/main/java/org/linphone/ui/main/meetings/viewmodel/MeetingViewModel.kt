@@ -63,6 +63,8 @@ class MeetingViewModel @UiThread constructor() : GenericViewModel() {
 
     val participants = MutableLiveData<ArrayList<ParticipantModel>>()
 
+    val isCancelled = MutableLiveData<Boolean>()
+
     val conferenceInfoFoundEvent = MutableLiveData<Event<Boolean>>()
 
     val startTimeStamp = MutableLiveData<Long>()
@@ -211,6 +213,10 @@ class MeetingViewModel @UiThread constructor() : GenericViewModel() {
             subject.postValue(conferenceInfo.subject)
             sipUri.postValue(conferenceInfo.uri?.asStringUriOnly() ?: "")
             description.postValue(conferenceInfo.description)
+
+            val state = conferenceInfo.state
+            Log.i("$TAG Conference info is in state [$state]")
+            isCancelled.postValue(state == ConferenceInfo.State.Cancelled)
 
             val timestamp = conferenceInfo.dateTime
             val duration = conferenceInfo.duration
