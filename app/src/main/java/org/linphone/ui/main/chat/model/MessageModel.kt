@@ -510,12 +510,11 @@ class MessageModel @WorkerThread constructor(
         filesList.postValue(filesPath)
 
         if (!displayableContentFound) { // Temporary workaround to prevent empty bubbles
-            val describe = LinphoneUtils.getTextDescribingMessage(chatMessage)
+            val describe = LinphoneUtils.getFormattedTextDescribingMessage(chatMessage)
             Log.w(
                 "$TAG No displayable content found, generating text based description [$describe]"
             )
-            val spannable = Spannable.Factory.getInstance().newSpannable(describe)
-            text.postValue(spannable)
+            text.postValue(describe)
         }
     }
 

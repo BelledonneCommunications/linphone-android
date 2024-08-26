@@ -778,7 +778,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             coreContext.contactsManager.findContactByAddress(address)
         val displayName = contact?.name ?: LinphoneUtils.getDisplayName(address)
 
-        val originalMessage = LinphoneUtils.getTextDescribingMessage(message)
+        val originalMessage = LinphoneUtils.getPlainTextDescribingMessage(message)
         val text = AppUtils.getString(R.string.notification_chat_message_reaction_received).format(
             reaction,
             originalMessage
@@ -874,7 +874,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             coreContext.contactsManager.findContactByAddress(message.fromAddress)
         val displayName = contact?.name ?: LinphoneUtils.getDisplayName(message.fromAddress)
 
-        val text = LinphoneUtils.getTextDescribingMessage(message)
+        val text = LinphoneUtils.getPlainTextDescribingMessage(message)
         val notifiableMessage = NotifiableMessage(
             text,
             contact,

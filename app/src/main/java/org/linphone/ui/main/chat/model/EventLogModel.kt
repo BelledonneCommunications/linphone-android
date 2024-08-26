@@ -58,7 +58,7 @@ class EventLogModel @WorkerThread constructor(
                 val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(from)
                 replyTo = avatarModel.contactName ?: LinphoneUtils.getDisplayName(from)
 
-                LinphoneUtils.getTextDescribingMessage(replyMessage)
+                LinphoneUtils.getPlainTextDescribingMessage(replyMessage)
             } else {
                 Log.e(
                     "$TAG Failed to find the reply message from ID [${chatMessage.replyMessageId}]"

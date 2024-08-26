@@ -540,6 +540,11 @@
     <string name="message_reaction_click_to_remove_label">Click to remove</string>
     <string name="message_forwarded_label">Forwarded</string>
 
+    <string name="message_meeting_invitation_content_description">meeting invite:</string>
+    <string name="message_meeting_invitation_updated_content_description">meeting updated:</string>
+    <string name="message_meeting_invitation_cancelled_content_description">meeting cancelled:</string>
+    <string name="message_voice_message_content_description">voice message</string>
+
     <!-- Scheduled conferences -->
     <string name="meetings_list_empty">No meeting for the moment…</string>
     <string name="meetings_list_no_meeting_for_today">No meeting scheduled for today</string>
@@ -751,12 +756,6 @@
     <string name="welcome_carousel_skip"><u>Skip</u></string>
     <string name="assistant_forgotten_password"><u>Forgotten password?</u></string>
     <string name="call_zrtp_sas_validation_skip"><u>Skip</u></string>
-
-    <!-- Keep <i></i> in the following strings translations! -->
-    <string name="message_meeting_invitation_content_description"><i>meeting invite: </i>%s</string>
-    <string name="message_meeting_invitation_updated_content_description"><i>meeting updated: </i>%s</string>
-    <string name="message_meeting_invitation_cancelled_content_description"><i>meeting cancelled: </i>%s</string>
-    <string name="message_voice_message_content_description"><i>voice message</i></string>
 
     <!-- Keep <b></b> in the following strings translations! -->
     <string name="conversation_message_meeting_updated_label"><b>Meeting has been updated</b></string>

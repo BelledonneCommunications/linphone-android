@@ -21,6 +21,7 @@ package org.linphone.ui.main.chat.viewmodel
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.text.Spannable
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.core.app.ActivityCompat
@@ -82,7 +83,7 @@ class SendMessageInConversationViewModel @UiThread constructor() : GenericViewMo
 
     val isReplyingTo = MutableLiveData<String>()
 
-    val isReplyingToMessage = MutableLiveData<String>()
+    val isReplyingToMessage = MutableLiveData<Spannable>()
 
     val isKeyboardOpen = MutableLiveData<Boolean>()
 
@@ -211,7 +212,7 @@ class SendMessageInConversationViewModel @UiThread constructor() : GenericViewMo
             Log.i("$TAG Pending reply to message [${message.messageId}]")
             chatMessageToReplyTo = message
             isReplyingTo.postValue(model.avatarModel.value?.friend?.name)
-            isReplyingToMessage.postValue(LinphoneUtils.getTextDescribingMessage(message))
+            isReplyingToMessage.postValue(LinphoneUtils.getFormattedTextDescribingMessage(message))
             isReplying.postValue(true)
         }
     }

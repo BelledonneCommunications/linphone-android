@@ -19,10 +19,17 @@
  */
 package org.linphone.utils
 
+import android.graphics.Typeface
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.StyleSpan
 import androidx.annotation.AnyThread
 import androidx.annotation.DrawableRes
 import androidx.annotation.IntegerRes
 import androidx.annotation.WorkerThread
+import androidx.core.text.toSpannable
+import java.text.SimpleDateFormat
+import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.contacts.getListOfSipAddresses
@@ -391,9 +398,31 @@ class LinphoneUtils {
         }
 
         @WorkerThread
-        fun getTextDescribingMessage(message: ChatMessage): String {
+        fun getFormattedTextDescribingMessage(message: ChatMessage): Spannable {
+            val pair = getTextDescribingMessage(message)
+            val builder = SpannableStringBuilder(
+                "${pair.first} ${pair.second}".trim()
+            )
+            builder.setSpan(
+                StyleSpan(Typeface.ITALIC),
+                0,
+                pair.first.length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            return builder.toSpannable()
+        }
+
+        @WorkerThread
+        fun getPlainTextDescribingMessage(message: ChatMessage): String {
+            val pair = getTextDescribingMessage(message)
+            return "${pair.first} ${pair.second}".trim()
+        }
+
+        @WorkerThread
+        private fun getTextDescribingMessage(message: ChatMessage): Pair<String, String> {
             // If message contains text, then use that
             var text = message.contents.find { content -> content.isText }?.utf8Text ?: ""
+            var contentDescription = ""
 
             if (text.isEmpty()) {
                 val firstContent = message.contents.firstOrNull()
@@ -402,26 +431,21 @@ class LinphoneUtils {
                         firstContent
                     )
                     if (conferenceInfo != null) {
-                        val subject = conferenceInfo.subject.orEmpty()
-                        text = when (conferenceInfo.state) {
+                        text = conferenceInfo.subject.orEmpty()
+                        contentDescription = when (conferenceInfo.state) {
                             ConferenceInfo.State.Cancelled -> {
-                                AppUtils.getFormattedString(
-                                    R.string.message_meeting_invitation_cancelled_content_description,
-                                    subject
+                                AppUtils.getString(
+                                    R.string.message_meeting_invitation_cancelled_content_description
                                 )
                             }
-
                             ConferenceInfo.State.Updated -> {
-                                AppUtils.getFormattedString(
-                                    R.string.message_meeting_invitation_updated_content_description,
-                                    subject
+                                AppUtils.getString(
+                                    R.string.message_meeting_invitation_updated_content_description
                                 )
                             }
-
                             else -> {
-                                AppUtils.getFormattedString(
-                                    R.string.message_meeting_invitation_content_description,
-                                    subject
+                                AppUtils.getString(
+                                    R.string.message_meeting_invitation_content_description
                                 )
                             }
                         }
@@ -432,18 +456,31 @@ class LinphoneUtils {
                         text = firstContent.name.orEmpty()
                     }
                 } else if (firstContent?.isVoiceRecording == true) {
-                    text = AppUtils.getString(R.string.message_voice_message_content_description)
+                    val label = AppUtils.getString(
+                        R.string.message_voice_message_content_description
+                    )
+                    val formattedDuration = SimpleDateFormat(
+                        "mm:ss",
+                        Locale.getDefault()
+                    ).format(firstContent.fileDuration) // duration is in ms
+                    contentDescription = "$label ($formattedDuration)"
                 } else {
                     for (content in message.contents) {
                         if (text.isNotEmpty()) {
                             text += ", "
                         }
-                        text += content.name
+                        val contentType = "${content.type}/${content.subtype}"
+                        text += when (FileUtils.getMimeType(contentType)) {
+                            FileUtils.MimeType.Image -> "\uD83D\uDDBC\uFE0F"
+                            // FileUtils.MimeType.Video -> "\uD83C\uDF9E\uFE0F"
+                            // FileUtils.MimeType.Audio -> "\uD83C\uDFB5"
+                            else -> content.name
+                        }
                     }
                 }
             }
 
-            return text
+            return Pair(contentDescription, text)
         }
 
         @WorkerThread

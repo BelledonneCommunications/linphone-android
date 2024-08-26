@@ -82,6 +82,23 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
+            android:id="@+id/last_message_sender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="3sp"
+            android:gravity="center_vertical|start"
+            android:text="@{model.lastMessageTextSender, default=`John Doe:`}"
+            android:textSize="14sp"
+            android:textColor="?attr/color_main2_400"
+            android:visibility="@{model.lastMessageTextSender.length() > 0 ? View.VISIBLE : View.GONE}"
+            textFont="@{model.isBeingDeleted || model.unreadMessageCount > 0 || model.isComposing ? NotoSansFont.NotoSansBold : NotoSansFont.NotoSansRegular}"
+            app:layout_constraintStart_toStartOf="@id/title"
+            app:layout_constraintEnd_toStartOf="@id/last_message_or_composing"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintBottom_toTopOf="@id/separator"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
             android:id="@+id/last_message_or_composing"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -92,10 +109,10 @@
             android:textSize="14sp"
             android:textColor="?attr/color_main2_400"
             textFont="@{model.isBeingDeleted || model.unreadMessageCount > 0 || model.isComposing ? NotoSansFont.NotoSansBold : NotoSansFont.NotoSansRegular}"
-            app:layout_constraintStart_toStartOf="@id/title"
+            app:layout_constraintStart_toEndOf="@id/last_message_sender"
             app:layout_constraintEnd_toStartOf="@id/right_border"
-            app:layout_constraintTop_toBottomOf="@id/title"
-            app:layout_constraintBottom_toTopOf="@id/separator" />
+            app:layout_constraintTop_toTopOf="@id/last_message_sender"
+            app:layout_constraintBottom_toBottomOf="@id/last_message_sender" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_300"

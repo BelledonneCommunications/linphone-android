@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.chat.model
 
+import android.text.Spannable
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
@@ -70,7 +71,9 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
 
     val isEphemeral = MutableLiveData<Boolean>()
 
-    val lastMessageText = MutableLiveData<String>()
+    val lastMessageTextSender = MutableLiveData<String>()
+
+    val lastMessageText = MutableLiveData<Spannable>()
 
     val lastMessageIcon = MutableLiveData<Int>()
 
@@ -254,7 +257,6 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
     private fun updateLastMessageStatus(message: ChatMessage) {
         val isOutgoing = message.isOutgoing
 
-        val text = LinphoneUtils.getTextDescribingMessage(message)
         if (isGroup && !isOutgoing) {
             val fromAddress = message.fromAddress
             val sender = coreContext.contactsManager.findContactByAddress(fromAddress)
@@ -263,10 +265,11 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
                 R.string.conversations_last_message_format,
                 name
             )
-            lastMessageText.postValue("$senderName $text")
+            lastMessageTextSender.postValue(senderName)
         } else {
-            lastMessageText.postValue(text)
+            lastMessageTextSender.postValue("")
         }
+        lastMessageText.postValue(LinphoneUtils.getFormattedTextDescribingMessage(message))
 
         isLastMessageOutgoing.postValue(isOutgoing)
         if (isOutgoing) {
