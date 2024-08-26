@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:textSize="12sp"
             android:text="@{model.avatarModel.name, default=`John Doe`}"
-            android:textColor="?attr/color_main2_700"
+            android:textColor="?attr/color_main2_800"
             android:maxLines="1"
             android:ellipsize="end"
             android:visibility="@{!model.isFromGroup ? View.GONE: model.groupedWithPreviousMessage ? View.GONE : View.VISIBLE}"
@@ -221,7 +221,7 @@
                 android:layout_height="wrap_content"
                 android:text="@{model.text, default=`Lorem ipsum dolor sit amet`}"
                 android:textSize="14sp"
-                android:textColor="?attr/color_main2_700"
+                android:textColor="?attr/color_main2_800"
                 android:gravity="center_vertical|start"
                 android:visibility="@{model.text.length() > 0 ? View.VISIBLE : View.GONE}"/>
 
