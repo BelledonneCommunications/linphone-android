@@ -453,6 +453,9 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
                         "$TAG Setting default contacts list filter to [${corePreferences.contactsFilter}]"
                     )
                 }
+
+                // Add that flag back, was disabled for a time during dev process
+                core.config.setBool("misc", "hide_empty_chat_rooms", true)
             }
 
             corePreferences.linphoneConfigurationVersion = currentVersion

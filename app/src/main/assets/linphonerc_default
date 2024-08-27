@@ -39,7 +39,7 @@ version_check_url_root=https://www.linphone.org/releases
 max_calls=10
 history_max_size=100
 conference_layout=1
-hide_empty_chat_rooms=0
+hide_empty_chat_rooms=1
 
 [fec]
 fec_enabled=1
