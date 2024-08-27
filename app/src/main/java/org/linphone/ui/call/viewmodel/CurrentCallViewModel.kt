@@ -663,11 +663,6 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
                 } else {
                     currentCall.microphoneMuted
                 }
-                if (currentCall.conference != null) {
-                    currentCall.conference?.microphoneMuted = !micMuted
-                } else {
-                    currentCall.microphoneMuted = !micMuted
-                }
                 if (micMuted != isMicrophoneMuted.value) {
                     if (micMuted) {
                         Log.w("$TAG Microphone is muted, updating button state accordingly")
