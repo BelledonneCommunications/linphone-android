@@ -403,12 +403,14 @@ class LinphoneUtils {
             val builder = SpannableStringBuilder(
                 "${pair.first} ${pair.second}".trim()
             )
-            builder.setSpan(
-                StyleSpan(Typeface.ITALIC),
-                0,
-                pair.first.length,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
+            if (pair.first.isNotEmpty()) { // prevent error log due to zero length exclusive span
+                builder.setSpan(
+                    StyleSpan(Typeface.ITALIC),
+                    0,
+                    pair.first.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
             return builder.toSpannable()
         }
 

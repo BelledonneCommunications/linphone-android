@@ -326,12 +326,6 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
                 isVideoEnabled.postValue(videoEnabled)
                 updateVideoDirection(call.currentParams.videoDirection)
 
-                // Toggle full screen OFF when remote disables video
-                if (!videoEnabled && fullScreenMode.value == true) {
-                    Log.w("$TAG Video is not longer enabled, leaving full screen mode")
-                    fullScreenMode.postValue(false)
-                }
-
                 if (call.state == Call.State.Connected) {
                     if (call.conference != null) {
                         Log.i(
@@ -1194,14 +1188,34 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
     @WorkerThread
     private fun updateVideoDirection(direction: MediaDirection) {
         val isSending = direction == MediaDirection.SendRecv || direction == MediaDirection.SendOnly
-        val isReceived = direction == MediaDirection.SendRecv || direction == MediaDirection.RecvOnly
-        isSendingVideo.postValue(
-            isSending
-        )
-        isReceivingVideo.postValue(
-            isReceived
-        )
-        Log.d("$TAG Is video being sent? [$isSending] Is video being received? [$isReceived]")
+        val isReceiving = direction == MediaDirection.SendRecv || direction == MediaDirection.RecvOnly
+
+        val wasSending = isSendingVideo.value == true
+        val wasReceiving = isReceivingVideo.value == true
+
+        if (isReceiving != wasReceiving || isSending != wasSending) {
+            Log.i(
+                "$TAG Video is enabled in ${if (isSending && isReceiving) "both ways" else if (isSending) "upload" else "download"}"
+            )
+            isSendingVideo.postValue(isSending)
+            isReceivingVideo.postValue(isReceiving)
+        }
+
+        if (((isSending || isReceiving) && !wasSending && !wasReceiving)) {
+            if (fullScreenMode.value != true) {
+                Log.i("$TAG Video is enabled (it wasn't before), switching to full-screen mode")
+                fullScreenMode.postValue(true)
+            } else {
+                Log.w(
+                    "$TAG Full-screen mode is already enabled but call wasn't using video, unexpected..."
+                )
+            }
+        } else {
+            if (!isSending && !isReceiving && fullScreenMode.value == true) {
+                Log.w("$TAG Video is no longer enabled, leaving full screen mode")
+                fullScreenMode.postValue(false)
+            }
+        }
 
         updateProximitySensor()
     }
