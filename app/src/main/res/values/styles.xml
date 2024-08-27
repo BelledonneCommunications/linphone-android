@@ -2,8 +2,13 @@
 <resources>
     <style name="AppSplashScreenTheme" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/dark_grey_color</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/vector_linphone_logo</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/dimensions_icon</item>
         <item name="postSplashScreenTheme">@style/AppTheme</item>
+    </style>
+
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen.IconBackground">
+        <!-- Set a white background behind the splash screen icon. -->
+        <item name="windowSplashScreenIconBackgroundColor">@android:color/white</item>
     </style>
 
     <!-- Base application theme. -->
@@ -92,6 +97,21 @@
         <item name="android:layout_margin">5dp</item>
         <item name="android:padding">15dp</item>
         <item name="android:background">@drawable/button_call_numpad_background</item>
+    </style>
+
+    <style name="numpad_button">
+        <item name="android:background" >@drawable/button_call_numpad_background</item>
+        <item name="android:layout_width">90dp</item>
+        <item name="android:layout_height">90dp</item>
+        <item name="android:layout_margin">5dp</item>
+    </style>
+
+    <style name="numpad_button_digit" parent="@android:style/TextAppearance.Medium">
+        <!--<item name="android:textColor">@color/light_primary_text_color</item>-->
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:textSize">50dp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:gravity">center</item>
     </style>
 
     <!-- Assistant related -->

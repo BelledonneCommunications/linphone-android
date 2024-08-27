@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="keyListener"
+            type="org.linphone.activities.main.dialer.NumpadDigitListener" />
+    </data>
+
+    <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/numpad"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/backgroundColor"
+        app:flexWrap="wrap"
+        app:justifyContent="space_around"
+        app:alignItems="center"
+        app:alignContent="space_around"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="60dp">
+
+        <RelativeLayout
+            style="@style/numpad_button"
+            android:theme="@style/numpad_button_digit"
+            android:contentDescription="@string/content_description_numpad_1"
+            android:onClick="@{() -> keyListener.handleClick('1')}"
+            android:onLongClick="@{() -> keyListener.handleLongClick('1')}">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:text="1"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:paddingBottom="12dp"
+                android:text=" ">
+            </TextView>
+        </RelativeLayout>
+
+        <RelativeLayout
+            style="@style/numpad_button"
+            android:theme="@style/numpad_button_digit"
+            android:contentDescription="2"
+            android:onClick="@{() -> keyListener.handleClick('2')}"
+            android:onLongClick="@{() -> keyListener.handleLongClick('2')}">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"/>
+            <TextView
+                android:textColor="@color/grey_color"
+                android:textSize="18dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:paddingBottom="12dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="ABC" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            style="@style/numpad_button"
+            android:theme="@style/numpad_button_digit"
+            android:contentDescription="3"
+            android:onClick="@{() -> keyListener.handleClick('3')}"
+            android:onLongClick="@{() -> keyListener.handleLongClick('3')}">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3"/>
+            <TextView
+                android:textColor="@color/grey_color"
+                android:textSize="18dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:paddingBottom="12dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="DEF" />
+        </RelativeLayout>
+
+
+
+        <RelativeLayout
+            style="@style/numpad_button"
+            android:theme="@style/numpad_button_digit"
+            android:contentDescription="4"
+            android:onClick="@{() -> keyListener.handleClick('4')}"
+            android:onLongClick="@{() -> keyListener.handleLongClick('4')}">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:text="4"/>
+
+            <TextView
+                android:textColor="@color/grey_color"
+                android:textSize="18dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:paddingBottom="12dp"
+                android:text="GHI">
+            </TextView>
+        </RelativeLayout>
+
+        <RelativeLayout
+            style="@style/numpad_button"
+            android:theme="@style/numpad_button_digit"
+            android:contentDescription="5"
+            android:onClick="@{() -> keyListener.handleClick('5')}"
+            android:onLongClick="@{() -> keyListener.handleLongClick('5')}">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5"/>
+            <TextView
+                android:textColor="@color/grey_color"
+                android:textSize="18dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:paddingBottom="12dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="JKL" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            style="@style/numpad_button"
+            android:theme="@style/numpad_button_digit"
+            android:contentDescription="6"
+            android:onClick="@{() -> keyListener.handleClick('6')}"
+            android:onLongClick="@{() -> keyListener.handleLongClick('6')}">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="6"/>
+            <TextView
+                android:textColor="@color/grey_color"
+                android:textSize="18dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:paddingBottom="12dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="MNO" />
+        </RelativeLayout>
+
+
+
+        <RelativeLayout
+            style="@style/numpad_button"
+            android:theme="@style/numpad_button_digit"
+            android:contentDescription="7"
+            android:onClick="@{() -> keyListener.handleClick('7')}"
+            android:onLongClick="@{() -> keyListener.handleLongClick('7')}">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:text="7"/>
+
+            <TextView
+                android:textColor="@color/grey_color"
+                android:textSize="18dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:paddingBottom="12dp"
+                android:text="PQRS">
+            </TextView>
+        </RelativeLayout>
+
+        <RelativeLayout
+            style="@style/numpad_button"
+            android:theme="@style/numpad_button_digit"
+            android:contentDescription="8"
+            android:onClick="@{() -> keyListener.handleClick('8')}"
+            android:onLongClick="@{() -> keyListener.handleLongClick('8')}">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="8"/>
+            <TextView
+                android:textColor="@color/grey_color"
+                android:textSize="18dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:paddingBottom="12dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="TUV" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            style="@style/numpad_button"
+            android:theme="@style/numpad_button_digit"
+            android:contentDescription="9"
+            android:onClick="@{() -> keyListener.handleClick('9')}"
+            android:onLongClick="@{() -> keyListener.handleLongClick('9')}">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="9"/>
+            <TextView
+                android:textColor="@color/grey_color"
+                android:textSize="18dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:paddingBottom="12dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="WXYZ" />
+        </RelativeLayout>
+
+
+
+        <RelativeLayout
+            style="@style/numpad_button"
+            android:theme="@style/numpad_button_digit"
+            android:contentDescription="*"
+            android:onClick="@{() -> keyListener.handleClick('*')}"
+            android:onLongClick="@{() -> keyListener.handleLongClick('*')}">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="*" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            style="@style/numpad_button"
+            android:theme="@style/numpad_button_digit"
+            android:contentDescription="0"
+            android:onClick="@{() -> keyListener.handleClick('0')}"
+            android:onLongClick="@{() -> keyListener.handleLongClick('+')}">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"/>
+            <TextView
+                android:textColor="@color/grey_color"
+                android:textSize="18dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:paddingBottom="12dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="+" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            style="@style/numpad_button"
+            android:theme="@style/numpad_button_digit"
+            android:contentDescription="#"
+            android:onClick="@{() -> keyListener.handleClick('#')}"
+            android:onLongClick="@{() -> keyListener.handleLongClick('#')}">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="#"/>
+        </RelativeLayout>
+
+    </com.google.android.flexbox.FlexboxLayout>
+
+</layout>

@@ -594,26 +594,26 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getBool("app", "side_menu_accounts", true)
 
     val showAssistantInSideMenu: Boolean
-        get() = config.getBool("app", "side_menu_assistant", true)
+        get() = config.getBool("app", "side_menu_assistant", false)
 
     val showSettingsInSideMenu: Boolean
-        get() = config.getBool("app", "side_menu_settings", true)
+        get() = config.getBool("app", "side_menu_settings", false)
 
     val showRecordingsInSideMenu: Boolean
-        get() = config.getBool("app", "side_menu_recordings", true)
+        get() = config.getBool("app", "side_menu_recordings", false)
 
     val showScheduledConferencesInSideMenu: Boolean
         get() = config.getBool(
             "app",
             "side_menu_conferences",
-            LinphoneUtils.isRemoteConferencingAvailable()
+            false // LinphoneUtils.isRemoteConferencingAvailable()
         )
 
     val showAboutInSideMenu: Boolean
         get() = config.getBool("app", "side_menu_about", true)
 
     val showQuitInSideMenu: Boolean
-        get() = config.getBool("app", "side_menu_quit", true)
+        get() = config.getBool("app", "side_menu_quit", false)
 
     /* Settings */
 
