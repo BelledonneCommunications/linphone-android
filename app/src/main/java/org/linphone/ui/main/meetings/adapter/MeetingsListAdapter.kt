@@ -83,7 +83,7 @@ class MeetingsListAdapter :
 
     override fun getItemViewType(position: Int): Int {
         val data = getItem(position)
-        if (data.isToday) {
+        if (data.isTodayIndicator) {
             return TODAY_INDICATOR
         }
         return MEETING

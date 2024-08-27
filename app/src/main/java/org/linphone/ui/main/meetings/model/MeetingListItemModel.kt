@@ -28,6 +28,8 @@ class MeetingListItemModel @WorkerThread constructor(
 ) {
     val isToday = meetingModel == null || meetingModel.isToday
 
+    val isTodayIndicator = meetingModel == null
+
     val month = meetingModel?.month ?: TimestampUtils.month(System.currentTimeMillis(), false)
 
     val day = meetingModel?.day ?: TimestampUtils.dayOfWeek(System.currentTimeMillis(), false)

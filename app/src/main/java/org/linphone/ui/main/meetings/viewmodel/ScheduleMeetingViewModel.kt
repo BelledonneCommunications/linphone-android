@@ -416,9 +416,9 @@ class ScheduleMeetingViewModel @UiThread constructor() : GenericViewModel() {
 
                 cal.timeInMillis = endTimestamp
                 cal.set(Calendar.HOUR_OF_DAY, 0)
-                cal.set(Calendar.MINUTE, 0)
-                cal.set(Calendar.SECOND, 0)
-                cal.add(Calendar.HOUR, 24)
+                cal.add(Calendar.HOUR, 23)
+                cal.set(Calendar.MINUTE, 59)
+                cal.set(Calendar.SECOND, 59)
                 val endTime = cal.timeInMillis / 1000 // Linphone expects timestamp in seconds
                 val duration = ((endTime - startTime) / 60).toInt() // Linphone expects duration in minutes
 
@@ -611,7 +611,8 @@ class ScheduleMeetingViewModel @UiThread constructor() : GenericViewModel() {
             cal.set(Calendar.HOUR_OF_DAY, startHour)
             cal.set(Calendar.MINUTE, startMinutes)
         }
-        val start = TimestampUtils.timeToString(cal.timeInMillis, timestampInSecs = false)
+        startTimestamp = cal.timeInMillis
+        val start = TimestampUtils.timeToString(startTimestamp, timestampInSecs = false)
         Log.i("$TAG Computed start time for timestamp [$startTimestamp] is [$start]")
         fromTime.postValue(start)
 
@@ -619,8 +620,17 @@ class ScheduleMeetingViewModel @UiThread constructor() : GenericViewModel() {
         if (endHour != -1 && endMinutes != -1) {
             cal.set(Calendar.HOUR_OF_DAY, endHour)
             cal.set(Calendar.MINUTE, endMinutes)
+
+            if (endHour < startHour || (endHour == startHour && endMinutes <= startMinutes)) {
+                // Make sure if endTime is after startTime that it is on the next day
+                if (cal.timeInMillis <= startTimestamp) {
+                    Log.i("$TAG endTime < startTime, adding 1 day to endTimestamp")
+                    cal.add(Calendar.DAY_OF_YEAR, 1)
+                }
+            }
         }
-        val end = TimestampUtils.timeToString(cal.timeInMillis, timestampInSecs = false)
+        endTimestamp = cal.timeInMillis
+        val end = TimestampUtils.timeToString(endTimestamp, timestampInSecs = false)
         Log.i("$TAG Computed end time for timestamp [$endTimestamp] is [$end]")
         toTime.postValue(end)
     }

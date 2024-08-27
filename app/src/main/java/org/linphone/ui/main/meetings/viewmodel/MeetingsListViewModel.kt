@@ -128,6 +128,7 @@ class MeetingsListViewModel @UiThread constructor() : AbstractMainViewModel() {
             }
 
             if (add) {
+                Log.d("$TAG Found meeting model info [${info.subject}]")
                 val model = MeetingModel(info)
 
                 var firstMeetingOfTheWeek = previousModelWeekLabel != model.weekLabel
@@ -139,7 +140,8 @@ class MeetingsListViewModel @UiThread constructor() : AbstractMainViewModel() {
                 }
                 model.firstMeetingOfTheDay.postValue(firstMeetingOfTheDay)
 
-                if (model.isToday) {
+                if (model.isToday && !meetingForTodayFound) {
+                    Log.i("$TAG Found a meeting scheduled for today")
                     meetingForTodayFound = true
                 }
 
