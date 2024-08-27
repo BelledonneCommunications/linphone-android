@@ -52,7 +52,7 @@ class VideoSettingsViewModel : GenericSettingsViewModel() {
 
     val initiateCallListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
-            val policy = core.videoActivationPolicy
+            val policy = core.videoActivationPolicy.clone()
             policy.automaticallyInitiate = newValue
             core.videoActivationPolicy = policy
         }
@@ -61,7 +61,7 @@ class VideoSettingsViewModel : GenericSettingsViewModel() {
 
     val autoAcceptListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
-            val policy = core.videoActivationPolicy
+            val policy = core.videoActivationPolicy.clone()
             policy.automaticallyAccept = newValue
             core.videoActivationPolicy = policy
         }

@@ -144,10 +144,10 @@ class CoreContext(
                     core.isVideoCaptureEnabled = false
                     core.isVideoDisplayEnabled = false
 
-                    val videoPolicy = core.videoActivationPolicy
-                    videoPolicy.automaticallyInitiate = false
-                    videoPolicy.automaticallyAccept = false
-                    core.videoActivationPolicy = videoPolicy
+                    val policy = core.videoActivationPolicy.clone()
+                    policy.automaticallyInitiate = false
+                    policy.automaticallyAccept = false
+                    core.videoActivationPolicy = policy
                 }
 
                 fetchContacts()
