@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:paddingBottom="12dp"
+                android:paddingBottom="14dp"
                 android:text=" ">
             </TextView>
         </RelativeLayout>
@@ -53,11 +53,11 @@
                 android:text="2"/>
             <TextView
                 android:textColor="@color/grey_color"
-                android:textSize="18dp"
+                android:textSize="13sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:paddingBottom="12dp"
+                android:paddingBottom="14dp"
                 android:fontFamily="sans-serif-medium"
                 android:text="ABC" />
         </RelativeLayout>
@@ -74,11 +74,11 @@
                 android:text="3"/>
             <TextView
                 android:textColor="@color/grey_color"
-                android:textSize="18dp"
+                android:textSize="13sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:paddingBottom="12dp"
+                android:paddingBottom="14dp"
                 android:fontFamily="sans-serif-medium"
                 android:text="DEF" />
         </RelativeLayout>
@@ -99,11 +99,11 @@
 
             <TextView
                 android:textColor="@color/grey_color"
-                android:textSize="18dp"
+                android:textSize="13sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:paddingBottom="12dp"
+                android:paddingBottom="14dp"
                 android:text="GHI">
             </TextView>
         </RelativeLayout>
@@ -120,11 +120,11 @@
                 android:text="5"/>
             <TextView
                 android:textColor="@color/grey_color"
-                android:textSize="18dp"
+                android:textSize="13sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:paddingBottom="12dp"
+                android:paddingBottom="14dp"
                 android:fontFamily="sans-serif-medium"
                 android:text="JKL" />
         </RelativeLayout>
@@ -141,11 +141,11 @@
                 android:text="6"/>
             <TextView
                 android:textColor="@color/grey_color"
-                android:textSize="18dp"
+                android:textSize="13sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:paddingBottom="12dp"
+                android:paddingBottom="14dp"
                 android:fontFamily="sans-serif-medium"
                 android:text="MNO" />
         </RelativeLayout>
@@ -166,11 +166,11 @@
 
             <TextView
                 android:textColor="@color/grey_color"
-                android:textSize="18dp"
+                android:textSize="13sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:paddingBottom="12dp"
+                android:paddingBottom="14dp"
                 android:text="PQRS">
             </TextView>
         </RelativeLayout>
@@ -187,11 +187,11 @@
                 android:text="8"/>
             <TextView
                 android:textColor="@color/grey_color"
-                android:textSize="18dp"
+                android:textSize="13sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:paddingBottom="12dp"
+                android:paddingBottom="14dp"
                 android:fontFamily="sans-serif-medium"
                 android:text="TUV" />
         </RelativeLayout>
@@ -208,11 +208,11 @@
                 android:text="9"/>
             <TextView
                 android:textColor="@color/grey_color"
-                android:textSize="18dp"
+                android:textSize="13sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:paddingBottom="12dp"
+                android:paddingBottom="14dp"
                 android:fontFamily="sans-serif-medium"
                 android:text="WXYZ" />
         </RelativeLayout>
@@ -244,11 +244,11 @@
                 android:text="0"/>
             <TextView
                 android:textColor="@color/grey_color"
-                android:textSize="18dp"
+                android:textSize="13sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:paddingBottom="12dp"
+                android:paddingBottom="14dp"
                 android:fontFamily="sans-serif-medium"
                 android:text="+" />
         </RelativeLayout>
