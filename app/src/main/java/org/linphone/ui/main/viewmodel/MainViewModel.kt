@@ -118,6 +118,8 @@ class MainViewModel @UiThread constructor() : ViewModel() {
 
     private var firstAccountRegistered: Boolean = false
 
+    private var monitorAccount = false
+
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
         override fun onGlobalStateChanged(core: Core, state: GlobalState?, message: String) {
@@ -192,6 +194,8 @@ class MainViewModel @UiThread constructor() : ViewModel() {
             state: RegistrationState?,
             message: String
         ) {
+            if (!monitorAccount) return
+
             when (state) {
                 RegistrationState.Failed -> {
                     if (account == core.defaultAccount) {
@@ -244,6 +248,8 @@ class MainViewModel @UiThread constructor() : ViewModel() {
 
         @WorkerThread
         override fun onDefaultAccountChanged(core: Core, account: Account?) {
+            if (!monitorAccount) return
+
             if (account == null) {
                 Log.w("$TAG Default account is now null!")
             } else {
@@ -262,6 +268,8 @@ class MainViewModel @UiThread constructor() : ViewModel() {
 
         @WorkerThread
         override fun onAccountRemoved(core: Core, account: Account) {
+            if (!monitorAccount) return
+
             Log.w(
                 "$TAG Account [${account.params.identityAddress?.asStringUriOnly()}] has been removed!"
             )
@@ -280,6 +288,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
         defaultAccountRegistrationFailed = false
         showAlert.value = false
         maxAlertLevel.value = NONE
+        enableAccountMonitoring(true)
 
         coreContext.postOnCoreThread { core ->
             accountsFound = core.accountList.size
@@ -374,6 +383,20 @@ class MainViewModel @UiThread constructor() : ViewModel() {
             askPostNotificationsPermissionEvent.value = Event(true)
         } else {
             openDrawerEvent.value = Event(true)
+        }
+    }
+
+    @UiThread
+    fun enableAccountMonitoring(enable: Boolean) {
+        if (enable != monitorAccount) {
+            monitorAccount = enable
+            Log.i(
+                "$TAG Account monitoring is now [${if (monitorAccount) "enabled" else "disabled"}]"
+            )
+        } else {
+            Log.i(
+                "$TAG Account monitoring is already [${if (monitorAccount) "enabled" else "disabled"}], nothing to do"
+            )
         }
     }
 

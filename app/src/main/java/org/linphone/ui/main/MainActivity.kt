@@ -317,6 +317,8 @@ class MainActivity : GenericActivity() {
     }
 
     override fun onPause() {
+        viewModel.enableAccountMonitoring(false)
+
         currentlyDisplayedAuthDialog?.dismiss()
         currentlyDisplayedAuthDialog = null
 
@@ -349,6 +351,7 @@ class MainActivity : GenericActivity() {
     override fun onResume() {
         super.onResume()
 
+        viewModel.enableAccountMonitoring(true)
         viewModel.checkForNewAccount()
         viewModel.updateNetworkReachability()
         viewModel.updatePostNotificationsPermission()
