@@ -27,7 +27,6 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
-import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 
 class TimestampUtils {
@@ -148,17 +147,9 @@ class TimestampUtils {
 
         @AnyThread
         fun timeToString(time: Long, timestampInSecs: Boolean = true): String {
-            val use24hFormat = android.text.format.DateFormat.is24HourFormat(
-                coreContext.context
-            )
             val calendar = getCalendar()
             calendar.timeInMillis = if (timestampInSecs) time * 1000 else time
-
-            return if (use24hFormat) {
-                SimpleDateFormat("HH'h'mm", Locale.getDefault()).format(calendar.time)
-            } else {
-                SimpleDateFormat("h:mm a", Locale.getDefault()).format(calendar.time)
-            }
+            return DateFormat.getTimeInstance(DateFormat.SHORT).format(calendar.time)
         }
 
         @AnyThread
