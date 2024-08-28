@@ -128,7 +128,7 @@
         </LinearLayout>
 
         <include
-            layout="@layout/numpad"
+            layout="@layout/numpad_new"
             android:layout_above="@id/controls"
             android:layout_below="@id/address_bar"
             android:layout_width="match_parent"

@@ -119,6 +119,7 @@ public class AuthStateManager {
     }
 
     public void performAuthAction(boolean wasAuthed, boolean isAuthed) {
+        /*
         switch (GetAuthAction(wasAuthed, isAuthed)) {
             case LogIn -> {
                 Log.Log.i("performAuthAction::Loading accounts");
@@ -132,6 +133,7 @@ public class AuthStateManager {
 
             default -> { }
         }
+        */
     }
 
     private authStateChangeAction GetAuthAction(Boolean wasAuthed, Boolean isAuthed) {

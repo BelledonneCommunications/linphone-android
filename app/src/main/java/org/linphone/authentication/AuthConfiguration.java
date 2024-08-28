@@ -126,7 +126,7 @@ public final class AuthConfiguration {
         mPrefs.edit().putString(KEY_LAST_HASH, mConfigHash).apply();
     }
 
-    @Nullable
+    @NonNull
     public String getClientId() {
         return mClientId;
     }
