@@ -12,7 +12,7 @@ class AuthInterceptor(context: Context) : Interceptor {
         val requestBuilder = chain.request().newBuilder()
 
         requestBuilder.addHeader("Accept", "application/json")
-        requestBuilder.addHeader("Authorization", "Bearer ${asm.current.accessToken}")
+        // requestBuilder.addHeader("Authorization", "Bearer ${asm.current.accessToken}")
 
         return chain.proceed(requestBuilder.build())
     }

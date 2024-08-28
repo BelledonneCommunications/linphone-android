@@ -193,15 +193,17 @@ class LoginActivity : AppCompatActivity() {
             val response = AuthorizationResponse.fromIntent(intent)
             val ex = AuthorizationException.fromIntent(intent)
 
-            Log.i(
-                String.format(
-                    "LoginActivity.handleAuthIntents::(%s),(%s)",
-                    response,
-                    ex
+            if (response != null || ex != null) {
+                Log.i(
+                    String.format(
+                        "LoginActivity.handleAuthIntents::(%s),(%s)",
+                        response,
+                        ex
+                    )
                 )
-            )
 
-            asm.updateAfterAuthorization(response, ex)
+                asm.updateAfterAuthorization(response, ex)
+            }
         }
     }
 

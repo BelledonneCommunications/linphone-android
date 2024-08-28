@@ -17,10 +17,12 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class DimensionsAccountsManager(context: Context) {
+
     companion object {
-        private val INSTANCE_REF: AtomicReference<WeakReference<DimensionsAccountsManager>> = AtomicReference(
-            WeakReference(null)
-        )
+        private val INSTANCE_REF: AtomicReference<WeakReference<DimensionsAccountsManager>> =
+            AtomicReference(
+                WeakReference(null)
+            )
 
         @AnyThread
         fun getInstance(context: Context): DimensionsAccountsManager {
@@ -35,6 +37,18 @@ class DimensionsAccountsManager(context: Context) {
     }
 
     private val mContext = context
+
+    init {
+        val asm = AuthStateManager.getInstance(context)
+        val sub = asm.user
+            .map { it.id ?: "" }
+            .doOnEach { Log.i("AUTH user ID : $it") }
+            // .distinctUntilChanged { id -> id }
+            .subscribe(
+                { if (it != "") load() else clear() },
+                { Log.e("User ID error: " + it.message) }
+            )
+    }
 
     val devicesSubject = BehaviorSubject.create<SubscribableUserDeviceList>()
     val userInfoSubject = BehaviorSubject.create<SubscribableUserInfo>()

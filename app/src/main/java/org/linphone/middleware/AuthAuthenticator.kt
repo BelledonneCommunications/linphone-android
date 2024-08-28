@@ -18,6 +18,10 @@ class AuthAuthenticator(
     override fun authenticate(route: Route?, response: Response): Request? {
         val future = CompletableFuture<Request?>()
 
+        Log.i("AUTH Using refresh token: ", authState.refreshToken)
+        Log.i("AUTH ID token: ", authState.idToken)
+        Log.i("AUTH access token: ", authState.accessToken)
+
         authState.performActionWithFreshTokens(authService) { accessToken, _, ex ->
             if (ex != null) {
                 Log.e("AppAuthAuthenticator", "Failed to authorize = $ex")
