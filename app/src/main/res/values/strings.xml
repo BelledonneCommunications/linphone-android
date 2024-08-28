@@ -197,6 +197,7 @@
     <string name="help_error_checking_version_toast_message">An error occurred while checking for update</string>
     <string name="help_dialog_update_available_title">Update available</string>
     <string name="help_dialog_update_available_message">A new version %s is available. Do you want to update?</string>
+    <string name="help_quit_title">Quit app</string>
     <string name="help_troubleshooting_title">Troubleshooting</string>
     <string name="help_troubleshooting_clean_logs">Clean logs</string>
     <string name="help_troubleshooting_share_logs">Share logs</string>

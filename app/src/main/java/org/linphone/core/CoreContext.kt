@@ -35,6 +35,7 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import kotlin.system.exitProcess
 import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.contacts.ContactsManager
@@ -494,14 +495,15 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         audioManager.unregisterAudioDeviceCallback(audioDeviceCallback)
 
-        core.stopAsync()
+        core.stop()
 
         contactsManager.onCoreStopped(core)
         telecomManager.onCoreStopped(core)
         notificationsManager.onCoreStopped(core)
 
         // It's very unlikely the process will survive until the Core reaches GlobalStateOff sadly
-        Log.w("$TAG Core is shutting down but probably won't reach Off state")
+        Log.w("$TAG Core has been shut down")
+        exitProcess(0)
     }
 
     @AnyThread

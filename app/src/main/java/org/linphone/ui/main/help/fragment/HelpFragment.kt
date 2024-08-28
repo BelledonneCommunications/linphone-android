@@ -28,6 +28,7 @@ import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.HelpFragmentBinding
@@ -71,6 +72,16 @@ class HelpFragment : GenericMainFragment() {
         binding.setDebugClickListener {
             val action = HelpFragmentDirections.actionHelpFragmentToDebugFragment()
             findNavController().navigate(action)
+        }
+
+        binding.setQuitClickListener {
+            coreContext.postOnCoreThread {
+                Log.i("$TAG Stopping Core Context")
+                coreContext.quitSafely()
+            }
+
+            Log.i("$TAG Quitting app")
+            requireActivity().finishAffinity()
         }
 
         binding.setPrivacyPolicyClickListener {
