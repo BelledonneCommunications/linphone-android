@@ -19,6 +19,7 @@
  */
 package org.linphone.core
 
+import android.app.PendingIntent
 import android.content.Intent
 import android.os.IBinder
 import androidx.annotation.MainThread
@@ -26,6 +27,7 @@ import androidx.core.app.NotificationCompat
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.core.tools.service.PushService
+import org.linphone.ui.main.MainActivity
 
 @MainThread
 class CorePushService : PushService() {
@@ -58,6 +60,17 @@ class CorePushService : PushService() {
     }
 
     override fun createServiceNotification() {
+        Log.i("$TAG Creating notification")
+
+        val intent = Intent(applicationContext, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        val pendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
         mServiceNotification = NotificationCompat.Builder(
             this,
             SERVICE_NOTIFICATION_CHANNEL_ID
@@ -71,6 +84,7 @@ class CorePushService : PushService() {
             .setWhen(System.currentTimeMillis())
             .setShowWhen(false)
             .setOngoing(true)
+            .setContentIntent(pendingIntent)
             .build()
     }
 }

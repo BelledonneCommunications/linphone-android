@@ -20,6 +20,7 @@
 package org.linphone.core
 
 import android.Manifest
+import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.IBinder
@@ -33,6 +34,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.core.tools.service.FileTransferService
+import org.linphone.ui.main.MainActivity
 
 @MainThread
 class CoreFileTransferService : FileTransferService() {
@@ -80,6 +82,17 @@ class CoreFileTransferService : FileTransferService() {
     }
 
     override fun createServiceNotification() {
+        Log.i("$TAG Creating notification")
+
+        val intent = Intent(applicationContext, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        val pendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
         mServiceNotification = builder.setContentTitle(
             getString(R.string.notification_file_transfer_title)
         )
@@ -92,6 +105,7 @@ class CoreFileTransferService : FileTransferService() {
             .setShowWhen(false)
             .setOngoing(true)
             .setProgress(0, 0, true)
+            .setContentIntent(pendingIntent)
             .build()
         postNotification()
 
@@ -130,7 +144,7 @@ class CoreFileTransferService : FileTransferService() {
         } else if (uploadingFilesCount > 0) {
             uploadText
         } else {
-            getString(R.string.notification_file_transfer_title)
+            getString(R.string.notification_file_transfer_startup_message)
         }
 
         mServiceNotification = builder.setContentText(message).build()
@@ -146,6 +160,7 @@ class CoreFileTransferService : FileTransferService() {
             ) == PackageManager.PERMISSION_GRANTED
         ) {
             if (mServiceNotification != null) {
+                Log.i("$TAG Sending notification to manager")
                 notificationsManager.notify(SERVICE_NOTIF_ID, mServiceNotification)
             } else {
                 Log.e("$TAG Notification content hasn't been computed yet!")
