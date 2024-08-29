@@ -25,6 +25,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.tools.Log
 
 open class NumpadModel @UiThread constructor(
+    private val inCallNumpad: Boolean,
     private val onDigitClicked: (value: String) -> (Unit),
     private val onBackspaceClicked: () -> (Unit),
     private val onCallClicked: () -> (Unit),
@@ -42,8 +43,8 @@ open class NumpadModel @UiThread constructor(
         onDigitClicked.invoke(value)
 
         if (value.isNotEmpty()) {
-            coreContext.postOnCoreThread { core ->
-                coreContext.playDtmf(value[0])
+            coreContext.postOnCoreThread {
+                coreContext.playDtmf(value[0], ignoreSystemPolicy = inCallNumpad)
             }
         }
     }

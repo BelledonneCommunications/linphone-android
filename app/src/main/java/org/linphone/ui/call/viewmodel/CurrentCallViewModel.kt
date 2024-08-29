@@ -525,6 +525,7 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
         }
 
         numpadModel = NumpadModel(
+            true,
             { digit -> // onDigitClicked
                 appendDigitToSearchBarEvent.value = Event(digit)
                 coreContext.postOnCoreThread {

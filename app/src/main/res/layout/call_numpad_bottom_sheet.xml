@@ -46,6 +46,8 @@
             android:textSize="30sp"
             android:text="@{model.digits, default=`0123456789`}"
             android:background="@color/transparent_color"
+            android:enabled="false"
+            android:inputType="number|phone"
             android:gravity="center"
             android:maxLines="1"
             android:ellipsize="start"

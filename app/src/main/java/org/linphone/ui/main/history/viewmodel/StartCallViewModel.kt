@@ -125,6 +125,7 @@ class StartCallViewModel @UiThread constructor() : AddressSelectionViewModel() {
     init {
         isNumpadVisible.value = false
         numpadModel = NumpadModel(
+            false,
             { digit ->
                 // onDigitClicked
                 appendDigitToSearchBarEvent.value = Event(digit)
