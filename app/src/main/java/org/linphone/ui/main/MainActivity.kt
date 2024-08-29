@@ -63,8 +63,8 @@ import org.linphone.databinding.MainActivityBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.assistant.AssistantActivity
 import org.linphone.ui.main.chat.fragment.ConversationsListFragmentDirections
-import org.linphone.ui.main.fragment.AuthRequestedDialogModel
 import org.linphone.ui.main.help.fragment.DebugFragmentDirections
+import org.linphone.ui.main.model.AuthRequestedDialogModel
 import org.linphone.ui.main.sso.fragment.SingleSignOnFragmentDirections
 import org.linphone.ui.main.viewmodel.MainViewModel
 import org.linphone.ui.main.viewmodel.SharedMainViewModel

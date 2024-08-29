@@ -77,6 +77,8 @@ class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
 
     val accountFoundEvent = MutableLiveData<Event<Boolean>>()
 
+    val showUpdatePasswordDialog = MutableLiveData<Event<String>>()
+
     private lateinit var account: Account
     private lateinit var natPolicy: NatPolicy
 
@@ -241,5 +243,26 @@ class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
     @UiThread
     fun toggleAdvancedSettingsExpand() {
         expandAdvancedSettings.value = expandAdvancedSettings.value == false
+    }
+
+    @UiThread
+    fun updateAccountPassword(newPassword: String) {
+        coreContext.postOnCoreThread { core ->
+            if (::account.isInitialized) {
+                val authInfo = account.findAuthInfo()
+                if (authInfo != null) {
+                    Log.i(
+                        "$TAG Updating password for username [${authInfo.username}] using auth info [$authInfo]"
+                    )
+                    authInfo.password = newPassword
+                    core.addAuthInfo(authInfo)
+                    core.refreshRegisters()
+                } else {
+                    Log.w(
+                        "$TAG Failed to find auth info for account [${account.params.identityAddress?.asStringUriOnly()}]"
+                    )
+                }
+            }
+        }
     }
 }

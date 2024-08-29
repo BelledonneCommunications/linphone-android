@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2023 Belledonne Communications SARL.
+ * Copyright (c) 2010-2024 Belledonne Communications SARL.
  *
  * This file is part of linphone-android
  * (see https://www.linphone.org).
@@ -17,17 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.main.fragment
+package org.linphone.ui.main.settings.model
 
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
-import org.linphone.R
-import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
-class AuthRequestedDialogModel @UiThread constructor(identity: String) {
-    val message = MutableLiveData<String>()
-
+@UiThread
+class UpdatePasswordDialogModel {
     val password = MutableLiveData<String>()
 
     val showPassword = MutableLiveData<Boolean>()
@@ -38,10 +35,6 @@ class AuthRequestedDialogModel @UiThread constructor(identity: String) {
 
     init {
         showPassword.value = false
-        message.value = AppUtils.getFormattedString(
-            R.string.account_settings_dialog_invalid_password_message,
-            identity
-        )
     }
 
     @UiThread

@@ -37,7 +37,9 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.AccountSettingsFragmentBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.fragment.GenericMainFragment
+import org.linphone.ui.main.settings.model.UpdatePasswordDialogModel
 import org.linphone.ui.main.settings.viewmodel.AccountSettingsViewModel
+import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 
 @UiThread
@@ -99,6 +101,10 @@ class AccountSettingsFragment : GenericMainFragment() {
             goBack()
         }
 
+        binding.setUpdatePasswordClickListener {
+            showUpdatePasswordDialog()
+        }
+
         viewModel.accountFoundEvent.observe(viewLifecycleOwner) {
             it.consume { found ->
                 if (found) {
@@ -139,5 +145,25 @@ class AccountSettingsFragment : GenericMainFragment() {
         viewModel.saveChanges()
         // It is possible some value have changed, causing some menu to appear or disappear
         sharedViewModel.forceUpdateAvailableNavigationItems.value = Event(true)
+    }
+
+    private fun showUpdatePasswordDialog() {
+        val model = UpdatePasswordDialogModel()
+        val dialog = DialogUtils.getUpdatePasswordDialog(requireContext(), model)
+
+        model.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        model.confirmEvent.observe(viewLifecycleOwner) {
+            it.consume { password ->
+                viewModel.updateAccountPassword(password)
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
     }
 }

@@ -9,6 +9,9 @@
             name="backClickListener"
             type="View.OnClickListener" />
         <variable
+            name="updatePasswordClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.main.settings.viewmodel.AccountSettingsViewModel" />
     </data>
@@ -157,8 +160,8 @@
                             android:hint="@string/account_settings_mwi_uri_title"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/mwi_uri_title"/>
+                            app:layout_constraintTop_toBottomOf="@id/mwi_uri_title"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -186,6 +189,7 @@
                         android:layout_marginBottom="@dimen/screen_bottom_margin"
                         android:visibility="@{viewModel.expandAdvancedSettings ? View.VISIBLE : View.GONE}"
                         layout="@layout/account_advanced_settings"
+                        bind:updatePasswordClickListener="@{updatePasswordClickListener}"
                         bind:viewModel="@{viewModel}"/>
 
                 </LinearLayout>

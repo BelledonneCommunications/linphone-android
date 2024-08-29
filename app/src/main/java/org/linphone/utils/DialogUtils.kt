@@ -50,6 +50,7 @@ import org.linphone.databinding.DialogRemoveAllCallLogsBinding
 import org.linphone.databinding.DialogRemoveCallLogsBinding
 import org.linphone.databinding.DialogRemoveConversationHistoryBinding
 import org.linphone.databinding.DialogSetOrEditGroupSubjectBindingImpl
+import org.linphone.databinding.DialogUpdateAccountPasswordAfterRegisterFailureBinding
 import org.linphone.databinding.DialogUpdateAccountPasswordBinding
 import org.linphone.databinding.DialogUpdateAvailableBinding
 import org.linphone.databinding.DialogZrtpSasValidationBinding
@@ -61,9 +62,10 @@ import org.linphone.ui.call.model.ZrtpSasConfirmationDialogModel
 import org.linphone.ui.main.contacts.model.ContactTrustDialogModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.contacts.model.TrustCallDialogModel
-import org.linphone.ui.main.fragment.AuthRequestedDialogModel
-import org.linphone.ui.main.fragment.GroupSetOrEditSubjectDialogModel
 import org.linphone.ui.main.history.model.ConfirmationDialogModel
+import org.linphone.ui.main.model.AuthRequestedDialogModel
+import org.linphone.ui.main.model.GroupSetOrEditSubjectDialogModel
+import org.linphone.ui.main.settings.model.UpdatePasswordDialogModel
 
 class DialogUtils {
     companion object {
@@ -335,6 +337,23 @@ class DialogUtils {
         fun getAuthRequestedDialog(
             context: Context,
             viewModel: AuthRequestedDialogModel
+        ): Dialog {
+            val binding: DialogUpdateAccountPasswordAfterRegisterFailureBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_update_account_password_after_register_failure,
+                null,
+                false
+            )
+            binding.viewModel = viewModel
+            binding.lifecycleOwner = context as LifecycleOwner
+
+            return getDialog(context, binding)
+        }
+
+        @UiThread
+        fun getUpdatePasswordDialog(
+            context: Context,
+            viewModel: UpdatePasswordDialogModel
         ): Dialog {
             val binding: DialogUpdateAccountPasswordBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),

@@ -38,8 +38,8 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.StartCallFragmentBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.fragment.GenericAddressPickerFragment
-import org.linphone.ui.main.fragment.GroupSetOrEditSubjectDialogModel
 import org.linphone.ui.main.history.viewmodel.StartCallViewModel
+import org.linphone.ui.main.model.GroupSetOrEditSubjectDialogModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import org.linphone.utils.addCharacterAtPosition

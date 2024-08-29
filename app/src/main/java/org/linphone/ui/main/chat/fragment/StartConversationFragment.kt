@@ -35,7 +35,7 @@ import org.linphone.databinding.StartChatFragmentBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.chat.viewmodel.StartConversationViewModel
 import org.linphone.ui.main.fragment.GenericAddressPickerFragment
-import org.linphone.ui.main.fragment.GroupSetOrEditSubjectDialogModel
+import org.linphone.ui.main.model.GroupSetOrEditSubjectDialogModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import org.linphone.utils.hideKeyboard
