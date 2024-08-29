@@ -244,6 +244,7 @@
 
     <string name="settings_advanced_title">Paramètres avancés</string>
     <string name="settings_advanced_keep_alive_service_title">Garder l\'app en vie via un Service</string>
+    <string name="settings_advanced_device_id">Nom du périphérique</string>
     <string name="settings_advanced_remote_provisioning_url">URL de configuration distante</string>
     <string name="settings_advanced_download_apply_remote_provisioning">Télécharger &amp; appliquer</string>
     <string name="settings_advanced_audio_devices_title">Périphériques audio</string>

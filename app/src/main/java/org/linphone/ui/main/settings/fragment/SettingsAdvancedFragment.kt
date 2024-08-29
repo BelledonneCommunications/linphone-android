@@ -95,6 +95,7 @@ class SettingsAdvancedFragment : GenericMainFragment() {
     }
 
     override fun onPause() {
+        viewModel.updateDeviceName()
         viewModel.updateRemoteProvisioningUrl()
 
         super.onPause()

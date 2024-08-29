@@ -202,7 +202,7 @@
                         app:layout_constraintBottom_toBottomOf="@id/prefix"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/header_style"
+                        style="@style/settings_title_style"
                         android:id="@+id/sip_address_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -237,7 +237,7 @@
                         app:layout_constraintBottom_toBottomOf="@id/sip_address_label"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/header_style"
+                        style="@style/settings_title_style"
                         android:id="@+id/device_id_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -274,7 +274,7 @@
                         app:layout_constraintBottom_toBottomOf="@id/device_id_label"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/header_style"
+                        style="@style/settings_title_style"
                         android:id="@+id/display_name_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -308,7 +308,7 @@
                         app:layout_constraintEnd_toEndOf="@id/details_background"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/header_style"
+                        style="@style/settings_title_style"
                         android:id="@+id/prefix_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -328,7 +328,7 @@
                         android:layout_marginStart="8dp"
                         android:src="@drawable/info"
                         android:contentDescription="@string/content_description_click_for_more_info"
-                        app:tint="@color/black"
+                        app:tint="?attr/color_main2_600"
                         app:layout_constraintTop_toTopOf="@id/prefix_label"
                         app:layout_constraintBottom_toBottomOf="@id/prefix_label"
                         app:layout_constraintStart_toEndOf="@id/prefix_label" />

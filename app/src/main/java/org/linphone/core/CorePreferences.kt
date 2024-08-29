@@ -90,6 +90,13 @@ class CorePreferences @UiThread constructor(private val context: Context) {
             config.setBool("app", "keep_service_alive", value)
         }
 
+    @get:WorkerThread @set:WorkerThread
+    var deviceName: String
+        get() = config.getString("app", "device", "").orEmpty().trim()
+        set(value) {
+            config.setString("app", "device", value.trim())
+        }
+
     /* Call settings */
 
     // This won't be done if bluetooth or wired headset is used

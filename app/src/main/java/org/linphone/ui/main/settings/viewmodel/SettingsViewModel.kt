@@ -169,6 +169,7 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
     // Advanced settings
     val keepAliveThirdPartyAccountsService = MutableLiveData<Boolean>()
 
+    val deviceName = MutableLiveData<String>()
     val remoteProvisioningUrl = MutableLiveData<String>()
 
     val expandAudioDevices = MutableLiveData<Boolean>()
@@ -252,6 +253,7 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
 
             keepAliveThirdPartyAccountsService.postValue(corePreferences.keepServiceAlive)
 
+            deviceName.postValue(corePreferences.deviceName)
             remoteProvisioningUrl.postValue(core.provisioningUri)
 
             setupAudioDevices()
@@ -557,9 +559,23 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
     }
 
     @UiThread
+    fun updateDeviceName() {
+        coreContext.postOnCoreThread {
+            val newDeviceName = deviceName.value.orEmpty().trim()
+            if (newDeviceName != corePreferences.deviceName) {
+                corePreferences.deviceName = newDeviceName
+                Log.i(
+                    "$TAG Updated device name to [${corePreferences.deviceName}], re-compute user-agent"
+                )
+                coreContext.computeUserAgent()
+            }
+        }
+    }
+
+    @UiThread
     fun updateRemoteProvisioningUrl() {
         coreContext.postOnCoreThread { core ->
-            val newProvisioningUri = remoteProvisioningUrl.value.orEmpty()
+            val newProvisioningUri = remoteProvisioningUrl.value.orEmpty().trim()
             if (newProvisioningUri != core.provisioningUri) {
                 Log.i("$TAG Updating remote provisioning URI to [$newProvisioningUri]")
                 if (newProvisioningUri.isEmpty()) {

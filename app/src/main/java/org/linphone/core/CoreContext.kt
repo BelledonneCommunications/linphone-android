@@ -806,8 +806,14 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
     }
 
     @WorkerThread
-    private fun computeUserAgent() {
-        val deviceName = AppUtils.getDeviceName(context)
+    fun computeUserAgent() {
+        if (corePreferences.deviceName.isEmpty()) {
+            Log.i("$TAG Device name not fetched yet, doing it now")
+            corePreferences.deviceName = AppUtils.getDeviceName(context)
+            Log.i("$TAG Fetched device name is [${corePreferences.deviceName}]")
+        }
+        val deviceName = corePreferences.deviceName
+
         val appName = context.getString(org.linphone.R.string.app_name)
         val androidVersion = BuildConfig.VERSION_NAME
         val userAgent = "${appName}Android/$androidVersion ($deviceName) LinphoneSDK"

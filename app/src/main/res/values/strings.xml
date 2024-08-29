@@ -281,6 +281,7 @@
 
     <string name="settings_advanced_title">Advanced settings</string>
     <string name="settings_advanced_keep_alive_service_title">Keep app alive using Service</string>
+    <string name="settings_advanced_device_id">Device ID</string>
     <string name="settings_advanced_remote_provisioning_url">Remote provisioning URL</string>
     <string name="settings_advanced_download_apply_remote_provisioning">Download &amp; apply</string>
     <string name="settings_advanced_audio_devices_title">Audio devices</string>
