@@ -80,7 +80,6 @@ import org.linphone.ui.main.chat.model.MessageReactionsModel
 import org.linphone.ui.main.chat.view.RichEditText
 import org.linphone.ui.main.chat.viewmodel.ChatMessageLongPressViewModel
 import org.linphone.ui.main.chat.viewmodel.ConversationViewModel
-import org.linphone.ui.main.chat.viewmodel.ConversationViewModel.Companion.SCROLLING_POSITION_NOT_SET
 import org.linphone.ui.main.chat.viewmodel.SendMessageInConversationViewModel
 import org.linphone.ui.main.fragment.SlidingPaneChildFragment
 import org.linphone.ui.main.history.model.ConfirmationDialogModel
@@ -706,6 +705,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
 
         viewModel.itemToScrollTo.observe(viewLifecycleOwner) { position ->
             if (position >= 0) {
+                Log.i("$TAG Scrolling to message/event at position [$position]")
                 val recyclerView = binding.eventsList
                 recyclerView.scrollToPosition(position)
             }
@@ -878,11 +878,6 @@ open class ConversationFragment : SlidingPaneChildFragment() {
 
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.messageBottomSheet.root)
         bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
-
-        if (viewModel.scrollingPosition != SCROLLING_POSITION_NOT_SET) {
-            Log.d("$TAG Restoring previous scrolling position: ${viewModel.scrollingPosition}")
-            binding.eventsList.scrollToPosition(viewModel.scrollingPosition)
-        }
     }
 
     override fun onPause() {
@@ -906,14 +901,6 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             adapter.unregisterAdapterDataObserver(dataObserver)
         } catch (e: IllegalStateException) {
             Log.e("$TAG Failed to unregister data observer to adapter: $e")
-        }
-
-        if (viewModel.isUserScrollingUp.value == true) {
-            val layoutManager = binding.eventsList.layoutManager as LinearLayoutManager
-            viewModel.scrollingPosition = layoutManager.findFirstCompletelyVisibleItemPosition()
-            Log.d("$TAG Storing current scrolling position: ${viewModel.scrollingPosition}")
-        } else {
-            viewModel.scrollingPosition = SCROLLING_POSITION_NOT_SET
         }
 
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.messageBottomSheet.root)

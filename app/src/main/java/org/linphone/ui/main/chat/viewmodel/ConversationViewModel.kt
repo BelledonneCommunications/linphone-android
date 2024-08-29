@@ -60,8 +60,6 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         private const val MESSAGES_PER_PAGE = 30
 
         const val MAX_TIME_TO_GROUP_MESSAGES = 60 // 1 minute
-        const val SCROLLING_POSITION_NOT_SET = -1
-
         const val ITEMS_TO_LOAD_BEFORE_SEARCH_RESULT = 6
     }
 
@@ -102,8 +100,6 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
     val isUserScrollingUp = MutableLiveData<Boolean>()
 
     val unreadMessagesCount = MutableLiveData<Int>()
-
-    var scrollingPosition: Int = SCROLLING_POSITION_NOT_SET
 
     val focusSearchBarEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
@@ -588,7 +584,6 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
 
     @WorkerThread
     private fun configureChatRoom() {
-        scrollingPosition = SCROLLING_POSITION_NOT_SET
         computeComposingLabel()
 
         isEndToEndEncrypted.postValue(
