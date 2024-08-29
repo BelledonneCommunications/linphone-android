@@ -471,13 +471,7 @@ class LinphoneUtils {
                         if (text.isNotEmpty()) {
                             text += ", "
                         }
-                        val contentType = "${content.type}/${content.subtype}"
-                        text += when (FileUtils.getMimeType(contentType)) {
-                            FileUtils.MimeType.Image -> "\uD83D\uDDBC\uFE0F"
-                            // FileUtils.MimeType.Video -> "\uD83C\uDF9E\uFE0F"
-                            // FileUtils.MimeType.Audio -> "\uD83C\uDFB5"
-                            else -> content.name
-                        }
+                        text += content.name
                     }
                 }
             }
