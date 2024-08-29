@@ -26,11 +26,11 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.annotation.UiThread
-import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.linphone.R
 import org.linphone.core.tools.Log
@@ -58,6 +58,16 @@ class MeetingsListFragment : AbstractMainFragment() {
     private lateinit var adapter: MeetingsListAdapter
 
     private var bottomSheetDialog: BottomSheetDialogFragment? = null
+
+    private val dataObserver = object : AdapterDataObserver() {
+        override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+            if (positionStart == 0 && adapter.itemCount == itemCount) {
+                // First time we fill the list with messages
+                Log.i("$TAG First time meeting list is filled, scrolling to 'today'")
+                scrollToToday()
+            }
+        }
+    }
 
     override fun onDefaultAccountChanged() {
         if (!goToContactsIfMeetingsAreDisabledForCurrentlyDefaultAccount()) {
@@ -145,12 +155,6 @@ class MeetingsListFragment : AbstractMainFragment() {
             adapter.submitList(it)
             Log.i("$TAG Meetings list ready with [$newCount] items")
             listViewModel.fetchInProgress.value = false
-
-            (view.parent as? ViewGroup)?.doOnPreDraw {
-                if (currentCount < newCount) {
-                    scrollToToday()
-                }
-            }
         }
 
         adapter.meetingLongClickedEvent.observe(viewLifecycleOwner) {
@@ -225,12 +229,24 @@ class MeetingsListFragment : AbstractMainFragment() {
     override fun onPause() {
         super.onPause()
 
+        try {
+            adapter.unregisterAdapterDataObserver(dataObserver)
+        } catch (e: IllegalStateException) {
+            Log.e("$TAG Failed to unregister data observer to adapter: $e")
+        }
+
         bottomSheetDialog?.dismiss()
         bottomSheetDialog = null
     }
 
     override fun onResume() {
         super.onResume()
+
+        try {
+            adapter.registerAdapterDataObserver(dataObserver)
+        } catch (e: IllegalStateException) {
+            Log.e("$TAG Failed to register data observer to adapter: $e")
+        }
 
         goToContactsIfMeetingsAreDisabledForCurrentlyDefaultAccount()
     }
