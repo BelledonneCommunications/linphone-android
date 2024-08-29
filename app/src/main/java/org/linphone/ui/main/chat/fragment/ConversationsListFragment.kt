@@ -337,9 +337,6 @@ class ConversationsListFragment : AbstractMainFragment() {
         } catch (e: IllegalStateException) {
             Log.e("$TAG Failed to unregister data observer to adapter: $e")
         }
-
-        // Scroll to top when fragment is resumed
-        binding.conversationsList.scrollToPosition(0)
     }
 
     override fun onPause() {

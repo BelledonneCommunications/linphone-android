@@ -43,6 +43,10 @@ class HistoryListViewModel @UiThread constructor() : AbstractMainViewModel() {
 
     val fetchInProgress = MutableLiveData<Boolean>()
 
+    val historyInsertedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     val historyDeletedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -56,8 +60,9 @@ class HistoryListViewModel @UiThread constructor() : AbstractMainViewModel() {
         }
 
         override fun onCallLogUpdated(core: Core, callLog: CallLog) {
-            Log.i("$TAG A call log was updated, updating list")
+            Log.i("$TAG A call log was created, updating list")
             computeCallLogsList(currentFilter)
+            historyInsertedEvent.postValue(Event(true))
         }
     }
 

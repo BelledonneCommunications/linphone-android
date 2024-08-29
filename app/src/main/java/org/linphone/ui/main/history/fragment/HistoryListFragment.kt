@@ -195,6 +195,13 @@ class HistoryListFragment : AbstractMainFragment() {
             listViewModel.fetchInProgress.value = false
         }
 
+        listViewModel.historyInsertedEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                // Scroll to top to display latest call log
+                binding.historyList.scrollToPosition(0)
+            }
+        }
+
         listViewModel.historyDeletedEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.w("$TAG All call logs have been deleted")
@@ -262,9 +269,6 @@ class HistoryListFragment : AbstractMainFragment() {
         Log.i("$TAG Fragment is resumed, resetting missed calls count")
         sharedViewModel.resetMissedCallsCountEvent.value = Event(true)
         sharedViewModel.refreshDrawerMenuAccountsListEvent.value = Event(false)
-
-        // Scroll to top to display latest call logs
-        binding.historyList.scrollToPosition(0)
     }
 
     private fun copyNumberOrAddressToClipboard(value: String) {
