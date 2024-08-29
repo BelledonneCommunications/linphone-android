@@ -121,6 +121,10 @@ class CoreFileTransferService : FileTransferService() {
         Log.i(
             "$TAG [$downloadingFilesCount] file(s) being downloaded, [$uploadingFilesCount] file(s) being uploaded"
         )
+        if (downloadingFilesCount == 0 && uploadingFilesCount == 0) {
+            Log.i("$TAG No more files being transferred, do not alter the notification")
+            return
+        }
 
         val downloadText = resources.getQuantityString(
             R.plurals.notification_file_transfer_download,
@@ -141,10 +145,8 @@ class CoreFileTransferService : FileTransferService() {
             )
         } else if (downloadingFilesCount > 0) {
             downloadText
-        } else if (uploadingFilesCount > 0) {
-            uploadText
         } else {
-            getString(R.string.notification_file_transfer_startup_message)
+            uploadText
         }
 
         mServiceNotification = builder.setContentText(message).build()
