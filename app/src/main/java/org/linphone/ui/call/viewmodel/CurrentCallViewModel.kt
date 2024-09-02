@@ -272,7 +272,7 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
             Log.i("$TAG Call [${call.remoteAddress.asStringUriOnly()}] state changed [$state]")
             if (LinphoneUtils.isCallOutgoing(call.state)) {
                 isVideoEnabled.postValue(call.params.isVideoEnabled)
-                updateVideoDirection(call.currentParams.videoDirection)
+                updateVideoDirection(call.params.videoDirection)
             } else if (LinphoneUtils.isCallEnding(call.state)) {
                 // If current call is being terminated but there is at least one other call, switch
                 val core = call.core
@@ -1069,10 +1069,11 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
 
         if (LinphoneUtils.isCallOutgoing(call.state)) {
             isVideoEnabled.postValue(call.params.isVideoEnabled)
+            updateVideoDirection(call.params.videoDirection)
         } else {
             isVideoEnabled.postValue(call.currentParams.isVideoEnabled)
+            updateVideoDirection(call.currentParams.videoDirection)
         }
-        updateVideoDirection(call.currentParams.videoDirection)
 
         if (ActivityCompat.checkSelfPermission(
                 coreContext.context,
@@ -1190,6 +1191,11 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
 
     @WorkerThread
     private fun updateVideoDirection(direction: MediaDirection) {
+        val state = currentCall.state
+        if (state != Call.State.StreamsRunning) {
+            return
+        }
+
         val isSending = direction == MediaDirection.SendRecv || direction == MediaDirection.SendOnly
         val isReceiving = direction == MediaDirection.SendRecv || direction == MediaDirection.RecvOnly
 
