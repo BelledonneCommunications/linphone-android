@@ -29,12 +29,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancelAndJoin
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -113,8 +108,6 @@ class MainViewModel @UiThread constructor() : ViewModel() {
     private var defaultAccountRegistrationFailed = false
 
     private val alertsList = arrayListOf<Pair<Int, String>>()
-
-    private var alertJob: Job? = null
 
     private var firstAccountRegistered: Boolean = false
 
@@ -369,7 +362,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
 
         coreContext.postOnCoreThread {
             Log.i("$TAG User closed alerts top bar, clearing alerts")
-            cancelAlertJob()
+            showAlert.postValue(false)
             alertsList.clear()
             updateDisplayedAlert()
         }
@@ -463,7 +456,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
             it.first == type
         }
         if (found == null || forceUpdate) {
-            cancelAlertJob()
+            showAlert.postValue(false)
             if (found != null) {
                 alertsList.remove(found)
             }
@@ -483,22 +476,12 @@ class MainViewModel @UiThread constructor() : ViewModel() {
             it.first == type
         }
         if (found != null) {
-            cancelAlertJob()
+            showAlert.postValue(false)
             Log.i("$TAG Removing alert with type [$type]")
             alertsList.remove(found)
             updateDisplayedAlert()
         } else {
             Log.w("$TAG Failed to remove alert with type [$type], not found in current alerts list")
-        }
-    }
-
-    @WorkerThread
-    private fun cancelAlertJob() {
-        viewModelScope.launch {
-            withContext(Dispatchers.Main) {
-                alertJob?.cancelAndJoin()
-                alertJob = null
-            }
         }
     }
 
@@ -538,17 +521,16 @@ class MainViewModel @UiThread constructor() : ViewModel() {
             if (showAlert.value == true) {
                 Log.i("$TAG Alert top-bar is already visible")
             } else {
-                Log.i("$TAG Alert top-bar is currently invisible, starting job to display it")
-                coreContext.postOnMainThread {
-                    val delayMs = if (type == SINGLE_CALL) 1000L else 0L
-                    alertJob = viewModelScope.launch {
-                        withContext(Dispatchers.IO) {
-                            delay(delayMs)
-                            withContext(Dispatchers.Main) {
-                                showAlert.value = true
-                            }
+                if (type == SINGLE_CALL) {
+                    Log.i("$TAG Alert top-bar is currently invisible, displaying it in a second")
+                    coreContext.postOnCoreThreadDelayed({
+                        if (maxAlertLevel.value != NONE) {
+                            showAlert.postValue(true)
                         }
-                    }
+                    }, 1000L)
+                } else {
+                    Log.i("$TAG Alert top-bar is currently invisible, display it now")
+                    showAlert.postValue(true)
                 }
             }
         }
