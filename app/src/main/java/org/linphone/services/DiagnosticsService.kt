@@ -46,7 +46,8 @@ class DiagnosticsService {
         }
 
         private fun getUploadName(context: Context): String {
-            val userId = AuthStateManager.getInstance(context).fetchUserId()
+            // val userId = AuthStateManager.getInstance(context).fetchUserId()
+            val userId = AuthStateManager.getInstance(context).getUser().id
             val timestamp = LOG_FILE_TIME_FORMAT.format(Date())
             return "${userId}_$timestamp.zip"
         }
