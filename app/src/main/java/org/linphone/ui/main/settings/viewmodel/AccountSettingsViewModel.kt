@@ -77,8 +77,6 @@ class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
 
     val accountFoundEvent = MutableLiveData<Event<Boolean>>()
 
-    val showUpdatePasswordDialog = MutableLiveData<Event<String>>()
-
     private lateinit var account: Account
     private lateinit var natPolicy: NatPolicy
 

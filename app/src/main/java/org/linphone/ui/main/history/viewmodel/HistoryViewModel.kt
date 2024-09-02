@@ -80,6 +80,8 @@ class HistoryViewModel @UiThread constructor() : GenericViewModel() {
         @WorkerThread
         override fun onStateChanged(chatRoom: ChatRoom, newState: ChatRoom.State?) {
             val state = chatRoom.state
+            if (state == ChatRoom.State.Instantiated) return
+
             val id = LinphoneUtils.getChatRoomId(chatRoom)
             Log.i("$TAG Conversation [$id] (${chatRoom.subject}) state changed: [$state]")
 
