@@ -168,6 +168,12 @@ class ConversationForwardMessageFragment : SlidingPaneChildFragment() {
 
         numberOrAddressPickerDialog?.dismiss()
         numberOrAddressPickerDialog = null
+
+        sharedViewModel.messageToForwardEvent.value?.consume {
+            Log.w(
+                "$TAG Fragment is pausing, consuming forward event to prevent it from being used later"
+            )
+        }
     }
 
     private fun showNumberOrAddressPickerDialog(list: ArrayList<ContactNumberOrAddressModel>) {
