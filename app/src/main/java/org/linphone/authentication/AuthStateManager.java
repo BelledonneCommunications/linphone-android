@@ -291,6 +291,7 @@ public class AuthStateManager {
         userSubject.onNext(user);
     }
 
+    /*
     @Nullable
     @AnyThread
     public String fetchUserId() {
@@ -304,6 +305,7 @@ public class AuthStateManager {
 
         return "";
     }
+    */
 
     public AuthenticatedUser getUser() {
         return userSubject.getValue();

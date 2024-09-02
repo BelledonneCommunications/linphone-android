@@ -67,7 +67,8 @@ class DimensionsAccountsManager(context: Context) {
             asm
         )
 
-        ucGatewayService.doGetUserDevices(userID = asm.fetchUserId()).enqueue(object :
+        val userId = asm.getUser().id
+        ucGatewayService.doGetUserDevices(userId).enqueue(object :
                 Callback<List<UserDevice>> {
                 override fun onFailure(call: Call<List<UserDevice>>, t: Throwable) {
                     Log.e(
