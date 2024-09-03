@@ -32,7 +32,7 @@ data class UserDevice(
     var sipTransport: String,
 
     @SerializedName("sipRegisterTimeout")
-    var sipRegisterTimeout: Int,
+    var sipRegisterTimeout: Int = 3600,
 
     @SerializedName("primaryDns")
     var primaryDns: String,
