@@ -92,7 +92,7 @@ class RecordingModel @WorkerThread constructor(
 
             val parsedTimestamp = withoutHeader.substring(
                 indexOfSeparator + LinphoneUtils.RECORDING_FILE_NAME_URI_TIMESTAMP_SEPARATOR.length,
-                withoutHeader.length - LinphoneUtils.RECORDING_FILE_EXTENSION.length
+                withoutHeader.lastIndexOf(".")
             )
             Log.i(
                 "$TAG Extract SIP URI [$sipUri] and timestamp [$parsedTimestamp] from file [$fileName]"
