@@ -41,7 +41,13 @@ data class UserDevice(
     var secondaryDns: String,
 
     @SerializedName("callWaitingEnabled")
-    var callWaitingEnabled: Boolean? = null
+    var callWaitingEnabled: Boolean? = null,
+
+    @SerializedName("audioCodecs")
+    var audioCodecs: Map<String, String>? = null,
+
+    @SerializedName("videoCodecs")
+    var videoCodecs: Map<String, String>? = null
 ) {
 
     fun hasCredentials(): Boolean {

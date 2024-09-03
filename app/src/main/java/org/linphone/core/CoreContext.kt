@@ -40,6 +40,7 @@ import androidx.lifecycle.*
 import androidx.loader.app.LoaderManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.gson.GsonBuilder
 import java.io.File
 import java.math.BigInteger
 import java.nio.charset.StandardCharsets
@@ -432,8 +433,8 @@ class CoreContext(
     }
 
     private fun clearAccounts() {
-        setAudioPayloadTypes()
-        setVideoPayloadTypes()
+        setAudioPayloadTypes(null)
+        setVideoPayloadTypes(null)
 
         // Clear accounts before auth info or you'll get password errors
         core.clearAccounts()
@@ -463,6 +464,9 @@ class CoreContext(
 
     private fun registerSipEndpoint(userDevice: UserDevice) {
         if (userDevice.hasCredentials()) {
+            setAudioPayloadTypes(userDevice)
+            setVideoPayloadTypes(userDevice)
+
             val accountParams = core.createAccountParams()
             val identityUri = "${userDevice.sipUsername} <sip:${userDevice.sipUsername}@${userDevice.sipRealm}>"
 
@@ -535,18 +539,56 @@ class CoreContext(
         return TransportType.Tls
     }
 
-    private fun setVideoPayloadTypes() {
-//        for (payloadType in coreContext.core.videoPayloadTypes) {
-//        }
+    private fun setVideoPayloadTypes(userDevice: UserDevice?) {
+        Log.i(
+            String.format("VideoCodecs: %s", GsonBuilder().create().toJson(userDevice?.videoCodecs))
+        )
+
+        if (userDevice?.videoCodecs != null)
+        {
+            for (videoPayloadType in core.videoPayloadTypes)
+            {
+                val enabled = userDevice.videoCodecs!!.any {
+                    videoPayloadType.mimeType.equals(
+                        it.value,
+                        true
+                    )
+                }
+
+                Log.i(String.format("Setting %s enabled=%s", videoPayloadType.mimeType, enabled))
+
+                videoPayloadType.enable(enabled)
+            }
+        }
     }
 
-    private fun setAudioPayloadTypes() {
-        for (payloadType in core.audioPayloadTypes) {
-            if (payloadType.mimeType.equals("PCMA", true) ||
-                payloadType.mimeType.equals("PCMU", true)
-            ) {
-                payloadType.enable(true)
+    private fun setAudioPayloadTypes(userDevice: UserDevice?) {
+        var foundCodec = false
+
+        Log.i(
+            String.format("AudioCodecs: %s", GsonBuilder().create().toJson(userDevice?.audioCodecs))
+        )
+
+        if (userDevice?.audioCodecs != null) {
+            for (audioPayloadType in core.audioPayloadTypes) {
+                val enabled = userDevice.audioCodecs!!.any {
+                    audioPayloadType.mimeType.equals(
+                        it.value,
+                        true
+                    )
+                }
+                Log.i(String.format("Setting %s enabled=%s", audioPayloadType.mimeType, enabled))
+
+                if (enabled) foundCodec = true
+                audioPayloadType.enable(enabled)
             }
+        }
+
+        if (!foundCodec) {
+            Log.i("No codecs enabled - defaulting to primary as PCMA and secondary as PCMU")
+
+            core.audioPayloadTypes.single { it.mimeType.equals("PCMA", true) }.enable(true)
+            core.audioPayloadTypes.single { it.mimeType.equals("PCMU", true) }.enable(true)
         }
     }
 
