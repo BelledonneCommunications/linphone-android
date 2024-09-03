@@ -491,7 +491,7 @@ class CoreContext(
             accountParams.isOutboundProxyEnabled = enableOutboundProxy
             accountParams.isRegisterEnabled = true
             accountParams.avpfMode = AVPFMode.Disabled // This is always disabled in PlumMobile
-            accountParams.expires = userDevice.sipRegisterTimeout
+            accountParams.expires = if (userDevice.sipRegisterTimeout == 0) 3600 else userDevice.sipRegisterTimeout
             accountParams.pushNotificationAllowed = false
             accountParams.remotePushNotificationAllowed = false
 
@@ -544,10 +544,8 @@ class CoreContext(
             String.format("VideoCodecs: %s", GsonBuilder().create().toJson(userDevice?.videoCodecs))
         )
 
-        if (userDevice?.videoCodecs != null)
-        {
-            for (videoPayloadType in core.videoPayloadTypes)
-            {
+        if (userDevice?.videoCodecs != null) {
+            for (videoPayloadType in core.videoPayloadTypes) {
                 val enabled = userDevice.videoCodecs!!.any {
                     videoPayloadType.mimeType.equals(
                         it.value,
