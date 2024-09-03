@@ -1210,20 +1210,16 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
             isReceivingVideo.postValue(isReceiving)
         }
 
-        if (((isSending || isReceiving) && !wasSending && !wasReceiving)) {
+        if (((isReceiving) && !wasReceiving)) {
             if (fullScreenMode.value != true) {
-                Log.i("$TAG Video is enabled (it wasn't before), switching to full-screen mode")
-                fullScreenMode.postValue(true)
-            } else {
-                Log.w(
-                    "$TAG Full-screen mode is already enabled but call wasn't using video, unexpected..."
+                Log.i(
+                    "$TAG Video is being received (it wasn't before), switching to full-screen mode"
                 )
+                fullScreenMode.postValue(true)
             }
-        } else {
-            if (!isSending && !isReceiving && fullScreenMode.value == true) {
-                Log.w("$TAG Video is no longer enabled, leaving full screen mode")
-                fullScreenMode.postValue(false)
-            }
+        } else if (!isSending && !isReceiving && fullScreenMode.value == true) {
+            Log.w("$TAG Video is no longer enabled, leaving full screen mode")
+            fullScreenMode.postValue(false)
         }
 
         updateProximitySensor()
