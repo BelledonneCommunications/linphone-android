@@ -207,6 +207,13 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
     }
 
     @UiThread
+    fun updateMuteState() {
+        coreContext.postOnCoreThread {
+            isMuted.postValue(chatRoom.muted)
+        }
+    }
+
+    @UiThread
     fun toggleMute() {
         coreContext.postOnCoreThread {
             chatRoom.muted = !chatRoom.muted

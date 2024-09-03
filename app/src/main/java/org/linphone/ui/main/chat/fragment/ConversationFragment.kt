@@ -1049,12 +1049,14 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             Log.i("$TAG Muting conversation")
             viewModel.mute()
             popupWindow.dismiss()
+            sharedViewModel.forceRefreshDisplayedConversation.value = Event(true)
         }
 
         popupView.setUnmuteClickListener {
             Log.i("$TAG Un-muting conversation")
             viewModel.unMute()
             popupWindow.dismiss()
+            sharedViewModel.forceRefreshDisplayedConversation.value = Event(true)
         }
 
         popupView.setConfigureEphemeralMessagesClickListener {

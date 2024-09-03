@@ -281,6 +281,18 @@ class ConversationsListFragment : AbstractMainFragment() {
             }
         }
 
+        sharedViewModel.forceRefreshDisplayedConversation.observe(viewLifecycleOwner) {
+            it.consume {
+                val displayChatRoom = sharedViewModel.displayedChatRoom
+                if (displayChatRoom != null) {
+                    val found = listViewModel.conversations.value.orEmpty().find { model ->
+                        model.chatRoom == displayChatRoom
+                    }
+                    found?.updateMuteState()
+                }
+            }
+        }
+
         sharedViewModel.updateUnreadMessageCountForCurrentConversationEvent.observe(
             viewLifecycleOwner
         ) {
