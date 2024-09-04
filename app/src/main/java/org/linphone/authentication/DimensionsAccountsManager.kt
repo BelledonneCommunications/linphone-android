@@ -36,24 +36,31 @@ class DimensionsAccountsManager(context: Context) {
         }
     }
 
+    val devicesSubject = BehaviorSubject.create<SubscribableUserDeviceList>()
+    val userInfoSubject = BehaviorSubject.create<SubscribableUserInfo>()
+
     private val mContext = context
 
     init {
         val asm = AuthStateManager.getInstance(context)
         val sub = asm.user
             .map { it.id ?: "" }
-            .doOnEach { Log.i("AUTH user ID : $it") }
+            .doOnEach {
+                Log.i("AUTH user ID : $it")
+            }
             // .distinctUntilChanged { id -> id }
-            .subscribe(
-                { if (it != "") load() else clear() },
+            .subscribe({
+                    try {
+                        if (it != "") load() else clear()
+                    } catch (e: Exception) {
+                        Log.e(e)
+                    }
+                },
                 { Log.e("User ID error: " + it.message) }
             )
     }
 
-    val devicesSubject = BehaviorSubject.create<SubscribableUserDeviceList>()
-    val userInfoSubject = BehaviorSubject.create<SubscribableUserInfo>()
-
-    fun load() {
+    private fun load() {
         Log.i("CoreContext.loadDimensionsAccounts")
 
         val dimensionsEnvironment = DimensionsEnvironmentService.getInstance(mContext).getCurrentEnvironment()
