@@ -19,11 +19,27 @@
  */
 package org.linphone.activities.main.about
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.activities.main.settings.SettingListenerStub
 
 class AboutViewModel : ViewModel() {
+    private val prefs = corePreferences
+
     val appVersion: String = coreContext.appVersion
 
     val sdkVersion: String = coreContext.sdkVersion
+
+    val sipLogModeListener = object : SettingListenerStub() {
+        override fun onBoolValueChanged(newValue: Boolean) {
+            prefs.debugLogs = newValue
+        }
+    }
+    val sipLogMode = MutableLiveData<Boolean>()
+
+    init {
+        sipLogMode.value = prefs.debugLogs
+    }
 }

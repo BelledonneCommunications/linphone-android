@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:linphone="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/tools">
+    xmlns:linphone="http://schemas.android.com/apk/res-auto">
 
     <data>
         <import type="android.view.View"/>
@@ -142,6 +141,21 @@
                     android:background="?attr/backgroundColor"
                     android:padding="10dp">
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_marginHorizontal="10dp"
+                        android:orientation="vertical">
+
+                        <include
+                            layout="@layout/settings_widget_switch"
+                            linphone:title="@{@string/about_siplogging_title}"
+                            linphone:subtitle="@{@string/about_siplogging_subtitle}"
+                            linphone:listener="@{viewModel.sipLogModeListener}"
+                            linphone:checked="@={viewModel.sipLogMode}"/>
+
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -156,19 +170,19 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:onClick="@{uploadLogsClickListener}"
-                            android:text="Upload logs" />
+                            android:text="@{@string/about_logging_upload}" />
 
-                        <Space
+                        <android.widget.Space
                             android:layout_width="10dp"
                             android:layout_height="match_parent"/>
 
                         <Button
-                            android:id="@+id/uclear_logs_btn"
+                            android:id="@+id/clear_logs_btn"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:onClick="@{clearLogsClickListener}"
-                            android:text="Clear logs" />
+                            android:text="@{@string/about_logging_clear}" />
                     </LinearLayout>
 
 
