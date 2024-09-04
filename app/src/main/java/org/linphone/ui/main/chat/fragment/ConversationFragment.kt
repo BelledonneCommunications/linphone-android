@@ -1120,9 +1120,11 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         showDelivery: Boolean = false,
         showReactions: Boolean = false
     ) {
-        val bottomSheetBehavior = BottomSheetBehavior.from(binding.messageBottomSheet.root)
+        binding.sendArea.messageToSend.hideKeyboard()
 
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.messageBottomSheet.root)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+
         binding.messageBottomSheet.setHandleClickedListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }

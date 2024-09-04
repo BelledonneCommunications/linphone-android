@@ -213,7 +213,7 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/settings_title_style"
-                android:id="@+id/change_ringtone"
+                android:id="@+id/clear_friends_db"
                 android:onClick="@{() -> viewModel.clearNativeFriendsDatabase()}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
