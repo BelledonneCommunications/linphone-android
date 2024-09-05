@@ -144,10 +144,6 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
         if (::viewModel.isInitialized) {
             viewModel.userName.set("Loading auth token...")
 
-            // val authManager = AuthStateManager.getInstance(requireContext())
-            // var x = authManager.current
-            // authManager.userName.subscribe({ user -> viewModel.userName.set("TOKEN:\n" + user) })
-
             val userIdentity = UserService.getInstance(requireContext()).user.subscribe { user ->
                 viewModel.userName.set(
                     user.name + " (" + user.id + ")"
@@ -170,25 +166,6 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
             }
         }
     }
-
-//    override fun onAttach(context: Context) {
-//        super.onAttach(context)
-//
-//        val authManager = AuthStateManager.getInstance(requireContext())
-//
-//         authManager.userName.subscribe({ user -> viewModel.userName = user })
-//
-//        if (authManager.userName == null) {
-//            binding.userName.text = "Null observable!"
-//        } else {
-//            authManager.userName.subscribe(
-//                { user -> if (binding != null) binding.userName.text = user },
-//                { error -> viewModel.userName = "ERROR" }
-//            )
-//        }
-//
-//         viewModel.userName.set("TEST!")
-//    }
 
     private fun pickFile() {
         val cameraIntents = ArrayList<Intent>()

@@ -30,17 +30,21 @@ class BrandingService(val context: Context) : DefaultLifecycleObserver {
     init {
         Log.d("Created BrandingService")
 
-        authStateManager.user
+        val sub = authStateManager.user
             .distinctUntilChanged { user -> user.id ?: "" }
             .takeUntil(destroy)
             .subscribe { user ->
-                Log.d("Brand user: " + user.name)
-                if (user.id == null && brandSubject.value != null) {
-                    brandSubject.onNext(
-                        Optional(null)
-                    )
-                } else {
-                    fetchBranding()
+                try {
+                    Log.d("Brand user: " + user.name)
+                    if (user.id == null && brandSubject.value != null) {
+                        brandSubject.onNext(
+                            Optional(null)
+                        )
+                    } else {
+                        fetchBranding()
+                    }
+                } catch (ex: Exception) {
+                    Log.e(ex)
                 }
             }
     }
@@ -90,8 +94,6 @@ class BrandingService(val context: Context) : DefaultLifecycleObserver {
                 }
             })
     }
-
-    // val brand = asm.user. do({ x -> fetchBranding() })
 }
 
 data class Optional<T>(val value: T?)

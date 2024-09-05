@@ -49,7 +49,8 @@ class DimensionsAccountsManager(context: Context) {
                 Log.i("AUTH user ID : $it")
             }
             // .distinctUntilChanged { id -> id }
-            .subscribe({
+            .subscribe(
+                {
                     try {
                         if (it != "") load() else clear()
                     } catch (e: Exception) {

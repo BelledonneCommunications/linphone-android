@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit
 import java.util.zip.GZIPOutputStream
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
+import org.linphone.utils.Log
 import timber.log.Timber
 
 typealias LogElement = Triple<String, Int, String?>
@@ -111,7 +112,13 @@ class FileTree(val context: Context) : Timber.Tree() {
         flushCompleted
             .subscribeOn(Schedulers.io())
             .filter { filesize -> filesize > LOG_FILE_MAX_SIZE_THRESHOLD }
-            .subscribe { rotateLogs() }
+            .subscribe {
+                try {
+                    rotateLogs()
+                } catch (ex: Exception) {
+                    Log.e(ex)
+                }
+            }
     }
 
     override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
@@ -129,10 +136,14 @@ class FileTree(val context: Context) : Timber.Tree() {
                 .onErrorReturn { -1L }
                 .filter { it > 0 }
                 .subscribe {
-                    rotateLogs()
+                    try {
+                        rotateLogs()
 
-                    // Delegate back to caller
-                    oncomplete()
+                        // Delegate back to caller
+                        oncomplete()
+                    } catch (ex: Exception) {
+                        Log.e(ex)
+                    }
                 }
         }
 
