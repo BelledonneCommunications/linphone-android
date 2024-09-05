@@ -37,6 +37,10 @@ class Api33Compatibility {
             )
         }
 
+        fun getPostNotificationsPermission(): String {
+            return Manifest.permission.POST_NOTIFICATIONS
+        }
+
         fun hasPostNotificationsPermission(context: Context): Boolean {
             return Compatibility.hasPermission(context, Manifest.permission.POST_NOTIFICATIONS)
         }
@@ -50,6 +54,14 @@ class Api33Compatibility {
                     Manifest.permission.CAMERA
                 ),
                 code
+            )
+        }
+
+        fun getExternalStoragePermissions(): Array<String> {
+            return arrayOf(
+                Manifest.permission.READ_MEDIA_IMAGES,
+                Manifest.permission.READ_MEDIA_VIDEO,
+                Manifest.permission.READ_MEDIA_AUDIO
             )
         }
 

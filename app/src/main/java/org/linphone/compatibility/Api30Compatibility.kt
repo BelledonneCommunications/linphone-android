@@ -49,6 +49,10 @@ class Api30Compatibility {
             return granted
         }
 
+        fun getReadPhoneNumbersPermission(): String {
+            return Manifest.permission.READ_PHONE_NUMBERS
+        }
+
         fun requestReadPhoneNumbersPermission(fragment: Fragment, code: Int) {
             fragment.requestPermissions(arrayOf(Manifest.permission.READ_PHONE_NUMBERS), code)
         }

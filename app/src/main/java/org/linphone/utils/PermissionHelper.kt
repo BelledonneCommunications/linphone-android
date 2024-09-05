@@ -21,6 +21,8 @@ package org.linphone.utils
 
 import android.Manifest
 import android.content.Context
+import org.linphone.compatibility.Api30Compatibility
+import org.linphone.compatibility.Api33Compatibility
 import org.linphone.compatibility.Compatibility
 import org.linphone.mediastream.Version
 
@@ -29,6 +31,34 @@ import org.linphone.mediastream.Version
  */
 class PermissionHelper private constructor(private val context: Context) {
     companion object : SingletonHolder<PermissionHelper, Context>(::PermissionHelper)
+
+    fun getEssentialPermissions(): Array<String> {
+        val permissions = mutableListOf<String>()
+
+        permissions.add(Manifest.permission.READ_CONTACTS)
+        permissions.add(Manifest.permission.WRITE_CONTACTS)
+        permissions.add(Manifest.permission.READ_PHONE_STATE)
+        permissions.add(Manifest.permission.CAMERA)
+        permissions.add(Manifest.permission.RECORD_AUDIO)
+
+        if (Version.sdkAboveOrEqual(Version.API30_ANDROID_11)) Api30Compatibility.getReadPhoneNumbersPermission()
+
+        if (Version.sdkAboveOrEqual(Version.API33_ANDROID_13_TIRAMISU)) {
+            permissions.addAll(Api33Compatibility.getExternalStoragePermissions())
+        } else {
+            permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+
+        if (!Version.sdkAboveOrEqual(Version.API29_ANDROID_10)) {
+            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        }
+
+        if (Version.sdkAboveOrEqual(Version.API33_ANDROID_13_TIRAMISU)) {
+            permissions.add(Api33Compatibility.getPostNotificationsPermission())
+        }
+
+        return permissions.toTypedArray()
+    }
 
     private fun hasPermission(permission: String): Boolean {
         val granted = Compatibility.hasPermission(context, permission)

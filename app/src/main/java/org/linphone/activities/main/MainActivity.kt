@@ -33,6 +33,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.annotation.MainThread
 import androidx.annotation.StringRes
 import androidx.annotation.WorkerThread
+import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.doOnAttach
 import androidx.databinding.DataBindingUtil
@@ -227,19 +228,20 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         }
     }
 
-//    override fun onNewIntent(intent: Intent?) {
-//        super.onNewIntent(intent)
-//
-//        if (intent != null) {
-//            Log.d("[Main Activity] Found new intent")
-//            handleIntentParams(intent)
-//        }
-//    }
-
     override fun onStart() {
         super.onStart()
 
         Log.i("onStart MainActivity")
+
+        try {
+            ActivityCompat.requestPermissions(
+                this,
+                PermissionHelper.get().getEssentialPermissions(),
+                0
+            )
+        } catch (ex: Exception) {
+            Log.e(ex)
+        }
 
         // the stored AuthState is incomplete, so check if we are currently receiving the result of
         // the authorization flow from the browser.
@@ -251,7 +253,6 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         Log.i("isAuthorised: " + asm.current.isAuthorized)
 
         if (asm.current.isAuthorized) {
-            // displayAuthorized();
             return
         }
 
