@@ -93,6 +93,9 @@ android {
         manifestPlaceholders = [
                 appAuthRedirectScheme: 'plum.oauth2'
         ]
+        ndk {
+            debugSymbolLevel = "full"
+        }
     }
 
     applicationVariants.all { variant ->

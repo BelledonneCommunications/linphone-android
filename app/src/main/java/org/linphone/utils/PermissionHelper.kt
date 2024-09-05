@@ -38,19 +38,10 @@ class PermissionHelper private constructor(private val context: Context) {
         permissions.add(Manifest.permission.READ_CONTACTS)
         permissions.add(Manifest.permission.WRITE_CONTACTS)
         permissions.add(Manifest.permission.READ_PHONE_STATE)
-        permissions.add(Manifest.permission.CAMERA)
         permissions.add(Manifest.permission.RECORD_AUDIO)
 
-        if (Version.sdkAboveOrEqual(Version.API30_ANDROID_11)) Api30Compatibility.getReadPhoneNumbersPermission()
-
-        if (Version.sdkAboveOrEqual(Version.API33_ANDROID_13_TIRAMISU)) {
-            permissions.addAll(Api33Compatibility.getExternalStoragePermissions())
-        } else {
-            permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE)
-        }
-
-        if (!Version.sdkAboveOrEqual(Version.API29_ANDROID_10)) {
-            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (Version.sdkAboveOrEqual(Version.API30_ANDROID_11)) {
+            permissions.add(Api30Compatibility.getReadPhoneNumbersPermission())
         }
 
         if (Version.sdkAboveOrEqual(Version.API33_ANDROID_13_TIRAMISU)) {
