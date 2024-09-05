@@ -1089,6 +1089,12 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             notificationBuilder.addPerson(person)
         }
 
+        if (corePreferences.markConversationAsReadWhenDismissingMessageNotification) {
+            Log.i("$TAG Conversation will be marked as read upon notification dismissal")
+            notificationBuilder
+                .setDeleteIntent(getMarkMessageAsReadPendingIntent(notifiable))
+        }
+
         return notificationBuilder.build()
     }
 

@@ -121,6 +121,14 @@ class CorePreferences @UiThread constructor(private val context: Context) {
             config.setBool("app", "show_confirmation_dialog_zrtp_trust_call", value)
         }
 
+    /* Conversation related */
+
+    var markConversationAsReadWhenDismissingMessageNotification: Boolean
+        get() = config.getBool("app", "mark_as_read_notif_dismissal", false)
+        set(value) {
+            config.setBool("app", "mark_as_read_notif_dismissal", value)
+        }
+
     /* Contacts related */
 
     @get:WorkerThread @set:WorkerThread

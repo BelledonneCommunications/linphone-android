@@ -87,6 +87,8 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
 
     val autoDownloadEnabled = MutableLiveData<Boolean>()
 
+    val markAsReadWhenDismissingNotification = MutableLiveData<Boolean>()
+
     // Contacts settings
     val showContactsSettings = MutableLiveData<Boolean>()
 
@@ -271,6 +273,9 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
             allowIpv6.postValue(core.isIpv6Enabled)
 
             autoDownloadEnabled.postValue(core.maxSizeForAutoDownloadIncomingFiles == 0)
+            markAsReadWhenDismissingNotification.postValue(
+                corePreferences.markConversationAsReadWhenDismissingMessageNotification
+            )
 
             defaultLayout.postValue(core.defaultConferenceLayout.toInt())
 
@@ -415,6 +420,15 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
         coreContext.postOnCoreThread { core ->
             core.maxSizeForAutoDownloadIncomingFiles = if (newValue) 0 else -1
             autoDownloadEnabled.postValue(newValue)
+        }
+    }
+
+    @UiThread
+    fun toggleMarkConversationAsReadWhenDismissingNotification() {
+        val newValue = markAsReadWhenDismissingNotification.value == false
+        coreContext.postOnCoreThread {
+            corePreferences.markConversationAsReadWhenDismissingMessageNotification = newValue
+            markAsReadWhenDismissingNotification.postValue(newValue)
         }
     }
 
