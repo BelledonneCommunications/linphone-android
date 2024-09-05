@@ -30,6 +30,7 @@ import org.linphone.core.AudioDevice
 import org.linphone.core.Conference
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
+import org.linphone.core.EcCalibratorStatus
 import org.linphone.core.Factory
 import org.linphone.core.FriendList
 import org.linphone.core.Tunnel
@@ -67,6 +68,10 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
 
     // Calls settings
     val echoCancellerEnabled = MutableLiveData<Boolean>()
+    val calibratedEchoCancellerValue = MutableLiveData<String>()
+
+    val adaptiveRateControlEnabled = MutableLiveData<Boolean>()
+
     val videoEnabled = MutableLiveData<Boolean>()
     val videoFecEnabled = MutableLiveData<Boolean>()
 
@@ -187,11 +192,18 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
     val videoCodecs = MutableLiveData<List<CodecModel>>()
 
     private val coreListener = object : CoreListenerStub() {
+        @WorkerThread
         override fun onAudioDevicesListUpdated(core: Core) {
             Log.i(
                 "$TAG Audio devices list has changed, update available input/output audio devices list"
             )
             setupAudioDevices()
+        }
+
+        @WorkerThread
+        override fun onEcCalibrationResult(core: Core, status: EcCalibratorStatus, delayMs: Int) {
+            if (status == EcCalibratorStatus.InProgress) return
+            echoCancellerCalibrationFinished(status, delayMs)
         }
     }
 
@@ -232,6 +244,24 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
             isUiSecureModeEnabled.postValue(corePreferences.enableSecureMode)
 
             echoCancellerEnabled.postValue(core.isEchoCancellationEnabled)
+            val delay = core.echoCancellationCalibration
+            if (delay > 0) {
+                val label = AppUtils.getString(
+                    R.string.settings_calls_calibrate_echo_canceller_done
+                ).format(
+                    delay
+                )
+                calibratedEchoCancellerValue.postValue(label)
+            } else if (delay == 0) {
+                calibratedEchoCancellerValue.postValue(
+                    AppUtils.getString(
+                        R.string.settings_calls_calibrate_echo_canceller_done_no_echo
+                    )
+                )
+            }
+
+            adaptiveRateControlEnabled.postValue(core.isAdaptiveRateControlEnabled)
+
             videoEnabled.postValue(core.isVideoEnabled)
             videoFecEnabled.postValue(core.isFecEnabled)
             vibrateDuringIncomingCall.postValue(core.isVibrationOnIncomingCallEnabled)
@@ -309,6 +339,26 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
         coreContext.postOnCoreThread { core ->
             core.isEchoCancellationEnabled = newValue
             echoCancellerEnabled.postValue(newValue)
+        }
+    }
+
+    @UiThread
+    fun calibrateEchoCanceller() {
+        coreContext.postOnCoreThread { core ->
+            Log.i("$TAG Starting echo canceller calibration")
+            core.startEchoCancellerCalibration()
+            calibratedEchoCancellerValue.postValue(
+                AppUtils.getString(R.string.settings_calls_calibrate_echo_canceller_in_progress)
+            )
+        }
+    }
+
+    @UiThread
+    fun toggleAdaptiveRateControl() {
+        val newValue = adaptiveRateControlEnabled.value == false
+        coreContext.postOnCoreThread { core ->
+            core.isAdaptiveRateControlEnabled = newValue
+            adaptiveRateControlEnabled.postValue(newValue)
         }
     }
 
@@ -696,5 +746,26 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
             videoCodecsList.add(model)
         }
         videoCodecs.postValue(videoCodecsList)
+    }
+
+    @WorkerThread
+    private fun echoCancellerCalibrationFinished(status: EcCalibratorStatus, delay: Int) {
+        val value = when (status) {
+            EcCalibratorStatus.DoneNoEcho -> {
+                echoCancellerEnabled.postValue(false)
+                AppUtils.getString(R.string.settings_calls_calibrate_echo_canceller_done_no_echo)
+            }
+            EcCalibratorStatus.Done -> {
+                echoCancellerEnabled.postValue(true)
+                AppUtils.getString(R.string.settings_calls_calibrate_echo_canceller_done).format(
+                    delay
+                )
+            }
+            EcCalibratorStatus.Failed -> {
+                AppUtils.getString(R.string.settings_calls_calibrate_echo_canceller_failed)
+            }
+            else -> ""
+        }
+        calibratedEchoCancellerValue.postValue(value)
     }
 }

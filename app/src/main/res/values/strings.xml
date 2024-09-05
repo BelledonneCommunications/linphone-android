@@ -216,8 +216,14 @@
     <string name="settings_security_enable_vfs_subtitle">Warning: once enabled it can\'t be disabled!</string>
     <string name="settings_security_prevent_screenshots_title">Prevent interface from being recorded</string>
     <string name="settings_calls_title">Calls</string>
-    <string name="settings_calls_echo_canceller_title">Use echo canceller</string>
-    <string name="settings_calls_echo_canceller_subtitle">Prevents echo from being heard by remote end</string>
+    <string name="settings_calls_echo_canceller_title">Use software echo canceller</string>
+    <string name="settings_calls_echo_canceller_subtitle">Prevents echo from being heard by remote end if no hardware echo canceller is available</string>
+    <string name="settings_calls_calibrate_echo_canceller_title">Calibrate echo canceller</string>
+    <string name="settings_calls_calibrate_echo_canceller_in_progress">in progress</string>
+    <string name="settings_calls_calibrate_echo_canceller_done_no_echo">no echo</string>
+    <string name="settings_calls_calibrate_echo_canceller_done">%s ms</string>
+    <string name="settings_calls_calibrate_echo_canceller_failed">failed</string>
+    <string name="settings_calls_adaptive_rate_control_title">Adaptive rate control</string>
     <string name="settings_calls_enable_video_title">Enable video</string>
     <string name="settings_calls_enable_fec_title">Enable video FEC</string>
     <string name="settings_calls_vibrate_while_ringing_title">Vibrate while incoming call is ringing</string>

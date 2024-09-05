@@ -179,8 +179,14 @@
     <string name="settings_security_enable_vfs_subtitle">Attention, vous ne pourrez pas revenir en arrière !</string>
     <string name="settings_security_prevent_screenshots_title">Empêcher l\'interface d\'être enregistrée</string>
     <string name="settings_calls_title">Appels</string>
-    <string name="settings_calls_echo_canceller_title">Utiliser l\'annulateur d\'écho</string>
-    <string name="settings_calls_echo_canceller_subtitle">Évite que de l\'écho soit entendu par votre correspondant</string>
+    <string name="settings_calls_echo_canceller_title">Utiliser l\'annulateur d\'écho logiciel</string>
+    <string name="settings_calls_echo_canceller_subtitle">Évite que de l\'écho soit entendu par votre correspondant si un annulateur matériel n\'est pas disponible</string>
+    <string name="settings_calls_calibrate_echo_canceller_title">Calibrer l\'annulateur d\'écho</string>
+    <string name="settings_calls_calibrate_echo_canceller_in_progress">en cours</string>
+    <string name="settings_calls_calibrate_echo_canceller_done_no_echo">pas d\'écho</string>
+    <string name="settings_calls_calibrate_echo_canceller_done">%s ms</string>
+    <string name="settings_calls_calibrate_echo_canceller_failed">échec</string>
+    <string name="settings_calls_adaptive_rate_control_title">Contrôle qualité adaptatif</string>
     <string name="settings_calls_enable_video_title">Activer la vidéo</string>
     <string name="settings_calls_enable_fec_title">Activer la FEC vidéo</string>
     <string name="settings_calls_vibrate_while_ringing_title">Vibrer lors de la réception d\'un appel</string>

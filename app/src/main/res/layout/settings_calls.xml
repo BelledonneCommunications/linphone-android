@@ -60,6 +60,65 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/settings_title_style"
+            android:id="@+id/calibrate_echo_canceller"
+            android:onClick="@{() -> viewModel.calibrateEchoCanceller()}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="@dimen/screen_bottom_margin"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="@string/settings_calls_calibrate_echo_canceller_title"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/calibrated_echo_canceller"
+            app:layout_constraintTop_toBottomOf="@id/echo_canceller_subtitle"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/settings_subtitle_style"
+            android:id="@+id/calibrated_echo_canceller"
+            android:onClick="@{() -> viewModel.calibrateEchoCanceller()}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@{viewModel.calibratedEchoCancellerValue, default=`0ms`}"
+            app:layout_constraintStart_toStartOf="@id/echo_canceller_switch"
+            app:layout_constraintEnd_toEndOf="@id/echo_canceller_switch"
+            app:layout_constraintTop_toTopOf="@id/calibrate_echo_canceller"
+            app:layout_constraintBottom_toBottomOf="@id/calibrate_echo_canceller"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/settings_title_style"
+            android:onClick="@{() -> viewModel.toggleAdaptiveRateControl()}"
+            android:id="@+id/adaptive_rate_control_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/settings_calls_adaptive_rate_control_title"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintTop_toTopOf="@id/adaptive_rate_control_switch"
+            app:layout_constraintBottom_toBottomOf="@id/adaptive_rate_control_switch"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/adaptive_rate_control_switch"/>
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            style="@style/material_switch_style"
+            android:id="@+id/adaptive_rate_control_switch"
+            android:onClick="@{() -> viewModel.toggleAdaptiveRateControl()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:checked="@{viewModel.adaptiveRateControlEnabled}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/calibrate_echo_canceller" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/settings_title_style"
             android:onClick="@{() -> viewModel.toggleEnableVideo()}"
             android:id="@+id/enable_video_title"
             android:layout_width="0dp"
@@ -84,7 +143,7 @@
             android:layout_marginEnd="16dp"
             android:checked="@{viewModel.videoEnabled}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/echo_canceller_switch" />
+            app:layout_constraintTop_toBottomOf="@id/adaptive_rate_control_switch" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/settings_title_style"
@@ -151,7 +210,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="16dp"
             android:layout_marginEnd="10dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="@dimen/screen_bottom_margin"
