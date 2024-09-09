@@ -111,6 +111,8 @@ class ConversationForwardMessageFragment : SlidingPaneChildFragment() {
             )
             adapter.submitList(it)
 
+            // Wait for adapter to have items before setting it in the RecyclerView,
+            // otherwise scroll position isn't retained
             if (binding.contactsList.adapter != adapter) {
                 binding.contactsList.adapter = adapter
             }

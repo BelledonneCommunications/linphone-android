@@ -133,17 +133,17 @@ class ContactsListFragment : AbstractMainFragment() {
         configureAdapter(adapter)
         configureAdapter(favouritesAdapter)
 
-        if (binding.contactsList.adapter != adapter) {
-            binding.contactsList.adapter = adapter
-        }
-        if (binding.favouritesContactsList.adapter != favouritesAdapter) {
-            binding.favouritesContactsList.adapter = favouritesAdapter
-        }
-
         listViewModel.contactsList.observe(
             viewLifecycleOwner
         ) {
             adapter.submitList(it)
+
+            // Wait for adapter to have items before setting it in the RecyclerView,
+            // otherwise scroll position isn't retained
+            if (binding.contactsList.adapter != adapter) {
+                binding.contactsList.adapter = adapter
+            }
+
             Log.i("$TAG Contacts list updated with [${it.size}] items")
             listViewModel.fetchInProgress.value = false
         }
@@ -152,6 +152,13 @@ class ContactsListFragment : AbstractMainFragment() {
             viewLifecycleOwner
         ) {
             favouritesAdapter.submitList(it)
+
+            // Wait for adapter to have items before setting it in the RecyclerView,
+            // otherwise scroll position isn't retained
+            if (binding.favouritesContactsList.adapter != favouritesAdapter) {
+                binding.favouritesContactsList.adapter = favouritesAdapter
+            }
+
             Log.i("$TAG Favourites contacts list updated with [${it.size}] items")
         }
 

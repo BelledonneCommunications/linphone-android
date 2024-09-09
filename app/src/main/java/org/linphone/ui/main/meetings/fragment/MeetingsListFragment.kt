@@ -119,10 +119,6 @@ class MeetingsListFragment : AbstractMainFragment() {
         val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
         binding.meetingsList.addItemDecoration(headerItemDecoration)
 
-        if (binding.meetingsList.adapter != adapter) {
-            binding.meetingsList.adapter = adapter
-        }
-
         binding.setNewMeetingClicked {
             if (findNavController().currentDestination?.id == R.id.meetingsListFragment) {
                 Log.i("$TAG Navigating to schedule meeting fragment")
@@ -153,6 +149,13 @@ class MeetingsListFragment : AbstractMainFragment() {
             val currentCount = adapter.itemCount
             val newCount = it.size
             adapter.submitList(it)
+
+            // Wait for adapter to have items before setting it in the RecyclerView,
+            // otherwise scroll position isn't retained
+            if (binding.meetingsList.adapter != adapter) {
+                binding.meetingsList.adapter = adapter
+            }
+
             Log.i("$TAG Meetings list ready with [$newCount] items")
             listViewModel.fetchInProgress.value = false
         }

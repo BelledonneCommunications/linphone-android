@@ -120,10 +120,6 @@ class ConversationsListFragment : AbstractMainFragment() {
         binding.conversationsList.setHasFixedSize(true)
         binding.conversationsList.layoutManager = LinearLayoutManager(requireContext())
 
-        if (binding.conversationsList.adapter != adapter) {
-            binding.conversationsList.adapter = adapter
-        }
-
         adapter.conversationLongClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
                 val modalBottomSheet = ConversationDialogFragment(
@@ -181,6 +177,13 @@ class ConversationsListFragment : AbstractMainFragment() {
 
         listViewModel.conversations.observe(viewLifecycleOwner) {
             adapter.submitList(it)
+
+            // Wait for adapter to have items before setting it in the RecyclerView,
+            // otherwise scroll position isn't retained
+            if (binding.conversationsList.adapter != adapter) {
+                binding.conversationsList.adapter = adapter
+            }
+
             Log.i("$TAG Conversations list ready with [${it.size}] items")
             listViewModel.fetchInProgress.value = false
         }

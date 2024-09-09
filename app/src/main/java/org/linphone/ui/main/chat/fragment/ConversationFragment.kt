@@ -400,10 +400,6 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         layoutManager.stackFromEnd = true
         binding.eventsList.layoutManager = layoutManager
 
-        if (binding.eventsList.adapter != adapter) {
-            binding.eventsList.adapter = adapter
-        }
-
         val callbacks = RecyclerViewSwipeUtilsCallback(
             R.drawable.reply,
             ConversationEventAdapter.EventViewHolder::class.java
@@ -479,6 +475,12 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                 val items = viewModel.eventsList
                 Log.i("$TAG Events (messages) list submitted, contains [${items.size}] items")
                 adapter.submitList(items)
+
+                // Wait for adapter to have items before setting it in the RecyclerView,
+                // otherwise scroll position isn't retained
+                if (binding.eventsList.adapter != adapter) {
+                    binding.eventsList.adapter = adapter
+                }
 
                 (view.parent as? ViewGroup)?.doOnPreDraw {
                     sharedViewModel.openSlidingPaneEvent.value = Event(true)

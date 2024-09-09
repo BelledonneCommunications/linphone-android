@@ -94,13 +94,16 @@ class RecordingsListFragment : GenericMainFragment() {
         val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
         binding.recordingsList.addItemDecoration(headerItemDecoration)
 
-        if (binding.recordingsList.adapter != adapter) {
-            binding.recordingsList.adapter = adapter
-        }
-
         listViewModel.recordings.observe(viewLifecycleOwner) {
             val count = it.size
             adapter.submitList(it)
+
+            // Wait for adapter to have items before setting it in the RecyclerView,
+            // otherwise scroll position isn't retained
+            if (binding.recordingsList.adapter != adapter) {
+                binding.recordingsList.adapter = adapter
+            }
+
             Log.i("$TAG Recordings list ready with [$count] items")
             listViewModel.fetchInProgress.value = false
         }

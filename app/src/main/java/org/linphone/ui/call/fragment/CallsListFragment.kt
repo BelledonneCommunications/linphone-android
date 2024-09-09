@@ -76,10 +76,6 @@ class CallsListFragment : GenericCallFragment() {
         binding.callsList.setHasFixedSize(true)
         binding.callsList.layoutManager = LinearLayoutManager(requireContext())
 
-        if (binding.callsList.adapter != adapter) {
-            binding.callsList.adapter = adapter
-        }
-
         adapter.callLongClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
                 val modalBottomSheet = CallMenuDialogFragment(model) {
@@ -108,6 +104,12 @@ class CallsListFragment : GenericCallFragment() {
         viewModel.calls.observe(viewLifecycleOwner) {
             Log.i("$TAG Calls list updated with [${it.size}] items")
             adapter.submitList(it)
+
+            // Wait for adapter to have items before setting it in the RecyclerView,
+            // otherwise scroll position isn't retained
+            if (binding.callsList.adapter != adapter) {
+                binding.callsList.adapter = adapter
+            }
         }
     }
 

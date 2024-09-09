@@ -88,10 +88,6 @@ class ConferenceParticipantsListFragment : GenericCallFragment() {
         binding.participantsList.setHasFixedSize(true)
         binding.participantsList.layoutManager = LinearLayoutManager(requireContext())
 
-        if (binding.participantsList.adapter != adapter) {
-            binding.participantsList.adapter = adapter
-        }
-
         binding.setBackClickListener {
             findNavController().popBackStack()
         }
@@ -107,6 +103,12 @@ class ConferenceParticipantsListFragment : GenericCallFragment() {
         viewModel.conferenceModel.participants.observe(viewLifecycleOwner) {
             Log.i("$TAG participants list updated with [${it.size}] items")
             adapter.submitList(it)
+
+            // Wait for adapter to have items before setting it in the RecyclerView,
+            // otherwise scroll position isn't retained
+            if (binding.participantsList.adapter != adapter) {
+                binding.participantsList.adapter = adapter
+            }
         }
 
         viewModel.conferenceModel.removeParticipantEvent.observe(viewLifecycleOwner) {

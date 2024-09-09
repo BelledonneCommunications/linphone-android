@@ -107,10 +107,6 @@ class HistoryListFragment : AbstractMainFragment() {
         binding.historyList.setHasFixedSize(true)
         binding.historyList.layoutManager = LinearLayoutManager(requireContext())
 
-        if (binding.historyList.adapter != adapter) {
-            binding.historyList.adapter = adapter
-        }
-
         adapter.callLogLongClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
                 val modalBottomSheet = HistoryMenuDialogFragment(
@@ -191,6 +187,13 @@ class HistoryListFragment : AbstractMainFragment() {
 
         listViewModel.callLogs.observe(viewLifecycleOwner) {
             adapter.submitList(it)
+
+            // Wait for adapter to have items before setting it in the RecyclerView,
+            // otherwise scroll position isn't retained
+            if (binding.historyList.adapter != adapter) {
+                binding.historyList.adapter = adapter
+            }
+
             Log.i("$TAG Call logs ready with [${it.size}] items")
             listViewModel.fetchInProgress.value = false
         }
