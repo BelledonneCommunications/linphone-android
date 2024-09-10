@@ -27,6 +27,7 @@
             android:text="@string/settings_calls_echo_canceller_title"
             android:maxLines="1"
             android:ellipsize="end"
+            android:visibility="gone"
             app:layout_constraintTop_toTopOf="@id/echo_canceller_switch"
             app:layout_constraintBottom_toTopOf="@id/echo_canceller_subtitle"
             app:layout_constraintStart_toStartOf="parent"
@@ -41,6 +42,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="10dp"
             android:text="@string/settings_calls_echo_canceller_subtitle"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/echo_canceller_title"
             app:layout_constraintBottom_toBottomOf="@id/echo_canceller_switch"
             app:layout_constraintStart_toStartOf="parent"
@@ -55,6 +57,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginEnd="16dp"
             android:checked="@{viewModel.echoCancellerEnabled}"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -80,12 +83,12 @@
             style="@style/settings_subtitle_style"
             android:id="@+id/calibrated_echo_canceller"
             android:onClick="@{() -> viewModel.calibrateEchoCanceller()}"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
             android:gravity="center"
             android:text="@{viewModel.calibratedEchoCancellerValue, default=`0ms`}"
-            app:layout_constraintStart_toStartOf="@id/echo_canceller_switch"
-            app:layout_constraintEnd_toEndOf="@id/echo_canceller_switch"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/calibrate_echo_canceller"
             app:layout_constraintBottom_toBottomOf="@id/calibrate_echo_canceller"/>
 
