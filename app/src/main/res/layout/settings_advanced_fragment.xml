@@ -102,6 +102,79 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/settings_title_style"
+                    android:id="@+id/media_encryption_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/settings_advanced_media_encryption_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/enable_fec_switch"/>
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    style="@style/default_text_style"
+                    android:id="@+id/media_encryption"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginEnd="16dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:textSize="14sp"
+                    android:textColor="@color/gray_main2_600"
+                    android:gravity="center_vertical"
+                    android:overlapAnchor="false"
+                    android:dropDownVerticalOffset="2dp"
+                    android:spinnerMode="dropdown"
+                    android:popupBackground="@drawable/shape_squircle_white_background"
+                    android:background="@drawable/edit_text_background"
+                    app:layout_constraintTop_toBottomOf="@id/media_encryption_label"
+                    app:layout_constraintStart_toStartOf="@id/media_encryption_label"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <ImageView
+                    android:id="@+id/media_encryption_caret"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:src="@drawable/caret_down"
+                    android:contentDescription="@null"
+                    app:layout_constraintTop_toTopOf="@id/media_encryption"
+                    app:layout_constraintBottom_toBottomOf="@id/media_encryption"
+                    app:layout_constraintEnd_toEndOf="@id/media_encryption"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/settings_title_style"
+                    android:onClick="@{() -> viewModel.toggleMediaEncryptionMandatory()}"
+                    android:id="@+id/media_encryption_mandatory_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/settings_advanced_media_encryption_mandatory_title"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    app:layout_constraintTop_toTopOf="@id/media_encryption_mandatory_switch"
+                    app:layout_constraintBottom_toBottomOf="@id/media_encryption_mandatory_switch"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/media_encryption_mandatory_switch"/>
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    style="@style/material_switch_style"
+                    android:id="@+id/media_encryption_mandatory_switch"
+                    android:onClick="@{() -> viewModel.toggleMediaEncryptionMandatory()}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="16dp"
+                    android:checked="@{viewModel.mediaEncryptionMandatory}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/media_encryption" />
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/settings_title_style"
                     android:id="@+id/push_notifications_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -126,7 +199,7 @@
                     android:paddingBottom="8dp"
                     android:text="@string/settings_advanced_device_id"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/enable_fec_switch"/>
+                    app:layout_constraintTop_toBottomOf="@id/media_encryption_mandatory_switch"/>
 
                 <androidx.appcompat.widget.AppCompatEditText
                     style="@style/default_text_style"

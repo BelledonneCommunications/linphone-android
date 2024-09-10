@@ -33,6 +33,7 @@ import org.linphone.core.CoreListenerStub
 import org.linphone.core.EcCalibratorStatus
 import org.linphone.core.Factory
 import org.linphone.core.FriendList
+import org.linphone.core.MediaEncryption
 import org.linphone.core.Tunnel
 import org.linphone.core.VFS
 import org.linphone.core.tools.Log
@@ -179,6 +180,11 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
     val deviceName = MutableLiveData<String>()
     val remoteProvisioningUrl = MutableLiveData<String>()
 
+    val mediaEncryptionIndex = MutableLiveData<Int>()
+    val mediaEncryptionLabels = arrayListOf<String>()
+    private val mediaEncryptionValues = arrayListOf<MediaEncryption>()
+    val mediaEncryptionMandatory = MutableLiveData<Boolean>()
+
     val expandAudioDevices = MutableLiveData<Boolean>()
     val inputAudioDeviceIndex = MutableLiveData<Int>()
     val inputAudioDeviceLabels = arrayListOf<String>()
@@ -291,6 +297,7 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
             deviceName.postValue(corePreferences.deviceName)
             remoteProvisioningUrl.postValue(core.provisioningUri)
 
+            setupMediaEncryption()
             setupAudioDevices()
             setupCodecs()
         }
@@ -619,6 +626,53 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
             } else {
                 coreContext.stopKeepAliveService()
             }
+        }
+    }
+
+    @WorkerThread
+    private fun setupMediaEncryption() {
+        val core = coreContext.core
+
+        mediaEncryptionLabels.clear()
+        mediaEncryptionValues.clear()
+
+        var index = 0
+        val defaultMediaEncryption = core.mediaEncryption
+        Log.i("$TAG Current media encryption is [$defaultMediaEncryption]")
+        for (encryption in MediaEncryption.entries) {
+            if (core.isMediaEncryptionSupported(encryption)) {
+                mediaEncryptionLabels.add(encryption.toString())
+                mediaEncryptionValues.add(encryption)
+                if (encryption == defaultMediaEncryption) {
+                    mediaEncryptionIndex.postValue(index)
+                }
+                index += 1
+            }
+        }
+
+        mediaEncryptionMandatory.postValue(core.isMediaEncryptionMandatory)
+    }
+
+    @UiThread
+    fun setMediaEncryption(index: Int) {
+        coreContext.postOnCoreThread { core ->
+            val mediaEncryption = mediaEncryptionValues[index]
+            core.mediaEncryption = mediaEncryption
+
+            if (mediaEncryption == MediaEncryption.None) {
+                core.isMediaEncryptionMandatory = false
+                mediaEncryptionMandatory.postValue(false)
+            }
+        }
+    }
+
+    @UiThread
+    fun toggleMediaEncryptionMandatory() {
+        val newValue = mediaEncryptionMandatory.value == false
+
+        coreContext.postOnCoreThread { core ->
+            core.isMediaEncryptionMandatory = newValue
+            mediaEncryptionMandatory.postValue(newValue)
         }
     }
 
