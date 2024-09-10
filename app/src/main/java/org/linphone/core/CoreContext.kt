@@ -455,6 +455,10 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
                     )
                 }
 
+                Log.i("$TAG Making sure both RFC2833 & SIP INFO are enabled for DTMFs")
+                core.useRfc2833ForDtmf = true
+                core.useInfoForDtmf = true
+
                 // Add that flag back, was disabled for a time during dev process
                 core.config.setBool("misc", "hide_empty_chat_rooms", true)
             }
