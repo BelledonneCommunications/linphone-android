@@ -117,20 +117,19 @@
             android:id="@+id/file_background"
             android:onClick="@{() -> model.onClick()}"
             android:onLongClick="@{onLongClickListener}"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/chat_bubble_grid_file_width"
             android:layout_height="0dp"
             android:background="@drawable/shape_squircle_white_right"
             app:layout_constraintTop_toTopOf="@id/file_icon"
             app:layout_constraintBottom_toBottomOf="@id/file_icon"
-            app:layout_constraintStart_toEndOf="@id/file_icon"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintStart_toEndOf="@id/file_icon"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_700"
             android:id="@+id/file_name"
             android:onClick="@{() -> model.onClick()}"
             android:onLongClick="@{onLongClickListener}"
-            android:layout_width="@dimen/chat_bubble_grid_file_name_max_width"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
