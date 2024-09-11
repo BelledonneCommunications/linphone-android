@@ -55,11 +55,11 @@
                     app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
                     app:layout_constraintEnd_toEndOf="parent"/>
 
-                <ImageView
+                <View
                     android:id="@+id/background"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:src="?attr/color_main2_000"
+                    android:background="?attr/color_main2_000"
                     android:contentDescription="@null"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -96,7 +96,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/top_bar_height"
-                    android:layout_marginStart="@dimen/landscape_nav_bar_width" />
+                    android:layout_marginStart="@dimen/landscape_nav_bar_width"/>
 
                 <com.google.android.material.progressindicator.CircularProgressIndicator
                     android:id="@+id/fetch_in_progress"

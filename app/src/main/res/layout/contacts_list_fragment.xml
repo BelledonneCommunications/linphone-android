@@ -27,7 +27,8 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="?attr/color_main1_500">
 
                 <androidx.constraintlayout.widget.Group
                     android:layout_width="wrap_content"
@@ -55,7 +56,7 @@
                     android:layout_height="0dp"
                     android:layout_marginTop="@dimen/top_bar_height"
                     android:orientation="vertical"
-                    android:background="?attr/color_main2_000"
+                    android:background="@drawable/shape_squircle_white_r20_top_background"
                     app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

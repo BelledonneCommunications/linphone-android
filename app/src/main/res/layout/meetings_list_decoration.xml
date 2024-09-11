@@ -16,8 +16,6 @@
         android:paddingEnd="20dp"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
-        android:text="October"
-        android:gravity="center_vertical"
-        tools:ignore="HardcodedText" />
+        android:gravity="center_vertical" />
 
 </layout>

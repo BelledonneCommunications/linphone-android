@@ -119,6 +119,7 @@ class ConversationsListFragment : AbstractMainFragment() {
 
         binding.conversationsList.setHasFixedSize(true)
         binding.conversationsList.layoutManager = LinearLayoutManager(requireContext())
+        binding.conversationsList.clipToOutline = true
 
         adapter.conversationLongClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->

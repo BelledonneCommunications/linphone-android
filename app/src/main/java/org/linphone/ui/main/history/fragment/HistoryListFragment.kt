@@ -106,6 +106,7 @@ class HistoryListFragment : AbstractMainFragment() {
 
         binding.historyList.setHasFixedSize(true)
         binding.historyList.layoutManager = LinearLayoutManager(requireContext())
+        binding.historyList.clipToOutline = true
 
         adapter.callLogLongClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->

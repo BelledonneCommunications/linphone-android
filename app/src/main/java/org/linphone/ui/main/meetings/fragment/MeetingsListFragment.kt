@@ -118,6 +118,7 @@ class MeetingsListFragment : AbstractMainFragment() {
 
         val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
         binding.meetingsList.addItemDecoration(headerItemDecoration)
+        binding.meetingsList.clipToOutline = true
 
         binding.setNewMeetingClicked {
             if (findNavController().currentDestination?.id == R.id.meetingsListFragment) {

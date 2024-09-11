@@ -30,7 +30,8 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="?attr/color_main1_500">
 
                 <androidx.constraintlayout.widget.Group
                     android:layout_width="wrap_content"
@@ -52,45 +53,10 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
 
-                <ImageView
-                    android:id="@+id/background"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:src="?attr/color_main2_000"
-                    android:contentDescription="@null"
-                    app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/top_bar" />
-
-                <ImageView
-                    android:id="@+id/no_meeting_image"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:src="@drawable/illu"
-                    android:contentDescription="@null"
-                    app:layout_constraintHeight_max="200dp"
-                    app:layout_constraintBottom_toTopOf="@id/no_meeting_label"
-                    app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/background" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/section_header_style"
-                    android:id="@+id/no_meeting_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{viewModel.isFilterEmpty ? @string/meetings_list_empty : @string/list_filter_no_result_found, default=@string/meetings_list_empty}"
-                    app:layout_constraintBottom_toTopOf="@id/background"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/no_meeting_image" />
-
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/meetings_list"
                     android:layout_width="match_parent"
+                    android:background="@drawable/shape_squircle_white_r20_top_background"
                     android:layout_height="0dp"
                     android:layout_marginTop="@dimen/top_bar_height"
                     app:layout_constraintTop_toTopOf="parent"
