@@ -13,7 +13,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="40dp"
         android:background="@{viewModel.maxAlertLevel >= 20 ? @drawable/color_success_500 : viewModel.maxAlertLevel >= 10 ? @drawable/color_danger_500 : viewModel.maxAlertLevel > 0 ? @drawable/color_main2_500 : @drawable/color_main1_500, default=@drawable/color_main1_500}"
         android:onClick="@{() -> viewModel.onTopBarClicked()}">
 
@@ -24,9 +23,9 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
+            android:visibility="@{viewModel.showAlert ? View.VISIBLE : View.GONE, default=gone}"
             android:src="@{viewModel.alertIcon, default=@drawable/bell_simple}"
             android:contentDescription="@null"
-            android:visibility="@{viewModel.showAlert ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -36,7 +35,7 @@
             style="@style/default_text_style_300"
             android:id="@+id/label"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="10dp"
             android:layout_marginTop="5dp"
