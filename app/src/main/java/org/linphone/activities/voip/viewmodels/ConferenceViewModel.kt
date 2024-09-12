@@ -306,7 +306,7 @@ class ConferenceViewModel : ViewModel() {
 
         subject.value = AppUtils.getString(R.string.conference_default_title)
 
-        var conference = coreContext.core.conference ?: coreContext.core.currentCall?.conference
+        var conference = coreContext.core.currentCall?.conference
         if (conference == null) {
             for (call in coreContext.core.calls) {
                 if (call.conference != null) {
