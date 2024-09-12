@@ -34,7 +34,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.Person
 import androidx.core.graphics.drawable.IconCompat
 import androidx.loader.app.LoaderManager
-import java.io.IOException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -690,10 +689,8 @@ fun Friend.getNativeContactPictureUri(): Uri? {
                     fd.close()
                     return pictureUri
                 }
-            } catch (ioe: IOException) {
-                Log.e("[Contacts Manager] Can't open [$pictureUri]: $ioe")
-            } catch (se: SecurityException) {
-                Log.e("[Contacts Manager] Can't open [$pictureUri]: $se")
+            } catch (e: Exception) {
+                Log.e("[Contacts Manager] Can't open [$pictureUri] for contact [$name]: $e")
             }
 
             // Fallback to thumbnail

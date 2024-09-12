@@ -303,8 +303,9 @@ open class ConversationFragment : SlidingPaneChildFragment() {
 
     private val bottomSheetCallback = object : BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
-            if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+            if (newState == BottomSheetBehavior.STATE_COLLAPSED || newState == BottomSheetBehavior.STATE_HIDDEN) {
                 currentChatMessageModelForBottomSheet?.isSelected?.value = false
+                backPressedCallback.isEnabled = false
             }
         }
 
@@ -318,11 +319,19 @@ open class ConversationFragment : SlidingPaneChildFragment() {
     private val backPressedCallback = object : OnBackPressedCallback(false) {
         override fun handleOnBackPressed() {
             if (viewModel.searchBarVisible.value == true) {
+                Log.i("$TAG Search bar is visible, closing it instead of going back")
                 viewModel.closeSearchBar()
                 return
             }
 
-            Log.i("$TAG Search bar is closed, going back")
+            val bottomSheetBehavior = BottomSheetBehavior.from(binding.messageBottomSheet.root)
+            if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_HIDDEN) {
+                Log.i("$TAG Bottom sheet is visible, hiding it instead of going back")
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                return
+            }
+
+            Log.i("$TAG Search bar is closed & no bottom sheet is opened, going back")
             isEnabled = false
             try {
                 requireActivity().onBackPressedDispatcher.onBackPressed()
@@ -1123,6 +1132,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         showReactions: Boolean = false
     ) {
         binding.sendArea.messageToSend.hideKeyboard()
+        backPressedCallback.isEnabled = true
 
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.messageBottomSheet.root)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
