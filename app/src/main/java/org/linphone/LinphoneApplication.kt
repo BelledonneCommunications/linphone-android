@@ -69,8 +69,10 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
             val appName = context.getString(R.string.app_name)
             Factory.instance().setLoggerDomain(appName)
             Factory.instance().enableLogcatLogs(corePreferences.logcatLogsOutput)
+            Factory.instance().enableLogCollection(LogCollectionState.Disabled)
             if (corePreferences.debugLogs) {
                 Factory.instance().loggingService.setLogLevel(LogLevel.Message)
+                Factory.instance().enableLogCollection(LogCollectionState.Enabled)
             }
 
             Log.i("[Application] Core config & preferences created")
