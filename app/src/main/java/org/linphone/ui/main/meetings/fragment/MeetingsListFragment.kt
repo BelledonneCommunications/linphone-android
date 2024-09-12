@@ -272,6 +272,7 @@ class MeetingsListFragment : AbstractMainFragment() {
         }
         val index = listViewModel.meetings.value.orEmpty().indexOf(todayMeeting)
         Log.i("$TAG 'Today' is at position [$index]")
+        binding.meetingsList.smoothScrollToPosition(index) // Workaround to have header decoration visible at top
         (binding.meetingsList.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(
             index,
             AppUtils.getDimension(R.dimen.meeting_list_decoration_height).toInt()
