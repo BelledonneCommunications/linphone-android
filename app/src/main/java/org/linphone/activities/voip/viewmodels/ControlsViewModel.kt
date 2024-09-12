@@ -257,7 +257,6 @@ class ControlsViewModel : ViewModel() {
         val core = coreContext.core
         when {
             core.currentCall != null -> core.currentCall?.terminate()
-            core.conference?.isIn == true -> core.terminateConference()
             else -> core.terminateAllCalls()
         }
     }
@@ -519,7 +518,7 @@ class ControlsViewModel : ViewModel() {
         val core = coreContext.core
         val currentCall = core.currentCall
         isVideoAvailable.value = (core.isVideoCaptureEnabled || core.isVideoPreviewEnabled) &&
-            ((currentCall != null && !currentCall.mediaInProgress()) || core.conference?.isIn == true)
+            ((currentCall != null && !currentCall.mediaInProgress()) || currentCall?.conference?.isIn == true)
     }
 
     private fun updateVideoEnabled() {

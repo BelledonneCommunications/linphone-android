@@ -933,15 +933,12 @@ class CoreContext(
             }
         }
 
-        val conference = core.conference
-        if (conference == null || !conference.isIn) {
-            val call = core.currentCall
-            if (call == null) {
-                Log.w("[Context] Switching camera while not in call")
-                return
-            }
-            call.update(null)
+        val call = core.currentCall
+        if (call == null) {
+            Log.w("[Context] Switching camera while not in call")
+            return
         }
+        call.update(null)
     }
 
     fun showSwitchCameraButton(): Boolean {

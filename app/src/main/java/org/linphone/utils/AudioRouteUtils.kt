@@ -40,7 +40,7 @@ class AudioRouteUtils {
                 Log.w("[Audio Route Helper] No call found, setting audio route on Core")
                 null
             }
-            val conference = coreContext.core.conference
+            val conference = currentCall?.conference
             val capability = if (output) {
                 AudioDevice.Capabilities.CapabilityPlay
             } else {
@@ -186,7 +186,7 @@ class AudioRouteUtils {
                 Log.w("[Audio Route Helper] No call found, checking audio route on Core")
                 null
             }
-            val conference = coreContext.core.conference
+            val conference = currentCall?.conference
 
             val audioDevice = if (conference != null && conference.isIn) {
                 conference.outputAudioDevice
@@ -209,7 +209,7 @@ class AudioRouteUtils {
                 return false
             }
             val currentCall = call ?: coreContext.core.currentCall ?: coreContext.core.calls[0]
-            val conference = coreContext.core.conference
+            val conference = currentCall?.conference
 
             val audioDevice = if (conference != null && conference.isIn) {
                 conference.outputAudioDevice
