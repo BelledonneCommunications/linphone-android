@@ -116,27 +116,6 @@ class EditMeetingFragment : SlidingPaneChildFragment() {
             picker.show(parentFragmentManager, "Start date picker")
         }
 
-        binding.setPickEndDateClickListener {
-            val constraintsBuilder =
-                CalendarConstraints.Builder()
-                    .setValidator(
-                        DateValidatorPointForward.from(viewModel.getCurrentlySelectedStartDate())
-                    )
-            val picker =
-                MaterialDatePicker.Builder.datePicker()
-                    .setCalendarConstraints(constraintsBuilder.build())
-                    .setTitleText(R.string.meeting_schedule_pick_end_date_title)
-                    .setSelection(viewModel.getCurrentlySelectedEndDate())
-                    .build()
-            picker.addOnPositiveButtonClickListener {
-                val selection = picker.selection
-                if (selection != null) {
-                    viewModel.setEndDate(selection)
-                }
-            }
-            picker.show(parentFragmentManager, "End date picker")
-        }
-
         binding.setPickStartTimeClickListener {
             val isSystem24Hour = DateFormat.is24HourFormat(requireContext())
             val clockFormat = if (isSystem24Hour) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H

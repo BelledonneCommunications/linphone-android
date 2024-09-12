@@ -107,6 +107,7 @@ class ScheduleMeetingFragment : GenericMainFragment() {
                     .setCalendarConstraints(constraintsBuilder.build())
                     .setTitleText(R.string.meeting_schedule_pick_start_date_title)
                     .setSelection(viewModel.getCurrentlySelectedStartDate())
+                    .setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR)
                     .build()
             picker.addOnPositiveButtonClickListener {
                 val selection = picker.selection
@@ -115,27 +116,6 @@ class ScheduleMeetingFragment : GenericMainFragment() {
                 }
             }
             picker.show(parentFragmentManager, "Start date picker")
-        }
-
-        binding.setPickEndDateClickListener {
-            val constraintsBuilder =
-                CalendarConstraints.Builder()
-                    .setValidator(
-                        DateValidatorPointForward.from(viewModel.getCurrentlySelectedStartDate())
-                    )
-            val picker =
-                MaterialDatePicker.Builder.datePicker()
-                    .setCalendarConstraints(constraintsBuilder.build())
-                    .setTitleText(R.string.meeting_schedule_pick_end_date_title)
-                    .setSelection(viewModel.getCurrentlySelectedEndDate())
-                    .build()
-            picker.addOnPositiveButtonClickListener {
-                val selection = picker.selection
-                if (selection != null) {
-                    viewModel.setEndDate(selection)
-                }
-            }
-            picker.show(parentFragmentManager, "End date picker")
         }
 
         binding.setPickStartTimeClickListener {
@@ -147,6 +127,7 @@ class ScheduleMeetingFragment : GenericMainFragment() {
                     .setTitleText(R.string.meeting_schedule_pick_start_time_title)
                     .setHour(viewModel.startHour)
                     .setMinute(viewModel.startMinutes)
+                    .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK)
                     .build()
             picker.addOnPositiveButtonClickListener {
                 viewModel.setStartTime(picker.hour, picker.minute)
@@ -165,6 +146,7 @@ class ScheduleMeetingFragment : GenericMainFragment() {
                     .setTitleText(R.string.meeting_schedule_pick_end_time_title)
                     .setHour(viewModel.endHour)
                     .setMinute(viewModel.endMinutes)
+                    .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK)
                     .build()
             picker.addOnPositiveButtonClickListener {
                 viewModel.setEndTime(picker.hour, picker.minute)
