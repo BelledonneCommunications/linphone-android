@@ -124,7 +124,7 @@ class LoginActivity : AppCompatActivity() {
         if (mConfiguration!!.hasConfigurationChanged()) {
             // discard any existing authorization state due to the change of configuration
             Log.i("Configuration change detected, discarding old state")
-            mAuthStateManager!!.replace(AuthState())
+            mAuthStateManager!!.replace(AuthState(), "onCreate")
             mConfiguration!!.acceptConfiguration()
         }
 
@@ -253,7 +253,7 @@ class LoginActivity : AppCompatActivity() {
                 mConfiguration!!.endSessionEndpoint
             )
 
-            mAuthStateManager!!.replace(AuthState(config))
+            mAuthStateManager!!.replace(AuthState(config), "initializeAppAuth")
             mAuthStateManager!!.performAuthAction(false, mAuthStateManager!!.current.isAuthorized())
 
             initializeClient()
@@ -291,7 +291,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         Log.i("Discovery document retrieved")
-        mAuthStateManager!!.replace(AuthState(config))
+        mAuthStateManager!!.replace(AuthState(config), "handleConfigurationRetrievalResult")
         mAuthStateManager!!.performAuthAction(false, mAuthStateManager!!.current.isAuthorized())
 
         mExecutor.submit { this.initializeClient() }
@@ -388,7 +388,7 @@ class LoginActivity : AppCompatActivity() {
                         applicationContext
                     )
                     environmentService.setCurrentEnvironment(env)
-                    mAuthStateManager!!.replace(AuthState())
+                    mAuthStateManager!!.replace(AuthState(), "Environment Selector")
 
                     initializeAppAuth()
                 }

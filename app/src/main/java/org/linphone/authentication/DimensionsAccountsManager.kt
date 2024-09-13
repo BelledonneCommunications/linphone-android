@@ -7,6 +7,7 @@ import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicReference
 import org.linphone.core.tools.Log
 import org.linphone.environment.DimensionsEnvironmentService
+import org.linphone.models.AuthenticatedUser
 import org.linphone.models.SubscribableUserDeviceList
 import org.linphone.models.SubscribableUserInfo
 import org.linphone.models.UserDevice
@@ -52,7 +53,13 @@ class DimensionsAccountsManager(context: Context) {
             .subscribe(
                 {
                     try {
-                        if (it != "") load() else clear()
+                        when (it) {
+                            AuthenticatedUser.UNINTIALISED_AUTHENTICATEDUSER -> Log.w(
+                                "DimensionsAccountManager subscription triggered with initial AuthenticatedUser"
+                            )
+                            "" -> clear()
+                            else -> load()
+                        }
                     } catch (e: Exception) {
                         Log.e(e)
                     }

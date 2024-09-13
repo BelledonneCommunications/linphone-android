@@ -11,6 +11,8 @@ class AuthenticatedUser(
     var tenantId: String? = null
 ) {
     companion object {
+        public const val UNINTIALISED_AUTHENTICATEDUSER: String = "init"
+
         fun fromToken(jwtToken: String?): AuthenticatedUser {
             if (jwtToken == null) return AuthenticatedUser()
 

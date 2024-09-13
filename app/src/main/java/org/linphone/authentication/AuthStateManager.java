@@ -42,7 +42,6 @@ import org.linphone.activities.main.LoginActivity;
 import org.linphone.models.AuthenticatedUser;
 
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.internal.operators.flowable.FlowableUnsubscribeOn;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 
 /**
@@ -71,7 +70,7 @@ public class AuthStateManager {
     private final ReentrantLock mPrefsLock;
     private final AtomicReference<AuthState> mCurrentAuthState;
 
-    private final BehaviorSubject<AuthenticatedUser> userSubject = BehaviorSubject.createDefault(new AuthenticatedUser());
+    private final BehaviorSubject<AuthenticatedUser> userSubject = BehaviorSubject.createDefault(new AuthenticatedUser(AuthenticatedUser.UNINTIALISED_AUTHENTICATEDUSER, null, null, null, null, null ));
     public final Observable<AuthenticatedUser> user = userSubject.map(x -> x);
 
     @AnyThread
@@ -101,9 +100,8 @@ public class AuthStateManager {
         }
 
         AuthState state = readState();
-        updateObservable(state);
-
         if (mCurrentAuthState.compareAndSet(null, state)) {
+            updateObservable(state, "getCurrent");
             return state;
         } else {
             return mCurrentAuthState.get();
@@ -112,8 +110,9 @@ public class AuthStateManager {
 
     @AnyThread
     @NonNull
-    public AuthState replace(@NonNull AuthState state) {
-        writeState(state);
+    public AuthState replace(@NonNull AuthState state, String caller) {
+        Log.Log.i("AuthStateManager.replace: " + caller);
+        writeState(state, "replace");
         mCurrentAuthState.set(state);
         return state;
     }
@@ -168,7 +167,7 @@ public class AuthStateManager {
             Log.Log.d("access token: " + response.accessToken);
         }
 
-        return replace(current);
+        return replace(current, "onCreate");
     }
 
     @AnyThread
@@ -184,7 +183,7 @@ public class AuthStateManager {
         current.update(response, ex);
         performAuthAction(wasAuthed, current.isAuthorized());
 
-        return replace(current);
+        return replace(current, "updateAfterTokenResponse");
     }
 
     @AnyThread
@@ -203,7 +202,7 @@ public class AuthStateManager {
         current.update(response);
         performAuthAction(wasAuthed, current.isAuthorized());
 
-        return replace(current);
+        return replace(current, "updateAfterRegistration");
     }
 
     @AnyThread
@@ -228,7 +227,8 @@ public class AuthStateManager {
     }
 
     @AnyThread
-    private void writeState(@Nullable AuthState state) {
+    private void writeState(@Nullable AuthState state, String caller) {
+        Log.Log.i("AuthStateManager.writeState: " + caller);
         mPrefsLock.lock();
         try {
             SharedPreferences.Editor editor = mPrefs.edit();
@@ -242,7 +242,7 @@ public class AuthStateManager {
                 throw new IllegalStateException("Failed to write state to shared prefs");
             }
         } finally {
-            updateObservable(state);
+            updateObservable(state, "writeState");
             mPrefsLock.unlock();
         }
     }
@@ -260,7 +260,7 @@ public class AuthStateManager {
         var wasAuthed = current.isAuthorized();
         performAuthAction(wasAuthed, false);
 
-        replace(new AuthState());
+        replace(new AuthState(), "logout");
 
         EndSessionRequest endSessionRequest =
                 new EndSessionRequest.Builder(authConfig)
@@ -281,7 +281,9 @@ public class AuthStateManager {
     }
 
 
-    private void updateObservable(@Nullable AuthState state) {
+    private void updateObservable(@Nullable AuthState state, String caller) {
+        Log.Log.i("AuthStateManager.updateObservable: " + caller);
+
         var accessToken = state == null ? "<null>" : state.getAccessToken();
         Log.Log.d("Access token: " + accessToken);
 
