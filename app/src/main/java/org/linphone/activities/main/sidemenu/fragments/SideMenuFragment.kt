@@ -42,6 +42,7 @@ import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.authentication.AuthStateManager
 import org.linphone.core.Factory
 import org.linphone.databinding.SideMenuFragmentBinding
+import org.linphone.models.AuthenticatedUser
 import org.linphone.services.UserService
 import org.linphone.utils.*
 
@@ -145,9 +146,13 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
             viewModel.userName.set("Loading auth token...")
 
             val userIdentity = UserService.getInstance(requireContext()).user.subscribe { user ->
-                viewModel.userName.set(
+                val userDisplay = if (user.id.isNullOrBlank() || user.id == AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER) {
+                    "User logged out"
+                } else {
                     user.name + " (" + user.id + ")"
-                )
+                }
+
+                viewModel.userName.set(userDisplay)
             }
         }
     }

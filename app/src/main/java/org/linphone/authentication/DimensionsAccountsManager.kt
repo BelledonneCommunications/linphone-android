@@ -54,7 +54,7 @@ class DimensionsAccountsManager(context: Context) {
                 {
                     try {
                         when (it) {
-                            AuthenticatedUser.UNINTIALISED_AUTHENTICATEDUSER -> Log.w(
+                            AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER -> Log.w(
                                 "DimensionsAccountManager subscription triggered with initial AuthenticatedUser"
                             )
                             "" -> clear()

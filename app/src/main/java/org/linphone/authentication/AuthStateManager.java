@@ -65,12 +65,11 @@ public class AuthStateManager {
     private static final String STORE_NAME = "AuthState";
     private static final String KEY_STATE = "state";
 
-    private final Context mContext;
     private final SharedPreferences mPrefs;
     private final ReentrantLock mPrefsLock;
     private final AtomicReference<AuthState> mCurrentAuthState;
 
-    private final BehaviorSubject<AuthenticatedUser> userSubject = BehaviorSubject.createDefault(new AuthenticatedUser(AuthenticatedUser.UNINTIALISED_AUTHENTICATEDUSER, null, null, null, null, null ));
+    private final BehaviorSubject<AuthenticatedUser> userSubject = BehaviorSubject.createDefault(new AuthenticatedUser(AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER, null, null, null, null, null ));
     public final Observable<AuthenticatedUser> user = userSubject.map(x -> x);
 
     @AnyThread
@@ -86,7 +85,6 @@ public class AuthStateManager {
 
     private AuthStateManager(Context context) {
         Log.Log.i("CREATE AuthStateManager");
-        mContext = context;
         mPrefs = context.getSharedPreferences(STORE_NAME, Context.MODE_PRIVATE);
         mPrefsLock = new ReentrantLock();
         mCurrentAuthState = new AtomicReference<>();
@@ -95,11 +93,10 @@ public class AuthStateManager {
     @AnyThread
     @NonNull
     public AuthState getCurrent() {
-        if (mCurrentAuthState.get() != null) {
-            return mCurrentAuthState.get();
-        }
+        AuthState state = mCurrentAuthState.get();
+        if (state != null) return state;
 
-        AuthState state = readState();
+        state = readState();
         if (mCurrentAuthState.compareAndSet(null, state)) {
             updateObservable(state, "getCurrent");
             return state;
@@ -111,28 +108,10 @@ public class AuthStateManager {
     @AnyThread
     @NonNull
     public AuthState replace(@NonNull AuthState state, String caller) {
-        Log.Log.i("AuthStateManager.replace: " + caller);
-        writeState(state, "replace");
+        Log.Log.d("AuthStateManager.replace: " + caller);
+        writeState(state);
         mCurrentAuthState.set(state);
         return state;
-    }
-
-    public void performAuthAction(boolean wasAuthed, boolean isAuthed) {
-        /*
-        switch (GetAuthAction(wasAuthed, isAuthed)) {
-            case LogIn -> {
-                Log.Log.i("performAuthAction::Loading accounts");
-                DimensionsAccountsManager.Companion.getInstance(mContext).load();
-            }
-
-            case Logout -> {
-                Log.Log.i("performAuthAction::Clearing accounts");
-                DimensionsAccountsManager.Companion.getInstance(mContext).clear();
-            }
-
-            default -> { }
-        }
-        */
     }
 
     private authStateChangeAction GetAuthAction(Boolean wasAuthed, Boolean isAuthed) {
@@ -157,14 +136,11 @@ public class AuthStateManager {
         var wasAuthed = current.isAuthorized();
         if (response != null || ex != null) {
             current.update(response, ex);
-            performAuthAction(wasAuthed, current.isAuthorized());
-        }
-        else {
-            performAuthAction(wasAuthed, false);
         }
 
         if (response != null) {
-            Log.Log.d("access token: " + response.accessToken);
+            if (response.accessToken != null) Log.Log.d("updateAfterAuthorization::access token: " + response.accessToken);
+            if (response.authorizationCode!= null) Log.Log.d("updateAfterAuthorization::authorization code: " + response.authorizationCode);;
         }
 
         return replace(current, "onCreate");
@@ -179,9 +155,7 @@ public class AuthStateManager {
 
         AuthState current = getCurrent();
 
-        var wasAuthed = current.isAuthorized();
         current.update(response, ex);
-        performAuthAction(wasAuthed, current.isAuthorized());
 
         return replace(current, "updateAfterTokenResponse");
     }
@@ -198,9 +172,7 @@ public class AuthStateManager {
             return current;
         }
 
-        var wasAuthed = current.isAuthorized();
         current.update(response);
-        performAuthAction(wasAuthed, current.isAuthorized());
 
         return replace(current, "updateAfterRegistration");
     }
@@ -227,8 +199,7 @@ public class AuthStateManager {
     }
 
     @AnyThread
-    private void writeState(@Nullable AuthState state, String caller) {
-        Log.Log.i("AuthStateManager.writeState: " + caller);
+    private void writeState(@Nullable AuthState state) {
         mPrefsLock.lock();
         try {
             SharedPreferences.Editor editor = mPrefs.edit();
@@ -257,8 +228,6 @@ public class AuthStateManager {
             return;
         }
         Log.Log.i("AuthStateManager.logout");
-        var wasAuthed = current.isAuthorized();
-        performAuthAction(wasAuthed, false);
 
         replace(new AuthState(), "logout");
 
@@ -280,34 +249,17 @@ public class AuthStateManager {
                 PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_IMMUTABLE));
     }
 
-
     private void updateObservable(@Nullable AuthState state, String caller) {
-        Log.Log.i("AuthStateManager.updateObservable: " + caller);
+        Log.Log.d("AuthStateManager.updateObservable: " + caller);
 
-        var accessToken = state == null ? "<null>" : state.getAccessToken();
-        Log.Log.d("Access token: " + accessToken);
+        var accessToken = state == null ? AuthenticatedUser.UNINTIALIZED_ACCESS_TOKEN : state.getAccessToken();
+        Log.Log.d("AuthStateManager.updateObservable:Access token: " + accessToken);
 
         AuthenticatedUser user = AuthenticatedUser.Companion.fromToken(accessToken);
-        Log.Log.d("User:"  + user);
+        Log.Log.d("AuthStateManager.updateObservable:User:ID("  + user.getId() + ")::Name(" + user.getName() + ")");
 
         userSubject.onNext(user);
     }
-
-    /*
-    @Nullable
-    @AnyThread
-    public String fetchUserId() {
-        if (mCurrentAuthState != null && mCurrentAuthState.get().isAuthorized()) {
-            var idToken = mCurrentAuthState.get().getParsedIdToken();
-            if (idToken != null)
-            {
-                return idToken.subject;
-            }
-        }
-
-        return "";
-    }
-    */
 
     public AuthenticatedUser getUser() {
         return userSubject.getValue();

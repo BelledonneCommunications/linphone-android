@@ -11,20 +11,16 @@ class AuthenticatedUser(
     var tenantId: String? = null
 ) {
     companion object {
-        public const val UNINTIALISED_AUTHENTICATEDUSER: String = "init"
+        const val UNINTIALIZED_AUTHENTICATEDUSER: String = "NoAuthenticatedUser"
+        const val UNINTIALIZED_ACCESS_TOKEN: String = "<null>"
 
         fun fromToken(jwtToken: String?): AuthenticatedUser {
-            if (jwtToken == null) return AuthenticatedUser()
+            if (jwtToken == null || jwtToken == UNINTIALIZED_ACCESS_TOKEN) return AuthenticatedUser()
 
             val jwt = JWT(jwtToken)
 
             fun getClaim(key: String): String {
-                val value = jwt.getClaim(key).asString()
-                return if (value == null) {
-                    ""
-                } else {
-                    value
-                }
+                return jwt.getClaim(key).asString() ?: ""
             }
 
             return AuthenticatedUser(

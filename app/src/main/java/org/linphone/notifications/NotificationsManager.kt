@@ -107,6 +107,7 @@ class NotificationsManager(private val context: Context) {
     private var service: CoreService? = null
 
     var currentlyDisplayedChatRoomAddress: String? = null
+    var missedNotificationOnStart = false
 
     private val listener: CoreListenerStub = object : CoreListenerStub() {
         override fun onCallStateChanged(
@@ -130,6 +131,7 @@ class NotificationsManager(private val context: Context) {
                         )
                         displayIncomingCallNotification(call, false)
                     } else {
+                        missedNotificationOnStart = true
                         Log.w("[Notifications Manager] No service found, waiting for it to start")
                     }
                 }
@@ -220,7 +222,7 @@ class NotificationsManager(private val context: Context) {
             }
 
             val chatRoomPeerAddress = chatRoom.peerAddress.asStringUriOnly()
-            var notifiable: Notifiable? = chatNotificationsMap[chatRoomPeerAddress]
+            val notifiable: Notifiable? = chatNotificationsMap[chatRoomPeerAddress]
             if (notifiable == null) {
                 Log.i(
                     "[Notifications Manager] No notification for chat room [$chatRoomPeerAddress], nothing to do"
@@ -661,6 +663,14 @@ class NotificationsManager(private val context: Context) {
     fun serviceCreated(createdService: CoreService) {
         Log.i("[Notifications Manager] Service has been created, keeping it around")
         service = createdService
+        if (missedNotificationOnStart) {
+            Log.d("serviceCreated::Actioning missed notifications")
+
+            missedNotificationOnStart = false
+            for (call in coreContext.core.calls) {
+                listener.onCallStateChanged(coreContext.core, call, call.state, "")
+            }
+        }
     }
 
     fun serviceDestroyed() {

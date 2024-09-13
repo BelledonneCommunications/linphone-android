@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicReference
 import org.linphone.authentication.AuthStateManager
 import org.linphone.authentication.AuthorizationServiceManager
 import org.linphone.environment.DimensionsEnvironmentService
+import org.linphone.models.AuthenticatedUser
 import org.linphone.models.TenantBrandingDefinition
 import org.linphone.utils.Log
 import retrofit2.Call
@@ -36,7 +37,7 @@ class BrandingService(val context: Context) : DefaultLifecycleObserver {
             .subscribe { user ->
                 try {
                     Log.d("Brand user: " + user.name)
-                    if (user.id == null && brandSubject.value != null) {
+                    if ((user.id == null || user.id == AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER) && brandSubject.value != null) {
                         brandSubject.onNext(
                             Optional(null)
                         )

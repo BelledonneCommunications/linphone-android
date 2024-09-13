@@ -46,7 +46,6 @@ class DiagnosticsService {
         }
 
         private fun getUploadName(context: Context): String {
-            // val userId = AuthStateManager.getInstance(context).fetchUserId()
             val userId = AuthStateManager.getInstance(context).getUser().id
             val timestamp = LOG_FILE_TIME_FORMAT.format(Date())
             return "${userId}_$timestamp.zip"
@@ -63,7 +62,7 @@ class DiagnosticsService {
             try {
                 val logsFolder: String = FileTree.getLogsDirectory(context)
 
-                writeDiagnositcsFile(context)
+                writeDiagnosticsFile(context)
 
                 val zipFile = FileTree.zipAll(logsFolder)
 
@@ -105,10 +104,9 @@ class DiagnosticsService {
             }
         }
 
-        private fun writeDiagnositcsFile(context: Context) {
+        private fun writeDiagnosticsFile(context: Context) {
             val info = JSONObject()
             info.put("productName", "Dimensions Connect Mobile")
-            // info.append("productVersion", AppInfo.VersionString);
 
             info.put("user", getUserInfo(context))
             info.put(
@@ -116,13 +114,11 @@ class DiagnosticsService {
                 DimensionsEnvironmentService.getInstance(context).getCurrentEnvironment()?.name
             )
             info.put("localTime", Date().toString())
-            // info.put("utcTime", DateTime.UtcNow.ToString("O"));
 
             info.put("timeZone", TimeZone.getDefault().displayName)
             info.put("culture", Locale.getDefault().displayName)
             info.put("sysInfo", getSystemInfo())
             info.put("audioDevices", getAudioDevices(context))
-            // info.put("versionHistory", JSONArray.FromObject(VersionTracking.VersionHistory));
 
             // Write the JSON to the logs folder
             val logsFolder: String = FileTree.getLogsDirectory(context)
@@ -149,11 +145,11 @@ class DiagnosticsService {
 
         private fun getSystemInfo(): JSONObject {
             val jObj = JSONObject()
-            jObj.put("manufacturer", android.os.Build.MANUFACTURER)
-            jObj.put("product", android.os.Build.PRODUCT)
-            jObj.put("model", android.os.Build.MODEL)
+            jObj.put("manufacturer", Build.MANUFACTURER)
+            jObj.put("product", Build.PRODUCT)
+            jObj.put("model", Build.MODEL)
             jObj.put("version", System.getProperty("os.version"))
-            jObj.put("sdk_version", android.os.Build.VERSION.SDK)
+            jObj.put("sdk_version", Build.VERSION.SDK)
 
             val fields = Build.VERSION_CODES::class.java.fields
             var osCode = "UNKNOWN"
