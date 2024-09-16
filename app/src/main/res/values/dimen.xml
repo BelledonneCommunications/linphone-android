@@ -42,6 +42,7 @@
     <dimen name="primary_secondary_buttons_label_padding">11dp</dimen>
     <dimen name="dialog_top_bottom_margin">20dp</dimen>
 
+    <dimen name="top_bar_shadow_height">54dp</dimen>
     <dimen name="top_bar_height">55dp</dimen>
     <dimen name="toast_top_margin">70dp</dimen> <!-- 15dp + top_bar_height -->
     <dimen name="toast_max_width">400dp</dimen>

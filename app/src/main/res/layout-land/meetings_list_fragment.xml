@@ -32,12 +32,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <androidx.constraintlayout.widget.Group
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:constraint_referenced_ids="no_meeting_image, no_meeting_label"
-                    android:visibility="@{viewModel.meetings.empty ? View.VISIBLE : View.GONE}" />
-
                 <include
                     android:id="@+id/bottom_nav_bar"
                     android:layout_width="@dimen/landscape_nav_bar_width"
