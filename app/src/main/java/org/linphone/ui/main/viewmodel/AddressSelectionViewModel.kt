@@ -254,9 +254,12 @@ abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccoun
             if (address != null) {
                 val friend = coreContext.contactsManager.findContactByAddress(address)
                 if (friend != null) {
+                    val found = contactsList.find { it.friend == friend }
+                    if (found != null) continue
+
                     val model = ConversationContactOrSuggestionModel(address, friend = friend)
-                    val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
-                        address
+                    val avatarModel = coreContext.contactsManager.getContactAvatarModelForFriend(
+                        friend
                     )
                     model.avatarModel.postValue(avatarModel)
 
