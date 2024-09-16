@@ -23,6 +23,7 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.FirebaseApp
 import kotlinx.coroutines.launch
 import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -48,6 +49,8 @@ class HelpViewModel @UiThread constructor() : GenericViewModel() {
     val appVersion = MutableLiveData<String>()
 
     val sdkVersion = MutableLiveData<String>()
+
+    val firebaseProjectId = MutableLiveData<String>()
 
     val checkUpdateAvailable = MutableLiveData<Boolean>()
 
@@ -137,6 +140,8 @@ class HelpViewModel @UiThread constructor() : GenericViewModel() {
 
         sdkVersion.value = coreContext.sdkVersion
         logsUploadInProgress.value = false
+
+        firebaseProjectId.value = FirebaseApp.getInstance().options.projectId
 
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)

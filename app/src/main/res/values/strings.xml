@@ -203,6 +203,7 @@
     <string name="help_troubleshooting_share_logs">Share logs</string>
     <string name="help_troubleshooting_app_version_title">App version</string>
     <string name="help_troubleshooting_sdk_version_title">SDK version</string>
+    <string name="help_troubleshooting_firebase_project_title">Firebase project ID</string>
     <string name="help_troubleshooting_share_logs_dialog_title">Share debug logs link using…</string>
     <string name="help_troubleshooting_debug_logs_cleaned_toast_message">Debug logs have been cleaned</string>
     <string name="help_troubleshooting_debug_logs_upload_error_toast_message">Failed to upload debug logs</string>

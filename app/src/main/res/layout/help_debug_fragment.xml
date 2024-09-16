@@ -110,7 +110,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginStart="16dp"
-                android:src="@drawable/info"
+                android:src="@drawable/google_play"
                 android:contentDescription="@null"
                 app:tint="?attr/color_main1_500"
                 app:layout_constraintStart_toStartOf="parent"
@@ -153,7 +153,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginStart="16dp"
-                android:src="@drawable/info"
+                android:src="@drawable/resource_package"
                 android:contentDescription="@null"
                 app:tint="?attr/color_main1_500"
                 app:layout_constraintStart_toStartOf="parent"
@@ -190,6 +190,49 @@
                 app:layout_constraintStart_toEndOf="@id/sdk_version_icon"
                 app:layout_constraintEnd_toEndOf="parent" />
 
+            <ImageView
+                android:id="@+id/firebase_project_icon"
+                android:onClick="@{sdkVersionClickListener}"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/firebase"
+                android:contentDescription="@null"
+                app:tint="?attr/color_main1_500"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/firebase_project_title"
+                app:layout_constraintTop_toTopOf="@id/firebase_project_title"
+                app:layout_constraintBottom_toBottomOf="@id/firebase_project_title" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/header_style"
+                android:id="@+id/firebase_project_title"
+                android:onClick="@{sdkVersionClickListener}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/help_troubleshooting_firebase_project_title"
+                app:layout_constraintTop_toBottomOf="@id/sdk_version_subtitle"
+                app:layout_constraintStart_toEndOf="@id/firebase_project_icon"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:id="@+id/firebase_project_subtitle"
+                android:onClick="@{sdkVersionClickListener}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@{viewModel.firebaseProjectId, default=`linphone-android-8a563`}"
+                android:textSize="14sp"
+                android:textColor="?attr/color_main2_600"
+                app:layout_constraintTop_toBottomOf="@id/firebase_project_title"
+                app:layout_constraintStart_toEndOf="@id/firebase_project_icon"
+                app:layout_constraintEnd_toEndOf="parent" />
+
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/tertiary_button_label_style"
                 android:onClick="@{() -> viewModel.showConfigFile()}"
@@ -209,7 +252,7 @@
                 android:maxLines="1"
                 android:ellipsize="end"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/sdk_version_subtitle"/>
+                app:layout_constraintTop_toBottomOf="@id/firebase_project_subtitle"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/settings_title_style"
