@@ -56,11 +56,32 @@ class DiagnosticsService {
             File(logsFolder).walkTopDown()
                 .filter { file -> file.isFile && (file.extension == "log" || file.extension == "json" || file.extension == "zip") }
                 .forEach { file -> file.delete() }
+
+            val linphoneLogFiles = getLinphoneLogs(context)
+            if (linphoneLogFiles != null) {
+                for (linphoneLogFile in linphoneLogFiles) {
+                    linphoneLogFile.delete()
+                }
+            }
+        }
+
+        fun getLinphoneLogs(context: Context): Array<File>? {
+            val fileFolder = File(context.filesDir.absolutePath)
+            return fileFolder.listFiles { directory, filename ->
+                directory.length() > 0 && filename.matches(Regex("^linphone\\d+\\.log\$"))
+            }
         }
 
         fun uploadDiagnostics(context: Context) {
             try {
                 val logsFolder: String = FileTree.getLogsDirectory(context)
+
+                val linphoneLogFiles = getLinphoneLogs(context)
+                if (linphoneLogFiles != null) {
+                    for (linphoneLogFile in linphoneLogFiles) {
+                        linphoneLogFile.copyTo(File(logsFolder + "/" + linphoneLogFile.name))
+                    }
+                }
 
                 writeDiagnosticsFile(context)
 
