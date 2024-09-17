@@ -24,6 +24,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.linphone.R
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.fragments.SecureFragment
@@ -81,16 +84,18 @@ class AboutFragment : SecureFragment<AboutFragmentBinding>() {
         }
 
         binding.setUploadLogsClickListener {
-            try {
-                DiagnosticsService.uploadDiagnostics(requireContext())
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    DiagnosticsService.uploadDiagnostics(requireContext())
 
-                val activity = requireActivity() as MainActivity
-                activity.showSnackBar("Logs uploaded to server")
-            } catch (se: SecurityException) {
-                Log.e("[About] Failed to start browser intent, $se")
+                    val activity = requireActivity() as MainActivity
+                    activity.showSnackBar("Logs uploaded to server")
+                } catch (e: Exception) {
+                    Log.e("[About] Failed to start browser intent, $e")
 
-                val activity = requireActivity() as MainActivity
-                activity.showSnackBar("Failed to upload logs to server!")
+                    val activity = requireActivity() as MainActivity
+                    activity.showSnackBar("Failed to upload logs! " + e.message)
+                }
             }
         }
 
