@@ -364,6 +364,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
 
     override fun goBack(): Boolean {
         sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+        sharedViewModel.displayedChatRoom = null
 
         if (findNavController().currentDestination?.id == R.id.conversationFragment) {
             // If not done this fragment won't be paused, which will cause us issues
@@ -781,6 +782,13 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                         }
                     }
                 }
+            }
+        }
+
+        sharedViewModel.hideConversationEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.w("$TAG We were asked to close conversation, going back")
+                goBack()
             }
         }
 

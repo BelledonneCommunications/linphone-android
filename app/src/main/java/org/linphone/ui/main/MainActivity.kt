@@ -615,6 +615,16 @@ class MainActivity : GenericActivity() {
                 Log.i("$TAG Drawer menu is opened, closing it")
                 closeDrawerMenu()
             }
+            if (findNavController().currentDestination?.id == R.id.conversationsListFragment) {
+                if (sharedViewModel.displayedChatRoom != null) {
+                    Log.w(
+                        "$TAG Closing already opened conversation to prevent attaching file in it directly"
+                    )
+                    sharedViewModel.hideConversationEvent.postValue(Event(true))
+                } else {
+                    Log.i("$TAG No chat room currently displayed, nothing to close")
+                }
+            }
 
             val paths = deferred.awaitAll()
             for (path in paths) {
