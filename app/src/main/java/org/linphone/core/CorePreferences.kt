@@ -597,7 +597,7 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getBool("app", "side_menu_assistant", false)
 
     val showSettingsInSideMenu: Boolean
-        get() = config.getBool("app", "side_menu_settings", false)
+        get() = config.getBool("app", "side_menu_settings", true)
 
     val showRecordingsInSideMenu: Boolean
         get() = config.getBool("app", "side_menu_recordings", false)
