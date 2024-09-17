@@ -126,7 +126,7 @@ class CorePreferences constructor(private val context: Context) {
     /* UI */
 
     var forcePortrait: Boolean
-        get() = config.getBool("app", "force_portrait_orientation", false)
+        get() = config.getBool("app", "force_portrait_orientation", true)
         set(value) {
             config.setBool("app", "force_portrait_orientation", value)
         }
