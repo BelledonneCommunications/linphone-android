@@ -188,7 +188,7 @@
                 android:padding="7dp"
                 android:selected="@{callsViewModel.currentCallData.isRecording}"
                 android:src="@drawable/icon_call_record"
-                android:visibility="@{controlsViewModel.fullScreenMode || controlsViewModel.pipMode ? View.GONE : View.VISIBLE}"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@id/background"
                 app:layout_constraintTop_toTopOf="@id/background" />
 

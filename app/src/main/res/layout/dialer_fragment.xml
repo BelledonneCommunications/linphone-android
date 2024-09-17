@@ -46,6 +46,7 @@
             <EditText
                 android:id="@+id/sip_uri_input"
                 android:text="@={viewModel.enteredUri}"
+                android:enabled="false"
                 android:beforeTextChanged="@{(text, start, count, after) -> viewModel.onBeforeUriChanged(sipUriInput, count, after)}"
                 android:afterTextChanged="@{(text) -> viewModel.onAfterUriChanged(sipUriInput, text)}"
                 android:layout_width="match_parent"
@@ -55,7 +56,6 @@
                 android:background="@color/transparent_color"
                 android:backgroundTint="@color/transparent_color"
                 android:ellipsize="start"
-                android:hint="@string/dialer_address_bar_hint"
                 android:inputType="textEmailAddress|textUri|textNoSuggestions"
                 android:paddingLeft="20dp"
                 android:paddingRight="5dp"

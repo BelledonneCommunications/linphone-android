@@ -183,7 +183,7 @@
                         android:visibility="@{viewModel.showAdvancedSettings ? View.VISIBLE : View.GONE}"
                         linphone:listener="@{viewModel.advancedSettingsListener}"
                         linphone:title="@{@string/settings_advanced_title}"
-                        linphone:icon="@{@drawable/settings_advanced}" />
+                        linphone:icon="@{@drawable/menu_options}" />
 
                 </LinearLayout>
 

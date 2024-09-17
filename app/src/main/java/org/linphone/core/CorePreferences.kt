@@ -126,7 +126,7 @@ class CorePreferences constructor(private val context: Context) {
     /* UI */
 
     var forcePortrait: Boolean
-        get() = config.getBool("app", "force_portrait_orientation", false)
+        get() = config.getBool("app", "force_portrait_orientation", true)
         set(value) {
             config.setBool("app", "force_portrait_orientation", value)
         }
@@ -489,11 +489,11 @@ class CorePreferences constructor(private val context: Context) {
 
     // Will disable chat feature completely
     val disableChat: Boolean
-        get() = config.getBool("app", "disable_chat_feature", false)
+        get() = config.getBool("app", "disable_chat_feature", true)
 
     // Will disable video feature completely
     val disableVideo: Boolean
-        get() = config.getBool("app", "disable_video_feature", false)
+        get() = config.getBool("app", "disable_video_feature", true)
 
     val forceEndToEndEncryptedChat: Boolean
         get() = config.getBool("app", "force_lime_chat_rooms", false)
@@ -597,7 +597,7 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getBool("app", "side_menu_assistant", false)
 
     val showSettingsInSideMenu: Boolean
-        get() = config.getBool("app", "side_menu_settings", false)
+        get() = config.getBool("app", "side_menu_settings", true)
 
     val showRecordingsInSideMenu: Boolean
         get() = config.getBool("app", "side_menu_recordings", false)
@@ -621,7 +621,7 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getBool("app", "allow_dtls_transport", false)
 
     val showAccountSettings: Boolean
-        get() = config.getBool("app", "settings_accounts", true)
+        get() = config.getBool("app", "settings_accounts", false)
 
     val showTunnelSettings: Boolean
         get() = config.getBool("app", "settings_tunnel", true)
@@ -642,7 +642,7 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getBool("app", "settings_network", true)
 
     val showContactsSettings: Boolean
-        get() = config.getBool("app", "settings_contacts", true)
+        get() = config.getBool("app", "settings_contacts", false)
 
     val showAdvancedSettings: Boolean
         get() = config.getBool("app", "settings_advanced", true)

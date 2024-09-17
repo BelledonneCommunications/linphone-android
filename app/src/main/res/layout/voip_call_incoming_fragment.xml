@@ -102,6 +102,7 @@
 
         <TextView
             android:id="@+id/sipAddress"
+            android:visibility="gone"
             style="@style/call_header_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -199,6 +200,7 @@
 
         <TextView
             android:id="@+id/early_media_sipAddress"
+            android:visibility="gone"
             style="@style/call_header_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

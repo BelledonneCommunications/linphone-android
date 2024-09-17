@@ -42,9 +42,9 @@
         android:clickable="true"
         android:background="?attr/backgroundColor">
 
+        <!--android:onClick="@{() -> viewModel.defaultAccountViewModel.accountsSettingsListener.onAccountClicked(viewModel.defaultAccountViewModel.identity)}"-->
         <RelativeLayout
             android:id="@+id/main_account"
-            android:onClick="@{() -> viewModel.defaultAccountViewModel.accountsSettingsListener.onAccountClicked(viewModel.defaultAccountViewModel.identity)}"
             android:enabled="@{viewModel.defaultAccountFound}"
             android:visibility="@{viewModel.showAccounts ? View.VISIBLE : View.GONE}"
             android:layout_width="match_parent"
@@ -202,9 +202,9 @@
                     <ImageView
                         android:layout_width="45dp"
                         android:layout_height="45dp"
-                        android:padding="10dp"
                         android:contentDescription="@string/settings"
-                        android:src="@drawable/menu_options" />
+                        android:padding="10dp"
+                        android:src="@drawable/settings_advanced" />
 
                     <TextView
                         android:text="@string/settings"
@@ -344,16 +344,6 @@
                     android:layout_weight="1"
                     android:background="?dividerColor"
                     android:visibility="@{viewModel.showAbout ? View.VISIBLE : View.GONE}" />
-
-                <TextView
-                    style="@style/standard_text_font"
-                    android:layout_width="match_parent"
-                    android:layout_height="334dp"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="16dp"
-                    android:text="@{viewModel.userName}" />
-
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
