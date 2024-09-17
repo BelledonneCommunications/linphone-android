@@ -621,7 +621,7 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getBool("app", "allow_dtls_transport", false)
 
     val showAccountSettings: Boolean
-        get() = config.getBool("app", "settings_accounts", true)
+        get() = config.getBool("app", "settings_accounts", false)
 
     val showTunnelSettings: Boolean
         get() = config.getBool("app", "settings_tunnel", true)
@@ -642,7 +642,7 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getBool("app", "settings_network", true)
 
     val showContactsSettings: Boolean
-        get() = config.getBool("app", "settings_contacts", true)
+        get() = config.getBool("app", "settings_contacts", false)
 
     val showAdvancedSettings: Boolean
         get() = config.getBool("app", "settings_advanced", true)
