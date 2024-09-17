@@ -164,7 +164,8 @@ class AccountProfileFragment : GenericMainFragment() {
             val model = ConfirmationDialogModel()
             val dialog = DialogUtils.getConfirmAccountRemovalDialog(
                 requireActivity(),
-                model
+                model,
+                viewModel.isOnDefaultDomain.value == true
             )
 
             model.dismissEvent.observe(viewLifecycleOwner) {

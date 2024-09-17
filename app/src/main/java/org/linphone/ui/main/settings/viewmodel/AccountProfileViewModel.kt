@@ -70,7 +70,7 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
 
     val expandDevices = MutableLiveData<Boolean>()
 
-    val devicesAvailable = MutableLiveData<Boolean>()
+    val isOnDefaultDomain = MutableLiveData<Boolean>()
 
     val devicesFetchInProgress = MutableLiveData<Boolean>()
 
@@ -156,6 +156,7 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
         expandDevices.value = false
         showDeviceId.value = false
         devicesFetchInProgress.value = true
+        isOnDefaultDomain.value = false
 
         coreContext.postOnCoreThread {
             hideAccountSettings.postValue(corePreferences.hideAccountSettings)
@@ -195,12 +196,13 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
 
                 sipAddress.postValue(account.params.identityAddress?.asStringUriOnly())
                 displayName.postValue(account.params.identityAddress?.displayName)
+                showDeviceId.postValue(false)
 
                 val identityAddress = account.params.identityAddress
                 if (identityAddress != null) {
                     val domain = identityAddress.domain
                     val defaultDomain = corePreferences.defaultDomain
-                    devicesAvailable.postValue(domain == defaultDomain)
+                    isOnDefaultDomain.postValue(domain == defaultDomain)
                     if (domain == defaultDomain) {
                         Log.i(
                             "$TAG Request list of known devices for account [${identityAddress.asStringUriOnly()}]"

@@ -25,6 +25,7 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
+import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import androidx.annotation.UiThread
@@ -122,7 +123,8 @@ class DialogUtils {
         @UiThread
         fun getConfirmAccountRemovalDialog(
             context: Context,
-            viewModel: ConfirmationDialogModel
+            viewModel: ConfirmationDialogModel,
+            showDeleteAccountLink: Boolean
         ): Dialog {
             val binding: DialogRemoveAccountBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
@@ -131,6 +133,7 @@ class DialogUtils {
                 false
             )
             binding.viewModel = viewModel
+            binding.message.visibility = if (showDeleteAccountLink) View.VISIBLE else View.GONE
 
             return getDialog(context, binding)
         }
