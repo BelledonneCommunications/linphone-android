@@ -344,16 +344,6 @@
                     android:layout_weight="1"
                     android:background="?dividerColor"
                     android:visibility="@{viewModel.showAbout ? View.VISIBLE : View.GONE}" />
-
-                <TextView
-                    style="@style/standard_text_font"
-                    android:layout_width="match_parent"
-                    android:layout_height="334dp"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="16dp"
-                    android:text="@{viewModel.userName}" />
-
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
