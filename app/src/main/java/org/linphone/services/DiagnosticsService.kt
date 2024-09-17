@@ -16,6 +16,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
 import org.json.JSONArray
 import org.json.JSONObject
+import org.linphone.BuildConfig
 import org.linphone.authentication.AuthStateManager
 import org.linphone.authentication.AuthorizationServiceManager
 import org.linphone.environment.DimensionsEnvironmentService
@@ -134,6 +135,8 @@ class DiagnosticsService {
                 "environment",
                 DimensionsEnvironmentService.getInstance(context).getCurrentEnvironment()?.name
             )
+            info.put("version", BuildConfig.VERSION_CODE)
+            info.put("versionName", BuildConfig.VERSION_NAME)
             info.put("localTime", Date().toString())
 
             info.put("timeZone", TimeZone.getDefault().displayName)
