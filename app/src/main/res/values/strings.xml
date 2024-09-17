@@ -314,7 +314,7 @@
     <string name="manage_account_international_prefix">International Prefix</string>
     <string name="manage_account_dialog_international_prefix_help_message">Pick your country to allow &appName; to match your contacts.</string>
     <string name="manage_account_settings">Account settings</string>
-    <string name="manage_account_delete">Delete account</string>
+    <string name="manage_account_delete">Sign out</string>
     <string name="manage_account_choose_mode_title">Choose account mode</string>
     <string name="manage_account_choose_mode_apply_label">Apply</string>
     <string name="manage_account_e2e_encrypted_mode_default_title">End-to-end encrypted mode</string>
@@ -323,8 +323,8 @@
     <string name="manage_account_e2e_encrypted_mode_interoperable_summary">This mode allows you to enjoy all &appName; features while staying interoperable with any SIP service through point-to-point encryption.</string>
     <string name="manage_account_device_remove">Remove</string>
     <string name="manage_account_device_last_connection">Last connection:</string>
-    <string name="manage_account_dialog_remove_account_title">Delete %s?</string>
-    <string name="manage_account_dialog_remove_account_message">You can reconnect at any time by clicking \“Add an account\”.\nHowever, all data on this phone will be deleted.</string>
+    <string name="manage_account_dialog_remove_account_title">Sign out of your account?</string>
+    <string name="manage_account_dialog_remove_account_message">If you wish to delete your account permanently, go to: https://sip.linphone.org</string>
 
     <string name="account_settings_title">Account settings</string>
     <string name="account_settings_push_notification_title">Allow push notifications</string>

@@ -620,7 +620,7 @@ class MainActivity : GenericActivity() {
                     Log.w(
                         "$TAG Closing already opened conversation to prevent attaching file in it directly"
                     )
-                    sharedViewModel.hideConversationEvent.postValue(Event(true))
+                    sharedViewModel.hideConversationEvent.value = Event(true)
                 } else {
                     Log.i("$TAG No chat room currently displayed, nothing to close")
                 }

@@ -54,6 +54,8 @@
             android:layout_marginTop="10dp"
             android:text="@string/manage_account_dialog_remove_account_message"
             android:textSize="14sp"
+            android:autoLink="web"
+            android:textColorLink="?attr/color_main1_500"
             app:layout_constraintBottom_toTopOf="@id/cancel"
             app:layout_constraintStart_toStartOf="@id/dialog_background"
             app:layout_constraintEnd_toEndOf="@id/dialog_background"

@@ -122,8 +122,7 @@ class DialogUtils {
         @UiThread
         fun getConfirmAccountRemovalDialog(
             context: Context,
-            viewModel: ConfirmationDialogModel,
-            displayName: String
+            viewModel: ConfirmationDialogModel
         ): Dialog {
             val binding: DialogRemoveAccountBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
@@ -132,10 +131,6 @@ class DialogUtils {
                 false
             )
             binding.viewModel = viewModel
-            binding.title.text = context.getString(
-                R.string.manage_account_dialog_remove_account_title,
-                displayName
-            )
 
             return getDialog(context, binding)
         }

@@ -534,7 +534,7 @@
                         android:layout_marginBottom="@dimen/screen_bottom_margin"
                         android:background="@drawable/action_background"
                         android:text="@string/manage_account_delete"
-                        android:drawableStart="@drawable/trash_simple"
+                        android:drawableStart="@drawable/sign_out"
                         app:layout_constraintTop_toBottomOf="@id/action_settings"
                         app:layout_constraintStart_toStartOf="@id/actions_background"
                         app:layout_constraintEnd_toEndOf="@id/actions_background"/>
