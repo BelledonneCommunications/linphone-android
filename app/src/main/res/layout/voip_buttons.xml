@@ -112,7 +112,7 @@
             style="?android:attr/progressBarStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:visibility="@{controlsViewModel.isVideoUpdateInProgress ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/video"
             app:layout_constraintStart_toStartOf="@id/video" />

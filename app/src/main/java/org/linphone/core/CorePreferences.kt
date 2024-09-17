@@ -493,7 +493,7 @@ class CorePreferences constructor(private val context: Context) {
 
     // Will disable video feature completely
     val disableVideo: Boolean
-        get() = config.getBool("app", "disable_video_feature", false)
+        get() = config.getBool("app", "disable_video_feature", true)
 
     val forceEndToEndEncryptedChat: Boolean
         get() = config.getBool("app", "force_lime_chat_rooms", false)
