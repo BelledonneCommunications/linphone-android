@@ -49,18 +49,35 @@
             android:orientation="vertical"
             layout_constraintGuide_percent="@{viewModel.rightAnchor, default=0.75}" />
 
+        <RelativeLayout
+            android:id="@+id/contacts"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/footer_button"
+            android:onClick="@{contactsClickListener}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guidelineLeft">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:padding="15dp"
+                android:contentDescription="@string/content_description_menu_contacts"
+                android:src="@drawable/footer_contacts" />
+        </RelativeLayout>
+
         <ImageView
             android:id="@+id/history"
             android:onClick="@{historyClickListener}"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_centerInParent="true"
             android:padding="15dp"
             android:contentDescription="@string/content_description_menu_history"
             android:src="@drawable/footer_history"
             android:background="@drawable/footer_button"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/guidelineLeft" />
+            app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+            app:layout_constraintEnd_toEndOf="@id/guidelineMiddle" />
 
         <TextView
             android:id="@+id/history_unread_count"
@@ -73,27 +90,8 @@
             android:translationY="@{viewModel.historyMissedCountTranslateY}"
             android:background="@{viewModel.missedCallsCount == 0 ? @drawable/hidden_unread_message_count_bg : @drawable/unread_message_count_bg}"
             android:text="@{viewModel.missedCallsCount == 0 ? `` : String.valueOf(viewModel.missedCallsCount)}"
-            app:layout_constraintRight_toLeftOf="@id/guidelineLeft"
+            app:layout_constraintRight_toLeftOf="@id/guidelineMiddle"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <RelativeLayout
-            android:id="@+id/contacts"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/footer_button"
-            android:onClick="@{contactsClickListener}"
-            app:layout_constraintStart_toStartOf="@id/guidelineLeft"
-            app:layout_constraintEnd_toEndOf="@id/guidelineMiddle">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:padding="15dp"
-                android:contentDescription="@string/content_description_menu_contacts"
-                android:src="@drawable/footer_contacts" />
-
-        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/dialer"
@@ -114,16 +112,17 @@
 
         </RelativeLayout>
 
+        <!--
+        android:src="@drawable/footer_chat"
+        android:onClick="@{chatClickListener}"
+        -->
         <ImageView
-            android:visibility="gone"
             android:id="@+id/chat"
-            android:onClick="@{chatClickListener}"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:contentDescription="@string/content_description_menu_chat"
             android:padding="15dp"
-            android:src="@drawable/footer_chat"
             android:background="@drawable/footer_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/guidelineRight" />
