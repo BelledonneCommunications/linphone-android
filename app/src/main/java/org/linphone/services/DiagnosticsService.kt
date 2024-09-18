@@ -11,12 +11,8 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.ResponseBody
 import org.json.JSONArray
 import org.json.JSONObject
 import org.linphone.BuildConfig
@@ -26,9 +22,6 @@ import org.linphone.environment.DimensionsEnvironmentService
 import org.linphone.interfaces.CTGatewayService
 import org.linphone.middleware.FileTree
 import org.linphone.utils.Log
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import timber.log.Timber
 
 class DiagnosticsService {
@@ -76,14 +69,13 @@ class DiagnosticsService {
             }
         }
 
-        suspend fun uploadDiagnostics(context: Context): String = suspendCoroutine { continuation ->
-
+        suspend fun uploadDiagnostics(context: Context) {
             val logsFolder: String = FileTree.getLogsDirectory(context)
 
             val linphoneLogFiles = getLinphoneLogs(context)
             if (linphoneLogFiles != null) {
                 for (linphoneLogFile in linphoneLogFiles) {
-                    linphoneLogFile.copyTo(File(logsFolder + "/" + linphoneLogFile.name))
+                    linphoneLogFile.copyTo(File(logsFolder + "/" + linphoneLogFile.name), true)
                 }
             }
 
@@ -106,99 +98,13 @@ class DiagnosticsService {
 
             val uploadName = getUploadName(context)
 
-            val callback = createCallbackWithContinuation(
-                onSuccess = continuation::resume,
-                onFailure = continuation::resumeWithException
-            )
-
-            getGateway(context).doPostClientDiagnostics(uploadName, body)
-                .enqueue(object : Callback<ResponseBody> {
-                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                        Log.e(t, "Failed to upload logs")
-                        callback.onFailure(t)
-                    }
-
-                    override fun onResponse(
-                        call: Call<ResponseBody>,
-                        response: Response<ResponseBody>
-                    ) {
-                        val code = response.code()
-                        if (code < 200 || code > 299) {
-                            val msg = response.errorBody()
-                            Log.e("Failed to upload logs: $msg")
-                            val ex = Exception(msg.toString())
-                            callback.onFailure(ex)
-                        } else {
-                            Log.i("Logs uploaded!")
-                            callback.onSuccess("Done")
-                        }
-                    }
-                })
-        }
-
-        interface CallbackFn {
-            fun onSuccess(result: String)
-            fun onFailure(error: Throwable)
-        }
-
-        fun createCallbackWithContinuation(
-            onSuccess: (String) -> Unit,
-            onFailure: (Throwable) -> Unit
-        ) = object : CallbackFn {
-            // Resume the coroutine with the result
-            override fun onSuccess(result: String) = onSuccess(result)
-
-            // Resume the coroutine with an exception
-            override fun onFailure(error: Throwable) = onFailure(error)
-        }
-
-        fun uploadDiagnostics_old(context: Context) {
-            val logsFolder: String = FileTree.getLogsDirectory(context)
-
-            val linphoneLogFiles = getLinphoneLogs(context)
-            if (linphoneLogFiles != null) {
-                for (linphoneLogFile in linphoneLogFiles) {
-                    linphoneLogFile.copyTo(File(logsFolder + "/" + linphoneLogFile.name))
-                }
+            val response = getGateway(context).postClientDiagnostics(uploadName, body)
+            val code = response.code()
+            if (code < 200 || code > 299) {
+                val msg = response.errorBody()
+                Log.e("Failed to upload logs: $msg")
+                throw Exception(msg.toString())
             }
-
-            writeDiagnosticsFile(context)
-
-            val zipFile = FileTree.zipAll(logsFolder)
-
-            Log.i("Uploading logs from file ${zipFile.path}")
-
-            // Flush current log files
-            Timber.forest().forEach { t -> if (t is FileTree) t.flush() }
-
-            val body = zipFile
-                .readBytes()
-                .toRequestBody(
-                    "application/octet".toMediaTypeOrNull(),
-                    0,
-                    zipFile.length().toInt()
-                )
-
-            val uploadName = getUploadName(context)
-
-            getGateway(context).doPostClientDiagnostics(uploadName, body)
-                .enqueue(object : Callback<ResponseBody> {
-                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                        Log.e(t, "Failed to upload logs")
-                    }
-
-                    override fun onResponse(
-                        call: Call<ResponseBody>,
-                        response: Response<ResponseBody>
-                    ) {
-                        val code = response.code()
-                        if (code < 200 || code > 299) {
-                            Log.e("Failed to upload logs: ${response.errorBody()}")
-                        } else {
-                            Log.i("Logs uploaded!")
-                        }
-                    }
-                })
         }
 
         private fun writeDiagnosticsFile(context: Context) {

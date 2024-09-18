@@ -85,15 +85,12 @@ class AboutFragment : SecureFragment<AboutFragmentBinding>() {
 
         binding.setUploadLogsClickListener {
             CoroutineScope(Dispatchers.IO).launch {
+                val activity = requireActivity() as MainActivity
                 try {
                     DiagnosticsService.uploadDiagnostics(requireContext())
-
-                    val activity = requireActivity() as MainActivity
                     activity.showSnackBar("Logs uploaded to server")
                 } catch (e: Exception) {
-                    Log.e("[About] Failed to start browser intent, $e")
-
-                    val activity = requireActivity() as MainActivity
+                    Log.e("[About] Failed to upload logs, $e")
                     activity.showSnackBar("Failed to upload logs! " + e.message)
                 }
             }
