@@ -6,6 +6,7 @@ import org.linphone.models.TenantBrandingDefinition
 import org.linphone.models.UserDevice
 import org.linphone.models.UserInfo
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -24,8 +25,8 @@ interface CTGatewayService {
     fun doGetUserBranding(): Call<TenantBrandingDefinition>
 
     @POST("api/v1.0/clientdiagnostics/{fileName}")
-    fun doPostClientDiagnostics(
+    suspend fun postClientDiagnostics(
         @Path("fileName") fileName: String,
         @Body body: RequestBody
-    ): Call<ResponseBody>
+    ): Response<Void>
 }
