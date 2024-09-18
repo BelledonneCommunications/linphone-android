@@ -55,6 +55,8 @@ class ConversationForwardMessageFragment : SlidingPaneChildFragment() {
 
     private var numberOrAddressPickerDialog: Dialog? = null
 
+    private var disableConsumingEventOnPause = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -135,6 +137,7 @@ class ConversationForwardMessageFragment : SlidingPaneChildFragment() {
                         localSipUri,
                         remoteSipUri
                     )
+                    disableConsumingEventOnPause = true
                     findNavController().navigate(action)
                 }
             }
@@ -171,10 +174,12 @@ class ConversationForwardMessageFragment : SlidingPaneChildFragment() {
         numberOrAddressPickerDialog?.dismiss()
         numberOrAddressPickerDialog = null
 
-        sharedViewModel.messageToForwardEvent.value?.consume {
-            Log.w(
-                "$TAG Fragment is pausing, consuming forward event to prevent it from being used later"
-            )
+        if (!disableConsumingEventOnPause) {
+            sharedViewModel.messageToForwardEvent.value?.consume {
+                Log.w(
+                    "$TAG Fragment is pausing, consuming forward event to prevent it from being used later"
+                )
+            }
         }
     }
 

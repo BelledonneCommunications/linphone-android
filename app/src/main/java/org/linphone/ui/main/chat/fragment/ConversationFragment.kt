@@ -469,13 +469,27 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                             Log.i("$TAG Found message to forward")
                             if (viewModel.isReadOnly.value == true || viewModel.isDisabledBecauseNotSecured.value == true) {
                                 Log.w(
-                                    "$TAG Can't forward message in this conversation as it is read only"
+                                    "$TAG Can't forward message in this conversation as it is read only, keeping it in memory until conversation is joined just in case"
                                 )
+                                viewModel.pendingForwardMessage = toForward
                             } else {
                                 sendMessageViewModel.forwardMessage(toForward)
                             }
                         }
                     }
+                }
+            }
+        }
+
+        viewModel.forwardMessageEvent.observe(viewLifecycleOwner) {
+            it.consume { toForward ->
+                Log.i("$TAG Found pending message to forward")
+                if (viewModel.isReadOnly.value == true || viewModel.isDisabledBecauseNotSecured.value == true) {
+                    Log.w(
+                        "$TAG Can't forward message in this conversation as it is still read only"
+                    )
+                } else {
+                    sendMessageViewModel.forwardMessage(toForward)
                 }
             }
         }

@@ -129,7 +129,13 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         MutableLiveData<Event<Boolean>>()
     }
 
+    val forwardMessageEvent: MutableLiveData<Event<MessageModel>> by lazy {
+        MutableLiveData<Event<MessageModel>>()
+    }
+
     var eventsList = arrayListOf<EventLogModel>()
+
+    var pendingForwardMessage: MessageModel? = null
 
     private var latestMatch: EventLog? = null
 
@@ -138,6 +144,13 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         override fun onConferenceJoined(chatRoom: ChatRoom, eventLog: EventLog) {
             Log.i("$TAG Conversation was joined")
             computeConversationInfo()
+
+            val messageToForward = pendingForwardMessage
+            if (messageToForward != null) {
+                Log.i("$TAG Found pending forward message, doing it now")
+                forwardMessageEvent.postValue(Event(messageToForward))
+                pendingForwardMessage = null
+            }
         }
 
         @WorkerThread
@@ -552,7 +565,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         if (!chatRoom.hasCapability(ChatRoom.Capabilities.Encrypted.toInt())) {
             if (LinphoneUtils.getAccountForAddress(chatRoom.localAddress)?.params?.instantMessagingEncryptionMandatory == true) {
                 Log.w(
-                    "$TAG Conversation with subject [${chatRoom.subject}] has been disabled because it isn't encrypted and default account is in secure mode"
+                    "$TAG Conversation with subject [${chatRoom.subject}] is considered as read-only because it isn't encrypted and default account is in secure mode"
                 )
                 isDisabledBecauseNotSecured.postValue(true)
             } else {
@@ -604,6 +617,11 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
 
         val empty =
             chatRoom.hasCapability(ChatRoom.Capabilities.Conference.toInt()) && chatRoom.participants.isEmpty()
+        if (empty) {
+            Log.w(
+                "$TAG Conversation has conference capability but has no participants, will be considered as read only!"
+            )
+        }
         val readOnly = chatRoom.isReadOnly || empty
         isReadOnly.postValue(readOnly)
         if (readOnly) {
