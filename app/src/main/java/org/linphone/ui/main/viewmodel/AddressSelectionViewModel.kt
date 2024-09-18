@@ -28,6 +28,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.contacts.ContactsManager
+import org.linphone.core.Address
 import org.linphone.core.ChatRoom
 import org.linphone.core.Friend
 import org.linphone.core.MagicSearch
@@ -133,6 +134,16 @@ abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccoun
                 "0"
             )
         )
+    }
+
+    @WorkerThread
+    fun updateSelectedParticipants(selectedAddresses: List<Address>) {
+        for (address in selectedAddresses) {
+            val found = modelsList.value.orEmpty().find {
+                it.address.weakEqual(address)
+            }
+            found?.selected?.postValue(true)
+        }
     }
 
     @WorkerThread

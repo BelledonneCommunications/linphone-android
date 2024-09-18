@@ -23,6 +23,7 @@ import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.core.Address
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.model.SelectedAddressModel
 import org.linphone.utils.AppUtils
@@ -45,6 +46,7 @@ class AddParticipantsViewModel @UiThread constructor() : AddressSelectionViewMod
         coreContext.postOnCoreThread { core ->
             Log.i("$TAG Adding [${participants.size}] pre-selected participants")
             val list = arrayListOf<SelectedAddressModel>()
+            val addresses = arrayListOf<Address>()
 
             for (uri in participants) {
                 val address = core.interpretUrl(uri, false)
@@ -52,6 +54,7 @@ class AddParticipantsViewModel @UiThread constructor() : AddressSelectionViewMod
                     Log.e("$TAG Failed to parse participant URI [$uri] as address!")
                     continue
                 }
+                addresses.add(address)
 
                 val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
                     address
@@ -70,6 +73,7 @@ class AddParticipantsViewModel @UiThread constructor() : AddressSelectionViewMod
                 )
             )
             selection.postValue(list)
+            updateSelectedParticipants(addresses)
         }
     }
 

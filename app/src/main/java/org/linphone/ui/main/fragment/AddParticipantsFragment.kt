@@ -81,13 +81,14 @@ class AddParticipantsFragment : GenericAddressPickerFragment() {
         setupRecyclerView(binding.contactsList)
 
         val participants = args.selectedParticipants
-        if (!participants.isNullOrEmpty()) {
-            viewModel.addSelectedParticipants(participants)
-        }
 
         viewModel.modelsList.observe(
             viewLifecycleOwner
         ) {
+            if (!participants.isNullOrEmpty()) {
+                viewModel.addSelectedParticipants(participants)
+            }
+
             Log.i("$TAG Contacts & suggestions list is ready with [${it.size}] items")
             adapter.submitList(it)
 
