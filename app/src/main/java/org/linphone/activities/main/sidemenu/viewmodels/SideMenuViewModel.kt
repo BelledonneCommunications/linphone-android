@@ -27,6 +27,7 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.activities.main.settings.viewmodels.AccountSettingsViewModel
 import org.linphone.core.*
+import org.linphone.models.UserInfo
 import org.linphone.utils.LinphoneUtils
 
 class SideMenuViewModel : ViewModel() {
@@ -47,6 +48,7 @@ class SideMenuViewModel : ViewModel() {
 
     val presenceStatus = MutableLiveData<ConsolidatedPresence>()
 
+    val user = ObservableField<UserInfo>()
     val userName = ObservableField<String>()
 
     lateinit var accountsSettingsListener: SettingListenerStub

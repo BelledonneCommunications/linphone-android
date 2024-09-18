@@ -1,7 +1,6 @@
 package org.linphone.interfaces
 
 import okhttp3.RequestBody
-import okhttp3.ResponseBody
 import org.linphone.models.TenantBrandingDefinition
 import org.linphone.models.UserDevice
 import org.linphone.models.UserInfo
@@ -20,6 +19,9 @@ interface CTGatewayService {
 
     @GET("api/v1.0/users/me")
     fun doGetUserInfo(): Call<UserInfo>
+
+    @GET("api/v1.0/users/me")
+    suspend fun getUserInfo(): Response<UserInfo>
 
     @GET("api/v1.0/users/me/branding")
     fun doGetUserBranding(): Call<TenantBrandingDefinition>

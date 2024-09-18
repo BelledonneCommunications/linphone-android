@@ -28,6 +28,7 @@ import android.view.View
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import io.reactivex.rxjava3.disposables.Disposable
 import java.io.File
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -42,13 +43,13 @@ import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.authentication.AuthStateManager
 import org.linphone.core.Factory
 import org.linphone.databinding.SideMenuFragmentBinding
-import org.linphone.models.AuthenticatedUser
 import org.linphone.services.UserService
 import org.linphone.utils.*
 
 class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
     private lateinit var viewModel: SideMenuViewModel
     private var temporaryPicturePath: File? = null
+    private var userSubscription: Disposable? = null
 
     override fun getLayoutId(): Int = R.layout.side_menu_fragment
 
@@ -143,18 +144,17 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
         }
 
         if (::viewModel.isInitialized) {
-            viewModel.userName.set("Loading auth token...")
-
-            val userIdentity = UserService.getInstance(requireContext()).user.subscribe { user ->
-                val userDisplay = if (user.id.isNullOrBlank() || user.id == AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER) {
-                    "User logged out"
-                } else {
-                    user.name + " (" + user.id + ")"
-                }
-
-                viewModel.userName.set(userDisplay)
-            }
+            val userSvc = UserService.getInstance(requireContext())
+            userSubscription = userSvc.user
+                .subscribe { u -> viewModel.user.set(u) }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        userSubscription?.dispose()
+        userSubscription = null
     }
 
     @Deprecated("Deprecated in Java")
