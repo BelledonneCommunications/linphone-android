@@ -4,7 +4,7 @@
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="dialog_background">#99000000</color><!-- 60% opacity -->
-    <color name="shadow">#30000000</color>
+    <color name="shadow">#10000000</color>
 
     <color name="orange_main_100">#FFEACB</color>
     <color name="orange_main_100_alpha_50">#80FFEACB</color>
