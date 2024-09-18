@@ -100,11 +100,15 @@ class EventModel @WorkerThread constructor(private val eventLog: EventLog) {
                 EventLog.Type.ConferenceSubjectChanged -> {
                     R.drawable.pencil_simple
                 }
+                EventLog.Type.ConferenceCreated,
                 EventLog.Type.ConferenceParticipantAdded,
                 EventLog.Type.ConferenceParticipantRemoved,
                 EventLog.Type.ConferenceParticipantDeviceAdded,
                 EventLog.Type.ConferenceParticipantDeviceRemoved -> {
                     R.drawable.door
+                }
+                EventLog.Type.ConferenceParticipantSetAdmin -> {
+                    R.drawable.user_circle_check
                 }
                 else -> R.drawable.user_circle
             },
