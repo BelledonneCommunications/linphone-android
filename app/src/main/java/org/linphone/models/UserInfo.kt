@@ -7,6 +7,16 @@ data class SubscribableUserInfo(var userInfo: UserInfo?) {
 }
 
 data class UserInfo(
+
+    var id: String,
+    var tenantId: String,
+    var tenantName: String,
+    var tenantTier: String,
+    var displayName: String,
+    var email: String,
+    var isEnabled: Boolean,
+    var profileImageUrl: String,
+
     @SerializedName("permissions")
     var permissions: List<String>,
 

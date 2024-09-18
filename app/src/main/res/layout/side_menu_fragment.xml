@@ -53,7 +53,8 @@
 
             <ImageView
                 android:id="@+id/avatar"
-                coilRounded="@{viewModel.defaultAccountAvatar}"
+                android:visibility="@{viewModel.user == null ? View.GONE : View.VISIBLE, default=gone}"
+                coilRounded="@{viewModel.user.profileImageUrl}"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
@@ -62,7 +63,7 @@
                 android:contentDescription="@string/content_description_change_own_picture"
                 android:onClick="@{selfPictureClickListener}"
                 android:src="@drawable/icon_single_contact_avatar"
-                android:visibility="@{viewModel.defaultAccountFound ? View.VISIBLE : View.GONE}" />
+                />
 
             <ImageView
                 android:id="@+id/avatar_border"
@@ -97,27 +98,25 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:visibility="@{viewModel.defaultAccountFound ? View.GONE : View.VISIBLE, default=gone}"
+                    android:visibility="@{viewModel.user == null ? View.VISIBLE : View.GONE, default=visible}"
                     android:text="@string/no_account_configured"
                     android:textColor="?attr/lightToolbarTextColor"
-                    android:textStyle="bold"
                     android:textSize="18sp"
                     android:padding="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:visibility="@{viewModel.defaultAccountFound ? View.VISIBLE : View.GONE}"
-                    android:text="@{viewModel.defaultAccountViewModel.displayName.isEmpty() ? viewModel.defaultAccountViewModel.userName : viewModel.defaultAccountViewModel.displayName}"
+                    android:visibility="@{viewModel.user == null ? View.GONE : View.VISIBLE, default=gone}"
+                    android:text="@{viewModel.user.displayName}"
                     android:textColor="?attr/lightToolbarTextColor"
-                    android:textStyle="bold"
                     android:textSize="18sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:visibility="@{viewModel.defaultAccountFound ? View.VISIBLE : View.GONE}"
-                    android:text="@{viewModel.defaultAccountViewModel.displayUsernameInsteadOfIdentity ? viewModel.defaultAccountViewModel.userName : viewModel.defaultAccountViewModel.identity}"
+                    android:visibility="@{viewModel.user == null ? View.GONE : View.VISIBLE, default=gone}"
+                    android:text="@{viewModel.user.presenceId}"
                     style="@style/sip_uri_small_font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />

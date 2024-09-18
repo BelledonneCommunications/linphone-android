@@ -20,6 +20,9 @@ interface CTGatewayService {
     @GET("api/v1.0/users/me")
     fun doGetUserInfo(): Call<UserInfo>
 
+    @GET("api/v1.0/users/me")
+    suspend fun getUserInfo(): Response<UserInfo>
+
     @GET("api/v1.0/users/me/branding")
     fun doGetUserBranding(): Call<TenantBrandingDefinition>
 
