@@ -56,8 +56,13 @@ class DiagnosticsService {
 
             val linphoneLogFiles = getLinphoneLogs(context)
             if (linphoneLogFiles != null) {
-                for (linphoneLogFile in linphoneLogFiles) {
-                    linphoneLogFile.delete()
+                linphoneLogFiles.sortByDescending { f -> f.lastModified() }
+                for ((index, file) in linphoneLogFiles.withIndex()) {
+                    if (index == 0) {
+                        FileWriter(file).close()
+                    } else {
+                        file.delete()
+                    }
                 }
             }
         }
