@@ -53,15 +53,13 @@
 
             <ImageView
                 android:id="@+id/avatar"
-                android:visibility="@{viewModel.user == null ? View.GONE : View.VISIBLE, default=gone}"
-                coilRounded="@{viewModel.user.profileImageUrl}"
+                android:visibility="@{viewModel.userImageUrl == null ? View.GONE : View.VISIBLE, default=gone}"
+                coilRounded="@{viewModel.userImageUrl}"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
                 android:adjustViewBounds="true"
                 android:background="@drawable/generated_avatar_bg"
-                android:contentDescription="@string/content_description_change_own_picture"
-                android:onClick="@{selfPictureClickListener}"
                 android:src="@drawable/icon_single_contact_avatar"
                 />
 

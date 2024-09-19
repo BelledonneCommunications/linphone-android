@@ -49,7 +49,8 @@ class SideMenuViewModel : ViewModel() {
     val presenceStatus = MutableLiveData<ConsolidatedPresence>()
 
     val user = ObservableField<UserInfo>()
-    val userName = ObservableField<String>()
+
+    val userImageUrl = ObservableField<String>()
 
     lateinit var accountsSettingsListener: SettingListenerStub
 
