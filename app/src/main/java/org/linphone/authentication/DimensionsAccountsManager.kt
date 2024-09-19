@@ -9,9 +9,7 @@ import org.linphone.core.tools.Log
 import org.linphone.environment.DimensionsEnvironmentService
 import org.linphone.models.AuthenticatedUser
 import org.linphone.models.SubscribableUserDeviceList
-import org.linphone.models.SubscribableUserInfo
 import org.linphone.models.UserDevice
-import org.linphone.models.UserInfo
 import org.linphone.services.APIClientService
 import retrofit2.Call
 import retrofit2.Callback
@@ -38,7 +36,6 @@ class DimensionsAccountsManager(context: Context) {
     }
 
     val devicesSubject = BehaviorSubject.create<SubscribableUserDeviceList>()
-    val userInfoSubject = BehaviorSubject.create<SubscribableUserInfo>()
 
     private val mContext = context
 
@@ -46,10 +43,8 @@ class DimensionsAccountsManager(context: Context) {
         val asm = AuthStateManager.getInstance(context)
         val sub = asm.user
             .map { it.id ?: "" }
-            .doOnEach {
-                Log.i("AUTH user ID : $it")
-            }
-            // .distinctUntilChanged { id -> id }
+            .doOnEach { Log.i("AUTH user ID : $it") }
+            .distinctUntilChanged { id -> id }
             .subscribe(
                 {
                     try {
@@ -104,29 +99,9 @@ class DimensionsAccountsManager(context: Context) {
                     }
                 }
             })
-
-        ucGatewayService.doGetUserInfo().enqueue(object : Callback<UserInfo> {
-            override fun onFailure(call: Call<UserInfo>, t: Throwable) {
-                Log.e("CoreContext.loadDimensionsAccounts.doGetUserInfo.onFailure::${t.message}")
-            }
-
-            override fun onResponse(
-                call: Call<UserInfo>,
-                response: Response<UserInfo>
-            ) {
-                if (response.isSuccessful) {
-                    userInfoSubject.onNext(SubscribableUserInfo(response.body()))
-                } else {
-                    Log.e(
-                        "CoreContext.loadDimensionsAccounts.doGetUserInfo.onResponse::${response.message()}"
-                    )
-                }
-            }
-        })
     }
 
     fun clear() {
         devicesSubject.onNext(SubscribableUserDeviceList(null))
-        userInfoSubject.onNext(SubscribableUserInfo(null))
     }
 }

@@ -7,6 +7,7 @@ import kotlinx.coroutines.rx3.rxSingle
 import org.linphone.authentication.AuthStateManager
 import org.linphone.authentication.AuthorizationServiceManager
 import org.linphone.environment.DimensionsEnvironmentService
+import org.linphone.interfaces.CTGatewayService
 import org.linphone.models.AuthenticatedUser
 import org.linphone.models.UserInfo
 import org.linphone.utils.Log
@@ -27,7 +28,8 @@ class UserService public constructor(context: Context) {
     }
 
     val user: Observable<UserInfo>
-    // = ReplaySubject.create(1)
+
+    private val ucGatewayService: CTGatewayService
 
     init {
         Log.i("Created UserService")
@@ -35,7 +37,8 @@ class UserService public constructor(context: Context) {
         val asm = AuthStateManager.getInstance(context)
         val apiClientService = APIClientService()
         val dimensionsEnvironment = DimensionsEnvironmentService.getInstance(context).getCurrentEnvironment()
-        val ucGatewayService = apiClientService.getUCGatewayService(
+
+        ucGatewayService = apiClientService.getUCGatewayService(
             context,
             dimensionsEnvironment!!.gatewayApiUri,
             AuthorizationServiceManager.getInstance(context).getAuthorizationServiceInstance(),
@@ -46,10 +49,19 @@ class UserService public constructor(context: Context) {
             .filter { u -> u.id != null && u.id != AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER }
             .doOnNext { Log.i("Fetching user info....") }
             .switchMapSingle {
-                rxSingle { ucGatewayService.getUserInfo() }
+                rxSingle { getUserInfo() }
             }
-            .map { x -> x.body()!! }
             .replay(1)
             .autoConnect()
+    }
+
+    private suspend fun getUserInfo(): UserInfo {
+        val response = ucGatewayService.getUserInfo()
+
+        if (response.code() < 200 || response.code() > 299) {
+            throw Exception("Error fetching user info: " + response.message())
+        }
+
+        return response.body()!!
     }
 }

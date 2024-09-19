@@ -146,7 +146,10 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
         if (::viewModel.isInitialized) {
             val userSvc = UserService.getInstance(requireContext())
             userSubscription = userSvc.user
-                .subscribe { u -> viewModel.user.set(u) }
+                .subscribe(
+                    { u -> viewModel.user.set(u) },
+                    { error -> Log.e(error) }
+                )
         }
     }
 
