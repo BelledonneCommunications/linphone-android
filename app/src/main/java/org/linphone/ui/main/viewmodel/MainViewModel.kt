@@ -242,6 +242,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
         @WorkerThread
         override fun onDefaultAccountChanged(core: Core, account: Account?) {
             if (!monitorAccount) return
+            if (core.globalState != GlobalState.On) return // In case of late remote provisioning
 
             if (account == null) {
                 Log.w("$TAG Default account is now null!")
@@ -262,6 +263,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
         @WorkerThread
         override fun onAccountRemoved(core: Core, account: Account) {
             if (!monitorAccount) return
+            if (core.globalState != GlobalState.On) return // In case of late remote provisioning
 
             Log.w(
                 "$TAG Account [${account.params.identityAddress?.asStringUriOnly()}] has been removed!"
