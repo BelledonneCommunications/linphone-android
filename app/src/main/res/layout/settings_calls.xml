@@ -218,7 +218,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="@dimen/screen_bottom_margin"
             android:text="@string/settings_calls_change_ringtone_title"
-            android:drawableEnd="@drawable/caret_right"
+            android:drawableEnd="@drawable/arrow_square_out"
             android:drawableTint="?attr/color_main2_600"
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintStart_toStartOf="parent"

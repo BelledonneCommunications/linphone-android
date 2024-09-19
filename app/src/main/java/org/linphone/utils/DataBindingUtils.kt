@@ -285,6 +285,22 @@ fun AppCompatTextView.setColor(@ColorRes color: Int) {
 }
 
 @UiThread
+@BindingAdapter("coilUrl")
+fun ImageView.loadUrlImage(url: String?) {
+    if (!url.isNullOrEmpty()) {
+        load(url) {
+            listener(
+                onError = { _, result ->
+                    Log.e(
+                        "$TAG Error getting shortcut icon from URL [$url]: ${result.throwable}"
+                    )
+                }
+            )
+        }
+    }
+}
+
+@UiThread
 @BindingAdapter("coilFile")
 fun ImageView.loadFileImage(file: String?) {
     if (!file.isNullOrEmpty()) {

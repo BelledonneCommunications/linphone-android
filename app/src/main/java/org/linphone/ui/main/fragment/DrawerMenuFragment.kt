@@ -20,6 +20,7 @@
 package org.linphone.ui.main.fragment
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -125,6 +126,19 @@ class DrawerMenuFragment : GenericMainFragment() {
                             (requireActivity() as MainActivity).closeDrawerMenu()
                         }
                     }
+                }
+            }
+        }
+
+        viewModel.openLinkInBrowserEvent.observe(viewLifecycleOwner) {
+            it.consume { link ->
+                try {
+                    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
+                    startActivity(browserIntent)
+                } catch (ise: IllegalStateException) {
+                    Log.e(
+                        "$TAG Can't start ACTION_VIEW intent for URL [$link], IllegalStateException: $ise"
+                    )
                 }
             }
         }

@@ -32,6 +32,7 @@ import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
 import org.linphone.ui.main.model.AccountModel
+import org.linphone.ui.main.model.ShortcutModel
 import org.linphone.utils.Event
 
 class DrawerMenuViewModel @UiThread constructor() : GenericViewModel() {
@@ -47,6 +48,8 @@ class DrawerMenuViewModel @UiThread constructor() : GenericViewModel() {
 
     val hideSettings = MutableLiveData<Boolean>()
 
+    val shortcuts = MutableLiveData<ArrayList<ShortcutModel>>()
+
     val startAssistantEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -60,6 +63,10 @@ class DrawerMenuViewModel @UiThread constructor() : GenericViewModel() {
     }
 
     val defaultAccountChangedEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
+    val openLinkInBrowserEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
     }
 
@@ -104,8 +111,9 @@ class DrawerMenuViewModel @UiThread constructor() : GenericViewModel() {
             if (status != ConfiguringState.Skipped) {
                 accounts.value.orEmpty().forEach(AccountModel::destroy)
 
-                Log.i("$TAG Configuring status is [$status], reload accounts")
+                Log.i("$TAG Configuring status is [$status], reload accounts & shortcuts")
                 computeAccountsList()
+                computeShortcuts()
             }
         }
     }
@@ -118,6 +126,7 @@ class DrawerMenuViewModel @UiThread constructor() : GenericViewModel() {
             hideSettings.postValue(corePreferences.hideSettings)
 
             computeAccountsList()
+            computeShortcuts()
         }
     }
 
@@ -173,12 +182,37 @@ class DrawerMenuViewModel @UiThread constructor() : GenericViewModel() {
 
         val maxAccount = corePreferences.maxAccountsCount
         val accountsCount = list.size
-        val maxAccountsReached = maxAccount > 0 && accountsCount >= maxAccount
+        val maxAccountsReached = maxAccount in 1..accountsCount
         if (maxAccountsReached) {
             Log.w(
                 "$TAG Max number of allowed accounts reached [$maxAccount], hiding add account button"
             )
         }
         hideAddAccount.postValue(maxAccountsReached)
+    }
+
+    @WorkerThread
+    private fun computeShortcuts() {
+        val config = coreContext.core.config
+        val shortcutsList = arrayListOf<ShortcutModel>()
+        val shortcutsCount = config.getInt("ui", "shortcut_count", 0)
+        if (shortcutsCount > 0) {
+            Log.i("$TAG Found [$shortcutsCount] shortcuts to display")
+            for (i in 0 until shortcutsCount) {
+                val key = "shortcut_$i"
+                val label = config.getString(key, "name", "").orEmpty()
+                val iconUrl = config.getString(key, "icon", "").orEmpty()
+                val linkUrl = config.getString(key, "link", "").orEmpty()
+                val shortcutModel = ShortcutModel(
+                    label,
+                    iconUrl,
+                    linkUrl
+                ) { link ->
+                    openLinkInBrowserEvent.postValue(Event(link))
+                }
+                shortcutsList.add(shortcutModel)
+            }
+        }
+        shortcuts.postValue(shortcutsList)
     }
 }

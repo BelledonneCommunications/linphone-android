@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="model"
+            type="org.linphone.ui.main.model.ShortcutModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
+
+        <ImageView
+            android:onClick="@{() -> model.clicked()}"
+            android:id="@+id/shortcut_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/icon_size"
+            android:adjustViewBounds="true"
+            coilUrl="@{model.iconUrl}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{() -> model.clicked()}"
+            style="@style/header_style"
+            android:id="@+id/shortcut_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@{model.label, default=`Shortcut`}"
+            android:drawableEnd="@drawable/arrow_square_out"
+            android:drawablePadding="8dp"
+            app:drawableTint="?attr/color_main2_500"
+            app:layout_constraintStart_toEndOf="@id/shortcut_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -131,7 +131,7 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
                     .maxSizePercent(0.02)
                     .build()
             }
-            .networkCachePolicy(CachePolicy.DISABLED)
+            .networkCachePolicy(CachePolicy.ENABLED)
             .diskCachePolicy(diskCachePolicy)
             .memoryCachePolicy(CachePolicy.ENABLED)
             .build()
