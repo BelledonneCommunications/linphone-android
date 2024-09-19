@@ -891,7 +891,7 @@ class MessageModel @WorkerThread constructor(
     private fun playerTickerFlow() = flow {
         while (isPlayingVoiceRecord.value == true) {
             emit(Unit)
-            delay(50)
+            delay(10)
         }
     }
 
