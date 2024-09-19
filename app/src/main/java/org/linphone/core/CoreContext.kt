@@ -54,6 +54,7 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 import kotlin.math.abs
 import kotlinx.coroutines.*
+import kotlinx.coroutines.rx3.await
 import kotlinx.coroutines.tasks.await
 import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -68,6 +69,7 @@ import org.linphone.core.tools.Log
 import org.linphone.mediastream.Version
 import org.linphone.models.UserDevice
 import org.linphone.notifications.NotificationsManager
+import org.linphone.services.UserService
 import org.linphone.telecom.TelecomHelper
 import org.linphone.utils.*
 import org.linphone.utils.Event
@@ -427,9 +429,10 @@ class CoreContext(
         audioManager.registerAudioDeviceCallback(audioDeviceCallback, handler)
         Log.i("[Context] Started")
 
-        var deviceSubscription = DimensionsAccountsManager.getInstance(context).devicesSubject.subscribe { subscribableDeviceList ->
-            registerSipEndpoints(subscribableDeviceList.userDevices)
-        }
+        val deviceSubscription = DimensionsAccountsManager.getInstance(context).devicesSubject.subscribe(
+            { response -> registerSipEndpoints(response.userDevices) },
+            { error -> Log.e(error) }
+        )
     }
 
     private fun clearAccounts() {
@@ -1365,13 +1368,15 @@ class CoreContext(
     }
 
     fun dialVoicemail() {
-        val userInfoSubjectValue = DimensionsAccountsManager.getInstance(context).userInfoSubject.value
+        CoroutineScope(Dispatchers.IO).launch {
+            val userInfo = UserService.getInstance(context).user
+                .firstOrError()
+                .await()
 
-        if (userInfoSubjectValue == null || !userInfoSubjectValue.hasValue) {
-            Log.w("[Context] CallVoicemail executed with no userInfo")
-            return
-        } else {
-            core.invite(userInfoSubjectValue.userInfo!!.presenceId)
+            //    (context as Activity).runOnUiThread {
+            Handler(Looper.getMainLooper()).post {
+                core.invite(userInfo.presenceId)
+            }
         }
     }
 

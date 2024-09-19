@@ -146,7 +146,13 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
         if (::viewModel.isInitialized) {
             val userSvc = UserService.getInstance(requireContext())
             userSubscription = userSvc.user
-                .subscribe { u -> viewModel.user.set(u) }
+                .subscribe(
+                    { u ->
+                        viewModel.user.set(u)
+                        viewModel.userImageUrl.set(u.profileImageUrl.replace("_36.png", "_128.png"))
+                    },
+                    { error -> Log.e(error) }
+                )
         }
     }
 
