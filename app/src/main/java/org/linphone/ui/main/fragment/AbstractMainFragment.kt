@@ -20,9 +20,11 @@
 package org.linphone.ui.main.fragment
 
 import android.content.res.Configuration
+import android.graphics.Outline
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewOutlineProvider
 import android.view.inputmethod.EditorInfo
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.IdRes
@@ -52,6 +54,14 @@ import org.linphone.utils.showKeyboard
 abstract class AbstractMainFragment : GenericMainFragment() {
     companion object {
         private const val TAG = "[Abstract Main Fragment]"
+    }
+
+    protected val outlineProvider = object : ViewOutlineProvider() {
+        override fun getOutline(view: View?, outline: Outline?) {
+            val radius = resources.getDimension(R.dimen.top_bar_rounded_corner_radius)
+            view ?: return
+            outline?.setRoundRect(0, 0, view.width, (view.height + radius).toInt(), radius)
+        }
     }
 
     private var currentFragmentId: Int = 0
