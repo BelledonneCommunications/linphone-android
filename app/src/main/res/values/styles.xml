@@ -101,18 +101,20 @@
 
     <style name="numpad_button">
         <item name="android:background" >@drawable/button_call_numpad_background</item>
-        <item name="android:layout_width">90dp</item>
-        <item name="android:layout_height">90dp</item>
-        <item name="android:layout_margin">5dp</item>
+        <item name="android:layout_width">96dp</item>
+        <item name="android:layout_height">96dp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+
     </style>
 
     <style name="numpad_button_digit" >
         <item name="android:textColor">@color/light_primary_text_color</item>
         <item name="android:layout_centerHorizontal">true</item>
-        <item name="android:textSize">40sp</item>
+        <item name="android:textSize">42sp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:gravity">center</item>
-        <item name="android:paddingTop">3dp</item>
+        <item name="android:paddingTop">5dp</item>
     </style>
 
     <!-- Assistant related -->
