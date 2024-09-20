@@ -132,7 +132,7 @@ class CorePreferences constructor(private val context: Context) {
         }
 
     var replaceSipUriByUsername: Boolean
-        get() = config.getBool("app", "replace_sip_uri_by_username", false)
+        get() = config.getBool("app", "replace_sip_uri_by_username", true)
         set(value) {
             config.setBool("app", "replace_sip_uri_by_username", value)
         }
