@@ -70,13 +70,13 @@
             android:layout_toLeftOf="@id/voice_mail_count"
             android:gravity="center_vertical"
             android:src="@drawable/voicemail"
-            android:visibility="@{viewModel.voiceMailCount > 0 ? View.VISIBLE : View.GONE, default=gone}" />
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/voice_mail_count"
             android:onClick="@{voicemailClickListener}"
             android:text="@{viewModel.voiceMailCount.toString()}"
-            android:visibility="@{viewModel.voiceMailCount > 0 ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="gone"
             android:textColor="?attr/secondaryTextColor"
             android:textSize="21sp"
             android:layout_width="wrap_content"

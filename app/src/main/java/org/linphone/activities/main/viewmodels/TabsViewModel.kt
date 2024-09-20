@@ -23,14 +23,17 @@ import android.animation.ValueAnimator
 import android.view.animation.LinearInterpolator
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.*
 import org.linphone.utils.AppUtils
+import org.linphone.utils.Log
 
 class TabsViewModel : ViewModel() {
     val unreadMessagesCount = MutableLiveData<Int>()
+    val unreadVoicemailsCount = MutableLiveData<Int>()
     val missedCallsCount = MutableLiveData<Int>()
 
     val leftAnchor = MutableLiveData<Float>()
@@ -39,6 +42,7 @@ class TabsViewModel : ViewModel() {
 
     val historyMissedCountTranslateY = MutableLiveData<Float>()
     val chatUnreadCountTranslateY = MutableLiveData<Float>()
+    val voicemailUnreadCountTranslateY = MutableLiveData<Float>()
 
     private val bounceAnimator: ValueAnimator by lazy {
         ValueAnimator.ofFloat(
@@ -49,6 +53,7 @@ class TabsViewModel : ViewModel() {
                 val value = it.animatedValue as Float
                 historyMissedCountTranslateY.value = -value
                 chatUnreadCountTranslateY.value = -value
+                voicemailUnreadCountTranslateY.value = -value
             }
             interpolator = LinearInterpolator()
             duration = 250
@@ -86,20 +91,35 @@ class TabsViewModel : ViewModel() {
                 updateUnreadChatCount()
             }
         }
+
+        override fun onNotifyReceived(
+            core: Core,
+            event: Event,
+            notifiedEvent: String,
+            body: Content?
+        ) {
+            if (body?.type == "application" && body.subtype == "simple-message-summary" && body.size > 0) {
+                val data = body.utf8Text?.lowercase(Locale.getDefault())
+                val voiceMail = data?.split("voice-message: ")
+                if ((voiceMail?.size ?: 0) >= 2) {
+                    val toParse = voiceMail!![1].split("/", limit = 0)
+                    try {
+                        val unreadCount: Int = toParse[0].toInt()
+                        unreadVoicemailsCount.value = unreadCount
+                    } catch (nfe: NumberFormatException) {
+                        Log.e("[Status Fragment] $nfe")
+                    }
+                }
+            }
+        }
     }
 
     init {
         coreContext.core.addListener(listener)
 
-        if (corePreferences.disableChat) {
-            leftAnchor.value = 1 / 3F
-            middleAnchor.value = 2 / 3F
-            rightAnchor.value = 1F
-        } else {
-            leftAnchor.value = 0.25F
-            middleAnchor.value = 0.5F
-            rightAnchor.value = 0.75F
-        }
+        leftAnchor.value = 0.25F
+        middleAnchor.value = 0.5F
+        rightAnchor.value = 0.75F
 
         updateUnreadChatCount()
         updateMissedCallCount()
@@ -118,5 +138,9 @@ class TabsViewModel : ViewModel() {
 
     fun updateUnreadChatCount() {
         unreadMessagesCount.value = if (corePreferences.disableChat) 0 else coreContext.core.unreadChatMessageCountFromActiveLocals
+    }
+
+    fun dialVoicemail() {
+        coreContext.dialVoicemail()
     }
 }

@@ -115,7 +115,7 @@
         <item name="android:textSize">38sp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:paddingTop">0dp</item>
-        <item name="android:paddingBottom">10dp</item>
+        <item name="android:paddingBottom">15sp</item>
     </style>
 
     <style name="numpad_button_text">
@@ -124,7 +124,7 @@
         <item name="android:layout_centerInParent">true</item>
         <item name="android:textSize">13sp</item>
         <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:paddingTop">38sp</item>
+        <item name="android:paddingTop">40sp</item>
         <item name="android:paddingBottom">0dp</item>
     </style>
 
