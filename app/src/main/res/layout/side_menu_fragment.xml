@@ -74,7 +74,7 @@
                 android:adjustViewBounds="true"
                 android:contentDescription="@null"
                 android:src="@drawable/avatar_border"
-                android:visibility="@{viewModel.defaultAccountFound ? View.VISIBLE : View.GONE}" />
+                android:visibility="@{viewModel.userImageUrl == null ? View.GONE : View.VISIBLE, default=gone}" />
 
             <ImageView
                 android:layout_width="@dimen/contact_presence_badge_size"

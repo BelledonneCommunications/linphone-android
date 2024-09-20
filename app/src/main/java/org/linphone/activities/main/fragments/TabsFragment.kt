@@ -99,6 +99,10 @@ class TabsFragment : GenericFragment<TabsFragmentBinding>(), NavController.OnDes
             }
             navigateToChatRooms()
         }
+
+        binding.setVoicemailClickListener {
+            viewModel.dialVoicemail()
+        }
     }
 
     override fun onStart() {

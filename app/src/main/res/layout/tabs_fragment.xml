@@ -18,6 +18,9 @@
             name="chatClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
+            name="voicemailClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
             name="viewModel"
             type="org.linphone.activities.main.viewmodels.TabsViewModel" />
     </data>
@@ -117,6 +120,7 @@
         android:onClick="@{chatClickListener}"
         -->
         <ImageView
+            android:visibility="gone"
             android:id="@+id/chat"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -139,6 +143,33 @@
             android:translationY="@{viewModel.chatUnreadCountTranslateY}"
             android:background="@{viewModel.unreadMessagesCount == 0 ? @drawable/hidden_unread_message_count_bg : @drawable/unread_message_count_bg}"
             android:text="@{viewModel.unreadMessagesCount == 0 ? `` : String.valueOf(viewModel.unreadMessagesCount)}"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+            android:id="@+id/voicemail"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/content_description_menu_voicemail"
+            android:padding="15dp"
+            android:background="@drawable/footer_button"
+            android:src="@drawable/footer_voicemail"
+            android:onClick="@{voicemailClickListener}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/guidelineRight"/>
+
+        <TextView
+            android:id="@+id/voicemail_unread_count"
+            style="@style/unread_count_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:translationY="@{viewModel.voicemailUnreadCountTranslateY}"
+            android:background="@{viewModel.unreadVoicemailsCount == 0 ? @drawable/hidden_unread_message_count_bg : @drawable/unread_message_count_bg}"
+            android:text="@{viewModel.unreadVoicemailsCount == 0 ? `` : String.valueOf(viewModel.unreadVoicemailsCount)}"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 

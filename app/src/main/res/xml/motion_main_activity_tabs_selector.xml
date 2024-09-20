@@ -4,7 +4,7 @@
 
     <Transition
         motion:constraintSetStart="@+id/dialer"
-        motion:constraintSetEnd="@+id/chat_rooms"/>
+        motion:constraintSetEnd="@+id/voicemail"/>
 
     <Transition
         motion:constraintSetStart="@+id/call_history"
@@ -16,7 +16,7 @@
 
     <Transition
         motion:constraintSetStart="@+id/call_history"
-        motion:constraintSetEnd="@+id/chat_rooms"/>
+        motion:constraintSetEnd="@+id/voicemail"/>
 
     <Transition
         motion:constraintSetStart="@+id/contacts"
@@ -24,7 +24,7 @@
 
     <Transition
         motion:constraintSetStart="@+id/contacts"
-        motion:constraintSetEnd="@+id/chat_rooms"/>
+        motion:constraintSetEnd="@+id/voicemail"/>
 
     <ConstraintSet android:id="@+id/call_history">
 
@@ -59,7 +59,7 @@
 
     </ConstraintSet>
 
-    <ConstraintSet android:id="@+id/chat_rooms">
+    <ConstraintSet android:id="@+id/voicemail">
 
         <Constraint
             android:id="@id/selector"

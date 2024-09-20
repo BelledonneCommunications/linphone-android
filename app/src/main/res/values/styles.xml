@@ -105,16 +105,27 @@
         <item name="android:layout_height">96dp</item>
         <item name="android:layout_marginTop">5dp</item>
         <item name="android:layout_marginBottom">5dp</item>
-
+        <item name="android:clipToPadding">false</item>
     </style>
 
     <style name="numpad_button_digit" >
         <item name="android:textColor">@color/light_primary_text_color</item>
         <item name="android:layout_centerHorizontal">true</item>
-        <item name="android:textSize">42sp</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:textSize">38sp</item>
         <item name="android:fontFamily">sans-serif</item>
-        <item name="android:gravity">center</item>
-        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">15sp</item>
+    </style>
+
+    <style name="numpad_button_text">
+        <item name="android:textColor">@color/grey_color</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:paddingTop">40sp</item>
+        <item name="android:paddingBottom">0dp</item>
     </style>
 
     <!-- Assistant related -->
