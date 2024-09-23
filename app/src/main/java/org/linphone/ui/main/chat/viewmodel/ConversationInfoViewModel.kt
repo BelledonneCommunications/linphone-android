@@ -30,13 +30,10 @@ import org.linphone.contacts.ContactsManager
 import org.linphone.core.Address
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomListenerStub
-import org.linphone.core.ConferenceScheduler
-import org.linphone.core.ConferenceSchedulerListenerStub
 import org.linphone.core.EventLog
 import org.linphone.core.Factory
 import org.linphone.core.Friend
 import org.linphone.core.Participant
-import org.linphone.core.ParticipantInfo
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.chat.model.ParticipantModel
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
@@ -196,47 +193,6 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
         }
     }
 
-    private val conferenceSchedulerListener = object : ConferenceSchedulerListenerStub() {
-        override fun onStateChanged(
-            conferenceScheduler: ConferenceScheduler,
-            state: ConferenceScheduler.State
-        ) {
-            Log.i("$TAG Conference scheduler state is $state")
-            if (state == ConferenceScheduler.State.Ready) {
-                conferenceScheduler.removeListener(this)
-
-                val conferenceAddress = conferenceScheduler.info?.uri
-                if (conferenceAddress != null) {
-                    Log.i(
-                        "$TAG Conference info created, address is ${conferenceAddress.asStringUriOnly()}"
-                    )
-                    coreContext.startVideoCall(conferenceAddress)
-                } else {
-                    Log.e("$TAG Conference info URI is null!")
-                    showRedToastEvent.postValue(
-                        Event(
-                            Pair(
-                                R.string.conference_failed_to_create_group_call_toast,
-                                R.drawable.warning_circle
-                            )
-                        )
-                    )
-                }
-            } else if (state == ConferenceScheduler.State.Error) {
-                conferenceScheduler.removeListener(this)
-                Log.e("$TAG Failed to create group call!")
-                showRedToastEvent.postValue(
-                    Event(
-                        Pair(
-                            R.string.conference_failed_to_create_group_call_toast,
-                            R.drawable.warning_circle
-                        )
-                    )
-                )
-            }
-        }
-    }
-
     private val contactsListener = object : ContactsManager.ContactsListener {
         @WorkerThread
         override fun onContactsLoaded() {
@@ -301,24 +257,6 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
         coreContext.postOnCoreThread {
             chatRoom.muted = !chatRoom.muted
             isMuted.postValue(chatRoom.muted)
-        }
-    }
-
-    @UiThread
-    fun call() {
-        coreContext.postOnCoreThread { core ->
-            if (LinphoneUtils.isChatRoomAGroup(chatRoom) && chatRoom.participants.size >= 2) {
-                createGroupCall()
-            } else {
-                val firstParticipant = chatRoom.participants.firstOrNull()
-                val address = firstParticipant?.address
-                if (address != null) {
-                    Log.i("$TAG Audio calling SIP address [${address.asStringUriOnly()}]")
-                    coreContext.startAudioCall(address)
-                } else {
-                    Log.e("$TAG Failed to find participant to call!")
-                }
-            }
         }
     }
 
@@ -635,42 +573,6 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
         avatarModel.postValue(avatar)
 
         participants.postValue(participantsList)
-    }
-
-    @WorkerThread
-    private fun createGroupCall() {
-        val core = coreContext.core
-        val account = core.defaultAccount
-        if (account == null) {
-            Log.e(
-                "$TAG No default account found, can't create group call!"
-            )
-            return
-        }
-
-        val conferenceInfo = Factory.instance().createConferenceInfo()
-        conferenceInfo.organizer = account.params.identityAddress
-        conferenceInfo.subject = subject.value
-
-        val participants = arrayOfNulls<ParticipantInfo>(chatRoom.participants.size)
-        var index = 0
-        for (participant in chatRoom.participants) {
-            val info = Factory.instance().createParticipantInfo(participant.address)
-            // For meetings, all participants must have Speaker role
-            info?.role = Participant.Role.Speaker
-            participants[index] = info
-            index += 1
-        }
-        conferenceInfo.setParticipantInfos(participants)
-
-        Log.i(
-            "$TAG Creating group call with subject ${subject.value} and ${participants.size} participant(s)"
-        )
-        val conferenceScheduler = core.createConferenceScheduler()
-        conferenceScheduler.addListener(conferenceSchedulerListener)
-        conferenceScheduler.account = account
-        // Will trigger the conference creation/update automatically
-        conferenceScheduler.info = conferenceInfo
     }
 
     @WorkerThread

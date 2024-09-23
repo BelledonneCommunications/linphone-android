@@ -184,6 +184,12 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
             }
         }
 
+        viewModel.confirmGroupCallEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                showConfirmGroupCallPopup()
+            }
+        }
+
         sharedViewModel.listOfSelectedSipUrisEvent.observe(viewLifecycleOwner) {
             it.consume { list ->
                 Log.i("$TAG Found [${list.size}] new participants to add to the group, let's do it")
@@ -421,6 +427,29 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
         model.confirmEvent.observe(viewLifecycleOwner) {
             it.consume {
                 viewModel.deleteHistory()
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun showConfirmGroupCallPopup() {
+        val model = ConfirmationDialogModel()
+        val dialog = DialogUtils.getConfirmGroupCallDialog(
+            requireActivity(),
+            model
+        )
+
+        model.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        model.confirmEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                viewModel.startGroupCall()
                 dialog.dismiss()
             }
         }

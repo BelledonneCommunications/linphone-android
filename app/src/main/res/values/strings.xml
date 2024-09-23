@@ -79,6 +79,7 @@
     <string name="dialog_no">No</string>
     <string name="dialog_yes">Yes</string>
     <string name="dialog_remove">Remove</string>
+    <string name="dialog_confirm">Confirm</string>
 
     <!-- Related to Android notifications -->
     <string name="notification_channel_call_name">&appName; active calls notifications</string>
@@ -482,7 +483,6 @@
     <string name="conversation_dialog_edit_subject">Edit conversation subject</string>
     <string name="conversation_dialog_subject_cant_be_empty_error">Subject is mandatory</string>
     <string name="conversation_dialog_subject_hint">Conversation subject</string>
-    <string name="conversation_dialog_edit_subject_confirm_button">Confirm</string>
     <string name="conversation_dialog_open_or_export_file_title">Open or export file?</string>
     <string name="conversation_dialog_open_or_export_file_message">&appName; can\'t open this file.\n\nDo you want to open it in another app (if possible), or export it on your device?</string>
     <string name="conversation_dialog_open_file_label">Open file</string>
@@ -523,6 +523,9 @@
     <string name="conversation_info_participant_no_longer_has_admin_rights_toast">%s is no longer admin</string>
     <string name="conversation_info_cant_find_contact_to_display_toast">Contact was not found</string>
     <string name="conversation_info_no_address_to_add_to_contact_toast">No address to add to contact</string>
+    <string name="conversation_info_confirm_start_group_call_dialog_title">Start a group call?</string>
+    <string name="conversation_info_confirm_start_group_call_dialog_message">All participants will receive a call.</string>
+    <string name="conversation_info_confirm_start_group_call_dialog_button">Start a group call</string>
 
     <string name="conversation_event_conference_created">You have joined the group</string>
     <string name="conversation_event_conference_destroyed">You have left the group</string>

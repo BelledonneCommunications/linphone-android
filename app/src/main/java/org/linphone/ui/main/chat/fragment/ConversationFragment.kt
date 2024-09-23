@@ -512,6 +512,12 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             }
         }
 
+        viewModel.confirmGroupCallEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                showConfirmGroupCallPopup()
+            }
+        }
+
         viewModel.isEndToEndEncrypted.observe(viewLifecycleOwner) { encrypted ->
             if (encrypted) {
                 binding.eventsList.addItemDecoration(headerItemDecoration)
@@ -1362,6 +1368,29 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         model.confirmEvent.observe(viewLifecycleOwner) {
             it.consume {
                 exportFile(path, mime)
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun showConfirmGroupCallPopup() {
+        val model = ConfirmationDialogModel()
+        val dialog = DialogUtils.getConfirmGroupCallDialog(
+            requireActivity(),
+            model
+        )
+
+        model.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        model.confirmEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                viewModel.startGroupCall()
                 dialog.dismiss()
             }
         }

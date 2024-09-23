@@ -51,6 +51,7 @@ import org.linphone.databinding.DialogRemoveAllCallLogsBinding
 import org.linphone.databinding.DialogRemoveCallLogsBinding
 import org.linphone.databinding.DialogRemoveConversationHistoryBinding
 import org.linphone.databinding.DialogSetOrEditGroupSubjectBindingImpl
+import org.linphone.databinding.DialogStartGroupCallFromConversationBinding
 import org.linphone.databinding.DialogUpdateAccountPasswordAfterRegisterFailureBinding
 import org.linphone.databinding.DialogUpdateAccountPasswordBinding
 import org.linphone.databinding.DialogUpdateAvailableBinding
@@ -277,6 +278,22 @@ class DialogUtils {
             binding.viewModel = viewModel
             // For some reason, binding.subject triggers an error on Android Studio...
             binding.root.findViewById<AppCompatEditText>(R.id.subject)?.requestFocus()
+
+            return getDialog(context, binding)
+        }
+
+        @UiThread
+        fun getConfirmGroupCallDialog(
+            context: Context,
+            viewModel: ConfirmationDialogModel
+        ): Dialog {
+            val binding: DialogStartGroupCallFromConversationBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_start_group_call_from_conversation,
+                null,
+                false
+            )
+            binding.viewModel = viewModel
 
             return getDialog(context, binding)
         }

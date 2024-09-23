@@ -7,20 +7,13 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.model.GroupSetOrEditSubjectDialogModel" />
+            type="org.linphone.ui.main.history.model.ConfirmationDialogModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:onClick="@{() -> viewModel.dismiss()}"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.75" />
 
         <ImageView
             android:id="@+id/dialog_background"
@@ -44,49 +37,29 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:paddingTop="@dimen/dialog_top_bottom_margin"
-            android:text="@{viewModel.isGroupConversation ? viewModel.isEdit ? @string/conversation_dialog_edit_subject : @string/conversation_dialog_set_subject : @string/history_group_call_start_dialog_set_subject, default=@string/history_group_call_start_dialog_set_subject}"
+            android:text="@string/conversation_info_confirm_start_group_call_dialog_title"
             app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintBottom_toTopOf="@id/subject"
+            app:layout_constraintBottom_toTopOf="@id/message"
             app:layout_constraintStart_toStartOf="@id/dialog_background"
             app:layout_constraintEnd_toEndOf="@id/dialog_background"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
-            android:id="@+id/subject"
+            android:id="@+id/message"
             android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="5dp"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:hint="@{viewModel.isGroupConversation ? @string/conversation_dialog_subject_hint : @string/history_group_call_start_dialog_subject_hint, default=@string/history_group_call_start_dialog_subject_hint}"
-            android:text="@={viewModel.subject, default=`Lorem Ipsum`}"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/conversation_info_confirm_start_group_call_dialog_message"
             android:textSize="14sp"
-            android:textColor="?attr/color_main2_600"
-            android:maxLines="1"
-            android:background="@{viewModel.emptySubject ? @drawable/shape_edit_text_error_background : @drawable/edit_text_background, default=@drawable/edit_text_background}"
-            android:inputType="text|textCapSentences"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintWidth_max="@dimen/text_input_max_width"
+            android:autoLink="web"
+            android:textColorLink="?attr/color_main1_500"
             app:layout_constraintBottom_toTopOf="@id/cancel"
             app:layout_constraintStart_toStartOf="@id/dialog_background"
             app:layout_constraintEnd_toEndOf="@id/dialog_background"
-            app:layout_constraintTop_toBottomOf="@id/title"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_600"
-            android:id="@+id/subject_error"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/conversation_dialog_subject_cant_be_empty_error"
-            android:textSize="13sp"
-            android:textColor="?attr/color_danger_500"
-            android:visibility="@{viewModel.emptySubject ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintTop_toBottomOf="@id/subject"
-            app:layout_constraintStart_toStartOf="@id/subject"
-            app:layout_constraintEnd_toEndOf="@id/subject"/>
+            app:layout_constraintTop_toBottomOf="@id/title" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{() -> viewModel.dismiss()}"
@@ -100,7 +73,7 @@
             android:text="@string/dialog_cancel"
             app:layout_constraintStart_toStartOf="@id/dialog_background"
             app:layout_constraintEnd_toEndOf="@id/dialog_background"
-            app:layout_constraintTop_toBottomOf="@id/subject"
+            app:layout_constraintTop_toBottomOf="@id/message"
             app:layout_constraintBottom_toTopOf="@id/confirm"/>
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -112,7 +85,6 @@
             android:layout_marginTop="16dp"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
-            android:enabled="@{!viewModel.emptySubject}"
             android:text="@string/dialog_confirm"
             app:layout_constraintStart_toStartOf="@id/dialog_background"
             app:layout_constraintEnd_toEndOf="@id/dialog_background"
@@ -126,7 +98,7 @@
             app:layout_constraintTop_toBottomOf="@id/confirm"
             app:layout_constraintStart_toStartOf="@id/dialog_background"
             app:layout_constraintEnd_toEndOf="@id/dialog_background"
-            app:layout_constraintBottom_toBottomOf="@id/guideline"/>
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
