@@ -167,6 +167,10 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
         Log.i("Auth: onCreate MainActivity")
 
+        if (intent.hasExtra("login")) {
+            Log.i("AUTH login COMPLETE!")
+        }
+
         if (parent != null) {
             parent.finish()
         }
@@ -228,6 +232,12 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         }
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+
+        if (intent != null) handleAuthIntent(intent)
+    }
+
     override fun onStart() {
         super.onStart()
 
@@ -243,9 +253,13 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             Log.e(ex)
         }
 
+        handleAuthIntent(intent)
+    }
+
+    private fun handleAuthIntent(intent: Intent) {
         // the stored AuthState is incomplete, so check if we are currently receiving the result of
         // the authorization flow from the browser.
-        val response = AuthorizationResponse.fromIntent(intent)
+       val response = AuthorizationResponse.fromIntent(intent)
         val ex = AuthorizationException.fromIntent(intent)
 
         val asm = AuthStateManager.getInstance(applicationContext)
