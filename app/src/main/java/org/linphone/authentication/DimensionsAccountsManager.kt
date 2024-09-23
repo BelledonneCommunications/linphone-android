@@ -43,11 +43,10 @@ class DimensionsAccountsManager(context: Context) {
         val asm = AuthStateManager.getInstance(context)
         val sub = asm.user
             .map { it.id ?: "" }
-            .doOnEach { Log.i("AUTH user ID : $it") }
-            .distinctUntilChanged { id -> id }
             .subscribe(
                 {
                     try {
+                        Log.i("AUTH user ID : $it")
                         when (it) {
                             AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER -> Log.w(
                                 "DimensionsAccountManager subscription triggered with initial AuthenticatedUser"
