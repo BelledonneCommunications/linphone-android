@@ -50,6 +50,15 @@ public final class EnvironmentSelectionAdapter extends BaseAdapter {
                 new EnvironmentLoaderCallbacks());
     }
 
+    public int getItemIndex(String itemId) {
+        for (var i = 0; i < mEnvironments.size(); i++) {
+            var env = mEnvironments.get(i);
+            if (env != null && env.getId().equals(itemId)) {
+                return i;
+            }
+        }
+        return 0;
+    }
 
     @Override
     public int getCount() {
@@ -160,3 +169,4 @@ public final class EnvironmentSelectionAdapter extends BaseAdapter {
         }
     }
 }
+

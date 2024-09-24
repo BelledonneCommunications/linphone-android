@@ -3,6 +3,7 @@ package org.linphone.activities.main
 import android.annotation.TargetApi
 import android.app.PendingIntent
 import android.content.Intent
+import android.database.DataSetObserver
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -365,9 +366,15 @@ class LoginActivity : AppCompatActivity() {
      */
     @MainThread
     private fun configureEnvironmentSelector() {
+        val environmentService = getInstance(
+            applicationContext
+        )
         val spinner = findViewById<View>(R.id.environment_selector) as Spinner
         val adapter = EnvironmentSelectionAdapter(this)
+        adapter.registerDataSetObserver(NotifyingDataSetObserver())
         spinner.adapter = adapter
+
+
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
@@ -377,14 +384,8 @@ class LoginActivity : AppCompatActivity() {
             ) {
                 val env = adapter.getItem(position)
                 if (env != null) {
-                    Log.i(
-                        TAG,
-                        "Setting environment " + env.name + " (" + env.identityServerUri + ")"
-                    )
+                    Log.i("Setting environment " + env.name + " (" + env.identityServerUri + ")")
 
-                    val environmentService = getInstance(
-                        applicationContext
-                    )
                     environmentService.setCurrentEnvironment(env)
                     mAuthStateManager!!.replace(AuthState(), "Environment Selector")
 
@@ -407,7 +408,7 @@ class LoginActivity : AppCompatActivity() {
         try {
             mAuthIntentLatch.await()
         } catch (ex: InterruptedException) {
-            Log.w(TAG, "Interrupted while waiting for auth intent")
+            Log.w("Interrupted while waiting for auth intent")
         }
 
         if (mUsePendingIntents) {
@@ -448,7 +449,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         if (AuthorizationServiceManager.getInstance(this).authorizationServiceInstance != null) {
-            Log.i(TAG, "Discarding existing AuthService instance")
+            Log.i("Discarding existing AuthService instance")
             AuthorizationServiceManager.getInstance(this).clearAuthorizationServiceInstance()
         }
 
@@ -499,18 +500,20 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun displayAuthCancelled() {
-        Snackbar.make(
-            findViewById(R.id.coordinator),
-            "Authorization canceled",
-            Snackbar.LENGTH_SHORT
-        )
-            .show()
+        runOnUiThread {
+            Snackbar
+                .make(
+                    findViewById(R.id.login_coordinator),
+                    "Authorization cancelled",
+                    Snackbar.LENGTH_SHORT
+                ).show()
+        }
     }
 
     private fun warmUpBrowser() {
         mAuthIntentLatch = CountDownLatch(1)
         mExecutor.execute {
-            Log.i(TAG, "Warming up browser instance for auth request")
+            Log.i("Warming up browser instance for auth request")
             val intentBuilder =
                 AuthorizationServiceManager.getInstance(this).authorizationServiceInstance.createCustomTabsIntentBuilder(
                     mAuthRequest.get()!!.toUri()
@@ -522,7 +525,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun createAuthRequest(loginHint: String?) {
-        Log.i(TAG, "Creating auth request for login hint: $loginHint")
+        Log.i("Creating auth request for login hint: $loginHint")
         val authRequestBuilder = AuthorizationRequest.Builder(
             mAuthStateManager!!.current.authorizationServiceConfiguration!!,
             mClientId.get()!!,
@@ -590,11 +593,32 @@ class LoginActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val TAG = "LoginActivity"
         private const val EXTRA_FAILED = "failed"
         private const val RC_AUTH = 100
         private const val DEBOUNCE_DELAY_MS = 500
 
         private var isLoggingInitialised = false
+    }
+
+
+    private inner class NotifyingDataSetObserver : DataSetObserver() {
+        override fun onChanged() {
+            super.onChanged()
+
+            val environmentService = getInstance(applicationContext)
+            val spinner = findViewById<View>(R.id.environment_selector) as Spinner
+
+            val environmentId = environmentService.getCurrentEnvironment()?.id ?: ""
+
+            val index = (spinner.adapter as EnvironmentSelectionAdapter).getItemIndex(environmentId)
+
+            Log.i("Environment: $environmentId ($index)")
+
+            spinner.setSelection(index)
+        }
+
+        override fun onInvalidated() {
+            super.onInvalidated()
+        }
     }
 }

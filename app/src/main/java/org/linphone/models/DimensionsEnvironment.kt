@@ -34,7 +34,10 @@ data class DimensionsEnvironment(
     var diagnosticsBlobConnectionString: String,
 
     @SerializedName("ResourcesBlobUrl")
-    var resourcesBlobUrl: String
+    var resourcesBlobUrl: String,
+
+    @SerializedName("Locales")
+    var locales: List<String>
 ) {
     companion object {
         public fun jsonDeserialize(jsonStr: String): DimensionsEnvironment {

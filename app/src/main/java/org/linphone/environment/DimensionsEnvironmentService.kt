@@ -2,13 +2,14 @@ package org.linphone.environment
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.annotation.AnyThread
 import java.lang.ref.WeakReference
+import java.util.Locale
 import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.locks.ReentrantLock
 import org.json.JSONException
 import org.linphone.models.DimensionsEnvironment
+import org.linphone.utils.Log
 
 class DimensionsEnvironmentService(context: Context) {
     companion object {
@@ -37,7 +38,6 @@ class DimensionsEnvironmentService(context: Context) {
     )
     private var mPrefsLock: ReentrantLock = ReentrantLock()
     private var mCurrentEnvironment: AtomicReference<DimensionsEnvironment> = AtomicReference<DimensionsEnvironment>()
-    private var mEnvironmentList: List<DimensionsEnvironment>? = null
 
     @AnyThread
     fun getCurrentEnvironment(): DimensionsEnvironment? {
@@ -62,116 +62,16 @@ class DimensionsEnvironmentService(context: Context) {
     }
 
     @AnyThread
-    fun getEnvironmentList(): List<DimensionsEnvironment>? {
-        Log.d("getEnvironmentList", "Reading environments...")
-
-        if (mEnvironmentList == null) {
-            mEnvironmentList = buildEnvironmentList()
-        }
-
-        return mEnvironmentList
-    }
-
-    @AnyThread
-    fun buildEnvironmentList(): List<DimensionsEnvironment> {
-        val environments = listOf(
-            DimensionsEnvironment(
-                id = "NA",
-                name = "North America",
-                isDefault = false,
-                isHidden = false,
-                identityServerUri = "https://login.xarios.cloud",
-                gatewayApiUri = "https://ucgateway.xarios.cloud",
-                realtimeApiUri = "https://realtime.xarios.cloud",
-                documentationUri = "https://docs.xarios.cloud/mobile",
-                diagnosticsBlobConnectionString = "@~#DIAGBLOB_NA#~@",
-                resourcesBlobUrl = "https://resource.xarios.cloud"
-            ),
-            DimensionsEnvironment(
-                id = "AU",
-                name = "Australia",
-                isDefault = false,
-                isHidden = false,
-                identityServerUri = "https://login.au.xarios.cloud",
-                gatewayApiUri = "https://ucgateway.au.xarios.cloud",
-                realtimeApiUri = "https://realtime.au.xarios.cloud",
-                documentationUri = "https://docs.au.xarios.cloud/mobile",
-                diagnosticsBlobConnectionString = "@~#DIAGBLOB_AU#~@",
-                resourcesBlobUrl = "https://resource.au.xarios.cloud"
-            ),
-            DimensionsEnvironment(
-                id = "EU",
-                name = "Europe",
-                isDefault = false,
-                isHidden = false,
-                identityServerUri = "https://login.eu.xarios.cloud",
-                gatewayApiUri = "https://ucgateway.eu.xarios.cloud",
-                realtimeApiUri = "https://realtime.eu.xarios.cloud",
-                documentationUri = "https://docs.eu.xarios.cloud/mobile",
-                diagnosticsBlobConnectionString = "@~#DIAGBLOB_EU#~@",
-                resourcesBlobUrl = "https://resource.eu.xarios.cloud"
-            ),
-            DimensionsEnvironment(
-                id = "UK",
-                name = "United Kingdom",
-                isDefault = true,
-                isHidden = false,
-                identityServerUri = "https://login.uk.xarios.cloud",
-                gatewayApiUri = "https://ucgateway.uk.xarios.cloud",
-                realtimeApiUri = "https://realtime.uk.xarios.cloud",
-                documentationUri = "https://docs.uk.xarios.cloud/mobile",
-                diagnosticsBlobConnectionString = "@~#DIAGBLOB_UK#~@",
-                resourcesBlobUrl = "https://resource.uk.xarios.cloud"
-            ),
-            DimensionsEnvironment(
-                id = "Stg",
-                name = "Staging",
-                isDefault = false,
-                isHidden = false, // FIXME - this should be true
-                identityServerUri = "https://login.stage-env.dev",
-                gatewayApiUri = "https://ucgateway.stage-env.dev",
-                realtimeApiUri = "https://realtime.stage-env.dev",
-                documentationUri = "https://docs.stage-env.dev/mobile",
-                diagnosticsBlobConnectionString = "@~#DIAGBLOB_Stg#~@",
-                resourcesBlobUrl = "https://resource.stage-env.dev"
-            ),
-            DimensionsEnvironment(
-                id = "QA",
-                name = "QA",
-                isDefault = false,
-                isHidden = true,
-                identityServerUri = "https://login.xarios.dev",
-                gatewayApiUri = "https://ucgateway.xarios.dev",
-                realtimeApiUri = "https://realtime.xarios.dev",
-                documentationUri = "https://docs.xarios.dev/mobile",
-                diagnosticsBlobConnectionString = "@~#DIAGBLOB_QA#~@",
-                resourcesBlobUrl = "https://resource.xarios.dev"
-            ),
-            DimensionsEnvironment(
-                id = "RemoteDev",
-                name = "Remote Development",
-                isDefault = false,
-                isHidden = true,
-                identityServerUri = "https://grapefruit-idp.cowling.dev",
-                gatewayApiUri = "https://grapefruit-ucgateway.cowling.dev",
-                realtimeApiUri = "https://grapefruit-realtime.cowling.dev",
-                documentationUri = "https://docs.xarios.dev/mobile/",
-                diagnosticsBlobConnectionString = "@~#DIAGBLOB_RemoteDev#~@",
-                resourcesBlobUrl = "https://resource.xarios.dev"
-            )
-        )
-
+    public fun getEnvironmentList(): List<DimensionsEnvironment> {
         return environments
     }
-
+/*
     @AnyThread
     fun getEnvironmentById(id: String): DimensionsEnvironment? {
-        val environments = getEnvironmentList() ?: return null
-
         return environments.firstOrNull { x ->
             x.id == id
         }
-    }
+    }*/
 
     @AnyThread
     fun readEnvironment(): DimensionsEnvironment? {
@@ -179,17 +79,30 @@ class DimensionsEnvironmentService(context: Context) {
         try {
             val currentEnvironment = mPrefs.getString(KEY_STATE, null)
 
-            if (currentEnvironment.isNullOrBlank()) return null
+            if (currentEnvironment.isNullOrBlank()) {
+                return getDefaultEnvironment()
+            }
 
             try {
                 return DimensionsEnvironment.jsonDeserialize(currentEnvironment)
             } catch (ex: JSONException) {
-                Log.w(TAG, "Failed to deserialize stored auth state - discarding")
+                Log.w("Failed to deserialize stored auth state - discarding")
                 return null
             }
         } finally {
             mPrefsLock.unlock()
         }
+    }
+
+    fun getDefaultEnvironment(): DimensionsEnvironment? {
+        // Get the first environment that matches the current UI culture.
+        val localeCode = Locale.getDefault().toLanguageTag()
+        val cultureMatch = environments.firstOrNull { x -> x.locales.contains(localeCode) }
+        if (cultureMatch != null) {
+            return cultureMatch
+        }
+        // If not found, return the overall default environment.
+        return environments.firstOrNull { x -> x.isDefault }
     }
 
     @AnyThread
