@@ -499,12 +499,14 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun displayAuthCancelled() {
-        Snackbar.make(
-            findViewById(R.id.coordinator),
-            "Authorization canceled",
-            Snackbar.LENGTH_SHORT
-        )
-            .show()
+        runOnUiThread {
+            Snackbar
+                .make(
+                    findViewById(R.id.login_coordinator),
+                    "Authorization cancelled",
+                    Snackbar.LENGTH_SHORT
+                ).show()
+        }
     }
 
     private fun warmUpBrowser() {
