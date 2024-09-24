@@ -28,6 +28,7 @@ import android.view.View
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.google.gson.GsonBuilder
 import io.reactivex.rxjava3.disposables.Disposable
 import java.io.File
 import kotlinx.coroutines.launch
@@ -147,6 +148,7 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
         userSubscription = userSvc.user
             .subscribe(
                 { u ->
+                    Log.i("Userinfo: " + GsonBuilder().create().toJson(u))
                     viewModel.user.set(u)
                     viewModel.userImageUrl.set(u.profileImageUrl.replace("_36.png", "_128.png"))
                 },

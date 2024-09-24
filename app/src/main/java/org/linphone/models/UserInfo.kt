@@ -2,36 +2,47 @@ package org.linphone.models
 
 import com.google.gson.annotations.SerializedName
 
-data class SubscribableUserInfo(var userInfo: UserInfo?) {
-    var hasValue = userInfo != null
-}
-
 data class UserInfo(
 
-    var id: String,
-    var tenantId: String,
-    var tenantName: String,
-    var tenantTier: String,
-    var displayName: String,
-    var email: String,
-    var isEnabled: Boolean,
-    var profileImageUrl: String,
+    @SerializedName("id")
+    val id: String,
+
+    @SerializedName("ditenantIdsplayName")
+    val tenantId: String,
+
+    @SerializedName("tenantName")
+    val tenantName: String,
+
+    @SerializedName("tenantTier")
+    val tenantTier: String,
+
+    @SerializedName("displayName")
+    val displayName: String,
+
+    @SerializedName("email")
+    val email: String,
+
+    @SerializedName("isEnabled")
+    val isEnabled: Boolean,
+
+    @SerializedName("profileImageUrl")
+    val profileImageUrl: String,
 
     @SerializedName("permissions")
-    var permissions: List<String>,
+    val permissions: List<String>,
 
     @SerializedName("presenceId")
-    var presenceId: String,
+    val presenceId: String,
 
     @SerializedName("primaryGroupId")
-    var primaryGroupId: String,
+    val primaryGroupId: String,
 
     @SerializedName("pbxCountryCode")
-    var pbxCountryCode: String,
+    val pbxCountryCode: String,
 
     @SerializedName("tenantTimeZoneId")
-    var tenantTimeZoneId: String,
+    val tenantTimeZoneId: String,
 
     @SerializedName("clientProfileSettings")
-    var clientProfileSettings: ClientProfileSettings
+    val clientProfileSettings: ClientProfileSettings
 )
