@@ -375,9 +375,10 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         Log.i("$TAG Creating Core")
         Looper.prepare()
 
-        Factory.instance().loggingService.addListener(loggingServiceListener)
-        Log.i("$TAG Crashlytics enabled, register logging service listener")
-
+        if (context.resources.getBoolean(org.linphone.R.bool.crashlytics_enabled)) {
+            Factory.instance().loggingService.addListener(loggingServiceListener)
+            Log.i("$TAG Crashlytics enabled, register logging service listener")
+        }
         Log.i("=========================================")
         Log.i("==== Linphone-android information dump ====")
         Log.i("VERSION=${BuildConfig.VERSION_NAME} / ${BuildConfig.VERSION_CODE}")

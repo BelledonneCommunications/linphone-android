@@ -1,5 +1,7 @@
 import com.android.build.gradle.internal.tasks.factory.dependsOn
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
+import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsPlugin
+import com.google.gms.googleservices.GoogleServicesPlugin
 import java.io.ByteArrayOutputStream
 import java.io.FileInputStream
 import java.util.Properties
@@ -10,8 +12,8 @@ plugins {
     alias(libs.plugins.ktlint)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.navigation)
-    alias(libs.plugins.googleGmsServices)
-    alias(libs.plugins.crashlytics)
+    alias(libs.plugins.googleGmsServices) apply false
+    alias(libs.plugins.crashlytics) apply false
 }
 
 val packageName = "org.linphone"
@@ -21,7 +23,21 @@ val sdkPath = providers.gradleProperty("LinphoneSdkBuildDir").get()
 val googleServices = File(projectDir.absolutePath + "/google-services.json")
 val linphoneLibs = File("$sdkPath/libs/")
 val linphoneDebugLibs = File("$sdkPath/libs-debug/")
+val firebaseCloudMessagingAvailable = googleServices.exists()
 val crashlyticsAvailable = googleServices.exists() && linphoneLibs.exists() && linphoneDebugLibs.exists()
+
+if (firebaseCloudMessagingAvailable) {
+    println("google-services.json found, enabling CloudMessaging feature")
+    apply<GoogleServicesPlugin>()
+} else {
+    println("google-services.json not found, disabling CloudMessaging feature")
+}
+if (crashlyticsAvailable) {
+    println("google-services.json, libs & libs-debug found, enabling Crashlytics feature")
+    apply<CrashlyticsPlugin>()
+} else {
+    println("google-services.json, libs & libs-debug not found, disabling Crashlytics feature")
+}
 
 var gitBranch = ByteArrayOutputStream()
 var gitVersion = "6.0.0"
@@ -151,6 +167,9 @@ android {
                     nativeSymbolUploadEnabled = true
                     unstrippedNativeLibsDir = File("$sdkPath/libs-debug/").toString()
                 }
+                resValue("bool", "crashlytics_enabled", "true")
+            } else {
+                resValue("bool", "crashlytics_enabled", "false")
             }
         }
 
@@ -171,6 +190,9 @@ android {
                     nativeSymbolUploadEnabled = true
                     unstrippedNativeLibsDir = File("$sdkPath/libs-debug/").toString()
                 }
+                resValue("bool", "crashlytics_enabled", "true")
+            } else {
+                resValue("bool", "crashlytics_enabled", "false")
             }
         }
     }
