@@ -88,6 +88,7 @@
                     android:visibility="@{viewModel.canVibrate ? View.VISIBLE : View.GONE}"/>
 
                 <include
+                    android:visibility="gone"
                     layout="@layout/settings_widget_list"
                     linphone:title="@{@string/call_settings_encryption_title}"
                     linphone:listener="@{viewModel.encryptionListener}"
@@ -95,6 +96,7 @@
                     linphone:labels="@{viewModel.encryptionLabels}"/>
 
                 <include
+                    android:visibility="gone"
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/call_settings_encryption_mandatory_title}"
                     linphone:listener="@{viewModel.encryptionMandatoryListener}"
@@ -124,18 +126,21 @@
                     linphone:enabled="@{viewModel.overlay}"/>
 
                 <include
+                    android:visibility="gone"
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/call_settings_sipinfo_dtmf_title}"
                     linphone:listener="@{viewModel.sipInfoDtmfListener}"
                     linphone:checked="@={viewModel.sipInfoDtmf}"/>
 
                 <include
+                    android:visibility="gone"
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/call_settings_rfc2833_dtmf_title}"
                     linphone:listener="@{viewModel.rfc2833DtmfListener}"
                     linphone:checked="@={viewModel.rfc2833Dtmf}"/>
 
                 <include
+                    android:visibility="gone"
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/call_settings_auto_start_recording_title}"
                     linphone:listener="@{viewModel.autoStartCallRecordingListener}"
