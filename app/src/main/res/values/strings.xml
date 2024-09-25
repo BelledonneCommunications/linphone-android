@@ -739,6 +739,7 @@
     <string name="advanced_settings_reset_debug_logs_title">Reset logs</string>
     <string name="advanced_settings_debug_title">Debug settings</string>
     <string name="advanced_settings_other_title">Other settings</string>
+    <string name="advanced_settings_title">App settings</string>
     <string name="advanced_settings_disable_fragment_security_title">Disable UI\'s secure mode</string>
     <string name="advanced_settings_disable_fragment_security_summary">Allow screen capture/recording on sensitive views</string>
 

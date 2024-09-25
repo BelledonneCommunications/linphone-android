@@ -99,12 +99,15 @@ class AudioSettingsFragment : GenericSettingFragment<SettingsAudioFragmentBindin
     private fun initAudioCodecsList() {
         val list = arrayListOf<ViewDataBinding>()
         for (payload in coreContext.core.audioPayloadTypes) {
+            if (!payload.enabled()) continue
+
             val binding = DataBindingUtil.inflate<ViewDataBinding>(
                 LayoutInflater.from(requireContext()),
                 R.layout.settings_widget_switch,
                 null,
                 false
             )
+            binding.setVariable(BR.enabled, false)
             binding.setVariable(BR.title, payload.mimeType)
             binding.setVariable(BR.subtitle, "${payload.clockRate} Hz")
             binding.setVariable(BR.checked, payload.enabled())
