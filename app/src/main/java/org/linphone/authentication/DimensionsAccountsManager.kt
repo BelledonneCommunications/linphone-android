@@ -40,7 +40,6 @@ class DimensionsAccountsManager(context: Context) {
     private val mContext = context
 
     init {
-        Log.i("DimensionsAccountsManager (INIT AUTH user ID:)")
         val asm = AuthStateManager.getInstance(context)
         val sub = asm.user
             .map { it.id ?: "" }
