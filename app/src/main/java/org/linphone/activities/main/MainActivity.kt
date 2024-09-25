@@ -259,7 +259,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     private fun handleAuthIntent(intent: Intent) {
         // the stored AuthState is incomplete, so check if we are currently receiving the result of
         // the authorization flow from the browser.
-       val response = AuthorizationResponse.fromIntent(intent)
+        val response = AuthorizationResponse.fromIntent(intent)
         val ex = AuthorizationException.fromIntent(intent)
 
         val asm = AuthStateManager.getInstance(applicationContext)

@@ -143,7 +143,7 @@ public class AuthStateManager {
             if (response.authorizationCode!= null) Log.Log.d("updateAfterAuthorization::authorization code: " + response.authorizationCode);;
         }
 
-        return replace(current, "onCreate");
+        return replace(current, "updateAfterAuthorization");
     }
 
     @AnyThread
@@ -256,7 +256,7 @@ public class AuthStateManager {
         Log.Log.d("AuthStateManager.updateObservable:Access token: " + accessToken);
 
         AuthenticatedUser user = AuthenticatedUser.Companion.fromToken(accessToken);
-        Log.Log.d("AuthStateManager.updateObservable:User:ID("  + user.getId() + ")::Name(" + user.getName() + ")");
+        Log.Log.d("AuthStateManager.updateObservable:User:ID(" + user.getId() + ")::Name(" + user.getName() + ")");
 
         userSubject.onNext(user);
     }

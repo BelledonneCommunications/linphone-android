@@ -60,7 +60,7 @@ public class AuthorizationServiceManager {
                     var builder = new AppAuthConfiguration.Builder();
                     builder.setBrowserMatcher(AnyBrowserMatcher.INSTANCE);
                     builder.setConnectionBuilder(connectionBuilder);
-
+                    
                     AuthorizationServiceInstance = new AuthorizationService(mContext, builder.build());
                 }
 

@@ -47,7 +47,7 @@ class UserService public constructor(context: Context) {
 
         user = asm.user
             .filter { u -> u.id != null && u.id != AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER }
-            .doOnNext { Log.i("Fetching user info....") }
+            .distinctUntilChanged { u -> u.id ?: "" }
             .switchMapSingle {
                 rxSingle { getUserInfo() }
             }
@@ -56,6 +56,8 @@ class UserService public constructor(context: Context) {
     }
 
     private suspend fun getUserInfo(): UserInfo {
+        Log.i("Fetching user info....")
+
         val response = ucGatewayService.getUserInfo()
 
         if (response.code() < 200 || response.code() > 299) {
