@@ -22,8 +22,14 @@ data class UserDevice(
     @SerializedName("sipRealm")
     var sipRealm: String,
 
+    @SerializedName("sipPort")
+    var sipPort: Int,
+
     @SerializedName("sipOutboundProxy")
     var sipOutboundProxy: String,
+
+    @SerializedName("remoteSipHost")
+    var remoteSipHost: String,
 
     @SerializedName("sipOutboundProxyPort")
     var sipOutboundProxyPort: Int,

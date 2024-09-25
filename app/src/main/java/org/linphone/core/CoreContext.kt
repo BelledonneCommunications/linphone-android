@@ -476,8 +476,11 @@ class CoreContext(
             accountParams.identityAddress = core.interpretUrl(identityUri, false)
             accountParams.limeServerUrl = ""
 
+            var outboundProxy = userDevice.remoteSipHost
+
             var enableOutboundProxy = false
             if (userDevice.sipOutboundProxy.isNotBlank()) {
+                outboundProxy = userDevice.sipOutboundProxy
                 enableOutboundProxy = true
             }
 
@@ -486,7 +489,12 @@ class CoreContext(
                 sipTransport = "tls"
             }
 
-            val serverUri = "<sip:${userDevice.sipOutboundProxy};transport=${stringToTransportType(
+            var sipPort = ""
+            if (userDevice.sipPort > 0) {
+                sipPort = ":${userDevice.sipPort}"
+            }
+
+            val serverUri = "<sip:${outboundProxy}$sipPort;transport=${stringToTransportType(
                 sipTransport
             )}>"
             accountParams.serverAddress = core.interpretUrl(serverUri, false)
