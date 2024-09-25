@@ -43,6 +43,7 @@ class DimensionsAccountsManager(context: Context) {
         val asm = AuthStateManager.getInstance(context)
         val sub = asm.user
             .map { it.id ?: "" }
+            .distinctUntilChanged()
             .subscribe(
                 {
                     try {
@@ -52,7 +53,7 @@ class DimensionsAccountsManager(context: Context) {
                                 "DimensionsAccountManager subscription triggered with initial AuthenticatedUser"
                             )
                             "" -> clear()
-                            else -> load()
+                            else -> load(it)
                         }
                     } catch (e: Exception) {
                         Log.e(e)
@@ -62,7 +63,7 @@ class DimensionsAccountsManager(context: Context) {
             )
     }
 
-    private fun load() {
+    private fun load(userId: String) {
         Log.i("CoreContext.loadDimensionsAccounts")
 
         val dimensionsEnvironment = DimensionsEnvironmentService.getInstance(mContext).getCurrentEnvironment()

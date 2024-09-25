@@ -110,7 +110,7 @@ class LoginActivity : AppCompatActivity() {
         if (dimensionsEnvironment == null) {
             displayAuthOptions()
             return
-        } else if (mAuthStateManager!!.getCurrent().isAuthorized && !mConfiguration!!.hasConfigurationChanged()) {
+        } else if (mAuthStateManager!!.current.isAuthorized && !mConfiguration!!.hasConfigurationChanged()) {
             Log.i("User is already authenticated, proceeding to token activity")
             startActivity(Intent(this, MainActivity::class.java))
             finish()
@@ -187,9 +187,6 @@ class LoginActivity : AppCompatActivity() {
 
             asm.updateAfterAuthorization(null, null)
             displayAuthOptions()
-
-//            val isAuthorised = mAuthStateManager!!.getCurrent().isAuthorized
-//            if (isAuthorised) return
         } else {
             val response = AuthorizationResponse.fromIntent(intent)
             val ex = AuthorizationException.fromIntent(intent)
@@ -373,7 +370,6 @@ class LoginActivity : AppCompatActivity() {
         val adapter = EnvironmentSelectionAdapter(this)
         adapter.registerDataSetObserver(NotifyingDataSetObserver())
         spinner.adapter = adapter
-
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -599,7 +595,6 @@ class LoginActivity : AppCompatActivity() {
 
         private var isLoggingInitialised = false
     }
-
 
     private inner class NotifyingDataSetObserver : DataSetObserver() {
         override fun onChanged() {
