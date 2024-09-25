@@ -18,6 +18,7 @@ job-android:
     - echo keyAlias=$ANDROID_KEYSTORE_KEY_ALIAS >> keystore.properties
     - echo storeFile=$ANDROID_KEYSTORE_FILE >> keystore.properties
     - ./gradlew app:dependencies | grep org.linphone
+    - ./gradlew clean
     - ./gradlew assembleDebug
     - ./gradlew assembleRelease
 

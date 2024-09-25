@@ -1,6 +1,5 @@
 import com.android.build.gradle.internal.tasks.factory.dependsOn
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
-import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsPlugin
 import com.google.gms.googleservices.GoogleServicesPlugin
 import java.io.ByteArrayOutputStream
 import java.io.FileInputStream
@@ -12,8 +11,7 @@ plugins {
     alias(libs.plugins.ktlint)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.navigation)
-    alias(libs.plugins.googleGmsServices) apply false
-    alias(libs.plugins.crashlytics) apply false
+    alias(libs.plugins.crashlytics)
 }
 
 val packageName = "org.linphone"
@@ -31,12 +29,6 @@ if (firebaseCloudMessagingAvailable) {
     apply<GoogleServicesPlugin>()
 } else {
     println("google-services.json not found, disabling CloudMessaging feature")
-}
-if (crashlyticsAvailable) {
-    println("google-services.json, libs & libs-debug found, enabling Crashlytics feature")
-    apply<CrashlyticsPlugin>()
-} else {
-    println("google-services.json, libs & libs-debug not found, disabling Crashlytics feature")
 }
 
 var gitBranch = ByteArrayOutputStream()
@@ -163,14 +155,13 @@ android {
             resValue("string", "linphone_app_branch", gitBranch.toString().trim())
 
             if (crashlyticsAvailable) {
+                val path = File("$sdkPath/libs-debug/").toString()
                 configure<CrashlyticsExtension> {
                     nativeSymbolUploadEnabled = true
-                    unstrippedNativeLibsDir = File("$sdkPath/libs-debug/").toString()
+                    unstrippedNativeLibsDir = path
                 }
-                resValue("bool", "crashlytics_enabled", "true")
-            } else {
-                resValue("bool", "crashlytics_enabled", "false")
             }
+            buildConfigField("Boolean", "CRASHLYTICS_ENABLED", crashlyticsAvailable.toString())
         }
 
         getByName("release") {
@@ -186,14 +177,13 @@ android {
             resValue("string", "linphone_app_branch", gitBranch.toString().trim())
 
             if (crashlyticsAvailable) {
+                val path = File("$sdkPath/libs-debug/").toString()
                 configure<CrashlyticsExtension> {
                     nativeSymbolUploadEnabled = true
-                    unstrippedNativeLibsDir = File("$sdkPath/libs-debug/").toString()
+                    unstrippedNativeLibsDir = path
                 }
-                resValue("bool", "crashlytics_enabled", "true")
-            } else {
-                resValue("bool", "crashlytics_enabled", "false")
             }
+            buildConfigField("Boolean", "CRASHLYTICS_ENABLED", crashlyticsAvailable.toString())
         }
     }
 

@@ -375,9 +375,16 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         Log.i("$TAG Creating Core")
         Looper.prepare()
 
-        if (context.resources.getBoolean(org.linphone.R.bool.crashlytics_enabled)) {
-            Factory.instance().loggingService.addListener(loggingServiceListener)
-            Log.i("$TAG Crashlytics enabled, register logging service listener")
+        if (BuildConfig.CRASHLYTICS_ENABLED) {
+            Log.i("$TAG Crashlytics is enabled, registering logging service listener")
+            try {
+                FirebaseCrashlytics.getInstance()
+                Factory.instance().loggingService.addListener(loggingServiceListener)
+            } catch (e: Exception) {
+                Log.e("$TAG Failed to instantiate Crashlytics: $e")
+            }
+        } else {
+            Log.i("$TAG Crashlytics is disabled")
         }
         Log.i("=========================================")
         Log.i("==== Linphone-android information dump ====")
