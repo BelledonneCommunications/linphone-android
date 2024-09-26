@@ -13,7 +13,7 @@ import net.openid.appauth.AuthorizationService;
 import net.openid.appauth.browser.AnyBrowserMatcher;
 import net.openid.appauth.connectivity.ConnectionBuilder;
 
-import org.linphone.core.tools.Log;
+import org.linphone.utils.Log;
 
 public class AuthorizationServiceManager {
 
@@ -46,7 +46,7 @@ public class AuthorizationServiceManager {
 
     public AuthorizationService getAuthorizationServiceInstance() {
         if (AuthorizationServiceInstance == null) {
-            Log.i(TAG, "Creating authorization service");
+            Log.Log.i("Creating authorization service");
             try {
                 ConnectionBuilder connectionBuilder = null;
 

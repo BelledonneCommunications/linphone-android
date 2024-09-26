@@ -7,7 +7,7 @@ import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
 import org.linphone.authentication.AuthStateManager
-import org.linphone.core.tools.Log
+import org.linphone.utils.Log
 
 class AuthAuthenticator(
     private val authService: AuthorizationService,
@@ -19,9 +19,9 @@ class AuthAuthenticator(
         val future = CompletableFuture<Request?>()
 
         val authState = authManager.current
-        Log.i("AUTH Using refresh token: ", authState.refreshToken)
-        Log.i("AUTH ID token: ", authState.idToken)
-        Log.i("AUTH access token: ", authState.accessToken)
+        Log.i("AUTH Using refresh token: " + authState.refreshToken)
+        Log.i("AUTH ID token: " + authState.idToken)
+        Log.i("AUTH access token: " + authState.accessToken)
 
         authState.performActionWithFreshTokens(authService) { accessToken, _, ex ->
             if (ex != null) {
