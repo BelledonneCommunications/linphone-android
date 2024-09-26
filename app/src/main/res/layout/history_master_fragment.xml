@@ -114,6 +114,7 @@
                     android:layout_weight="0.2" />
 
                 <ImageView
+                    android:visibility="invisible"
                     android:onClick="@{editClickListener}"
                     android:enabled="@{!viewModel.callLogs.empty}"
                     android:contentDescription="@string/content_description_enter_edition_mode"
