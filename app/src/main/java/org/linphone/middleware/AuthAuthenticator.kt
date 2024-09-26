@@ -21,7 +21,9 @@ class AuthAuthenticator(
         val authState = authManager.current
         Log.i("AUTH Using refresh token: " + authState.refreshToken)
         Log.i("AUTH ID token: " + authState.idToken)
-        Log.i("AUTH access token: " + authState.accessToken)
+        Log.i(
+            "AUTH access token: " + authState.accessToken + " exp:" + authState.accessTokenExpirationTime
+        )
 
         authState.performActionWithFreshTokens(authService) { accessToken, _, ex ->
             if (ex != null) {

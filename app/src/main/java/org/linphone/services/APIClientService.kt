@@ -6,7 +6,6 @@ import okhttp3.OkHttpClient
 import org.linphone.authentication.AuthStateManager
 import org.linphone.interfaces.CTGatewayService
 import org.linphone.middleware.AuthAuthenticator
-import org.linphone.middleware.AuthInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -48,7 +47,6 @@ class APIClientService {
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .authenticator(AuthAuthenticator(authService, asm))
-            .addInterceptor(AuthInterceptor(context))
             .build()
     }
 }

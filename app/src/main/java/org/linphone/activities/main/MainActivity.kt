@@ -270,8 +270,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             if (asm.current.refreshToken == null) {
                 redirectToLogin("Refresh token is null!")
             }
-        }
-        else {
+        } else {
             if (response != null || ex != null) {
                 asm.updateAfterAuthorization(response, ex)
             }
