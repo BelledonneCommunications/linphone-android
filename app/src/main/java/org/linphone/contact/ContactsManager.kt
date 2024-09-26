@@ -295,10 +295,8 @@ class ContactsManager(private val context: Context) {
 
         for (syncAdapter in syncAdapters) {
             if (syncAdapter.authority == "com.android.contacts" && syncAdapter.isUserVisible) {
-                if (syncAdapter.supportsUploading() || syncAdapter.accountType == context.getString(
-                        R.string.sync_account_type
-                    )
-                ) {
+                // || syncAdapter.accountType == context.getString(R.string.sync_account_type)
+                if (syncAdapter.supportsUploading()) {
                     Log.i(
                         "[Contacts Manager] Found sync adapter for com.android.contacts authority: ${syncAdapter.accountType}"
                     )
