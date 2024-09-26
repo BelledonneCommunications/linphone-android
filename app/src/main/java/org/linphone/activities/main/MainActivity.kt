@@ -267,18 +267,31 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         Log.i("isAuthorised: " + asm.current.isAuthorized)
 
         if (asm.current.isAuthorized) {
-            return
+            if (asm.current.refreshToken == null) {
+                redirectToLogin("Refresh token is null!")
+            }
         }
+        else {
+            if (response != null || ex != null) {
+                asm.updateAfterAuthorization(response, ex)
+            }
 
-        if (response != null || ex != null) {
-            asm.updateAfterAuthorization(response, ex)
+            if (response?.authorizationCode != null) {
+                // authorization code exchange is required
+                exchangeAuthorizationCode(response)
+            }
         }
+    }
 
-        if (response?.authorizationCode != null) {
-            // authorization code exchange is required
-            asm.updateAfterAuthorization(response, ex)
-            exchangeAuthorizationCode(response)
-        }
+    private fun redirectToLogin(reason: String) {
+        Log.w("Reidrecting to login: $reason")
+
+        val loginIntent = Intent(this, LoginActivity::class.java)
+        loginIntent.setFlags(
+            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        )
+
+        startActivity(loginIntent)
     }
 
     override fun onResume() {

@@ -52,24 +52,19 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject;
 public class AuthStateManager {
     public static final String AUTH_KEY = "auth";
     public static final String LOGOUT_VALUE = "logout";
-
-    enum authStateChangeAction {
-        None,
-        Logout,
-        LogIn
-    }
+    private static final String STORE_NAME = "AuthState";
+    private static final String KEY_STATE = "state";
 
     private static final AtomicReference<WeakReference<AuthStateManager>> INSTANCE_REF =
             new AtomicReference<>(new WeakReference<>(null));
-
-    private static final String STORE_NAME = "AuthState";
-    private static final String KEY_STATE = "state";
 
     private final SharedPreferences mPrefs;
     private final ReentrantLock mPrefsLock;
     private final AtomicReference<AuthState> mCurrentAuthState;
 
-    private final BehaviorSubject<AuthenticatedUser> userSubject = BehaviorSubject.createDefault(new AuthenticatedUser(AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER, null, null, null, null, null ));
+    private final BehaviorSubject<AuthenticatedUser> userSubject = BehaviorSubject.createDefault(
+        new AuthenticatedUser(AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER, null, null, null, null, null )
+    );
     public final Observable<AuthenticatedUser> user = userSubject.map(x -> x);
 
     @AnyThread
@@ -114,16 +109,6 @@ public class AuthStateManager {
         return state;
     }
 
-    private authStateChangeAction GetAuthAction(Boolean wasAuthed, Boolean isAuthed) {
-        Log.Log.i(String.format("GetAuthAction::WasAuthed(%s)::IsAuthed(%s)", wasAuthed, isAuthed));
-
-        if (!wasAuthed && isAuthed)
-            return authStateChangeAction.LogIn;
-        if (!isAuthed && wasAuthed)
-            return authStateChangeAction.Logout;
-
-        return authStateChangeAction.None;
-    }
 
     @AnyThread
     @NonNull
@@ -133,14 +118,14 @@ public class AuthStateManager {
         Log.Log.i(String.format("updateAfterAuthorization::Response(%s)::Ex(%s)", response, ex));
         AuthState current = getCurrent();
 
-        var wasAuthed = current.isAuthorized();
         if (response != null || ex != null) {
             current.update(response, ex);
         }
 
         if (response != null) {
             if (response.accessToken != null) Log.Log.d("updateAfterAuthorization::access token: " + response.accessToken);
-            if (response.authorizationCode!= null) Log.Log.d("updateAfterAuthorization::authorization code: " + response.authorizationCode);;
+            if (response.authorizationCode!= null) Log.Log.d("updateAfterAuthorization::authorization code: " + response.authorizationCode);
+            Log.Log.d("updateAfterAuthorization::response: " + response.jsonSerialize());
         }
 
         return replace(current, "updateAfterAuthorization");
@@ -151,7 +136,8 @@ public class AuthStateManager {
     public AuthState updateAfterTokenResponse(
             @Nullable TokenResponse response,
             @Nullable AuthorizationException ex) {
-        Log.Log.i(String.format("updateAfterTokenResponse::Response(%s)::Ex(%s)", response, ex));
+        final var json = response.jsonSerialize();
+        Log.Log.i(String.format("updateAfterTokenResponse::Response(%s)::Ex(%s)", json, ex));
 
         AuthState current = getCurrent();
 
@@ -168,9 +154,6 @@ public class AuthStateManager {
         Log.Log.i(String.format("updateAfterRegistration::Response(%s)::Ex(%s)", response, ex));
 
         AuthState current = getCurrent();
-        if (ex != null) {
-            return current;
-        }
 
         current.update(response);
 
