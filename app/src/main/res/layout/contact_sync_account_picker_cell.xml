@@ -16,6 +16,7 @@
     <TextView
         android:id="@+id/account_name"
         style="@style/standard_text_font"
+        android:textSize="16sp"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:paddingLeft="5dp" />

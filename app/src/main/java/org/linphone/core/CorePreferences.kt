@@ -485,7 +485,7 @@ class CorePreferences constructor(private val context: Context) {
 
     // Will hide the SIP contacts selector, leaving only the all contacts list
     val hideSipContactsList: Boolean
-        get() = config.getBool("app", "hide_sip_contacts_list", false)
+        get() = config.getBool("app", "hide_sip_contacts_list", true)
 
     // Will disable chat feature completely
     val disableChat: Boolean

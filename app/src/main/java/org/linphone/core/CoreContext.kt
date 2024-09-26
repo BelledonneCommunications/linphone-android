@@ -65,7 +65,6 @@ import org.linphone.compatibility.PhoneStateInterface
 import org.linphone.contact.ContactLoader
 import org.linphone.contact.ContactsManager
 import org.linphone.contact.getContactForPhoneNumberOrAddress
-import org.linphone.core.tools.Log
 import org.linphone.mediastream.Version
 import org.linphone.models.UserDevice
 import org.linphone.notifications.NotificationsManager
@@ -73,6 +72,7 @@ import org.linphone.services.UserService
 import org.linphone.telecom.TelecomHelper
 import org.linphone.utils.*
 import org.linphone.utils.Event
+import org.linphone.utils.Log
 
 class CoreContext(
     val context: Context,
@@ -1505,7 +1505,7 @@ class CoreContext(
 
                 Log.i("[Context] [VFS] VFS activated")
             } catch (e: Exception) {
-                Log.f("[Context] [VFS] Unable to activate VFS encryption: $e")
+                Log.wtf("[Context] [VFS] Unable to activate VFS encryption: $e")
             }
         }
     }

@@ -5,12 +5,12 @@ import androidx.annotation.AnyThread
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicReference
-import org.linphone.core.tools.Log
 import org.linphone.environment.DimensionsEnvironmentService
 import org.linphone.models.AuthenticatedUser
 import org.linphone.models.SubscribableUserDeviceList
 import org.linphone.models.UserDevice
 import org.linphone.services.APIClientService
+import org.linphone.utils.Log
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
