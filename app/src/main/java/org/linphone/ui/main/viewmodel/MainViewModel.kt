@@ -169,7 +169,10 @@ class MainViewModel @UiThread constructor() : ViewModel() {
             messages: Array<out ChatMessage>
         ) {
             Log.i("$TAG Message(s) received, updating notifications count if needed")
-            computeNonDefaultAccountNotificationsCount()
+            val account = LinphoneUtils.getAccountForAddress(chatRoom.localAddress)
+            if (account != null && account != core.defaultAccount) {
+                computeNonDefaultAccountNotificationsCount()
+            }
         }
 
         @WorkerThread
