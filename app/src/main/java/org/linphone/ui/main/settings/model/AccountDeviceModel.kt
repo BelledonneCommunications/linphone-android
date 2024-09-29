@@ -27,7 +27,7 @@ import org.linphone.utils.TimestampUtils
 
 class AccountDeviceModel @WorkerThread constructor(
     private val accountDevice: AccountDevice,
-    private val onRemove: (accountDevice: AccountDevice) -> (Unit)
+    private val onRemove: (model: AccountDeviceModel, accountDevice: AccountDevice) -> (Unit)
 ) {
     companion object {
         const val TAG = "[Account Device Model]"
@@ -63,6 +63,6 @@ class AccountDeviceModel @WorkerThread constructor(
     }
 
     fun removeDevice() {
-        onRemove(accountDevice)
+        onRemove(this, accountDevice)
     }
 }

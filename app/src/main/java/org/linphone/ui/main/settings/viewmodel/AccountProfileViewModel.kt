@@ -31,6 +31,7 @@ import org.linphone.core.AccountDevice
 import org.linphone.core.AccountManagerServices
 import org.linphone.core.AccountManagerServicesRequest
 import org.linphone.core.AccountManagerServicesRequestListenerStub
+import org.linphone.core.Address
 import org.linphone.core.DialPlan
 import org.linphone.core.Dictionary
 import org.linphone.core.Factory
@@ -98,7 +99,7 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
             val devicesList = arrayListOf<AccountDeviceModel>()
             for (accountDevice in accountDevices) {
                 devicesList.add(
-                    AccountDeviceModel(accountDevice) { device ->
+                    AccountDeviceModel(accountDevice) { model, device ->
                         if (::accountManagerServices.isInitialized) {
                             val identityAddress = account.params.identityAddress
                             if (identityAddress != null) {
@@ -111,6 +112,11 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
                                 )
                                 deleteRequest.addListener(this)
                                 deleteRequest.submit()
+
+                                val newList = arrayListOf<AccountDeviceModel>()
+                                newList.addAll(devices.value.orEmpty())
+                                newList.remove(model)
+                                devices.postValue(newList)
                             } else {
                                 Log.e("$TAG Account identity address is null, can't delete device!")
                             }
@@ -120,6 +126,12 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
             }
             devices.postValue(devicesList)
             devicesFetchInProgress.postValue(false)
+        }
+
+        override fun onRequestSuccessful(request: AccountManagerServicesRequest, data: String?) {
+            if (request.type == AccountManagerServicesRequest.Type.DeleteDevice) {
+                Log.i("$TAG Device successfully deleted: $data")
+            }
         }
 
         @WorkerThread
@@ -204,16 +216,7 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
                     val defaultDomain = corePreferences.defaultDomain
                     isOnDefaultDomain.postValue(domain == defaultDomain)
                     if (domain == defaultDomain) {
-                        Log.i(
-                            "$TAG Request list of known devices for account [${identityAddress.asStringUriOnly()}]"
-                        )
-                        accountManagerServices = core.createAccountManagerServices()
-                        accountManagerServices.language = Locale.getDefault().language // Returns en, fr, etc...
-                        val request = accountManagerServices.createGetDevicesListRequest(
-                            identityAddress
-                        )
-                        request.addListener(accountManagerServicesListener)
-                        request.submit()
+                        requestDevicesList(identityAddress)
                     } else {
                         Log.i(
                             "$TAG Account with domain [$domain] can't get devices list, only works with [$defaultDomain] domain"
@@ -384,5 +387,19 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
     fun showDebugInfo(): Boolean {
         showDeviceId.value = true
         return true
+    }
+
+    @WorkerThread
+    private fun requestDevicesList(identityAddress: Address) {
+        Log.i(
+            "$TAG Request devices list for identity address [${identityAddress.asStringUriOnly()}]"
+        )
+        accountManagerServices = coreContext.core.createAccountManagerServices()
+        accountManagerServices.language = Locale.getDefault().language // Returns en, fr, etc...
+        val request = accountManagerServices.createGetDevicesListRequest(
+            identityAddress
+        )
+        request.addListener(accountManagerServicesListener)
+        request.submit()
     }
 }
