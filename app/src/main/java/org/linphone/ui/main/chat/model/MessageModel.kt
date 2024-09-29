@@ -209,6 +209,14 @@ class MessageModel @WorkerThread constructor(
                 if (!allFilesDownloaded) {
                     computeContentsList()
                 }
+
+                for (content in message.contents) {
+                    if (content.isVoiceRecording) {
+                        Log.i("$TAG File transfer done, updating voice record info")
+                        computeVoiceRecordContent(content)
+                        break
+                    }
+                }
             }
         }
 
@@ -390,16 +398,7 @@ class MessageModel @WorkerThread constructor(
             } else if (content.isVoiceRecording) {
                 Log.d("$TAG Found voice recording content")
                 isVoiceRecord.postValue(true)
-                voiceRecordPath = content.filePath ?: ""
-
-                val duration = content.fileDuration
-                voiceRecordingDuration.postValue(duration)
-
-                val formattedDuration = SimpleDateFormat(
-                    "mm:ss",
-                    Locale.getDefault()
-                ).format(duration) // duration is in ms
-                formattedVoiceRecordingDuration.postValue(formattedDuration)
+                computeVoiceRecordContent(content)
                 displayableContentFound = true
             } else {
                 if (content.isFile) {
@@ -951,5 +950,22 @@ class MessageModel @WorkerThread constructor(
                 }
             }
         }
+    }
+
+    @WorkerThread
+    private fun computeVoiceRecordContent(content: Content) {
+        voiceRecordPath = content.filePath ?: ""
+
+        val duration = content.fileDuration
+        voiceRecordingDuration.postValue(duration)
+
+        val formattedDuration = SimpleDateFormat(
+            "mm:ss",
+            Locale.getDefault()
+        ).format(duration) // duration is in ms
+        formattedVoiceRecordingDuration.postValue(formattedDuration)
+        Log.i(
+            "$TAG Found voice record with path [$voiceRecordPath] and duration [$formattedDuration]"
+        )
     }
 }
