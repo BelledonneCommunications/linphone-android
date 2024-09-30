@@ -360,7 +360,7 @@ class MeetingWaitingRoomViewModel @UiThread constructor() : GenericViewModel() {
                     }
                 }
                 list.add(model)
-                Log.i("$TAG Found audio device [$device]")
+                Log.i("$TAG Found audio device [${device.id}]")
             }
 
             if (list.size > 2) {
