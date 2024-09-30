@@ -105,6 +105,17 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         NotificationManagerCompat.from(context)
     }
 
+    private var inCallService: CoreInCallService? = null
+    private var keepAliveService: CoreKeepAliveThirdPartyAccountsService? = null
+
+    private val callNotificationsMap: HashMap<String, Notifiable> = HashMap()
+    private val chatNotificationsMap: HashMap<String, Notifiable> = HashMap()
+    private val previousChatNotifications: ArrayList<Int> = arrayListOf()
+
+    private val notificationsMap = HashMap<Int, Notification>()
+
+    private var currentlyDisplayedChatRoomId: String = ""
+
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
         override fun onCallStateChanged(
@@ -355,15 +366,6 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         }
     }
 
-    private var inCallService: CoreInCallService? = null
-    private var keepAliveService: CoreKeepAliveThirdPartyAccountsService? = null
-
-    private val callNotificationsMap: HashMap<String, Notifiable> = HashMap()
-    private val chatNotificationsMap: HashMap<String, Notifiable> = HashMap()
-    private val previousChatNotifications: ArrayList<Int> = arrayListOf()
-
-    private var currentlyDisplayedChatRoomId: String = ""
-
     init {
         for (notification in notificationManager.activeNotifications) {
             if (notification.tag.isNullOrEmpty()) {
@@ -613,8 +615,11 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         }
 
         val notifiable = getNotifiableForCall(call)
-        val notification = notificationManager.activeNotifications.find {
-            it.id == notifiable.notificationId
+        val notificationId = notifiable.notificationId
+        val notification = if (notificationsMap.containsKey(notificationId)) {
+            notificationsMap[notificationId]
+        } else {
+            null
         }
 
         if (notification == null) {
@@ -622,7 +627,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             stopInCallCallForegroundService()
             return
         }
-        Log.i("$TAG Found notification [${notification.id}] for current Call")
+        Log.i("$TAG Found notification [$notificationId] for current Call")
 
         var mask = Compatibility.FOREGROUND_SERVICE_TYPE_PHONE_CALL
         val callState = call.state
@@ -664,7 +669,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         Compatibility.startServiceForeground(
             service,
             notifiable.notificationId,
-            notification.notification,
+            notification,
             mask
         )
         currentInCallServiceNotificationId = notifiable.notificationId
@@ -825,6 +830,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             )
             try {
                 notificationManager.notify(tag, id, notification)
+                notificationsMap[id] = notification
             } catch (iae: IllegalArgumentException) {
                 if (inCallService == null && tag == null) {
                     // We can't notify using CallStyle if there isn't a foreground service running
@@ -848,6 +854,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             "$TAG Canceling notification with ID [$id] and ${if (tag == null) "without tag" else "with tag [$tag]"}"
         )
         notificationManager.cancel(tag, id)
+        notificationsMap.remove(id)
     }
 
     @WorkerThread
