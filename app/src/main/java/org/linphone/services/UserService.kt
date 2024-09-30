@@ -51,6 +51,10 @@ class UserService public constructor(context: Context) {
             .switchMapSingle {
                 rxSingle { getUserInfo() }
             }
+            .onErrorReturn { e ->
+                Log.e(e.localizedMessage)
+                UserInfo()
+            }
             .replay(1)
             .autoConnect()
     }

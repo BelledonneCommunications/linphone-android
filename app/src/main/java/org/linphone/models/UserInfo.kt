@@ -5,44 +5,52 @@ import com.google.gson.annotations.SerializedName
 data class UserInfo(
 
     @SerializedName("id")
-    val id: String,
+    val id: String = "",
 
-    @SerializedName("ditenantIdsplayName")
-    val tenantId: String,
+    @SerializedName("tenantId")
+    val tenantId: String = "",
 
     @SerializedName("tenantName")
-    val tenantName: String,
+    val tenantName: String = "",
 
     @SerializedName("tenantTier")
-    val tenantTier: String,
+    val tenantTier: String = "",
 
     @SerializedName("displayName")
-    val displayName: String,
+    val displayName: String = "",
 
     @SerializedName("email")
-    val email: String,
+    val email: String = "",
 
     @SerializedName("isEnabled")
-    val isEnabled: Boolean,
+    val isEnabled: Boolean = true,
 
     @SerializedName("profileImageUrl")
-    val profileImageUrl: String,
+    val profileImageUrl: String = "",
 
     @SerializedName("permissions")
-    val permissions: List<String>,
+    val permissions: List<String> = emptyList(),
 
     @SerializedName("presenceId")
-    val presenceId: String,
+    val presenceId: String = "",
 
     @SerializedName("primaryGroupId")
-    val primaryGroupId: String,
+    val primaryGroupId: String = "",
 
     @SerializedName("pbxCountryCode")
-    val pbxCountryCode: String,
+    val pbxCountryCode: String = "",
 
     @SerializedName("tenantTimeZoneId")
-    val tenantTimeZoneId: String,
+    val tenantTimeZoneId: String = "",
+
+    @SerializedName("deviceCount")
+    val deviceCount: Number = 0,
 
     @SerializedName("clientProfileSettings")
-    val clientProfileSettings: ClientProfileSettings
-)
+    val clientProfileSettings: ClientProfileSettings = ClientProfileSettings()
+) {
+
+    fun hasClientPermission(): Boolean {
+        return permissions.contains("customer.user.uc.mobile")
+    }
+}

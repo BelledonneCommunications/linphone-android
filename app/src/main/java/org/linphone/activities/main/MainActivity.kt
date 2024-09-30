@@ -50,11 +50,14 @@ import com.google.android.material.snackbar.Snackbar
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
 import kotlin.math.abs
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx3.awaitFirst
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationResponse
 import net.openid.appauth.AuthorizationService
@@ -85,6 +88,7 @@ import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.CorePreferences
 import org.linphone.databinding.MainActivityBinding
+import org.linphone.services.UserService
 import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
@@ -280,15 +284,23 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                 exchangeAuthorizationCode(response)
             }
         }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val user = UserService.getInstance(applicationContext).user.awaitFirst()
+            if (!user.hasClientPermission()) {
+                redirectToLogin("You do not have permission to use the client.")
+            }
+        }
     }
 
     private fun redirectToLogin(reason: String) {
-        Log.w("Reidrecting to login: $reason")
+        Log.w("Redirecting to login: $reason")
 
         val loginIntent = Intent(this, LoginActivity::class.java)
         loginIntent.setFlags(
             Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         )
+        loginIntent.putExtra("message", reason)
 
         startActivity(loginIntent)
     }

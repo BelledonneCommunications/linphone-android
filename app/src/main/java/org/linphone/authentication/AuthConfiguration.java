@@ -21,7 +21,6 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,8 +38,10 @@ import org.linphone.environment.DimensionsEnvironmentService;
 import org.linphone.models.DimensionsEnvironment;
 
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.atomic.AtomicReference;
+
+import org.linphone.utils.Log;
 
 /**
  * Reads and validates the demo app configuration from `res/raw/auth_config.json`. Configuration
@@ -52,7 +53,7 @@ public final class AuthConfiguration {
     private static final String PREFS_NAME = "config";
     private static final String KEY_LAST_HASH = "lastHash";
 
-    private static WeakReference<AuthConfiguration> sInstance = new WeakReference<>(null);
+    private static final AtomicReference<AuthConfiguration> sInstance = new AtomicReference<>(null);
 
     private final Context mContext;
     private final SharedPreferences mPrefs;
@@ -73,14 +74,19 @@ public final class AuthConfiguration {
     private Uri mEndSessionEndpoint;
     private Uri mRegistrationEndpointUri;
 
-    public static AuthConfiguration getInstance(Context context) {
-        AuthConfiguration config = sInstance.get();
-        if (config == null) {
-            config = new AuthConfiguration(context);
-            sInstance = new WeakReference<>(config);
-        }
+    private static final Object instanceLock = new Object();
 
-        return config;
+    public static AuthConfiguration getInstance(Context context) {
+        synchronized(instanceLock) {
+            AuthConfiguration config = sInstance.get();
+
+            if (config == null) {
+                config = new AuthConfiguration(context);
+                sInstance.set(config);
+            }
+
+            return config;
+        }
     }
 
     public AuthConfiguration(Context context) {
@@ -181,7 +187,7 @@ public final class AuthConfiguration {
     }
 
     private void readConfigurationFile() throws InvalidConfigurationException {
-        Log.d("AuthConfiguration", "Reading auth_config...");
+        Log.Log.i("Reading auth_config...");
         BufferedSource configSource =
                 Okio.buffer(Okio.source(mResources.openRawResource(R.raw.auth_config)));
         Buffer configData = new Buffer();

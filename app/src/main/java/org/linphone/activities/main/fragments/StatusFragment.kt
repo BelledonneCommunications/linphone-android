@@ -26,6 +26,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.viewmodels.StatusViewModel
+import org.linphone.authentication.DimensionsAccountsManager
 import org.linphone.databinding.StatusFragmentBinding
 import org.linphone.utils.Event
 import org.linphone.utils.Log
@@ -65,5 +66,12 @@ class StatusFragment : GenericFragment<StatusFragmentBinding>() {
         binding.setVoicemailClickListener {
             viewModel.dialVoicemail()
         }
+
+        val devices = DimensionsAccountsManager.getInstance(requireContext()).devicesSubject
+            .subscribe { devices ->
+                if (devices.userDevices.isNullOrEmpty()) {
+                    viewModel.showDeviceMissing()
+                }
+            }
     }
 }

@@ -82,6 +82,7 @@ open class StatusViewModel : ViewModel() {
         if (defaultAccount != null) {
             state = defaultAccount.state
         }
+
         updateDefaultAccountRegistrationStatus(state)
     }
 
@@ -119,5 +120,10 @@ open class StatusViewModel : ViewModel() {
             RegistrationState.Failed -> R.drawable.led_error
             else -> R.drawable.led_not_registered
         }
+    }
+
+    fun showDeviceMissing() {
+        registrationStatusText.value = R.string.no_device_configured
+        registrationStatusDrawable.value = R.drawable.led_error
     }
 }
