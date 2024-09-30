@@ -400,12 +400,13 @@ class MainViewModel @UiThread constructor() : ViewModel() {
 
     @WorkerThread
     private fun computeNonDefaultAccountNotificationsCount() {
+        removeAlert(NON_DEFAULT_ACCOUNT_NOTIFICATIONS)
+
         var count = 0
         for (account in coreContext.core.accountList) {
             if (account == coreContext.core.defaultAccount) continue
             count += account.unreadChatMessageCount + account.missedCallsCount
         }
-
         if (count > 0) {
             val label = AppUtils.getStringWithPlural(
                 R.plurals.pending_notification_for_other_accounts,
@@ -415,8 +416,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
             addAlert(NON_DEFAULT_ACCOUNT_NOTIFICATIONS, label, forceUpdate = true)
             Log.i("$TAG Found [$count] pending notifications for other account(s)")
         } else {
-            Log.i("$TAG No pending notification found for other account(s), clearing alert")
-            removeAlert(NON_DEFAULT_ACCOUNT_NOTIFICATIONS)
+            Log.i("$TAG No pending notification found for other account(s)")
         }
     }
 
@@ -523,20 +523,16 @@ class MainViewModel @UiThread constructor() : ViewModel() {
             }
             alertLabel.postValue(label)
 
-            if (showAlert.value == true) {
-                Log.i("$TAG Alert top-bar is already visible")
+            if (type == SINGLE_CALL) {
+                Log.i("$TAG Alert top-bar is currently invisible, displaying it in a second")
+                coreContext.postOnCoreThreadDelayed({
+                    if (maxAlertLevel.value != NONE) {
+                        showAlert.postValue(true)
+                    }
+                }, 1000L)
             } else {
-                if (type == SINGLE_CALL) {
-                    Log.i("$TAG Alert top-bar is currently invisible, displaying it in a second")
-                    coreContext.postOnCoreThreadDelayed({
-                        if (maxAlertLevel.value != NONE) {
-                            showAlert.postValue(true)
-                        }
-                    }, 1000L)
-                } else {
-                    Log.i("$TAG Alert top-bar is currently invisible, display it now")
-                    showAlert.postValue(true)
-                }
+                Log.i("$TAG Alert top-bar is currently invisible, display it now")
+                showAlert.postValue(true)
             }
         }
     }

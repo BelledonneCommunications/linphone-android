@@ -598,6 +598,12 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     private fun startInCallForegroundService(call: Call) {
         Log.i("$TAG Trying to start/update foreground Service using call notification")
 
+        val service = inCallService
+        if (service == null) {
+            Log.w("$TAG Core Foreground Service hasn't started yet...")
+            return
+        }
+
         val channelId = context.getString(R.string.notification_channel_call_id)
         val channel = notificationManager.getNotificationChannel(channelId)
         val importance = channel?.importance ?: NotificationManagerCompat.IMPORTANCE_NONE
@@ -606,15 +612,14 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             return
         }
 
-        val notifiable = getNotifiableForCall(
-            coreContext.core.currentCall ?: coreContext.core.calls.first()
-        )
+        val notifiable = getNotifiableForCall(call)
         val notification = notificationManager.activeNotifications.find {
             it.id == notifiable.notificationId
         }
 
         if (notification == null) {
             Log.w("$TAG No existing notification found for current Call, aborting")
+            stopInCallCallForegroundService()
             return
         }
         Log.i("$TAG Found notification [${notification.id}] for current Call")
@@ -653,21 +658,16 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             }
         }
 
-        val service = inCallService
-        if (service != null) {
-            Log.i(
-                "$TAG Service found, starting it as foreground using notification ID [${notifiable.notificationId}] with type(s) [$mask]"
-            )
-            Compatibility.startServiceForeground(
-                service,
-                notifiable.notificationId,
-                notification.notification,
-                mask
-            )
-            currentInCallServiceNotificationId = notifiable.notificationId
-        } else {
-            Log.w("$TAG Core Foreground Service hasn't started yet...")
-        }
+        Log.i(
+            "$TAG Service found, starting it as foreground using notification ID [${notifiable.notificationId}] with type(s) [$mask]"
+        )
+        Compatibility.startServiceForeground(
+            service,
+            notifiable.notificationId,
+            notification.notification,
+            mask
+        )
+        currentInCallServiceNotificationId = notifiable.notificationId
     }
 
     @WorkerThread
