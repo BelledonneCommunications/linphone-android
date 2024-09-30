@@ -40,7 +40,7 @@ import org.linphone.ui.call.conference.view.GridBoxLayout
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
-class ConferenceViewModel : GenericViewModel() {
+class ConferenceViewModel @UiThread constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Conference ViewModel]"
 
@@ -233,6 +233,10 @@ class ConferenceViewModel : GenericViewModel() {
         }
     }
 
+    init {
+        isPaused.value = false
+    }
+
     @WorkerThread
     fun destroy() {
         isCurrentCallInConference.postValue(false)
@@ -254,8 +258,13 @@ class ConferenceViewModel : GenericViewModel() {
         conference.addListener(conferenceListener)
 
         val isIn = conference.isIn
-        isPaused.postValue(!isIn)
-        Log.i("$TAG We ${if (isIn) "are" else "aren't"} in the conference right now")
+        val state = conf.state
+        if (state != Conference.State.CreationPending) {
+            isPaused.postValue(!isIn)
+        }
+        Log.i(
+            "$TAG We ${if (isIn) "are" else "aren't"} in the conference right now, current state is [$state]"
+        )
 
         val screenSharing = conference.screenSharingParticipant != null
         isScreenSharing.postValue(screenSharing)
