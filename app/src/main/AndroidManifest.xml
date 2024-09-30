@@ -53,6 +53,7 @@
         android:enableOnBackInvokedCallback="true"
         android:localeConfig="@xml/locales_config"
         android:theme="@style/Theme.Linphone"
+        android:appCategory="social"
         tools:targetApi="35">
 
         <!-- Required for chat message & call notifications to be displayed in Android auto -->
