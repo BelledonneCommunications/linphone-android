@@ -6,11 +6,6 @@ import android.content.Intent
 import android.database.DataSetObserver
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.text.Editable
-import android.text.TextUtils
-import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Spinner
@@ -26,8 +21,11 @@ import com.google.android.material.snackbar.Snackbar
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx3.awaitFirst
 import net.openid.appauth.AuthState
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationRequest
@@ -44,6 +42,7 @@ import org.linphone.authentication.AuthorizationServiceManager
 import org.linphone.environment.DimensionsEnvironmentService.Companion.getInstance
 import org.linphone.environment.EnvironmentSelectionAdapter
 import org.linphone.middleware.FileTree
+import org.linphone.services.UserService
 import org.linphone.utils.Log
 import timber.log.Timber
 
@@ -63,8 +62,8 @@ import timber.log.Timber
  * instructions.
  */
 class LoginActivity : AppCompatActivity() {
-    private var mAuthStateManager: AuthStateManager? = null
-    private var mConfiguration: AuthConfiguration? = null
+    private lateinit var mAuthStateManager: AuthStateManager
+    private lateinit var mConfiguration: AuthConfiguration
 
     private val mClientId = AtomicReference<String?>()
     private val mAuthRequest = AtomicReference<AuthorizationRequest?>()
@@ -73,6 +72,7 @@ class LoginActivity : AppCompatActivity() {
     private var mExecutor: ExecutorService = Executors.newSingleThreadExecutor()
 
     private val mUsePendingIntents = true
+    private var isEnvironmentSelected = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         android.util.Log.i("LoginActivity", "onCreate")
@@ -86,7 +86,6 @@ class LoginActivity : AppCompatActivity() {
         installSplashScreen()
 
         if (!isLoggingInitialised) {
-            android.util.Log.i("LoginActivity", "Initialise loggers")
             Timber.plant(Timber.DebugTree(), FileTree(applicationContext))
             Timber.tag("cloud.dimensions.uconnect")
             isLoggingInitialised = true
@@ -96,12 +95,20 @@ class LoginActivity : AppCompatActivity() {
 
         findViewById<View>(R.id.retry).setOnClickListener { _: View? ->
             mExecutor.submit(
-                Runnable { this.initializeAppAuth() }
+                Runnable {
+                    if (mAuthStateManager.current.isAuthorized) {
+                        mAuthStateManager.logout(
+                            applicationContext
+                        )
+                    } else {
+                        this.initializeAppAuth()
+                    }
+                }
             )
         }
         findViewById<View>(R.id.start_auth).setOnClickListener { _: View? -> startAuth() }
 
-        handleAuthIntents()
+        displayLoading("Initializing")
 
         configureEnvironmentSelector()
 
@@ -110,32 +117,51 @@ class LoginActivity : AppCompatActivity() {
         if (dimensionsEnvironment == null) {
             displayAuthOptions()
             return
-        } else if (mAuthStateManager!!.current.isAuthorized && !mConfiguration!!.hasConfigurationChanged()) {
-            Log.i("User is already authenticated, proceeding to token activity")
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
+        }
+
+        // mExecutor.submit(Runnable { this.initializeAppAuth() })
+        initializeAppAuth()
+
+        if (!handleAuthIntents()) {
             return
         }
 
-        if (!mConfiguration!!.isValid) {
-            displayError(mConfiguration!!.configurationError, false)
+        if (!mConfiguration.isValid) {
+            displayError(mConfiguration.configurationError, false)
             return
         }
 
-        if (mConfiguration!!.hasConfigurationChanged()) {
+        if (mConfiguration.hasConfigurationChanged()) {
             // discard any existing authorization state due to the change of configuration
             Log.i("Configuration change detected, discarding old state")
-            mAuthStateManager!!.replace(AuthState(), "onCreate")
-            mConfiguration!!.acceptConfiguration()
+            mAuthStateManager.replace(AuthState(), "onCreate")
+            mConfiguration.acceptConfiguration()
         }
 
         if (intent.getBooleanExtra(EXTRA_FAILED, false)) {
             displayAuthCancelled()
         }
 
-        displayLoading("Initializing")
+        redirectPermittedUser()
+    }
 
-        mExecutor.submit(Runnable { this.initializeAppAuth() })
+    private fun redirectPermittedUser() {
+        if (mAuthStateManager.current.isAuthorized && !mConfiguration.hasConfigurationChanged()) {
+            val intent = Intent(this, MainActivity::class.java)
+
+            displayLoading("Fetching user info...")
+
+            CoroutineScope(Dispatchers.IO).launch {
+                val user = UserService.getInstance(applicationContext).user.awaitFirst()
+                if (!user.hasClientPermission()) {
+                    displayErrorLater("You do not have permission to use the client.", true)
+                } else {
+                    Log.i("User is authenticated, proceeding to main activity")
+                    startActivity(intent)
+                    finish()
+                }
+            }
+        }
     }
 
     override fun onStart() {
@@ -176,7 +202,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun handleAuthIntents() {
+    private fun handleAuthIntents(): Boolean {
         val asm = AuthStateManager.getInstance(applicationContext)
 
         if (intent != null &&
@@ -203,6 +229,14 @@ class LoginActivity : AppCompatActivity() {
                 asm.updateAfterAuthorization(response, ex)
             }
         }
+
+        val message = intent.getStringExtra("message")
+        if (message != null) {
+            displayError(message, true)
+            return false
+        }
+
+        return true
     }
 
     @MainThread
@@ -227,31 +261,31 @@ class LoginActivity : AppCompatActivity() {
      * Initializes the authorization service configuration if necessary, either from the local
      * static values or by retrieving an OpenID discovery document.
      */
-    @WorkerThread
+    // @WorkerThread
     private fun initializeAppAuth() {
         Log.i("LoginActivity.initializeAppAuth")
 
         recreateAuthorizationService()
 
-        if (mAuthStateManager!!.current.authorizationServiceConfiguration != null) {
+        if (mAuthStateManager.current.authorizationServiceConfiguration != null) {
             // configuration is already created, skip to client initialization
             Log.i("auth config already established")
             initializeClient()
-            // return;
+            return
         }
 
         // if we are not using discovery, build the authorization service configuration directly
         // from the static configuration values.
-        if (mConfiguration!!.discoveryUri == null) {
-            Log.i("Creating auth config from res/raw/auth_config.json")
+        if (mConfiguration.discoveryUri == null) {
+            Log.i("discoveryUri is null - creating auth config from res/raw/auth_config.json")
             val config = AuthorizationServiceConfiguration(
-                mConfiguration!!.authEndpointUri!!,
-                mConfiguration!!.tokenEndpointUri!!,
-                mConfiguration!!.registrationEndpointUri,
-                mConfiguration!!.endSessionEndpoint
+                mConfiguration.authEndpointUri!!,
+                mConfiguration.tokenEndpointUri!!,
+                mConfiguration.registrationEndpointUri,
+                mConfiguration.endSessionEndpoint
             )
 
-            mAuthStateManager!!.replace(AuthState(config), "initializeAppAuth")
+            mAuthStateManager.replace(AuthState(config), "initializeAppAuth")
 
             initializeClient()
             return
@@ -260,9 +294,9 @@ class LoginActivity : AppCompatActivity() {
         // WrongThread inference is incorrect for lambdas
         // noinspection WrongThread
         runOnUiThread { displayLoading("Retrieving discovery document") }
-        Log.i("Retrieving OpenID discovery doc from " + mConfiguration!!.discoveryUri)
+        Log.i("Retrieving OpenID discovery doc from " + mConfiguration.discoveryUri)
         AuthorizationServiceConfiguration.fetchFromUrl(
-            mConfiguration!!.discoveryUri!!,
+            mConfiguration.discoveryUri!!,
             {
                     config: AuthorizationServiceConfiguration?,
                     ex: AuthorizationException? ->
@@ -271,7 +305,7 @@ class LoginActivity : AppCompatActivity() {
                     ex
                 )
             },
-            mConfiguration!!.connectionBuilder
+            mConfiguration.connectionBuilder
         )
     }
 
@@ -288,7 +322,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         Log.i("Discovery document retrieved")
-        mAuthStateManager!!.replace(AuthState(config), "handleConfigurationRetrievalResult")
+        mAuthStateManager.replace(AuthState(config), "handleConfigurationRetrievalResult")
 
         mExecutor.submit { this.initializeClient() }
     }
@@ -299,15 +333,15 @@ class LoginActivity : AppCompatActivity() {
      */
     @WorkerThread
     private fun initializeClient() {
-        if (mConfiguration!!.clientId != null) {
-            Log.i("Using static client ID: " + mConfiguration!!.clientId)
+        if (mConfiguration.clientId != "") {
+            Log.i("Using static client ID: " + mConfiguration.clientId)
             // use a statically configured client ID
-            mClientId.set(mConfiguration!!.clientId)
+            mClientId.set(mConfiguration.clientId)
             runOnUiThread { this.initializeAuthRequest() }
             return
         }
 
-        val lastResponse = mAuthStateManager!!.current.lastRegistrationResponse
+        val lastResponse = mAuthStateManager.current.lastRegistrationResponse
 
         if (lastResponse != null) {
             Log.i("Using dynamic client ID: " + lastResponse.clientId)
@@ -323,8 +357,8 @@ class LoginActivity : AppCompatActivity() {
         Log.i("Dynamically registering client")
 
         val registrationRequest = RegistrationRequest.Builder(
-            mAuthStateManager!!.current.authorizationServiceConfiguration!!,
-            listOf(mConfiguration!!.redirectUri)
+            mAuthStateManager.current.authorizationServiceConfiguration!!,
+            listOf(mConfiguration.redirectUri)
         )
             .setTokenEndpointAuthenticationMethod(ClientSecretBasic.NAME)
             .build()
@@ -344,7 +378,7 @@ class LoginActivity : AppCompatActivity() {
         response: RegistrationResponse?,
         ex: AuthorizationException?
     ) {
-        mAuthStateManager!!.updateAfterRegistration(response, ex)
+        mAuthStateManager.updateAfterRegistration(response, ex)
         if (response == null) {
             Log.i("Failed to dynamically register client", ex)
             displayErrorLater("Failed to register client: " + ex!!.message, true)
@@ -378,12 +412,19 @@ class LoginActivity : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
+                Log.i("Environment spinner onItemSelected")
+                if (!isEnvironmentSelected) {
+                    Log.i("Skip setting environment on first load.")
+                    isEnvironmentSelected = true
+                    return
+                }
+
                 val env = adapter.getItem(position)
-                if (env != null) {
+                if (env != null && env.id != environmentService.getCurrentEnvironment()?.id) {
                     Log.i("Setting environment " + env.name + " (" + env.identityServerUri + ")")
 
                     environmentService.setCurrentEnvironment(env)
-                    mAuthStateManager!!.replace(AuthState(), "Environment Selector")
+                    mAuthStateManager.replace(AuthState(), "Environment Selector")
 
                     initializeAppAuth()
                 }
@@ -439,7 +480,8 @@ class LoginActivity : AppCompatActivity() {
 
     private fun recreateAuthorizationService() {
         try {
-            mConfiguration!!.readConfiguration()
+            Log.i("LoginActivity.recreateAuthorizationService")
+            mConfiguration.readConfiguration()
         } catch (e: AuthConfiguration.InvalidConfigurationException) {
             displayError("Failed to reload auth configuration.", true)
         }
@@ -480,7 +522,7 @@ class LoginActivity : AppCompatActivity() {
 
     @MainThread
     private fun initializeAuthRequest() {
-        createAuthRequest(null)
+        createAuthRequest()
         warmUpBrowser()
         displayAuthOptions()
     }
@@ -491,7 +533,7 @@ class LoginActivity : AppCompatActivity() {
         findViewById<View>(R.id.loading_container).visibility = View.GONE
         findViewById<View>(R.id.error_container).visibility = View.GONE
 
-        val state = mAuthStateManager!!.current
+        val state = mAuthStateManager.current
         val config = state.authorizationServiceConfiguration
     }
 
@@ -520,19 +562,20 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun createAuthRequest(loginHint: String?) {
-        Log.i("Creating auth request for login hint: $loginHint")
+    private fun createAuthRequest() {
+        Log.i("Creating auth request")
+
+        if (mAuthStateManager.current.authorizationServiceConfiguration == null) {
+            return
+        }
+
         val authRequestBuilder = AuthorizationRequest.Builder(
-            mAuthStateManager!!.current.authorizationServiceConfiguration!!,
+            mAuthStateManager.current.authorizationServiceConfiguration!!,
             mClientId.get()!!,
             ResponseTypeValues.CODE,
-            mConfiguration!!.redirectUri
+            mConfiguration.redirectUri
         )
-            .setScope(mConfiguration!!.scope)
-
-        if (!TextUtils.isEmpty(loginHint)) {
-            authRequestBuilder.setLoginHint(loginHint)
-        }
+            .setScope(mConfiguration.scope)
 
         mAuthRequest.set(authRequestBuilder.build())
     }
@@ -547,52 +590,9 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Responds to changes in the login hint. After a "debounce" delay, warms up the browser
-     * for a request with the new login hint; this avoids constantly re-initializing the
-     * browser while the user is typing.
-     */
-    private inner class LoginHintChangeHandler : TextWatcher {
-        private val mHandler = Handler(Looper.getMainLooper())
-        private var mTask: RecreateAuthRequestTask
-
-        init {
-            mTask = RecreateAuthRequestTask()
-        }
-
-        override fun beforeTextChanged(cs: CharSequence, start: Int, count: Int, after: Int) {}
-
-        override fun onTextChanged(cs: CharSequence, start: Int, before: Int, count: Int) {
-            mTask.cancel()
-            mTask = RecreateAuthRequestTask()
-            mHandler.postDelayed(mTask, Companion.DEBOUNCE_DELAY_MS.toLong())
-        }
-
-        override fun afterTextChanged(ed: Editable) {}
-    }
-
-    private inner class RecreateAuthRequestTask : Runnable {
-        private val mCanceled = AtomicBoolean()
-
-        override fun run() {
-            if (mCanceled.get()) {
-                return
-            }
-
-            createAuthRequest(null)
-            warmUpBrowser()
-        }
-
-        fun cancel() {
-            mCanceled.set(true)
-        }
-    }
-
     companion object {
         private const val EXTRA_FAILED = "failed"
         private const val RC_AUTH = 100
-        private const val DEBOUNCE_DELAY_MS = 500
-
         private var isLoggingInitialised = false
     }
 
@@ -610,10 +610,6 @@ class LoginActivity : AppCompatActivity() {
             Log.i("Environment: $environmentId ($index)")
 
             spinner.setSelection(index)
-        }
-
-        override fun onInvalidated() {
-            super.onInvalidated()
         }
     }
 }

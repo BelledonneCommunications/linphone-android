@@ -100,7 +100,7 @@ class CorePreferences constructor(private val context: Context) {
         }
 
     var logcatLogsOutput: Boolean
-        get() = config.getBool("app", "print_logs_into_logcat", true)
+        get() = config.getBool("app", "print_logs_into_logcat", false)
         set(value) {
             config.setBool("app", "print_logs_into_logcat", value)
         }
