@@ -777,7 +777,11 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
             CoreKeepAliveThirdPartyAccountsService::class.java
         )
         Log.i("$TAG Starting Keep alive for third party accounts Service")
-        context.startService(serviceIntent)
+        try {
+            context.startService(serviceIntent)
+        } catch (e: Exception) {
+            Log.e("$TAG Failed to start keep alive service: $e")
+        }
     }
 
     @WorkerThread

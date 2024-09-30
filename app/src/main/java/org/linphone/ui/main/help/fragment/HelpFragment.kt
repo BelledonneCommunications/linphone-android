@@ -75,13 +75,15 @@ class HelpFragment : GenericMainFragment() {
         }
 
         binding.setQuitClickListener {
+            coreContext.stopKeepAliveService()
+
             coreContext.postOnCoreThread {
                 Log.i("$TAG Stopping Core Context")
                 coreContext.quitSafely()
             }
 
             Log.i("$TAG Quitting app")
-            requireActivity().finishAffinity()
+            requireActivity().finishAndRemoveTask()
         }
 
         binding.setPrivacyPolicyClickListener {
