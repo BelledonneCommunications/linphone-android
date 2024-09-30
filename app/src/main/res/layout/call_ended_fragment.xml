@@ -64,6 +64,7 @@
             android:id="@+id/call_media_encryption_info"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:visibility="@{viewModel.callDuration > 0 ? View.VISIBLE : View.GONE, default=gone}"
             layout="@layout/call_media_encryption_info"
             bind:viewModel="@{viewModel}"
             app:layout_constraintTop_toBottomOf="@id/call_direction_label"

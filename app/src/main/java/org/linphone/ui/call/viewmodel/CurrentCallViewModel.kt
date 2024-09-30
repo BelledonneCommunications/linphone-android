@@ -327,6 +327,7 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
                 updateVideoDirection(call.currentParams.videoDirection)
 
                 if (call.state == Call.State.Connected) {
+                    updateCallDuration()
                     if (call.conference != null) {
                         Log.i(
                             "$TAG Call is in Connected state and conference isn't null, going to conference fragment"
@@ -337,6 +338,7 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
                         conferenceModel.destroy()
                     }
                 } else if (call.state == Call.State.StreamsRunning) {
+                    updateCallDuration()
                     if (corePreferences.automaticallyStartCallRecording) {
                         isRecording.postValue(call.params.isRecording)
                     }
