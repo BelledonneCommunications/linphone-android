@@ -611,6 +611,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         val importance = channel?.importance ?: NotificationManagerCompat.IMPORTANCE_NONE
         if (importance == NotificationManagerCompat.IMPORTANCE_NONE) {
             Log.e("$TAG Calls channel has been disabled, can't start foreground service!")
+            stopInCallCallForegroundService()
             return
         }
 
@@ -618,12 +619,16 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         val notificationId = notifiable.notificationId
         val notification = if (notificationsMap.containsKey(notificationId)) {
             notificationsMap[notificationId]
+        } else if (notificationsMap.containsKey(INCOMING_CALL_ID)) {
+            notificationsMap[INCOMING_CALL_ID]
         } else {
             null
         }
 
         if (notification == null) {
-            Log.w("$TAG No existing notification found for current Call, aborting")
+            Log.w(
+                "$TAG No existing notification (ID [$notificationId]) found for current call [${call.remoteAddress.asStringUriOnly()}], aborting"
+            )
             stopInCallCallForegroundService()
             return
         }
