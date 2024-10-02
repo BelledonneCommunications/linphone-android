@@ -7,7 +7,6 @@
     </style>
 
     <style name="Theme.App.Starting" parent="Theme.SplashScreen.IconBackground">
-        <!-- Set a white background behind the splash screen icon. -->
         <item name="windowSplashScreenIconBackgroundColor">@android:color/white</item>
     </style>
 
@@ -38,6 +37,7 @@
         <item name="secondaryTextColor">@color/white_color</item>
         <item name="primarySubtextDarkColor">@color/grey_color</item>
         <item name="primarySubtextLightColor">@color/light_grey_color</item>
+        <item name="navbarColor">@color/navbar_color</item>
 
         <item name="backgroundColor">@color/white_color</item>
         <item name="backgroundColor2">@color/header_background_color</item>

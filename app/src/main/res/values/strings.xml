@@ -69,7 +69,7 @@
     <string name="logs_upload_failure">Failed to upload logs!</string>
     <string name="logs_reset_complete">Logs have been cleared</string>
     <string name="logs_url_copied_to_clipboard">Logs URL copied into clipboard</string>
-    <string name="about_bugreport_email" translatable="false">linphone-android@belledonne-communications.com</string>
+    <string name="about_bugreport_email" translatable="false">support@dimensionstechnologies.com</string>
 
     <!-- Common -->
     <string name="phone_number">Phone number</string>

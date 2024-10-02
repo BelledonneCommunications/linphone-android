@@ -195,6 +195,10 @@ android {
                 }
             }
         }
+
+        voyager {
+            initWith releaseWithCrashlytics
+        }
     }
 
     buildFeatures {

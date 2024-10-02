@@ -352,7 +352,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_alignParentBottom="true"
-            android:background="?attr/accentColor"
+            android:background="?attr/navbarColor"
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
