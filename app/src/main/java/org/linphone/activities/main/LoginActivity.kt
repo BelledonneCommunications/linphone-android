@@ -75,15 +75,12 @@ class LoginActivity : AppCompatActivity() {
     private var isEnvironmentSelected = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        android.util.Log.i("LoginActivity", "onCreate")
-
         super.onCreate(savedInstanceState)
-
-        mAuthStateManager = AuthStateManager.getInstance(this)
-        mConfiguration = AuthConfiguration.getInstance(this)
 
         // Must be done before the setContentView
         installSplashScreen()
+
+        setContentView(R.layout.login_activity)
 
         if (!isLoggingInitialised) {
             Timber.plant(Timber.DebugTree(), FileTree(applicationContext))
@@ -91,7 +88,8 @@ class LoginActivity : AppCompatActivity() {
             isLoggingInitialised = true
         }
 
-        setContentView(R.layout.login_activity)
+        mAuthStateManager = AuthStateManager.getInstance(this)
+        mConfiguration = AuthConfiguration.getInstance(this)
 
         findViewById<View>(R.id.retry).setOnClickListener { _: View? ->
             mExecutor.submit(

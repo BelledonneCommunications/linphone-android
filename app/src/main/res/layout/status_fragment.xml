@@ -21,7 +21,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/status_fragment_size"
-        android:background="?attr/accentColor"
+        android:background="?attr/navbarColor"
         android:orientation="horizontal">
 
         <ImageView

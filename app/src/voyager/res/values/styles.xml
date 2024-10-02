@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="VoyagerAppSplashScreenTheme" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#1a486a</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/voyager_splash_logo</item>
+        <item name="postSplashScreenTheme">@style/AppTheme</item>
+    </style>
+</resources>

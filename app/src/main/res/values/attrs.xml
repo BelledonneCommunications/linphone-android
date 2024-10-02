@@ -10,6 +10,7 @@
         <attr name="secondaryTextColor" format="color"/>
         <attr name="primarySubtextDarkColor" format="color"/>
         <attr name="primarySubtextLightColor" format="color"/>
+        <attr name="navbarColor" format="color"/>
 
         <attr name="backgroundColor" format="color"/>
         <attr name="backgroundColor2" format="color"/>

@@ -26,6 +26,7 @@
         <item name="secondaryTextColor">@color/voip_dark_gray</item>
         <item name="primarySubtextDarkColor">@color/header_background_color</item>
         <item name="primarySubtextLightColor">@color/toolbar_color</item>
+        <item name="navbarColor">@color/primary_dark_color</item>
 
         <item name="backgroundColor">@color/voip_dark_color4</item>
         <item name="backgroundColor2">@color/voip_gray</item>
