@@ -661,6 +661,7 @@ class NotificationsManager(private val context: Context) {
     fun serviceCreated(createdService: CoreService) {
         Log.i("[Notifications Manager] Service has been created, keeping it around")
         service = createdService
+        startCallForeground(createdService)
     }
 
     fun serviceDestroyed() {
