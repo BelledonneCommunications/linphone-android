@@ -351,7 +351,7 @@ class MeetingWaitingRoomViewModel @UiThread constructor() : GenericViewModel() {
                     core.outputAudioDevice ?: core.defaultOutputAudioDevice
                 }
                 val isCurrentlyInUse = device.type == currentDevice?.type && device.deviceName == currentDevice?.deviceName
-                val model = AudioDeviceModel(device, name, device.type, isCurrentlyInUse) {
+                val model = AudioDeviceModel(device, name, device.type, isCurrentlyInUse, true) {
                     // onSelected
                     coreContext.postOnCoreThread {
                         Log.i("$TAG Selected audio device with ID [${device.id}]")

@@ -27,6 +27,7 @@ data class AudioDeviceModel @WorkerThread constructor(
     val name: String,
     val type: AudioDevice.Type,
     val isCurrentlySelected: Boolean,
+    val isEnabled: Boolean,
     private val onAudioDeviceSelected: (() -> Unit)? = null
 ) {
     var dismissDialog: (() -> Unit)? = null
