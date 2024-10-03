@@ -681,9 +681,6 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
         coreContext.postOnCoreThread { core ->
             val audioDevices = core.audioDevices
             val list = arrayListOf<AudioDeviceModel>()
-            val isEarpieceAvailable = coreContext.telecomManager.isEarpieceAvailable(
-                currentCall.callLog.callId ?: ""
-            )
             for (device in audioDevices) {
                 // Only list output audio devices
                 if (!device.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) continue
@@ -717,8 +714,7 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
                 }
                 val currentDevice = currentCall.outputAudioDevice
                 val isCurrentlyInUse = device.type == currentDevice?.type && device.deviceName == currentDevice?.deviceName
-                val enabled = if (device.type == AudioDevice.Type.Earpiece) isEarpieceAvailable else true
-                val model = AudioDeviceModel(device, name, device.type, isCurrentlyInUse, enabled) {
+                val model = AudioDeviceModel(device, name, device.type, isCurrentlyInUse, true) {
                     // onSelected
                     coreContext.postOnCoreThread {
                         Log.i("$TAG Selected audio device with ID [${device.id}]")

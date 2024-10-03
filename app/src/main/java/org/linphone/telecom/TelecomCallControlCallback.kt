@@ -168,12 +168,6 @@ class TelecomCallControlCallback(
         }.launchIn(scope)
     }
 
-    fun isEarpieceAvailable(): Boolean {
-        return availableEndpoints.find {
-            it.type == CallEndpointCompat.Companion.TYPE_EARPIECE
-        } != null
-    }
-
     fun applyAudioRouteToCallWithId(routes: List<AudioDevice.Type>): Boolean {
         Log.i("$TAG Looking for audio endpoint with type [${routes.first()}]")
 

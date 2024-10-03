@@ -194,10 +194,4 @@ class TelecomManager @WorkerThread constructor(context: Context) {
 
         return callControlCallback.applyAudioRouteToCallWithId(routes)
     }
-
-    @WorkerThread
-    fun isEarpieceAvailable(callId: String): Boolean {
-        val callControlCallback = map[callId]
-        return callControlCallback?.isEarpieceAvailable() ?: false
-    }
 }
