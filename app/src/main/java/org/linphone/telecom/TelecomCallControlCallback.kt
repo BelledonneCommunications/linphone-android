@@ -136,7 +136,6 @@ class TelecomCallControlCallback(
                     route.add(AudioDevice.Type.Headphones)
                     route.add(AudioDevice.Type.Headset)
                 }
-                else -> null
             }
             if (route.isNotEmpty()) {
                 currentEndpoint = endpoint.type
