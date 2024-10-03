@@ -533,7 +533,7 @@ class CoreContext(
                 val pushToken = FirebaseMessaging.getInstance().token.await()
                 if (!pushToken.isNullOrEmpty()) {
                     Log.i("RegisterSipAccount: We have a push token, setting contact")
-                    accountParams.contactParameters = "app-id=cloud.xarios.dimensions;pn-tok=$pushToken;pn-type=firebase"
+                    accountParams.contactParameters = "app-id=cloud.xarios.dimensions;pn-tok=$pushToken;pn-type=firebase_v1"
                 }
             }
 
