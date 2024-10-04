@@ -24,6 +24,7 @@ import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.activities.main.settings.SettingListenerStub
+import org.linphone.models.UserInfo
 
 class AboutViewModel : ViewModel() {
     private val prefs = corePreferences
@@ -42,4 +43,7 @@ class AboutViewModel : ViewModel() {
     init {
         sipLogMode.value = prefs.debugLogs
     }
+
+    var user: UserInfo = UserInfo()
+    var region: String? = null
 }

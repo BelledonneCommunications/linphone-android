@@ -13,7 +13,6 @@ import org.linphone.R
 import org.linphone.models.DimensionsEnvironment
 import org.linphone.models.EnvironmentOverride
 import org.linphone.utils.Log
-import kotlin.reflect.typeOf
 
 class DimensionsEnvironmentService(context: Context) {
     companion object {
