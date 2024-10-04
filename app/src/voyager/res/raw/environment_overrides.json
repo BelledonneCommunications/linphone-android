@@ -1,12 +1,11 @@
 [
   {
     "id": "AU",
-    "name": "Australalialalia",
-    "isDefault": true
+    "isDefault": true,
+    "defaultTenantId": "4b373e08-eae3-44ec-857f-08dc694c19ea"
   },
   {
-    "id": "QA",
-    "name": "Quality Assurance",
-    "defaultTenantId": "10a65cd9-8565-41fe-6039-08d9478d421f"
+    "id": "Stg",
+    "defaultTenantId": "3f9b5490-bf9d-498e-8cb1-7bdba1c013ea"
   }
 ]
