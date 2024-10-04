@@ -4,7 +4,7 @@
 
     <color name="primary_color">#00a0b5</color><!-- #ff5e00--><!-- Try to have a color that renders well on both light & dark theme -->
     <!-- You can use https://material.io/design/color/#tools-for-picking-colors to get dark color value from primary -->
-    <color name="primary_dark_color">#0090a5</color><!-- #e65000 -->
+    <color name="primary_dark_color">#252E35</color><!-- #e65000 -->
     <color name="primary_light_color">#ffab4d</color>
     <color name="primary_color_disabled">#4DFE5E00</color> <!-- Try to have a color that renders well on both light & dark theme -->
     <color name="notification_led_color">#ff8000</color>
@@ -31,7 +31,7 @@
     <color name="voip_translucent_popup_alt_background">#E64B5964</color>
     <color name="voip_numpad_background">#E4E4E4</color>
     <color name="voip_conference_participant_paused_background">#303030</color>
-    <color name="voip_dark_color">#d52E35</color>  <!-- Background -->
+    <color name="voip_dark_color">#252E35</color>  <!-- Background -->
     <color name="voip_dark_color2">#3F464B</color>  <!-- Light gray -->
     <color name="voip_dark_color3">#475663</color> <!-- Extra buttons -->
     <color name="voip_dark_color4">#2D3841</color> <!-- Top bars -->

@@ -16,7 +16,7 @@ data class DimensionsEnvironment(
     var isDefault: Boolean,
 
     @SerializedName("IsHidden")
-    var isHidden: Boolean,
+    var isHidden: Boolean = false,
 
     @SerializedName("IdentityServerUri")
     var identityServerUri: String,
@@ -37,7 +37,10 @@ data class DimensionsEnvironment(
     var resourcesBlobUrl: String,
 
     @SerializedName("Locales")
-    var locales: List<String>
+    var locales: List<String>,
+
+    @SerializedName("defaultTenantId")
+    var defaultTenantId: String? = null
 ) {
     companion object {
         public fun jsonDeserialize(jsonStr: String): DimensionsEnvironment {

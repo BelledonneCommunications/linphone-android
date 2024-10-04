@@ -1,0 +1,12 @@
+[
+  {
+    "id": "AU",
+    "name": "Australalialalia",
+    "isDefault": true
+  },
+  {
+    "id": "QA",
+    "name": "Quality Assurance",
+    "defaultTenantId": "10a65cd9-8565-41fe-6039-08d9478d421f"
+  }
+]
