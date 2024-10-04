@@ -135,6 +135,72 @@
                     android:padding="10dp">
 
                     <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="Region" style="@style/TextAppearance.AppCompat.Caption" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" style="@style/TextAppearance.AppCompat.Body1"
+                            android:text="@{viewModel.region}"
+                            android:paddingBottom="14sp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="Tenant ID" style="@style/TextAppearance.AppCompat.Caption" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" style="@style/TextAppearance.AppCompat.Body1"
+                            android:text="@{viewModel.user.tenantId}"
+                            android:paddingBottom="14sp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="Tenant Name" style="@style/TextAppearance.AppCompat.Caption" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" style="@style/TextAppearance.AppCompat.Body1"
+                            android:text="@{viewModel.user.tenantName}"
+                            android:paddingBottom="14sp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="User ID" style="@style/TextAppearance.AppCompat.Caption" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" style="@style/TextAppearance.AppCompat.Body1"
+                            android:text="@{viewModel.user.id}"
+                            android:paddingBottom="14sp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="User Name" style="@style/TextAppearance.AppCompat.Caption" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" style="@style/TextAppearance.AppCompat.Body1"
+                            android:text="@{viewModel.user.displayName}"
+                            android:paddingBottom="14sp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="User Email" style="@style/TextAppearance.AppCompat.Caption" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" style="@style/TextAppearance.AppCompat.Body1"
+                            android:text="@{viewModel.user.email}"
+                            android:paddingBottom="14sp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"

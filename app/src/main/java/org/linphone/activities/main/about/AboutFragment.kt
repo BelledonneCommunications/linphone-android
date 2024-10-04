@@ -24,6 +24,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,11 +32,14 @@ import org.linphone.R
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.databinding.AboutFragmentBinding
+import org.linphone.environment.DimensionsEnvironmentService
 import org.linphone.services.DiagnosticsService
+import org.linphone.services.UserService
 import org.linphone.utils.Log
 
 class AboutFragment : SecureFragment<AboutFragmentBinding>() {
     private lateinit var viewModel: AboutViewModel
+    private var userSubscription: Disposable? = null
 
     override fun getLayoutId(): Int = R.layout.about_fragment
 
@@ -109,5 +113,16 @@ class AboutFragment : SecureFragment<AboutFragmentBinding>() {
                 activity.showSnackBar("Failed to clear logs!")
             }
         }
+
+        userSubscription = UserService.getInstance(requireContext()).user
+            .subscribe { u -> viewModel.user = u }
+
+        viewModel.region = DimensionsEnvironmentService.getInstance(requireContext()).getCurrentEnvironment()?.name
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        userSubscription?.dispose()
     }
 }
