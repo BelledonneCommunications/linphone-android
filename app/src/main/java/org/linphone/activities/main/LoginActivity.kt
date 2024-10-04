@@ -567,6 +567,13 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
+        val environment = getInstance(applicationContext).getCurrentEnvironment()
+
+        val params = HashMap<String, String>()
+        if (environment?.defaultTenantId != null) {
+            params["tenant_id"] = environment.defaultTenantId!!
+        }
+
         val authRequestBuilder = AuthorizationRequest.Builder(
             mAuthStateManager.current.authorizationServiceConfiguration!!,
             mClientId.get()!!,
@@ -574,6 +581,7 @@ class LoginActivity : AppCompatActivity() {
             mConfiguration.redirectUri
         )
             .setScope(mConfiguration.scope)
+            .setAdditionalParameters(params)
 
         mAuthRequest.set(authRequestBuilder.build())
     }
