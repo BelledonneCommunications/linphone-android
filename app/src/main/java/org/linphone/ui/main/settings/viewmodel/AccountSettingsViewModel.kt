@@ -71,6 +71,7 @@ class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
 
     val bundleModeEnabled = MutableLiveData<Boolean>()
 
+    val mwiUri = MutableLiveData<String>()
     val voicemailUri = MutableLiveData<String>()
 
     val cpimInBasicChatRooms = MutableLiveData<Boolean>()
@@ -130,7 +131,8 @@ class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
 
                 cpimInBasicChatRooms.postValue(params.isCpimInBasicChatRoomEnabled)
 
-                voicemailUri.postValue(params.mwiServerAddress?.asStringUriOnly().orEmpty())
+                mwiUri.postValue(params.mwiServerAddress?.asStringUriOnly().orEmpty())
+                voicemailUri.postValue(params.voicemailAddress?.asStringUriOnly().orEmpty())
 
                 expire.postValue(params.expires.toString())
 
@@ -185,12 +187,20 @@ class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
 
                 newParams.isCpimInBasicChatRoomEnabled = cpimInBasicChatRooms.value == true
 
-                val mwiUri = voicemailUri.value.orEmpty()
-                if (mwiUri.isNotEmpty()) {
-                    val mwiAddress = core.interpretUrl(mwiUri, false)
+                val mwi = mwiUri.value.orEmpty()
+                if (mwi.isNotEmpty()) {
+                    val mwiAddress = core.interpretUrl(mwi, false)
                     newParams.mwiServerAddress = mwiAddress
                 } else {
                     newParams.mwiServerAddress = null
+                }
+
+                val voicemail = voicemailUri.value.orEmpty()
+                if (voicemail.isNotEmpty()) {
+                    val voicemailAddress = core.interpretUrl(voicemail, false)
+                    newParams.voicemailAddress = voicemailAddress
+                } else {
+                    newParams.voicemailAddress = null
                 }
 
                 val expire = expire.value.orEmpty()

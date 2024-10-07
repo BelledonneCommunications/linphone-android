@@ -131,6 +131,39 @@
 
                         <androidx.appcompat.widget.AppCompatTextView
                             style="@style/settings_title_style"
+                            android:id="@+id/voicemail_uri_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:text="@string/account_settings_voicemail_uri_title"
+                            android:maxLines="2"
+                            android:ellipsize="end"
+                            app:layout_constraintTop_toBottomOf="@id/im_encryption_mandatory_switch"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"/>
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            style="@style/default_text_style"
+                            android:id="@+id/voicemail_uri"
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginBottom="20dp"
+                            android:background="@drawable/edit_text_background"
+                            android:paddingStart="20dp"
+                            android:paddingEnd="20dp"
+                            android:text="@={viewModel.voicemailUri}"
+                            android:inputType="text|textUri"
+                            android:hint="@string/account_settings_voicemail_uri_title"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/voicemail_uri_title" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            style="@style/settings_title_style"
                             android:id="@+id/mwi_uri_title"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -140,7 +173,7 @@
                             android:text="@string/account_settings_mwi_uri_title"
                             android:maxLines="2"
                             android:ellipsize="end"
-                            app:layout_constraintTop_toBottomOf="@id/im_encryption_mandatory_switch"
+                            app:layout_constraintTop_toBottomOf="@id/voicemail_uri"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -155,7 +188,7 @@
                             android:background="@drawable/edit_text_background"
                             android:paddingStart="20dp"
                             android:paddingEnd="20dp"
-                            android:text="@={viewModel.voicemailUri}"
+                            android:text="@={viewModel.mwiUri}"
                             android:inputType="text|textUri"
                             android:hint="@string/account_settings_mwi_uri_title"
                             app:layout_constraintStart_toStartOf="parent"

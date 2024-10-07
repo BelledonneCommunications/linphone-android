@@ -36,28 +36,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <androidx.constraintlayout.helper.widget.Flow
-            android:id="@+id/flow"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="14dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/handle"
-            app:flow_horizontalStyle="spread"
-            app:flow_wrapMode="aligned"
-            app:flow_verticalGap="10dp"
-            app:flow_maxElementsWrap="3"
-            app:constraint_referenced_ids="digit_1, digit_2, digit_3, digit_4, digit_5, digit_6, digit_7, digit_8, digit_9, digit_star, digit_0, digit_sharp" />
-
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{() -> model.onDigitClicked(`1`)}"
+            android:onLongClick="@{() -> model.onVoicemailLongClicked()}"
             style="@style/call_start_numpad_digits_style"
             android:id="@+id/digit_1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:text="1"
-            app:layout_constraintTop_toBottomOf="@id/handle"
-            app:layout_constraintStart_toStartOf="parent"/>
+            android:textSize="24sp"
+            android:drawableBottom="@drawable/voicemail"
+            android:paddingBottom="5dp"
+            app:layout_constraintTop_toTopOf="@id/digit_2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/digit_2"
+            app:layout_constraintBottom_toBottomOf="@id/digit_2"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{() -> model.onDigitClicked(`2`)}"
@@ -65,9 +58,13 @@
             android:id="@+id/digit_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
             android:text="2"
+            app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintTop_toBottomOf="@id/handle"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toEndOf="@id/digit_1"
+            app:layout_constraintEnd_toStartOf="@id/digit_3"
+            app:layout_constraintBottom_toTopOf="@id/digit_5"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{() -> model.onDigitClicked(`3`)}"
@@ -76,8 +73,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="3"
-            app:layout_constraintTop_toBottomOf="@id/handle"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintTop_toTopOf="@id/digit_2"
+            app:layout_constraintStart_toEndOf="@id/digit_2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/digit_2"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{() -> model.onDigitClicked(`4`)}"
@@ -86,8 +85,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="4"
-            app:layout_constraintTop_toBottomOf="@id/handle"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintTop_toTopOf="@id/digit_5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/digit_5"
+            app:layout_constraintBottom_toBottomOf="@id/digit_5"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{() -> model.onDigitClicked(`5`)}"
@@ -95,9 +96,12 @@
             android:id="@+id/digit_5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:text="5"
-            app:layout_constraintTop_toBottomOf="@id/handle"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/digit_2"
+            app:layout_constraintStart_toEndOf="@id/digit_4"
+            app:layout_constraintEnd_toStartOf="@id/digit_6"
+            app:layout_constraintBottom_toTopOf="@id/digit_8"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{() -> model.onDigitClicked(`6`)}"
@@ -106,8 +110,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="6"
-            app:layout_constraintTop_toBottomOf="@id/handle"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintTop_toTopOf="@id/digit_5"
+            app:layout_constraintStart_toEndOf="@id/digit_5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/digit_5"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{() -> model.onDigitClicked(`7`)}"
@@ -116,8 +122,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="7"
-            app:layout_constraintTop_toBottomOf="@id/handle"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintTop_toTopOf="@id/digit_8"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/digit_8"
+            app:layout_constraintBottom_toBottomOf="@id/digit_8"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{() -> model.onDigitClicked(`8`)}"
@@ -125,9 +133,12 @@
             android:id="@+id/digit_8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:text="8"
-            app:layout_constraintTop_toBottomOf="@id/handle"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/digit_5"
+            app:layout_constraintStart_toEndOf="@id/digit_7"
+            app:layout_constraintEnd_toStartOf="@id/digit_9"
+            app:layout_constraintBottom_toTopOf="@id/digit_0"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{() -> model.onDigitClicked(`9`)}"
@@ -136,8 +147,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="9"
-            app:layout_constraintTop_toBottomOf="@id/handle"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintTop_toTopOf="@id/digit_8"
+            app:layout_constraintStart_toEndOf="@id/digit_8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/digit_8"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{() -> model.onDigitClicked(`*`)}"
@@ -146,8 +159,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="*"
-            app:layout_constraintTop_toBottomOf="@id/handle"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintTop_toTopOf="@id/digit_0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/digit_0"
+            app:layout_constraintBottom_toBottomOf="@id/digit_0"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{() -> model.onDigitClicked(`0`)}"
@@ -155,10 +170,14 @@
             style="@style/call_start_numpad_digits_style"
             android:id="@+id/digit_0"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
             android:text="0"
-            app:layout_constraintTop_toBottomOf="@id/handle"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/digit_8"
+            app:layout_constraintStart_toEndOf="@id/digit_star"
+            app:layout_constraintEnd_toStartOf="@id/digit_sharp"
+            app:layout_constraintBottom_toTopOf="@id/call"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{() -> model.onDigitClicked(`#`)}"
@@ -167,8 +186,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="#"
-            app:layout_constraintTop_toBottomOf="@id/handle"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintTop_toTopOf="@id/digit_0"
+            app:layout_constraintStart_toEndOf="@id/digit_0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/digit_0"/>
 
         <ImageView
             android:id="@+id/call"
@@ -179,14 +200,15 @@
             android:paddingTop="15dp"
             android:paddingEnd="30dp"
             android:paddingBottom="15dp"
+            android:layout_marginBottom="20dp"
             android:src="@drawable/phone"
             android:contentDescription="@string/content_description_call_start"
             android:elevation="3dp"
             android:background="@drawable/squircle_green_button_background"
             app:tint="?attr/color_main2_000"
-            app:layout_constraintTop_toBottomOf="@id/flow"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/digit_0"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
         <ImageView
@@ -194,17 +216,14 @@
             android:onClick="@{() -> model.onBackspaceClicked()}"
             android:onLongClick="@{() -> model.onBackspaceLongClicked()}"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="20dp"
+            android:layout_height="@dimen/call_button_size"
             android:src="@drawable/backspace_fill"
             android:contentDescription="@string/content_description_erase_last_input"
-            android:padding="20dp"
-            android:elevation="3dp"
-            app:layout_constraintTop_toBottomOf="@id/flow"
+            android:padding="15dp"
             app:layout_constraintStart_toStartOf="@id/digit_sharp"
             app:layout_constraintEnd_toEndOf="@id/digit_sharp"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toTopOf="@id/call"
+            app:layout_constraintBottom_toBottomOf="@id/call"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

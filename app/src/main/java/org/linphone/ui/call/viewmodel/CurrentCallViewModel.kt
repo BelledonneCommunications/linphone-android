@@ -539,6 +539,8 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
                     }
                 }
             },
+            { // onVoicemailClicked
+            },
             { // OnBackspaceClicked
                 removedCharacterAtCurrentPositionEvent.value = Event(true)
             },

@@ -126,14 +126,24 @@ class StartCallViewModel @UiThread constructor() : AddressSelectionViewModel() {
         isNumpadVisible.value = false
         numpadModel = NumpadModel(
             false,
-            { digit ->
-                // onDigitClicked
+            { digit -> // onDigitClicked
                 appendDigitToSearchBarEvent.value = Event(digit)
                 // Don't do that, cursor will stay at start
                 // searchFilter.value = "${searchFilter.value.orEmpty()}$digit"
             },
-            {
-                // OnBackspaceClicked
+            { // onVoicemailClicked
+                coreContext.postOnCoreThread { core ->
+                    val account = LinphoneUtils.getDefaultAccount()
+                    val voicemailAddress = account?.params?.voicemailAddress
+                    if (voicemailAddress != null) {
+                        Log.i("$TAG Calling voicemail URI [${voicemailAddress.asStringUriOnly()}]")
+                        coreContext.startCall(voicemailAddress)
+                    } else {
+                        Log.w("$TAG No voicemail URI configured for current account, nothing to do")
+                    }
+                }
+            },
+            { // OnBackspaceClicked
                 removedCharacterAtCurrentPositionEvent.value = Event(true)
             },
             { // OnCallClicked
