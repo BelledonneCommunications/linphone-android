@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="zero">0dp</dimen>
+    <dimen name="five">5dp</dimen>
 
     <dimen name="screen_bottom_margin">10dp</dimen>
 

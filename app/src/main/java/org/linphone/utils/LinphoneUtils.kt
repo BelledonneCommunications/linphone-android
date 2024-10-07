@@ -316,6 +316,31 @@ class LinphoneUtils {
             }
         }
 
+        @AnyThread
+        fun formatEphemeralExpiration(duration: Long): String {
+            return when (duration) {
+                0L -> AppUtils.getString(
+                    R.string.conversation_ephemeral_messages_duration_disabled
+                )
+                60L -> AppUtils.getString(
+                    R.string.conversation_ephemeral_messages_duration_one_minute
+                )
+                3600L -> AppUtils.getString(
+                    R.string.conversation_ephemeral_messages_duration_one_hour
+                )
+                86400L -> AppUtils.getString(
+                    R.string.conversation_ephemeral_messages_duration_one_day
+                )
+                259200L -> AppUtils.getString(
+                    R.string.conversation_ephemeral_messages_duration_three_days
+                )
+                604800L -> AppUtils.getString(
+                    R.string.conversation_ephemeral_messages_duration_one_week
+                )
+                else -> "$duration s"
+            }
+        }
+
         @WorkerThread
         fun getChatRoomId(room: ChatRoom): String {
             return getChatRoomId(room.localAddress, room.peerAddress)

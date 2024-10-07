@@ -27,6 +27,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.EventLog
 import org.linphone.utils.AppUtils
+import org.linphone.utils.LinphoneUtils
 
 class EventModel @WorkerThread constructor(private val eventLog: EventLog) {
     val text: String
@@ -77,7 +78,7 @@ class EventModel @WorkerThread constructor(private val eventLog: EventLog) {
             )
             EventLog.Type.ConferenceEphemeralMessageLifetimeChanged -> AppUtils.getFormattedString(
                 R.string.conversation_event_ephemeral_messages_lifetime_changed,
-                formatEphemeralExpiration(eventLog.ephemeralMessageLifetime).lowercase(
+                LinphoneUtils.formatEphemeralExpiration(eventLog.ephemeralMessageLifetime).lowercase(
                     Locale.getDefault()
                 )
             )
@@ -125,30 +126,5 @@ class EventModel @WorkerThread constructor(private val eventLog: EventLog) {
             "<?>"
         }
         return name
-    }
-
-    @WorkerThread
-    private fun formatEphemeralExpiration(duration: Long): String {
-        return when (duration) {
-            0L -> AppUtils.getString(
-                R.string.conversation_ephemeral_messages_duration_disabled
-            )
-            60L -> AppUtils.getString(
-                R.string.conversation_ephemeral_messages_duration_one_minute
-            )
-            3600L -> AppUtils.getString(
-                R.string.conversation_ephemeral_messages_duration_one_hour
-            )
-            86400L -> AppUtils.getString(
-                R.string.conversation_ephemeral_messages_duration_one_day
-            )
-            259200L -> AppUtils.getString(
-                R.string.conversation_ephemeral_messages_duration_three_days
-            )
-            604800L -> AppUtils.getString(
-                R.string.conversation_ephemeral_messages_duration_one_week
-            )
-            else -> "$duration s"
-        }
     }
 }

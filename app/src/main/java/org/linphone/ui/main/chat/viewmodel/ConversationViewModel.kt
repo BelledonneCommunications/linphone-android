@@ -80,6 +80,8 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
 
     val ephemeralLifetime = MutableLiveData<Long>()
 
+    val ephemeralLifeTimeLabel = MutableLiveData<String>()
+
     val composingLabel = MutableLiveData<String>()
 
     val searchBarVisible = MutableLiveData<Boolean>()
@@ -246,6 +248,9 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
 
             ephemeralLifetime.postValue(
                 if (!chatRoom.isEphemeralEnabled) 0L else chatRoom.ephemeralLifetime
+            )
+            ephemeralLifeTimeLabel.postValue(
+                LinphoneUtils.formatEphemeralExpiration(chatRoom.ephemeralLifetime)
             )
         }
 
@@ -460,6 +465,9 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
             ephemeralLifetime.postValue(
                 if (!chatRoom.isEphemeralEnabled) 0L else chatRoom.ephemeralLifetime
             )
+            ephemeralLifeTimeLabel.postValue(
+                LinphoneUtils.formatEphemeralExpiration(chatRoom.ephemeralLifetime)
+            )
         }
     }
 
@@ -574,6 +582,9 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
 
         ephemeralLifetime.postValue(
             if (!chatRoom.isEphemeralEnabled) 0L else chatRoom.ephemeralLifetime
+        )
+        ephemeralLifeTimeLabel.postValue(
+            LinphoneUtils.formatEphemeralExpiration(chatRoom.ephemeralLifetime)
         )
     }
 
@@ -835,7 +846,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
             composingFriends.add(name)
             label += "$name, "
         }
-        if (composingFriends.size > 0) {
+        if (composingFriends.isNotEmpty()) {
             label = label.dropLast(2)
 
             val format = AppUtils.getStringWithPlural(
