@@ -31,7 +31,7 @@
     <dimen name="chat_message_round_corner_radius">6.7dp</dimen>
     <dimen name="play_pause_button_size">30dp</dimen>
     <dimen name="progress_bar_height">40dp</dimen>
-    <dimen name="settings_margin">10dp</dimen>
+    <dimen name="settings_margin">20dp</dimen>
     <dimen name="setting_title_min_size">10sp</dimen>
     <dimen name="setting_title_max_size">18sp</dimen>
     <dimen name="setting_subtitle_min_size">8sp</dimen>
