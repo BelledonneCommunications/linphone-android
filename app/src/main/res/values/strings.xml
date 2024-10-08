@@ -88,7 +88,7 @@
     <string name="notification_channel_service_name">&appName; service notification</string>
     <string name="notification_channel_service_desc">This service will run all the time to keep app alive and allow you to receive calls and messages without push notifications.</string>
     <string name="notification_channel_chat_name">&appName; instant messages notifications</string>
-    <string name="notification_chat_message_reaction_received">Reacted by %s to: %s</string>
+    <string name="notification_chat_message_reaction_received">Reacted by %1$s to: %2$s</string>
     <string name="notification_mark_message_as_read">Mark as read</string>
     <string name="notification_reply_to_message">Reply</string>
     <string name="notification_missed_call">Missed call from %s</string>
@@ -405,7 +405,7 @@
     <string name="contact_details_phone_number_copied_to_clipboard_toast">Number copied into clipboard</string>
 
     <string name="contact_dialog_increase_trust_level_title">Increase trust level</string>
-    <string name="contact_dialog_increase_trust_level_message">You\'re about to make a call to $1%s\'s device $2%s.\nDo you want to make the call?</string>
+    <string name="contact_dialog_increase_trust_level_message">You\'re about to make a call to %1$s\'s device %2$s.\nDo you want to make the call?</string>
     <string name="contact_dialog_devices_trust_help_title">Trust level</string>
     <string name="contact_dialog_devices_trust_help_message">Check all of your contact devices to make sure your communications will be secured an unaltered.\nWhen all will be verified, you\'ll reach maximum trust level.</string>
     <string name="contact_dialog_delete_title">Delete %s?</string>
@@ -553,7 +553,7 @@
     <string name="message_delivery_info_sent_title">Sent %s</string>
     <string name="message_delivery_info_error_title">Error %s</string>
     <string name="message_reactions_info_all_title">Reactions %s</string>
-    <string name="message_reactions_info_emoji_title">%s %s</string>
+    <string name="message_reactions_info_emoji_title">%1$s %2$s</string>
     <string name="message_reaction_click_to_remove_label">Click to remove</string>
     <string name="message_forwarded_label">Forwarded</string>
 

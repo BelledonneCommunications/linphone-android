@@ -52,7 +52,7 @@
     <string name="notification_channel_service_name">&appName; notification de service</string>
     <string name="notification_channel_service_desc">Ce service sera actif en permanence pour garder l\'app en vie et vous permettre de recevoir appels et messages sans recourir aux notifications push.</string>
     <string name="notification_channel_chat_name">&appName; notifications des conversations</string>
-    <string name="notification_chat_message_reaction_received">A réagi par %s à : %s</string>
+    <string name="notification_chat_message_reaction_received">A réagi par %1$s à : %2$s</string>
     <string name="notification_mark_message_as_read">Marquer comme lu</string>
     <string name="notification_reply_to_message">Répondre</string>
     <string name="notification_missed_call">Appel manqué de %s</string>
@@ -367,7 +367,7 @@
     <string name="contact_details_phone_number_copied_to_clipboard_toast">Le numéro de téléphone a été copié</string>
 
     <string name="contact_dialog_increase_trust_level_title">Augmenter le niveau de confiance</string>
-    <string name="contact_dialog_increase_trust_level_message">Vous êtes sur le point de passer un appel vers l\'appareil $2%s\ de $1%s.\Voulez-vous démarrer l\'appel ?</string>
+    <string name="contact_dialog_increase_trust_level_message">Vous êtes sur le point de passer un appel vers l\'appareil %2$s\ de %1$s.\Voulez-vous démarrer l\'appel ?</string>
     <string name="contact_dialog_devices_trust_help_title">Niveau de confiance</string>
     <string name="contact_dialog_devices_trust_help_message">Vérifiez les appareils de votre contact pour confirmer que vos communications seront sécurisées et sans compromission.\nQuand tous seront vérifiés, vous atteindrez le niveau de confiance maximal.</string>
     <string name="contact_dialog_delete_title">Supprimer %s ?</string>
@@ -515,7 +515,7 @@
     <string name="message_delivery_info_sent_title">Envoyé %s</string>
     <string name="message_delivery_info_error_title">En erreur %s</string>
     <string name="message_reactions_info_all_title">Réactions %s</string>
-    <string name="message_reactions_info_emoji_title">%s %s</string>
+    <string name="message_reactions_info_emoji_title">%1$s %2$s</string>
     <string name="message_reaction_click_to_remove_label">Cliquez pour supprimer</string>
     <string name="message_forwarded_label">Transféré</string>
 
