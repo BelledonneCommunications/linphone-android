@@ -207,15 +207,19 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/mute_label"
                     style="@style/default_text_style"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="5dp"
                     android:onClick="@{() -> viewModel.toggleMute()}"
                     android:text="@{viewModel.isMuted ? @string/conversation_action_unmute : @string/conversation_action_mute, default=@string/conversation_action_mute}"
                     android:textSize="14sp"
+                    android:textAlignment="center"
+                    android:maxLines="2"
+                    android:ellipsize="end"
                     android:visibility="@{viewModel.isReadOnly ? View.GONE : View.VISIBLE}"
-                    app:layout_constraintEnd_toEndOf="@id/mute"
-                    app:layout_constraintStart_toStartOf="@id/mute"
+                    app:layout_constraintEnd_toStartOf="@id/call_label"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/mute" />
 
                 <ImageView
@@ -243,6 +247,9 @@
                     android:onClick="@{() -> viewModel.startCall()}"
                     android:text="@string/conversation_action_call"
                     android:textSize="14sp"
+                    android:textAlignment="center"
+                    android:maxLines="2"
+                    android:ellipsize="end"
                     android:visibility="@{viewModel.isReadOnly ? View.GONE : View.VISIBLE}"
                     app:layout_constraintEnd_toEndOf="@id/call"
                     app:layout_constraintStart_toStartOf="@id/call"
@@ -267,15 +274,19 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/meeting_label"
                     style="@style/default_text_style"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:layout_marginStart="5dp"
                     android:onClick="@{() -> viewModel.scheduleMeeting()}"
                     android:text="@string/meeting_schedule_meeting_label"
                     android:textSize="14sp"
+                    android:textAlignment="center"
+                    android:maxLines="2"
+                    android:ellipsize="end"
                     android:visibility="@{viewModel.isReadOnly ? View.GONE : View.VISIBLE}"
-                    app:layout_constraintEnd_toEndOf="@id/meeting"
-                    app:layout_constraintStart_toStartOf="@id/meeting"
+                    app:layout_constraintStart_toEndOf="@id/call_label"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/meeting" />
 
                 <androidx.appcompat.widget.AppCompatTextView
