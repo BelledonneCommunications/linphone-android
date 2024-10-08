@@ -201,7 +201,7 @@
                         android:layout_height="45dp"
                         android:contentDescription="@string/settings"
                         android:padding="10dp"
-                        android:src="@drawable/settings_advanced" />
+                        android:src="@drawable/icon_settings" />
 
                     <TextView
                         android:text="@string/settings"
@@ -291,7 +291,7 @@
                         android:layout_height="45dp"
                         android:padding="10dp"
                         android:contentDescription="@string/about"
-                        android:src="@drawable/menu_about" />
+                        android:src="@drawable/icon_help" />
 
                     <TextView
                         android:text="@string/about"
@@ -321,8 +321,8 @@
                         android:layout_height="45dp"
                         android:contentDescription="Logout"
                         android:padding="10dp"
-                        android:src="@drawable/chat_group_delete"
-                        app:srcCompat="@drawable/chat_group_delete" />
+                        android:src="@drawable/icon_logout"
+                        app:tint="@color/red_color" />
 
                     <TextView
                         style="@style/standard_text_font"

@@ -67,7 +67,8 @@
                 android:layout_centerInParent="true"
                 android:padding="15dp"
                 android:contentDescription="@string/content_description_menu_contacts"
-                android:src="@drawable/footer_contacts" />
+                android:src="@drawable/icon_users"
+                app:tint="@color/dark_primary_text_color" />
         </RelativeLayout>
 
         <ImageView
@@ -77,8 +78,9 @@
             android:layout_height="match_parent"
             android:padding="15dp"
             android:contentDescription="@string/content_description_menu_history"
-            android:src="@drawable/footer_history"
+            android:src="@drawable/icon_history"
             android:background="@drawable/footer_button"
+            app:tint="@color/dark_primary_text_color"
             app:layout_constraintStart_toStartOf="@id/guidelineLeft"
             app:layout_constraintEnd_toEndOf="@id/guidelineMiddle" />
 
@@ -111,7 +113,8 @@
                 android:layout_centerInParent="true"
                 android:padding="15dp"
                 android:contentDescription="@string/content_description_menu_dialer"
-                android:src="@drawable/footer_dialer" />
+                android:src="@drawable/icon_dialpad"
+                app:tint="@color/dark_primary_text_color" />
 
         </RelativeLayout>
 

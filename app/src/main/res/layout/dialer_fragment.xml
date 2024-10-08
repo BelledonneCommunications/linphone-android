@@ -35,13 +35,13 @@
                 android:onLongClick="@{() -> viewModel.eraseAll()}"
                 android:contentDescription="@string/content_description_dialer_erase"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="24dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:focusableInTouchMode="true"
-                android:src="@drawable/backspace" />
+                android:src="@drawable/icon_backspace" />
 
             <EditText
                 android:id="@+id/sip_uri_input"
@@ -74,11 +74,11 @@
                 android:visibility="@{viewModel.scheduleConferenceAvailable ? View.VISIBLE : View.GONE}"
                 android:contentDescription="@string/content_description_create_conference"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:background="?attr/button_background_drawable"
                 android:padding="5dp"
-                android:src="@drawable/icon_video_conf_new" />
+                android:src="@drawable/icon_conference" />
 
             <ImageView
                 android:onClick="@{newContactClickListener}"
@@ -97,11 +97,12 @@
                 android:visibility="@{viewModel.atLeastOneCall ? View.GONE : View.VISIBLE}"
                 android:contentDescription="@string/content_description_start_call"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/call"
                 android:padding="12dp"
-                android:src="@{viewModel.autoInitiateVideoCalls ? @drawable/call_video_start : @drawable/call_audio_start, default=@drawable/call_audio_start}" />
+                app:tint="@color/white_color"
+                android:src="@{viewModel.autoInitiateVideoCalls ? @drawable/call_video_start : @drawable/icon_call, default=@drawable/icon_call}" />
 
             <ImageView
                 android:onClick="@{() -> viewModel.startCall()}"

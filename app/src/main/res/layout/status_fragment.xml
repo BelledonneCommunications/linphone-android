@@ -33,7 +33,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerInParent="true"
             android:padding="10dp"
-            android:src="@drawable/menu" />
+            android:src="@drawable/icon_menu" />
 
         <ImageView
             android:id="@+id/status_led"

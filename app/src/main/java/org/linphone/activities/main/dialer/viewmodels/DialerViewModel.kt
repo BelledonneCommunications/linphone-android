@@ -156,7 +156,7 @@ class DialerViewModel : LogsUploadViewModel() {
         enteredUri.value = ""
         atLeastOneCall.value = coreContext.core.callsNb > 0
         transferVisibility.value = false
-        hideAddContactButton.value = corePreferences.readOnlyNativeContacts
+        hideAddContactButton.value = true // corePreferences.readOnlyNativeContacts
 
         showSwitchCamera.value = coreContext.showSwitchCameraButton()
         scheduleConferenceAvailable.value = LinphoneUtils.isRemoteConferencingAvailable()
