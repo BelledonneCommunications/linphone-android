@@ -38,15 +38,18 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.2">
 
-                    <ImageView
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="?attr/button_background_drawable"
-                        android:contentDescription="@string/content_description_show_all_calls"
                         android:enabled="@{viewModel.filter != CallLogsFilter.ALL}"
                         android:onClick="@{() -> viewModel.showAllCallLogs()}"
-                        android:padding="15dp"
-                        android:src="@drawable/history_all" />
+                        android:gravity="center"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:paddingTop="10dp"
+                        android:textSize="16sp"
+                        android:text="History"/>
 
                     <View
                         android:visibility="@{viewModel.filter == CallLogsFilter.ALL ? View.VISIBLE : View.GONE}"
@@ -62,16 +65,18 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.2">
 
-                    <ImageView
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="?attr/button_background_drawable"
-                        android:contentDescription="@string/content_description_show_missed_calls"
                         android:enabled="@{viewModel.filter != CallLogsFilter.MISSED}"
                         android:gravity="center"
                         android:onClick="@{() -> viewModel.showOnlyMissedCallLogs()}"
-                        android:padding="15dp"
-                        android:src="@drawable/history_missed" />
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:paddingTop="10dp"
+                        android:textSize="16sp"
+                        android:text="Missed"/>
 
                     <View
                         android:visibility="@{viewModel.filter == CallLogsFilter.MISSED ? View.VISIBLE : View.GONE}"
@@ -111,7 +116,7 @@
                 <View
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.2" />
+                    android:layout_weight="0.15" />
 
                 <ImageView
                     android:visibility="invisible"
@@ -120,7 +125,7 @@
                     android:contentDescription="@string/content_description_enter_edition_mode"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.2"
+                    android:layout_weight="0.15"
                     android:background="?attr/button_background_drawable"
                     android:padding="15dp"
                     android:src="@drawable/delete" />

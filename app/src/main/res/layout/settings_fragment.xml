@@ -34,12 +34,11 @@
                 <ImageView
                     android:id="@+id/back"
                     android:contentDescription="@string/content_description_go_back"
-                    android:layout_width="0dp"
+                    android:layout_width="54dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.2"
                     android:background="?attr/button_background_drawable"
-                    android:padding="18dp"
-                    android:src="@drawable/back" />
+                    android:padding="15dp"
+                    android:src="@drawable/icon_back" />
 
                 <TextView
                     style="@style/accent_colored_title_font"
@@ -134,7 +133,7 @@
                         android:visibility="@{viewModel.showAudioSettings ? View.VISIBLE : View.GONE}"
                         linphone:listener="@{viewModel.audioSettingsListener}"
                         linphone:title="@{@string/settings_audio_title}"
-                        linphone:icon="@{@drawable/settings_audio}" />
+                        linphone:icon="@{@drawable/icon_audio}" />
 
                     <include
                         layout="@layout/settings_widget_basic"
@@ -148,7 +147,7 @@
                         android:visibility="@{viewModel.showCallSettings ? View.VISIBLE : View.GONE}"
                         linphone:listener="@{viewModel.callSettingsListener}"
                         linphone:title="@{@string/settings_call_title}"
-                        linphone:icon="@{@drawable/settings_call}" />
+                        linphone:icon="@{@drawable/icon_call}" />
 
                     <include
                         layout="@layout/settings_widget_basic"
@@ -169,7 +168,7 @@
                         android:visibility="@{viewModel.showNetworkSettings ? View.VISIBLE : View.GONE}"
                         linphone:listener="@{viewModel.networkSettingsListener}"
                         linphone:title="@{@string/settings_network_title}"
-                        linphone:icon="@{@drawable/settings_network}" />
+                        linphone:icon="@{@drawable/icon_ethernet}" />
 
                     <include
                         layout="@layout/settings_widget_basic"
@@ -183,7 +182,7 @@
                         android:visibility="@{viewModel.showAdvancedSettings ? View.VISIBLE : View.GONE}"
                         linphone:listener="@{viewModel.advancedSettingsListener}"
                         linphone:title="@{@string/settings_advanced_title}"
-                        linphone:icon="@{@drawable/menu_options}" />
+                        linphone:icon="@{@drawable/icon_advanced}"/>
 
                 </LinearLayout>
 

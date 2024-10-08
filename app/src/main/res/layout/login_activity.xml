@@ -19,18 +19,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:orientation="vertical"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingLeft="32dp"
             android:paddingTop="@dimen/activity_vertical_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingRight="32dp"
             android:paddingBottom="@dimen/activity_vertical_margin">
-            <!--
-            <ImageView
-                android:layout_width="96dp"
-                android:layout_height="96dp"
-                android:layout_gravity="center"
-                app:srcCompat="@drawable/appauth_96dp"
-                android:contentDescription="@string/openid_logo_content_description"/>
--->
+
             <TextView
                 style="@style/Base.TextAppearance.AppCompat.Title"
                 android:layout_width="wrap_content"

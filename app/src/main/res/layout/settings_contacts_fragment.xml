@@ -28,12 +28,11 @@
                 android:id="@+id/back"
                 android:visibility="@{sharedMainViewModel.isSlidingPaneSlideable ? View.VISIBLE : View.GONE}"
                 android:contentDescription="@string/content_description_go_back"
-                android:layout_width="0dp"
+                android:layout_width="54dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.2"
                 android:background="?attr/button_background_drawable"
-                android:padding="18dp"
-                android:src="@drawable/back" />
+                android:padding="15dp"
+                android:src="@drawable/icon_back" />
 
             <TextView
                 style="@style/accent_colored_title_font"
