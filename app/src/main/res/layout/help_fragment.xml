@@ -21,9 +21,6 @@
             name="debugClickListener"
             type="View.OnClickListener" />
         <variable
-            name="quitClickListener"
-            type="View.OnClickListener" />
-        <variable
             name="viewModel"
             type="org.linphone.ui.main.help.viewmodel.HelpViewModel" />
     </data>
@@ -307,34 +304,6 @@
                 app:layout_constraintTop_toBottomOf="@id/advanced_title"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/debug_icon"
-                app:layout_constraintEnd_toEndOf="parent"/>
-
-            <ImageView
-                android:onClick="@{quitClickListener}"
-                android:id="@+id/quit_icon"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginStart="16dp"
-                android:src="@drawable/power"
-                android:contentDescription="@null"
-                app:tint="?attr/color_main1_500"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/quit_title"
-                app:layout_constraintTop_toTopOf="@id/quit_title"
-                app:layout_constraintBottom_toBottomOf="@id/quit_title" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/header_style"
-                android:onClick="@{quitClickListener}"
-                android:id="@+id/quit_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="24dp"
-                android:text="@string/help_quit_title"
-                app:layout_constraintTop_toBottomOf="@id/debug_icon"
-                app:layout_constraintStart_toEndOf="@id/quit_icon"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

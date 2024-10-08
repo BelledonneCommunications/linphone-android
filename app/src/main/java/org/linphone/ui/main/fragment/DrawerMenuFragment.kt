@@ -36,6 +36,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Account
 import org.linphone.core.tools.Log
@@ -92,6 +93,18 @@ class DrawerMenuFragment : GenericMainFragment() {
             val navController = (requireActivity() as MainActivity).findNavController()
             navController.navigate(R.id.action_global_helpFragment)
             (requireActivity() as MainActivity).closeDrawerMenu()
+        }
+
+        binding.setQuitClickedListener {
+            coreContext.stopKeepAliveService()
+
+            coreContext.postOnCoreThread {
+                Log.i("$TAG Stopping Core Context")
+                coreContext.quitSafely()
+            }
+
+            Log.i("$TAG Quitting app")
+            requireActivity().finishAndRemoveTask()
         }
 
         viewModel.startAssistantEvent.observe(viewLifecycleOwner) {

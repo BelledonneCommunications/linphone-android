@@ -50,6 +50,8 @@ class DrawerMenuViewModel @UiThread constructor() : GenericViewModel() {
 
     val shortcuts = MutableLiveData<ArrayList<ShortcutModel>>()
 
+    val hideQuitButton = MutableLiveData<Boolean>()
+
     val startAssistantEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -124,6 +126,7 @@ class DrawerMenuViewModel @UiThread constructor() : GenericViewModel() {
 
             hideRecordings.postValue(corePreferences.disableCallRecordings)
             hideSettings.postValue(corePreferences.hideSettings)
+            hideQuitButton.postValue(!corePreferences.keepServiceAlive)
 
             computeAccountsList()
             computeShortcuts()

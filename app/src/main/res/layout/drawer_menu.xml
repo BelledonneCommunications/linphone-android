@@ -14,6 +14,9 @@
             name="helpClickedListener"
             type="View.OnClickListener" />
         <variable
+            name="quitClickedListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.main.viewmodel.DrawerMenuViewModel" />
     </data>
@@ -202,6 +205,37 @@
             android:text="@string/help_title"
             android:drawableStart="@drawable/question"
             android:drawableEnd="@drawable/caret_right"
+            android:drawablePadding="8dp"
+            app:drawableTint="?attr/color_main2_500"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/separator_2" />
+
+        <View
+            android:id="@+id/separator_2"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="?attr/color_main2_200"
+            android:visibility="@{viewModel.hideQuitButton ? View.GONE : View.VISIBLE, default=gone}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/quit" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{quitClickedListener}"
+            style="@style/header_style"
+            android:id="@+id/quit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/help_quit_title"
+            android:visibility="@{viewModel.hideQuitButton ? View.GONE : View.VISIBLE, default=gone}"
+            android:drawableStart="@drawable/power"
             android:drawablePadding="8dp"
             app:drawableTint="?attr/color_main2_500"
             app:layout_constraintStart_toStartOf="parent"
