@@ -55,7 +55,7 @@
                 android:layout_weight="0.2"
                 android:background="?attr/button_background_drawable"
                 android:padding="15dp"
-                android:src="@drawable/contact_add" />
+                android:src="@drawable/icon_user_add" />
 
             <ImageView
                 android:onClick="@{contactClickListener}"
@@ -138,8 +138,10 @@
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:layout_margin="10dp"
+                        android:padding="14dp"
+                        app:tint="@color/dark_primary_text_color"
                         android:background="@drawable/round_orange_button_background"
-                        android:src="@drawable/call_start_default" />
+                        android:src="@drawable/icon_call" />
 
                     <ImageView
                         android:layout_width="56dp"

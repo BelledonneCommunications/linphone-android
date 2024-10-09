@@ -39,8 +39,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.2"
                 android:background="?attr/button_background_drawable"
-                android:padding="18dp"
-                android:src="@drawable/back" />
+                android:padding="15dp"
+                android:src="@drawable/icon_back" />
 
             <View
                 android:layout_width="0dp"
@@ -56,7 +56,7 @@
                 android:layout_weight="0.2"
                 android:background="?attr/button_background_drawable"
                 android:padding="15dp"
-                android:src="@drawable/edit" />
+                android:src="@drawable/icon_edit" />
 
             <ImageView
                 android:onClick="@{deleteClickListener}"
@@ -67,7 +67,7 @@
                 android:layout_weight="0.2"
                 android:background="?attr/button_background_drawable"
                 android:padding="15dp"
-                android:src="@drawable/delete" />
+                android:src="@drawable/icon_delete" />
 
         </LinearLayout>
 

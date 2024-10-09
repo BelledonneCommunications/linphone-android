@@ -470,9 +470,8 @@
 
     <style name="accent_colored_title_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/accentColor</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">21sp</item>
+        <item name="android:layout_marginTop">5dp</item>
     </style>
 
     <style name="sip_uri_font" parent="@android:style/TextAppearance.Medium">
