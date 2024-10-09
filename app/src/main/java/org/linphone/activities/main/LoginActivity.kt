@@ -1,5 +1,6 @@
 package org.linphone.activities.main
 
+import MultiTapDetector
 import android.annotation.TargetApi
 import android.app.PendingIntent
 import android.content.Intent
@@ -39,6 +40,7 @@ import org.linphone.R
 import org.linphone.authentication.AuthConfiguration
 import org.linphone.authentication.AuthStateManager
 import org.linphone.authentication.AuthorizationServiceManager
+import org.linphone.environment.DimensionsEnvironmentService
 import org.linphone.environment.DimensionsEnvironmentService.Companion.getInstance
 import org.linphone.environment.EnvironmentSelectionAdapter
 import org.linphone.middleware.FileTree
@@ -70,7 +72,7 @@ class LoginActivity : AppCompatActivity() {
     private val mAuthIntent = AtomicReference<CustomTabsIntent?>()
     private var mAuthIntentLatch = CountDownLatch(1)
     private var mExecutor: ExecutorService = Executors.newSingleThreadExecutor()
-
+    private lateinit var environmentAdapter: EnvironmentSelectionAdapter
     private val mUsePendingIntents = true
     private var isEnvironmentSelected = false
 
@@ -105,6 +107,9 @@ class LoginActivity : AppCompatActivity() {
             )
         }
         findViewById<View>(R.id.start_auth).setOnClickListener { _: View? -> startAuth() }
+        MultiTapDetector(findViewById(R.id.login_scrollview)) { nTaps, isComplete ->
+            toggleDevMode(nTaps, isComplete)
+        }
 
         displayLoading("Initializing")
 
@@ -399,9 +404,9 @@ class LoginActivity : AppCompatActivity() {
             applicationContext
         )
         val spinner = findViewById<View>(R.id.environment_selector) as Spinner
-        val adapter = EnvironmentSelectionAdapter(this)
-        adapter.registerDataSetObserver(NotifyingDataSetObserver())
-        spinner.adapter = adapter
+        environmentAdapter = EnvironmentSelectionAdapter(this)
+        environmentAdapter.registerDataSetObserver(NotifyingDataSetObserver())
+        spinner.adapter = environmentAdapter
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -417,7 +422,7 @@ class LoginActivity : AppCompatActivity() {
                     return
                 }
 
-                val env = adapter.getItem(position)
+                val env = environmentAdapter.getItem(position)
                 if (env != null && env.id != environmentService.getCurrentEnvironment()?.id) {
                     Log.i("Setting environment " + env.name + " (" + env.identityServerUri + ")")
 
@@ -593,6 +598,15 @@ class LoginActivity : AppCompatActivity() {
             getColor(color)
         } else {
             resources.getColor(color)
+        }
+    }
+
+    private fun toggleDevMode(nTaps: Int, isComplete: Boolean) {
+        Log.i("Tappety tap: " + nTaps + ", " + isComplete)
+        if (nTaps == 5 && isComplete) {
+            val envSvc = DimensionsEnvironmentService.getInstance(applicationContext)
+            envSvc.toggleDevMode()
+            environmentAdapter.notifyDataSetChanged()
         }
     }
 

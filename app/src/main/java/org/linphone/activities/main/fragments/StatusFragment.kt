@@ -68,10 +68,13 @@ class StatusFragment : GenericFragment<StatusFragmentBinding>() {
         }
 
         val devices = DimensionsAccountsManager.getInstance(requireContext()).devicesSubject
-            .subscribe { devices ->
-                if (devices.userDevices.isNullOrEmpty()) {
-                    viewModel.showDeviceMissing()
-                }
-            }
+            .subscribe(
+                { devices ->
+                    if (devices.userDevices.isNullOrEmpty()) {
+                        viewModel.showDeviceMissing()
+                    }
+                },
+                { error -> Log.e(error) }
+            )
     }
 }

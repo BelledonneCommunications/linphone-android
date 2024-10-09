@@ -95,6 +95,18 @@ public final class EnvironmentSelectionAdapter extends BaseAdapter {
         return convertView;
     }
 
+    // TODO: I don't think this is the correct way to handle rebinding, but
+    // it appears to work so leaving this in for now.
+    @Override
+    public void notifyDataSetChanged() {
+        final var svc = DimensionsEnvironmentService.Companion.getInstance(mContext);
+        mEnvironments.clear();
+        mEnvironments.add(null);
+        mEnvironments.addAll(svc.getEnvironmentList());
+
+        super.notifyDataSetChanged();
+    }
+
     private void initializeItemList() {
         mEnvironments = new ArrayList<>();
         mEnvironments.add(null);
