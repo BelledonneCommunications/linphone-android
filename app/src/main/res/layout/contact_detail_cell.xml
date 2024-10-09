@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <import type="android.view.View" />
@@ -96,8 +97,10 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_margin="10dp"
+                android:padding="12dp"
+                app:tint="@color/dark_primary_text_color"
                 android:background="@drawable/round_orange_button_background"
-                android:src="@drawable/call_start_default" />
+                android:src="@drawable/icon_call" />
 
             <ImageView
                 android:onClick="@{() -> data.startChat(false)}"

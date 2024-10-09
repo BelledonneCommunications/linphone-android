@@ -55,7 +55,7 @@
                         android:layout_height="match_parent"
                         android:background="?attr/button_background_drawable"
                         android:padding="15dp"
-                        android:src="@drawable/contacts_all" />
+                        android:src="@drawable/icon_users" />
 
                     <View
                         android:visibility="@{viewModel.sipContactsSelected ? View.GONE : View.VISIBLE}"
@@ -111,7 +111,7 @@
                     android:layout_weight="0.2"
                     android:background="?attr/button_background_drawable"
                     android:padding="15dp"
-                    android:src="@drawable/contact_add"
+                    android:src="@drawable/icon_user_add"
                     android:visibility="@{viewModel.nativeAddressBookEnabled &amp;&amp; !viewModel.readOnlyNativeAddressBook ? View.VISIBLE : View.INVISIBLE}"/>
 
                 <ImageView
@@ -144,7 +144,7 @@
                 android:layout_below="@id/top_bar"
                 android:layout_margin="10dp"
                 android:inputType="textPersonName|textNoSuggestions"
-                android:drawableLeft="@drawable/search"
+                android:drawableLeft="@drawable/icon_search"
                 android:drawablePadding="10dp"
                 android:background="@color/transparent_color"
                 android:backgroundTint="@color/transparent_color"
