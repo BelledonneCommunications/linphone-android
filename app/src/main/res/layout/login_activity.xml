@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/backgroundColor"
+        android:id="@+id/login_scrollview"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -87,7 +88,6 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="24dp"
                     android:text="@string/log_in" />
-
 
             </LinearLayout>
 

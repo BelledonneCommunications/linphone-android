@@ -21,6 +21,7 @@ class DimensionsEnvironmentService(context: Context) {
         )
         private const val STORE_NAME: String = "environment"
         private const val KEY_STATE: String = "environment-state"
+        private const val KEY_DEV_MODE: String = "dev-mode"
 
         @AnyThread
         fun getInstance(context: Context): DimensionsEnvironmentService {
@@ -42,6 +43,11 @@ class DimensionsEnvironmentService(context: Context) {
     private var mPrefsLock: ReentrantLock = ReentrantLock()
     private var mCurrentEnvironment: AtomicReference<DimensionsEnvironment> = AtomicReference<DimensionsEnvironment>()
     private var isListInitialised: Boolean = false
+    private var isDevModeEnabled: Boolean = false
+
+    init {
+        isDevModeEnabled = mPrefs.getBoolean(KEY_DEV_MODE, false)
+    }
 
     @AnyThread
     fun getCurrentEnvironment(): DimensionsEnvironment? {
@@ -73,7 +79,7 @@ class DimensionsEnvironmentService(context: Context) {
 
         isListInitialised = true
 
-        return environments
+        return environments.filter { e -> !e.isHidden || isDevModeEnabled }
     }
 
     private fun addEnvironmentOverrides() {
@@ -148,6 +154,18 @@ class DimensionsEnvironmentService(context: Context) {
             }
 
             check(editor.commit()) { "Failed to write state to shared prefs" }
+        } finally {
+            mPrefsLock.unlock()
+        }
+    }
+
+    fun toggleDevMode() {
+        isDevModeEnabled = !isDevModeEnabled
+        mPrefsLock.lock()
+        try {
+            val editor = mPrefs.edit()
+            editor.putBoolean(KEY_DEV_MODE, isDevModeEnabled)
+            check(editor.commit()) { "Failed to write dev mode setting" }
         } finally {
             mPrefsLock.unlock()
         }
