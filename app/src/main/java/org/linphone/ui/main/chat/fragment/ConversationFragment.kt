@@ -325,9 +325,17 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             }
 
             val bottomSheetBehavior = BottomSheetBehavior.from(binding.messageBottomSheet.root)
-            if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_HIDDEN) {
-                Log.i("$TAG Bottom sheet is visible, hiding it instead of going back")
+            if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_HIDDEN && bottomSheetBehavior.state != BottomSheetBehavior.STATE_COLLAPSED) {
+                Log.i(
+                    "$TAG Bottom sheet isn't hidden nor collapsed, hiding it instead of going back"
+                )
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                return
+            }
+
+            if (messageLongPressViewModel.visible.value == true) {
+                Log.i("$TAG Message long press menu is visible, hiding it instead of going back")
+                messageLongPressViewModel.dismiss()
                 return
             }
 
@@ -1151,6 +1159,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             }
         }
         messageLongPressViewModel.visible.value = true
+        backPressedCallback.isEnabled = true
     }
 
     @UiThread
