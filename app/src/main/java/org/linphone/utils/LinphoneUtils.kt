@@ -75,7 +75,7 @@ class LinphoneUtils {
         @WorkerThread
         fun applyInternationalPrefix(account: Account? = null): Boolean {
             return account?.params?.useInternationalPrefixForCallsAndChats
-                ?: (getDefaultAccount()?.params?.useInternationalPrefixForCallsAndChats ?: false)
+                ?: (getDefaultAccount()?.params?.useInternationalPrefixForCallsAndChats == true)
         }
 
         @WorkerThread

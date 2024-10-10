@@ -379,7 +379,7 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
             composingFriends.add(name)
             label += "$name, "
         }
-        if (composingFriends.size > 0) {
+        if (composingFriends.isNotEmpty()) {
             label = label.dropLast(2)
 
             val format = AppUtils.getStringWithPlural(

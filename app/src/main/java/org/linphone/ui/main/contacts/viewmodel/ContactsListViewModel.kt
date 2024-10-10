@@ -295,7 +295,7 @@ class ContactsListViewModel @UiThread constructor() : AbstractMainViewModel() {
             list.add(model)
             count += 1
 
-            val starred = friend?.starred ?: false
+            val starred = friend?.starred == true
             model.isFavourite.postValue(starred)
             if (starred) {
                 favouritesList.add(model)

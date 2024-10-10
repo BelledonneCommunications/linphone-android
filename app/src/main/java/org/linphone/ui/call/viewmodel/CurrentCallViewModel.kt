@@ -636,7 +636,7 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
         coreContext.postOnCoreThread {
             if (::currentCall.isInitialized) {
                 val micMuted = if (currentCall.conference != null) {
-                    currentCall.conference?.microphoneMuted ?: false
+                    currentCall.conference?.microphoneMuted == true
                 } else {
                     currentCall.microphoneMuted
                 }
@@ -660,7 +660,7 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
         coreContext.postOnCoreThread {
             if (::currentCall.isInitialized) {
                 val micMuted = if (currentCall.conference != null) {
-                    currentCall.conference?.microphoneMuted ?: false
+                    currentCall.conference?.microphoneMuted == true
                 } else {
                     currentCall.microphoneMuted
                 }
@@ -1135,7 +1135,7 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
 
         isRecording.postValue(call.params.isRecording)
 
-        val isRemoteRecording = call.remoteParams?.isRecording ?: false
+        val isRemoteRecording = call.remoteParams?.isRecording == true
         if (isRemoteRecording) {
             Log.w("$TAG Remote end [${displayedName.value.orEmpty()}] is recording the call")
             isRemoteRecordingEvent.postValue(Event(Pair(true, displayedName.value.orEmpty())))

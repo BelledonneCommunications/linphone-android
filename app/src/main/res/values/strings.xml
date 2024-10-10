@@ -527,7 +527,6 @@
     <string name="conversation_info_no_address_to_add_to_contact_toast">No address to add to contact</string>
     <string name="conversation_info_confirm_start_group_call_dialog_title">Start a group call?</string>
     <string name="conversation_info_confirm_start_group_call_dialog_message">All participants will receive a call.</string>
-    <string name="conversation_info_confirm_start_group_call_dialog_button">Start a group call</string>
 
     <string name="conversation_event_conference_created">You have joined the group</string>
     <string name="conversation_event_conference_destroyed">You have left the group</string>
@@ -564,7 +563,6 @@
     <string name="message_voice_message_content_description">voice message</string>
 
     <!-- Scheduled conferences -->
-    <string name="meetings_list_empty">No meeting for the moment…</string>
     <string name="meetings_list_no_meeting_for_today">No meeting scheduled for today</string>
 
     <string name="meeting_schedule_title">New meeting</string>
@@ -572,9 +570,7 @@
     <string name="meeting_schedule_broadcast_label">Broadcast</string>
     <string name="meeting_schedule_broadcast_help">Info about broadcast.\n<u>Learn more</u></string>
     <string name="meeting_schedule_subject_hint">Add title…</string>
-    <string name="meeting_schedule_date_all_day_title">All day</string>
     <string name="meeting_schedule_pick_start_date_title">Choose the start date</string>
-    <string name="meeting_schedule_pick_end_date_title">Choose the end date</string>
     <string name="meeting_schedule_pick_start_time_title">Choose the start time</string>
     <string name="meeting_schedule_pick_end_time_title">Choose the end time</string>
     <string name="meeting_schedule_timezone_title">Timezone</string>

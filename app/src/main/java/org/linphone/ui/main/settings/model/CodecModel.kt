@@ -27,7 +27,7 @@ class CodecModel @WorkerThread constructor(
     val mimeType: String,
     clockRate: Int,
     recvFmtp: String?,
-    private val isAudioCodec: Boolean,
+    isAudioCodec: Boolean,
     enabled: Boolean,
     val onEnabledChanged: ((enabled: Boolean) -> Unit)
 ) {

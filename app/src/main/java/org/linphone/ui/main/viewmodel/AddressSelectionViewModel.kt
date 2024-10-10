@@ -30,7 +30,6 @@ import org.linphone.R
 import org.linphone.contacts.ContactsManager
 import org.linphone.core.Address
 import org.linphone.core.ChatRoom
-import org.linphone.core.Friend
 import org.linphone.core.MagicSearch
 import org.linphone.core.MagicSearchListenerStub
 import org.linphone.core.SearchResult

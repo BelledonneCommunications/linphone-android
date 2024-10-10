@@ -1,6 +1,5 @@
 package org.linphone.ui.file_viewer
 
-import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -147,7 +146,7 @@ class FileViewerActivity : GenericActivity() {
 
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == EXPORT_FILE_AS_DOCUMENT && resultCode == Activity.RESULT_OK) {
+        if (requestCode == EXPORT_FILE_AS_DOCUMENT && resultCode == RESULT_OK) {
             data?.data?.also { documentUri ->
                 Log.i("$TAG Exported file should be stored in URI [$documentUri]")
                 viewModel.copyFileToUri(documentUri)

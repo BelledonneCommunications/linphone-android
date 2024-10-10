@@ -21,7 +21,6 @@ package org.linphone
 
 import android.annotation.SuppressLint
 import android.app.Application
-import android.content.ComponentCallbacks2
 import androidx.annotation.MainThread
 import coil.ImageLoader
 import coil.ImageLoaderFactory
@@ -93,10 +92,10 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
     override fun onTrimMemory(level: Int) {
         Log.w("$TAG onTrimMemory called with level [${trimLevelToString(level)}]($level) !")
         when (level) {
-            ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW,
-            ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL,
-            ComponentCallbacks2.TRIM_MEMORY_MODERATE,
-            ComponentCallbacks2.TRIM_MEMORY_COMPLETE -> {
+            TRIM_MEMORY_RUNNING_LOW,
+            TRIM_MEMORY_RUNNING_CRITICAL,
+            TRIM_MEMORY_MODERATE,
+            TRIM_MEMORY_COMPLETE -> {
                 Log.i("$TAG Memory trim required, clearing imageLoader memory cache")
                 imageLoader.memoryCache?.clear()
             }
@@ -139,13 +138,13 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
 
     private fun trimLevelToString(level: Int): String {
         return when (level) {
-            ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN -> "Hidden UI"
-            ComponentCallbacks2.TRIM_MEMORY_RUNNING_MODERATE -> "Moderate (Running)"
-            ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW -> "Low"
-            ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL -> "Critical"
-            ComponentCallbacks2.TRIM_MEMORY_BACKGROUND -> "Background"
-            ComponentCallbacks2.TRIM_MEMORY_MODERATE -> "Moderate"
-            ComponentCallbacks2.TRIM_MEMORY_COMPLETE -> "Complete"
+            TRIM_MEMORY_UI_HIDDEN -> "Hidden UI"
+            TRIM_MEMORY_RUNNING_MODERATE -> "Moderate (Running)"
+            TRIM_MEMORY_RUNNING_LOW -> "Low"
+            TRIM_MEMORY_RUNNING_CRITICAL -> "Critical"
+            TRIM_MEMORY_BACKGROUND -> "Background"
+            TRIM_MEMORY_MODERATE -> "Moderate"
+            TRIM_MEMORY_COMPLETE -> "Complete"
             else -> level.toString()
         }
     }

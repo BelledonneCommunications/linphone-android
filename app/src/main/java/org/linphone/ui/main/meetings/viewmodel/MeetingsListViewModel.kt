@@ -117,8 +117,8 @@ class MeetingsListViewModel @UiThread constructor() : AbstractMainViewModel() {
                     filter,
                     ignoreCase = true
                 ) ?: false
-                val subjectCheck = info.subject?.contains(filter, ignoreCase = true) ?: false
-                val descriptionCheck = info.description?.contains(filter, ignoreCase = true) ?: false
+                val subjectCheck = info.subject?.contains(filter, ignoreCase = true) == true
+                val descriptionCheck = info.description?.contains(filter, ignoreCase = true) == true
                 val participantsCheck = info.participantInfos.find {
                     it.address.asStringUriOnly().contains(filter, ignoreCase = true)
                 } != null

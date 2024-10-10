@@ -148,7 +148,6 @@ class MeetingsListFragment : AbstractMainFragment() {
         }
 
         listViewModel.meetings.observe(viewLifecycleOwner) {
-            val currentCount = adapter.itemCount
             val newCount = it.size
             adapter.submitList(it)
 

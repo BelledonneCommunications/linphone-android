@@ -489,7 +489,6 @@
     <string name="conversation_info_no_address_to_add_to_contact_toast">Aucune adresse à ajouter au contact</string>
     <string name="conversation_info_confirm_start_group_call_dialog_title">Démarrer un appel de groupe ?</string>
     <string name="conversation_info_confirm_start_group_call_dialog_message">Tous les participants de la conversation recevront un appel.</string>
-    <string name="conversation_info_confirm_start_group_call_dialog_button">Démarrer l\'appel de groupe</string>
 
     <string name="conversation_event_conference_created">Vous avez rejoint le groupe</string>
     <string name="conversation_event_conference_destroyed">Vous avez quitté le groupe</string>
@@ -526,7 +525,6 @@
     <string name="message_voice_message_content_description">message vocal</string>
 
     <!-- Scheduled conferences -->
-    <string name="meetings_list_empty">Aucune réunion pour le moment…</string>
     <string name="meetings_list_no_meeting_for_today">Aucune réunion aujourd\'hui</string>
 
     <string name="meeting_schedule_title">Nouvelle réunion</string>
@@ -534,9 +532,7 @@
     <string name="meeting_schedule_broadcast_label">Webinar</string>
     <string name="meeting_schedule_broadcast_help">Informations sur le mode Webinar.\n<u>En savoir plus</u></string>
     <string name="meeting_schedule_subject_hint">Ajouter un titre…</string>
-    <string name="meeting_schedule_date_all_day_title">Toute la journée</string>
     <string name="meeting_schedule_pick_start_date_title">Date de début</string>
-    <string name="meeting_schedule_pick_end_date_title">Date de fin</string>
     <string name="meeting_schedule_pick_start_time_title">Heure de début</string>
     <string name="meeting_schedule_pick_end_time_title">Heure de fin</string>
     <string name="meeting_schedule_timezone_title">Fuseau horaire</string>

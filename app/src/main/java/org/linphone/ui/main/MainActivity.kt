@@ -22,7 +22,6 @@ package org.linphone.ui.main
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -339,7 +338,7 @@ class MainActivity : GenericActivity() {
                 HISTORY_FRAGMENT_ID
             }
         }
-        with(getPreferences(Context.MODE_PRIVATE).edit()) {
+        with(getPreferences(MODE_PRIVATE).edit()) {
             putInt(DEFAULT_FRAGMENT_KEY, defaultFragmentId)
             apply()
         }
@@ -403,7 +402,7 @@ class MainActivity : GenericActivity() {
                 }
             }
 
-            val defaultFragmentId = getPreferences(Context.MODE_PRIVATE).getInt(
+            val defaultFragmentId = getPreferences(MODE_PRIVATE).getInt(
                 DEFAULT_FRAGMENT_KEY,
                 HISTORY_FRAGMENT_ID
             )

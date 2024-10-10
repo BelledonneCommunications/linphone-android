@@ -22,6 +22,7 @@
             android:layout_height="@dimen/icon_size"
             android:adjustViewBounds="true"
             coilUrl="@{model.iconUrl}"
+            android:contentDescription="@null"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>

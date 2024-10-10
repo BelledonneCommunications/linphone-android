@@ -46,7 +46,7 @@ class ContactHistoryListAdapter : ListAdapter<CallLogHistoryModel, RecyclerView.
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as ContactHistoryListAdapter.ViewHolder).bind(getItem(position))
+        (holder as ViewHolder).bind(getItem(position))
     }
 
     inner class ViewHolder(

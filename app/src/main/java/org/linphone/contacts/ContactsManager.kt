@@ -602,7 +602,7 @@ class ContactsManager @UiThread constructor() {
     @WorkerThread
     fun getMePerson(localAddress: Address): Person {
         val account = coreContext.core.accountList.find {
-            it.params.identityAddress?.weakEqual(localAddress) ?: false
+            it.params.identityAddress?.weakEqual(localAddress) == true
         }
         val name = account?.params?.identityAddress?.displayName ?: LinphoneUtils.getDisplayName(
             localAddress
@@ -627,7 +627,6 @@ class ContactsManager @UiThread constructor() {
 
     @WorkerThread
     fun updateContactsModelDependingOnDefaultAccountMode() {
-        val account = coreContext.core.defaultAccount
         val showTrust = true
         Log.i(
             "$TAG Default account mode is [${if (showTrust) "end-to-end encryption mandatory" else "interoperable"}], update all contact models showTrust value"

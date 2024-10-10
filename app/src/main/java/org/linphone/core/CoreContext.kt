@@ -608,7 +608,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
     @WorkerThread
     fun isAddressMyself(address: Address): Boolean {
         val found = core.accountList.find {
-            it.params.identityAddress?.weakEqual(address) ?: false
+            it.params.identityAddress?.weakEqual(address) == true
         }
         return found != null
     }
@@ -675,7 +675,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
 
         if (localAddress != null) {
             val account = core.accountList.find { account ->
-                account.params.identityAddress?.weakEqual(localAddress) ?: false
+                account.params.identityAddress?.weakEqual(localAddress) == true
             }
             if (account != null) {
                 params.account = account

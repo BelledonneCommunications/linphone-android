@@ -262,7 +262,7 @@ class MeetingViewModel @UiThread constructor() : GenericViewModel() {
         var organizerFound = false
         for (info in conferenceInfo.participantInfos) {
             val participant = info.address
-            val isOrganizer = organizer?.weakEqual(participant) ?: false
+            val isOrganizer = organizer?.weakEqual(participant) == true
             Log.d(
                 "$TAG Conference [${conferenceInfo.subject}] ${if (isOrganizer) "organizer" else "participant"} [${participant.asStringUriOnly()}] is a [${info.role}]"
             )
