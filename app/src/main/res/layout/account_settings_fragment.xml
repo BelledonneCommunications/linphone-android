@@ -200,7 +200,7 @@
 
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/section_header_style"
-                        android:id="@+id/tunnel"
+                        android:id="@+id/advanced_settings_header"
                         android:onClick="@{() -> viewModel.toggleAdvancedSettingsExpand()}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
