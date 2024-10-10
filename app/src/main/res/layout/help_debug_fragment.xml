@@ -55,6 +55,34 @@
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <androidx.appcompat.widget.AppCompatTextView
+                style="@style/settings_title_style"
+                android:onClick="@{() -> viewModel.toggleLogcat()}"
+                android:id="@+id/logcat_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/help_troubleshooting_print_logs_in_logcat"
+                android:maxLines="2"
+                android:ellipsize="end"
+                app:layout_constraintTop_toTopOf="@id/logcat_switch"
+                app:layout_constraintBottom_toBottomOf="@id/logcat_switch"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/logcat_switch"/>
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                style="@style/material_switch_style"
+                android:id="@+id/logcat_switch"
+                android:onClick="@{() -> viewModel.toggleLogcat()}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="16dp"
+                android:checked="@{viewModel.logcat}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title" />
+
+            <androidx.appcompat.widget.AppCompatTextView
                 style="@style/tertiary_button_label_style"
                 android:id="@+id/clean_logs"
                 android:onClick="@{() -> viewModel.cleanLogs()}"
@@ -95,14 +123,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 app:flow_wrapMode="chain"
                 app:flow_horizontalGap="16dp"
                 app:flow_verticalGap="10dp"
                 app:flow_horizontalStyle="spread_inside"
                 app:constraint_referenced_ids="clean_logs, send_logs"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/title" />
+                app:layout_constraintTop_toBottomOf="@id/logcat_switch" />
 
             <ImageView
                 android:id="@+id/app_version_icon"

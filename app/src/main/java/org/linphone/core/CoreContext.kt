@@ -347,6 +347,8 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         }
     }
 
+    private var logcatEnabled: Boolean = corePreferences.printLogsInLogcat
+
     private val loggingServiceListener = object : LoggingServiceListenerStub() {
         @WorkerThread
         override fun onLogMessageWritten(
@@ -355,12 +357,14 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
             level: LogLevel,
             message: String
         ) {
-            when (level) {
-                LogLevel.Error -> android.util.Log.e(domain, message)
-                LogLevel.Warning -> android.util.Log.w(domain, message)
-                LogLevel.Message -> android.util.Log.i(domain, message)
-                LogLevel.Fatal -> android.util.Log.wtf(domain, message)
-                else -> android.util.Log.d(domain, message)
+            if (logcatEnabled) {
+                when (level) {
+                    LogLevel.Error -> android.util.Log.e(domain, message)
+                    LogLevel.Warning -> android.util.Log.w(domain, message)
+                    LogLevel.Message -> android.util.Log.i(domain, message)
+                    LogLevel.Fatal -> android.util.Log.wtf(domain, message)
+                    else -> android.util.Log.d(domain, message)
+                }
             }
             FirebaseCrashlytics.getInstance().log("[$domain] [${level.name}] $message")
         }
@@ -841,5 +845,10 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         val sdkBranch = context.getString(R.string.linphone_sdk_branch)
         val sdkUserAgent = "$sdkVersion ($sdkBranch)"
         core.setUserAgent(userAgent, sdkUserAgent)
+    }
+
+    @WorkerThread
+    fun enableLogcat(enable: Boolean) {
+        logcatEnabled = enable
     }
 }

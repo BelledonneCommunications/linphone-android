@@ -200,6 +200,7 @@
     <string name="help_dialog_update_available_message">A new version %s is available. Do you want to update?</string>
     <string name="help_quit_title">Quit app</string>
     <string name="help_troubleshooting_title">Troubleshooting</string>
+    <string name="help_troubleshooting_print_logs_in_logcat">Print logs in logcat</string>
     <string name="help_troubleshooting_clean_logs">Clean logs</string>
     <string name="help_troubleshooting_share_logs">Share logs</string>
     <string name="help_troubleshooting_app_version_title">App version</string>

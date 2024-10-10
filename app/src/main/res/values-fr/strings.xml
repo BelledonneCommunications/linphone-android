@@ -163,6 +163,7 @@
     <string name="help_dialog_update_available_message">Une nouvelle version %s est disponible. Voulez-vous mettre à jour ?</string>
     <string name="help_quit_title">Quitter l\'application</string>
     <string name="help_troubleshooting_title">Dépannage</string>
+    <string name="help_troubleshooting_print_logs_in_logcat">Imprimer les journaux dans logcat</string>
     <string name="help_troubleshooting_clean_logs">Nettoyer les journaux</string>
     <string name="help_troubleshooting_share_logs">Partager les journaux</string>
     <string name="help_troubleshooting_app_version_title">Version de l\'application</string>

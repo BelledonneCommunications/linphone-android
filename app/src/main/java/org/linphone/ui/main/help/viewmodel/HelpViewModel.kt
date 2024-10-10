@@ -32,6 +32,7 @@ import org.linphone.R
 import org.linphone.contacts.ContactLoader.Companion.NATIVE_ADDRESS_BOOK_FRIEND_LIST
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
+import org.linphone.core.Factory
 import org.linphone.core.VersionUpdateCheckResult
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
@@ -43,6 +44,8 @@ class HelpViewModel @UiThread constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Help ViewModel]"
     }
+
+    val logcat = MutableLiveData<Boolean>()
 
     val version = MutableLiveData<String>()
 
@@ -146,6 +149,7 @@ class HelpViewModel @UiThread constructor() : GenericViewModel() {
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
 
+            logcat.postValue(corePreferences.printLogsInLogcat)
             checkUpdateAvailable.postValue(corePreferences.checkForUpdateServerUrl.isNotEmpty())
             uploadLogsAvailable.postValue(!core.logCollectionUploadServerUrl.isNullOrEmpty())
         }
@@ -157,6 +161,17 @@ class HelpViewModel @UiThread constructor() : GenericViewModel() {
 
         coreContext.postOnCoreThread { core ->
             core.removeListener(coreListener)
+        }
+    }
+
+    @UiThread
+    fun toggleLogcat() {
+        val newValue = logcat.value == false
+        coreContext.postOnCoreThread {
+            corePreferences.printLogsInLogcat = newValue
+            coreContext.enableLogcat(newValue)
+            Factory.instance().enableLogcatLogs(newValue)
+            logcat.postValue(newValue)
         }
     }
 
