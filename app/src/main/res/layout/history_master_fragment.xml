@@ -3,12 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
-        <import type="android.view.View"/>
-        <import type="org.linphone.activities.main.history.viewmodels.CallLogsFilter"/>
+    <data
+        android:layout_width="4dp"
+        android:layout_height="5dp">
+
+        <import type="android.view.View" />
+
+        <import type="org.linphone.activities.main.history.viewmodels.CallLogsFilter" />
+
         <variable
             name="editClickListener"
-            type="android.view.View.OnClickListener"/>
+            type="android.view.View.OnClickListener" />
+
         <variable
             name="viewModel"
             type="org.linphone.activities.main.history.viewmodels.CallLogsListViewModel" />

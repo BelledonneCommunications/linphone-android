@@ -109,7 +109,7 @@
     </style>
 
     <style name="numpad_button_digit" >
-        <item name="android:textColor">@color/light_primary_text_color</item>
+        <!--<item name="android:textColor">@color/light_primary_text_color</item>-->
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:layout_centerInParent">true</item>
         <item name="android:textSize">38sp</item>
