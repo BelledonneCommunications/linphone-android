@@ -65,7 +65,7 @@
     <dimen name="voip_dialog_button_max_width">137dp</dimen>
     <dimen name="voip_contact_avatar_max_size">180dp</dimen>
     <dimen name="voip_contact_avatar_text_size">80sp</dimen>
-    <dimen name="voip_numpad_button_max_size">60dp</dimen>
+    <dimen name="voip_numpad_button_max_size">80dp</dimen>
     <dimen name="voip_conference_audio_only_participant_cell_height">80dp</dimen>
     <dimen name="voip_conference_audio_only_participant_avatar_size">40dp</dimen>
     <dimen name="conference_schedule_form_field_border_thickness">1dp</dimen>

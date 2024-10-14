@@ -3,12 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
-        <import type="android.view.View"/>
-        <import type="org.linphone.activities.main.history.viewmodels.CallLogsFilter"/>
+    <data
+        android:layout_width="4dp"
+        android:layout_height="5dp">
+
+        <import type="android.view.View" />
+
+        <import type="org.linphone.activities.main.history.viewmodels.CallLogsFilter" />
+
         <variable
             name="editClickListener"
-            type="android.view.View.OnClickListener"/>
+            type="android.view.View.OnClickListener" />
+
         <variable
             name="viewModel"
             type="org.linphone.activities.main.history.viewmodels.CallLogsListViewModel" />
@@ -48,7 +54,8 @@
                         android:paddingLeft="15dp"
                         android:paddingRight="15dp"
                         android:paddingTop="10dp"
-                        android:textSize="16sp"
+                        android:textSize="18sp"
+                        android:textColor="@{viewModel.filter == CallLogsFilter.ALL ? @color/primary_color : @color/light_primary_text_color}"
                         android:text="History"/>
 
                     <View
@@ -70,12 +77,13 @@
                         android:layout_height="match_parent"
                         android:background="?attr/button_background_drawable"
                         android:enabled="@{viewModel.filter != CallLogsFilter.MISSED}"
+                        android:textColor="@{viewModel.filter == CallLogsFilter.MISSED ? @color/primary_color : @color/light_primary_text_color}"
                         android:gravity="center"
                         android:onClick="@{() -> viewModel.showOnlyMissedCallLogs()}"
                         android:paddingLeft="15dp"
                         android:paddingRight="15dp"
                         android:paddingTop="10dp"
-                        android:textSize="16sp"
+                        android:textSize="18sp"
                         android:text="Missed"/>
 
                     <View
@@ -116,7 +124,7 @@
                 <View
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.15" />
+                    android:layout_weight="0.1" />
 
                 <ImageView
                     android:visibility="invisible"
@@ -125,7 +133,7 @@
                     android:contentDescription="@string/content_description_enter_edition_mode"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.15"
+                    android:layout_weight="0.1"
                     android:background="?attr/button_background_drawable"
                     android:padding="15dp"
                     android:src="@drawable/delete" />
