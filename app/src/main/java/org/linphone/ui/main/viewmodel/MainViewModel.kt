@@ -113,6 +113,8 @@ class MainViewModel @UiThread constructor() : ViewModel() {
 
     private var monitorAccount = false
 
+    private var nonDefaultAccountNotificationsCount = 0
+
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
         override fun onGlobalStateChanged(core: Core, state: GlobalState?, message: String) {
@@ -128,6 +130,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
             removeAlert(SINGLE_CALL)
             atLeastOneCall.postValue(false)
 
+            // TODO: do not do it if nothing has changed!
             computeNonDefaultAccountNotificationsCount()
         }
 
@@ -135,7 +138,14 @@ class MainViewModel @UiThread constructor() : ViewModel() {
         override fun onFirstCallStarted(core: Core) {
             Log.i("$TAG First call started, adding in-call 'alert'")
             updateCallAlert()
-            atLeastOneCall.postValue(true)
+            coreContext.postOnCoreThreadDelayed({
+                if (core.callsNb > 0) {
+                    Log.i("$TAG At least a call is active, showing 'alert' top bar")
+                    atLeastOneCall.postValue(true)
+                } else {
+                    Log.i("$TAG No call found, do not show 'alert' top bar")
+                }
+            }, 1000L)
         }
 
         @WorkerThread
@@ -145,7 +155,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
             state: Call.State?,
             message: String
         ) {
-            Log.i("$TAG A call's state changed, updating alerts if needed")
+            Log.i("$TAG A call's state changed, updating 'alerts' if needed")
             if (
                 core.callsNb > 1 && (
                     LinphoneUtils.isCallEnding(call.state) ||
@@ -285,7 +295,9 @@ class MainViewModel @UiThread constructor() : ViewModel() {
     init {
         defaultAccountRegistrationFailed = false
         showAlert.value = false
+        atLeastOneCall.value = false
         maxAlertLevel.value = NONE
+        nonDefaultAccountNotificationsCount = 0
         enableAccountMonitoring(true)
 
         coreContext.postOnCoreThread { core ->
@@ -301,8 +313,8 @@ class MainViewModel @UiThread constructor() : ViewModel() {
 
             if (core.callsNb > 0) {
                 updateCallAlert()
+                atLeastOneCall.postValue(true)
             }
-            atLeastOneCall.postValue(core.callsNb > 0)
 
             if (core.defaultAccount?.state == RegistrationState.Ok && !firstAccountRegistered) {
                 triggerNativeAddressBookImport()
@@ -400,23 +412,25 @@ class MainViewModel @UiThread constructor() : ViewModel() {
 
     @WorkerThread
     private fun computeNonDefaultAccountNotificationsCount() {
-        removeAlert(NON_DEFAULT_ACCOUNT_NOTIFICATIONS)
-
         var count = 0
         for (account in coreContext.core.accountList) {
             if (account == coreContext.core.defaultAccount) continue
             count += account.unreadChatMessageCount + account.missedCallsCount
         }
-        if (count > 0) {
-            val label = AppUtils.getStringWithPlural(
-                R.plurals.pending_notification_for_other_accounts,
-                count,
-                count.toString()
-            )
-            addAlert(NON_DEFAULT_ACCOUNT_NOTIFICATIONS, label, forceUpdate = true)
-            Log.i("$TAG Found [$count] pending notifications for other account(s)")
-        } else {
-            Log.i("$TAG No pending notification found for other account(s)")
+        if (count != nonDefaultAccountNotificationsCount) {
+            if (count > 0) {
+                val label = AppUtils.getStringWithPlural(
+                    R.plurals.pending_notification_for_other_accounts,
+                    count,
+                    count.toString()
+                )
+                addAlert(NON_DEFAULT_ACCOUNT_NOTIFICATIONS, label, forceUpdate = true)
+                Log.i("$TAG Found [$count] pending notifications for other account(s)")
+            } else {
+                removeAlert(NON_DEFAULT_ACCOUNT_NOTIFICATIONS)
+                Log.i("$TAG No pending notification found for other account(s)")
+            }
+            nonDefaultAccountNotificationsCount = count
         }
     }
 
@@ -523,14 +537,8 @@ class MainViewModel @UiThread constructor() : ViewModel() {
             }
             alertLabel.postValue(label)
 
-            if (type == SINGLE_CALL) {
-                Log.i("$TAG Alert top-bar is currently invisible, displaying it in a second")
-                coreContext.postOnCoreThreadDelayed({
-                    if (maxAlertLevel.value != NONE) {
-                        showAlert.postValue(true)
-                    }
-                }, 1000L)
-            } else {
+            if (type < SINGLE_CALL) {
+                // Call alert is displayed using atLeastOnCall mutable, not showAlert
                 Log.i("$TAG Alert top-bar is currently invisible, display it now")
                 showAlert.postValue(true)
             }
