@@ -181,7 +181,10 @@ class MeetingsListAdapter :
             newItem: MeetingListItemModel
         ): Boolean {
             if (oldItem.model is MeetingModel && newItem.model is MeetingModel) {
-                return oldItem.model.subject.value.orEmpty().isNotEmpty() && oldItem.model.subject.value == newItem.model.subject.value && oldItem.model.time == newItem.model.time
+                return oldItem.model.subject.value.orEmpty().isNotEmpty() &&
+                    oldItem.model.subject.value == newItem.model.subject.value &&
+                    oldItem.model.time == newItem.model.time &&
+                    oldItem.firstMeetingOfTheWeek == newItem.firstMeetingOfTheWeek
             }
             return false
         }
