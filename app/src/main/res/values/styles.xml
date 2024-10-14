@@ -91,16 +91,15 @@
     </style>
 
     <style name="call_numpad_digit" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">@android:color/transparent</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">0dp</item>
         <item name="android:layout_margin">5dp</item>
-        <item name="android:padding">15dp</item>
+        <item name="android:padding">20dp</item>
         <item name="android:background">@drawable/button_call_numpad_background</item>
     </style>
 
     <style name="numpad_button">
-        <item name="android:background" >@drawable/button_call_numpad_background</item>
+        <item name="android:background" >@drawable/button_numpad_background</item>
         <item name="android:layout_width">96dp</item>
         <item name="android:layout_height">96dp</item>
         <item name="android:layout_marginTop">5dp</item>
