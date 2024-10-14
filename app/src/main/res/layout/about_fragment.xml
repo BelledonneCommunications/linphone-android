@@ -80,65 +80,36 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:background="@color/voip_dark_color2"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:adjustViewBounds="true"
-                        android:layout_gravity="center"
-                        android:layout_marginBottom="10dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/connect_icon"/>
-
-                    <ImageView
-                        android:visibility="gone"
-                        android:layout_width="125dp"
-                        android:layout_height="wrap_content"
-                        android:adjustViewBounds="true"
-                        android:layout_gravity="center"
-                        android:contentDescription="@null"
-                        android:src="@drawable/linphone_app_name_logo" />
-
-                    <TextView
-                        style="@style/about_version_font"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:paddingTop="20dp"
-                        android:textColorLink="?attr/secondaryTextColor"
-                        android:textIsSelectable="true"
-                        android:text="@{String.format(@string/about_version, viewModel.appVersion)}" />
-
-                    <TextView
-                        style="@style/about_version_font"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:textColorLink="?attr/secondaryTextColor"
-                        android:textIsSelectable="true"
-                        android:text="@{String.format(@string/about_liblinphone_sdk_version, viewModel.sdkVersion)}" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
                     android:orientation="vertical"
                     android:background="?attr/backgroundColor"
                     android:padding="10dp">
 
                     <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="15dp">
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="15dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:adjustViewBounds="true"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="10dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/about_logo_dark"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="Version"
+                            style="@style/standard_small_text_font" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" style="@style/standard_text_font"
+                            android:text="@{viewModel.appVersion}"
+                            android:paddingBottom="14sp"/>
+
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -247,6 +218,7 @@
 
 
                     <TextView
+                        android:visibility="gone"
                         android:onClick="@{weblateClickListener}"
                         android:textColor="?attr/accentColor"
                         android:textSize="16sp"
