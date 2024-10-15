@@ -32,10 +32,13 @@ import org.linphone.utils.AppUtils
 class CallStatsModel @WorkerThread constructor() {
     val audioCodec = MutableLiveData<String>()
     val audioBandwidth = MutableLiveData<String>()
+    val lossRate = MutableLiveData<String>()
+    val jitterBuffer = MutableLiveData<String>()
 
     val isVideoEnabled = MutableLiveData<Boolean>()
     val videoCodec = MutableLiveData<String>()
     val videoBandwidth = MutableLiveData<String>()
+    val videoLossRate = MutableLiveData<String>()
     val videoResolution = MutableLiveData<String>()
     val videoFps = MutableLiveData<String>()
 
@@ -76,6 +79,21 @@ class CallStatsModel @WorkerThread constructor() {
                     "↑ $uploadBandwidth kbits/s ↓ $downloadBandwidth kbits/s"
                 )
                 audioBandwidth.postValue(bandwidthLabel)
+
+                val uploadLoss = stats.receiverLossRate.roundToInt()
+                val downloadLoss = stats.localLossRate.roundToInt()
+                val lossRateLabel = AppUtils.getFormattedString(
+                    R.string.call_stats_loss_rate_label,
+                    "↑ $uploadLoss% ↓ $downloadLoss%"
+                )
+                lossRate.postValue(lossRateLabel)
+
+                val jitterBufferSize = stats.jitterBufferSizeMs.roundToInt()
+                val jitterBufferLabel = AppUtils.getFormattedString(
+                    R.string.call_stats_jitter_buffer_label,
+                    "$jitterBufferSize ms"
+                )
+                jitterBuffer.postValue(jitterBufferLabel)
             }
             StreamType.Video -> {
                 val payloadType = call.currentParams.usedVideoPayloadType
@@ -93,6 +111,14 @@ class CallStatsModel @WorkerThread constructor() {
                     "↑ $uploadBandwidth kbits/s ↓ $downloadBandwidth kbits/s"
                 )
                 videoBandwidth.postValue(bandwidthLabel)
+
+                val uploadLoss = stats.receiverLossRate.roundToInt()
+                val downloadLoss = stats.localLossRate.roundToInt()
+                val lossRateLabel = AppUtils.getFormattedString(
+                    R.string.call_stats_loss_rate_label,
+                    "↑ $uploadLoss% ↓ $downloadLoss%"
+                )
+                videoLossRate.postValue(lossRateLabel)
 
                 val sentResolution = call.currentParams.sentVideoDefinition?.name
                 val receivedResolution = call.currentParams.receivedVideoDefinition?.name

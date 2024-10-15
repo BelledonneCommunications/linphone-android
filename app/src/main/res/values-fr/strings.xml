@@ -629,8 +629,10 @@
     <string name="call_stats_audio_title">Audio</string>
     <string name="call_stats_codec_label">Codec : %s</string>
     <string name="call_stats_bandwidth_label">Bande passante : %s</string>
+    <string name="call_stats_loss_rate_label">Taux de perte : %s</string>
+    <string name="call_stats_jitter_buffer_label">Tampon de gigue : %s</string>
     <string name="call_stats_video_title">Vidéo</string>
-    <string name="call_stats_resolution_label">Résolution : %s</string>
+    <string name="call_stats_resolution_label">Définition : %s</string>
     <string name="call_stats_fps_label">FPS : %s</string>
     <string name="call_stats_fec_title">FEC</string>
     <string name="call_stats_fec_lost_packets_label">Paquets perdus : %s</string>

@@ -73,8 +73,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
                 android:text="@{model.audioBandwidth, default=@string/call_stats_bandwidth_label}"
+                android:textColor="@color/white"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:gravity="center" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@{model.lossRate, default=@string/call_stats_loss_rate_label}"
+                android:textColor="@color/white"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:gravity="center" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="@{model.jitterBuffer, default=@string/call_stats_jitter_buffer_label}"
                 android:textColor="@color/white"
                 android:maxLines="1"
                 android:ellipsize="end"
@@ -124,6 +146,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@{model.videoBandwidth, default=@string/call_stats_bandwidth_label}"
+                android:textColor="@color/white"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:gravity="center" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@{model.videoLossRate, default=@string/call_stats_loss_rate_label}"
                 android:textColor="@color/white"
                 android:maxLines="1"
                 android:ellipsize="end"

@@ -667,6 +667,8 @@
     <string name="call_stats_audio_title">Audio</string>
     <string name="call_stats_codec_label">Codec: %s</string>
     <string name="call_stats_bandwidth_label">Bandwidth: %s</string>
+    <string name="call_stats_loss_rate_label">Loss rate: %s</string>
+    <string name="call_stats_jitter_buffer_label">Jitter buffer: %s</string>
     <string name="call_stats_video_title">Video</string>
     <string name="call_stats_resolution_label">Resolution: %s</string>
     <string name="call_stats_fps_label">FPS: %s</string>
