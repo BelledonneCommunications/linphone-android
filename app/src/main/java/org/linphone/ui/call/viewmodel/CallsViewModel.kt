@@ -41,6 +41,8 @@ class CallsViewModel @UiThread constructor() : GenericViewModel() {
 
     val calls = MutableLiveData<ArrayList<CallModel>>()
 
+    val callsExceptCurrentOne = MutableLiveData<ArrayList<CallModel>>()
+
     val callsCount = MutableLiveData<Int>()
 
     val showTopBar = MutableLiveData<Boolean>()
@@ -236,6 +238,15 @@ class CallsViewModel @UiThread constructor() : GenericViewModel() {
     @WorkerThread
     private fun updateOtherCallsInfo() {
         val core = coreContext.core
+
+        callsExceptCurrentOne.value.orEmpty().forEach(CallModel::destroy)
+        val list = arrayListOf<CallModel>()
+        for (call in core.calls) {
+            if (call != core.currentCall) {
+                list.add(CallModel(call))
+            }
+        }
+        callsExceptCurrentOne.postValue(list)
 
         if (core.callsNb > 1) {
             showTopBar.postValue(true)

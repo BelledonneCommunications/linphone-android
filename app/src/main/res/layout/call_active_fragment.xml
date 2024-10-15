@@ -9,6 +9,9 @@
             name="backClickListener"
             type="View.OnClickListener" />
         <variable
+            name="transferCallClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="newCallClickListener"
             type="View.OnClickListener" />
         <variable
@@ -277,6 +280,7 @@
             layout="@layout/call_actions_bottom_sheet"
             bind:viewModel="@{viewModel}"
             bind:callsViewModel="@{callsViewModel}"
+            bind:transferCallClickListener="@{transferCallClickListener}"
             bind:newCallClickListener="@{newCallClickListener}"
             bind:callsListClickListener="@{callsListClickListener}"/>
 

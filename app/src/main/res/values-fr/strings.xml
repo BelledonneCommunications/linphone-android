@@ -572,9 +572,13 @@
     <string name="call_incoming">Appel entrant</string>
     <string name="call_ended">Appel terminé</string>
     <string name="call_incoming_for_account">Appel entrant pour %s</string>
+    <string name="call_transfer_current_call_title">Transférer %s à…</string>
+    <string name="call_transfer_active_calls_label">Appels en cours</string>
+    <string name="call_transfer_no_active_call_label">Pas d\'autre appel</string>
+    <string name="call_transfer_confirm_dialog_tittle">Confirmer le transfert</string>
+    <string name="call_transfer_confirm_dialog_message">Vous allez transférer %1$s à %2$s.</string>
 
-    <string name="call_action_blind_transfer">Transfert</string>
-    <string name="call_action_attended_transfer">Transfert</string>
+    <string name="call_action_transfer">Transfert</string>
     <string name="call_action_start_new_call">Nouvel appel</string>
     <string name="call_action_go_to_calls_list">Liste des appels</string>
     <string name="call_action_show_dialer">Pavé</string>
@@ -599,7 +603,6 @@
     <string name="call_srtp_point_to_point_encrypted">Appel chiffré de point à point</string>
     <string name="call_not_encrypted">Appel non chiffré</string>
     <string name="calls_list_title">Liste des appels</string>
-    <string name="call_transfer_title">Transférer l\'appel vers</string>
     <string name="call_remote_is_recording">%s est en train d\'enregistrer</string>
     <string name="calls_count_label">%s appels</string>
     <string name="calls_paused_count_label">%s appels en pause</string>

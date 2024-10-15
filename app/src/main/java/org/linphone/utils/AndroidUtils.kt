@@ -70,8 +70,13 @@ class AppUtils {
         }
 
         @AnyThread
-        fun getFormattedString(@StringRes id: Int, args: Any): String {
-            return coreContext.context.getString(id, args)
+        fun getFormattedString(@StringRes id: Int, arg: Any): String {
+            return coreContext.context.getString(id, arg)
+        }
+
+        @AnyThread
+        fun getFormattedString(@StringRes id: Int, arg1: Any, arg2: Any): String {
+            return coreContext.context.getString(id, arg1, arg2)
         }
 
         @AnyThread

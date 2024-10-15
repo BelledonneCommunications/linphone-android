@@ -129,8 +129,6 @@ class MainViewModel @UiThread constructor() : ViewModel() {
             Log.i("$TAG Last call ended, removing in-call 'alert'")
             removeAlert(SINGLE_CALL)
             atLeastOneCall.postValue(false)
-
-            // TODO: do not do it if nothing has changed!
             computeNonDefaultAccountNotificationsCount()
         }
 

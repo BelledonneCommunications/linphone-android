@@ -6,6 +6,9 @@
     <data>
         <import type="android.view.View" />
         <variable
+            name="transferCallClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="newCallClickListener"
             type="View.OnClickListener" />
         <variable
@@ -39,14 +42,14 @@
 
         <ImageView
             android:id="@+id/transfer"
-            android:onClick="@{() -> viewModel.transferClicked()}"
+            android:onClick="@{transferCallClickListener}"
             android:layout_width="0dp"
             android:layout_height="@dimen/call_button_size"
             android:layout_marginTop="@dimen/call_extra_button_top_margin"
             android:background="@drawable/in_call_button_background_red"
             android:padding="@dimen/call_button_icon_padding"
             android:src="@drawable/phone_transfer"
-            android:contentDescription="@{callsViewModel.callsCount == 1 ? @string/call_action_blind_transfer : @string/call_action_attended_transfer}"
+            android:contentDescription="@string/call_action_transfer"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="@id/transfer_label"
             app:layout_constraintStart_toStartOf="@id/transfer_label"
@@ -207,11 +210,11 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/in_call_extra_action_label_style"
             android:id="@+id/transfer_label"
-            android:onClick="@{() -> viewModel.transferClicked()}"
+            android:onClick="@{transferCallClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
-            android:text="@{callsViewModel.callsCount == 1 ? @string/call_action_blind_transfer : @string/call_action_attended_transfer, default=@string/call_action_blind_transfer}"
+            android:text="@string/call_action_transfer"
             app:layout_constraintEnd_toStartOf="@id/new_call_label"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/transfer"/>

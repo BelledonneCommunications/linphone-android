@@ -138,10 +138,6 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
         MutableLiveData<Event<Pair<Boolean, String>>>()
     }
 
-    val goToInitiateBlindTransferEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
-    }
-
     val goToEndedCallEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
     }
@@ -236,7 +232,7 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    private lateinit var currentCall: Call
+    lateinit var currentCall: Call
 
     private val callListener = object : CallListenerStub() {
         @WorkerThread
@@ -875,35 +871,6 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
     }
 
     @UiThread
-    fun transferClicked() {
-        coreContext.postOnCoreThread { core ->
-            if (core.callsNb == 1) {
-                Log.i("$TAG Only one call, initiate blind call transfer")
-                goToInitiateBlindTransferEvent.postValue(Event(true))
-            } else {
-                val callToTransferTo = core.calls.findLast {
-                    it.state == Call.State.Paused && it != currentCall
-                }
-                if (callToTransferTo == null) {
-                    Log.e(
-                        "$TAG Couldn't find a call in Paused state to transfer current call to"
-                    )
-                    return@postOnCoreThread
-                }
-
-                Log.i(
-                    "$TAG Doing an attended transfer between currently displayed call [${currentCall.remoteAddress.asStringUriOnly()}] and paused call [${callToTransferTo.remoteAddress.asStringUriOnly()}]"
-                )
-                if (callToTransferTo.transferToAnother(currentCall) != 0) {
-                    Log.e("$TAG Failed to make attended transfer!")
-                } else {
-                    Log.i("$TAG Attended transfer is successful")
-                }
-            }
-        }
-    }
-
-    @UiThread
     fun createConversation() {
         if (::currentCall.isInitialized) {
             coreContext.postOnCoreThread {
@@ -926,6 +893,20 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
                     Log.i("$TAG No existing conversation was found, let's create it")
                     createCurrentCallConversation(currentCall)
                 }
+            }
+        }
+    }
+
+    @WorkerThread
+    fun attendedTransferCallTo(to: Call) {
+        if (::currentCall.isInitialized) {
+            Log.i(
+                "$TAG Doing an attended transfer between currently displayed call [${currentCall.remoteAddress.asStringUriOnly()}] and paused call [${to.remoteAddress.asStringUriOnly()}]"
+            )
+            if (to.transferToAnother(currentCall) == 0) {
+                Log.i("$TAG Attended transfer is successful")
+            } else {
+                Log.e("$TAG Failed to make attended transfer!")
             }
         }
     }

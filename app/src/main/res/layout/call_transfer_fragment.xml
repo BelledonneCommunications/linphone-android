@@ -17,6 +17,9 @@
         <variable
             name="viewModel"
             type="org.linphone.ui.main.history.viewmodel.StartCallViewModel" />
+        <variable
+            name="callsViewModel"
+            type="org.linphone.ui.call.viewmodel.CallsViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -27,13 +30,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="?attr/color_main2_000">
-
-            <androidx.constraintlayout.widget.Group
-                android:id="@+id/multiple_selection_group"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:constraint_referenced_ids="multiple_selection, multiple_selection_count"
-                android:visibility="@{viewModel.multipleSelectionMode ? View.VISIBLE : View.GONE, default=gone}" />
 
             <ImageView
                 android:id="@+id/back"
@@ -55,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:text="@string/call_action_start_new_call"
+                android:text="@{viewModel.title, default=@string/call_transfer_current_call_title}"
                 app:layout_constraintBottom_toBottomOf="@id/back"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/back"
@@ -71,35 +67,46 @@
                 app:layout_constraintTop_toBottomOf="@id/back" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style_300"
-                android:id="@+id/multiple_selection_count"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@{viewModel.selectionCount, default=`0 selected`}"
-                android:textSize="12sp"
-                android:textColor="?attr/color_main2_900"
-                app:layout_constraintStart_toStartOf="@id/title"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/title" />
-
-            <HorizontalScrollView
-                android:id="@+id/multiple_selection"
+                style="@style/section_header_style"
+                android:id="@+id/calls_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/call_transfer_active_calls_label"
+                app:layout_constraintTop_toBottomOf="@id/title"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/section_header_style"
+                android:id="@+id/no_current_call_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:scrollbars="none"
+                android:text="@string/call_transfer_no_active_call_label"
+                android:gravity="center"
+                android:visibility="@{callsViewModel.callsExceptCurrentOne.isEmpty ? View.VISIBLE : View.GONE}"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/multiple_selection_count">
+                app:layout_constraintTop_toBottomOf="@id/calls_label" />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    entries="@{viewModel.selection}"
-                    layout="@{@layout/address_selected_list_cell}"
-                    emptyPlaceholder="@{@layout/multiple_participants_selection_placeholder}"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/calls_list"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/calls_label"/>
 
-            </HorizontalScrollView>
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/calls_barrier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="calls_list, no_current_call_label"
+                app:barrierDirection="bottom" />
 
             <androidx.appcompat.widget.AppCompatEditText
                 style="@style/default_text_style"
@@ -125,7 +132,7 @@
                 app:layout_constraintWidth_max="@dimen/text_input_max_width"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/multiple_selection" />
+                app:layout_constraintTop_toBottomOf="@id/calls_barrier" />
 
             <ImageView
                 android:id="@+id/numpad"
@@ -155,60 +162,6 @@
                 app:layout_constraintTop_toTopOf="@id/search_bar"
                 app:tint="?attr/color_main2_600" />
 
-            <androidx.constraintlayout.widget.Group
-                android:id="@+id/group_call"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:constraint_referenced_ids="group_call_icon, gradient_background, group_call_label"
-                android:visibility="@{viewModel.hideGroupCallButton || viewModel.multipleSelectionMode || viewModel.searchFilter.length() > 0 ? View.GONE : View.VISIBLE}" />
-
-            <!-- margin start must be half the size of the group_call_icon below -->
-            <View
-                android:id="@+id/gradient_background"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="22dp"
-                android:background="@drawable/shape_gradient"
-                app:layout_constraintBottom_toBottomOf="@id/group_call_icon"
-                app:layout_constraintEnd_toEndOf="@id/group_call_label"
-                app:layout_constraintStart_toStartOf="@id/group_call_icon"
-                app:layout_constraintTop_toTopOf="@id/group_call_icon" />
-
-            <ImageView
-                android:id="@+id/group_call_icon"
-                android:onClick="@{() -> viewModel.switchToMultipleSelectionMode()}"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="28dp"
-                android:background="@drawable/shape_orange_round"
-                android:padding="10dp"
-                android:src="@drawable/video_conference"
-                android:contentDescription="@null"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/search_bar"
-                app:tint="?attr/color_on_main" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style_800"
-                android:id="@+id/group_call_label"
-                android:onClick="@{() -> viewModel.switchToMultipleSelectionMode()}"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:drawableEnd="@drawable/caret_right"
-                android:padding="5dp"
-                android:text="@string/history_call_start_create_group_call"
-                android:textColor="?attr/color_main2_900"
-                android:textSize="16sp"
-                android:maxLines="1"
-                android:ellipsize="end"
-                app:layout_constraintBottom_toBottomOf="@id/group_call_icon"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/group_call_icon"
-                app:layout_constraintTop_toTopOf="@id/group_call_icon" />
-
             <ImageView
                 android:id="@+id/no_contacts_nor_suggestion_image"
                 android:layout_width="0dp"
@@ -222,7 +175,7 @@
                 app:layout_constraintHeight_max="200dp"
                 app:layout_constraintVertical_bias="0.3"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/group_call_icon"
+                app:layout_constraintTop_toBottomOf="@id/search_bar"
                 app:layout_constraintBottom_toBottomOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -245,23 +198,7 @@
                 android:visibility="@{viewModel.isEmpty ? View.GONE : View.VISIBLE}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/group_call_icon"
-                app:layout_constraintBottom_toBottomOf="parent" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/create_group"
-                android:onClick="@{askForGroupCallSubjectClickListener}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|bottom"
-                android:layout_margin="16dp"
-                android:visibility="@{viewModel.multipleSelectionMode &amp;&amp; viewModel.startGroupCallButtonEnabled ? View.VISIBLE : View.GONE, default=gone}"
-                android:src="@drawable/check"
-                android:contentDescription="@string/content_description_create_group_call"
-                app:tint="?attr/color_on_main"
-                app:backgroundTint="?attr/color_main1_500"
-                app:shapeAppearanceOverlay="@style/rounded"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/search_bar"
                 app:layout_constraintBottom_toBottomOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -271,10 +208,6 @@
             bind:handleClickedListener="@{hideNumpadClickListener}"
             bind:model="@{viewModel.numpadModel}"
             layout="@layout/start_call_numpad_bottom_sheet" />
-
-        <include
-            layout="@layout/operation_in_progress"
-            bind:visibility="@{viewModel.operationInProgress}" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

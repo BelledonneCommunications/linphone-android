@@ -36,6 +36,7 @@ import androidx.lifecycle.LifecycleOwner
 import org.linphone.R
 import org.linphone.databinding.DialogAssistantAcceptConditionsAndPolicyBinding
 import org.linphone.databinding.DialogAssistantCreateAccountConfirmPhoneNumberBinding
+import org.linphone.databinding.DialogCallConfirmTransferBinding
 import org.linphone.databinding.DialogCancelContactChangesBinding
 import org.linphone.databinding.DialogCancelMeetingBinding
 import org.linphone.databinding.DialogContactConfirmTrustCallBinding
@@ -59,6 +60,7 @@ import org.linphone.databinding.DialogZrtpSasValidationBinding
 import org.linphone.databinding.DialogZrtpSecurityAlertBinding
 import org.linphone.ui.assistant.model.AcceptConditionsAndPolicyDialogModel
 import org.linphone.ui.assistant.model.ConfirmPhoneNumberDialogModel
+import org.linphone.ui.call.model.ConfirmCallTransferDialogModel
 import org.linphone.ui.call.model.ZrtpAlertDialogModel
 import org.linphone.ui.call.model.ZrtpSasConfirmationDialogModel
 import org.linphone.ui.main.contacts.model.ContactTrustDialogModel
@@ -422,6 +424,22 @@ class DialogUtils {
             val binding: DialogMergeCallsIntoConferenceBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
                 R.layout.dialog_merge_calls_into_conference,
+                null,
+                false
+            )
+            binding.viewModel = viewModel
+
+            return getDialog(context, binding)
+        }
+
+        @UiThread
+        fun getConfirmCallTransferCallDialog(
+            context: Context,
+            viewModel: ConfirmCallTransferDialogModel
+        ): Dialog {
+            val binding: DialogCallConfirmTransferBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_call_confirm_transfer,
                 null,
                 false
             )

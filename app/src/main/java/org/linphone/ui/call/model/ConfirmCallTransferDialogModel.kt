@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2023 Belledonne Communications SARL.
+ * Copyright (c) 2010-2024 Belledonne Communications SARL.
  *
  * This file is part of linphone-android
  * (see https://www.linphone.org).
@@ -17,37 +17,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.main.contacts.model
+package org.linphone.ui.call.model
 
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
-class TrustCallDialogModel @UiThread constructor(contact: String, device: String) {
+class ConfirmCallTransferDialogModel @UiThread constructor(
+    toTransfer: String,
+    toReceiveTransfer: String
+) {
+    val cancelEvent = MutableLiveData<Event<Boolean>>()
+
+    val confirmEvent = MutableLiveData<Event<Boolean>>()
+
     val message = MutableLiveData<String>()
-
-    val doNotShowAnymore = MutableLiveData<Boolean>()
-
-    val dismissEvent = MutableLiveData<Event<Boolean>>()
-
-    val confirmCallEvent = MutableLiveData<Event<Boolean>>()
 
     init {
         message.value = AppUtils.getFormattedString(
-            org.linphone.R.string.contact_dialog_increase_trust_level_message,
-            contact,
-            device
+            org.linphone.R.string.call_transfer_confirm_dialog_message,
+            toTransfer,
+            toReceiveTransfer
         )
     }
 
     @UiThread
-    fun dismiss() {
-        dismissEvent.value = Event(true)
+    fun cancel() {
+        cancelEvent.value = Event(true)
     }
 
     @UiThread
-    fun confirmCall() {
-        confirmCallEvent.value = Event(true)
+    fun confirm() {
+        confirmEvent.value = Event(true)
     }
 }
