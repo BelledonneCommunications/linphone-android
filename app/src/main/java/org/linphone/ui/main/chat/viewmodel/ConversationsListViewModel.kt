@@ -118,36 +118,6 @@ class ConversationsListViewModel @UiThread constructor() : AbstractMainViewModel
     }
 
     @WorkerThread
-    private fun createConversationModel(chatRoom: ChatRoom): ConversationModel? {
-        val filter = currentFilter
-        if (filter.isEmpty()) {
-            return ConversationModel(chatRoom)
-        } else {
-            val participants = chatRoom.participants
-            val found = participants.find {
-                // Search in address but also in contact name if exists
-                val model =
-                    coreContext.contactsManager.getContactAvatarModelForAddress(it.address)
-                model.contactName?.contains(
-                    filter,
-                    ignoreCase = true
-                ) == true || it.address.asStringUriOnly().contains(
-                    filter,
-                    ignoreCase = true
-                )
-            }
-            if (
-                found != null ||
-                chatRoom.peerAddress.asStringUriOnly().contains(filter, ignoreCase = true) ||
-                chatRoom.subject.orEmpty().contains(filter, ignoreCase = true)
-            ) {
-                return ConversationModel(chatRoom)
-            }
-        }
-        return null
-    }
-
-    @WorkerThread
     private fun computeChatRoomsList(filter: String) {
         conversations.value.orEmpty().forEach(ConversationModel::destroy)
 
@@ -159,13 +129,15 @@ class ConversationsListViewModel @UiThread constructor() : AbstractMainViewModel
         var count = 0
 
         val account = LinphoneUtils.getDefaultAccount()
-        val chatRooms = account?.chatRooms ?: coreContext.core.chatRooms
-        for (chatRoom in chatRooms) {
-            val model = createConversationModel(chatRoom)
-            if (model != null) {
-                list.add(model)
-                count += 1
-            }
+        val chatRooms = if (filter.isEmpty()) {
+            account?.chatRooms
+        } else {
+            account?.filterChatRooms(filter)
+        }
+        for (chatRoom in chatRooms.orEmpty()) {
+            val model = ConversationModel(chatRoom)
+            list.add(model)
+            count += 1
 
             if (count == 15) {
                 conversations.postValue(list)
@@ -198,18 +170,20 @@ class ConversationsListViewModel @UiThread constructor() : AbstractMainViewModel
             return
         }
 
-        val newList = arrayListOf<ConversationModel>()
-        val model = createConversationModel(chatRoom)
-        if (model != null) {
-            newList.add(model)
-            newList.addAll(currentList)
-            Log.i("$TAG Adding chat room to list")
-            conversations.postValue(newList)
-        } else {
-            Log.w(
-                "$TAG A chat room was created but not displaying it because it doesn't match current filter"
-            )
+        if (currentFilter.isNotEmpty()) {
+            val filteredRooms = defaultAccount.filterChatRooms(currentFilter)
+            val found = filteredRooms.find {
+                it == chatRoom
+            }
+            if (found == null) return
         }
+
+        val newList = arrayListOf<ConversationModel>()
+        val model = ConversationModel(chatRoom)
+        newList.add(model)
+        newList.addAll(currentList)
+        Log.i("$TAG Adding chat room to list")
+        conversations.postValue(newList)
     }
 
     @WorkerThread
