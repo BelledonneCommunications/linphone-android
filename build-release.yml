@@ -1,4 +1,4 @@
-name: $(major).$(minor).$(Year:yy)$(DayOfYear).$(rev:r)
+name: $(Build.SourceBranchName)
 pool:
   vmImage: 'ubuntu-latest'
 variables:
@@ -12,6 +12,40 @@ steps:
   inputs:
     secureFile: 'UconnectAndroidAd-Hoc.keystore'
 
+- task: Bash@3
+  displayName: 'Set Version Number'
+  inputs:
+    targetType: 'inline'
+    script: |
+        #!/bin/bash
+        # Script to set build number in Azure Devops
+        # We want build number of the following form:
+        #
+        # If $VERSION is manually set then use $VERSION (for hotfixes)
+        # If $VERSION is not set and this is not a pull request then use the branch name (for initial builds on branch)
+        # If this is a pull request then generate build based on 999.DAYOFYEAR.HOUROFDAY
+        # 
+        # Builtin Azure Devops build numbering is insufficient, so we override with this script.
+      
+        date_str=$(date "+%j.%-H")
+      
+        if [[ -z "$SYSTEM_PULLREQUEST_SOURCEBRANCH" ]]; then
+          # Release branch
+          
+          if [[ -z "$VERSION" ]]; then
+              # No version set user branch name
+              build_number="$BUILD_SOURCEBRANCHNAME"
+              
+          else
+              # Use the version number we set at runtime
+              build_number="$VERSION"
+          fi
+        else
+          # This is pull request make up build number 
+          build_number="999.${date_str}.0"
+        fi
+      
+        echo "##vso[build.updatebuildnumber]${build_number}"
 - task: JavaToolInstaller@0
   displayName: "Install Java"
   inputs:
