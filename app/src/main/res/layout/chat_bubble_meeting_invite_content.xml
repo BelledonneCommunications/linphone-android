@@ -190,13 +190,15 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
+            android:layout_marginBottom="10dp"
             android:text="@{model.meetingDescription, default=`Meeting with John Doe.`}"
             android:textSize="12sp"
             android:textColor="?attr/color_main2_500"
             android:visibility="@{model.meetingDescription.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/description_title"/>
+            app:layout_constraintTop_toBottomOf="@id/description_title"
+            app:layout_constraintBottom_toTopOf="@id/join"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_300"
@@ -205,7 +207,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginTop="16dp"
             android:text="@{model.meetingParticipants, default=`24 participants`}"
             android:textSize="12sp"
             android:textColor="?attr/color_main2_800"
@@ -218,7 +219,8 @@
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/join"
-            app:layout_constraintTop_toBottomOf="@id/description"/>
+            app:layout_constraintTop_toTopOf="@id/join"
+            app:layout_constraintBottom_toBottomOf="@id/join"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/tertiary_button_label_style"
@@ -227,7 +229,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/tertiary_button_background"
             android:paddingStart="12dp"
