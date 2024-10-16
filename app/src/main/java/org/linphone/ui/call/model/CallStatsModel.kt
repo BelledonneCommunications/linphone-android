@@ -80,8 +80,8 @@ class CallStatsModel @WorkerThread constructor() {
                 )
                 audioBandwidth.postValue(bandwidthLabel)
 
-                val uploadLoss = stats.receiverLossRate.roundToInt()
-                val downloadLoss = stats.localLossRate.roundToInt()
+                val uploadLoss = stats.senderLossRate.roundToInt()
+                val downloadLoss = stats.receiverLossRate.roundToInt()
                 val lossRateLabel = AppUtils.getFormattedString(
                     R.string.call_stats_loss_rate_label,
                     "↑ $uploadLoss% ↓ $downloadLoss%"
@@ -112,8 +112,8 @@ class CallStatsModel @WorkerThread constructor() {
                 )
                 videoBandwidth.postValue(bandwidthLabel)
 
-                val uploadLoss = stats.receiverLossRate.roundToInt()
-                val downloadLoss = stats.localLossRate.roundToInt()
+                val uploadLoss = stats.senderLossRate.roundToInt()
+                val downloadLoss = stats.receiverLossRate.roundToInt()
                 val lossRateLabel = AppUtils.getFormattedString(
                     R.string.call_stats_loss_rate_label,
                     "↑ $uploadLoss% ↓ $downloadLoss%"
