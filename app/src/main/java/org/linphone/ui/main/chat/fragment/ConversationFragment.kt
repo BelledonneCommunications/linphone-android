@@ -910,12 +910,6 @@ open class ConversationFragment : SlidingPaneChildFragment() {
     override fun onResume() {
         super.onResume()
 
-        if (!viewModel.isChatRoomInitialized()) {
-            Log.w("$TAG Fragment resuming but no chatRoom in viewModel, going back")
-            goBack()
-            return
-        }
-
         viewModel.updateCurrentlyDisplayedConversation()
 
         // Wait for items to be displayed

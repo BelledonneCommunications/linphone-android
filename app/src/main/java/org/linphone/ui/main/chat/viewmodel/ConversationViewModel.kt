@@ -450,11 +450,15 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
     @UiThread
     fun updateCurrentlyDisplayedConversation() {
         coreContext.postOnCoreThread {
-            val id = LinphoneUtils.getChatRoomId(chatRoom)
-            Log.i("$TAG Asking notifications manager not to notify messages for conversation [$id]")
-            coreContext.notificationsManager.setCurrentlyDisplayedChatRoomId(id)
+            if (isChatRoomInitialized()) {
+                val id = LinphoneUtils.getChatRoomId(chatRoom)
+                Log.i(
+                    "$TAG Asking notifications manager not to notify messages for conversation [$id]"
+                )
+                coreContext.notificationsManager.setCurrentlyDisplayedChatRoomId(id)
 
-            checkIfConversationShouldBeDisabledForSecurityReasons()
+                checkIfConversationShouldBeDisabledForSecurityReasons()
+            }
         }
     }
 
