@@ -1,0 +1,69 @@
+name: $(MAJOR)$(MINOR)$(YEAR:yy)$(DAYOFYEAR)$(REV:r)
+pool:
+  vmImage: 'ubuntu-latest'
+variables:
+  appVersionCode: $(MAJOR)$(MINOR)$(YEAR:yy)$(DAYOFYEAR)$(REV:r)
+steps:
+- checkout: self
+
+- task: DownloadSecureFile@1
+  displayName: "Download keystore"
+  name: "keystore"
+  inputs:
+    secureFile: 'UconnectAndroidAd-Hoc.keystore'
+
+- task: JavaToolInstaller@0
+  displayName: "Install Java"
+  inputs:
+    versionSpec: '17'
+    jdkArchitectureOption: 'x64'
+    jdkSourceOption: 'PreInstalled'
+    
+- task: Bash@3
+  displayName: "Generate keystore.properties"
+  inputs:
+    targetType: 'inline'
+    script: |
+      echo storePassword=$(KEYSTORE_PASSWORD) >> keystore.properties
+      echo keyPassword=$(KEYSTORE_PASSWORD) >> keystore.properties
+      echo keyAlias=uconnect android ad-hoc >> keystore.properties
+      echo storeFile=$(KEYSTORE.SECUREFILEPATH) >> keystore.properties
+      
+- task: Bash@3
+  displayName: "Set VersionCode"
+  inputs:
+    targetType: 'inline'
+    script: |
+      current_timestamp=`date +%s`
+      find . -name "build.gradle" | xargs sed -i "s/versionCode appVersionCode/versionCode ${current_timestamp}/g"
+    workingDirectory: '$(Build.SourcesDirectory)/app/'
+- task: Bash@3
+  displayName: "Set Version Name"
+  inputs:
+    targetType: 'inline'
+    script: "find . -name 'build.gradle' | xargs sed -i 's/versionName \"${project.version}\"/versionName \"$(BUILD.BUILDNUMBER)\"/g'"
+    workingDirectory: '$(Build.SourcesDirectory)/app/'
+
+- task: CmdLine@2
+  displayName: "View Gradle Content"
+  inputs:
+    script: 'cat build.gradle'
+    workingDirectory: '$(Build.SourcesDirectory)/app/'
+    
+- task: Gradle@3
+  displayName: "Build App"
+  inputs:
+    gradleWrapperFile: 'gradlew'
+    tasks: 'bundleRelease'
+    publishJUnitResults: false
+    javaHomeOption: 'JDKVersion'
+    sonarQubeRunAnalysis: false
+    spotBugsAnalysis: false
+
+- task: PublishBuildArtifacts@1
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+  displayName: "Publish App"
+  inputs:
+    PathtoPublish: 'app/build/outputs'
+    ArtifactName: 'apk-release'
+    publishLocation: 'container'
