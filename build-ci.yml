@@ -1,4 +1,4 @@
-name: $(MAJOR).$(MINOR).$(YEAR:yy)$(DAYOFYEAR)$(REV:r)
+name: $(MAJOR).$(MINOR).$(YEAR:yy)$(DAYOFYEAR).$(REV:r)
 pool:
   vmImage: 'ubuntu-latest'
 variables:
