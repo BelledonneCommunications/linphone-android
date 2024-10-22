@@ -22,6 +22,7 @@ package org.linphone
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import android.os.PowerManager
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.decode.GifDecoder
@@ -46,6 +47,13 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
             if (::corePreferences.isInitialized) {
                 return
             }
+
+            val powerManager = context.getSystemService(POWER_SERVICE) as PowerManager
+            val wakeLock = powerManager.newWakeLock(
+                PowerManager.PARTIAL_WAKE_LOCK,
+                "Linphone:AppCreation"
+            )
+            wakeLock.acquire(20000L) // 20 seconds
 
             Factory.instance().setLogCollectionPath(context.filesDir.absolutePath)
             Factory.instance().enableLogCollection(LogCollectionState.Enabled)
@@ -74,6 +82,7 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
             }
 
             Log.i("[Application] Core config & preferences created")
+            wakeLock.release()
         }
 
         fun ensureCoreExists(
@@ -88,6 +97,13 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
                 return false
             }
 
+            val powerManager = context.getSystemService(POWER_SERVICE) as PowerManager
+            val wakeLock = powerManager.newWakeLock(
+                PowerManager.PARTIAL_WAKE_LOCK,
+                "Linphone:EnsureCoreExists"
+            )
+            wakeLock.acquire(20000L) // 20 seconds
+
             Log.i(
                 "[Application] Core context is being created ${if (pushReceived) "from push" else ""}"
             )
@@ -100,6 +116,7 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
             if (!skipCoreStart) {
                 coreContext.start()
             }
+            wakeLock.release()
             return true
         }
 
