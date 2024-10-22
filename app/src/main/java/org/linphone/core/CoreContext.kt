@@ -275,15 +275,15 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
 
         @WorkerThread
         override fun onAuthenticationRequested(core: Core, authInfo: AuthInfo, method: AuthMethod) {
-            if (authInfo.username == null || authInfo.domain == null || authInfo.realm == null) {
-                Log.e(
-                    "$TAG Authentication request but either username [${authInfo.username}], domain [${authInfo.domain}] or realm [${authInfo.realm}] is null!"
-                )
-                return
-            }
-
             when (method) {
                 AuthMethod.Bearer -> {
+                    if (authInfo.authorizationServer == null) {
+                        Log.e(
+                            "$TAG Authentication request using Bearer method but authorization server is null!"
+                        )
+                        return
+                    }
+
                     val serverUrl = authInfo.authorizationServer
                     val username = authInfo.username
                     if (!serverUrl.isNullOrEmpty()) {
@@ -301,6 +301,13 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
                     }
                 }
                 AuthMethod.HttpDigest -> {
+                    if (authInfo.username == null || authInfo.domain == null || authInfo.realm == null) {
+                        Log.e(
+                            "$TAG Authentication request using Digest method but either username [${authInfo.username}], domain [${authInfo.domain}] or realm [${authInfo.realm}] is null!"
+                        )
+                        return
+                    }
+
                     val accountFound = core.accountList.find {
                         it.params.identityAddress?.username == authInfo.username && it.params.identityAddress?.domain == authInfo.domain
                     }
