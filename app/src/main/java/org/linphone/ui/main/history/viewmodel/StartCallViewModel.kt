@@ -234,7 +234,7 @@ class StartCallViewModel @UiThread constructor() : AddressSelectionViewModel() {
             Log.i(
                 "$TAG Creating group call with subject ${subject.value} and ${participants.size} participant(s)"
             )
-            val conferenceScheduler = core.createConferenceScheduler()
+            val conferenceScheduler = LinphoneUtils.createConferenceScheduler(account)
             conferenceScheduler.addListener(conferenceSchedulerListener)
             conferenceScheduler.account = account
             // Will trigger the conference creation/update automatically

@@ -42,7 +42,8 @@ import org.linphone.core.CallStats
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomListenerStub
-import org.linphone.core.ChatRoomParams
+import org.linphone.core.Conference
+import org.linphone.core.ConferenceParams
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.MediaDirection
@@ -711,7 +712,7 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
                     else -> device.deviceName
                 }
                 val currentDevice = currentCall.outputAudioDevice
-                val isCurrentlyInUse = device.type == currentDevice?.type && device.deviceName == currentDevice?.deviceName
+                val isCurrentlyInUse = device.type == currentDevice?.type && device.deviceName == currentDevice.deviceName
                 val model = AudioDeviceModel(device, name, device.type, isCurrentlyInUse, true) {
                     // onSelected
                     coreContext.postOnCoreThread {
@@ -1281,7 +1282,7 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
         val params = getChatRoomParams(call) ?: return // TODO: show error to user
         val conversation = core.createChatRoom(params, localAddress, participants)
         if (conversation != null) {
-            if (params.backend == ChatRoom.Backend.FlexisipChat) {
+            if (params.chatParams?.backend == ChatRoom.Backend.FlexisipChat) {
                 if (conversation.state == ChatRoom.State.Created) {
                     val id = LinphoneUtils.getChatRoomId(conversation)
                     Log.i("$TAG 1-1 conversation [$id] has been created")
@@ -1323,37 +1324,39 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
     }
 
     @WorkerThread
-    private fun getChatRoomParams(call: Call): ChatRoomParams? {
+    private fun getChatRoomParams(call: Call): ConferenceParams? {
         val localAddress = call.callLog.localAddress
         val remoteAddress = call.remoteAddress
         val core = call.core
         val account = LinphoneUtils.getAccountForAddress(localAddress) ?: LinphoneUtils.getDefaultAccount() ?: return null
 
-        val params: ChatRoomParams = core.createDefaultChatRoomParams()
+        val params = coreContext.core.createConferenceParams(call.conference)
+        params.isChatEnabled = true
         params.isGroupEnabled = false
         params.subject = AppUtils.getString(R.string.conversation_one_to_one_hidden_subject)
-        params.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
+        val chatParams = params.chatParams ?: return null
+        chatParams.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
 
         val sameDomain = remoteAddress.domain == corePreferences.defaultDomain && remoteAddress.domain == account.params.domain
         if (account.params.instantMessagingEncryptionMandatory && sameDomain) {
             Log.i(
                 "$TAG Account is in secure mode & domain matches, requesting E2E encryption"
             )
-            params.backend = ChatRoom.Backend.FlexisipChat
-            params.isEncryptionEnabled = true
+            chatParams.backend = ChatRoom.Backend.FlexisipChat
+            params.securityLevel = Conference.SecurityLevel.EndToEnd
         } else if (!account.params.instantMessagingEncryptionMandatory) {
             if (LinphoneUtils.isEndToEndEncryptedChatAvailable(core)) {
                 Log.i(
                     "$TAG Account is in interop mode but LIME is available, requesting E2E encryption"
                 )
-                params.backend = ChatRoom.Backend.FlexisipChat
-                params.isEncryptionEnabled = true
+                chatParams.backend = ChatRoom.Backend.FlexisipChat
+                params.securityLevel = Conference.SecurityLevel.EndToEnd
             } else {
                 Log.i(
                     "$TAG Account is in interop mode but LIME isn't available, disabling E2E encryption"
                 )
-                params.backend = ChatRoom.Backend.Basic
-                params.isEncryptionEnabled = false
+                chatParams.backend = ChatRoom.Backend.Basic
+                params.securityLevel = Conference.SecurityLevel.None
             }
         } else {
             Log.e(

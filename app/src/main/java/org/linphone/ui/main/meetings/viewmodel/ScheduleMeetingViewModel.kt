@@ -30,6 +30,7 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.Address
 import org.linphone.core.ChatRoom
+import org.linphone.core.Conference
 import org.linphone.core.ConferenceInfo
 import org.linphone.core.ConferenceScheduler
 import org.linphone.core.ConferenceSchedulerListenerStub
@@ -41,6 +42,7 @@ import org.linphone.ui.GenericViewModel
 import org.linphone.ui.main.meetings.model.TimeZoneModel
 import org.linphone.ui.main.model.SelectedAddressModel
 import org.linphone.utils.Event
+import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
 
 class ScheduleMeetingViewModel @UiThread constructor() : GenericViewModel() {
@@ -129,11 +131,15 @@ class ScheduleMeetingViewModel @UiThread constructor() : GenericViewModel() {
 
                     if (sendInvitations.value == true) {
                         Log.i("$TAG User asked for invitations to be sent, let's do it")
-                        val chatRoomParams = coreContext.core.createDefaultChatRoomParams()
+
+                        val chatRoomParams = coreContext.core.createConferenceParams(null)
+                        chatRoomParams.isChatEnabled = true
                         chatRoomParams.isGroupEnabled = false
-                        chatRoomParams.backend = ChatRoom.Backend.FlexisipChat
-                        chatRoomParams.isEncryptionEnabled = true
                         chatRoomParams.subject = "Meeting invitation" // Won't be used
+                        val chatParams = chatRoomParams.chatParams ?: return
+                        chatParams.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
+                        chatParams.backend = ChatRoom.Backend.FlexisipChat
+                        chatRoomParams.securityLevel = Conference.SecurityLevel.EndToEnd
                         conferenceScheduler.sendInvitations(chatRoomParams)
                     } else {
                         Log.i("$TAG User didn't asked for invitations to be sent")
@@ -459,7 +465,7 @@ class ScheduleMeetingViewModel @UiThread constructor() : GenericViewModel() {
             conferenceInfo.setParticipantInfos(participantsInfoArray)
 
             if (!::conferenceScheduler.isInitialized) {
-                conferenceScheduler = core.createConferenceScheduler()
+                conferenceScheduler = LinphoneUtils.createConferenceScheduler(localAccount)
                 conferenceScheduler.addListener(conferenceSchedulerListener)
             }
 
@@ -511,7 +517,9 @@ class ScheduleMeetingViewModel @UiThread constructor() : GenericViewModel() {
             conferenceInfo.setParticipantInfos(participantsInfoArray)
 
             if (!::conferenceScheduler.isInitialized) {
-                conferenceScheduler = core.createConferenceScheduler()
+                conferenceScheduler = LinphoneUtils.createConferenceScheduler(
+                    LinphoneUtils.getDefaultAccount()
+                )
                 conferenceScheduler.addListener(conferenceSchedulerListener)
             }
 

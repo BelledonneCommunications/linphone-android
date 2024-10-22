@@ -25,7 +25,6 @@ import androidx.lifecycle.MutableLiveData
 import java.util.TimeZone
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Address
-import org.linphone.core.ChatRoom
 import org.linphone.core.ConferenceInfo
 import org.linphone.core.ConferenceScheduler
 import org.linphone.core.ConferenceSchedulerListenerStub
@@ -36,6 +35,7 @@ import org.linphone.ui.GenericViewModel
 import org.linphone.ui.main.meetings.model.ParticipantModel
 import org.linphone.ui.main.meetings.model.TimeZoneModel
 import org.linphone.utils.Event
+import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
 
 class MeetingViewModel @UiThread constructor() : GenericViewModel() {
@@ -90,12 +90,12 @@ class MeetingViewModel @UiThread constructor() : GenericViewModel() {
                 Log.i(
                     "$TAG Conference ${conferenceScheduler.info?.subject} cancelled"
                 )
-                val chatRoomParams = coreContext.core.createDefaultChatRoomParams()
-                chatRoomParams.isGroupEnabled = false
-                chatRoomParams.backend = ChatRoom.Backend.FlexisipChat
-                chatRoomParams.isEncryptionEnabled = true
-                chatRoomParams.subject = "Meeting cancelled" // Won't be used
-                conferenceScheduler.sendInvitations(chatRoomParams) // Send cancel ICS
+                val params = LinphoneUtils.getChatRoomParamsToCancelMeeting()
+                if (params != null) {
+                    conferenceScheduler.sendInvitations(params)
+                } else {
+                    operationInProgress.postValue(false)
+                }
             } else if (state == ConferenceScheduler.State.Error) {
                 operationInProgress.postValue(false)
             }
@@ -185,7 +185,9 @@ class MeetingViewModel @UiThread constructor() : GenericViewModel() {
             if (::conferenceInfo.isInitialized) {
                 Log.i("$TAG Cancelling conference information [$conferenceInfo]")
                 operationInProgress.postValue(true)
-                val conferenceScheduler = core.createConferenceScheduler()
+                val conferenceScheduler = LinphoneUtils.createConferenceScheduler(
+                    LinphoneUtils.getDefaultAccount()
+                )
                 conferenceScheduler.addListener(conferenceSchedulerListener)
                 conferenceScheduler.cancelConference(conferenceInfo)
             }

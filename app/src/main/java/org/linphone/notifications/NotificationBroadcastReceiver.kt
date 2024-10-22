@@ -25,6 +25,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.Address
+import org.linphone.core.ConferenceParams
 import org.linphone.core.tools.Log
 
 class NotificationBroadcastReceiver : BroadcastReceiver() {
@@ -110,7 +112,15 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
                 return@postOnCoreThread
             }
 
-            val room = core.searchChatRoom(null, localAddress, remoteAddress, arrayOfNulls(0))
+            val params: ConferenceParams? = null
+            val room = core.searchChatRoom(
+                params,
+                localAddress,
+                remoteAddress,
+                arrayOfNulls<Address>(
+                    0
+                )
+            )
             if (room == null) {
                 Log.e(
                     "$TAG Couldn't find conversation for remote address [$remoteSipAddress] and local address [$localIdentity]"

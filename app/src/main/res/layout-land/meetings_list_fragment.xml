@@ -103,6 +103,10 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <include
+                layout="@layout/operation_in_progress"
+                bind:visibility="@{viewModel.operationInProgress}" />
+
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <androidx.fragment.app.FragmentContainerView

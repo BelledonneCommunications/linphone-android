@@ -29,7 +29,7 @@ import org.linphone.contacts.getListOfSipAddressesAndPhoneNumbers
 import org.linphone.core.Address
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomListenerStub
-import org.linphone.core.ChatRoomParams
+import org.linphone.core.Conference
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
@@ -189,29 +189,31 @@ class ConversationForwardMessageViewModel @UiThread constructor() : AddressSelec
 
         operationInProgress.postValue(true)
 
-        val params: ChatRoomParams = coreContext.core.createDefaultChatRoomParams()
+        val params = coreContext.core.createConferenceParams(null)
+        params.isChatEnabled = true
         params.isGroupEnabled = false
         params.subject = AppUtils.getString(R.string.conversation_one_to_one_hidden_subject)
-        params.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
+        val chatParams = params.chatParams ?: return
+        chatParams.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
 
         val sameDomain = remote.domain == corePreferences.defaultDomain && remote.domain == account.params.domain
         if (account.params.instantMessagingEncryptionMandatory && sameDomain) {
             Log.i("$TAG Account is in secure mode & domain matches, creating a E2E conversation")
-            params.backend = ChatRoom.Backend.FlexisipChat
-            params.isEncryptionEnabled = true
+            chatParams.backend = ChatRoom.Backend.FlexisipChat
+            params.securityLevel = Conference.SecurityLevel.EndToEnd
         } else if (!account.params.instantMessagingEncryptionMandatory) {
             if (LinphoneUtils.isEndToEndEncryptedChatAvailable(core)) {
                 Log.i(
                     "$TAG Account is in interop mode but LIME is available, creating a E2E conversation"
                 )
-                params.backend = ChatRoom.Backend.FlexisipChat
-                params.isEncryptionEnabled = true
+                chatParams.backend = ChatRoom.Backend.FlexisipChat
+                params.securityLevel = Conference.SecurityLevel.EndToEnd
             } else {
                 Log.i(
                     "$TAG Account is in interop mode but LIME isn't available, creating a SIP simple conversation"
                 )
-                params.backend = ChatRoom.Backend.Basic
-                params.isEncryptionEnabled = false
+                chatParams.backend = ChatRoom.Backend.Basic
+                params.securityLevel = Conference.SecurityLevel.None
             }
         } else {
             Log.e(
@@ -238,7 +240,7 @@ class ConversationForwardMessageViewModel @UiThread constructor() : AddressSelec
             )
             val chatRoom = core.createChatRoom(params, localAddress, participants)
             if (chatRoom != null) {
-                if (params.backend == ChatRoom.Backend.FlexisipChat) {
+                if (chatParams.backend == ChatRoom.Backend.FlexisipChat) {
                     if (chatRoom.state == ChatRoom.State.Created) {
                         val id = LinphoneUtils.getChatRoomId(chatRoom)
                         Log.i("$TAG 1-1 conversation [$id] has been created")

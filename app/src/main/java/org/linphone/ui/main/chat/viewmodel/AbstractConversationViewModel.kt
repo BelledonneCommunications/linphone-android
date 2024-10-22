@@ -26,7 +26,9 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.core.Address
 import org.linphone.core.ChatRoom
+import org.linphone.core.ConferenceParams
 import org.linphone.core.ConferenceScheduler
 import org.linphone.core.ConferenceSchedulerListenerStub
 import org.linphone.core.Factory
@@ -149,11 +151,12 @@ abstract class AbstractConversationViewModel : GenericViewModel() {
 
             if (localAddress != null && remoteAddress != null) {
                 Log.i("$TAG Searching for conversation in Core using local & peer SIP addresses")
+                val params: ConferenceParams? = null
                 val found = core.searchChatRoom(
-                    null,
+                    params,
                     localAddress,
                     remoteAddress,
-                    arrayOfNulls(
+                    arrayOfNulls<Address>(
                         0
                     )
                 )
@@ -229,7 +232,7 @@ abstract class AbstractConversationViewModel : GenericViewModel() {
             Log.i(
                 "$TAG Creating group call with subject ${conferenceInfo.subject} and ${participants.size} participant(s)"
             )
-            val conferenceScheduler = core.createConferenceScheduler()
+            val conferenceScheduler = LinphoneUtils.createConferenceScheduler(account)
             conferenceScheduler.addListener(conferenceSchedulerListener)
             conferenceScheduler.account = account
             // Will trigger the conference creation/update automatically

@@ -35,6 +35,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.MeetingsListFragmentBinding
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.fragment.AbstractMainFragment
 import org.linphone.ui.main.history.model.ConfirmationDialogModel
 import org.linphone.ui.main.meetings.adapter.MeetingsListAdapter
@@ -58,6 +59,8 @@ class MeetingsListFragment : AbstractMainFragment() {
     private lateinit var adapter: MeetingsListAdapter
 
     private var bottomSheetDialog: BottomSheetDialogFragment? = null
+
+    private var meetingViewModelBeingCancelled: MeetingModel? = null
 
     private val dataObserver = object : AdapterDataObserver() {
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
@@ -161,6 +164,24 @@ class MeetingsListFragment : AbstractMainFragment() {
             listViewModel.fetchInProgress.value = false
         }
 
+        listViewModel.conferenceCancelledEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Meeting has been cancelled successfully, deleting it")
+                (requireActivity() as GenericActivity).showGreenToast(
+                    getString(R.string.meeting_info_cancelled_toast),
+                    R.drawable.trash_simple
+                )
+
+                meetingViewModelBeingCancelled?.delete()
+                meetingViewModelBeingCancelled = null
+                listViewModel.applyFilter()
+                (requireActivity() as GenericActivity).showGreenToast(
+                    getString(R.string.meeting_info_deleted_toast),
+                    R.drawable.trash_simple
+                )
+            }
+        }
+
         adapter.meetingLongClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
                 val modalBottomSheet = MeetingsMenuDialogFragment(
@@ -168,12 +189,17 @@ class MeetingsListFragment : AbstractMainFragment() {
                         adapter.resetSelection()
                     },
                     { // onDelete
-                        if (model.isOrganizer()) {
+                        if (model.isOrganizer() && !model.isCancelled) {
                             showCancelMeetingDialog(model)
                         } else {
                             Log.i("$TAG Deleting meeting [${model.id}]")
                             model.delete()
                             listViewModel.applyFilter()
+
+                            (requireActivity() as GenericActivity).showGreenToast(
+                                getString(R.string.meeting_info_deleted_toast),
+                                R.drawable.trash_simple
+                            )
                         }
                     }
                 )
@@ -296,16 +322,20 @@ class MeetingsListFragment : AbstractMainFragment() {
                 Log.i("$TAG Deleting meeting [${meetingModel.id}]")
                 meetingModel.delete()
                 listViewModel.applyFilter()
+
                 dialog.dismiss()
+                (requireActivity() as GenericActivity).showGreenToast(
+                    getString(R.string.meeting_info_deleted_toast),
+                    R.drawable.trash_simple
+                )
             }
         }
 
         model.confirmEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG Cancelling meeting [${meetingModel.id}]")
+                meetingViewModelBeingCancelled = meetingModel
                 listViewModel.cancelMeeting(meetingModel.conferenceInfo)
-                meetingModel.delete()
-                listViewModel.applyFilter()
                 dialog.dismiss()
             }
         }

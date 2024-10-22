@@ -41,7 +41,10 @@ import org.linphone.core.Call.Status
 import org.linphone.core.CallLog
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatRoom
+import org.linphone.core.Conference
 import org.linphone.core.ConferenceInfo
+import org.linphone.core.ConferenceParams
+import org.linphone.core.ConferenceScheduler
 import org.linphone.core.Core
 import org.linphone.core.Factory
 import org.linphone.core.Friend
@@ -211,6 +214,39 @@ class LinphoneUtils {
         @WorkerThread
         fun isRemoteConferencingAvailable(core: Core): Boolean {
             return core.defaultAccount?.params?.audioVideoConferenceFactoryAddress != null
+        }
+
+        @WorkerThread
+        fun createConferenceScheduler(account: Account?): ConferenceScheduler {
+            if (!account?.params?.ccmpServerUrl.isNullOrEmpty()) {
+                Log.i(
+                    "$TAG CCMP server URL has been set in Account's params, using CCMP conference scheduler"
+                )
+                return coreContext.core.createConferenceSchedulerWithType(
+                    account,
+                    ConferenceScheduler.Type.CCMP
+                )
+            }
+            Log.i(
+                "$TAG CCMP server URL hasn't been set in Account's params, using SIP conference scheduler"
+            )
+            return coreContext.core.createConferenceSchedulerWithType(
+                account,
+                ConferenceScheduler.Type.SIP
+            )
+        }
+
+        @WorkerThread
+        fun getChatRoomParamsToCancelMeeting(): ConferenceParams? {
+            val chatRoomParams = coreContext.core.createConferenceParams(null)
+            chatRoomParams.isChatEnabled = true
+            chatRoomParams.isGroupEnabled = false
+            chatRoomParams.subject = "Meeting invitation" // Won't be used
+            val chatParams = chatRoomParams.chatParams ?: return null
+            chatParams.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
+            chatParams.backend = ChatRoom.Backend.FlexisipChat
+            chatRoomParams.securityLevel = Conference.SecurityLevel.EndToEnd
+            return chatRoomParams
         }
 
         @WorkerThread
