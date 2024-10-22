@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <!-- To be able to display contacts list & match calling/called numbers -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -22,15 +23,15 @@
 
     <!-- Needed to attach file(s) in chat room fragment -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32"/>
+        android:maxSdkVersion="32" tools:node="remove" />
     <!-- Starting Android 13 you need those 3 permissions instead (https://developer.android.com/about/versions/13/behavior-changes-13) -->
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
-    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" tools:node="remove" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" tools:node="remove" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" tools:node="remove" />
 
     <!-- Needed to shared downloaded files if setting is on -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="28" />
+        android:maxSdkVersion="28" tools:node="remove" />
 
     <!-- Both permissions below are for contacts sync account, needed to store presence in native contact if enabled -->
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
@@ -51,7 +52,11 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <!-- Needed for Android 14
     https://developer.android.com/about/versions/14/behavior-changes-14#fgs-types -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA" tools:node="remove" />
+    <uses-feature android:name="android.hardware.camera" android:required="false"  tools:node="remove" />
+    <uses-permission android:name="android.permission.CAMERA" tools:node="remove" tools:ignore="ReservedSystemPermission" />
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE"  />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_PHONE_CALL" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
