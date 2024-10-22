@@ -21,6 +21,7 @@ package org.linphone
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.os.PowerManager
 import androidx.annotation.MainThread
 import coil.ImageLoader
 import coil.ImageLoaderFactory
@@ -57,6 +58,13 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
         super.onCreate()
         val context = applicationContext
 
+        val powerManager = context.getSystemService(POWER_SERVICE) as PowerManager
+        val wakeLock = powerManager.newWakeLock(
+            PowerManager.PARTIAL_WAKE_LOCK,
+            "Linphone:AppCreation"
+        )
+        wakeLock.acquire(20000L) // 20 seconds
+
         Factory.instance().setLogCollectionPath(context.filesDir.absolutePath)
         Factory.instance().enableLogCollection(LogCollectionState.Enabled)
         // For VFS
@@ -87,6 +95,7 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
         coreContext.start()
 
         DynamicColors.applyToActivitiesIfAvailable(this)
+        wakeLock.release()
     }
 
     override fun onTrimMemory(level: Int) {
