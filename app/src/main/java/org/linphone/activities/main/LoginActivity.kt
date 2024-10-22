@@ -602,8 +602,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun toggleDevMode(nTaps: Int, isComplete: Boolean) {
-        Log.i("Tappety tap: " + nTaps + ", " + isComplete)
-        if (nTaps == 5 && isComplete) {
+        if (nTaps == 5) {
             val envSvc = DimensionsEnvironmentService.getInstance(applicationContext)
             envSvc.toggleDevMode()
             environmentAdapter.notifyDataSetChanged()
