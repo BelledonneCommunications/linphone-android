@@ -21,7 +21,9 @@ package org.linphone.ui.main.chat.model
 
 import android.media.MediaMetadataRetriever
 import android.media.MediaMetadataRetriever.METADATA_KEY_DURATION
+import android.media.ThumbnailUtils
 import android.net.Uri
+import android.provider.MediaStore
 import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
@@ -52,6 +54,10 @@ class FileModel @AnyThread constructor(
 
     val transferProgress = MutableLiveData<Int>()
 
+    val mediaPreview = MutableLiveData<String>()
+
+    val mediaPreviewAvailable = MutableLiveData<Boolean>()
+
     val mimeType: FileUtils.MimeType
 
     val mimeTypeString: String
@@ -79,6 +85,7 @@ class FileModel @AnyThread constructor(
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     init {
+        mediaPreviewAvailable.postValue(false)
         transferProgress.postValue(-1)
         formattedFileSize.postValue(FileUtils.bytesToDisplayableSize(fileSize))
 
@@ -93,6 +100,14 @@ class FileModel @AnyThread constructor(
             isImage = mimeType == FileUtils.MimeType.Image
             isVideoPreview = mimeType == FileUtils.MimeType.Video
             isAudio = mimeType == FileUtils.MimeType.Audio
+
+            if (isImage) {
+                mediaPreview.postValue(path)
+                mediaPreviewAvailable.postValue(true)
+            } else if (isVideoPreview) {
+                loadVideoPreview()
+            }
+
             if (isVideoPreview || isAudio) {
                 getDuration()
             }
@@ -130,6 +145,25 @@ class FileModel @AnyThread constructor(
     suspend fun deleteFile() {
         Log.i("$TAG Deleting file [$path]")
         FileUtils.deleteFile(path)
+    }
+
+    @AnyThread
+    private fun loadVideoPreview() {
+        try {
+            Log.i("$TAG Try to create an image preview of video file [$path]")
+            val previewBitmap = ThumbnailUtils.createVideoThumbnail(
+                path,
+                MediaStore.Images.Thumbnails.MINI_KIND
+            )
+            if (previewBitmap != null) {
+                val previewPath = FileUtils.storeBitmap(previewBitmap, fileName)
+                Log.i("$TAG Preview of video file [$path] available at [$previewPath]")
+                mediaPreview.postValue(previewPath)
+                mediaPreviewAvailable.postValue(true)
+            }
+        } catch (e: Exception) {
+            Log.e("$TAG Failed to get image preview for file [$path]: $e")
+        }
     }
 
     @AnyThread

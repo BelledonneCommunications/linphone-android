@@ -22,6 +22,7 @@ package org.linphone.utils
 import android.content.ContentValues
 import android.content.Context
 import android.database.CursorIndexOutOfBoundsException
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Environment
 import android.os.ParcelFileDescriptor
@@ -396,6 +397,19 @@ class FileUtils {
         fun doesFileExist(path: String): Boolean {
             val file = File(path)
             return file.exists()
+        }
+
+        @AnyThread
+        fun storeBitmap(bitmap: Bitmap, fileName: String): String {
+            val path = getFileStorageCacheDir("$fileName.jpg", true)
+            FileOutputStream(path).use { outputStream ->
+                bitmap.compress(
+                    Bitmap.CompressFormat.JPEG,
+                    100,
+                    outputStream
+                )
+            }
+            return path.absolutePath
         }
 
         @AnyThread

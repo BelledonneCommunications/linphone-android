@@ -27,6 +27,21 @@
             app:constraint_referenced_ids="file_name, file_background, file_icon" />
 
         <ImageView
+            android:id="@+id/broken_media_icon"
+            android:onClick="@{() -> model.onClick()}"
+            android:layout_width="@dimen/chat_bubble_grid_image_size"
+            android:layout_height="@dimen/chat_bubble_grid_image_size"
+            android:adjustViewBounds="true"
+            android:padding="18dp"
+            android:background="@drawable/shape_squircle_main2_200_5dp"
+            android:visibility="@{model.mediaPreviewAvailable ? View.GONE : View.VISIBLE, default=gone}"
+            android:contentDescription="@{model.isVideoPreview ? @string/content_description_chat_bubble_video : @string/content_description_chat_bubble_image}"
+            android:src="@{model.isVideoPreview ? @drawable/file_video : @drawable/file_image, default=@drawable/file_video}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:tint="?attr/color_main2_600" />
+
+        <ImageView
             android:id="@+id/image"
             android:onClick="@{() -> model.onClick()}"
             android:onLongClick="@{onLongClickListener}"
@@ -36,7 +51,8 @@
             android:scaleType="centerCrop"
             android:contentDescription="@{model.isVideoPreview ? @string/content_description_chat_bubble_video : @string/content_description_chat_bubble_image}"
             android:visibility="@{model.isImage || model.isVideoPreview ? View.VISIBLE : View.GONE}"
-            coilBubbleGrid="@{model.path}"
+            coilBubbleGrid="@{model.mediaPreview}"
+            coilBubbleFallback="@{brokenMediaIcon}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
@@ -50,16 +66,17 @@
             android:textColor="@{model.isVideoPreview ? @color/white : @color/main2_600}"
             android:textSize="12sp"
             android:visibility="@{model.isVideoPreview &amp;&amp; model.audioVideoDuration.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintBottom_toBottomOf="@id/image"
-            app:layout_constraintStart_toStartOf="@id/image"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
 
         <ImageView
             android:id="@+id/video_preview"
+            android:onClick="@{() -> model.onClick()}"
             android:layout_width="@dimen/icon_size"
             android:layout_height="@dimen/icon_size"
             android:src="@drawable/play_fill"
             android:contentDescription="@null"
-            android:visibility="@{model.isVideoPreview ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{model.isVideoPreview &amp;&amp; model.mediaPreviewAvailable ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintTop_toTopOf="@id/image"
             app:layout_constraintBottom_toBottomOf="@id/image"
             app:layout_constraintStart_toStartOf="@id/image"

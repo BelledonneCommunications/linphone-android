@@ -23,6 +23,22 @@
         inflatedLifecycleOwner="@{true}">
 
         <ImageView
+            android:id="@+id/broken_media_icon"
+            android:onClick="@{() -> model.onClick()}"
+            android:layout_width="@dimen/chat_bubble_grid_image_size"
+            android:layout_height="@dimen/chat_bubble_grid_image_size"
+            android:adjustViewBounds="true"
+            android:padding="18dp"
+            android:background="@drawable/shape_squircle_main2_200_5dp"
+            android:visibility="@{model.mediaPreviewAvailable ? View.GONE : View.VISIBLE, default=gone}"
+            android:contentDescription="@{model.isVideoPreview ? @string/content_description_chat_bubble_video : @string/content_description_chat_bubble_image}"
+            android:src="@{model.isVideoPreview ? @drawable/file_video : @drawable/file_image, default=@drawable/file_video}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:tint="?attr/color_main2_600" />
+
+        <ImageView
             android:id="@+id/image"
             android:onClick="@{() -> model.onClick()}"
             android:onLongClick="@{onLongClickListener}"
@@ -31,7 +47,8 @@
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:contentDescription="@{model.isVideoPreview ? @string/content_description_chat_bubble_video : @string/content_description_chat_bubble_image}"
-            coilBubble="@{model.path}"
+            coilBubble="@{model.mediaPreview}"
+            coilBubbleFallback="@{brokenMediaIcon}"
             app:layout_constraintHeight_max="@dimen/chat_bubble_big_image_max_size"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -41,6 +58,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_600"
             android:id="@+id/video_duration"
+            android:onClick="@{() -> model.onClick()}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
@@ -48,16 +66,17 @@
             android:textColor="@{model.isVideoPreview ? @color/white : @color/main2_600}"
             android:textSize="12sp"
             android:visibility="@{model.isVideoPreview &amp;&amp; model.audioVideoDuration.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintBottom_toBottomOf="@id/image"
-            app:layout_constraintStart_toStartOf="@id/image"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
 
         <ImageView
             android:id="@+id/video_preview"
+            android:onClick="@{() -> model.onClick()}"
             android:layout_width="@dimen/icon_size"
             android:layout_height="@dimen/icon_size"
             android:src="@drawable/play_fill"
             android:contentDescription="@null"
-            android:visibility="@{model.isVideoPreview ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{model.isVideoPreview &amp;&amp; model.mediaPreviewAvailable ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintTop_toTopOf="@id/image"
             app:layout_constraintBottom_toBottomOf="@id/image"
             app:layout_constraintStart_toStartOf="@id/image"

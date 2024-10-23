@@ -64,6 +64,10 @@ class MediaViewModel @UiThread constructor() : GenericViewModel() {
         MutableLiveData<Event<Pair<Int, Int>>>()
     }
 
+    val changeFullScreenModeEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     lateinit var mediaPlayer: MediaPlayer
 
     private lateinit var filePath: String
@@ -172,11 +176,18 @@ class MediaViewModel @UiThread constructor() : GenericViewModel() {
 
                 // Leave full screen when playback is done
                 fullScreenMode.postValue(false)
+                changeFullScreenModeEvent.postValue(Event(false))
             }
             setOnVideoSizeChangedListener { mediaPlayer, width, height ->
                 videoSizeChangedEvent.postValue(Event(Pair(width, height)))
             }
-            prepare()
+            try {
+                prepare()
+            } catch (e: Exception) {
+                fullScreenMode.postValue(false)
+                changeFullScreenModeEvent.postValue(Event(false))
+                Log.e("$TAG Failed to prepare video file: $e")
+            }
         }
 
         val durationInMillis = mediaPlayer.duration

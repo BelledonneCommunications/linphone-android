@@ -95,6 +95,12 @@ class MediaViewerFragment : GenericMainFragment() {
                 binding.videoPlayer.setAspectRatio(width, height)
             }
         }
+
+        viewModel.changeFullScreenModeEvent.observe(viewLifecycleOwner) {
+            it.consume { fullScreenMode ->
+                sharedViewModel.mediaViewerFullScreenMode.value = fullScreenMode
+            }
+        }
     }
 
     override fun onResume() {
