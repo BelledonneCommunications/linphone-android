@@ -67,6 +67,8 @@ class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
 
     val audioVideoConferenceFactoryUri = MutableLiveData<String>()
 
+    val ccmpServerUrl = MutableLiveData<String>()
+
     val limeServerUrl = MutableLiveData<String>()
 
     val bundleModeEnabled = MutableLiveData<Boolean>()
@@ -141,6 +143,8 @@ class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
                 audioVideoConferenceFactoryUri.postValue(
                     params.audioVideoConferenceFactoryAddress?.asStringUriOnly()
                 )
+
+                ccmpServerUrl.postValue(params.ccmpServerUrl)
 
                 limeServerUrl.postValue(params.limeServerUrl)
 
@@ -235,6 +239,7 @@ class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
                     newParams.audioVideoConferenceFactoryAddress = null
                 }
 
+                newParams.ccmpServerUrl = ccmpServerUrl.value
                 newParams.limeServerUrl = limeServerUrl.value
 
                 account.params = newParams

@@ -340,6 +340,7 @@
     <string name="account_settings_expire_title">Expire (in seconds)</string>
     <string name="account_settings_conference_factory_uri_title">Conference factory URI</string>
     <string name="account_settings_audio_video_conference_factory_uri_title">Audio/video conference factory URI</string>
+    <string name="account_settings_ccmp_server_url_title">CCMP server URL</string>
     <string name="account_settings_lime_server_url_title">E2E encryption keys server URL</string>
     <string name="account_settings_bundle_mode_title">Bundle mode</string>
     <string name="account_settings_cpim_in_basic_conversations_title">Use CPIM in \"basic\" conversations</string>

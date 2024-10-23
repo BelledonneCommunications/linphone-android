@@ -239,20 +239,22 @@
             app:layout_constraintTop_toBottomOf="@id/bundle_mode_switch" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/settings_title_style"
             android:id="@+id/cpim_basic_chat_room_title"
+            style="@style/settings_title_style"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="10dp"
-            android:text="@string/account_settings_cpim_in_basic_conversations_title"
-            android:maxLines="2"
             android:ellipsize="end"
+            android:maxLines="2"
+            android:text="@string/account_settings_cpim_in_basic_conversations_title"
             android:visibility="@{viewModel.imEncryptionMandatory ? View.GONE : View.VISIBLE}"
-            app:layout_constraintTop_toTopOf="@id/cpim_basic_chat_room_switch"
             app:layout_constraintBottom_toBottomOf="@id/cpim_basic_chat_room_switch"
+            app:layout_constraintEnd_toStartOf="@id/cpim_basic_chat_room_switch"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/cpim_basic_chat_room_switch"/>
+            app:layout_constraintTop_toTopOf="@id/cpim_basic_chat_room_switch"
+            app:layout_constraintVertical_bias="1.0" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/settings_title_style"
@@ -354,6 +356,38 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/settings_title_style"
+            android:id="@+id/ccmp_server_url_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/account_settings_ccmp_server_url_title"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintTop_toBottomOf="@id/audio_video_conference_factory_uri"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            style="@style/default_text_style"
+            android:id="@+id/ccmp_server_url"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:background="@drawable/edit_text_background"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@={viewModel.ccmpServerUrl}"
+            android:inputType="text|textUri"
+            android:hint="@string/account_settings_ccmp_server_url_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ccmp_server_url_title"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/settings_title_style"
             android:id="@+id/lime_server_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -363,7 +397,7 @@
             android:text="@string/account_settings_lime_server_url_title"
             android:maxLines="2"
             android:ellipsize="end"
-            app:layout_constraintTop_toBottomOf="@id/audio_video_conference_factory_uri"
+            app:layout_constraintTop_toBottomOf="@id/ccmp_server_url"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 

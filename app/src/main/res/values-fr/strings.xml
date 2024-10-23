@@ -303,6 +303,7 @@
     <string name="account_settings_expire_title">Expiration (en secondes)</string>
     <string name="account_settings_conference_factory_uri_title">URI de l\'usine à conversations</string>
     <string name="account_settings_audio_video_conference_factory_uri_title">URI de l\'usine à réunions</string>
+    <string name="account_settings_ccmp_server_url_title">URL du serveur CCMP</string>
     <string name="account_settings_lime_server_url_title">URL du serveur d\'échange de clés de chiffrement</string>
     <string name="account_settings_bundle_mode_title">Mode "bundle"</string>
     <string name="account_settings_cpim_in_basic_conversations_title">Utiliser CPIM dans les conversations \"basiques\"</string>
