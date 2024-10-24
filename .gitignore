@@ -28,3 +28,4 @@ app/releaseWithCrashlytics
 app/keystore.properties
 app/src/main/res/xml/contacts.xml
 **/*.keystore
+/.vs
