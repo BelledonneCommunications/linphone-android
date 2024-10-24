@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
+import org.json.JSONObject;
 import org.linphone.utils.Log;
 import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
@@ -136,7 +137,9 @@ public class AuthStateManager {
     public AuthState updateAfterTokenResponse(
             @Nullable TokenResponse response,
             @Nullable AuthorizationException ex) {
-        final var json = response.jsonSerialize();
+
+        JSONObject json = null;
+        if (response != null) json = response.jsonSerialize();
         Log.Log.i(String.format("updateAfterTokenResponse::Response(%s)::Ex(%s)", json, ex));
 
         AuthState current = getCurrent();
