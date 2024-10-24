@@ -199,7 +199,6 @@ class ScheduleMeetingViewModel @UiThread constructor() : GenericViewModel() {
         }
         isBroadcastSelected.value = false
         showBroadcastHelp.value = false
-        allDayMeeting.value = false
         sendInvitations.value = true
 
         selectedTimeZone.value = availableTimeZones.find {
@@ -292,20 +291,20 @@ class ScheduleMeetingViewModel @UiThread constructor() : GenericViewModel() {
 
     @UiThread
     fun setStartDate(timestamp: Long) {
-        startTimestamp = timestamp
-        endTimestamp = timestamp
-        computeDateLabels()
-    }
+        val cal = Calendar.getInstance(
+            TimeZone.getTimeZone(selectedTimeZone.value?.id ?: TimeZone.getDefault().id)
+        )
+        cal.timeInMillis = timestamp
+        cal.set(Calendar.HOUR_OF_DAY, startHour)
+        cal.set(Calendar.MINUTE, startMinutes)
+        startTimestamp = cal.timeInMillis
 
-    @UiThread
-    fun getCurrentlySelectedEndDate(): Long {
-        return endTimestamp
-    }
+        cal.set(Calendar.HOUR_OF_DAY, endHour)
+        cal.set(Calendar.MINUTE, endMinutes)
+        endTimestamp = cal.timeInMillis
 
-    @UiThread
-    fun setEndDate(timestamp: Long) {
-        endTimestamp = timestamp
         computeDateLabels()
+        computeTimeLabels()
     }
 
     @UiThread
@@ -410,39 +409,14 @@ class ScheduleMeetingViewModel @UiThread constructor() : GenericViewModel() {
             conferenceInfo.subject = subject.value
             conferenceInfo.description = description.value
 
-            if (allDayMeeting.value == true) {
-                val cal = Calendar.getInstance(
-                    TimeZone.getTimeZone(selectedTimeZone.value?.id ?: TimeZone.getDefault().id)
-                )
-                cal.timeInMillis = startTimestamp
-                cal.set(Calendar.HOUR_OF_DAY, 0)
-                cal.set(Calendar.MINUTE, 0)
-                cal.set(Calendar.SECOND, 0)
-                val startTime = cal.timeInMillis / 1000 // Linphone expects timestamp in seconds
-
-                cal.timeInMillis = endTimestamp
-                cal.set(Calendar.HOUR_OF_DAY, 0)
-                cal.add(Calendar.HOUR, 23)
-                cal.set(Calendar.MINUTE, 59)
-                cal.set(Calendar.SECOND, 59)
-                val endTime = cal.timeInMillis / 1000 // Linphone expects timestamp in seconds
-                val duration = ((endTime - startTime) / 60).toInt() // Linphone expects duration in minutes
-
-                Log.i(
-                    "$TAG Scheduling meeting using start day [$startTime] and duration [$duration] (minutes)"
-                )
-                conferenceInfo.dateTime = startTime
-                conferenceInfo.duration = duration
-            } else {
-                val startTime = startTimestamp / 1000 // Linphone expects timestamp in seconds
-                val duration =
-                    (((endTimestamp - startTimestamp) / 1000) / 60).toInt() // Linphone expects duration in minutes
-                Log.i(
-                    "$TAG Scheduling meeting using start hour [$startTime] and duration [$duration] (minutes)"
-                )
-                conferenceInfo.dateTime = startTime
-                conferenceInfo.duration = duration
-            }
+            val startTime = startTimestamp / 1000 // Linphone expects timestamp in seconds
+            val duration =
+                (((endTimestamp - startTimestamp) / 1000) / 60).toInt() // Linphone expects duration in minutes
+            Log.i(
+                "$TAG Scheduling meeting using start hour [$startTime] and duration [$duration] (minutes)"
+            )
+            conferenceInfo.dateTime = startTime
+            conferenceInfo.duration = duration
 
             val participantsList = participants.value.orEmpty()
             val participantsInfoList = arrayListOf<ParticipantInfo>()
