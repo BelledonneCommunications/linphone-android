@@ -1,5 +1,8 @@
 package org.linphone.models
 
+import androidx.annotation.Keep
+
+@Keep
 data class EnvironmentOverride(
     var id: String,
     var name: String?,
