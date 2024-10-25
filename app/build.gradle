@@ -106,19 +106,20 @@ android {
         }
 
         // See https://developer.android.com/studio/releases/gradle-plugin#3-6-0-behavior for why extractNativeLibs is set to true in debug flavor
-        if (variant.buildType.name == "release" || variant.buildType.name == "releaseWithCrashlytics") {
-            variant.getMergedFlavor().manifestPlaceholders = [linphone_address_mime_type: "vnd.android.cursor.item/vnd." + packageName + ".provider.sip_address",
-                                                              linphone_file_provider: packageName + ".fileprovider",
-                                                              appLabel: "@string/app_name",
-                                                              appAuthRedirectScheme: "plum.oauth2",
-                                                              firebaseServiceEnabled: enableFirebaseService]
-        } else {
+        if (variant.buildType.name == "debug") {
             variant.getMergedFlavor().manifestPlaceholders = [linphone_address_mime_type: "vnd.android.cursor.item/vnd." + packageName + ".provider.sip_address",
                                                               linphone_file_provider: packageName + ".debug.fileprovider",
                                                               appLabel: "@string/app_name_debug",
                                                               appAuthRedirectScheme: "plum.oauth2",
                                                               firebaseServiceEnabled: enableFirebaseService]
             extractNativeLibs = true
+        }
+        else {
+            variant.getMergedFlavor().manifestPlaceholders = [linphone_address_mime_type: "vnd.android.cursor.item/vnd." + packageName + ".provider.sip_address",
+                                                              linphone_file_provider: packageName + ".fileprovider",
+                                                              appLabel: "@string/app_name",
+                                                              appAuthRedirectScheme: "plum.oauth2",
+                                                              firebaseServiceEnabled: enableFirebaseService]
         }
     }
 
@@ -197,7 +198,7 @@ android {
         }
 
         voyager {
-            initWith releaseWithCrashlytics
+            initWith release
         }
     }
 
