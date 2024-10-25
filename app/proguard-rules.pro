@@ -23,6 +23,15 @@
 -keep public class * extends androidx.fragment.app.Fragment { *; }
 -dontwarn com.google.errorprone.annotations.Immutable
 
+
+#Gson
+-keep class * {
+  @com.google.gson.annotations.SerializedName <fields>;
+}
+-dontwarn com.google.api.client.http.**
+-dontwarn org.joda.time.Instant
+
+
 # To prevent following errors:
 #ERROR: Missing classes detected while running R8. Please add the missing classes or apply additional keep rules that are generated in /builds/BC/public/linphone-android/app/build/outputs/mapping/release/missing_rules.txt.
 #ERROR: R8: Missing class org.bouncycastle.jsse.BCSSLParameters (referenced from: void okhttp3.internal.platform.BouncyCastlePlatform.configureTlsExtensions(javax.net.ssl.SSLSocket, java.lang.String, java.util.List) and 1 other context)
