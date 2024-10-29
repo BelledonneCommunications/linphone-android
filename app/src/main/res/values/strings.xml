@@ -508,7 +508,7 @@
     <string name="conversation_search_no_match_found">No matching result found</string>
     <string name="conversation_search_no_more_match">Last matching result reached</string>
 
-    <string name="conversation_info_participants_list_title">Group members</string>
+    <string name="conversation_info_participants_list_title">Group members (%s)</string>
     <string name="conversation_info_add_participants_label">Add participants</string>
     <string name="conversation_info_participant_is_admin_label">Admin</string>
     <string name="conversation_info_delete_history_action">Delete history</string>

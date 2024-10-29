@@ -470,7 +470,7 @@
     <string name="conversation_search_no_match_found">Aucun résultat trouvé</string>
     <string name="conversation_search_no_more_match">Dernier résultat atteint</string>
 
-    <string name="conversation_info_participants_list_title">Membres du groupe</string>
+    <string name="conversation_info_participants_list_title">Membres du groupe (%s)</string>
     <string name="conversation_info_add_participants_label">Ajouter des membres</string>
     <string name="conversation_info_participant_is_admin_label">Administrateur</string>
     <string name="conversation_info_delete_history_action">Supprimer l\'historique</string>

@@ -301,7 +301,7 @@
                     android:drawableTint="?attr/color_main2_600"
                     android:onClick="@{() -> viewModel.toggleParticipantsExpand()}"
                     android:padding="5dp"
-                    android:text="@string/conversation_info_participants_list_title"
+                    android:text="@{viewModel.participantsLabel, default=@string/conversation_info_participants_list_title}"
                     android:visibility="@{viewModel.isGroup ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

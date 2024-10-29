@@ -50,6 +50,8 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
 
     val participants = MutableLiveData<ArrayList<ParticipantModel>>()
 
+    val participantsLabel = MutableLiveData<String>()
+
     val isGroup = MutableLiveData<Boolean>()
 
     val isEndToEndEncrypted = MutableLiveData<Boolean>()
@@ -573,6 +575,12 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
         avatarModel.postValue(avatar)
 
         participants.postValue(participantsList)
+        participantsLabel.postValue(
+            AppUtils.getFormattedString(
+                R.string.conversation_info_participants_list_title,
+                participantsList.size.toString()
+            )
+        )
     }
 
     @WorkerThread
