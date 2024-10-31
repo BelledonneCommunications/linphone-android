@@ -60,7 +60,9 @@ class AccountModel @WorkerThread constructor(
 
     val notificationsCount = MutableLiveData<Int>()
 
-    val voicemailCount = MutableLiveData<Int>()
+    val showMwi = MutableLiveData<Boolean>()
+
+    val voicemailCount = MutableLiveData<String>()
 
     private val accountListener = object : AccountListenerStub() {
         @WorkerThread
@@ -82,6 +84,7 @@ class AccountModel @WorkerThread constructor(
             Log.i(
                 "$TAG Account [${account.params.identityAddress?.asStringUriOnly()}] has received a MWI NOTIFY. ${if (mwi.hasMessageWaiting()) "Message(s) are waiting." else "No message is waiting."}}"
             )
+            showMwi.postValue(mwi.hasMessageWaiting())
             for (summary in mwi.summaries) {
                 val context = summary.contextClass
                 val nbNew = summary.nbNew
@@ -91,7 +94,8 @@ class AccountModel @WorkerThread constructor(
                 Log.i(
                     "$TAG [MWI] [$context]: new [$nbNew] urgent ($nbNewUrgent), old [$nbOld] urgent ($nbOldUrgent)"
                 )
-                voicemailCount.postValue(nbNew)
+
+                voicemailCount.postValue(nbNew.toString())
             }
         }
     }
@@ -117,7 +121,8 @@ class AccountModel @WorkerThread constructor(
         coreContext.core.addListener(coreListener)
 
         presenceStatus.postValue(ConsolidatedPresence.Offline)
-        voicemailCount.postValue(0)
+        showMwi.postValue(false)
+        voicemailCount.postValue("")
 
         update()
     }
@@ -159,6 +164,17 @@ class AccountModel @WorkerThread constructor(
     fun refreshRegister() {
         coreContext.postOnCoreThread { core ->
             core.refreshRegisters()
+        }
+    }
+
+    @UiThread
+    fun callVoicemailUri() {
+        coreContext.postOnCoreThread {
+            val voicemail = account.params.voicemailAddress
+            if (voicemail != null) {
+                Log.i("$TAG Calling voicemail address [${voicemail.asStringUriOnly()}]")
+                coreContext.startAudioCall(voicemail)
+            }
         }
     }
 

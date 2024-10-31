@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="start"
-            app:constraint_referenced_ids="voicemail_count, notifications_count, menu" />
+            app:constraint_referenced_ids="voicemail_count, voicemail_icon, notifications_count, menu" />
 
         <include
             android:id="@+id/avatar"
@@ -81,18 +81,31 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
             android:id="@+id/voicemail_count"
+            android:onClick="@{() -> model.callVoicemailUri()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@{model.voicemailCount, default=`1`}"
+            android:textColor="?attr/color_danger_500"
+            android:textSize="13sp"
+            android:visibility="@{model.showMwi ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintBottom_toTopOf="@id/voicemail_icon"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="@id/voicemail_icon"
+            app:layout_constraintEnd_toEndOf="@id/voicemail_icon"/>
+
+        <ImageView
+            style="@style/default_text_style"
+            android:id="@+id/voicemail_icon"
+            android:onClick="@{() -> model.callVoicemailUri()}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:gravity="center"
-            android:text="@{String.valueOf(model.voicemailCount), default=`1`}"
-            android:textColor="?attr/color_danger_500"
-            android:textSize="13sp"
-            android:paddingBottom="2dp"
-            android:visibility="@{model.voicemailCount > 0 ? View.VISIBLE : View.GONE, default=gone}"
-            android:drawableBottom="@drawable/voicemail"
+            android:src="@drawable/voicemail"
+            android:visibility="@{model.showMwi ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/voicemail_count"
             app:layout_constraintEnd_toStartOf="@id/notifications_count"/>
 
         <androidx.appcompat.widget.AppCompatTextView
