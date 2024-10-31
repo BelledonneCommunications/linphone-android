@@ -1198,10 +1198,13 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
 
         if (((isReceiving) && !wasReceiving)) {
             if (fullScreenMode.value != true) {
-                Log.i(
-                    "$TAG Video is being received (it wasn't before), switching to full-screen mode"
-                )
-                fullScreenMode.postValue(true)
+                val inConference = conferenceModel.isCurrentCallInConference.value == true
+                if (!inConference) {
+                    Log.i(
+                        "$TAG Video is being received (it wasn't before), switching to full-screen mode"
+                    )
+                    fullScreenMode.postValue(true)
+                }
             }
         } else if (!isSending && !isReceiving && fullScreenMode.value == true) {
             Log.w("$TAG Video is no longer enabled, leaving full screen mode")

@@ -73,6 +73,10 @@ class ConferenceViewModel @UiThread constructor() : GenericViewModel() {
 
     val isMeAdmin = MutableLiveData<Boolean>()
 
+    val firstParticipantOtherThanOurselvesJoinedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     val showLayoutMenuEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -90,6 +94,11 @@ class ConferenceViewModel @UiThread constructor() : GenericViewModel() {
                 "$TAG Participant added: ${participant.address.asStringUriOnly()}"
             )
             addParticipant(participant)
+
+            if (conference.participantList.size == 1) { // we do not count
+                Log.i("$TAG First participant other than ourselves joined the conference")
+                firstParticipantOtherThanOurselvesJoinedEvent.postValue(Event(true))
+            }
         }
 
         @WorkerThread
@@ -226,9 +235,13 @@ class ConferenceViewModel @UiThread constructor() : GenericViewModel() {
             if (conference.state == Conference.State.Created) {
                 val isIn = conference.isIn
                 isPaused.postValue(!isIn)
-                Log.i("$TAG We ${if (isIn) "are" else "aren't"} in the conference")
+                Log.i("$TAG We [${if (isIn) "are" else "aren't"}] in the conference")
 
                 computeParticipants(false)
+                if (conference.participantList.size >= 1) { // we do not count
+                    Log.i("$TAG Joined conference already has at least another participant")
+                    firstParticipantOtherThanOurselvesJoinedEvent.postValue(Event(true))
+                }
             }
         }
     }
@@ -278,6 +291,10 @@ class ConferenceViewModel @UiThread constructor() : GenericViewModel() {
 
         if (conference.state == Conference.State.Created) {
             computeParticipants(false)
+            if (conference.participantList.size >= 1) { // we do not count
+                Log.i("$TAG Joined conference already has at least another participant")
+                firstParticipantOtherThanOurselvesJoinedEvent.postValue(Event(true))
+            }
         }
 
         val currentLayout = getCurrentLayout(call)

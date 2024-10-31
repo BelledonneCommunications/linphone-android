@@ -226,6 +226,17 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
             }
         }
 
+        callViewModel.conferenceModel.firstParticipantOtherThanOurselvesJoinedEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                if (callViewModel.fullScreenMode.value == false) {
+                    Log.i("$TAG First participant joined conference, switching to full screen mode")
+                    callViewModel.toggleFullScreen()
+                }
+            }
+        }
+
         callViewModel.goToCallEvent.observe(viewLifecycleOwner) {
             it.consume {
                 if (findNavController().currentDestination?.id == R.id.activeConferenceCallFragment) {
