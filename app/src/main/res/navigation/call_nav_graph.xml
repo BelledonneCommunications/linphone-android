@@ -158,6 +158,12 @@
             app:enterAnim="@anim/slide_in"
             app:popExitAnim="@anim/slide_out"
             app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_activeConferenceCallFragment_to_inCallConversationFragment"
+            app:destination="@id/inCallConversationFragment"
+            app:enterAnim="@anim/slide_in"
+            app:popExitAnim="@anim/slide_out"
+            app:launchSingleTop="true" />
     </fragment>
 
     <action android:id="@+id/action_global_activeConferenceCallFragment"

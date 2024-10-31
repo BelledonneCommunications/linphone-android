@@ -22,6 +22,7 @@ package org.linphone.ui.call.fragment
 import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.findNavController
+import org.linphone.core.tools.Log
 import org.linphone.ui.main.chat.fragment.ConversationFragment
 
 class ConversationFragment : ConversationFragment() {
@@ -32,6 +33,7 @@ class ConversationFragment : ConversationFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        Log.i("$TAG Creating an in-call ConversationFragment")
         sendMessageViewModel.isInCallConversation.value = true
         viewModel.isInCallConversation.value = true
 

@@ -28,6 +28,7 @@ import org.linphone.core.Address
 import org.linphone.core.Call
 import org.linphone.core.Conference
 import org.linphone.core.ConferenceListenerStub
+import org.linphone.core.ConferenceParams
 import org.linphone.core.MediaDirection
 import org.linphone.core.Participant
 import org.linphone.core.ParticipantDevice
@@ -73,6 +74,8 @@ class ConferenceViewModel @UiThread constructor() : GenericViewModel() {
 
     val isMeAdmin = MutableLiveData<Boolean>()
 
+    val isConversationAvailable = MutableLiveData<Boolean>()
+
     val firstParticipantOtherThanOurselvesJoinedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -83,6 +86,10 @@ class ConferenceViewModel @UiThread constructor() : GenericViewModel() {
 
     val removeParticipantEvent: MutableLiveData<Event<Pair<String, Participant>>> by lazy {
         MutableLiveData<Event<Pair<String, Participant>>>()
+    }
+
+    val goToConversationEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
+        MutableLiveData<Event<Pair<String, String>>>()
     }
 
     private lateinit var conference: Conference
@@ -248,6 +255,7 @@ class ConferenceViewModel @UiThread constructor() : GenericViewModel() {
 
     init {
         isPaused.value = false
+        isConversationAvailable.value = false
     }
 
     @WorkerThread
@@ -282,6 +290,9 @@ class ConferenceViewModel @UiThread constructor() : GenericViewModel() {
         val screenSharing = conference.screenSharingParticipant != null
         isScreenSharing.postValue(screenSharing)
 
+        val chatEnabled = conference.currentParams.isChatEnabled
+        isConversationAvailable.postValue(chatEnabled)
+
         val confSubject = conference.subject.orEmpty()
         Log.i(
             "$TAG Configuring conference with subject [$confSubject] from call [${call.callLog.callId}]"
@@ -304,6 +315,28 @@ class ConferenceViewModel @UiThread constructor() : GenericViewModel() {
                 "$TAG Conference has a participant sharing it's screen, changing layout from mosaic to active speaker"
             )
             setNewLayout(ACTIVE_SPEAKER_LAYOUT)
+        }
+    }
+
+    @UiThread
+    fun goToConversation() {
+        coreContext.postOnCoreThread { core ->
+            Log.i("$TAG Navigating to conference's conversation")
+            val chatParams: ConferenceParams? = null
+            val address = conference.conferenceAddress
+            val chatRoom = core.searchChatRoom(chatParams, address, null, null)
+            if (chatRoom != null) {
+                goToConversationEvent.postValue(
+                    Event(
+                        Pair(
+                            chatRoom.localAddress.asStringUriOnly(),
+                            chatRoom.peerAddress.asStringUriOnly()
+                        )
+                    )
+                )
+            } else {
+                Log.e("$TAG Couldn't find chat room for address [${address?.asStringUriOnly()}]")
+            }
         }
     }
 

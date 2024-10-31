@@ -237,6 +237,24 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
             }
         }
 
+        callViewModel.conferenceModel.goToConversationEvent.observe(viewLifecycleOwner) {
+            it.consume { pair ->
+                if (findNavController().currentDestination?.id == R.id.activeConferenceCallFragment) {
+                    val localSipUri = pair.first
+                    val remoteSipUri = pair.second
+                    Log.i(
+                        "$TAG Display conversation with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
+                    )
+                    val action =
+                        ActiveConferenceCallFragmentDirections.actionActiveConferenceCallFragmentToInCallConversationFragment(
+                            localSipUri,
+                            remoteSipUri
+                        )
+                    findNavController().navigate(action)
+                }
+            }
+        }
+
         callViewModel.goToCallEvent.observe(viewLifecycleOwner) {
             it.consume {
                 if (findNavController().currentDestination?.id == R.id.activeConferenceCallFragment) {

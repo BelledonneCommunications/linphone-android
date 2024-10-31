@@ -120,18 +120,38 @@
 
         <ImageView
             android:id="@+id/chat"
+            android:onClick="@{() -> viewModel.conferenceModel.goToConversation()}"
             android:layout_width="0dp"
             android:layout_height="@dimen/call_button_size"
             android:layout_marginTop="@dimen/call_extra_button_top_margin"
             android:padding="@dimen/call_button_icon_padding"
             android:src="@drawable/chat_teardrop_text"
+            android:enabled="@{viewModel.conferenceModel.isConversationAvailable}"
             android:contentDescription="@string/call_action_show_messages"
-            android:background="@drawable/shape_round_in_call_disabled_button_background"
-            app:tint="?attr/color_grey_500"
+            android:background="@drawable/in_call_button_background_red"
+            app:tint="@color/in_call_button_tint_color"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toBottomOf="@id/main_actions"
             app:layout_constraintStart_toStartOf="@id/chat_label"
             app:layout_constraintEnd_toEndOf="@id/chat_label"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/unread_messages_count"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="25dp"
+            android:gravity="center"
+            android:background="@drawable/shape_red_round"
+            android:text="@{String.valueOf(viewModel.unreadMessagesCount), default=`1`}"
+            android:textColor="?attr/color_on_main"
+            android:textSize="13sp"
+            android:paddingBottom="2dp"
+            android:visibility="@{viewModel.unreadMessagesCount > 0 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintTop_toBottomOf="@id/main_actions"
+            app:layout_constraintStart_toStartOf="@id/chat"
+            app:layout_constraintEnd_toEndOf="@id/chat"/>
 
         <ImageView
             android:id="@+id/pause_call"
@@ -219,11 +239,12 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/in_call_extra_action_label_style"
             android:id="@+id/chat_label"
+            android:onClick="@{() -> viewModel.conferenceModel.goToConversation()}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
             android:text="@string/call_action_show_messages"
-            android:enabled="false"
+            android:enabled="@{viewModel.conferenceModel.isConversationAvailable}"
             app:layout_constraintTop_toBottomOf="@id/chat"
             app:layout_constraintStart_toEndOf="@id/layout_label"
             app:layout_constraintEnd_toStartOf="@id/pause_call_label" />
