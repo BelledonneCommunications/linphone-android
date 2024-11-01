@@ -33,6 +33,7 @@ import androidx.core.view.doOnPreDraw
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
+import androidx.slidingpanelayout.widget.SlidingPaneLayout.PanelSlideListener
 import com.google.android.material.textfield.TextInputLayout
 import org.linphone.R
 import org.linphone.core.tools.Log
@@ -225,6 +226,22 @@ abstract class AbstractMainFragment : GenericMainFragment() {
 
                 if (!slidingPane.isOpen) {
                     Log.d("$TAG Opening sliding pane")
+                    if (slidingPane.isSlideable && viewModel.searchBarVisible.value == true) {
+                        slidingPane.addPanelSlideListener(object : PanelSlideListener {
+                            override fun onPanelSlide(
+                                panel: View,
+                                slideOffset: Float
+                            ) { }
+
+                            override fun onPanelOpened(panel: View) {
+                                Log.d("$TAG Closing search bar")
+                                viewModel.closeSearchBar()
+                                slidingPane.removePanelSlideListener(this)
+                            }
+
+                            override fun onPanelClosed(panel: View) { }
+                        })
+                    }
                     slidingPane.openPane()
                 }
             }
