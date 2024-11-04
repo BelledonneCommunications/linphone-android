@@ -57,7 +57,7 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
 
     val isEncrypted = chatRoom.hasCapability(Capabilities.Encrypted.toInt())
 
-    val isReadOnly = chatRoom.isReadOnly
+    val isReadOnly = MutableLiveData<Boolean>()
 
     val subject = MutableLiveData<String>()
 
@@ -172,6 +172,7 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
 
         isMuted.postValue(chatRoom.muted)
         isEphemeral.postValue(chatRoom.isEphemeralEnabled)
+        isReadOnly.postValue(chatRoom.isReadOnly)
         Log.d(
             "$TAG Ephemeral messages are [${if (chatRoom.isEphemeralEnabled) "enabled" else "disabled"}], lifetime is [${chatRoom.ephemeralLifetime}]"
         )
@@ -257,6 +258,7 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
         coreContext.postOnCoreThread {
             chatRoom.leave()
             Log.i("$TAG Group conversation [$id] has been leaved")
+            isReadOnly.postValue(true)
         }
     }
 
