@@ -110,6 +110,12 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
         }
 
         @WorkerThread
+        override fun onConferenceLeft(chatRoom: ChatRoom, eventLog: EventLog) {
+            Log.w("TAG Conversation has been left")
+            isReadOnly.postValue(true)
+        }
+
+        @WorkerThread
         override fun onIsComposingReceived(
             chatRoom: ChatRoom,
             remoteAddress: Address,

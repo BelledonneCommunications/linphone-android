@@ -140,6 +140,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         @WorkerThread
         override fun onConferenceJoined(chatRoom: ChatRoom, eventLog: EventLog) {
             Log.i("$TAG Conversation was joined")
+            addEvents(arrayOf(eventLog))
             computeConversationInfo()
 
             val messageToForward = pendingForwardMessage
@@ -148,6 +149,13 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
                 forwardMessageEvent.postValue(Event(messageToForward))
                 pendingForwardMessage = null
             }
+        }
+
+        @WorkerThread
+        override fun onConferenceLeft(chatRoom: ChatRoom, eventLog: EventLog) {
+            Log.w("$TAG Conversation was left")
+            addEvents(arrayOf(eventLog))
+            isReadOnly.postValue(true)
         }
 
         @WorkerThread
