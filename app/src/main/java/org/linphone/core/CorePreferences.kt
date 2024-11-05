@@ -245,7 +245,7 @@ class CorePreferences @UiThread constructor(private val context: Context) {
 
     @get:WorkerThread
     val useUsernameAsSingleSignOnLoginHint: Boolean
-        get() = config.getBool("ui", "use_username_as_sso_login_hint", true)
+        get() = config.getBool("ui", "use_username_as_sso_login_hint", false)
 
     @get:WorkerThread
     val thirdPartySipAccountDefaultTransport: String
