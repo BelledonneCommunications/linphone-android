@@ -159,7 +159,7 @@ abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccoun
             list.addAll(actual)
 
             val found = modelsList.value.orEmpty().find {
-                it.address.weakEqual(model.address)
+                it.address.weakEqual(model.address) || it.friend == model.avatarModel?.friend
             }
             found?.selected?.postValue(true)
 
@@ -191,7 +191,7 @@ abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccoun
             list.remove(model)
 
             val found = modelsList.value.orEmpty().find {
-                it.address.weakEqual(model.address)
+                it.address.weakEqual(model.address) || it.friend == model.avatarModel?.friend
             }
             found?.selected?.postValue(false)
 

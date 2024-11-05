@@ -147,6 +147,23 @@ abstract class GenericAddressPickerFragment : GenericMainFragment() {
     }
 
     private fun handleClickOnContactModel(model: ConversationContactOrSuggestionModel) {
+        if (model.selected.value == true) {
+            Log.i(
+                "$TAG User clicked on already selected item [${model.name}], removing it from selection"
+            )
+            val found = viewModel.selection.value.orEmpty().find {
+                it.address.weakEqual(model.address) || it.avatarModel?.friend == model.friend
+            }
+            if (found != null) {
+                coreContext.postOnCoreThread {
+                    viewModel.removeAddressModelFromSelection(found)
+                }
+                return
+            } else {
+                Log.e("$TAG Failed to find already selected entry matching the one clicked")
+            }
+        }
+
         coreContext.postOnCoreThread { core ->
             val friend = model.friend
             if (friend == null) {
