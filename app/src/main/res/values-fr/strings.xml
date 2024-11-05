@@ -570,9 +570,11 @@
 
     <!-- Call related -->
     <string name="call_outgoing">Appel sortant</string>
-    <string name="call_incoming">Appel entrant</string>
+    <string name="call_audio_incoming">Appel entrant</string>
+    <string name="call_video_incoming">Appel vidéo entrant</string>
     <string name="call_ended">Appel terminé</string>
-    <string name="call_incoming_for_account">Appel entrant pour %s</string>
+    <string name="call_audio_incoming_for_account">Appel entrant pour %s</string>
+    <string name="call_video_incoming_for_account">Appel vidéo entrant pour %s</string>
     <string name="call_transfer_current_call_title">Transférer %s à…</string>
     <string name="call_transfer_active_calls_label">Appels en cours</string>
     <string name="call_transfer_no_active_call_label">Pas d\'autre appel</string>

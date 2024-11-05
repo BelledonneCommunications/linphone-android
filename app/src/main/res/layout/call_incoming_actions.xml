@@ -46,10 +46,29 @@
             android:paddingEnd="30dp"
             android:paddingBottom="15dp"
             android:src="@drawable/phone"
-            android:contentDescription="@string/content_description_answer_call"
+            android:visibility="@{viewModel.isVideoEnabled ? View.GONE : View.VISIBLE}"
+            android:contentDescription="@string/content_description_answer_audio_call"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/answer_video_call"
+            app:layout_constraintStart_toEndOf="@id/hang_up"
+            app:tint="@color/white" />
+
+        <ImageView
+            android:id="@+id/answer_video_call"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/call_button_size"
+            android:background="@drawable/squircle_green_button_background"
+            android:onClick="@{() -> viewModel.answer()}"
+            android:paddingStart="30dp"
+            android:paddingTop="15dp"
+            android:paddingEnd="30dp"
+            android:paddingBottom="15dp"
+            android:src="@drawable/video_camera"
+            android:visibility="@{viewModel.isVideoEnabled ? View.VISIBLE : View.GONE, default=gone}"
+            android:contentDescription="@string/content_description_answer_video_call"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/hang_up"
+            app:layout_constraintStart_toEndOf="@id/answer_call"
             app:tint="@color/white" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

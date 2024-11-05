@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginBottom="5dp"
-            android:text="@{model.isOutgoing() ? @string/call_outgoing : @string/call_incoming, default=@string/call_outgoing}"
+            android:text="@{model.isOutgoing() ? @string/call_outgoing : @string/call_audio_incoming, default=@string/call_outgoing}"
             android:textSize="14sp"
             android:textColor="?attr/color_main2_700"
             app:layout_constraintStart_toEndOf="@id/call_status"

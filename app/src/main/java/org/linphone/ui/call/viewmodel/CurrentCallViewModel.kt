@@ -1040,22 +1040,40 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
         }
 
         if (call.dir == Call.Dir.Incoming) {
+            val isVideo = call.remoteParams?.isVideoEnabled == true && call.remoteParams?.videoDirection != MediaDirection.Inactive
             if (call.core.accountList.size > 1) {
                 val displayName = LinphoneUtils.getDisplayName(call.toAddress)
-                incomingCallTitle.postValue(
-                    AppUtils.getFormattedString(
-                        R.string.call_incoming_for_account,
-                        displayName
+                if (isVideo) {
+                    incomingCallTitle.postValue(
+                        AppUtils.getFormattedString(
+                            R.string.call_video_incoming_for_account,
+                            displayName
+                        )
                     )
-                )
+                } else {
+                    incomingCallTitle.postValue(
+                        AppUtils.getFormattedString(
+                            R.string.call_audio_incoming_for_account,
+                            displayName
+                        )
+                    )
+                }
             } else {
-                incomingCallTitle.postValue(AppUtils.getString(R.string.call_incoming))
+                if (isVideo) {
+                    incomingCallTitle.postValue(AppUtils.getString(R.string.call_video_incoming))
+                } else {
+                    incomingCallTitle.postValue(AppUtils.getString(R.string.call_audio_incoming))
+                }
             }
         }
 
         if (LinphoneUtils.isCallOutgoing(call.state)) {
             isVideoEnabled.postValue(call.params.isVideoEnabled)
             updateVideoDirection(call.params.videoDirection)
+        } else if (LinphoneUtils.isCallIncoming(call.state)) {
+            isVideoEnabled.postValue(
+                call.remoteParams?.isVideoEnabled == true && call.remoteParams?.videoDirection != MediaDirection.Inactive
+            )
         } else {
             isVideoEnabled.postValue(call.currentParams.isVideoEnabled)
             updateVideoDirection(call.currentParams.videoDirection)

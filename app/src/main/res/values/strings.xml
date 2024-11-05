@@ -608,9 +608,11 @@
 
     <!-- Call related -->
     <string name="call_outgoing">Outgoing call</string>
-    <string name="call_incoming">Incoming call</string>
+    <string name="call_audio_incoming">Incoming call</string>
+    <string name="call_video_incoming">Incoming video call</string>
     <string name="call_ended">Call ended</string>
-    <string name="call_incoming_for_account">Incoming call for %s</string>
+    <string name="call_audio_incoming_for_account">Incoming call for %s</string>
+    <string name="call_video_incoming_for_account">Incoming video call for %s</string>
     <string name="call_transfer_current_call_title">Transfer %s to…</string>
     <string name="call_transfer_active_calls_label">Current calls</string>
     <string name="call_transfer_no_active_call_label">No other call</string>
@@ -797,7 +799,8 @@
     <string name="content_description_toggle_password_visibility">Toggles password visibility</string>
     <string name="content_description_toggle_bottom_sheet">Expands/retracts bottom sheet</string>
     <string name="content_description_hang_up_call">Terminates the call</string>
-    <string name="content_description_answer_call">Answers the call</string>
+    <string name="content_description_answer_audio_call">Answers the call</string>
+    <string name="content_description_answer_video_call">Answers the video call</string>
     <string name="content_description_call_start">Starts a call</string>
     <string name="content_description_call_start_video">Starts a video call</string>
     <string name="content_description_toggle_video">Enables/disables sending  your camera feed</string>

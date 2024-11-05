@@ -138,18 +138,21 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                     )
                     showCallNotification(call, false)
                 }
-                Call.State.Connected -> {
-                    if (call.dir == Call.Dir.Incoming) {
+                Call.State.Connected,
+                Call.State.StreamsRunning -> {
+                    if (call.state == Call.State.Connected && call.dir == Call.Dir.Incoming) {
                         Log.i(
                             "$TAG Connected call was incoming (so it was answered), removing incoming call notification"
                         )
                         removeIncomingCallNotification()
                     }
 
-                    Log.i(
-                        "$TAG Showing connected call notification for [${call.remoteAddress.asStringUriOnly()}]"
-                    )
-                    showCallNotification(call, false)
+                    if (call.state == Call.State.Connected || call.dir == Call.Dir.Incoming) {
+                        Log.i(
+                            "$TAG Showing connected call notification for [${call.remoteAddress.asStringUriOnly()}]"
+                        )
+                        showCallNotification(call, false)
+                    }
                 }
                 Call.State.Updating -> {
                     val notifiable = getNotifiableForCall(call)
@@ -1006,7 +1009,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             channel
         ).apply {
             try {
-                style.setIsVideo(false)
+                style.setIsVideo(isVideo)
                 setStyle(style)
             } catch (iae: IllegalArgumentException) {
                 Log.e(
