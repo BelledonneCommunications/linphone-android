@@ -22,7 +22,10 @@ package org.linphone.ui.main.settings.viewmodel
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import java.io.File
 import java.util.Locale
+import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -41,6 +44,7 @@ import org.linphone.ui.main.model.AccountModel
 import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.ui.main.settings.model.AccountDeviceModel
 import org.linphone.utils.Event
+import org.linphone.utils.FileUtils
 
 class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
     companion object {
@@ -261,6 +265,16 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
                 val authInfo = account.findAuthInfo()
                 if (authInfo != null) {
                     Log.i("$TAG Found auth info for account, removing it")
+                    if (authInfo.password.isNullOrEmpty() && authInfo.ha1.isNullOrEmpty() && authInfo.accessToken != null) {
+                        Log.i("$TAG Auth info was using bearer token instead of password")
+                        val ssoCache = File(corePreferences.ssoCacheFile)
+                        if (ssoCache.exists()) {
+                            Log.i("$TAG Found auth_state.json file, deleting it")
+                            viewModelScope.launch {
+                                FileUtils.deleteFile(ssoCache.absolutePath)
+                            }
+                        }
+                    }
                     core.removeAuthInfo(authInfo)
                 } else {
                     Log.w("$TAG Failed to find matching auth info for account")

@@ -157,10 +157,7 @@ class SingleSignOnViewModel : GenericViewModel() {
                 authService = AuthorizationService(coreContext.context)
             }
 
-            val authStateJsonFile = File(
-                coreContext.context.filesDir.absolutePath,
-                "auth_state.json"
-            )
+            val authStateJsonFile = File(corePreferences.ssoCacheFile)
             Log.i("$TAG Starting refresh token request")
             try {
                 authService.performTokenRequest(
@@ -230,7 +227,7 @@ class SingleSignOnViewModel : GenericViewModel() {
 
     @UiThread
     private suspend fun getAuthState(): AuthState {
-        val file = File(coreContext.context.filesDir.absolutePath, "auth_state.json")
+        val file = File(corePreferences.ssoCacheFile)
         if (file.exists()) {
             Log.i("$TAG Auth state file found, trying to read it")
             val content = FileUtils.readFile(file)
@@ -256,7 +253,7 @@ class SingleSignOnViewModel : GenericViewModel() {
         Log.i("$TAG Trying to save serialized authState as JSON file")
         val data = authState.jsonSerializeString()
         Log.d("$TAG Date to save is [$data]")
-        val file = File(coreContext.context.filesDir.absolutePath, "auth_state.json")
+        val file = File(corePreferences.ssoCacheFile)
         viewModelScope.launch {
             if (FileUtils.dumpStringToFile(data, file)) {
                 Log.i("$TAG Service configuration saved as JSON as [${file.absolutePath}]")
@@ -297,7 +294,7 @@ class SingleSignOnViewModel : GenericViewModel() {
                     }
                 } else {
                     Log.w("$TAG Access token expiration info not available")
-                    val file = File(coreContext.context.filesDir.absolutePath, "auth_state.json")
+                    val file = File(corePreferences.ssoCacheFile)
                     viewModelScope.launch {
                         FileUtils.deleteFile(file.absolutePath)
                         singleSignOn()

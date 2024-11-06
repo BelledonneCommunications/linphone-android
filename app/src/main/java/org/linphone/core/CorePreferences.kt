@@ -297,6 +297,10 @@ class CorePreferences @UiThread constructor(private val context: Context) {
     val vfsCachePath: String
         get() = context.cacheDir.absolutePath + "/evfs/"
 
+    @get:AnyThread
+    val ssoCacheFile: String
+        get() = context.filesDir.absolutePath + "/auth_state.json"
+
     @UiThread
     fun copyAssetsFromPackage() {
         copy("linphonerc_default", configPath)
