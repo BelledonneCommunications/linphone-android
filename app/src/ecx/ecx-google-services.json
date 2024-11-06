@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "560333017727",
+    "project_id": "voyager-connect-mobile",
+    "storage_bucket": "voyager-connect-mobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:560333017727:android:583898b971a34aa041e54a",
+        "android_client_info": {
+          "package_name": "com.voyager.connectmobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBn7sHaLxOXvxZQrl22YSxlN1xo1HKqEQ8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
+    <application android:name=".LinphoneApplication">
+        <activity
+            android:name=".activities.main.LoginActivity"
+            android:theme="@style/EcxAppSplashScreenTheme"
+            tools:replace="android:theme">
+        </activity>
+
+        <activity android:name=".activities.main.MainActivity"
+            android:theme="@style/AppTheme"
+            tools:replace="android:theme">
+        </activity>
+    </application>
+</manifest>
