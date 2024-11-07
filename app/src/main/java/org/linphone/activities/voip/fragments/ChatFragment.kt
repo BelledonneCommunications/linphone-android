@@ -42,6 +42,7 @@ import org.linphone.activities.main.chat.viewmodels.*
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.ChatRoom
+import org.linphone.core.ChatRoomParams
 import org.linphone.core.Factory
 import org.linphone.core.tools.Log
 import org.linphone.databinding.VoipChatFragmentBinding
@@ -101,8 +102,9 @@ class ChatFragment : GenericFragment<VoipChatFragmentBinding>() {
 
             val localAddress = Factory.instance().createAddress(localSipUri)
             val remoteSipAddress = Factory.instance().createAddress(remoteSipUri)
+            val params: ChatRoomParams? = null
             chatRoom = coreContext.core.searchChatRoom(
-                null,
+                params,
                 localAddress,
                 remoteSipAddress,
                 arrayOfNulls(0)

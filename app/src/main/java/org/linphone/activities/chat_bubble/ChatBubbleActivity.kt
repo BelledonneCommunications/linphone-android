@@ -38,6 +38,7 @@ import org.linphone.activities.main.chat.viewmodels.*
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomListenerStub
+import org.linphone.core.ChatRoomParams
 import org.linphone.core.EventLog
 import org.linphone.core.Factory
 import org.linphone.core.tools.Log
@@ -82,8 +83,10 @@ class ChatBubbleActivity : GenericActivity() {
             )
             val localAddress = Factory.instance().createAddress(localSipUri)
             val remoteSipAddress = Factory.instance().createAddress(remoteSipUri)
+
+            val params: ChatRoomParams? = null
             chatRoom = coreContext.core.searchChatRoom(
-                null,
+                params,
                 localAddress,
                 remoteSipAddress,
                 arrayOfNulls(

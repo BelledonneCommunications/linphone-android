@@ -23,8 +23,8 @@ import android.app.Activity
 import android.app.Application.ActivityLifecycleCallbacks
 import android.os.Bundle
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.core.tools.service.AndroidDispatcher
 import org.linphone.core.tools.AndroidPlatformHelper
+import org.linphone.core.tools.service.AndroidDispatcher
 
 class ActivityMonitor : ActivityLifecycleCallbacks {
     private val activities = ArrayList<Activity>()
