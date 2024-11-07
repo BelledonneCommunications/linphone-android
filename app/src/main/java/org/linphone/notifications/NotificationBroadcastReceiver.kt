@@ -27,6 +27,7 @@ import android.content.Intent
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.ensureCoreExists
 import org.linphone.core.Call
+import org.linphone.core.ChatRoomParams
 import org.linphone.core.Core
 import org.linphone.core.tools.Log
 
@@ -80,7 +81,8 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
             return
         }
 
-        val room = core.searchChatRoom(null, localAddress, remoteAddress, arrayOfNulls(0))
+        val params: ChatRoomParams? = null
+        val room = core.searchChatRoom(params, localAddress, remoteAddress, arrayOfNulls(0))
         if (room == null) {
             Log.e(
                 "[Notification Broadcast Receiver] Couldn't find chat room for remote address $remoteSipAddress and local address $localIdentity"

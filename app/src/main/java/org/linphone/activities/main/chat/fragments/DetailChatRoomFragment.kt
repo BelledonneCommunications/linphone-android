@@ -191,8 +191,9 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
             val localAddress = Factory.instance().createAddress(localSipUri)
             val remoteSipAddress = Factory.instance().createAddress(remoteSipUri)
+            val params: ChatRoomParams? = null
             sharedViewModel.selectedChatRoom.value = coreContext.core.searchChatRoom(
-                null,
+                params,
                 localAddress,
                 remoteSipAddress,
                 arrayOfNulls(

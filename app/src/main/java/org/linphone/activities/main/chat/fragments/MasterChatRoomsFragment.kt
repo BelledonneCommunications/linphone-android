@@ -44,6 +44,7 @@ import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.navigateToChatRoom
 import org.linphone.activities.navigateToChatRoomCreation
 import org.linphone.core.ChatRoom
+import org.linphone.core.ChatRoomParams
 import org.linphone.core.Factory
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatRoomMasterFragmentBinding
@@ -324,8 +325,9 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             arguments?.clear()
             val localAddress = Factory.instance().createAddress(localSipUri)
             val remoteSipAddress = Factory.instance().createAddress(remoteSipUri)
+            val params: ChatRoomParams? = null
             val chatRoom = coreContext.core.searchChatRoom(
-                null,
+                params,
                 localAddress,
                 remoteSipAddress,
                 arrayOfNulls(0)
