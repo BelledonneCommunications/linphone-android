@@ -61,7 +61,7 @@
     <dimen name="call_remote_video_top_margin">70dp</dimen> <!-- Size of top text + top & bottom margins -->
     <dimen name="call_main_actions_menu_height">110dp</dimen>
     <dimen name="call_all_actions_menu_height">345dp</dimen> <!-- sum of above two -->
-    <dimen name="call_main_actions_menu_margin">120dp</dimen>
+    <dimen name="call_main_actions_menu_margin">115dp</dimen>
     <dimen name="call_round_corners_texture_view_radius">20dp</dimen>
     <dimen name="call_pip_round_corners_texture_view_radius">5dp</dimen>
     <dimen name="call_button_size">55dp</dimen>
@@ -72,7 +72,7 @@
     <dimen name="call_video_preview_pip_max_size">45dp</dimen>
 
     <dimen name="call_conference_audio_only_miniature_height">100dp</dimen>
-    <dimen name="call_conference_active_speaker_miniature_size">120dp</dimen>
+    <dimen name="call_conference_active_speaker_miniature_size">124dp</dimen>
 
     <dimen name="meeting_list_decoration_height">66dp</dimen>
     <dimen name="meeting_margin">8dp</dimen>

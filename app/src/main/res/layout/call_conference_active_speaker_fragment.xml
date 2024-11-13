@@ -124,7 +124,7 @@
             android:text="@string/conference_active_speaker_is_screen_sharing"
             android:textColor="@color/white"
             android:textSize="20sp"
-            android:visibility="@{conferenceViewModel.isScreenSharing ? View.VISIBLE : View.GONE}"
+            android:visibility="@{conferenceViewModel.isScreenSharing ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintBottom_toBottomOf="@id/active_speaker_name"
             app:layout_constraintTop_toTopOf="@id/active_speaker_name"
             app:layout_constraintStart_toEndOf="@id/active_speaker_name" />
@@ -139,7 +139,7 @@
             android:src="@drawable/microphone_slash"
             android:contentDescription="@string/content_description_conference_participant_muted"
             android:background="@drawable/shape_circle_white_call_background"
-            android:visibility="@{conferenceViewModel.activeSpeaker.isMuted ? View.VISIBLE : View.GONE}"
+            android:visibility="@{conferenceViewModel.activeSpeaker.isMuted ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -154,7 +154,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="5dp"
                 android:orientation="horizontal"
                 entries="@{conferenceViewModel.participantDevices}"
                 layout="@{@layout/call_conference_active_speaker_cell}"/>
