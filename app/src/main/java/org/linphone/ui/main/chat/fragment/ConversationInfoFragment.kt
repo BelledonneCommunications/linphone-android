@@ -169,11 +169,13 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
         }
 
         viewModel.goToScheduleMeetingEvent.observe(viewLifecycleOwner) {
-            it.consume { participants ->
+            it.consume { pair ->
+                val subject = pair.first
+                val participants = pair.second
                 Log.i(
-                    "$TAG Forward participants list of size [${participants.size}] to schedule meeting fragment"
+                    "$TAG Forward subject [$subject] and participants list of size [${participants.size}] to schedule meeting fragment"
                 )
-                sharedViewModel.goToScheduleMeetingEvent.postValue(Event(participants))
+                sharedViewModel.goToScheduleMeetingEvent.postValue(Event(pair))
                 sharedViewModel.navigateToMeetingsEvent.postValue(Event(true))
             }
         }

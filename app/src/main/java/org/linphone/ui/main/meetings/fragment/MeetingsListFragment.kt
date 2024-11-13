@@ -229,14 +229,17 @@ class MeetingsListFragment : AbstractMainFragment() {
         }
 
         sharedViewModel.goToScheduleMeetingEvent.observe(viewLifecycleOwner) {
-            it.consume { participants ->
+            it.consume { pair ->
                 if (findNavController().currentDestination?.id == R.id.meetingsListFragment) {
+                    val subject = pair.first
+                    val participants = pair.second
                     val participantsArray = participants.toTypedArray()
                     Log.i(
-                        "$TAG Going to schedule meeting fragment with pre-populated participants array of size [${participantsArray.size}]"
+                        "$TAG Going to schedule meeting fragment with pre-populated subject [$subject] and participants array of size [${participantsArray.size}]"
                     )
                     val action =
                         MeetingsListFragmentDirections.actionMeetingsListFragmentToScheduleMeetingFragment(
+                            subject,
                             participantsArray
                         )
                     findNavController().navigate(action)

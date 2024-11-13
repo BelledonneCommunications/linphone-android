@@ -92,8 +92,8 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
         MutableLiveData<Event<Pair<View, ParticipantModel>>>()
     }
 
-    val goToScheduleMeetingEvent: MutableLiveData<Event<ArrayList<String>>> by lazy {
-        MutableLiveData<Event<ArrayList<String>>>()
+    val goToScheduleMeetingEvent: MutableLiveData<Event<Pair<String, ArrayList<String>>>> by lazy {
+        MutableLiveData<Event<Pair<String, ArrayList<String>>>>()
     }
 
     private val chatRoomListener = object : ChatRoomListenerStub() {
@@ -269,14 +269,16 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
                 val participantsList = arrayListOf<String>()
                 for (participant in chatRoom.participants) {
                     participantsList.add(participant.address.asStringUriOnly())
-                    goToScheduleMeetingEvent.postValue(Event(participantsList))
                 }
+                goToScheduleMeetingEvent.postValue(
+                    Event(Pair(chatRoom.subject.orEmpty(), participantsList))
+                )
             } else {
                 val firstParticipant = chatRoom.participants.firstOrNull()
                 val address = firstParticipant?.address
                 if (address != null) {
                     val participantsList = arrayListOf(address.asStringUriOnly())
-                    goToScheduleMeetingEvent.postValue(Event(participantsList))
+                    goToScheduleMeetingEvent.postValue(Event(Pair("", participantsList)))
                 } else {
                     Log.e("$TAG Failed to find participant to call!")
                 }

@@ -338,6 +338,11 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
         <argument
+            android:name="subject"
+            app:argType="string"
+            app:nullable="false"
+            android:defaultValue="" />
+        <argument
             android:name="participants"
             app:argType="string[]"
             app:nullable="true"

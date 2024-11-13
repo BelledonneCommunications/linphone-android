@@ -88,6 +88,9 @@ class ScheduleMeetingFragment : GenericMainFragment() {
         binding.viewModel = viewModel
         observeToastEvents(viewModel)
 
+        val subject = args.subject
+        viewModel.subject.value = subject
+
         val participants = args.participants
         if (!participants.isNullOrEmpty()) {
             Log.i("$TAG Found pre-populated array of participants of size [${participants.size}]")
