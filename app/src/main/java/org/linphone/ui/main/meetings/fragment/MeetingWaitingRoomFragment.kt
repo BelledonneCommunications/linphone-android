@@ -151,19 +151,20 @@ class MeetingWaitingRoomFragment : GenericMainFragment() {
     override fun onResume() {
         super.onResume()
 
-        if (isCameraPermissionGranted()) {
-            Log.i(
-                "$TAG Record video permission is granted, starting video preview with front cam if possible"
-            )
-            viewModel.setFrontCamera()
-            enableVideoPreview()
+        if (viewModel.joining.value == false) {
+            if (isCameraPermissionGranted()) {
+                Log.i(
+                    "$TAG Record video permission is granted, starting video preview with front cam if possible"
+                )
+                viewModel.setFrontCamera()
+                enableVideoPreview()
+            }
         }
     }
 
     override fun onPause() {
         bottomSheetDialog?.dismiss()
         bottomSheetDialog = null
-        viewModel.joining.value = false
 
         coreContext.postOnCoreThread { core ->
             core.nativePreviewWindowId = null

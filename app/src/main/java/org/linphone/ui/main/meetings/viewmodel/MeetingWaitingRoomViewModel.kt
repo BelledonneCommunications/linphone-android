@@ -111,12 +111,10 @@ class MeetingWaitingRoomViewModel @UiThread constructor() : GenericViewModel() {
                         Log.i("$TAG Call has ended, leaving waiting room fragment")
                         leaveWaitingRoomEvent.postValue(Event(true))
                     }
-
                     Call.State.Error -> {
                         Log.w("$TAG Call has failed, leaving waiting room fragment")
                         leaveWaitingRoomEvent.postValue(Event(true))
                     }
-
                     else -> {}
                 }
             }
