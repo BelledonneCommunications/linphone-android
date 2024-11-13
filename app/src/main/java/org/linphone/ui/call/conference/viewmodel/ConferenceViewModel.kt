@@ -28,7 +28,6 @@ import org.linphone.core.Address
 import org.linphone.core.Call
 import org.linphone.core.Conference
 import org.linphone.core.ConferenceListenerStub
-import org.linphone.core.ConferenceParams
 import org.linphone.core.MediaDirection
 import org.linphone.core.Participant
 import org.linphone.core.ParticipantDevice
@@ -322,9 +321,7 @@ class ConferenceViewModel @UiThread constructor() : GenericViewModel() {
     fun goToConversation() {
         coreContext.postOnCoreThread { core ->
             Log.i("$TAG Navigating to conference's conversation")
-            val chatParams: ConferenceParams? = null
-            val address = conference.conferenceAddress
-            val chatRoom = core.searchChatRoom(chatParams, address, null, null)
+            val chatRoom = conference.chatRoom
             if (chatRoom != null) {
                 goToConversationEvent.postValue(
                     Event(
@@ -335,7 +332,9 @@ class ConferenceViewModel @UiThread constructor() : GenericViewModel() {
                     )
                 )
             } else {
-                Log.e("$TAG Couldn't find chat room for address [${address?.asStringUriOnly()}]")
+                Log.e(
+                    "$TAG No chat room available for current conference [${conference.conferenceAddress?.asStringUriOnly()}]"
+                )
             }
         }
     }

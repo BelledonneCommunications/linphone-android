@@ -33,6 +33,7 @@ import org.linphone.core.ConferenceSchedulerListenerStub
 import org.linphone.core.Factory
 import org.linphone.core.Participant
 import org.linphone.core.ParticipantInfo
+import org.linphone.core.StreamType
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.history.model.NumpadModel
 import org.linphone.ui.main.viewmodel.AddressSelectionViewModel
@@ -219,6 +220,9 @@ class StartCallViewModel @UiThread constructor() : AddressSelectionViewModel() {
             val conferenceInfo = Factory.instance().createConferenceInfo()
             conferenceInfo.organizer = account.params.identityAddress
             conferenceInfo.subject = subject.value
+
+            // Allows to have a chat room within the conference
+            conferenceInfo.setCapability(StreamType.Text, true)
 
             val participants = arrayOfNulls<ParticipantInfo>(selection.value.orEmpty().size)
             var index = 0

@@ -37,6 +37,7 @@ import org.linphone.core.ConferenceSchedulerListenerStub
 import org.linphone.core.Factory
 import org.linphone.core.Participant
 import org.linphone.core.ParticipantInfo
+import org.linphone.core.StreamType
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
 import org.linphone.ui.main.meetings.model.TimeZoneModel
@@ -408,6 +409,9 @@ class ScheduleMeetingViewModel @UiThread constructor() : GenericViewModel() {
             conferenceInfo.organizer = localAddress
             conferenceInfo.subject = subject.value
             conferenceInfo.description = description.value
+
+            // Allows to have a chat room within the conference
+            conferenceInfo.setCapability(StreamType.Text, true)
 
             val startTime = startTimestamp / 1000 // Linphone expects timestamp in seconds
             val duration =

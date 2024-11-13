@@ -34,6 +34,7 @@ import org.linphone.core.ConferenceSchedulerListenerStub
 import org.linphone.core.Factory
 import org.linphone.core.Participant
 import org.linphone.core.ParticipantInfo
+import org.linphone.core.StreamType
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
 import org.linphone.utils.Event
@@ -217,6 +218,9 @@ abstract class AbstractConversationViewModel : GenericViewModel() {
             val conferenceInfo = Factory.instance().createConferenceInfo()
             conferenceInfo.organizer = account.params.identityAddress
             conferenceInfo.subject = chatRoom.subject
+
+            // Allows to have a chat room within the conference
+            conferenceInfo.setCapability(StreamType.Text, true)
 
             val participants = arrayOfNulls<ParticipantInfo>(chatRoom.participants.size)
             var index = 0
