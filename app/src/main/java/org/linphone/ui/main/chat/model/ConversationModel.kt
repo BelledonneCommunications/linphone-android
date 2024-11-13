@@ -77,6 +77,8 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
 
     val lastMessageIcon = MutableLiveData<Int>()
 
+    val isLastMessageForwarded = MutableLiveData<Boolean>()
+
     val isLastMessageOutgoing = MutableLiveData<Boolean>()
 
     val dateTime = MutableLiveData<String>()
@@ -290,6 +292,7 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
         if (isOutgoing) {
             lastMessageIcon.postValue(LinphoneUtils.getChatIconResId(message.state))
         }
+        isLastMessageForwarded.postValue(message.isForward)
     }
 
     @WorkerThread

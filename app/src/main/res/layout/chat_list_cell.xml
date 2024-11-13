@@ -93,9 +93,23 @@
             android:visibility="@{model.lastMessageTextSender.length() > 0 ? View.VISIBLE : View.GONE}"
             textFont="@{model.isBeingDeleted || model.unreadMessageCount > 0 || model.isComposing ? NotoSansFont.NotoSansBold : NotoSansFont.NotoSansRegular}"
             app:layout_constraintStart_toStartOf="@id/title"
-            app:layout_constraintEnd_toStartOf="@id/last_message_or_composing"
+            app:layout_constraintEnd_toStartOf="@id/last_message_forward"
             app:layout_constraintTop_toBottomOf="@id/title"
             app:layout_constraintBottom_toTopOf="@id/separator"/>
+
+        <ImageView
+            android:id="@+id/last_message_forward"
+            android:layout_width="@dimen/small_icon_size"
+            android:layout_height="@dimen/small_icon_size"
+            android:layout_marginStart="@{model.lastMessageTextSender.length() > 0 ? @dimen/five : @dimen/zero}"
+            android:layout_marginEnd="5dp"
+            android:layout_marginTop="3dp"
+            android:src="@drawable/forward"
+            android:visibility="@{model.isLastMessageForwarded ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintStart_toEndOf="@id/last_message_sender"
+            app:layout_constraintEnd_toStartOf="@id/last_message_or_composing"
+            app:layout_constraintTop_toTopOf="@id/last_message_or_composing"
+            app:layout_constraintBottom_toBottomOf="@id/last_message_or_composing"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
@@ -109,7 +123,7 @@
             android:textSize="14sp"
             android:textColor="?attr/color_main2_400"
             textFont="@{model.isBeingDeleted || model.unreadMessageCount > 0 || model.isComposing ? NotoSansFont.NotoSansBold : NotoSansFont.NotoSansRegular}"
-            app:layout_constraintStart_toEndOf="@id/last_message_sender"
+            app:layout_constraintStart_toEndOf="@id/last_message_forward"
             app:layout_constraintEnd_toStartOf="@id/right_border"
             app:layout_constraintTop_toTopOf="@id/last_message_sender"
             app:layout_constraintBottom_toBottomOf="@id/last_message_sender" />
