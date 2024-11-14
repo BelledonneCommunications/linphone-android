@@ -253,6 +253,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
+            android:enabled="@{viewModel.canBePaused}"
+            android:selected="@{viewModel.isPaused}"
             android:text="@{viewModel.isPaused ? @string/call_action_resume_call : @string/call_action_pause_call, default=@string/call_action_pause_call}"
             app:layout_constraintTop_toBottomOf="@id/pause_call"
             app:layout_constraintStart_toStartOf="@id/participants_label"
