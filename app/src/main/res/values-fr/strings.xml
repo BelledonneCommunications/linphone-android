@@ -324,6 +324,7 @@
     <string name="history_group_call_start_dialog_set_subject">Nommer l\'appel de groupe</string>
     <string name="history_group_call_start_dialog_subject_hint">Nom de l\'appel de groupe</string>
     <string name="history_list_empty_history">Aucun appel dans votre historique…</string>
+    <string name="history_group_call_go_to_conversation">Conversation</string>
 
     <string name="history_dialog_delete_all_call_logs_title">Voulez-vous tout supprimer ?</string>
     <string name="history_dialog_delete_all_call_logs_message">Tout votre historique d\'appels sera supprimé.</string>

@@ -89,7 +89,9 @@ class ScheduleMeetingFragment : GenericMainFragment() {
         observeToastEvents(viewModel)
 
         val subject = args.subject
-        viewModel.subject.value = subject
+        if (subject.isNotEmpty()) {
+            viewModel.subject.value = subject
+        }
 
         val participants = args.participants
         if (!participants.isNullOrEmpty()) {

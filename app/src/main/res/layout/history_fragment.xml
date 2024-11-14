@@ -249,8 +249,8 @@
                         android:contentDescription="@string/content_description_join_conference"
                         android:visibility="@{viewModel.isConferenceCallLog ? View.VISIBLE : View.GONE, default=gone}"
                         app:tint="?attr/color_main2_500"
-                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/meeting_chat"
                         app:layout_constraintTop_toBottomOf="@id/status" />
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -266,6 +266,36 @@
                         app:layout_constraintTop_toBottomOf="@id/meeting"
                         app:layout_constraintStart_toStartOf="@id/meeting"
                         app:layout_constraintEnd_toEndOf="@id/meeting"/>
+
+                    <ImageView
+                        android:id="@+id/meeting_chat"
+                        android:onClick="@{() -> viewModel.goToMeetingConversation()}"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/circle_light_blue_button_background"
+                        android:padding="16dp"
+                        android:src="@drawable/chat_teardrop_text"
+                        android:contentDescription="@string/content_description_go_to_conversation"
+                        android:visibility="@{viewModel.isConferenceCallLog &amp;&amp; viewModel.isChatRoomAvailable ? View.VISIBLE : View.GONE, default=gone}"
+                        app:tint="?attr/color_main2_500"
+                        app:layout_constraintStart_toEndOf="@id/meeting"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/status" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/default_text_style"
+                        android:id="@+id/meeting_chat_label"
+                        android:onClick="@{() -> viewModel.goToMeetingConversation()}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/history_group_call_go_to_conversation"
+                        android:textSize="14sp"
+                        android:visibility="@{viewModel.isConferenceCallLog &amp;&amp; viewModel.isChatRoomAvailable ? View.VISIBLE : View.GONE, default=gone}"
+                        app:layout_constraintTop_toBottomOf="@id/meeting_chat"
+                        app:layout_constraintStart_toStartOf="@id/meeting_chat"
+                        app:layout_constraintEnd_toEndOf="@id/meeting_chat"/>
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/call_history"

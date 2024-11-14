@@ -88,7 +88,7 @@ class SendMessageInConversationViewModel @UiThread constructor() : GenericViewMo
 
     val isKeyboardOpen = MutableLiveData<Boolean>()
 
-    val isInCallConversation = MutableLiveData<Boolean>()
+    val isCallConversation = MutableLiveData<Boolean>()
 
     val isVoiceRecording = MutableLiveData<Boolean>()
 
@@ -152,7 +152,7 @@ class SendMessageInConversationViewModel @UiThread constructor() : GenericViewMo
 
         isEmojiPickerOpen.value = false
         isPlayingVoiceRecord.value = false
-        isInCallConversation.value = false
+        isCallConversation.value = false
         maxNumberOfAttachmentsReached.value = false
     }
 

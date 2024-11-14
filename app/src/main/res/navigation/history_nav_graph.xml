@@ -25,11 +25,34 @@
             app:destination="@id/emptyFragment"
             app:popUpTo="@id/historyFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_historyFragment_to_conferenceConversationFragment"
+            app:destination="@id/conferenceConversationFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:launchSingleTop="true" />
     </fragment>
 
     <action
         android:id="@+id/action_global_historyFragment"
         app:destination="@id/historyFragment"
+        app:exitAnim="@anim/slide_out_left"
+        app:popExitAnim="@anim/slide_out_right"
         app:launchSingleTop="true" />
+
+    <fragment
+        android:id="@+id/conferenceConversationFragment"
+        android:name="org.linphone.ui.main.history.fragment.ConferenceConversationFragment"
+        android:label="ConferenceConversationFragment"
+        tools:layout="@layout/chat_conversation_fragment">
+        <argument
+            android:name="localSipUri"
+            app:argType="string" />
+        <argument
+            android:name="remoteSipUri"
+            app:argType="string" />
+    </fragment>
 
 </navigation>

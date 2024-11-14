@@ -160,6 +160,22 @@ class HistoryFragment : SlidingPaneChildFragment() {
             }
         }
 
+        viewModel.goToMeetingConversationEvent.observe(viewLifecycleOwner) {
+            it.consume { pair ->
+                val localAddress = pair.first
+                val remoteAddress = pair.second
+                if (findNavController().currentDestination?.id == R.id.historyFragment) {
+                    Log.i("$TAG Going to meeting conversation [$localAddress][$remoteAddress]")
+                    val action =
+                        HistoryFragmentDirections.actionHistoryFragmentToConferenceConversationFragment(
+                            localAddress,
+                            remoteAddress
+                        )
+                    findNavController().navigate(action)
+                }
+            }
+        }
+
         viewModel.conferenceToJoinEvent.observe(viewLifecycleOwner) {
             it.consume { conferenceUri ->
                 Log.i("$TAG Requesting to go to waiting room for conference URI [$conferenceUri]")

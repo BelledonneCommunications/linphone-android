@@ -56,10 +56,16 @@ class HistoryViewModel @UiThread constructor() : GenericViewModel() {
 
     val isConferenceCallLog = MutableLiveData<Boolean>()
 
+    val isChatRoomAvailable = MutableLiveData<Boolean>()
+
     val callLogFoundEvent = MutableLiveData<Event<Boolean>>()
 
     val chatRoomCreationErrorEvent: MutableLiveData<Event<Int>> by lazy {
         MutableLiveData<Event<Int>>()
+    }
+
+    val goToMeetingConversationEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
+        MutableLiveData<Event<Pair<String, String>>>()
     }
 
     val goToConversationEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
@@ -75,6 +81,8 @@ class HistoryViewModel @UiThread constructor() : GenericViewModel() {
     }
 
     private lateinit var address: Address
+
+    private var meetingChatRoom: ChatRoom? = null
 
     private val chatRoomListener = object : ChatRoomListenerStub() {
         @WorkerThread
@@ -124,7 +132,15 @@ class HistoryViewModel @UiThread constructor() : GenericViewModel() {
                 address = model.address
                 callLogModel.postValue(model)
 
-                isConferenceCallLog.postValue(callLog.wasConference())
+                val conference = callLog.wasConference()
+                isConferenceCallLog.postValue(conference)
+                meetingChatRoom = callLog.chatRoom
+                isChatRoomAvailable.postValue(meetingChatRoom != null)
+                if (conference) {
+                    Log.i(
+                        "$TAG Conference call log, chat room is ${ if (meetingChatRoom != null) "available" else "not available"}"
+                    )
+                }
 
                 val peerAddress = callLog.remoteAddress
                 val history = arrayListOf<CallLogHistoryModel>()
@@ -169,6 +185,25 @@ class HistoryViewModel @UiThread constructor() : GenericViewModel() {
     fun startVideoCall() {
         coreContext.postOnCoreThread { core ->
             coreContext.startVideoCall(address)
+        }
+    }
+
+    @UiThread
+    fun goToMeetingConversation() {
+        coreContext.postOnCoreThread {
+            val chatRoom = meetingChatRoom
+            if (chatRoom != null) {
+                goToMeetingConversationEvent.postValue(
+                    Event(
+                        Pair(
+                            chatRoom.localAddress.asStringUriOnly(),
+                            chatRoom.peerAddress.asStringUriOnly()
+                        )
+                    )
+                )
+            } else {
+                Log.e("$TAG Failed to find chat room for current call log!")
+            }
         }
     }
 

@@ -33,7 +33,7 @@
             android:id="@+id/extra_actions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="@{viewModel.isVoiceRecording ? View.INVISIBLE : (viewModel.isKeyboardOpen || viewModel.isInCallConversation || !viewModel.isFileTransferServerAvailable) ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.isVoiceRecording ? View.INVISIBLE : (viewModel.isKeyboardOpen || viewModel.isCallConversation || !viewModel.isFileTransferServerAvailable) ? View.GONE : View.VISIBLE}"
             app:constraint_referenced_ids="emoji_picker_toggle, capture_image" />
 
         <include
@@ -173,7 +173,7 @@
             android:layout_height="0dp"
             android:layout_marginEnd="4dp"
             android:enabled="@{viewModel.textToSend.length() > 0 || viewModel.attachments.size() > 0}"
-            android:visibility="@{viewModel.isInCallConversation || viewModel.textToSend.length() > 0 || viewModel.attachments.size() > 0 ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{viewModel.isCallConversation || viewModel.textToSend.length() > 0 || viewModel.attachments.size() > 0 ? View.VISIBLE : View.GONE, default=gone}"
             android:onClick="@{() -> viewModel.sendMessage()}"
             android:padding="8dp"
             android:src="@drawable/paper_plane_right"
@@ -188,7 +188,7 @@
             android:layout_width="40dp"
             android:layout_height="0dp"
             android:layout_marginEnd="4dp"
-            android:visibility="@{viewModel.isInCallConversation || viewModel.textToSend.length() > 0 || viewModel.attachments.size() > 0 || viewModel.isVoiceRecording || !viewModel.isFileTransferServerAvailable ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.isCallConversation || viewModel.textToSend.length() > 0 || viewModel.attachments.size() > 0 || viewModel.isVoiceRecording || !viewModel.isFileTransferServerAvailable ? View.GONE : View.VISIBLE}"
             android:onClick="@{() -> viewModel.startVoiceMessageRecording()}"
             android:padding="8dp"
             android:src="@drawable/microphone"

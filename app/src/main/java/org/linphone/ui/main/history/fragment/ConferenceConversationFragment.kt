@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.call.fragment
+package org.linphone.ui.main.history.fragment
 
 import android.os.Bundle
 import android.view.View
@@ -25,15 +25,15 @@ import androidx.navigation.fragment.findNavController
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.chat.fragment.ConversationFragment
 
-class ConversationFragment : ConversationFragment() {
+class ConferenceConversationFragment : ConversationFragment() {
     companion object {
-        private const val TAG = "[In-call Conversation Fragment]"
+        private const val TAG = "[Conference Conversation Fragment]"
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.i("$TAG Creating an in-call ConversationFragment")
+        Log.i("$TAG Creating a conference history ConversationFragment")
         sendMessageViewModel.isCallConversation.value = true
         viewModel.isCallConversation.value = true
 
