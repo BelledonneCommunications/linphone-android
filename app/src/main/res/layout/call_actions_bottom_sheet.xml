@@ -25,6 +25,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/call_all_actions_menu_height"
+        android:clickable="true"
+        android:focusable="true"
         android:background="@drawable/shape_call_bottom_sheet_background"
         android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode ? View.INVISIBLE : View.VISIBLE}"
         app:behavior_hideable="false"
