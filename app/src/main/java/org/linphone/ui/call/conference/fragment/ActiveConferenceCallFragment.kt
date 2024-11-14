@@ -202,11 +202,15 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
             }
         }
 
-        callViewModel.fullScreenMode.observe(viewLifecycleOwner) { hide ->
-            Log.i("$TAG Switching full screen mode to ${if (hide) "ON" else "OFF"}")
+        callViewModel.conferenceModel.fullScreenMode.observe(viewLifecycleOwner) { hide ->
+            Log.i("$TAG Switching full screen mode to [${if (hide) "ON" else "OFF"}]")
             sharedViewModel.toggleFullScreenEvent.value = Event(hide)
             callStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             callMediaEncryptionStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
+            if (hide != callViewModel.fullScreenMode.value) {
+                callViewModel.fullScreenMode.value = hide
+            }
         }
 
         callViewModel.conferenceModel.conferenceLayout.observe(viewLifecycleOwner) { layout ->
@@ -220,8 +224,10 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
                     Log.i("$TAG We are alone in that conference, using nativePreviewWindowId")
                     core.nativePreviewWindowId = binding.localPreviewVideoSurface
 
-                    // Don't forget to leave full screen mode, otherwise we won't be able to leave it by touching video surface...
-                    callViewModel.fullScreenMode.postValue(false)
+                    if (callViewModel.conferenceModel.fullScreenMode.value == true && callViewModel.conferenceModel.isMeParticipantSendingVideo.value == false) {
+                        // Don't forget to leave full screen mode, otherwise we won't be able to leave it by touching video surface...
+                        callViewModel.conferenceModel.fullScreenMode.postValue(false)
+                    }
                 }
             }
         }
@@ -230,9 +236,9 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
             viewLifecycleOwner
         ) {
             it.consume {
-                if (callViewModel.fullScreenMode.value == false) {
+                if (callViewModel.conferenceModel.fullScreenMode.value == false) {
                     Log.i("$TAG First participant joined conference, switching to full screen mode")
-                    callViewModel.toggleFullScreen()
+                    callViewModel.conferenceModel.toggleFullScreen()
                 }
             }
         }

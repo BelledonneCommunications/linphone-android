@@ -117,7 +117,7 @@ class AudioUtils {
 
             val extendedAudioDevices = coreContext.core.extendedAudioDevices
             Log.i(
-                "$TAG Looking for an ${if (output) "output" else "input"} audio device with capability [$capability], driver name [$preferredDriver] and type [$types] in extended audio devices list (size ${extendedAudioDevices.size})"
+                "$TAG Looking for an [${if (output) "output" else "input"}] audio device with capability [$capability], driver name [$preferredDriver] and type [$types] in extended audio devices list (size ${extendedAudioDevices.size})"
             )
             val foundAudioDevice = extendedAudioDevices.find {
                 it.driverName == preferredDriver && types.contains(it.type) && it.hasCapability(
@@ -143,7 +143,7 @@ class AudioUtils {
             }
             if (call != null) {
                 Log.i(
-                    "$TAG Found [${audioDevice.type}] ${if (output) "playback" else "recorder"} audio device [${audioDevice.deviceName} (${audioDevice.driverName})], routing call audio to it"
+                    "$TAG Found [${audioDevice.type}] [${if (output) "playback" else "recorder"}] audio device [${audioDevice.deviceName} (${audioDevice.driverName})], routing call audio to it"
                 )
                 if (output) {
                     call.outputAudioDevice = audioDevice
@@ -152,7 +152,7 @@ class AudioUtils {
                 }
             } else {
                 Log.i(
-                    "$TAG Found [${audioDevice.type}] ${if (output) "playback" else "recorder"} audio device [${audioDevice.deviceName} (${audioDevice.driverName})], changing core default audio device"
+                    "$TAG Found [${audioDevice.type}] [${if (output) "playback" else "recorder"}] audio device [${audioDevice.deviceName} (${audioDevice.driverName})], changing core default audio device"
                 )
                 if (output) {
                     coreContext.core.outputAudioDevice = audioDevice

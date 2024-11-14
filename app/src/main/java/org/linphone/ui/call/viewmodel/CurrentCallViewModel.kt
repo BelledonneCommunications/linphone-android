@@ -788,6 +788,9 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
                             params?.videoDirection = MediaDirection.SendRecv
                         }
                     }
+
+                    val sendingVideo = params?.videoDirection == MediaDirection.SendRecv || params?.videoDirection == MediaDirection.SendOnly
+                    conferenceModel.localVideoStreamToggled(sendingVideo)
                 } else if (params != null) {
                     params.isVideoEnabled = true
                     params.videoDirection = when (currentCall.currentParams.videoDirection) {
@@ -857,8 +860,17 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
 
     @UiThread
     fun toggleFullScreen() {
-        if (fullScreenMode.value == false && isVideoEnabled.value == false) return
-        fullScreenMode.value = fullScreenMode.value != true
+        if (fullScreenMode.value == true) {
+            // Always allow to switch off full screen mode
+            fullScreenMode.value = false
+            return
+        }
+
+        if (isVideoEnabled.value == false) {
+            // Do not allow turning full screen on for audio only calls
+            return
+        }
+        fullScreenMode.value = true
     }
 
     @UiThread
@@ -1214,19 +1226,18 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
             isReceivingVideo.postValue(isReceiving)
         }
 
-        if (((isReceiving) && !wasReceiving)) {
-            if (fullScreenMode.value != true) {
-                val inConference = conferenceModel.isCurrentCallInConference.value == true
-                if (!inConference) {
+        if (currentCall.conference == null) { // Let conference view model handle full screen while in conference
+            if (isReceiving && !wasReceiving) { // Do not change full screen mode base on our video being sent when it wasn't
+                if (fullScreenMode.value != true) {
                     Log.i(
-                        "$TAG Video is being received (it wasn't before), switching to full-screen mode"
+                        "$TAG Video is being received or sent (and it wasn't before), switching to full-screen mode"
                     )
                     fullScreenMode.postValue(true)
                 }
+            } else if (!isSending && !isReceiving && fullScreenMode.value == true) {
+                Log.w("$TAG Video is no longer sent nor received, leaving full screen mode")
+                fullScreenMode.postValue(false)
             }
-        } else if (!isSending && !isReceiving && fullScreenMode.value == true) {
-            Log.w("$TAG Video is no longer enabled, leaving full screen mode")
-            fullScreenMode.postValue(false)
         }
 
         updateProximitySensor()

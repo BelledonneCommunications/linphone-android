@@ -75,6 +75,8 @@ class ConferenceViewModel @UiThread constructor() : GenericViewModel() {
 
     val isConversationAvailable = MutableLiveData<Boolean>()
 
+    val fullScreenMode = MutableLiveData<Boolean>()
+
     val firstParticipantOtherThanOurselvesJoinedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -123,8 +125,7 @@ class ConferenceViewModel @UiThread constructor() : GenericViewModel() {
             if (conference.isMe(device.address)) {
                 val direction = device.getStreamCapability(StreamType.Video)
                 val sendingVideo = direction == MediaDirection.SendRecv || direction == MediaDirection.SendOnly
-                isMeParticipantSendingVideo.postValue(sendingVideo)
-                Log.i("$TAG We ${if (sendingVideo) "are" else "aren't"} sending video")
+                localVideoStreamToggled(sendingVideo)
             }
         }
 
@@ -255,6 +256,8 @@ class ConferenceViewModel @UiThread constructor() : GenericViewModel() {
     init {
         isPaused.value = false
         isConversationAvailable.value = false
+        isMeParticipantSendingVideo.value = false
+        fullScreenMode.value = false
     }
 
     @WorkerThread
@@ -283,7 +286,7 @@ class ConferenceViewModel @UiThread constructor() : GenericViewModel() {
             isPaused.postValue(!isIn)
         }
         Log.i(
-            "$TAG We ${if (isIn) "are" else "aren't"} in the conference right now, current state is [$state]"
+            "$TAG We [${if (isIn) "are" else "aren't"}] in the conference right now, current state is [$state]"
         )
 
         val screenSharing = conference.screenSharingParticipant != null
@@ -315,6 +318,33 @@ class ConferenceViewModel @UiThread constructor() : GenericViewModel() {
             )
             setNewLayout(ACTIVE_SPEAKER_LAYOUT)
         }
+    }
+
+    @UiThread
+    fun toggleFullScreen() {
+        if (fullScreenMode.value == true) {
+            // Always allow to switch off full screen mode
+            fullScreenMode.value = false
+            return
+        }
+
+        if (conferenceLayout.value == AUDIO_ONLY_LAYOUT) {
+            // Do not allow turning full screen on for audio only conference
+            return
+        }
+
+        if (isMeParticipantSendingVideo.value == false && participants.value.orEmpty().size == 1) {
+            // Do not allow turning full screen on if we're alone and not sending our video
+            return
+        }
+
+        fullScreenMode.value = true
+    }
+
+    @WorkerThread
+    fun localVideoStreamToggled(enabled: Boolean) {
+        isMeParticipantSendingVideo.postValue(enabled)
+        Log.i("$TAG We [${if (enabled) "are" else "aren't"}] sending video")
     }
 
     @UiThread
@@ -559,8 +589,7 @@ class ConferenceViewModel @UiThread constructor() : GenericViewModel() {
 
             val direction = device.getStreamCapability(StreamType.Video)
             val sendingVideo = direction == MediaDirection.SendRecv || direction == MediaDirection.SendOnly
-            isMeParticipantSendingVideo.postValue(sendingVideo)
-            Log.i("$TAG We ${if (sendingVideo) "are" else "aren't"} sending video right now")
+            localVideoStreamToggled(sendingVideo)
         }
 
         if (!activeSpeakerParticipantDeviceFound && devicesList.isNotEmpty()) {

@@ -44,6 +44,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraint_layout"
+            android:onClick="@{() -> viewModel.conferenceModel.toggleFullScreen()}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/gray_900">
@@ -235,7 +236,7 @@
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/conference_layout_nav_host_fragment"
                 android:name="androidx.navigation.fragment.NavHostFragment"
-                android:onClick="@{() -> viewModel.toggleFullScreen()}"
+                android:onClick="@{() -> viewModel.conferenceModel.toggleFullScreen()}"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginBottom="@{viewModel.fullScreenMode || viewModel.pipMode ? @dimen/zero : @dimen/call_main_actions_menu_margin, default=@dimen/call_main_actions_menu_margin}"

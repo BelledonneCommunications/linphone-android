@@ -242,7 +242,7 @@ class ConversationsListFragment : AbstractMainFragment() {
                     }
 
                     Log.i(
-                        "$TAG Navigating to ${if (isMedia) "media" else "file"} viewer fragment with path [$path]"
+                        "$TAG Navigating to [${if (isMedia) "media" else "file"}] viewer fragment with path [$path]"
                     )
                     if (isMedia) {
                         val intent = Intent(requireActivity(), MediaViewerActivity::class.java)

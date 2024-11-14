@@ -219,7 +219,7 @@ class ContactsListViewModel @UiThread constructor() : AbstractMainViewModel() {
             contactModel.friend.edit()
             val starred = !contactModel.friend.starred
             Log.i(
-                "$TAG Friend [${contactModel.name.value}] will be ${if (starred) "added to" else "removed from"} favourites"
+                "$TAG Friend [${contactModel.name.value}] will be [${if (starred) "added to" else "removed from"}] favourites"
             )
             contactModel.friend.starred = starred
             contactModel.friend.done()

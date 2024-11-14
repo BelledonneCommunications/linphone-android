@@ -177,7 +177,7 @@ class ConferenceParticipantDeviceModel @WorkerThread constructor(
             )
         } else {
             Log.i(
-                "$TAG Participant [${device.address.asStringUriOnly()}] is ${if (inConference) "inside" else "outside"} the conference with state [${device.state}]"
+                "$TAG Participant [${device.address.asStringUriOnly()}] is [${if (inConference) "inside" else "outside"}] the conference with state [${device.state}]"
             )
         }
 
