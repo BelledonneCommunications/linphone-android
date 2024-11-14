@@ -31,6 +31,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.updatePadding
@@ -129,6 +130,9 @@ class CallActivity : GenericActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.call_activity)
         binding.lifecycleOwner = this
         setUpToastsArea(binding.toastsArea)
+
+        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
+        windowInsetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.otherCallsTopBar.root) { v, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -458,15 +462,11 @@ class CallActivity : GenericActivity() {
 
     private fun hideUI(hide: Boolean) {
         Log.i("$TAG Switching full screen mode to ${if (hide) "ON" else "OFF"}")
-        val windowInsetsCompat = WindowInsetsControllerCompat(window, window.decorView)
+        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
         if (hide) {
-            windowInsetsCompat.let {
-                it.hide(WindowInsetsCompat.Type.systemBars())
-                it.systemBarsBehavior =
-                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-            }
+            windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
         } else {
-            windowInsetsCompat.show(WindowInsetsCompat.Type.systemBars())
+            windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
         }
     }
 

@@ -103,7 +103,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:visibility="@{conferenceViewModel.isPaused ? View.GONE : View.VISIBLE}"
                 app:layout_constraintStart_toEndOf="@id/separator"
                 app:layout_constraintEnd_toStartOf="@id/paused_call_header"
                 app:layout_constraintTop_toTopOf="@id/conference_subject"/>
