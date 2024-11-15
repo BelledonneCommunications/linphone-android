@@ -830,8 +830,9 @@ class CoreContext(
         // val sdkVersion = context.getString(org.linphone.core.R.string.linphone_sdk_version)
         // val sdkBranch = context.getString(org.linphone.core.R.string.linphone_sdk_branch)
         // val sdkUserAgent = "$sdkVersion ($sdkBranch)"
+        val appName = context.getString(R.string.user_agent_app_name)
 
-        core.setUserAgent("Dimensions UCM Android", "1.24130.1")
+        core.setUserAgent(appName, appVersion)
     }
 
     private fun initUserCertificates() {

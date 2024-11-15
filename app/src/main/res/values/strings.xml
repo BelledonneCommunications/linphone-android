@@ -43,7 +43,7 @@
 
     <string name="app_name" translatable="false">&appName;</string>
     <string name="app_name_debug" translatable="false">&appName; (debug)</string>
-    <string name="user_agent_app_name" translatable="false">&appName;Android</string>
+    <string name="user_agent_app_name" translatable="false">&appName; UCM Android</string>
     <string name="service_name">&appName; Service</string>
     <string name="service_auto_start_description">&appName; has been started automatically</string>
     <string name="service_description">This is required to receive calls while in background</string>
