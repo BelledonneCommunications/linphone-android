@@ -641,7 +641,23 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
         Log.i("$TAG Current media encryption is [$defaultMediaEncryption]")
         for (encryption in MediaEncryption.entries) {
             if (core.isMediaEncryptionSupported(encryption)) {
-                mediaEncryptionLabels.add(encryption.toString())
+                if (encryption == MediaEncryption.ZRTP) {
+                    if (core.postQuantumAvailable) {
+                        Log.i("$TAG Post Quantum ZRTP is available")
+                        mediaEncryptionLabels.add(
+                            AppUtils.getString(
+                                R.string.call_stats_media_encryption_zrtp_post_quantum
+                            )
+                        )
+                    } else {
+                        Log.i(
+                            "$TAG Post Quantum ZRTP isn't available, will use classic ZRTP instead"
+                        )
+                        mediaEncryptionLabels.add(encryption.toString())
+                    }
+                } else {
+                    mediaEncryptionLabels.add(encryption.toString())
+                }
                 mediaEncryptionValues.add(encryption)
                 if (encryption == defaultMediaEncryption) {
                     mediaEncryptionIndex.postValue(index)
