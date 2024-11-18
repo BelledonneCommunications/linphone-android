@@ -210,15 +210,11 @@ class ContactNewOrEditViewModel @UiThread constructor() : GenericViewModel() {
             updatePhoneNumbers()
 
             if (isEdit.value == false) {
-                if (friend.vcard?.generateUniqueId() == true) {
-                    friend.refKey = friend.vcard?.uid
-                    Log.i(
-                        "$TAG Newly created friend will have generated ref key [${friend.refKey}]"
-                    )
-                } else {
-                    Log.e("$TAG Failed to generate a ref key using vCard's generateUniqueId()")
-                    // TODO: generate unique ref key?
-                }
+                friend.vcard?.generateUniqueId()
+                friend.refKey = friend.vcard?.uid
+                Log.i(
+                    "$TAG Newly created friend will have generated ref key [${friend.refKey}]"
+                )
 
                 friend.isSubscribesEnabled = false
                 // Disable peer to peer short term presence

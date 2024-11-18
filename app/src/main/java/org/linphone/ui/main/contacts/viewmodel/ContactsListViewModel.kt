@@ -281,9 +281,13 @@ class ContactsListViewModel @UiThread constructor() : AbstractMainViewModel() {
 
         for (result in results) {
             val friend = result.friend
-            if (friend != null && result.sourceFlags == MagicSearch.Source.LdapServers.toInt()) {
-                // TODO FIXME: Fix issue in SDK, each LDAP friend should have a proper refKey
-                friend.refKey = friend.name
+            if (friend != null && friend.refKey.orEmpty().isEmpty()) {
+                if (friend.vcard != null) {
+                    friend.vcard?.generateUniqueId()
+                    friend.refKey = friend.vcard?.uid
+                } else {
+                    friend.refKey = friend.name
+                }
             }
 
             val model = if (friend != null) {
