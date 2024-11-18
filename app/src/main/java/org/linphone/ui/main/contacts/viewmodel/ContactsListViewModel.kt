@@ -260,12 +260,12 @@ class ContactsListViewModel @UiThread constructor() : AbstractMainViewModel() {
         previousFilter = filter
 
         Log.i(
-            "$TAG Asking Magic search for contacts matching filter [$filter], domain [$domain] and in sources Friends/LDAP"
+            "$TAG Asking Magic search for contacts matching filter [$filter], domain [$domain] and in sources Friends/LDAP/CardDAV"
         )
         magicSearch.getContactsListAsync(
             filter,
             domain,
-            MagicSearch.Source.Friends.toInt() or MagicSearch.Source.LdapServers.toInt(),
+            MagicSearch.Source.Friends.toInt() or MagicSearch.Source.LdapServers.toInt() or MagicSearch.Source.RemoteCardDAV.toInt(),
             MagicSearch.Aggregation.Friend
         )
     }
@@ -286,6 +286,9 @@ class ContactsListViewModel @UiThread constructor() : AbstractMainViewModel() {
                     friend.vcard?.generateUniqueId()
                     friend.refKey = friend.vcard?.uid
                 } else {
+                    Log.w(
+                        "$TAG Friend [${friend.name}] found in SearchResults doesn't have a refKey, using name instead"
+                    )
                     friend.refKey = friend.name
                 }
             }
