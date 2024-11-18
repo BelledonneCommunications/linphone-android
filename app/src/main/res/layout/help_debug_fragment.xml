@@ -134,7 +134,6 @@
 
             <ImageView
                 android:id="@+id/app_version_icon"
-                android:onClick="@{appVersionClickListener}"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginStart="16dp"
@@ -149,7 +148,6 @@
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/header_style"
                 android:id="@+id/app_version_title"
-                android:onClick="@{appVersionClickListener}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -164,20 +162,35 @@
                 style="@style/default_text_style"
                 android:id="@+id/app_version_subtitle"
                 android:onClick="@{appVersionClickListener}"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:text="@{viewModel.appVersion, default=`6.0.0 (master)`}"
                 android:textSize="14sp"
                 android:textColor="?attr/color_main2_600"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constrainedWidth="true"
                 app:layout_constraintTop_toBottomOf="@id/app_version_title"
                 app:layout_constraintStart_toEndOf="@id/app_version_icon"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toStartOf="@id/app_version_copy_icon" />
+
+            <ImageView
+                android:id="@+id/app_version_copy_icon"
+                android:onClick="@{appVersionClickListener}"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/copy"
+                app:tint="?attr/color_main2_600"
+                app:layout_constraintTop_toTopOf="@id/app_version_subtitle"
+                app:layout_constraintBottom_toBottomOf="@id/app_version_subtitle"
+                app:layout_constraintStart_toEndOf="@id/app_version_subtitle"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
             <ImageView
                 android:id="@+id/sdk_version_icon"
-                android:onClick="@{sdkVersionClickListener}"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginStart="16dp"
@@ -192,7 +205,6 @@
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/header_style"
                 android:id="@+id/sdk_version_title"
-                android:onClick="@{sdkVersionClickListener}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -207,20 +219,35 @@
                 style="@style/default_text_style"
                 android:id="@+id/sdk_version_subtitle"
                 android:onClick="@{sdkVersionClickListener}"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:text="@{viewModel.sdkVersion, default=`5.4.0 (master)`}"
                 android:textSize="14sp"
                 android:textColor="?attr/color_main2_600"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constrainedWidth="true"
                 app:layout_constraintTop_toBottomOf="@id/sdk_version_title"
                 app:layout_constraintStart_toEndOf="@id/sdk_version_icon"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toStartOf="@id/sdk_version_copy_icon" />
+
+            <ImageView
+                android:id="@+id/sdk_version_copy_icon"
+                android:onClick="@{sdkVersionClickListener}"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/copy"
+                app:tint="?attr/color_main2_600"
+                app:layout_constraintTop_toTopOf="@id/sdk_version_subtitle"
+                app:layout_constraintBottom_toBottomOf="@id/sdk_version_subtitle"
+                app:layout_constraintStart_toEndOf="@id/sdk_version_subtitle"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
             <ImageView
                 android:id="@+id/firebase_project_icon"
-                android:onClick="@{sdkVersionClickListener}"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginStart="16dp"
@@ -235,7 +262,6 @@
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/header_style"
                 android:id="@+id/firebase_project_title"
-                android:onClick="@{sdkVersionClickListener}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -249,7 +275,6 @@
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style"
                 android:id="@+id/firebase_project_subtitle"
-                android:onClick="@{sdkVersionClickListener}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"

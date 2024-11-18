@@ -98,6 +98,9 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="24dp"
                 android:text="@string/help_about_privacy_policy_title"
+                android:drawableEnd="@drawable/arrow_square_out"
+                android:drawablePadding="5dp"
+                app:drawableTint="?attr/color_main2_600"
                 app:layout_constraintTop_toBottomOf="@id/about_title"
                 app:layout_constraintStart_toEndOf="@id/privacy_policy_icon"
                 app:layout_constraintEnd_toEndOf="parent"/>
@@ -213,6 +216,9 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="24dp"
                 android:text="@string/help_about_open_source_licenses_title"
+                android:drawableEnd="@drawable/arrow_square_out"
+                android:drawablePadding="5dp"
+                app:drawableTint="?attr/color_main2_600"
                 app:layout_constraintTop_toBottomOf="@id/version_flow"
                 app:layout_constraintStart_toEndOf="@id/open_source_licenses_icon"
                 app:layout_constraintEnd_toEndOf="parent"/>
@@ -256,6 +262,9 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="24dp"
                 android:text="@string/help_about_contribute_translations_title"
+                android:drawableEnd="@drawable/arrow_square_out"
+                android:drawablePadding="5dp"
+                app:drawableTint="?attr/color_main2_600"
                 app:layout_constraintTop_toBottomOf="@id/open_source_licenses_subtitle"
                 app:layout_constraintStart_toEndOf="@id/translate_icon"
                 app:layout_constraintEnd_toEndOf="parent"/>
