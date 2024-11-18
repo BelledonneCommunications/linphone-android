@@ -489,10 +489,11 @@ class CoreContext(
                 sipTransport = "tls"
             }
 
-            var sipPort = ""
-            if (userDevice.sipPort > 0) {
-                sipPort = ":${userDevice.sipPort}"
-            }
+// See WI27048
+            val sipPort = ""
+//            if (userDevice.sipPort > 0) {
+//                sipPort = ":${userDevice.sipPort}"
+//            }
 
             val serverUri = "<sip:${outboundProxy}$sipPort;transport=${stringToTransportType(
                 sipTransport
