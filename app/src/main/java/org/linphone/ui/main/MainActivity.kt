@@ -31,6 +31,7 @@ import android.os.Parcelable
 import android.view.Gravity
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.view.WindowManager
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -262,7 +263,11 @@ class MainActivity : GenericActivity() {
 
         coreContext.digestAuthenticationRequestedEvent.observe(this) {
             it.consume { identity ->
-                showAuthenticationRequestedDialog(identity)
+                try {
+                    showAuthenticationRequestedDialog(identity)
+                } catch (e: WindowManager.BadTokenException) {
+                    Log.e("$TAG Failed to show authentication dialog: $e")
+                }
             }
         }
 
