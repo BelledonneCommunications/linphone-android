@@ -164,7 +164,7 @@ class TelecomManager @WorkerThread constructor(context: Context) {
                     Log.i("$TAG Call added to Telecom's CallsManager")
                 }
             } catch (e: Exception) {
-                Log.e("$TAG Failed to add call to Telecom's CallsManager!")
+                Log.e("$TAG Failed to add call to Telecom's CallsManager: $e")
             }
         }
     }

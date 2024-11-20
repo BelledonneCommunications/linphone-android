@@ -55,6 +55,10 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
 
     lateinit var core: Core
 
+    fun isCoreAvailable(): Boolean {
+        return ::core.isInitialized
+    }
+
     val contactsManager = ContactsManager()
 
     val notificationsManager = NotificationsManager(context)

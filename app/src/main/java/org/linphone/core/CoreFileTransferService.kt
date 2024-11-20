@@ -44,6 +44,8 @@ class CoreFileTransferService : FileTransferService() {
 
     var builder = NotificationCompat.Builder(this, SERVICE_NOTIFICATION_CHANNEL_ID)
 
+    var listenerAdded = false
+
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
         override fun onRemainingNumberOfFileTransferChanged(
@@ -57,12 +59,19 @@ class CoreFileTransferService : FileTransferService() {
 
     override fun onCreate() {
         super.onCreate()
-        coreContext.core.addListener(coreListener)
+        if (!listenerAdded && coreContext.isCoreAvailable()) {
+            coreContext.core.addListener(coreListener)
+            listenerAdded = true
+        }
         Log.i("$TAG Created")
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i("$TAG onStartCommand")
+        if (!listenerAdded && coreContext.isCoreAvailable()) {
+            coreContext.core.addListener(coreListener)
+            listenerAdded = true
+        }
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -74,6 +83,7 @@ class CoreFileTransferService : FileTransferService() {
     override fun onDestroy() {
         Log.i("$TAG onDestroy")
         coreContext.core.removeListener(coreListener)
+        listenerAdded = false
         super.onDestroy()
     }
 
