@@ -11,7 +11,7 @@ Group changes to describe their impact on the project, as follows:
     Security to invite users to upgrade in case of vulnerabilities.
 
 
-## [6.0.0] - 2024-07-??
+## [6.0.0] - 2024-??-??
 
 6.0.0 release is a complete rework of Linphone Android, with a fully redesigned UI, so it is impossible to list everything here.
 
@@ -19,6 +19,7 @@ Group changes to describe their impact on the project, as follows:
 - Separated threads: Contrary to previous versions, our SDK is now running in it's own thread, meaning it won't freeze the UI anymore in case of heavy work, thus reducing the number of ANR and greatly increasing the fluidity of the app.
 - Asymmetrical video : you no longer need to send your own camera feed to receive the one from the remote end of the call, and vice versa.
 - Improved multi account: you'll only see history, conversations, meetings etc... related to currently selected account, and you can switch the default account in two clicks.
+- Call transfer: Blind & Attended call transfer have been merged into one: during a call, if you initiate a transfer action, either pick another call to do the attended transfer or select a contact from the list (you can input a SIP URI not already in the suggestions list) to start a blind transfer.
 - Settings: a lot of them are gone, the one that are still there have been reworked to increase user friendliness.
 - Default screen (between contacts, call history, conversations & meetings list) will change depending on where you were when the app was paused or killed, and you will return to that last visited screen on the next startup.
 - Gradle files have been migrated from Groovy to Kotlin DSL, and dependencies are now in a separated file (libs.versions.toml).
@@ -29,14 +30,16 @@ Group changes to describe their impact on the project, as follows:
 ### Added
 - Contacts trust: contacts for which all devices have been validated through a ZRTP call with SAS exchange are now highlighted with a blue circle (and with a red one in case of mistrust). That trust is now handled at contact level (instead of conversation level in previous versions). 
 - Media & documents exchanged in a conversation can be easily found through a dedicated screen.
-- A brand new chat message research has been added to conversations.
+- A brand new chat message search feature has been added to conversations.
 - You can now react to a chat message using any emoji.
-- Screen sharing in conference: only desktop app starting with 6.0 version is able to start it, but on mobiles you'll be able to see it.
 - Chat while in call: a shortcut to a conversation screen with the remote.
+- Chat while in a conference: if the conference has a text stream enabled, you can chat with the other participants of the conference while it lasts. At the end, you'll find the messages history in the call history (and not in the list of conversations).
+- Screen sharing in conference: only desktop app starting with 6.0 version is able to start it, but on mobiles you'll be able to see it.
 - You can choose whatever ringtone you'd like for incoming calls (in Android notification channel settings).
 - Security focus: security & trust is more visible than ever, and unsecure conversations & calls are even more visible than before.
 - CardDAV: you can configure as many CardDAV servers you want to synchronize you contacts in Linphone (in addition or in replacement of native addressbook import).
 - OpenID: when used with a SSO compliant SIP server (such as Flexisip), we support single-sign-on login.
+- MWI support: display and allow to call your voicemail when you have new messages (if supported by your VoIP provider and properly configured in your account params).
 - Devices list: check on which device your sip.linphone.org account is connected and the last connection date & time (like on subscribe.linphone.org).
 - Protobuf dependency to allow logging native crashes stack traces at next app startup.
 - Android 15 startup listener, allowing us to log type of start (cold, warm, etc...) and some other useful info.

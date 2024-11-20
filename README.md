@@ -5,7 +5,7 @@ Linphone is an open source softphone for voice and video over IP calling and ins
 
 It is fully SIP-based, for all calling, presence and IM features.
 
-General description is available from [linphone web site](https://www.linphone.org/technical-corner/linphone).
+General description is available from [linphone web site](https://linphone.org).
 
 ### How to get it
 
@@ -21,11 +21,11 @@ Linphone is dual licensed, and is available either :
 
  - under a [GNU/GPLv3 license](https://www.gnu.org/licenses/gpl-3.0.en.html), for free (open source). Please make sure that you understand and agree with the terms  of this license before using it (see LICENSE file for details).
 
- - under a proprietary license, for a fee, to be used in closed source applications. Contact [Belledonne Communications](https://www.linphone.org/contact) for any question about costs and services.
+ - under a proprietary license, for a fee, to be used in closed source applications. Contact [Belledonne Communications](https://linphone.org/contact) for any question about costs and services.
 
 ### Documentation
 
-- Supported features and RFCs : https://www.linphone.org/technical-corner/linphone/features
+- Supported features and RFCs : https://linphone.org/technical-corner/linphone/features
 
 - Linphone public wiki : https://wiki.linphone.org/xwiki/wiki/public/view/Linphone/
 
@@ -33,16 +33,11 @@ Linphone is dual licensed, and is available either :
 
 # What's new
 
-App has been totally rewritten in Kotlin using modern components such as Navigation, Data Binding, View Models, coroutines, etc...  
-Check the [CHANGELOG](./CHANGELOG.md) file for a more detailed list.
-The first linphone-android release that will be based on this will be 4.5.0, using 5.0.0 SDK.
+6.0.0 release is a completely new version, designed with UX/UI experts and marks a turning point in design, features, and user experience. The improvements make this version smoother and simpler for both developers and users.
 
-We're also taking a fresh start regarding translations so less languages will be available for a while.  
-If you want to contribute, you are welcome to do so, check the [Translations](#Translations) section below.
+You can take a look at the [CHANGELOG.md](CHANGELOG.md) file for a non-exhaustive list of changes of this new version and of the newly added features, the most exciting ones being the improved fluidity, a real multi-accounts support and asymetrical video in calls.
 
-org.linphone.legacy flavor (old java wrapper if you didn't migrate your app code to the new one yet) is no longer supported starting 5.0.0 SDK.
-
-The sample project has been removed, we now recommend you to take a look at our [tutorials](https://gitlab.linphone.org/BC/public/tutorials/-/tree/master/android/kotlin).
+This release only works on Android OS 9.0 and newer.
 
 # Building the app
 
@@ -108,13 +103,9 @@ Also check you have built the SDK for the right CPU architecture using the `-DLI
 
 ### Behavior issue
 
-When submitting an issue on our [Github repository](https://github.com/BelledonneCommunications/linphone-android), please follow the template and attach the matching library logs:
+When submitting an issue on our [Github repository](https://github.com/BelledonneCommunications/linphone-android), please follow the template and attach the matching library logs.
 
-1. To enable them, go to Settings -> Advanced and toggle `Debug Mode`. If they are already enabled, clear them first using the `Reset logs` button on the About page.
-
-2. Then restart the app, reproduce the issue and upload the logs using the `Send logs` button on the advanced settings page.
-
-3. Finally paste the link to the uploaded logs (link is already in the clipboard after a successful upload).
+Starting 6.0.0 release, logs are always enabled and stored locally on the device, you can clear them/upload them securely on our server for sharing by going into the Help → Troubleshooting page.
 
 ### Native crash
 
@@ -122,16 +113,13 @@ First of all, to be able to get a symbolized stack trace, you need the debug ver
 
 If you haven't built the SDK locally (see [building a local SDK](#BuildingalocalSDK)), here's how to get them:
 
-1. Go to our [maven repository](https://download.linphone.org/maven_repository/org/linphone/linphone-sdk-android-debug/), in the linphone-android-debug directory.
+1. Go to our [maven repository](https://download.linphone.org/maven_repository/org/linphone/linphone-sdk-android/) and find the directory that matches the version of our SDK that crashed.
 
-2. Download the AAR file with **the exact same version** as the AAR that was used to generate the crash's stacktrace.
+2. Download the linphone-sdk-android-<version>-libs-debug.zip archive.
 
-3. Extract the AAR somewhere on your computer (it's a simple ZIP file even it's doesn't have the extension). Libraries are stored inside the ```jni``` folder (a directory for each architectured built, usually ```arm64-v8a, armeabi-v7a, x86_64 and x86```).
-
-4. To get consistent with locally built SDK, rename the ```jni``` directory into ```libs-debug```.
+3. Extract the symbolized libraries somewhere on your computer, it will create a ```libs-debug``` directory.
 
 Now you need the ```ndk-stack``` tool and possibly ```adb logcat```.
-
 If your computer isn't used for Android development, you can download those tools from [Google website](https://developer.android.com/studio#downloads), in the ```Command line tools only``` section.
 
 Once you have the debug libraries and the proper tools installed, you can use the ```ndk-stack``` tool to symbolize your stacktrace. Note that you also need to know the architecture (armv7, arm64, x86, etc...) of the libraries that were used.
@@ -148,20 +136,18 @@ Warning: This command won't print anything until you reproduce the crash!
 
 ## Create an APK with a different package name
 
-Simply edit the app/build.gradle file and change the value of the ```packageName``` variable.
+Simply edit the ```app/build.gradle.kts``` file and change the value of the ```packageName``` variable.
 The next build will automatically use this value everywhere thanks to ```manifestPlaceholders``` feature of gradle and Android.
 
-You may have already noticed that the app installed by Android Studio has ```org.linphone.debug``` package name.  
-If you build the app as release, the package name will be ```org.linphone```.
+We no longer build the debug flavor with a different package name, but if you still want that behavior you only have to change the value of ```useDifferentPackageNameForDebugBuild``` to ```true```. When enabled, app built and installed by Android studio will have ```org.linphone.debug``` package name instead of ```org.linphone```.
 
 If you encounter
 ```
 Execution failed for task ':app:processDebugGoogleServices'.
 > No matching client found for package name 'your package name'
 ```
-
-error when building, make sure you have replaced ```app/google-services.json``` file by yours (containing your package name).
-If you don't have such file, remove ours.
+error when building, make sure you have replaced the ```app/google-services.json``` file by yours (containing your package name).
+If you don't have such file because you don't rely on Firebase Cloud Messaging features nor Crashlytics, delete the file instead.
 
 ## Firebase push notifications
 
@@ -172,16 +158,6 @@ We have archived our own, so you can build your linphone-android application and
 If you delete it, you won't receive any push notification.
 
 If you have your own push server, replace this file by yours.
-
-## Translations
-
-We no longer use transifex for the translation process, instead we have deployed our own instance of [Weblate](https://weblate.linphone.org/).
-
-Due to the full app rewrite we can't re-use previous translations, so we'll be very happy if you want to contribute.
-
-<a href="https://weblate.linphone.org/engage/linphone/?utm_source=widget">
-<img src="https://weblate.linphone.org/widgets/linphone/-/linphone-android/multi-auto.svg" alt="Translation status" />
-</a>
 
 # CONTRIBUTIONS
 
