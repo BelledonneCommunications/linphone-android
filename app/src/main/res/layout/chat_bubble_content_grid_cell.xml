@@ -24,7 +24,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="@{model.isImage || model.isVideoPreview ? View.GONE : View.VISIBLE}"
-            app:constraint_referenced_ids="file_name, file_background, file_icon" />
+            app:constraint_referenced_ids="file_name, file_background" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/download_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{model.transferProgress == -1 || model.transferProgress >= 100 ? View.GONE : View.VISIBLE}"
+            app:constraint_referenced_ids="transfer_progress, transfer_progress_label" />
 
         <ImageView
             android:id="@+id/broken_media_icon"
@@ -83,22 +90,32 @@
             app:layout_constraintEnd_toEndOf="@id/image"
             app:tint="@color/white" />
 
-        <ImageView
-            android:id="@+id/file_icon"
+        <View
+            android:id="@+id/left_background"
             android:layout_width="@dimen/chat_bubble_grid_image_size"
             android:layout_height="@dimen/chat_bubble_grid_image_size"
             android:layout_marginTop="1dp"
             android:layout_marginBottom="1dp"
+            android:background="@drawable/shape_squircle_main2_200_left"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/file_icon"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:onClick="@{() -> model.onClick()}"
             android:onLongClick="@{onLongClickListener}"
             android:adjustViewBounds="true"
             android:padding="18dp"
             android:contentDescription="@string/content_description_chat_bubble_file"
             android:src="@{model.isWaitingToBeDownloaded ? @drawable/download_simple : model.isPdf ? @drawable/file_pdf : model.isAudio ? @drawable/file_audio : @drawable/file, default=@drawable/file_pdf}"
-            android:background="@drawable/shape_squircle_main2_200_left"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="@{model.isImage || model.isVideoPreview || (model.transferProgress >= 0 &amp;&amp; model.transferProgress &lt; 100) ? View.GONE : View.VISIBLE}"
+            app:layout_constraintTop_toTopOf="@id/left_background"
+            app:layout_constraintBottom_toBottomOf="@id/left_background"
+            app:layout_constraintStart_toStartOf="@id/left_background"
+            app:layout_constraintEnd_toEndOf="@id/left_background"
             app:tint="?attr/color_main2_600" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -111,24 +128,40 @@
             android:textColor="@color/main2_600"
             android:textSize="12sp"
             android:visibility="@{model.isAudio &amp;&amp; model.audioVideoDuration.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintBottom_toBottomOf="@id/file_icon"
-            app:layout_constraintStart_toStartOf="@id/file_icon"/>
+            app:layout_constraintBottom_toBottomOf="@id/left_background"
+            app:layout_constraintStart_toStartOf="@id/left_background"/>
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/transfer_progress"
             android:layout_width="@dimen/chat_bubble_grid_image_size"
             android:layout_height="@dimen/chat_bubble_grid_image_size"
-            android:padding="18dp"
             android:indeterminate="false"
             android:progress="@{model.transferProgress}"
             android:max="100"
-            android:visibility="@{model.transferProgress == -1 || model.transferProgress >= 100 ? View.GONE : View.VISIBLE}"
+            app:indicatorSize="50dp"
             app:trackColor="?attr/color_main1_100"
             app:indicatorColor="?attr/color_main1_500"
-            app:layout_constraintTop_toTopOf="@id/file_icon"
-            app:layout_constraintBottom_toBottomOf="@id/file_icon"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/left_background"
+            app:layout_constraintBottom_toBottomOf="@id/left_background"
+            app:layout_constraintStart_toStartOf="@id/left_background"
+            app:layout_constraintEnd_toEndOf="@id/left_background"
             tools:progress="40" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/main_page_title_style"
+            android:id="@+id/transfer_progress_label"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:onClick="@{() -> model.onClick()}"
+            android:onLongClick="@{onLongClickListener}"
+            android:text="@{model.transferProgressLabel, default=`40%`}"
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:textColor="?attr/color_main1_500"
+            app:layout_constraintTop_toTopOf="@id/left_background"
+            app:layout_constraintBottom_toBottomOf="@id/left_background"
+            app:layout_constraintStart_toStartOf="@id/left_background"
+            app:layout_constraintEnd_toEndOf="@id/left_background" />
 
         <View
             android:id="@+id/file_background"
@@ -137,9 +170,9 @@
             android:layout_width="@dimen/chat_bubble_grid_file_width"
             android:layout_height="0dp"
             android:background="@drawable/shape_squircle_white_right"
-            app:layout_constraintTop_toTopOf="@id/file_icon"
-            app:layout_constraintBottom_toBottomOf="@id/file_icon"
-            app:layout_constraintStart_toEndOf="@id/file_icon"/>
+            app:layout_constraintTop_toTopOf="@id/left_background"
+            app:layout_constraintBottom_toBottomOf="@id/left_background"
+            app:layout_constraintStart_toEndOf="@id/left_background"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_700"
@@ -157,7 +190,7 @@
             android:ellipsize="middle"
             android:background="@drawable/shape_squircle_white_r10_background"
             app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintStart_toEndOf="@id/file_icon"
+            app:layout_constraintStart_toEndOf="@id/left_background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/file_background"
             app:layout_constraintBottom_toTopOf="@id/file_size"/>

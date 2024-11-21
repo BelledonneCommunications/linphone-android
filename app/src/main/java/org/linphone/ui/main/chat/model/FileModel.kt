@@ -54,6 +54,8 @@ class FileModel @AnyThread constructor(
 
     val transferProgress = MutableLiveData<Int>()
 
+    val transferProgressLabel = MutableLiveData<String>()
+
     val mediaPreview = MutableLiveData<String>()
 
     val mediaPreviewAvailable = MutableLiveData<Boolean>()
@@ -86,7 +88,7 @@ class FileModel @AnyThread constructor(
 
     init {
         mediaPreviewAvailable.postValue(false)
-        transferProgress.postValue(-1)
+        updateTransferProgress(-1)
         formattedFileSize.postValue(FileUtils.bytesToDisplayableSize(fileSize))
 
         if (!isWaitingToBeDownloaded) {
@@ -133,6 +135,16 @@ class FileModel @AnyThread constructor(
             scope.launch {
                 FileUtils.deleteFile(path)
             }
+        }
+    }
+
+    @AnyThread
+    fun updateTransferProgress(percent: Int) {
+        transferProgress.postValue(percent)
+        if (percent < 0 || percent > 100) {
+            transferProgressLabel.postValue("")
+        } else {
+            transferProgressLabel.postValue("$percent%")
         }
     }
 

@@ -204,7 +204,7 @@ class MessageModel @WorkerThread constructor(
                 }
             } else if (messageState == ChatMessage.State.FileTransferDone) {
                 Log.i("$TAG File transfer is done")
-                transferringFileModel?.transferProgress?.postValue(-1)
+                transferringFileModel?.updateTransferProgress(-1)
                 transferringFileModel = null
                 if (!allFilesDownloaded) {
                     computeContentsList()
@@ -258,7 +258,7 @@ class MessageModel @WorkerThread constructor(
                     )
                 }
             }
-            model?.transferProgress?.postValue(percent)
+            model?.updateTransferProgress(percent)
         }
 
         @WorkerThread
@@ -531,7 +531,7 @@ class MessageModel @WorkerThread constructor(
                     "$TAG File [$contentName] will be downloaded at [${content.filePath}]"
                 )
 
-                model.transferProgress.postValue(0)
+                model.updateTransferProgress(0)
                 transferringFileModel = model
                 chatMessage.downloadContent(content)
             } else {
