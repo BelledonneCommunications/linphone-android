@@ -27,6 +27,7 @@ import org.linphone.contacts.ContactsManager
 import org.linphone.core.CallLog
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
+import org.linphone.core.Friend
 import org.linphone.core.GlobalState
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.history.model.CallLogModel
@@ -72,6 +73,9 @@ class HistoryListViewModel @UiThread constructor() : AbstractMainViewModel() {
             Log.i("$TAG Contacts have been (re)loaded, updating list")
             computeCallLogsList(currentFilter)
         }
+
+        @WorkerThread
+        override fun onContactFoundInRemoteDirectory(friend: Friend) { }
     }
 
     init {

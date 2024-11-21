@@ -90,6 +90,9 @@ class ContactsListViewModel @UiThread constructor() : AbstractMainViewModel() {
                 domainFilter
             )
         }
+
+        @WorkerThread
+        override fun onContactFoundInRemoteDirectory(friend: Friend) { }
     }
 
     init {
@@ -281,15 +284,19 @@ class ContactsListViewModel @UiThread constructor() : AbstractMainViewModel() {
 
         for (result in results) {
             val friend = result.friend
-            if (friend != null && friend.refKey.orEmpty().isEmpty()) {
-                if (friend.vcard != null) {
-                    friend.vcard?.generateUniqueId()
-                    friend.refKey = friend.vcard?.uid
-                } else {
-                    Log.w(
-                        "$TAG Friend [${friend.name}] found in SearchResults doesn't have a refKey, using name instead"
-                    )
-                    friend.refKey = friend.name
+            if (friend != null) {
+                if (coreContext.contactsManager.isContactTemporary(friend)) continue
+
+                if (friend.refKey.orEmpty().isEmpty()) {
+                    if (friend.vcard != null) {
+                        friend.vcard?.generateUniqueId()
+                        friend.refKey = friend.vcard?.uid
+                    } else {
+                        Log.w(
+                            "$TAG Friend [${friend.name}] found in SearchResults doesn't have a refKey, using name instead"
+                        )
+                        friend.refKey = friend.name
+                    }
                 }
             }
 

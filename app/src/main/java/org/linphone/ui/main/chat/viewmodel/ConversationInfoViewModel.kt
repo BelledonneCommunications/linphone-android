@@ -76,6 +76,8 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
 
     val oneToOneParticipantRefKey = MutableLiveData<String>()
 
+    val friendAvailable = MutableLiveData<Boolean>()
+
     val groupLeftEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -201,6 +203,9 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
             Log.i("$TAG Contacts have been (re)loaded, updating list")
             computeParticipantsList()
         }
+
+        @WorkerThread
+        override fun onContactFoundInRemoteDirectory(friend: Friend) { }
     }
 
     init {
@@ -497,7 +502,13 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
             sipUri.postValue(uri)
 
             val friend = coreContext.contactsManager.findContactByAddress(address)
-            oneToOneParticipantRefKey.postValue(friend?.refKey ?: "")
+            if (friend == null) {
+                oneToOneParticipantRefKey.postValue("")
+                friendAvailable.postValue(false)
+            } else {
+                oneToOneParticipantRefKey.postValue(friend.refKey)
+                friendAvailable.postValue(coreContext.contactsManager.isContactAvailable(friend))
+            }
         }
 
         ephemeralLifetime.postValue(

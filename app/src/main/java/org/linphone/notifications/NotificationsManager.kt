@@ -50,6 +50,7 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.compatibility.Compatibility
 import org.linphone.contacts.AvatarGenerator
+import org.linphone.contacts.ContactsManager.ContactsListener
 import org.linphone.contacts.getAvatarBitmap
 import org.linphone.contacts.getPerson
 import org.linphone.core.Address
@@ -59,10 +60,12 @@ import org.linphone.core.ChatMessageListener
 import org.linphone.core.ChatMessageListenerStub
 import org.linphone.core.ChatMessageReaction
 import org.linphone.core.ChatRoom
+import org.linphone.core.ConferenceParams
 import org.linphone.core.Core
 import org.linphone.core.CoreInCallService
 import org.linphone.core.CoreKeepAliveThirdPartyAccountsService
 import org.linphone.core.CoreListenerStub
+import org.linphone.core.Factory
 import org.linphone.core.Friend
 import org.linphone.core.MediaDirection
 import org.linphone.core.tools.Log
@@ -115,6 +118,57 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     private val notificationsMap = HashMap<Int, Notification>()
 
     private var currentlyDisplayedChatRoomId: String = ""
+
+    private val contactsListener = object : ContactsListener {
+        @WorkerThread
+        override fun onContactsLoaded() { }
+
+        @WorkerThread
+        override fun onContactFoundInRemoteDirectory(friend: Friend) {
+            val addresses = friend.addresses
+            Log.i(
+                "$TAG Found contact [${friend.name}] in remote directory with [${addresses.size}] addresses"
+            )
+
+            for ((remoteAddress, notifiable) in callNotificationsMap.entries) {
+                val parsedAddress = Factory.instance().createAddress(remoteAddress)
+                parsedAddress ?: continue
+                val addressMatch = addresses.find {
+                    it.weakEqual(parsedAddress)
+                }
+                if (addressMatch != null) {
+                    Log.i(
+                        "$TAG Found call [${addressMatch.asStringUriOnly()}] with contact in notifications, updating it"
+                    )
+                    updateCallNotification(notifiable, addressMatch, friend)
+                }
+            }
+
+            for ((remoteAddress, notifiable) in chatNotificationsMap.entries) {
+                var updated = false
+                var peerAddress: Address? = null
+                for (message in notifiable.messages) {
+                    val parsedAddress = Factory.instance().createAddress(message.senderAddress)
+                    parsedAddress ?: continue
+                    val addressMatch = addresses.find {
+                        it.weakEqual(parsedAddress)
+                    }
+                    if (addressMatch != null) {
+                        peerAddress = addressMatch
+                        updated = true
+                        message.sender = friend.name ?: LinphoneUtils.getDisplayName(addressMatch)
+                        message.friend = friend
+                    }
+                }
+                if (updated && peerAddress != null) {
+                    Log.i(
+                        "$TAG Found conversation [${peerAddress.asStringUriOnly()}] with contact in notifications, updating it"
+                    )
+                    updateConversationNotification(notifiable, peerAddress)
+                }
+            }
+        }
+    }
 
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
@@ -468,12 +522,15 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         }
 
         core.addListener(coreListener)
+
+        coreContext.contactsManager.addListener(contactsListener)
     }
 
     @WorkerThread
     fun onCoreStopped(core: Core) {
         Log.i("$TAG Getting destroyed, clearing foreground Service & call notifications")
         core.removeListener(coreListener)
+        coreContext.contactsManager.removeListener(contactsListener)
     }
 
     @WorkerThread
@@ -499,7 +556,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     }
 
     @WorkerThread
-    private fun showCallNotification(call: Call, isIncoming: Boolean) {
+    private fun showCallNotification(call: Call, isIncoming: Boolean, friend: Friend? = null) {
         val notifiable = getNotifiableForCall(call)
 
         val callNotificationIntent = Intent(context, CallActivity::class.java)
@@ -518,11 +575,11 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         )
 
         val notification = createCallNotification(
-            context,
             call,
             notifiable,
             pendingIntent,
-            isIncoming
+            isIncoming,
+            friend
         )
         if (isIncoming) {
             currentlyRingingCallRemoteAddress = call.remoteAddress
@@ -801,6 +858,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             text,
             contact,
             displayName,
+            address.asStringUriOnly(),
             message.time * 1000, /* Linphone timestamps are in seconds */
             isOutgoing = false,
             isReaction = true,
@@ -824,6 +882,33 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                 "$TAG Notifiable is empty but we should have displayed the reaction!"
             )
         }
+    }
+
+    @WorkerThread
+    private fun updateConversationNotification(notifiable: Notifiable, remoteAddress: Address) {
+        val localAddress = Factory.instance().createAddress(notifiable.localIdentity.orEmpty())
+        localAddress ?: return
+        val params: ConferenceParams? = null
+        val chatRoom: ChatRoom? = coreContext.core.searchChatRoom(
+            params,
+            localAddress,
+            remoteAddress,
+            arrayOfNulls<Address>(0)
+        )
+        chatRoom ?: return
+
+        val me = coreContext.contactsManager.getMePerson(chatRoom.localAddress)
+        val pendingIntent = getChatRoomPendingIntent(chatRoom, notifiable.notificationId)
+        val notification = createMessageNotification(
+            notifiable,
+            pendingIntent,
+            LinphoneUtils.getChatRoomId(chatRoom),
+            me
+        )
+        Log.i(
+            "$TAG Updating chat notification with ID [${notifiable.notificationId}]"
+        )
+        notify(notifiable.notificationId, notification, CHAT_TAG)
     }
 
     @WorkerThread
@@ -876,7 +961,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         var notifiable: Notifiable? = callNotificationsMap[address]
         if (notifiable == null) {
             notifiable = Notifiable(getNotificationIdForCall(call))
-            notifiable.remoteAddress = call.remoteAddress.asStringUriOnly()
+            notifiable.remoteAddress = address
 
             callNotificationsMap[address] = notifiable
         }
@@ -890,10 +975,12 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         val displayName = contact?.name ?: LinphoneUtils.getDisplayName(message.fromAddress)
 
         val text = LinphoneUtils.getPlainTextDescribingMessage(message)
+        val address = message.fromAddress
         val notifiableMessage = NotifiableMessage(
             text,
             contact,
             displayName,
+            address.asStringUriOnly(),
             message.time * 1000, /* Linphone timestamps are in seconds */
             isOutgoing = message.isOutgoing
         )
@@ -922,11 +1009,11 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
     @WorkerThread
     private fun createCallNotification(
-        context: Context,
         call: Call,
         notifiable: Notifiable,
         pendingIntent: PendingIntent?,
-        isIncoming: Boolean
+        isIncoming: Boolean,
+        friend: Friend? = null
     ): Notification {
         val declineIntent = getCallDeclinePendingIntent(notifiable)
         val answerIntent = getCallAnswerPendingIntent(notifiable)
@@ -953,8 +1040,8 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                 .setImportant(false)
                 .build()
         } else {
-            val contact =
-                coreContext.contactsManager.findContactByAddress(remoteAddress)
+            val contact = friend
+                ?: coreContext.contactsManager.findContactByAddress(remoteAddress)
             val displayName = contact?.name ?: LinphoneUtils.getDisplayName(remoteAddress)
 
             getPerson(contact, displayName)
@@ -1037,6 +1124,47 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     }
 
     @WorkerThread
+    private fun updateCallNotification(
+        notifiable: Notifiable,
+        remoteAddress: Address,
+        friend: Friend
+    ) {
+        val call = coreContext.core.getCallByRemoteAddress2(remoteAddress)
+        if (call == null) {
+            Log.w(
+                "$TAG Failed to find call with remote SIP URI [${remoteAddress.asStringUriOnly()}]"
+            )
+            return
+        }
+        val isIncoming = LinphoneUtils.isCallIncoming(call.state)
+
+        val notification = notificationsMap[notifiable.notificationId]
+        if (notification == null) {
+            Log.w(
+                "$TAG Failed to find notification with ID [${notifiable.notificationId}], creating a new one"
+            )
+            showCallNotification(call, isIncoming, friend)
+            return
+        }
+
+        val pendingIntent = notification.fullScreenIntent
+        val newNotification = createCallNotification(
+            call,
+            notifiable,
+            pendingIntent,
+            isIncoming,
+            friend
+        )
+        if (isIncoming) {
+            Log.i("$TAG Updating incoming call notification with ID [$INCOMING_CALL_ID]")
+            notify(INCOMING_CALL_ID, newNotification)
+        } else {
+            Log.i("$TAG Updating call notification with ID [${notifiable.notificationId}]")
+            notify(notifiable.notificationId, newNotification)
+        }
+    }
+
+    @WorkerThread
     private fun createMessageNotification(
         notifiable: Notifiable,
         pendingIntent: PendingIntent,
@@ -1078,6 +1206,9 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
         style.conversationTitle = if (notifiable.isGroup) notifiable.groupTitle else lastPerson?.name
         style.isGroupConversation = notifiable.isGroup
+        Log.i(
+            "$TAG Conversation is ${if (style.isGroupConversation) "group" else "1-1"} with title [${style.conversationTitle}]"
+        )
 
         val largeIcon = lastPersonAvatar
         val notificationBuilder = NotificationCompat.Builder(
@@ -1131,7 +1262,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         val notifiable: Notifiable? = chatNotificationsMap[address]
         if (notifiable != null) {
             Log.i(
-                "$TAG Dismissing notification for conversation $chatRoom with id ${notifiable.notificationId}"
+                "$TAG Dismissing notification for conversation [${chatRoom.peerAddress.asStringUriOnly()}] with id ${notifiable.notificationId}"
             )
             notifiable.messages.clear()
             cancelNotification(notifiable.notificationId, CHAT_TAG)
@@ -1193,6 +1324,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             text,
             null,
             notifiable.myself ?: LinphoneUtils.getDisplayName(senderAddress),
+            senderAddress.asStringUriOnly(),
             System.currentTimeMillis(),
             isOutgoing = true
         )
@@ -1459,9 +1591,10 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     }
 
     class NotifiableMessage(
-        var message: String,
-        val friend: Friend?,
-        val sender: String,
+        val message: String,
+        var friend: Friend?,
+        var sender: String,
+        val senderAddress: String,
         val time: Long,
         var filePath: Uri? = null,
         var fileMime: String? = null,

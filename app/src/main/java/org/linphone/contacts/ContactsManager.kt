@@ -52,6 +52,8 @@ import org.linphone.core.Factory
 import org.linphone.core.Friend
 import org.linphone.core.FriendList
 import org.linphone.core.FriendListListenerStub
+import org.linphone.core.MagicSearch
+import org.linphone.core.MagicSearchListenerStub
 import org.linphone.core.SecurityLevel
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.MainActivity
@@ -70,7 +72,8 @@ class ContactsManager @UiThread constructor() {
         private const val TAG = "[Contacts Manager]"
 
         private const val DELAY_BEFORE_RELOADING_CONTACTS_AFTER_PRESENCE_RECEIVED = 1000L // 1 second
-        private const val FRIEND_LIST_TEMPORARY_STORED = "TempNativeContacts"
+        private const val FRIEND_LIST_TEMPORARY_STORED_NATIVE = "TempNativeContacts"
+        private const val FRIEND_LIST_TEMPORARY_STORED_REMOTE_DIRECTORY = "TempRemoteDirectoryContacts"
     }
 
     private var nativeContactsLoaded = false
@@ -87,6 +90,36 @@ class ContactsManager @UiThread constructor() {
     private var reloadContactsJob: Job? = null
 
     private var loadContactsOnlyFromDefaultDirectory = true
+
+    private lateinit var magicSearch: MagicSearch
+
+    private val magicSearchListener = object : MagicSearchListenerStub() {
+        @WorkerThread
+        override fun onSearchResultsReceived(magicSearch: MagicSearch) {
+            val results = magicSearch.lastSearch
+            Log.i("$TAG [${results.size}] magic search results available")
+
+            if (results.isNotEmpty()) {
+                val result = results.first() {
+                    it.friend != null
+                }
+                if (result != null) {
+                    val friend = result.friend!!
+                    Log.i("$TAG Found matching friend in source [${result.sourceFlags}]")
+
+                    // Store friend in app's cache to be re-used in call history, conversations, etc...
+                    val temporaryFriendList = getTemporaryFriendList(native = false)
+                    temporaryFriendList.addFriend(friend)
+                    newContactAdded(friend)
+                    Log.i("$TAG Stored discovered friend in temporary friend list, for later use")
+
+                    for (listener in listeners) {
+                        listener.onContactFoundInRemoteDirectory(friend)
+                    }
+                }
+            }
+        }
+    }
 
     private val friendListListener: FriendListListenerStub = object : FriendListListenerStub() {
         @WorkerThread
@@ -106,7 +139,7 @@ class ContactsManager @UiThread constructor() {
                 friend.addAddress(address)
                 friend.done()
 
-                newContactAddedWithSipUri(sipUri)
+                newContactAddedWithSipUri(friend, sipUri)
             } else {
                 Log.e("$TAG Failed to parse SIP URI [$sipUri] as Address!")
             }
@@ -182,7 +215,7 @@ class ContactsManager @UiThread constructor() {
     }
 
     @WorkerThread
-    private fun newContactAddedWithSipUri(sipUri: String) {
+    private fun newContactAddedWithSipUri(friend: Friend, sipUri: String) {
         if (unknownContactsAvatarsMap.keys.contains(sipUri)) {
             Log.d("$TAG Found SIP URI [$sipUri] in unknownContactsAvatarsMap, removing it")
             val oldModel = unknownContactsAvatarsMap[sipUri]
@@ -195,13 +228,19 @@ class ContactsManager @UiThread constructor() {
             val oldModel = knownContactsAvatarsMap[sipUri]
             val address = Factory.instance().createAddress(sipUri)
             oldModel?.update(address)
+        } else {
+            Log.i(
+                "$TAG New contact added with SIP URI [$sipUri] but no avatar yet, let's create it"
+            )
+            val model = ContactAvatarModel(friend)
+            knownContactsAvatarsMap[sipUri] = model
         }
     }
 
     @WorkerThread
     fun newContactAdded(friend: Friend) {
         for (sipAddress in friend.addresses) {
-            newContactAddedWithSipUri(sipAddress.asStringUriOnly())
+            newContactAddedWithSipUri(friend, sipAddress.asStringUriOnly())
         }
 
         conferenceAvatarMap.values.forEach(ContactAvatarModel::destroy)
@@ -240,14 +279,12 @@ class ContactsManager @UiThread constructor() {
         Log.i("$TAG Native contacts have been loaded, cleaning avatars maps")
 
         val core = coreContext.core
-        val found = core.getFriendListByName(FRIEND_LIST_TEMPORARY_STORED)
-        if (found != null) {
-            val count = found.friends.size
-            Log.i(
-                "$TAG Found temporary friend list with [$count] friends, removing it as no longer necessary"
-            )
-            core.removeFriendList(found)
-        }
+        val found = getTemporaryFriendList(native = true)
+        val count = found.friends.size
+        Log.i(
+            "$TAG Found temporary friend list with [$count] friends, removing it as no longer necessary"
+        )
+        core.removeFriendList(found)
 
         knownContactsAvatarsMap.values.forEach(ContactAvatarModel::destroy)
         knownContactsAvatarsMap.clear()
@@ -294,6 +331,21 @@ class ContactsManager @UiThread constructor() {
         if (found != null) {
             Log.d("$TAG Friend [${found.name}] was found using SIP URI [$sipUri]")
             return found
+        }
+
+        // Start an async query in Magic Search in case LDAP or remote CardDAV is configured
+        val remoteContactDirectories = coreContext.core.remoteContactDirectories
+        if (remoteContactDirectories.isNotEmpty()) {
+            Log.i(
+                "$TAG SIP URI [$sipUri] not found in locally stored Friends, trying LDAP/CardDAV remote directory"
+            )
+            magicSearch.resetSearchCache()
+            magicSearch.getContactsListAsync(
+                username,
+                address.domain,
+                MagicSearch.Source.LdapServers.toInt() or MagicSearch.Source.RemoteCardDAV.toInt(),
+                MagicSearch.Aggregation.Friend
+            )
         }
 
         val sipAddress = if (sipUri.startsWith("sip:")) {
@@ -436,6 +488,17 @@ class ContactsManager @UiThread constructor() {
     }
 
     @WorkerThread
+    fun isContactAvailable(friend: Friend): Boolean {
+        return !friend.refKey.isNullOrEmpty() && !isContactTemporary(friend)
+    }
+
+    @WorkerThread
+    fun isContactTemporary(friend: Friend): Boolean {
+        val friendList = friend.friendList
+        return friendList == null || friendList.displayName == FRIEND_LIST_TEMPORARY_STORED_NATIVE || friendList.displayName == FRIEND_LIST_TEMPORARY_STORED_REMOTE_DIRECTORY
+    }
+
+    @WorkerThread
     fun onCoreStarted(core: Core) {
         loadContactsOnlyFromDefaultDirectory = corePreferences.fetchContactsFromDefaultDirectory
 
@@ -443,6 +506,10 @@ class ContactsManager @UiThread constructor() {
         for (list in core.friendsLists) {
             list.addListener(friendListListener)
         }
+
+        magicSearch = core.createMagicSearch()
+        magicSearch.limitedSearch = false
+        magicSearch.addListener(magicSearchListener)
 
         val context = coreContext.context
         if (ActivityCompat.checkSelfPermission(
@@ -467,10 +534,29 @@ class ContactsManager @UiThread constructor() {
     @WorkerThread
     fun onCoreStopped(core: Core) {
         coroutineScope.cancel()
+
+        magicSearch.removeListener(magicSearchListener)
         core.removeListener(coreListener)
+
         for (list in core.friendsLists) {
             list.removeListener(friendListListener)
         }
+    }
+
+    @WorkerThread
+    fun getTemporaryFriendList(native: Boolean): FriendList {
+        val core = coreContext.core
+        val name = if (native) FRIEND_LIST_TEMPORARY_STORED_NATIVE else FRIEND_LIST_TEMPORARY_STORED_REMOTE_DIRECTORY
+        val temporaryFriendList = core.getFriendListByName(name) ?: core.createFriendList()
+        if (temporaryFriendList.displayName.isNullOrEmpty()) {
+            temporaryFriendList.isDatabaseStorageEnabled = false
+            temporaryFriendList.displayName = name
+            core.addFriendList(temporaryFriendList)
+            Log.i(
+                "$TAG Created temporary friend list with name [$name]"
+            )
+        }
+        return temporaryFriendList
     }
 
     @WorkerThread
@@ -499,16 +585,7 @@ class ContactsManager @UiThread constructor() {
                 "$TAG Looking for native contact with address [$address] ${if (searchAsPhoneNumber) "or phone number [$username]" else ""}"
             )
 
-            val temporaryFriendList = core.getFriendListByName(FRIEND_LIST_TEMPORARY_STORED) ?: core.createFriendList()
-            if (temporaryFriendList.displayName.isNullOrEmpty()) {
-                temporaryFriendList.isDatabaseStorageEnabled = false
-                temporaryFriendList.displayName = FRIEND_LIST_TEMPORARY_STORED
-                core.addFriendList(temporaryFriendList)
-                Log.i(
-                    "$TAG Created temporary friend list with name [$FRIEND_LIST_TEMPORARY_STORED]"
-                )
-            }
-
+            val temporaryFriendList = getTemporaryFriendList(native = true)
             try {
                 val selection = if (searchAsPhoneNumber) {
                     "${ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER} LIKE ? OR ${ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS} LIKE ? OR ${ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS} LIKE ? OR ${ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS} LIKE ?"
@@ -649,6 +726,8 @@ class ContactsManager @UiThread constructor() {
 
     interface ContactsListener {
         fun onContactsLoaded()
+
+        fun onContactFoundInRemoteDirectory(friend: Friend)
     }
 }
 

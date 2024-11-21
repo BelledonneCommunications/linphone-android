@@ -301,6 +301,9 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
                 }
             }
         }
+
+        @WorkerThread
+        override fun onContactFoundInRemoteDirectory(friend: Friend) { }
     }
 
     init {

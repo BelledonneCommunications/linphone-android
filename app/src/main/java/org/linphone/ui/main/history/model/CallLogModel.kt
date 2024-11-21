@@ -93,7 +93,7 @@ class CallLogModel @WorkerThread constructor(private val callLog: CallLog) {
             avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(address)
             val friend = avatarModel.friend
             friendRefKey = friend.refKey
-            friendExists = !friendRefKey.isNullOrEmpty()
+            friendExists = coreContext.contactsManager.isContactAvailable(friend)
         }
         displayedAddress = if (corePreferences.onlyDisplaySipUriUsername) {
             avatarModel.friend.address?.username ?: address.username ?: ""

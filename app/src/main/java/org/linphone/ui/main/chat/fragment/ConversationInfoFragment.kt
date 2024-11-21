@@ -349,8 +349,8 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
         val isAdmin = participantModel.isParticipantAdmin
         popupView.isParticipantAdmin = isAdmin
         popupView.isMeAdmin = participantModel.isMyselfAdmin
-        val friendRefKey = participantModel.avatarModel.friend.refKey
-        popupView.isParticipantContact = !friendRefKey.isNullOrEmpty()
+        val friendRefKey = participantModel.refKey
+        popupView.isParticipantContact = participantModel.friendAvailable
 
         popupView.setRemoveParticipantClickListener {
             Log.i("$TAG Trying to remove participant [$address]")
@@ -372,7 +372,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
 
         popupView.setSeeContactProfileClickListener {
             Log.i("$TAG Trying to display participant [$address] contact page")
-            if (!friendRefKey.isNullOrEmpty()) {
+            if (friendRefKey.isNotEmpty()) {
                 sharedViewModel.navigateToContactsEvent.value = Event(true)
                 sharedViewModel.showContactEvent.value = Event(friendRefKey)
             } else {

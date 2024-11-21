@@ -30,6 +30,7 @@ import org.linphone.R
 import org.linphone.contacts.ContactsManager
 import org.linphone.core.Address
 import org.linphone.core.ChatRoom
+import org.linphone.core.Friend
 import org.linphone.core.MagicSearch
 import org.linphone.core.MagicSearchListenerStub
 import org.linphone.core.SearchResult
@@ -87,6 +88,9 @@ abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccoun
                 magicSearchSourceFlags
             )
         }
+
+        @WorkerThread
+        override fun onContactFoundInRemoteDirectory(friend: Friend) { }
     }
 
     init {

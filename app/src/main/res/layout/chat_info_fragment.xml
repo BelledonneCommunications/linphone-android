@@ -400,7 +400,7 @@
                     android:drawableStart="@drawable/address_book"
                     android:onClick="@{goToContactClickListener}"
                     android:text="@string/conversation_info_menu_go_to_contact"
-                    android:visibility="@{!viewModel.isGroup &amp;&amp; viewModel.oneToOneParticipantRefKey.length() != 0 ? View.VISIBLE : View.GONE, default=gone}"
+                    android:visibility="@{!viewModel.isGroup &amp;&amp; viewModel.friendAvailable ? View.VISIBLE : View.GONE, default=gone}"
                     app:layout_constraintEnd_toEndOf="@id/actions_background"
                     app:layout_constraintStart_toStartOf="@id/actions_background"
                     app:layout_constraintTop_toTopOf="@id/actions_background" />
@@ -424,7 +424,7 @@
                     android:drawableStart="@drawable/user_plus"
                     android:onClick="@{addToContactsClickListener}"
                     android:text="@string/conversation_info_menu_add_to_contacts"
-                    android:visibility="@{!viewModel.isGroup &amp;&amp; viewModel.oneToOneParticipantRefKey.length() == 0 ? View.VISIBLE : View.GONE, default=gone}"
+                    android:visibility="@{!viewModel.isGroup &amp;&amp; !viewModel.friendAvailable ? View.VISIBLE : View.GONE, default=gone}"
                     app:layout_constraintEnd_toEndOf="@id/actions_background"
                     app:layout_constraintStart_toStartOf="@id/actions_background"
                     app:layout_constraintTop_toBottomOf="@id/action_see_contact" />

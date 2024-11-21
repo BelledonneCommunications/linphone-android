@@ -29,6 +29,7 @@ import org.linphone.core.ChatMessage
 import org.linphone.core.ChatRoom
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
+import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.chat.model.ConversationModel
 import org.linphone.ui.main.viewmodel.AbstractMainViewModel
@@ -86,6 +87,9 @@ class ConversationsListViewModel @UiThread constructor() : AbstractMainViewModel
                 model.updateLastMessage()
             }
         }
+
+        @WorkerThread
+        override fun onContactFoundInRemoteDirectory(friend: Friend) { }
     }
 
     init {

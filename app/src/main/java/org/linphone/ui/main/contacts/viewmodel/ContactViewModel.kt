@@ -186,6 +186,9 @@ class ContactViewModel @UiThread constructor() : GenericViewModel() {
                 refreshContactInfo()
             }
         }
+
+        @WorkerThread
+        override fun onContactFoundInRemoteDirectory(friend: Friend) { }
     }
 
     private val chatRoomListener = object : ChatRoomListenerStub() {

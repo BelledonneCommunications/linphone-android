@@ -24,6 +24,7 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Address
+import org.linphone.ui.main.contacts.model.ContactAvatarModel
 
 class ParticipantModel @WorkerThread constructor(
     val address: Address,
@@ -36,7 +37,15 @@ class ParticipantModel @WorkerThread constructor(
 ) {
     val sipUri = address.asStringUriOnly()
 
-    val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(address)
+    val avatarModel: ContactAvatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
+        address
+    )
+
+    val refKey: String = avatarModel.friend.refKey.orEmpty()
+
+    val friendAvailable: Boolean = coreContext.contactsManager.isContactAvailable(
+        avatarModel.friend
+    )
 
     @UiThread
     fun onClicked() {
