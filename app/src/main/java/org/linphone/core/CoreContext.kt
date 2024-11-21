@@ -531,10 +531,11 @@ class CoreContext(
 
             // FIXME: this feels rotten to the core
             runBlocking {
+                val appId = BuildConfig.APPLICATION_ID;
                 val pushToken = FirebaseMessaging.getInstance().token.await()
                 if (!pushToken.isNullOrEmpty()) {
                     Log.i("RegisterSipAccount: We have a push token, setting contact")
-                    accountParams.contactParameters = "app-id=cloud.xarios.dimensions;pn-tok=$pushToken;pn-type=firebase_v1"
+                    accountParams.contactParameters = "app-id=$appId;pn-tok=$pushToken;pn-type=firebase_v1"
                 }
             }
 
