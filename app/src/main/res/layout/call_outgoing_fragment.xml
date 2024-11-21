@@ -39,6 +39,27 @@
             app:layout_constraintStart_toEndOf="@id/call_direction_icon"
             app:layout_constraintTop_toTopOf="parent"/>
 
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/call_header_style"
+            android:id="@+id/separator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@string/vertical_separator"
+            app:layout_constraintTop_toTopOf="@id/call_direction_label"
+            app:layout_constraintStart_toEndOf="@id/call_direction_label"
+            app:layout_constraintEnd_toStartOf="@id/chronometer"/>
+
+        <Chronometer
+            style="@style/call_header_style"
+            android:id="@+id/chronometer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode || viewModel.isPaused || viewModel.isPausedByRemote ? View.GONE : View.VISIBLE}"
+            app:layout_constraintStart_toEndOf="@id/separator"
+            app:layout_constraintTop_toTopOf="@id/call_direction_label"/>
+
         <include
             android:id="@+id/avatar"
             android:layout_width="@dimen/avatar_in_call_size"
@@ -50,28 +71,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/call_direction_label"
             app:layout_constraintBottom_toTopOf="@id/name" />
-
-        <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:indeterminate="true"
-            app:indicatorColor="@color/white"
-            app:layout_constraintBottom_toTopOf="@id/chronometer"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <Chronometer
-            style="@style/default_text_style_300"
-            android:id="@+id/chronometer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="30sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/call_direction_label"
-            app:layout_constraintBottom_toTopOf="@id/avatar" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_300"

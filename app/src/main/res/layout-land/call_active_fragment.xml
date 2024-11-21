@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="backClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="transferCallClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="newCallClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="callsListClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="callStatisticsClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="callMediaEncryptionStatisticsClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.call.viewmodel.CurrentCallViewModel" />
+        <variable
+            name="callsViewModel"
+            type="org.linphone.ui.call.viewmodel.CallsViewModel" />
+        <variable
+            name="numpadModel"
+            type="org.linphone.ui.main.history.model.NumpadModel" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/gray_900">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/hinge_top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/hinge_bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="1" />
+
+            <include
+                android:id="@+id/avatar"
+                android:layout_width="@dimen/avatar_in_call_size"
+                android:layout_height="@dimen/avatar_in_call_size"
+                android:layout_marginBottom="@{viewModel.fullScreenMode || viewModel.pipMode || viewModel.halfOpenedFolded ? @dimen/zero : @dimen/call_main_actions_menu_margin, default=@dimen/call_main_actions_menu_margin}"
+                android:layout_marginTop="@{viewModel.fullScreenMode || viewModel.pipMode || viewModel.halfOpenedFolded ? @dimen/zero : @dimen/call_remote_video_top_margin, default=@dimen/call_remote_video_top_margin}"
+                layout="@layout/contact_avatar_huge"
+                bind:model="@{viewModel.contact}"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintEnd_toStartOf="@id/name_address"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/hinge_bottom" />
+
+            <LinearLayout
+                android:id="@+id/name_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginBottom="@{viewModel.fullScreenMode || viewModel.pipMode || viewModel.halfOpenedFolded ? @dimen/zero : @dimen/call_main_actions_menu_margin, default=@dimen/call_main_actions_menu_margin}"
+                android:layout_marginTop="@{viewModel.fullScreenMode || viewModel.pipMode || viewModel.halfOpenedFolded ? @dimen/zero : @dimen/call_remote_video_top_margin, default=@dimen/call_remote_video_top_margin}"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:visibility="@{viewModel.pipMode ? View.GONE : View.VISIBLE}"
+                app:layout_constraintStart_toEndOf="@id/avatar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/hinge_bottom">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style_300"
+                    android:id="@+id/display_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="@{viewModel.displayedName, default=`John Doe`}"
+                    android:textColor="@color/white"
+                    android:textSize="22sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style"
+                    android:id="@+id/address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.displayedAddress, default=`sip:johndoe@sip.linphone.org`}"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <org.linphone.ui.call.view.RoundCornersTextureView
+                android:id="@+id/remote_video_surface"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginBottom="@{viewModel.fullScreenMode || viewModel.pipMode || viewModel.halfOpenedFolded ? @dimen/zero : @dimen/call_main_actions_menu_margin, default=@dimen/call_main_actions_menu_margin}"
+                android:layout_marginTop="@{viewModel.fullScreenMode || viewModel.pipMode || viewModel.halfOpenedFolded ? @dimen/zero : @dimen/call_remote_video_top_margin, default=@dimen/call_remote_video_top_margin}"
+                android:onClick="@{() -> viewModel.toggleFullScreen()}"
+                android:visibility="@{viewModel.isReceivingVideo &amp;&amp; !(viewModel.isPaused || viewModel.isPausedByRemote) ? View.VISIBLE : View.GONE}"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/hinge_bottom"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/header_info_visibility"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode ? View.INVISIBLE : View.VISIBLE}"
+                app:constraint_referenced_ids="back, name, separator" />
+
+            <ImageView
+                android:id="@+id/back"
+                android:onClick="@{backClickListener}"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/top_bar_height"
+                android:adjustViewBounds="true"
+                android:padding="15dp"
+                android:src="@drawable/caret_left"
+                android:contentDescription="@string/content_description_go_back_icon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/white" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/call_header_style"
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@{viewModel.displayedName, default=`John Doe`}"
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toEndOf="@id/back"
+                app:layout_constraintEnd_toStartOf="@id/separator"
+                app:layout_constraintTop_toTopOf="@id/back"
+                app:layout_constraintBottom_toBottomOf="@id/back"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/call_header_style"
+                android:id="@+id/separator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="@string/vertical_separator"
+                app:layout_constraintTop_toTopOf="@id/name"
+                app:layout_constraintStart_toEndOf="@id/name"
+                app:layout_constraintEnd_toStartOf="@id/chronometer"/>
+
+            <Chronometer
+                style="@style/call_header_style"
+                android:id="@+id/chronometer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode || viewModel.isPaused || viewModel.isPausedByRemote ? View.GONE : View.VISIBLE}"
+                app:layout_constraintStart_toEndOf="@id/separator"
+                app:layout_constraintEnd_toStartOf="@id/paused_call_header"
+                app:layout_constraintTop_toTopOf="@id/name"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/call_header_style"
+                android:id="@+id/paused_call_header"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="@{viewModel.isPaused ? @string/call_state_paused : @string/call_state_paused_by_remote, default=@string/call_state_paused}"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:visibility="@{viewModel.isPaused || viewModel.isPausedByRemote ? View.VISIBLE : View.GONE, default=gone}"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toEndOf="@id/chronometer"
+                app:layout_constraintEnd_toStartOf="@id/switch_camera"
+                app:layout_constraintTop_toTopOf="@id/name"/>
+
+            <ImageView
+                android:onClick="@{() -> viewModel.switchCamera()}"
+                android:id="@+id/switch_camera"
+                android:layout_width="@dimen/big_icon_size"
+                android:layout_height="0dp"
+                android:padding="10dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:src="@drawable/camera_rotate"
+                android:contentDescription="@string/content_description_change_camera"
+                android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; viewModel.isSendingVideo &amp;&amp; viewModel.showSwitchCamera ? View.VISIBLE : View.GONE}"
+                app:tint="@color/white"
+                app:layout_constraintTop_toTopOf="@id/back"
+                app:layout_constraintBottom_toBottomOf="@id/back"
+                app:layout_constraintEnd_toStartOf="@+id/paused" />
+
+            <ImageView
+                android:id="@+id/paused"
+                android:layout_width="@dimen/big_icon_size"
+                android:layout_height="0dp"
+                android:padding="10dp"
+                android:src="@drawable/pause"
+                android:contentDescription="@string/content_description_paused_call"
+                android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; (viewModel.isPaused || viewModel.isPausedByRemote) ? View.VISIBLE : View.GONE, default=gone}"
+                app:tint="?attr/color_main1_500"
+                app:layout_constraintTop_toTopOf="@id/back"
+                app:layout_constraintBottom_toBottomOf="@id/back"
+                app:layout_constraintEnd_toStartOf="@id/stats" />
+
+            <ImageView
+                android:id="@+id/stats"
+                android:onClick="@{callStatisticsClickListener}"
+                android:layout_width="@dimen/big_icon_size"
+                android:layout_height="0dp"
+                android:padding="10dp"
+                android:src="@{viewModel.qualityIcon, default=@drawable/cell_signal_full}"
+                android:contentDescription="@string/content_description_show_call_statistics"
+                android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; !(viewModel.isPaused || viewModel.isPausedByRemote) ? View.VISIBLE : View.GONE}"
+                android:tint="@{viewModel.qualityValue >= 2 ? @color/white : viewModel.qualityValue >= 1 ? @color/orange_warning_600 : @color/red_danger_500, default=@color/white}"
+                app:layout_constraintTop_toTopOf="@id/back"
+                app:layout_constraintBottom_toBottomOf="@id/back"
+                app:layout_constraintEnd_toEndOf="parent"
+                bind:ignore="UseAppTint" />
+
+            <include
+                android:id="@+id/call_media_encryption_info"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                layout="@layout/call_media_encryption_info"
+                bind:viewModel="@{viewModel}"
+                bind:callMediaEncryptionStatisticsClickListener="@{callMediaEncryptionStatisticsClickListener}"
+                app:layout_constraintTop_toBottomOf="@id/name"
+                app:layout_constraintStart_toEndOf="@id/back"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <org.linphone.ui.call.view.RoundCornersTextureView
+                android:id="@+id/local_preview_video_surface"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="@{viewModel.fullScreenMode || viewModel.pipMode || viewModel.halfOpenedFolded ? @dimen/zero : @dimen/call_main_actions_menu_margin, default=@dimen/call_main_actions_menu_margin}"
+                android:visibility="@{viewModel.isSendingVideo &amp;&amp; !(viewModel.isPaused || viewModel.isPausedByRemote) ? View.VISIBLE : View.GONE}"
+                app:alignTopRight="true"
+                app:displayMode="black_bars"
+                roundCornersRadius="@{viewModel.pipMode ? @dimen/call_pip_round_corners_texture_view_radius : @dimen/call_round_corners_texture_view_radius, default=@dimen/call_round_corners_texture_view_radius}"
+                app:layout_constraintBottom_toBottomOf="@id/hinge_bottom"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_max="@{viewModel.pipMode ? @dimen/call_video_preview_pip_max_size : @dimen/call_video_preview_max_size, default=@dimen/call_video_preview_max_size}"
+                app:layout_constraintWidth_max="@{viewModel.pipMode ? @dimen/call_video_preview_pip_max_size : @dimen/call_video_preview_max_size, default=@dimen/call_video_preview_max_size}" />
+
+            <ImageView
+                android:id="@+id/recording"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/record_fill"
+                android:contentDescription="@string/content_description_call_is_being_recorded"
+                android:visibility="@{viewModel.isRecording ? View.VISIBLE : View.GONE, default=gone}"
+                app:layout_constraintTop_toBottomOf="@id/call_media_encryption_info"
+                app:layout_constraintStart_toStartOf="parent"
+                app:tint="?attr/color_danger_500" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <include
+            android:id="@+id/bottom_bar"
+            layout="@layout/call_actions_bottom_sheet"
+            bind:viewModel="@{viewModel}"
+            bind:callsViewModel="@{callsViewModel}"
+            bind:transferCallClickListener="@{transferCallClickListener}"
+            bind:newCallClickListener="@{newCallClickListener}"
+            bind:callsListClickListener="@{callsListClickListener}"/>
+
+        <include
+            android:id="@+id/call_numpad"
+            layout="@layout/call_numpad_bottom_sheet"
+            bind:model="@{numpadModel}"/>
+
+        <include
+            android:id="@+id/call_media_encryption_stats"
+            layout="@layout/call_media_encryption_stats_bottom_sheet"
+            bind:viewModel="@{viewModel}"
+            bind:model="@{viewModel.callMediaEncryptionModel}"/>
+
+        <include
+            android:id="@+id/call_stats"
+            layout="@layout/call_stats_bottom_sheet"
+            bind:viewModel="@{viewModel}"
+            bind:model="@{viewModel.callStatsModel}"/>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</layout>

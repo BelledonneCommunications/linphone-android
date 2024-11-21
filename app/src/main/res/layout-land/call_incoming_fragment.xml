@@ -66,39 +66,44 @@
             android:layout_height="@dimen/avatar_in_call_size"
             layout="@layout/contact_avatar_huge"
             bind:model="@{viewModel.contact}"
-            app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintEnd_toStartOf="@id/name_address"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/call_direction_label"
-            app:layout_constraintBottom_toTopOf="@id/name" />
+            app:layout_constraintBottom_toTopOf="@id/bottom_bar" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_300"
-            android:id="@+id/name"
+        <LinearLayout
+            android:id="@+id/name_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="@{viewModel.displayedName, default=`John Doe`}"
-            android:textColor="@color/white"
-            android:textSize="22sp"
-            app:layout_constraintTop_toBottomOf="@id/avatar"
-            app:layout_constraintBottom_toBottomOf="@id/address"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:layout_marginStart="30dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            app:layout_constraintStart_toEndOf="@id/avatar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/call_direction_label"
+            app:layout_constraintBottom_toTopOf="@id/bottom_bar">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style"
-            android:id="@+id/address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{viewModel.displayedAddress, default=`sip:johndoe@sip.linphone.org`}"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:visibility="@{viewModel.conferenceModel.isCurrentCallInConference ? View.GONE : View.VISIBLE}"
-            app:layout_constraintTop_toBottomOf="@id/name"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_300"
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@{viewModel.displayedName, default=`John Doe`}"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:id="@+id/address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="@{viewModel.conferenceModel.isCurrentCallInConference ? View.GONE : View.VISIBLE}"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+        </LinearLayout>
 
         <include
             bind:viewModel="@{viewModel}"

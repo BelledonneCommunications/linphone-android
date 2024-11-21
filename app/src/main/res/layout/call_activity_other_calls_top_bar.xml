@@ -13,7 +13,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="40dp"
         android:background="@{viewModel.callsCount > 1 || viewModel.showTopBar ? @drawable/color_success_500 : @drawable/color_black, default=@drawable/color_black}"
         android:onClick="@{() -> viewModel.topBarClicked()}">
 
