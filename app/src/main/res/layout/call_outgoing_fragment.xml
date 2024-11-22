@@ -39,26 +39,18 @@
             app:layout_constraintStart_toEndOf="@id/call_direction_icon"
             app:layout_constraintTop_toTopOf="parent"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/call_header_style"
-            android:id="@+id/separator"
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/in_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:text="@string/vertical_separator"
-            app:layout_constraintTop_toTopOf="@id/call_direction_label"
-            app:layout_constraintStart_toEndOf="@id/call_direction_label"
-            app:layout_constraintEnd_toStartOf="@id/chronometer"/>
-
-        <Chronometer
-            style="@style/call_header_style"
-            android:id="@+id/chronometer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode || viewModel.isPaused || viewModel.isPausedByRemote ? View.GONE : View.VISIBLE}"
-            app:layout_constraintStart_toEndOf="@id/separator"
-            app:layout_constraintTop_toTopOf="@id/call_direction_label"/>
+            android:layout_marginBottom="5dp"
+            android:indeterminate="true"
+            app:indicatorColor="@color/white"
+            app:indicatorSize="28dp"
+            app:layout_constraintStart_toStartOf="@id/avatar"
+            app:layout_constraintEnd_toEndOf="@id/avatar"
+            app:layout_constraintTop_toBottomOf="@id/call_direction_label"
+            app:layout_constraintBottom_toTopOf="@id/avatar" />
 
         <include
             android:id="@+id/avatar"

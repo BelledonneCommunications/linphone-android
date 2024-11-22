@@ -20,7 +20,6 @@
 package org.linphone.ui.call.fragment
 
 import android.os.Bundle
-import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,10 +52,5 @@ class IncomingCallFragment : GenericCallFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = callViewModel
-
-        callViewModel.callDuration.observe(viewLifecycleOwner) { duration ->
-            binding.chronometer.base = SystemClock.elapsedRealtime() - (1000 * duration)
-            binding.chronometer.start()
-        }
     }
 }
