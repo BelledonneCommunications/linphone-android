@@ -62,14 +62,13 @@
                 android:id="@+id/avatar"
                 android:layout_width="@dimen/avatar_in_call_size"
                 android:layout_height="@dimen/avatar_in_call_size"
-                android:layout_marginBottom="@{viewModel.fullScreenMode || viewModel.pipMode || viewModel.halfOpenedFolded ? @dimen/zero : @dimen/call_main_actions_menu_margin, default=@dimen/call_main_actions_menu_margin}"
-                android:layout_marginTop="@{viewModel.fullScreenMode || viewModel.pipMode || viewModel.halfOpenedFolded ? @dimen/zero : @dimen/call_remote_video_top_margin, default=@dimen/call_remote_video_top_margin}"
+                android:layout_marginBottom="@{viewModel.fullScreenMode || viewModel.pipMode || viewModel.halfOpenedFolded ? @dimen/zero : @dimen/call_main_actions_menu_height, default=@dimen/call_main_actions_menu_height}"
                 layout="@layout/contact_avatar_huge"
                 bind:model="@{viewModel.contact}"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintEnd_toStartOf="@id/name_address"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/name"
                 app:layout_constraintBottom_toBottomOf="@id/hinge_bottom" />
 
             <LinearLayout
@@ -77,14 +76,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_marginBottom="@{viewModel.fullScreenMode || viewModel.pipMode || viewModel.halfOpenedFolded ? @dimen/zero : @dimen/call_main_actions_menu_margin, default=@dimen/call_main_actions_menu_margin}"
-                android:layout_marginTop="@{viewModel.fullScreenMode || viewModel.pipMode || viewModel.halfOpenedFolded ? @dimen/zero : @dimen/call_remote_video_top_margin, default=@dimen/call_remote_video_top_margin}"
+                android:layout_marginBottom="@{viewModel.fullScreenMode || viewModel.pipMode || viewModel.halfOpenedFolded ? @dimen/zero : @dimen/call_main_actions_menu_height, default=@dimen/call_main_actions_menu_height}"
                 android:orientation="vertical"
                 android:gravity="center"
                 android:visibility="@{viewModel.pipMode ? View.GONE : View.VISIBLE}"
                 app:layout_constraintStart_toEndOf="@id/avatar"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/name"
                 app:layout_constraintBottom_toBottomOf="@id/hinge_bottom">
 
                 <androidx.appcompat.widget.AppCompatTextView
