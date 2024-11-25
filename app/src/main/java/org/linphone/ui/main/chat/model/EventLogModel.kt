@@ -35,7 +35,8 @@ class EventLogModel @WorkerThread constructor(
     onJoinConferenceClicked: ((uri: String) -> Unit)? = null,
     onWebUrlClicked: ((url: String) -> Unit)? = null,
     onContactClicked: ((friendRefKey: String) -> Unit)? = null,
-    onRedToastToShow: ((pair: Pair<Int, Int>) -> Unit)? = null
+    onRedToastToShow: ((pair: Pair<Int, Int>) -> Unit)? = null,
+    onVoiceRecordingPlaybackEnded: ((id: String) -> Unit)? = null
 ) {
     companion object {
         private const val TAG = "[Event Log Model]"
@@ -85,7 +86,8 @@ class EventLogModel @WorkerThread constructor(
             onJoinConferenceClicked,
             onWebUrlClicked,
             onContactClicked,
-            onRedToastToShow
+            onRedToastToShow,
+            onVoiceRecordingPlaybackEnded
         )
     }
 

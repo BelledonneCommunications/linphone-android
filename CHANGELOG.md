@@ -32,6 +32,7 @@ Group changes to describe their impact on the project, as follows:
 - Media & documents exchanged in a conversation can be easily found through a dedicated screen.
 - A brand new chat message search feature has been added to conversations.
 - You can now react to a chat message using any emoji.
+- If next message is also a voice recording, playback will automatically start after the currently playing one ends.
 - Chat while in call: a shortcut to a conversation screen with the remote.
 - Chat while in a conference: if the conference has a text stream enabled, you can chat with the other participants of the conference while it lasts. At the end, you'll find the messages history in the call history (and not in the list of conversations).
 - Screen sharing in conference: only desktop app starting with 6.0 version is able to start it, but on mobiles you'll be able to see it.

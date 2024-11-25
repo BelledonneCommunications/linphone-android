@@ -79,7 +79,8 @@ class MessageModel @WorkerThread constructor(
     private val onJoinConferenceClicked: ((uri: String) -> Unit)? = null,
     private val onWebUrlClicked: ((url: String) -> Unit)? = null,
     private val onContactClicked: ((friendRefKey: String) -> Unit)? = null,
-    private val onRedToastToShow: ((pair: Pair<Int, Int>) -> Unit)? = null
+    private val onRedToastToShow: ((pair: Pair<Int, Int>) -> Unit)? = null,
+    private val onVoiceRecordingPlaybackEnded: ((id: String) -> Unit)? = null
 ) {
     companion object {
         private const val TAG = "[Message Model]"
@@ -182,6 +183,7 @@ class MessageModel @WorkerThread constructor(
     private val playerListener = PlayerListener {
         Log.i("$TAG End of file reached")
         stopVoiceRecordPlayer()
+        onVoiceRecordingPlaybackEnded?.invoke(id)
     }
     // End of voice record related fields
 

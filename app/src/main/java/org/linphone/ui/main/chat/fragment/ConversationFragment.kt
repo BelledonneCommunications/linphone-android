@@ -502,6 +502,30 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             }
         }
 
+        viewModel.voiceRecordPlaybackEndedEvent.observe(viewLifecycleOwner) {
+            it.consume { id ->
+                Log.i(
+                    "$TAG Voice record playback finished, looking for voice record in next message"
+                )
+                val list = viewModel.eventsList
+                val model = list.find {
+                    (it.model as? MessageModel)?.id == id
+                }
+                if (model != null) {
+                    val index = list.indexOf(model)
+                    if (index < list.size - 1) {
+                        val nextModel = list[index + 1].model as? MessageModel
+                        if (nextModel?.isVoiceRecord?.value == true) {
+                            Log.i(
+                                "$TAG Next message model is also a voice record, start playing it"
+                            )
+                            nextModel.togglePlayPauseVoiceRecord()
+                        }
+                    }
+                }
+            }
+        }
+
         viewModel.updateEvents.observe(viewLifecycleOwner) {
             it.consume {
                 val items = viewModel.eventsList

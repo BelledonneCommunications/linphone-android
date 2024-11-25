@@ -130,6 +130,10 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         MutableLiveData<Event<MessageModel>>()
     }
 
+    val voiceRecordPlaybackEndedEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
     var eventsList = arrayListOf<EventLogModel>()
 
     var pendingForwardMessage: MessageModel? = null
@@ -752,6 +756,9 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
                 },
                 { redToast ->
                     showRedToastEvent.postValue(Event(redToast))
+                },
+                { id ->
+                    voiceRecordPlaybackEndedEvent.postValue(Event(id))
                 }
             )
             eventsList.add(model)
