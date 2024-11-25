@@ -39,12 +39,16 @@ class Api31Compatibility {
         private const val TAG = "[API 31 Compatibility]"
 
         fun enableAutoEnterPiP(activity: Activity, enable: Boolean) {
-            activity.setPictureInPictureParams(
-                PictureInPictureParams.Builder()
-                    .setAspectRatio(AppUtils.getPipRatio(activity))
-                    .setAutoEnterEnabled(enable)
-                    .build()
-            )
+            try {
+                activity.setPictureInPictureParams(
+                    PictureInPictureParams.Builder()
+                        .setAspectRatio(AppUtils.getPipRatio(activity))
+                        .setAutoEnterEnabled(enable)
+                        .build()
+                )
+            } catch (ise: IllegalArgumentException) {
+                Log.e("$TAG Can't set PiP params: $ise")
+            }
         }
 
         fun setBlurRenderEffect(view: View) {

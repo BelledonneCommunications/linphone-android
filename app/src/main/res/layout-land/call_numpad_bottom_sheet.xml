@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="handleClickedListener"
+            type="View.OnClickListener" />
+        <variable
+            name="model"
+            type="org.linphone.ui.main.history.model.NumpadModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_call_bottom_sheet_background"
+        android:clickable="true"
+        android:focusable="true"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="0dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        tools:ignore="HardcodedText">
+
+        <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+            android:id="@+id/numpad_handle"
+            android:onClick="@{handleClickedListener}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="11dp"
+            android:src="@drawable/shape_drawer_handle"
+            app:tint="@color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            style="@style/default_text_style_300"
+            android:id="@+id/digits_history"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            android:text="@{model.digits, default=`0123456789`}"
+            android:background="@color/transparent_color"
+            android:enabled="false"
+            android:inputType="number|phone"
+            android:gravity="center"
+            android:maxLines="1"
+            android:ellipsize="start"
+            app:layout_constraintTop_toTopOf="@id/backspace"
+            app:layout_constraintBottom_toBottomOf="@id/backspace"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/backspace"/>
+
+        <ImageView
+            android:id="@+id/backspace"
+            android:onClick="@{() -> model.onBackspaceClicked()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="30dp"
+            android:src="@drawable/backspace_fill"
+            android:contentDescription="@string/content_description_erase_last_input"
+            android:padding="20dp"
+            android:elevation="3dp"
+            app:tint="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/numpad_handle"
+            app:layout_constraintStart_toEndOf="@id/digits_history"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.constraintlayout.helper.widget.Flow
+            android:id="@+id/flow"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="14dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/backspace"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="20dp"
+            app:flow_horizontalStyle="spread"
+            app:flow_wrapMode="aligned"
+            app:flow_verticalGap="10dp"
+            app:flow_maxElementsWrap="6"
+            app:constraint_referenced_ids="digit_1, digit_2, digit_3, digit_4, digit_5, digit_6, digit_7, digit_8, digit_9, digit_star, digit_0, digit_sharp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{() -> model.onDigitClicked(`1`)}"
+            style="@style/call_numpad_digits_style"
+            android:id="@+id/digit_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            app:layout_constraintTop_toBottomOf="@id/numpad_handle"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{() -> model.onDigitClicked(`2`)}"
+            style="@style/call_numpad_digits_style"
+            android:id="@+id/digit_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2"
+            app:layout_constraintTop_toBottomOf="@id/numpad_handle"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{() -> model.onDigitClicked(`3`)}"
+            style="@style/call_numpad_digits_style"
+            android:id="@+id/digit_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3"
+            app:layout_constraintTop_toBottomOf="@id/numpad_handle"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{() -> model.onDigitClicked(`4`)}"
+            style="@style/call_numpad_digits_style"
+            android:id="@+id/digit_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4"
+            app:layout_constraintTop_toBottomOf="@id/numpad_handle"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{() -> model.onDigitClicked(`5`)}"
+            style="@style/call_numpad_digits_style"
+            android:id="@+id/digit_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5"
+            app:layout_constraintTop_toBottomOf="@id/numpad_handle"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{() -> model.onDigitClicked(`6`)}"
+            style="@style/call_numpad_digits_style"
+            android:id="@+id/digit_6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="6"
+            app:layout_constraintTop_toBottomOf="@id/numpad_handle"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{() -> model.onDigitClicked(`7`)}"
+            style="@style/call_numpad_digits_style"
+            android:id="@+id/digit_7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="7"
+            app:layout_constraintTop_toBottomOf="@id/numpad_handle"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{() -> model.onDigitClicked(`8`)}"
+            style="@style/call_numpad_digits_style"
+            android:id="@+id/digit_8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="8"
+            app:layout_constraintTop_toBottomOf="@id/handle"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{() -> model.onDigitClicked(`9`)}"
+            style="@style/call_numpad_digits_style"
+            android:id="@+id/digit_9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="9"
+            app:layout_constraintTop_toBottomOf="@id/numpad_handle"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{() -> model.onDigitClicked(`*`)}"
+            style="@style/call_numpad_digits_style"
+            android:id="@+id/digit_star"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="*"
+            app:layout_constraintTop_toBottomOf="@id/numpad_handle"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{() -> model.onDigitClicked(`0`)}"
+            style="@style/call_numpad_digits_style"
+            android:id="@+id/digit_0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            app:layout_constraintTop_toBottomOf="@id/numpad_handle"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{() -> model.onDigitClicked(`#`)}"
+            style="@style/call_numpad_digits_style"
+            android:id="@+id/digit_sharp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="#"
+            app:layout_constraintTop_toBottomOf="@id/numpad_handle"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
