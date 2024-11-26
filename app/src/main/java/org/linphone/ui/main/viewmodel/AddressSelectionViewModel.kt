@@ -279,18 +279,6 @@ abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccoun
 
                     contactsList.add(model)
                 } else {
-                    // If user-input generated result (always last) already exists, don't show it again
-                    if (result.sourceFlags == MagicSearch.Source.Request.toInt()) {
-                        val found = suggestionsList.find {
-                            it.address.weakEqual(address)
-                        }
-                        if (found != null) {
-                            Log.i(
-                                "$TAG Result generated from user input is a duplicate of an existing solution, preventing double"
-                            )
-                            continue
-                        }
-                    }
                     val defaultAccountAddress = coreContext.core.defaultAccount?.params?.identityAddress
                     if (defaultAccountAddress != null && address.weakEqual(defaultAccountAddress)) {
                         Log.i("$TAG Removing from suggestions current default account address")
