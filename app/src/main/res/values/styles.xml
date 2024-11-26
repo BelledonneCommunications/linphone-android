@@ -119,21 +119,27 @@
     </style>
     <style name="popup_menu_action_label_style">
         <item name="android:fontFamily">@font/noto_sans</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:textColor">?attr/color_main2_500</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
-        <item name="android:padding">15dp</item>
+        <item name="android:paddingStart">15dp</item>
+        <item name="android:paddingEnd">15dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
         <item name="android:drawableTint">?attr/color_main2_500</item>
         <item name="android:drawablePadding">8dp</item>
     </style>
     <style name="popup_menu_danger_action_label_style">
         <item name="android:fontFamily">@font/noto_sans</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:textColor">?attr/color_danger_500</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
-        <item name="android:padding">15dp</item>
+        <item name="android:paddingStart">15dp</item>
+        <item name="android:paddingEnd">15dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
         <item name="android:drawableTint">?attr/color_danger_500</item>
         <item name="android:drawablePadding">8dp</item>
     </style>

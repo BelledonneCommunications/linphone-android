@@ -707,6 +707,7 @@
     <string name="menu_delete_selected_item">Supprimer</string>
     <string name="menu_invite">Inviter</string>
     <string name="menu_resend_chat_message">Ré-envoyer</string>
+    <string name="menu_show_imdn">Info</string>
     <string name="menu_reply_to_chat_message">Répondre</string>
     <string name="menu_forward_chat_message">Transférer</string>
     <string name="menu_copy_chat_message">Copier le texte</string>

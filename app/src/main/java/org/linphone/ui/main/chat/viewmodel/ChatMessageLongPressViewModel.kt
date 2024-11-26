@@ -54,6 +54,10 @@ class ChatMessageLongPressViewModel : GenericViewModel() {
 
     val isMessageInError = MutableLiveData<Boolean>()
 
+    val showImdnInfoEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     val replyToMessageEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -105,6 +109,12 @@ class ChatMessageLongPressViewModel : GenericViewModel() {
     fun resend() {
         Log.i("$TAG Re-sending message in error state")
         messageModel.value?.resend()
+        dismiss()
+    }
+
+    @UiThread
+    fun showInfo() {
+        showImdnInfoEvent.value = Event(true)
         dismiss()
     }
 

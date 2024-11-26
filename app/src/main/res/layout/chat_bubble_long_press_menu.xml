@@ -114,6 +114,20 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/popup_menu_action_label_style"
+                    android:id="@+id/action_info"
+                    android:onClick="@{() -> viewModel.showInfo()}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/menu_show_imdn"
+                    android:drawableEnd="@drawable/check" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/color_main2_200"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/popup_menu_action_label_style"
                     android:id="@+id/action_reply"
                     android:onClick="@{() -> viewModel.reply()}"
                     android:layout_width="match_parent"

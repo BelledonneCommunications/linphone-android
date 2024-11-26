@@ -775,6 +775,15 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             }
         }
 
+        messageLongPressViewModel.showImdnInfoEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                val model = messageLongPressViewModel.messageModel.value
+                if (model != null) {
+                    showBottomSheetDialog(model, showDelivery = true)
+                }
+            }
+        }
+
         messageLongPressViewModel.replyToMessageEvent.observe(viewLifecycleOwner) {
             it.consume {
                 val model = messageLongPressViewModel.messageModel.value

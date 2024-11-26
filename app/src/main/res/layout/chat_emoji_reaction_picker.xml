@@ -20,8 +20,8 @@
         <ImageView
             android:id="@+id/emojis_background"
             android:layout_width="0dp"
-            android:layout_height="70dp"
-            android:src="@drawable/shape_squircle_white_background"
+            android:layout_height="50dp"
+            android:src="@drawable/shape_squircle_white_r50_background"
             android:contentDescription="@null"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
