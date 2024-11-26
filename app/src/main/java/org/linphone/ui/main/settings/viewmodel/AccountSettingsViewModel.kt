@@ -26,6 +26,8 @@ import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.AVPFMode
 import org.linphone.core.Account
+import org.linphone.core.AuthInfo
+import org.linphone.core.Factory
 import org.linphone.core.NatPolicy
 import org.linphone.core.TransportType
 import org.linphone.core.tools.Log
@@ -38,6 +40,8 @@ class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
     }
 
     val expandAdvancedSettings = MutableLiveData<Boolean>()
+
+    val expandNatPolicySettings = MutableLiveData<Boolean>()
 
     val pushNotificationsAvailable = MutableLiveData<Boolean>()
 
@@ -58,6 +62,14 @@ class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
     val stunServer = MutableLiveData<String>()
 
     val iceEnabled = MutableLiveData<Boolean>()
+
+    val turnEnabled = MutableLiveData<Boolean>()
+
+    val turnUsername = MutableLiveData<String>()
+
+    val turnPassword = MutableLiveData<String>()
+
+    val showTurnPassword = MutableLiveData<Boolean>()
 
     val avpfEnabled = MutableLiveData<Boolean>()
 
@@ -82,9 +94,12 @@ class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
 
     private lateinit var account: Account
     private lateinit var natPolicy: NatPolicy
+    private lateinit var natPolicyAuthInfo: AuthInfo
 
     init {
         expandAdvancedSettings.value = false
+        expandNatPolicySettings.value = false
+        showTurnPassword.value = false
 
         availableTransports.add(TransportType.Udp.name.uppercase(Locale.getDefault()))
         availableTransports.add(TransportType.Tcp.name.uppercase(Locale.getDefault()))
@@ -126,6 +141,19 @@ class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
                 natPolicy = params.natPolicy ?: core.createNatPolicy()
                 stunServer.postValue(natPolicy.stunServer)
                 iceEnabled.postValue(natPolicy.isIceEnabled)
+                turnEnabled.postValue(natPolicy.isTurnEnabled)
+
+                val turnStunUsername = natPolicy.stunServerUsername.orEmpty()
+                turnUsername.postValue(turnStunUsername)
+                if (turnStunUsername.isNotEmpty()) {
+                    val authInfo = core.findAuthInfo(null, turnStunUsername, null)
+                    if (authInfo == null) {
+                        Log.w("$TAG TURN username not empty but unable to find matching auth info!")
+                    } else {
+                        natPolicyAuthInfo = authInfo
+                        turnPassword.postValue(authInfo.password.orEmpty())
+                    }
+                }
 
                 avpfEnabled.postValue(account.isAvpfEnabled)
 
@@ -182,7 +210,34 @@ class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
                     natPolicy.stunServer = stunServer.value
                     natPolicy.isStunEnabled = stunServer.value.orEmpty().isNotEmpty()
                     natPolicy.isIceEnabled = iceEnabled.value == true
+                    natPolicy.isTurnEnabled = turnEnabled.value == true
+                    val stunTurnUsername = turnUsername.value.orEmpty()
+                    natPolicy.stunServerUsername = stunTurnUsername
                     newParams.natPolicy = natPolicy
+
+                    if (::natPolicyAuthInfo.isInitialized) {
+                        if (stunTurnUsername.isEmpty()) {
+                            Log.i(
+                                "$TAG NAT policy TURN username is now empty, removing existing auth info"
+                            )
+                            core.removeAuthInfo(natPolicyAuthInfo)
+                        } else {
+                            Log.i("$TAG Found NAT policy auth info, updating it")
+                            natPolicyAuthInfo.username = stunTurnUsername
+                            natPolicyAuthInfo.password = turnPassword.value.orEmpty()
+                        }
+                    } else if (stunTurnUsername.isNotEmpty()) {
+                        Log.i("$TAG No NAT policy auth info found, creating it with")
+                        val authInfo = Factory.instance().createAuthInfo(
+                            stunTurnUsername,
+                            null,
+                            turnPassword.value.orEmpty(),
+                            null,
+                            null,
+                            null
+                        )
+                        core.addAuthInfo(authInfo)
+                    }
                 }
 
                 newParams.avpfMode = if (avpfEnabled.value == true) AVPFMode.Enabled else AVPFMode.Disabled
@@ -254,6 +309,11 @@ class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
     }
 
     @UiThread
+    fun toggleNatPolicySettingsExpand() {
+        expandNatPolicySettings.value = expandNatPolicySettings.value == false
+    }
+
+    @UiThread
     fun toggleAdvancedSettingsExpand() {
         expandAdvancedSettings.value = expandAdvancedSettings.value == false
     }
@@ -277,5 +337,10 @@ class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
                 }
             }
         }
+    }
+
+    @UiThread
+    fun toggleShowTurnPassword() {
+        showTurnPassword.value = showTurnPassword.value == false
     }
 }

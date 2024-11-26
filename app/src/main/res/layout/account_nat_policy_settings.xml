@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="android.text.InputType" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.main.settings.viewmodel.AccountSettingsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_squircle_white_background">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/settings_title_style"
+            android:id="@+id/stun_server_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/account_settings_stun_server_url_title"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            style="@style/default_text_style"
+            android:id="@+id/stun_server"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:background="@drawable/edit_text_background"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@={viewModel.stunServer}"
+            android:inputType="text|textUri"
+            android:hint="@string/account_settings_stun_server_url_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/stun_server_title"/>
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            style="@style/material_switch_style"
+            android:id="@+id/ice_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:checked="@={viewModel.iceEnabled}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/stun_server" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/settings_title_style"
+            android:id="@+id/ice_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/account_settings_enable_ice_title"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintTop_toTopOf="@id/ice_switch"
+            app:layout_constraintBottom_toBottomOf="@id/ice_switch"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/ice_switch"/>
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            style="@style/material_switch_style"
+            android:id="@+id/turn_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:checked="@={viewModel.turnEnabled}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ice_switch" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/settings_title_style"
+            android:id="@+id/turn_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/account_settings_enable_turn_title"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintTop_toTopOf="@id/turn_switch"
+            app:layout_constraintBottom_toBottomOf="@id/turn_switch"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/turn_switch"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/settings_title_style"
+            android:id="@+id/turn_username_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/account_settings_turn_username_title"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintTop_toBottomOf="@id/turn_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            style="@style/default_text_style"
+            android:id="@+id/turn_username"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/edit_text_background"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@={viewModel.turnUsername}"
+            android:inputType="text|textPersonName"
+            android:hint="@string/account_settings_turn_username_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/turn_username_title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/settings_title_style"
+            android:id="@+id/turn_password_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/account_settings_turn_password_title"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintTop_toBottomOf="@id/turn_username"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            style="@style/default_text_style"
+            android:id="@+id/turn_password"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/edit_text_background"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@={viewModel.turnPassword}"
+            android:hint="@string/account_settings_turn_password_title"
+            android:inputType="@{viewModel.showTurnPassword ? InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD : InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD, default=textPassword}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/turn_password_title"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageView
+            android:onClick="@{() -> viewModel.toggleShowTurnPassword()}"
+            android:id="@+id/eye"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="0dp"
+            android:padding="4dp"
+            android:layout_marginEnd="20dp"
+            android:contentDescription="@string/content_description_toggle_password_visibility"
+            android:src="@{viewModel.showTurnPassword ? @drawable/eye_slash : @drawable/eye, default=@drawable/eye}"
+            app:tint="?attr/color_main2_500"
+            app:layout_constraintEnd_toEndOf="@id/turn_password"
+            app:layout_constraintTop_toTopOf="@id/turn_password"
+            app:layout_constraintBottom_toBottomOf="@id/turn_password" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

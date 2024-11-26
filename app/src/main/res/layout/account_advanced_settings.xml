@@ -116,64 +116,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/outbound_proxy_switch"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/settings_title_style"
-            android:id="@+id/stun_server_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@string/account_settings_stun_server_url_title"
-            android:maxLines="2"
-            android:ellipsize="end"
-            app:layout_constraintTop_toBottomOf="@id/outbound_proxy_switch"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <androidx.appcompat.widget.AppCompatEditText
-            style="@style/default_text_style"
-            android:id="@+id/stun_server"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:background="@drawable/edit_text_background"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:text="@={viewModel.stunServer}"
-            android:inputType="text|textUri"
-            android:hint="@string/account_settings_stun_server_url_title"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/stun_server_title"/>
-
-        <com.google.android.material.materialswitch.MaterialSwitch
-            style="@style/material_switch_style"
-            android:id="@+id/ice_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="16dp"
-            android:checked="@={viewModel.iceEnabled}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/stun_server" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/settings_title_style"
-            android:id="@+id/ice_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="10dp"
-            android:text="@string/account_settings_enable_ice_title"
-            android:maxLines="2"
-            android:ellipsize="end"
-            app:layout_constraintTop_toTopOf="@id/ice_switch"
-            app:layout_constraintBottom_toBottomOf="@id/ice_switch"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/ice_switch"/>
-
         <com.google.android.material.materialswitch.MaterialSwitch
             style="@style/material_switch_style"
             android:id="@+id/avpf_switch"
@@ -183,7 +125,7 @@
             android:layout_marginEnd="16dp"
             android:checked="@={viewModel.avpfEnabled}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ice_switch" />
+            app:layout_constraintTop_toBottomOf="@id/outbound_proxy_title" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/settings_title_style"
@@ -251,10 +193,8 @@
             android:visibility="@{viewModel.imEncryptionMandatory ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="@id/cpim_basic_chat_room_switch"
             app:layout_constraintEnd_toStartOf="@id/cpim_basic_chat_room_switch"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/cpim_basic_chat_room_switch"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintTop_toTopOf="@id/cpim_basic_chat_room_switch"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/settings_title_style"
@@ -284,7 +224,6 @@
             android:text="@={viewModel.expire}"
             android:inputType="number"
             android:hint="@string/account_settings_expire_title"
-            app:layout_constraintVertical_bias="0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/expire_title"/>

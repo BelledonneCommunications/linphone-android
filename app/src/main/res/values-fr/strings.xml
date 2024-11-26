@@ -297,8 +297,12 @@
     <string name="account_settings_im_encryption_mandatory_title">Chiffrement obligatoire des conversations</string>
     <string name="account_settings_sip_proxy_url_title">URL du serveur mandataire</string>
     <string name="account_settings_outbound_proxy_title">Serveur mandataire sortant</string>
-    <string name="account_settings_stun_server_url_title">URL du serveur STUN</string>
+    <string name="account_settings_nat_policy_title">Paramètres de politique NAT</string>
+    <string name="account_settings_stun_server_url_title">URL du serveur STUN/TURN</string>
     <string name="account_settings_enable_ice_title">Activer ICE</string>
+    <string name="account_settings_enable_turn_title">Activer TURN</string>
+    <string name="account_settings_turn_username_title">Utilisateur TURN</string>
+    <string name="account_settings_turn_password_title">Mot de passe TURN</string>
     <string name="account_settings_avpf_title">AVPF</string>
     <string name="account_settings_expire_title">Expiration (en secondes)</string>
     <string name="account_settings_conference_factory_uri_title">URI de l\'usine à conversations</string>

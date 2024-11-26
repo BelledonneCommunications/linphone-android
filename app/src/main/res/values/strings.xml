@@ -334,8 +334,12 @@
     <string name="account_settings_im_encryption_mandatory_title">IM encryption mandatory</string>
     <string name="account_settings_sip_proxy_url_title">SIP proxy server URL</string>
     <string name="account_settings_outbound_proxy_title">Outbound proxy</string>
-    <string name="account_settings_stun_server_url_title">STUN server URL</string>
+    <string name="account_settings_nat_policy_title">NAT policy settings</string>
+    <string name="account_settings_stun_server_url_title">STUN/TURN server URL</string>
     <string name="account_settings_enable_ice_title">Enable ICE</string>
+    <string name="account_settings_enable_turn_title">Enable TURN</string>
+    <string name="account_settings_turn_username_title">TURN username</string>
+    <string name="account_settings_turn_password_title">TURN password</string>
     <string name="account_settings_avpf_title">AVPF</string>
     <string name="account_settings_expire_title">Expire (in seconds)</string>
     <string name="account_settings_conference_factory_uri_title">Conference factory URI</string>
