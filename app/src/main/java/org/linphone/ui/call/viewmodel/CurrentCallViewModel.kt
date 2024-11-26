@@ -34,6 +34,7 @@ import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.contacts.ContactsManager.ContactsListener
 import org.linphone.core.Address
 import org.linphone.core.AudioDevice
 import org.linphone.core.Call
@@ -46,6 +47,7 @@ import org.linphone.core.Conference
 import org.linphone.core.ConferenceParams
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
+import org.linphone.core.Friend
 import org.linphone.core.MediaDirection
 import org.linphone.core.MediaEncryption
 import org.linphone.core.SecurityLevel
@@ -234,6 +236,28 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
     }
 
     lateinit var currentCall: Call
+
+    private val contactsListener = object : ContactsListener {
+        @WorkerThread
+        override fun onContactsLoaded() {
+        }
+
+        @WorkerThread
+        override fun onContactFoundInRemoteDirectory(friend: Friend) {
+            val address = contact.value?.address
+            address ?: return
+
+            val addressMatch = friend.addresses.find {
+                it.weakEqual(address)
+            }
+            if (addressMatch != null) {
+                Log.i("$TAG Updating current call contact model")
+                displayedName.postValue(friend.name)
+                val model = ContactAvatarModel(friend, address)
+                contact.postValue(model)
+            }
+        }
+    }
 
     private val callListener = object : CallListenerStub() {
         @WorkerThread
@@ -509,6 +533,8 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
         proximitySensorEnabled.value = false
 
         coreContext.postOnCoreThread { core ->
+            coreContext.contactsManager.addListener(contactsListener)
+
             core.addListener(coreListener)
 
             isRecordingEnabled.postValue(!corePreferences.disableCallRecordings)
@@ -556,6 +582,7 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
 
         coreContext.postOnCoreThread { core ->
             core.removeListener(coreListener)
+            coreContext.contactsManager.removeListener(contactsListener)
             conferenceModel.destroy()
             contact.value?.destroy()
 
@@ -1130,7 +1157,6 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
             coreContext.contactsManager.getContactAvatarModelForConferenceInfo(conferenceInfo)
         } else {
             // Do not use contact avatar model from ContactsManager
-            // coreContext.contactsManager.getContactAvatarModelForAddress(address)
             val friend = coreContext.contactsManager.findContactByAddress(address)
             if (friend != null) {
                 ContactAvatarModel(friend, address)
@@ -1138,7 +1164,7 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
                 val fakeFriend = coreContext.core.createFriend()
                 fakeFriend.name = LinphoneUtils.getDisplayName(address)
                 fakeFriend.address = address
-                ContactAvatarModel(fakeFriend)
+                ContactAvatarModel(fakeFriend, address)
             }
         }
 

@@ -25,6 +25,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModelProvider
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.databinding.CallIncomingFragmentBinding
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
 
@@ -52,5 +53,17 @@ class IncomingCallFragment : GenericCallFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = callViewModel
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        coreContext.notificationsManager.setIncomingCallFragmentCurrentlyDisplayed(true)
+    }
+
+    override fun onPause() {
+        coreContext.notificationsManager.setIncomingCallFragmentCurrentlyDisplayed(false)
+
+        super.onPause()
     }
 }

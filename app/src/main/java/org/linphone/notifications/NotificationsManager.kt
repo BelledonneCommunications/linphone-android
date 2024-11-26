@@ -118,6 +118,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     private val notificationsMap = HashMap<Int, Notification>()
 
     private var currentlyDisplayedChatRoomId: String = ""
+    private var currentlyDisplayedIncomingCallFragment: Boolean = false
 
     private val contactsListener = object : ContactsListener {
         @WorkerThread
@@ -439,6 +440,11 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         }
     }
 
+    @AnyThread
+    fun setIncomingCallFragmentCurrentlyDisplayed(visible: Boolean) {
+        currentlyDisplayedIncomingCallFragment = visible
+    }
+
     @WorkerThread
     fun setCurrentlyDisplayedChatRoomId(id: String) {
         Log.i(
@@ -658,8 +664,19 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
     @WorkerThread
     private fun startInCallForegroundService(call: Call) {
-        Log.i("$TAG Trying to start/update foreground Service using call notification")
+        if (LinphoneUtils.isCallIncoming(call.state)) {
+            val notification = notificationsMap[INCOMING_CALL_ID]
+            if (notification != null) {
+                startIncomingCallForegroundService(notification)
+            } else {
+                Log.w(
+                    "$TAG Failed to find notification for incoming call with ID [$INCOMING_CALL_ID]"
+                )
+            }
+            return
+        }
 
+        Log.i("$TAG Trying to start/update foreground Service using call notification")
         val service = inCallService
         if (service == null) {
             Log.w("$TAG Core Foreground Service hasn't started yet...")
@@ -1138,7 +1155,11 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         }
         val isIncoming = LinphoneUtils.isCallIncoming(call.state)
 
-        val notification = notificationsMap[notifiable.notificationId]
+        val notification = if (isIncoming) {
+            notificationsMap[INCOMING_CALL_ID]
+        } else {
+            notificationsMap[notifiable.notificationId]
+        }
         if (notification == null) {
             Log.w(
                 "$TAG Failed to find notification with ID [${notifiable.notificationId}], creating a new one"
@@ -1156,8 +1177,14 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             friend
         )
         if (isIncoming) {
-            Log.i("$TAG Updating incoming call notification with ID [$INCOMING_CALL_ID]")
-            notify(INCOMING_CALL_ID, newNotification)
+            if (!currentlyDisplayedIncomingCallFragment) {
+                Log.i("$TAG Updating incoming call notification with ID [$INCOMING_CALL_ID]")
+                notify(INCOMING_CALL_ID, newNotification)
+            } else {
+                Log.i(
+                    "$TAG Incoming call fragment is visible, do not re-send an incoming call notification"
+                )
+            }
         } else {
             Log.i("$TAG Updating call notification with ID [${notifiable.notificationId}]")
             notify(notifiable.notificationId, newNotification)
