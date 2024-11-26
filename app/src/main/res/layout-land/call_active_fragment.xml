@@ -136,7 +136,7 @@
                 android:src="@drawable/caret_left"
                 android:contentDescription="@string/content_description_go_back_icon"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/hinge_top"
                 app:tint="@color/white" />
 
             <androidx.appcompat.widget.AppCompatTextView

@@ -49,6 +49,20 @@
             android:layout_height="match_parent"
             android:background="@color/gray_900">
 
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/hinge_top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/hinge_bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="1" />
+
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/header_info_visibility"
                 android:layout_width="wrap_content"
@@ -66,7 +80,7 @@
                 android:src="@drawable/caret_left"
                 android:contentDescription="@string/content_description_go_back_icon"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toTopOf="@id/hinge_top"
                 app:tint="@color/white" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -213,7 +227,7 @@
                 android:drawablePadding="8dp"
                 app:drawableTint="@color/gray_main2_400"
                 app:layout_constraintTop_toBottomOf="@id/waiting_for_others"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/hinge_bottom"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -222,12 +236,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-                android:layout_marginBottom="@{viewModel.fullScreenMode || viewModel.pipMode ? @dimen/zero : @dimen/call_main_actions_menu_margin, default=@dimen/call_main_actions_menu_margin}"
+                android:layout_marginBottom="@{viewModel.fullScreenMode || viewModel.pipMode || viewModel.halfOpenedFolded ? @dimen/zero : @dimen/call_main_actions_menu_margin, default=@dimen/call_main_actions_menu_margin}"
                 android:visibility="@{conferenceViewModel.isMeParticipantSendingVideo &amp;&amp; conferenceViewModel.participants.size() == 1 &amp;&amp; !conferenceViewModel.isPaused ? View.VISIBLE : View.GONE}"
                 app:alignTopRight="true"
                 app:displayMode="black_bars"
                 roundCornersRadius="@{viewModel.pipMode ? @dimen/call_pip_round_corners_texture_view_radius : @dimen/call_round_corners_texture_view_radius, default=@dimen/call_round_corners_texture_view_radius}"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/hinge_bottom"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHeight_max="@{viewModel.pipMode ? @dimen/call_video_preview_pip_max_size : @dimen/call_video_preview_max_size, default=@dimen/call_video_preview_max_size}"
                 app:layout_constraintWidth_max="@{viewModel.pipMode ? @dimen/call_video_preview_pip_max_size : @dimen/call_video_preview_max_size, default=@dimen/call_video_preview_max_size}" />
@@ -238,14 +252,14 @@
                 android:onClick="@{() -> viewModel.conferenceModel.toggleFullScreen()}"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginBottom="@{viewModel.fullScreenMode || viewModel.pipMode ? @dimen/zero : @dimen/call_main_actions_menu_margin, default=@dimen/call_main_actions_menu_margin}"
-                android:layout_marginTop="@{viewModel.fullScreenMode || viewModel.pipMode ? @dimen/zero : @dimen/call_remote_video_top_margin, default=@dimen/call_remote_video_top_margin}"
+                android:layout_marginBottom="@{viewModel.fullScreenMode || viewModel.pipMode || viewModel.halfOpenedFolded ? @dimen/zero : @dimen/call_main_actions_menu_margin, default=@dimen/call_main_actions_menu_margin}"
+                android:layout_marginTop="@{viewModel.fullScreenMode || viewModel.pipMode || viewModel.halfOpenedFolded ? @dimen/zero : @dimen/call_remote_video_top_margin, default=@dimen/call_remote_video_top_margin}"
                 android:visibility="@{conferenceViewModel.participants.size() > 1 &amp;&amp; !conferenceViewModel.isPaused ? View.VISIBLE : View.GONE, default=gone}"
                 app:navGraph="@navigation/conference_nav_graph"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintBottom_toBottomOf="@id/hinge_bottom"/>
 
             <ImageView
                 android:id="@+id/recording"

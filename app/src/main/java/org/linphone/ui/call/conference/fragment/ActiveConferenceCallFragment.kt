@@ -30,9 +30,11 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
+import androidx.window.layout.FoldingFeature
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
@@ -159,6 +161,10 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
         binding.conferenceViewModel = callViewModel.conferenceModel
         binding.callsViewModel = callsViewModel
         binding.numpadModel = callViewModel.numpadModel
+
+        sharedViewModel.foldingState.observe(viewLifecycleOwner) { feature ->
+            updateHingeRelatedConstraints(feature)
+        }
 
         val actionsBottomSheetBehavior = BottomSheetBehavior.from(binding.bottomBar.root)
         actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
@@ -332,5 +338,25 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
         super.onPause()
 
         binding.localPreviewVideoSurface.setOnTouchListener(null)
+    }
+
+    private fun updateHingeRelatedConstraints(feature: FoldingFeature) {
+        Log.i("$TAG Updating constraint layout hinges: $feature")
+
+        val constraintLayout = binding.constraintLayout
+        val set = ConstraintSet()
+        set.clone(constraintLayout)
+
+        if (feature.isSeparating && feature.state == FoldingFeature.State.HALF_OPENED && feature.orientation == FoldingFeature.Orientation.HORIZONTAL) {
+            set.setGuidelinePercent(R.id.hinge_top, 0.5f)
+            set.setGuidelinePercent(R.id.hinge_bottom, 0.5f)
+            callViewModel.halfOpenedFolded.value = true
+        } else {
+            set.setGuidelinePercent(R.id.hinge_top, 0f)
+            set.setGuidelinePercent(R.id.hinge_bottom, 1f)
+            callViewModel.halfOpenedFolded.value = false
+        }
+
+        set.applyTo(constraintLayout)
     }
 }

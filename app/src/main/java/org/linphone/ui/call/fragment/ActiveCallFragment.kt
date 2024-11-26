@@ -47,7 +47,6 @@ import org.linphone.ui.call.model.ZrtpAlertDialogModel
 import org.linphone.ui.call.model.ZrtpSasConfirmationDialogModel
 import org.linphone.ui.call.viewmodel.CallsViewModel
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
-import org.linphone.ui.call.viewmodel.SharedCallViewModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import org.linphone.utils.addCharacterAtPosition
@@ -237,10 +236,6 @@ class ActiveCallFragment : GenericCallFragment() {
         binding.setCallMediaEncryptionStatisticsClickListener {
             callStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             callMediaEncryptionStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-        }
-
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this)[SharedCallViewModel::class.java]
         }
 
         sharedViewModel.foldingState.observe(viewLifecycleOwner) { feature ->
@@ -454,7 +449,7 @@ class ActiveCallFragment : GenericCallFragment() {
         val set = ConstraintSet()
         set.clone(constraintLayout)
 
-        if (feature.state == FoldingFeature.State.HALF_OPENED) {
+        if (feature.isSeparating && feature.state == FoldingFeature.State.HALF_OPENED && feature.orientation == FoldingFeature.Orientation.HORIZONTAL) {
             set.setGuidelinePercent(R.id.hinge_top, 0.5f)
             set.setGuidelinePercent(R.id.hinge_bottom, 0.5f)
             callViewModel.halfOpenedFolded.value = true
