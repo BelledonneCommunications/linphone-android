@@ -172,12 +172,21 @@ class TelecomCallControlCallback(
                 Log.i(
                     "$TAG We're asked to [${if (muted) "mute" else "unmute"}] the call in state [$callState]"
                 )
-                // This is to prevent mic not muted when joining conference if user decided to join as muted
-                if (muted || !LinphoneUtils.isCallOutgoing(callState, false)) {
+                // Only follow un-mute requests for not outgoing calls (such as joining a conference muted)
+                // and if connected to Android Auto that has a way to let user mute/unmute from the car directly.
+                if (muted || (!LinphoneUtils.isCallOutgoing(callState, false) && coreContext.isConnectedToAndroidAuto)) {
                     call.microphoneMuted = muted
                     coreContext.refreshMicrophoneMuteStateEvent.postValue(Event(true))
                 } else {
-                    Log.w("$TAG Not following unmute request because call is in state [$callState]")
+                    if (coreContext.isConnectedToAndroidAuto) {
+                        Log.w(
+                            "$TAG Not following unmute request because call is in state [$callState]"
+                        )
+                    } else {
+                        Log.w(
+                            "$TAG Not following unmute request because user isn't connected to Android Auto and call is in state [$callState]"
+                        )
+                    }
                 }
             }
         }.launchIn(scope)
