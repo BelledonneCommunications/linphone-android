@@ -215,7 +215,7 @@
                     android:maxLines="1"
                     android:background="@drawable/edit_text_background"
                     android:inputType="text|textUri"
-                    android:hint="@string/settings_advanced_device_id"
+                    android:hint="@string/settings_advanced_device_id_hint"
                     app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintWidth_max="@dimen/text_input_max_width"
                     app:layout_constraintTop_toBottomOf="@id/device_id_label"

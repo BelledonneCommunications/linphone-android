@@ -161,14 +161,19 @@ class AppUtils {
                 Settings.Global.DEVICE_NAME
             )
             if (name == null) {
+                Log.w("$TAG Failed to obtain device name, trying to get bluetooth name")
                 name = Settings.Secure.getString(
                     context.contentResolver,
                     "bluetooth_name"
                 )
             }
             if (name == null) {
-                name = Build.MANUFACTURER + " " + Build.MODEL
+                Log.w("$TAG Failed to obtain bluetooth name, using device's manufacturer & model")
+                name = "${Build.MANUFACTURER} ${Build.MODEL}"
             }
+
+            // Some VoIP providers such as voip.ms seem to not like apostrophe in user-agent
+            name = name.replace("'", "")
             return name
         }
 

@@ -842,12 +842,22 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
 
     @WorkerThread
     fun computeUserAgent() {
-        if (corePreferences.deviceName.isEmpty()) {
+        val savedDeviceName = corePreferences.deviceName
+        val deviceName = if (savedDeviceName.isEmpty()) {
             Log.i("$TAG Device name not fetched yet, doing it now")
-            corePreferences.deviceName = AppUtils.getDeviceName(context)
-            Log.i("$TAG Fetched device name is [${corePreferences.deviceName}]")
+            AppUtils.getDeviceName(context)
+        } else if (savedDeviceName.contains("'")) {
+            // Some VoIP providers such as voip.ms seem to not like apostrophe in user-agent
+            // https://github.com/BelledonneCommunications/linphone-android/issues/2287
+            Log.i("$TAG Found an apostrophe in device name, removing it")
+            savedDeviceName.replace("'", "")
+        } else {
+            savedDeviceName
         }
-        val deviceName = corePreferences.deviceName
+        if (savedDeviceName != deviceName) {
+            corePreferences.deviceName = deviceName
+        }
+        Log.i("$TAG Device name for user-agent is [$deviceName]")
 
         val appName = context.getString(org.linphone.R.string.app_name)
         val androidVersion = BuildConfig.VERSION_NAME

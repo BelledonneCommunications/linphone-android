@@ -255,6 +255,7 @@
     <string name="settings_advanced_title">Paramètres avancés</string>
     <string name="settings_advanced_keep_alive_service_title">Garder l\'app en vie via un Service</string>
     <string name="settings_advanced_device_id">Nom du périphérique</string>
+    <string name="settings_advanced_device_id_hint">Caractères alpha-numériques uniquement</string>
     <string name="settings_advanced_media_encryption_title">Chiffrement du média</string>
     <string name="settings_advanced_media_encryption_mandatory_title">Rendre le chiffrement du média obligatoire</string>
     <string name="settings_advanced_remote_provisioning_url">URL de configuration distante</string>
