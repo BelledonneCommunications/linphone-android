@@ -40,6 +40,8 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="10dp"
             android:text="@{model.subtitle, default=`48000 Hz`}"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:visibility="@{model.subtitle.isEmpty() ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toBottomOf="@id/codec_title"
             app:layout_constraintBottom_toBottomOf="@id/codec_switch"
