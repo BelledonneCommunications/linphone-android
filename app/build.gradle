@@ -197,13 +197,9 @@ android {
             }
         }
 
-        voyager {
-            initWith release
-        }
-
-        ecx {
-            initWith release
-        }
+        voyager { initWith release }
+        ecx { initWith release }
+        bryteCall { initWith release }
     }
 
     buildFeatures {
