@@ -17,7 +17,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="1dp">
+        android:padding="1dp">
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/file_group"
@@ -94,9 +94,8 @@
             android:id="@+id/left_background"
             android:layout_width="@dimen/chat_bubble_grid_image_size"
             android:layout_height="@dimen/chat_bubble_grid_image_size"
-            android:layout_marginTop="1dp"
-            android:layout_marginBottom="1dp"
             android:background="@drawable/shape_squircle_main2_200_left"
+            android:visibility="@{model.isImage || model.isVideoPreview ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -172,7 +171,8 @@
             android:background="@drawable/shape_squircle_white_right"
             app:layout_constraintTop_toTopOf="@id/left_background"
             app:layout_constraintBottom_toBottomOf="@id/left_background"
-            app:layout_constraintStart_toEndOf="@id/left_background"/>
+            app:layout_constraintStart_toEndOf="@id/left_background"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_700"
