@@ -266,7 +266,17 @@ abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccoun
         for (result in results) {
             val address = result.address
             if (address != null) {
-                val friend = coreContext.contactsManager.findContactByAddress(address)
+                if (result.sourceFlags == MagicSearch.Source.Request.toInt()) {
+                    val model = ConversationContactOrSuggestionModel(address) {
+                        coreContext.startAudioCall(address)
+                    }
+                    suggestionsList.add(model)
+                    continue
+                }
+
+                val friend = result.friend ?: coreContext.contactsManager.findContactByAddress(
+                    address
+                )
                 if (friend != null) {
                     val found = contactsList.find { it.friend == friend }
                     if (found != null) continue

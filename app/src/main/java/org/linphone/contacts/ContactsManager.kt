@@ -83,7 +83,9 @@ class ContactsManager @UiThread constructor() {
     private val knownContactsAvatarsMap = hashMapOf<String, ContactAvatarModel>()
     private val unknownContactsAvatarsMap = hashMapOf<String, ContactAvatarModel>()
     private val conferenceAvatarMap = hashMapOf<String, ContactAvatarModel>()
+    private val magicSearchMap = hashMapOf<String, MagicSearch>()
 
+    private val unknownRemoteContactDirectoriesContactsMap = arrayListOf<String>()
     private val unknownAndroidContactsMap = arrayListOf<String>()
 
     private val coroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
@@ -91,14 +93,13 @@ class ContactsManager @UiThread constructor() {
 
     private var loadContactsOnlyFromDefaultDirectory = true
 
-    private lateinit var magicSearch: MagicSearch
-
     private val magicSearchListener = object : MagicSearchListenerStub() {
         @WorkerThread
         override fun onSearchResultsReceived(magicSearch: MagicSearch) {
             val results = magicSearch.lastSearch
             Log.i("$TAG [${results.size}] magic search results available")
 
+            var found = false
             if (results.isNotEmpty()) {
                 val result = results.first() {
                     it.friend != null
@@ -106,18 +107,38 @@ class ContactsManager @UiThread constructor() {
                 if (result != null) {
                     val friend = result.friend!!
                     Log.i("$TAG Found matching friend in source [${result.sourceFlags}]")
+                    found = true
 
                     // Store friend in app's cache to be re-used in call history, conversations, etc...
                     val temporaryFriendList = getTemporaryFriendList(native = false)
                     temporaryFriendList.addFriend(friend)
                     newContactAdded(friend)
-                    Log.i("$TAG Stored discovered friend in temporary friend list, for later use")
+                    Log.i(
+                        "$TAG Stored discovered friend [${friend.name}] in temporary friend list, for later use"
+                    )
 
                     for (listener in listeners) {
                         listener.onContactFoundInRemoteDirectory(friend)
                     }
                 }
             }
+
+            var foundKey = ""
+            for ((key, value) in magicSearchMap.entries) {
+                if (value == magicSearch) {
+                    foundKey = key
+                }
+            }
+            if (foundKey.isNotEmpty()) {
+                magicSearchMap.remove(foundKey)
+                if (!found) {
+                    Log.i(
+                        "$TAG SIP URI [$foundKey] wasn't found in remote directories, adding it to unknown list to prevent further queries"
+                    )
+                    unknownRemoteContactDirectoriesContactsMap.add(foundKey)
+                }
+            }
+            magicSearch.removeListener(this)
         }
     }
 
@@ -293,6 +314,7 @@ class ContactsManager @UiThread constructor() {
         conferenceAvatarMap.values.forEach(ContactAvatarModel::destroy)
         conferenceAvatarMap.clear()
         unknownAndroidContactsMap.clear()
+        unknownRemoteContactDirectoriesContactsMap.clear()
 
         notifyContactsListChanged()
 
@@ -335,11 +357,18 @@ class ContactsManager @UiThread constructor() {
 
         // Start an async query in Magic Search in case LDAP or remote CardDAV is configured
         val remoteContactDirectories = coreContext.core.remoteContactDirectories
-        if (remoteContactDirectories.isNotEmpty()) {
+        if (remoteContactDirectories.isNotEmpty() && !magicSearchMap.keys.contains(sipUri) && !unknownRemoteContactDirectoriesContactsMap.contains(
+                sipUri
+            )
+        ) {
             Log.i(
                 "$TAG SIP URI [$sipUri] not found in locally stored Friends, trying LDAP/CardDAV remote directory"
             )
-            magicSearch.resetSearchCache()
+
+            val magicSearch = coreContext.core.createMagicSearch()
+            magicSearch.addListener(magicSearchListener)
+            magicSearchMap[sipUri] = magicSearch
+
             magicSearch.getContactsListAsync(
                 username,
                 address.domain,
@@ -507,10 +536,6 @@ class ContactsManager @UiThread constructor() {
             list.addListener(friendListListener)
         }
 
-        magicSearch = core.createMagicSearch()
-        magicSearch.limitedSearch = false
-        magicSearch.addListener(magicSearchListener)
-
         val context = coreContext.context
         if (ActivityCompat.checkSelfPermission(
                 context,
@@ -535,7 +560,6 @@ class ContactsManager @UiThread constructor() {
     fun onCoreStopped(core: Core) {
         coroutineScope.cancel()
 
-        magicSearch.removeListener(magicSearchListener)
         core.removeListener(coreListener)
 
         for (list in core.friendsLists) {
