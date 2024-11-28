@@ -583,11 +583,9 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         val empty =
             chatRoom.hasCapability(ChatRoom.Capabilities.Conference.toInt()) && chatRoom.participants.isEmpty()
         if (empty) {
-            Log.w(
-                "$TAG Conversation has conference capability but has no participants, will be considered as read only!"
-            )
+            Log.w("$TAG Conversation has conference capability but has no participants!")
         }
-        val readOnly = chatRoom.isReadOnly || empty
+        val readOnly = chatRoom.isReadOnly
         isReadOnly.postValue(readOnly)
         if (readOnly) {
             Log.w("$TAG Conversation with subject [${chatRoom.subject}] is read only!")

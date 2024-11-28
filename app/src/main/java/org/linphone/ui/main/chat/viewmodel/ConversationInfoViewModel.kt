@@ -481,8 +481,7 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
             chatRoom.hasCapability(ChatRoom.Capabilities.Encrypted.toInt())
         )
 
-        val empty = chatRoom.hasCapability(ChatRoom.Capabilities.Conference.toInt()) && chatRoom.participants.isEmpty()
-        val readOnly = chatRoom.isReadOnly || empty
+        val readOnly = chatRoom.isReadOnly
         isReadOnly.postValue(readOnly)
         if (readOnly) {
             Log.w("$TAG Conversation with subject [${chatRoom.subject}] is read only!")
