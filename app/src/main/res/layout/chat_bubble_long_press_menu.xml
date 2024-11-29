@@ -119,7 +119,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/menu_show_imdn"
-                    android:drawableEnd="@drawable/check" />
+                    android:drawableEnd="@drawable/info" />
 
                 <View
                     android:layout_width="match_parent"

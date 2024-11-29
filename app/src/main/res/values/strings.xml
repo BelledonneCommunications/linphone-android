@@ -750,7 +750,7 @@
     <string name="menu_delete_selected_item">Delete</string>
     <string name="menu_invite">Invite</string>
     <string name="menu_resend_chat_message">Re-send</string>
-    <string name="menu_show_imdn">Info</string>
+    <string name="menu_show_imdn">Delivery status</string>
     <string name="menu_reply_to_chat_message">Reply</string>
     <string name="menu_forward_chat_message">Forward</string>
     <string name="menu_copy_chat_message">Copy</string>

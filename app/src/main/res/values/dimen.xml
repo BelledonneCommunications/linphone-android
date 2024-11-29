@@ -83,7 +83,7 @@
     <dimen name="chat_bubble_bottom_margin">8dp</dimen>
     <dimen name="chat_bubble_long_press_emoji_reaction_size">25dp</dimen>
     <dimen name="chat_bubble_grid_image_size">87dp</dimen>
-    <dimen name="chat_bubble_big_image_max_size">150dp</dimen>
+    <dimen name="chat_bubble_big_image_max_size">175dp</dimen>
     <dimen name="chat_bubble_grid_file_width">178dp</dimen> <!-- (87 + 2) * 2  -->
     <dimen name="chat_bubble_meeting_invite_width">271dp</dimen>
     <dimen name="chat_bubble_voice_record_width">230dp</dimen>
