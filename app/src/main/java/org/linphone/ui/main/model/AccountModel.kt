@@ -120,6 +120,7 @@ class AccountModel @WorkerThread constructor(
         account.addListener(accountListener)
         coreContext.core.addListener(coreListener)
 
+        isDefault.postValue(false)
         presenceStatus.postValue(ConsolidatedPresence.Offline)
         showMwi.postValue(false)
         voicemailCount.postValue("")

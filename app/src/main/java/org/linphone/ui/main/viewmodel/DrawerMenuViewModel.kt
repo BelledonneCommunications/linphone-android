@@ -82,9 +82,7 @@ class DrawerMenuViewModel @UiThread constructor() : GenericViewModel() {
                     "$TAG Account [${account.params.identityAddress?.asStringUriOnly()}] has been set as default"
                 )
                 for (model in accounts.value.orEmpty()) {
-                    if (model.account != account) {
-                        model.isDefault.postValue(false)
-                    }
+                    model.isDefault.postValue(model.account == account)
                 }
                 defaultAccountChangedEvent.postValue(
                     Event(account.params.identityAddress?.asStringUriOnly() ?: "")
