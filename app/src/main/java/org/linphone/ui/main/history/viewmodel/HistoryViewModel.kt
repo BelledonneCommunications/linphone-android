@@ -26,9 +26,12 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.Address
+import org.linphone.core.CallLog
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomListenerStub
 import org.linphone.core.Conference
+import org.linphone.core.Core
+import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
 import org.linphone.ui.main.history.model.CallLogHistoryModel
@@ -84,6 +87,22 @@ class HistoryViewModel @UiThread constructor() : GenericViewModel() {
 
     private var meetingChatRoom: ChatRoom? = null
 
+    private val coreListener = object : CoreListenerStub() {
+        @WorkerThread
+        override fun onCallLogUpdated(core: Core, callLog: CallLog) {
+            val peerAddress = callLog.remoteAddress
+            val localAddress = callLog.localAddress
+            val defaultAccount = LinphoneUtils.getDefaultAccount()
+            if (::address.isInitialized && address.weakEqual(peerAddress) && defaultAccount?.params?.identityAddress?.weakEqual(
+                    localAddress
+                ) == true
+            ) {
+                Log.i("$TAG A call log was created, updating list")
+                computeCallLogs()
+            }
+        }
+    }
+
     private val chatRoomListener = object : ChatRoomListenerStub() {
         @WorkerThread
         override fun onStateChanged(chatRoom: ChatRoom, newState: ChatRoom.State?) {
@@ -118,8 +137,18 @@ class HistoryViewModel @UiThread constructor() : GenericViewModel() {
 
     init {
         coreContext.postOnCoreThread { core ->
+            core.addListener(coreListener)
             chatDisabled.postValue(corePreferences.disableChat)
             videoCallDisabled.postValue(!core.isVideoEnabled)
+        }
+    }
+
+    @UiThread
+    override fun onCleared() {
+        super.onCleared()
+
+        coreContext.postOnCoreThread { core ->
+            core.removeListener(coreListener)
         }
     }
 
@@ -128,8 +157,9 @@ class HistoryViewModel @UiThread constructor() : GenericViewModel() {
         coreContext.postOnCoreThread { core ->
             val callLog = core.findCallLogFromCallId(callId)
             if (callLog != null) {
+                address = callLog.remoteAddress
+
                 val model = CallLogModel(callLog)
-                address = model.address
                 callLogModel.postValue(model)
 
                 val conference = callLog.wasConference()
@@ -142,20 +172,7 @@ class HistoryViewModel @UiThread constructor() : GenericViewModel() {
                     )
                 }
 
-                val peerAddress = callLog.remoteAddress
-                val history = arrayListOf<CallLogHistoryModel>()
-                val account = LinphoneUtils.getDefaultAccount()
-                val list = if (account == null) {
-                    val localAddress = callLog.localAddress
-                    core.getCallHistory(peerAddress, localAddress)
-                } else {
-                    account.getCallLogsForAddress(peerAddress)
-                }
-                for (log in list) {
-                    val historyModel = CallLogHistoryModel(log)
-                    history.add(historyModel)
-                }
-                historyCallLogs.postValue(history)
+                computeCallLogs()
 
                 callLogFoundEvent.postValue(Event(true))
             } else {
@@ -325,5 +342,21 @@ class HistoryViewModel @UiThread constructor() : GenericViewModel() {
                 conferenceToJoinEvent.postValue(Event(address.asStringUriOnly()))
             }
         }
+    }
+
+    @WorkerThread
+    private fun computeCallLogs() {
+        val history = arrayListOf<CallLogHistoryModel>()
+        val account = LinphoneUtils.getDefaultAccount()
+        account ?: return
+
+        val list = account.getCallLogsForAddress(address)
+        for (log in list) {
+            val historyModel = CallLogHistoryModel(log)
+            history.add(historyModel)
+        }
+
+        Log.i("$TAG Found [${history.size}] call logs")
+        historyCallLogs.postValue(history)
     }
 }

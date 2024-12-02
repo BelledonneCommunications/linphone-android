@@ -53,6 +53,7 @@ class HistoryListViewModel @UiThread constructor() : AbstractMainViewModel() {
     }
 
     private val coreListener = object : CoreListenerStub() {
+        @WorkerThread
         override fun onGlobalStateChanged(core: Core, state: GlobalState?, message: String) {
             if (state == GlobalState.On) {
                 Log.i("$TAG Core just started, fetching history")
@@ -60,6 +61,7 @@ class HistoryListViewModel @UiThread constructor() : AbstractMainViewModel() {
             }
         }
 
+        @WorkerThread
         override fun onCallLogUpdated(core: Core, callLog: CallLog) {
             Log.i("$TAG A call log was created, updating list")
             computeCallLogsList(currentFilter)
