@@ -12,8 +12,21 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/call_main_actions_menu_height"
-        android:paddingBottom="5dp"
         android:background="@drawable/shape_call_bottom_sheet_background">
+
+        <ImageView
+            android:onClick="@{() -> viewModel.toggleExpandActionsMenu()}"
+            android:id="@+id/call_actions_handle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="11dp"
+            android:src="@drawable/animated_caret_to_handle"
+            android:visibility="invisible"
+            android:contentDescription="@string/content_description_toggle_bottom_sheet"
+            app:tint="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/hang_up"
@@ -28,6 +41,7 @@
             android:contentDescription="@null"
             android:background="@drawable/shape_squircle_red_disabled_background"
             app:tint="@color/gray_400"
+            app:layout_constraintTop_toBottomOf="@id/call_actions_handle"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 
@@ -45,6 +59,7 @@
             app:tint="@color/gray_400"
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintTop_toBottomOf="@id/call_actions_handle"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/hang_up"
             app:layout_constraintEnd_toStartOf="@id/toggle_mute_mic" />
@@ -59,6 +74,7 @@
             android:contentDescription="@null"
             android:background="@drawable/shape_round_in_call_disabled_button_background"
             app:tint="@color/gray_400"
+            app:layout_constraintTop_toBottomOf="@id/call_actions_handle"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/toggle_video"
             app:layout_constraintEnd_toStartOf="@id/change_audio_output" />
@@ -73,6 +89,7 @@
             android:contentDescription="@null"
             android:background="@drawable/shape_round_in_call_disabled_button_background"
             app:tint="@color/gray_400"
+            app:layout_constraintTop_toBottomOf="@id/call_actions_handle"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/toggle_mute_mic"
             app:layout_constraintEnd_toEndOf="parent" />
