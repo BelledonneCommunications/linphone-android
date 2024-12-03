@@ -484,6 +484,17 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
 
                 // Add that flag back, was disabled for a time during dev process
                 core.config.setBool("misc", "hide_empty_chat_rooms", true)
+
+                // Replace old URLs by new ones
+                if (corePreferences.checkForUpdateServerUrl == "https://www.linphone.org/releases") {
+                    corePreferences.checkForUpdateServerUrl = "https://download.linphone.org/releases"
+                }
+                if (core.fileTransferServer == "https://www.linphone.org:444/lft.php") {
+                    core.fileTransferServer = "https://files.linphone.org/http-file-transfer-server/hft.php"
+                }
+                if (core.logCollectionUploadServerUrl == "https://www.linphone.org:444/lft.php") {
+                    core.logCollectionUploadServerUrl = "https://files.linphone.org/http-file-transfer-server/hft.php"
+                }
             }
 
             corePreferences.linphoneConfigurationVersion = currentVersion

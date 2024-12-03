@@ -65,9 +65,12 @@ class CorePreferences @UiThread constructor(private val context: Context) {
             config.setInt("app", "config_version", value)
         }
 
-    @get:WorkerThread
-    val checkForUpdateServerUrl: String
+    @get:WorkerThread @set:WorkerThread
+    var checkForUpdateServerUrl: String
         get() = config.getString("misc", "version_check_url_root", "").orEmpty()
+        set(value) {
+            config.setString("misc", "version_check_url_root", value)
+        }
 
     @get:WorkerThread @set:WorkerThread
     var conditionsAndPrivacyPolicyAccepted: Boolean
