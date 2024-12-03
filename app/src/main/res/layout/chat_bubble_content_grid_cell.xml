@@ -95,7 +95,7 @@
             android:layout_width="@dimen/chat_bubble_grid_image_size"
             android:layout_height="@dimen/chat_bubble_grid_image_size"
             android:background="@drawable/shape_squircle_main2_200_left"
-            android:visibility="@{model.isImage || model.isVideoPreview ? View.GONE : View.VISIBLE}"
+            android:visibility="@{model.isImage || model.isVideoPreview ? View.INVISIBLE : View.VISIBLE}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -157,10 +157,10 @@
             android:textSize="16sp"
             android:textAlignment="center"
             android:textColor="?attr/color_main1_500"
-            app:layout_constraintTop_toTopOf="@id/left_background"
-            app:layout_constraintBottom_toBottomOf="@id/left_background"
-            app:layout_constraintStart_toStartOf="@id/left_background"
-            app:layout_constraintEnd_toEndOf="@id/left_background" />
+            app:layout_constraintTop_toTopOf="@id/transfer_progress"
+            app:layout_constraintBottom_toBottomOf="@id/transfer_progress"
+            app:layout_constraintStart_toStartOf="@id/transfer_progress"
+            app:layout_constraintEnd_toEndOf="@id/transfer_progress" />
 
         <View
             android:id="@+id/file_background"

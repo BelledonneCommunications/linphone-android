@@ -87,11 +87,11 @@
             android:id="@+id/transfer_progress"
             android:layout_width="@dimen/chat_bubble_grid_image_size"
             android:layout_height="@dimen/chat_bubble_grid_image_size"
-            android:padding="18dp"
             android:indeterminate="false"
             android:progress="@{model.transferProgress}"
             android:max="100"
             android:visibility="@{model.transferProgress == -1 || model.transferProgress >= 100 ? View.GONE : View.VISIBLE}"
+            app:indicatorSize="50dp"
             app:trackColor="?attr/color_main1_100"
             app:indicatorColor="?attr/color_main1_500"
             app:layout_constraintTop_toTopOf="@id/image"
@@ -99,6 +99,22 @@
             app:layout_constraintStart_toStartOf="@id/image"
             app:layout_constraintEnd_toEndOf="@id/image"
             tools:progress="40" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/main_page_title_style"
+            android:id="@+id/transfer_progress_label"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:onClick="@{() -> model.onClick()}"
+            android:onLongClick="@{onLongClickListener}"
+            android:text="@{model.transferProgressLabel, default=`40%`}"
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:textColor="?attr/color_main1_500"
+            app:layout_constraintTop_toTopOf="@id/transfer_progress"
+            app:layout_constraintBottom_toBottomOf="@id/transfer_progress"
+            app:layout_constraintStart_toStartOf="@id/transfer_progress"
+            app:layout_constraintEnd_toEndOf="@id/transfer_progress" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
