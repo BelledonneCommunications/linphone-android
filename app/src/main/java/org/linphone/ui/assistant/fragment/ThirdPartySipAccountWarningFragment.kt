@@ -71,13 +71,19 @@ class ThirdPartySipAccountWarningFragment : GenericFragment() {
         }
 
         binding.setCreateAccountClickListener {
-            val action = ThirdPartySipAccountWarningFragmentDirections.actionThirdPartySipAccountWarningFragmentToRegisterFragment()
-            findNavController().navigate(action)
+            if (findNavController().currentDestination?.id == R.id.thirdPartySipAccountWarningFragment) {
+                val action =
+                    ThirdPartySipAccountWarningFragmentDirections.actionThirdPartySipAccountWarningFragmentToRegisterFragment()
+                findNavController().navigate(action)
+            }
         }
 
         binding.setLoginClickListener {
-            val action = ThirdPartySipAccountWarningFragmentDirections.actionThirdPartySipAccountWarningFragmentToThirdPartySipAccountLoginFragment()
-            findNavController().navigate(action)
+            if (findNavController().currentDestination?.id == R.id.thirdPartySipAccountWarningFragment) {
+                val action =
+                    ThirdPartySipAccountWarningFragmentDirections.actionThirdPartySipAccountWarningFragmentToThirdPartySipAccountLoginFragment()
+                findNavController().navigate(action)
+            }
         }
     }
 

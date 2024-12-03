@@ -214,18 +214,27 @@ class ActiveCallFragment : GenericCallFragment() {
         }
 
         binding.setTransferCallClickListener {
-            val action = ActiveCallFragmentDirections.actionActiveCallFragmentToTransferCallFragment()
-            findNavController().navigate(action)
+            if (findNavController().currentDestination?.id == R.id.activeCallFragment) {
+                val action =
+                    ActiveCallFragmentDirections.actionActiveCallFragmentToTransferCallFragment()
+                findNavController().navigate(action)
+            }
         }
 
         binding.setNewCallClickListener {
-            val action = ActiveCallFragmentDirections.actionActiveCallFragmentToNewCallFragment()
-            findNavController().navigate(action)
+            if (findNavController().currentDestination?.id == R.id.activeCallFragment) {
+                val action =
+                    ActiveCallFragmentDirections.actionActiveCallFragmentToNewCallFragment()
+                findNavController().navigate(action)
+            }
         }
 
         binding.setCallsListClickListener {
-            val action = ActiveCallFragmentDirections.actionActiveCallFragmentToCallsListFragment()
-            findNavController().navigate(action)
+            if (findNavController().currentDestination?.id == R.id.activeCallFragment) {
+                val action =
+                    ActiveCallFragmentDirections.actionActiveCallFragmentToCallsListFragment()
+                findNavController().navigate(action)
+            }
         }
 
         binding.setCallStatisticsClickListener {

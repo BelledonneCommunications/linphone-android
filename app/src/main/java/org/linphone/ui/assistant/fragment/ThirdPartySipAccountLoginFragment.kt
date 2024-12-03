@@ -135,11 +135,13 @@ class ThirdPartySipAccountLoginFragment : GenericFragment() {
                 Log.i(
                     "$TAG Navigating to Single Sign On Fragment with server URL [$serverUrl] and username [$username]"
                 )
-                val action = SingleSignOnFragmentDirections.actionGlobalSingleSignOnFragment(
-                    serverUrl,
-                    username
-                )
-                findNavController().navigate(action)
+                if (findNavController().currentDestination?.id == R.id.thirdPartySipAccountLoginFragment) {
+                    val action = SingleSignOnFragmentDirections.actionGlobalSingleSignOnFragment(
+                        serverUrl,
+                        username
+                    )
+                    findNavController().navigate(action)
+                }
             }
         }
 

@@ -69,8 +69,10 @@ class HelpFragment : GenericMainFragment() {
         }
 
         binding.setDebugClickListener {
-            val action = HelpFragmentDirections.actionHelpFragmentToDebugFragment()
-            findNavController().navigate(action)
+            if (findNavController().currentDestination?.id == R.id.helpFragment) {
+                val action = HelpFragmentDirections.actionHelpFragmentToDebugFragment()
+                findNavController().navigate(action)
+            }
         }
 
         binding.setPrivacyPolicyClickListener {

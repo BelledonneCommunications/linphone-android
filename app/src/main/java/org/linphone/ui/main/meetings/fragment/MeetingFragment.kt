@@ -127,10 +127,13 @@ class MeetingFragment : SlidingPaneChildFragment() {
                 Log.i(
                     "$TAG Navigating to meeting edit fragment with conference URI [$conferenceUri]"
                 )
-                val action = MeetingFragmentDirections.actionMeetingFragmentToEditMeetingFragment(
-                    conferenceUri
-                )
-                findNavController().navigate(action)
+                if (findNavController().currentDestination?.id == R.id.meetingFragment) {
+                    val action =
+                        MeetingFragmentDirections.actionMeetingFragmentToEditMeetingFragment(
+                            conferenceUri
+                        )
+                    findNavController().navigate(action)
+                }
             }
         }
 

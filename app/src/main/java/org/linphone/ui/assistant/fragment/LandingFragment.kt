@@ -86,8 +86,11 @@ class LandingFragment : GenericFragment() {
         }
 
         binding.setQrCodeClickListener {
-            val action = LandingFragmentDirections.actionLandingFragmentToQrCodeScannerFragment()
-            findNavController().navigate(action)
+            if (findNavController().currentDestination?.id == R.id.landingFragment) {
+                val action =
+                    LandingFragmentDirections.actionLandingFragmentToQrCodeScannerFragment()
+                findNavController().navigate(action)
+            }
         }
 
         binding.setThirdPartySipAccountLoginClickListener {
@@ -151,17 +154,21 @@ class LandingFragment : GenericFragment() {
     }
 
     private fun goToRegisterFragment() {
-        val action = LandingFragmentDirections.actionLandingFragmentToRegisterFragment()
-        findNavController().navigate(action)
+        if (findNavController().currentDestination?.id == R.id.landingFragment) {
+            val action = LandingFragmentDirections.actionLandingFragmentToRegisterFragment()
+            findNavController().navigate(action)
+        }
     }
 
     private fun goToLoginThirdPartySipAccountFragment(skipWarning: Boolean) {
-        val action = if (skipWarning) {
-            LandingFragmentDirections.actionLandingFragmentToThirdPartySipAccountLoginFragment()
-        } else {
-            LandingFragmentDirections.actionLandingFragmentToThirdPartySipAccountWarningFragment()
+        if (findNavController().currentDestination?.id == R.id.landingFragment) {
+            val action = if (skipWarning) {
+                LandingFragmentDirections.actionLandingFragmentToThirdPartySipAccountLoginFragment()
+            } else {
+                LandingFragmentDirections.actionLandingFragmentToThirdPartySipAccountWarningFragment()
+            }
+            findNavController().navigate(action)
         }
-        findNavController().navigate(action)
     }
 
     private fun showAcceptConditionsAndPrivacyDialog(

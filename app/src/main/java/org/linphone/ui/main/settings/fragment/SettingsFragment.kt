@@ -155,37 +155,49 @@ class SettingsFragment : GenericMainFragment() {
 
         viewModel.addLdapServerEvent.observe(viewLifecycleOwner) {
             it.consume {
-                val action = SettingsFragmentDirections.actionSettingsFragmentToLdapServerConfigurationFragment(
-                    null
-                )
-                findNavController().navigate(action)
+                if (findNavController().currentDestination?.id == R.id.settingsFragment) {
+                    val action =
+                        SettingsFragmentDirections.actionSettingsFragmentToLdapServerConfigurationFragment(
+                            null
+                        )
+                    findNavController().navigate(action)
+                }
             }
         }
 
         viewModel.editLdapServerEvent.observe(viewLifecycleOwner) {
             it.consume { name ->
-                val action = SettingsFragmentDirections.actionSettingsFragmentToLdapServerConfigurationFragment(
-                    name
-                )
-                findNavController().navigate(action)
+                if (findNavController().currentDestination?.id == R.id.settingsFragment) {
+                    val action =
+                        SettingsFragmentDirections.actionSettingsFragmentToLdapServerConfigurationFragment(
+                            name
+                        )
+                    findNavController().navigate(action)
+                }
             }
         }
 
         viewModel.addCardDavServerEvent.observe(viewLifecycleOwner) {
             it.consume {
-                val action = SettingsFragmentDirections.actionSettingsFragmentToCardDavAddressBookConfigurationFragment(
-                    null
-                )
-                findNavController().navigate(action)
+                if (findNavController().currentDestination?.id == R.id.settingsFragment) {
+                    val action =
+                        SettingsFragmentDirections.actionSettingsFragmentToCardDavAddressBookConfigurationFragment(
+                            null
+                        )
+                    findNavController().navigate(action)
+                }
             }
         }
 
         viewModel.editCardDavServerEvent.observe(viewLifecycleOwner) {
             it.consume { name ->
-                val action = SettingsFragmentDirections.actionSettingsFragmentToCardDavAddressBookConfigurationFragment(
-                    name
-                )
-                findNavController().navigate(action)
+                if (findNavController().currentDestination?.id == R.id.settingsFragment) {
+                    val action =
+                        SettingsFragmentDirections.actionSettingsFragmentToCardDavAddressBookConfigurationFragment(
+                            name
+                        )
+                    findNavController().navigate(action)
+                }
             }
         }
 

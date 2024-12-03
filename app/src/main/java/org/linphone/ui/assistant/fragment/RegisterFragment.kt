@@ -156,8 +156,11 @@ class RegisterFragment : GenericFragment() {
         viewModel.goToSmsCodeConfirmationViewEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG Going to SMS code confirmation fragment")
-                val action = RegisterFragmentDirections.actionRegisterFragmentToRegisterCodeConfirmationFragment()
-                findNavController().navigate(action)
+                if (findNavController().currentDestination?.id == R.id.registerFragment) {
+                    val action =
+                        RegisterFragmentDirections.actionRegisterFragmentToRegisterCodeConfirmationFragment()
+                    findNavController().navigate(action)
+                }
             }
         }
 

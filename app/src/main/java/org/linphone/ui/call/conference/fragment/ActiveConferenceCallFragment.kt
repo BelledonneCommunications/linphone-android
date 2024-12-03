@@ -284,14 +284,20 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
 
         binding.setCallsListClickListener {
             Log.i("$TAG Going to calls list fragment")
-            val action = ActiveConferenceCallFragmentDirections.actionActiveConferenceCallFragmentToCallsListFragment()
-            findNavController().navigate(action)
+            if (findNavController().currentDestination?.id == R.id.activeConferenceCallFragment) {
+                val action =
+                    ActiveConferenceCallFragmentDirections.actionActiveConferenceCallFragmentToCallsListFragment()
+                findNavController().navigate(action)
+            }
         }
 
         binding.setParticipantsListClickListener {
             Log.i("$TAG Going to conference participants list fragment")
-            val action = ActiveConferenceCallFragmentDirections.actionActiveConferenceCallFragmentToConferenceParticipantsListFragment()
-            findNavController().navigate(action)
+            if (findNavController().currentDestination?.id == R.id.activeConferenceCallFragment) {
+                val action =
+                    ActiveConferenceCallFragmentDirections.actionActiveConferenceCallFragmentToConferenceParticipantsListFragment()
+                findNavController().navigate(action)
+            }
         }
 
         binding.setShareConferenceClickListener {

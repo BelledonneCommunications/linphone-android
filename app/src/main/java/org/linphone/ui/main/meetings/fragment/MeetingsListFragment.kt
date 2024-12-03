@@ -143,9 +143,11 @@ class MeetingsListFragment : AbstractMainFragment() {
                     Log.w("$TAG Meeting with ID [${model.id}] is cancelled, can't show the details")
                 } else {
                     Log.i("$TAG Show meeting with ID [${model.id}]")
-                    sharedViewModel.displayedMeeting = model.conferenceInfo
-                    val action = MeetingFragmentDirections.actionGlobalMeetingFragment(model.id)
-                    binding.meetingsNavContainer.findNavController().navigate(action)
+                    if (findNavController().currentDestination?.id == R.id.meetingsListFragment) {
+                        sharedViewModel.displayedMeeting = model.conferenceInfo
+                        val action = MeetingFragmentDirections.actionGlobalMeetingFragment(model.id)
+                        binding.meetingsNavContainer.findNavController().navigate(action)
+                    }
                 }
             }
         }
