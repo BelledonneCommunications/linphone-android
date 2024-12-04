@@ -293,6 +293,7 @@
     <string name="settings_advanced_keep_alive_service_title">Keep app alive using Service</string>
     <string name="settings_advanced_device_id">Device ID</string>
     <string name="settings_advanced_device_id_hint">Alpha-numerical characters only</string>
+    <string name="settings_advanced_upload_server_url">File sharing server URL</string>
     <string name="settings_advanced_media_encryption_title">Media encryption</string>
     <string name="settings_advanced_media_encryption_mandatory_title">Media encryption mandatory</string>
     <string name="settings_advanced_remote_provisioning_url">Remote provisioning URL</string>

@@ -178,6 +178,7 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
     val keepAliveThirdPartyAccountsService = MutableLiveData<Boolean>()
 
     val deviceName = MutableLiveData<String>()
+    val fileSharingServerUrl = MutableLiveData<String>()
     val remoteProvisioningUrl = MutableLiveData<String>()
 
     val mediaEncryptionIndex = MutableLiveData<Int>()
@@ -295,6 +296,7 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
             keepAliveThirdPartyAccountsService.postValue(corePreferences.keepServiceAlive)
 
             deviceName.postValue(corePreferences.deviceName)
+            fileSharingServerUrl.postValue(core.fileTransferServer)
             remoteProvisioningUrl.postValue(core.provisioningUri)
 
             setupMediaEncryption()
@@ -702,6 +704,17 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
                     "$TAG Updated device name to [${corePreferences.deviceName}], re-compute user-agent"
                 )
                 coreContext.computeUserAgent()
+            }
+        }
+    }
+
+    @UiThread
+    fun updateFileSharingServerUrl() {
+        coreContext.postOnCoreThread { core ->
+            val newFileSharingServerUrl = fileSharingServerUrl.value.orEmpty().trim()
+            if (newFileSharingServerUrl.isNotEmpty()) {
+                Log.i("$TAG Updated file sharing server URL to [$newFileSharingServerUrl]")
+                core.fileTransferServer = newFileSharingServerUrl
             }
         }
     }
