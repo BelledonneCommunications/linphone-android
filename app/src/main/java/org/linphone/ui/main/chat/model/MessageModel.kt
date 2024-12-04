@@ -384,6 +384,13 @@ class MessageModel @WorkerThread constructor(
 
         val contents = chatMessage.contents
         allFilesDownloaded = true
+
+        val notMediaContent = contents.find {
+            it.isIcalendar || it.isVoiceRecording || (it.isText && !it.isFile) || it.isFileTransfer || (it.isFile && !(it.type == "video" || it.type == "image"))
+        }
+        val allContentsAreMedia = notMediaContent == null
+        val exactly4Contents = contents.size == 4
+
         for (content in contents) {
             val isFileEncrypted = content.isFileEncrypted
 
@@ -401,6 +408,7 @@ class MessageModel @WorkerThread constructor(
                 Log.d("$TAG Found voice recording content")
                 isVoiceRecord.postValue(true)
                 computeVoiceRecordContent(content)
+
                 displayableContentFound = true
             } else {
                 if (content.isFile) {
@@ -424,40 +432,23 @@ class MessageModel @WorkerThread constructor(
                             "$TAG Found file ready to be displayed [$path] with MIME [${content.type}/${content.subtype}] for message [${chatMessage.messageId}]"
                         )
 
+                        val wrapBefore = allContentsAreMedia && filesContentCount == 3
                         val fileSize = content.fileSize.toLong()
                         val timestamp = content.creationTimestamp
-                        when (content.type) {
-                            "image", "video" -> {
-                                val fileModel = FileModel(
-                                    path,
-                                    name,
-                                    fileSize,
-                                    timestamp,
-                                    isFileEncrypted,
-                                    originalPath
-                                ) { model ->
-                                    onContentClicked?.invoke(model)
-                                }
-                                filesPath.add(fileModel)
-
-                                displayableContentFound = true
-                            }
-                            else -> {
-                                val fileModel = FileModel(
-                                    path,
-                                    name,
-                                    fileSize,
-                                    timestamp,
-                                    isFileEncrypted,
-                                    originalPath
-                                ) { model ->
-                                    onContentClicked?.invoke(model)
-                                }
-                                filesPath.add(fileModel)
-
-                                displayableContentFound = true
-                            }
+                        val fileModel = FileModel(
+                            path,
+                            name,
+                            fileSize,
+                            timestamp,
+                            isFileEncrypted,
+                            originalPath,
+                            flexboxLayoutWrapBefore = wrapBefore
+                        ) { model ->
+                            onContentClicked?.invoke(model)
                         }
+                        filesPath.add(fileModel)
+
+                        displayableContentFound = true
                     } else {
                         Log.e("$TAG No path found for File Content!")
                     }
@@ -478,8 +469,7 @@ class MessageModel @WorkerThread constructor(
                                 content.fileSize.toLong(),
                                 timestamp,
                                 isFileEncrypted,
-                                path,
-                                false
+                                path
                             ) { model ->
                                 onContentClicked?.invoke(model)
                             }
@@ -491,7 +481,7 @@ class MessageModel @WorkerThread constructor(
                                 timestamp,
                                 isFileEncrypted,
                                 name,
-                                true
+                                isWaitingToBeDownloaded = true
                             ) { model ->
                                 downloadContent(model, content)
                             }

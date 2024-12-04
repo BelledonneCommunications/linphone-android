@@ -58,6 +58,7 @@ import coil.request.videoFrameMillis
 import coil.size.Dimension
 import coil.transform.CircleCropTransformation
 import coil.transform.RoundedCornersTransformation
+import com.google.android.flexbox.FlexboxLayout
 import org.linphone.BR
 import org.linphone.R
 import org.linphone.contacts.AbstractAvatarModel
@@ -603,6 +604,13 @@ fun validateOnInput(editText: EditText, onValidate: () -> (Unit)) {
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     })
+}
+
+@BindingAdapter("app:layout_wrapBefore")
+fun setFlexboxLayoutWrapBefore(view: View, wrap: Boolean = false) {
+    val params = view.layoutParams as FlexboxLayout.LayoutParams
+    params.isWrapBefore = wrap
+    view.layoutParams = params
 }
 
 @BindingAdapter("emojiPickedListener")

@@ -44,6 +44,7 @@ class FileModel @AnyThread constructor(
     val isEncrypted: Boolean,
     val originalPath: String,
     val isWaitingToBeDownloaded: Boolean = false,
+    val flexboxLayoutWrapBefore: Boolean = false,
     private val onClicked: ((model: FileModel) -> Unit)? = null
 ) {
     companion object {

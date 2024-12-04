@@ -17,6 +17,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_wrapBefore="@{model.flexboxLayoutWrapBefore}"
         android:padding="1dp">
 
         <androidx.constraintlayout.widget.Group
