@@ -495,6 +495,9 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
                 if (core.logCollectionUploadServerUrl == "https://www.linphone.org:444/lft.php") {
                     core.logCollectionUploadServerUrl = "https://files.linphone.org/http-file-transfer-server/hft.php"
                 }
+
+                Log.i("$TAG Removing previous grammar files (without .belr extension)")
+                corePreferences.clearPreviousGrammars()
             }
 
             corePreferences.linphoneConfigurationVersion = currentVersion

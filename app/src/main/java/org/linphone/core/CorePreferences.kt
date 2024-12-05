@@ -313,6 +313,48 @@ class CorePreferences @UiThread constructor(private val context: Context) {
     }
 
     @AnyThread
+    fun clearPreviousGrammars() {
+        val cpimGrammar = File("${context.filesDir.absolutePath}/share/belr/grammars/cpim_grammar")
+        if (cpimGrammar.exists()) {
+            cpimGrammar.delete()
+        }
+        val icsGrammar = File("${context.filesDir.absolutePath}/share/belr/grammars/ics_grammar")
+        if (icsGrammar.exists()) {
+            icsGrammar.delete()
+        }
+        val identityGrammar = File(
+            "${context.filesDir.absolutePath}/share/belr/grammars/identity_grammar"
+        )
+        if (identityGrammar.exists()) {
+            identityGrammar.delete()
+        }
+        val mwiGrammar = File("${context.filesDir.absolutePath}/share/belr/grammars/mwi_grammar")
+        if (mwiGrammar.exists()) {
+            mwiGrammar.delete()
+        }
+        val sdpGrammar = File("${context.filesDir.absolutePath}/share/belr/grammars/sdp_grammar")
+        if (sdpGrammar.exists()) {
+            sdpGrammar.delete()
+        }
+        val sipGrammar = File("${context.filesDir.absolutePath}/share/belr/grammars/sip_grammar")
+        if (sipGrammar.exists()) {
+            sipGrammar.delete()
+        }
+        val vcard3Grammar = File(
+            "${context.filesDir.absolutePath}/share/belr/grammars/vcard3_grammar"
+        )
+        if (vcard3Grammar.exists()) {
+            vcard3Grammar.delete()
+        }
+        val vcardGrammar = File(
+            "${context.filesDir.absolutePath}/share/belr/grammars/vcard_grammar"
+        )
+        if (vcardGrammar.exists()) {
+            vcardGrammar.delete()
+        }
+    }
+
+    @AnyThread
     private fun copy(from: String, to: String, overrideIfExists: Boolean = false) {
         val outFile = File(to)
         if (outFile.exists()) {
