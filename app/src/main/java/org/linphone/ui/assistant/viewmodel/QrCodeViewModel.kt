@@ -24,6 +24,7 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.ConfiguringState
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
@@ -39,6 +40,14 @@ class QrCodeViewModel @UiThread constructor() : GenericViewModel() {
 
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
+        override fun onConfiguringStatus(core: Core, status: ConfiguringState, message: String?) {
+            Log.i("$TAG Configuring state is [$status]")
+            if (status == ConfiguringState.Successful) {
+                qrCodeFoundEvent.postValue(Event(true))
+            }
+        }
+
+        @WorkerThread
         override fun onQrcodeFound(core: Core, result: String?) {
             Log.i("$TAG QR Code found: [$result]")
             if (result == null) {
@@ -47,6 +56,7 @@ class QrCodeViewModel @UiThread constructor() : GenericViewModel() {
                 val isValidUrl = Patterns.WEB_URL.matcher(result).matches()
                 if (!isValidUrl) {
                     Log.e("$TAG The content of the QR Code doesn't seem to be a valid web URL")
+                    qrCodeFoundEvent.postValue(Event(false))
                 } else {
                     Log.i(
                         "$TAG QR code URL set, restarting the Core to apply configuration changes"
@@ -57,7 +67,6 @@ class QrCodeViewModel @UiThread constructor() : GenericViewModel() {
                     coreContext.core.start()
                     Log.i("$TAG Core has been restarted")
                 }
-                qrCodeFoundEvent.postValue(Event(isValidUrl))
             }
         }
     }

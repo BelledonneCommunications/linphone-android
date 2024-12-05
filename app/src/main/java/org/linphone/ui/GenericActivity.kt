@@ -49,9 +49,11 @@ open class GenericActivity : AppCompatActivity() {
 
     private lateinit var toastsArea: ViewGroup
 
+    private var mainColor: String = "orange"
+
     override fun getTheme(): Resources.Theme {
-        val mainColor = corePreferences.themeMainColor
-        val theme = super.getTheme()
+        mainColor = corePreferences.themeMainColor
+        val theme = super.theme
         when (mainColor) {
             "yellow" -> theme.applyStyle(R.style.Theme_LinphoneYellow, true)
             "green" -> theme.applyStyle(R.style.Theme_LinphoneGreen, true)
@@ -87,6 +89,13 @@ open class GenericActivity : AppCompatActivity() {
         }
 
         super.onCreate(savedInstanceState)
+    }
+
+    protected fun checkMainColorTheme() {
+        if (mainColor != corePreferences.themeMainColor) {
+            Log.i("$TAG Main color setting has changed, re-creating activity")
+            recreate()
+        }
     }
 
     fun setUpToastsArea(viewGroup: ViewGroup) {

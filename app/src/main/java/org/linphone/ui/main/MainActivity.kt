@@ -45,6 +45,7 @@ import androidx.core.view.updatePadding
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.observe
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavOptions
@@ -292,6 +293,13 @@ class MainActivity : GenericActivity() {
                 val message = pair.first
                 val icon = pair.second
                 showRedToast(message, icon)
+            }
+        }
+
+        coreContext.provisioningAppliedEvent.observe(this) {
+            it.consume {
+                Log.i("$TAG Remote provisioning was applied, checking if theme has changed")
+                checkMainColorTheme()
             }
         }
 

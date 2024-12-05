@@ -106,6 +106,10 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         MutableLiveData<Event<Pair<String, Int>>>()
     }
 
+    val provisioningAppliedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     @SuppressLint("HandlerLeak")
     private lateinit var coreThread: Handler
 
@@ -166,6 +170,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         ) {
             Log.i("$TAG Configuring state changed [$status], message is [$message]")
             if (status == ConfiguringState.Successful) {
+                provisioningAppliedEvent.postValue(Event(true))
                 corePreferences.firstLaunch = false
                 showGreenToastEvent.postValue(
                     Event(
@@ -339,6 +344,9 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         }
 
         override fun onAccountAdded(core: Core, account: Account) {
+            // Prevent this trigger when core is stopped/start in remote prov
+            if (core.globalState == GlobalState.Off) return
+
             Log.i(
                 "$TAG New account configured: [${account.params.identityAddress?.asStringUriOnly()}]"
             )
@@ -507,6 +515,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         }
 
         if (corePreferences.keepServiceAlive) {
+            Log.i("$TAG Starting keep alive service")
             startKeepAliveService()
         }
 
