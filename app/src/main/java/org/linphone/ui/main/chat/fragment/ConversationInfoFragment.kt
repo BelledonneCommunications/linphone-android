@@ -64,7 +64,12 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
     private val args: ConversationInfoFragmentArgs by navArgs()
 
     override fun goBack(): Boolean {
-        return findNavController().popBackStack()
+        try {
+            return findNavController().popBackStack()
+        } catch (ise: IllegalStateException) {
+            Log.e("$TAG Can't go back popping back stack: $ise")
+        }
+        return false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
