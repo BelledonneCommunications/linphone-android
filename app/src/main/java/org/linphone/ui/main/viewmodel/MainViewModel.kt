@@ -303,8 +303,8 @@ class MainViewModel @UiThread constructor() : ViewModel() {
 
             core.addListener(coreListener)
 
-            if (!core.isNetworkReachable) {
-                Log.w("$TAG Network is not reachable!")
+            if (!core.isNetworkReachable && core.globalState == GlobalState.On) {
+                Log.w("$TAG Core is ON & network is not reachable!")
                 val label = AppUtils.getString(R.string.network_not_reachable)
                 addAlert(NETWORK_NOT_REACHABLE, label)
             }
@@ -554,7 +554,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
     private fun checkNetworkReachability() {
         val reachable = coreContext.core.isNetworkReachable
         Log.i("$TAG Network is ${if (reachable) "reachable" else "not reachable"}")
-        if (!reachable) {
+        if (!reachable && coreContext.core.globalState == GlobalState.On) {
             val label = AppUtils.getString(R.string.network_not_reachable)
             addAlert(NETWORK_NOT_REACHABLE, label)
         } else {

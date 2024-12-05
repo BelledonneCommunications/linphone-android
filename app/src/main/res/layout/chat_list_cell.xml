@@ -90,7 +90,7 @@
             android:text="@{model.lastMessageTextSender, default=`John Doe:`}"
             android:textSize="14sp"
             android:textColor="?attr/color_main2_400"
-            android:visibility="@{model.lastMessageTextSender.length() > 0 ? View.VISIBLE : View.GONE}"
+            android:visibility="@{model.isBeingDeleted || model.lastMessageTextSender.length() == 0 || model.isComposing ? View.GONE : View.VISIBLE}"
             textFont="@{model.isBeingDeleted || model.unreadMessageCount > 0 || model.isComposing ? NotoSansFont.NotoSansBold : NotoSansFont.NotoSansRegular}"
             app:layout_constraintStart_toStartOf="@id/title"
             app:layout_constraintEnd_toStartOf="@id/last_message_forward"
