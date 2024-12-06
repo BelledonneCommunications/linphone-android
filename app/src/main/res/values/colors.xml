@@ -61,34 +61,40 @@
     <color name="yellow_main_300">#FFE799</color>
     <color name="yellow_main_500">#F5BC00</color>
     <color name="yellow_main_700">#A37D00</color>
+    <color name="yellow_main_900">#806200</color>
 
     <color name="green_main_100">#DCF9E7</color>
     <color name="green_main_100_alpha_50">#80DCF9E7</color>
     <color name="green_main_300">#A8F0C2</color>
     <color name="green_main_500">#25D366</color>
     <color name="green_main_700">#1C9C4B</color>
+    <color name="green_main_900">#136c34</color>
 
     <color name="blue_main_100">#D6F4FF</color>
     <color name="blue_main_100_alpha_50">#80D6F4FF</color>
     <color name="blue_main_300">#99E4FF</color>
     <color name="blue_main_500">#00aff0</color>
     <color name="blue_main_700">#0078A3</color>
+    <color name="blue_main_900">#005d80</color>
 
     <color name="red_main_100">#FBE1DA</color>
     <color name="red_main_100_alpha_50">#80FBE1DA</color>
     <color name="red_main_300">#F5B53A</color>
     <color name="red_main_500">#E14318</color>
     <color name="red_main_700">#A63211</color>
+    <color name="red_main_900">#73220c</color>
 
     <color name="pink_main_100">#FFD6F1</color>
     <color name="pink_main_100_alpha_50">#80FFD6F1</color>
     <color name="pink_main_300">#FF99DD</color>
     <color name="pink_main_500">#FF00A9</color>
     <color name="pink_main_700">#B8007A</color>
+    <color name="pink_main_900">#800055</color>
 
     <color name="purple_main_100">#FFD6FF</color>
     <color name="purple_main_100_alpha_50">#80FFD6FF</color>
     <color name="purple_main_300">#FF99FF</color>
     <color name="purple_main_500">#800080</color>
     <color name="purple_main_700">#520052</color>
+    <color name="purple_main_900">#80007f</color>
 </resources>
