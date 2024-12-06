@@ -413,6 +413,18 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
             popupWindow.dismiss()
         }
 
+        popupView.setCopySipUriClickListener {
+            val sipUri = participantModel.sipUri
+            val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            clipboard.setPrimaryClip(ClipData.newPlainText("SIP address", sipUri))
+
+            val message = getString(R.string.sip_address_copied_to_clipboard_toast)
+            (requireActivity() as GenericActivity).showGreenToast(
+                message,
+                R.drawable.check
+            )
+        }
+
         // Elevation is for showing a shadow around the popup
         popupWindow.elevation = 20f
         popupWindow.showAsDropDown(view, 0, 0, Gravity.BOTTOM)
