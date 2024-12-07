@@ -126,6 +126,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             maxItems = SendMessageInConversationViewModel.MAX_FILES_TO_ATTACH
         )
     ) { list ->
+        sendMessageViewModel.closeFilePickerBottomSheet()
         if (list.isNotEmpty()) {
             for (uri in list) {
                 lifecycleScope.launch {
@@ -147,9 +148,21 @@ open class ConversationFragment : SlidingPaneChildFragment() {
 
     private var pendingImageCaptureFile: File? = null
 
+    private val pickDocument = registerForActivityResult(
+        ActivityResultContracts.OpenMultipleDocuments()
+    ) { files ->
+        sendMessageViewModel.closeFilePickerBottomSheet()
+        for (fileUri in files) {
+            val path = fileUri.toString()
+            Log.i("$TAG Picked file [$path]")
+            sendMessageViewModel.addAttachment(path)
+        }
+    }
+
     private val startCameraCapture = registerForActivityResult(
         ActivityResultContracts.TakePicture()
     ) { captured ->
+        sendMessageViewModel.closeFilePickerBottomSheet()
         val path = pendingImageCaptureFile?.absolutePath
         if (path != null) {
             if (captured) {
@@ -257,13 +270,13 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         }
 
         override fun afterTextChanged(p0: Editable?) {
-            sendMessageViewModel.isParticipantsListOpen.value = false
+            sendMessageViewModel.closeParticipantsList()
 
             val split = p0.toString().split(" ")
             for (part in split) {
                 if (part == "@") {
                     Log.i("$TAG '@' found, opening participants list")
-                    sendMessageViewModel.isParticipantsListOpen.value = true
+                    sendMessageViewModel.openParticipantsList()
                 }
             }
         }
@@ -608,6 +621,11 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         }
 
         binding.setOpenFilePickerClickListener {
+            Log.i("$TAG Opening file picker")
+            pickDocument.launch(arrayOf("*/*"))
+        }
+
+        binding.setOpenMediaPickerClickListener {
             Log.i("$TAG Opening media picker")
             pickMedia.launch(
                 PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo)

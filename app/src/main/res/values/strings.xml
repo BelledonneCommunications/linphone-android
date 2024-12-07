@@ -514,6 +514,9 @@
     <string name="conversation_to_display_no_found_toast">Conversation was not found</string>
     <string name="conversation_search_no_match_found">No matching result found</string>
     <string name="conversation_search_no_more_match">Last matching result reached</string>
+    <string name="conversation_take_picture_label">Take picture</string>
+    <string name="conversation_pick_file_from_gallery_label">Open gallery</string>
+    <string name="conversation_pick_any_file_label">Pick file</string>
 
     <string name="conversation_info_participants_list_title">Group members (%s)</string>
     <string name="conversation_info_add_participants_label">Add participants</string>
@@ -857,7 +860,7 @@
     <string name="content_description_chat_send_message">Sends message in conversation</string>
     <string name="content_description_chat_cancel_reply">Message will no longer be a reply to a previous message</string>
     <string name="content_description_chat_open_emoji_picker">Opens emoji picker</string>
-    <string name="content_description_chat_open_attach_media">Opens media picker</string>
+    <string name="content_description_chat_open_attach_file">Opens file picker</string>
     <string name="content_description_chat_take_picture">Opens camera to take a picture</string>
     <string name="content_description_chat_edit_conversation_subject">Click to edit the subject of this conversation</string>
     <string name="content_description_chat_toggle_mute">Silences on/off this conversation</string>

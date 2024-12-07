@@ -6,10 +6,13 @@
     <data>
         <import type="android.view.View" />
         <variable
-            name="openFilePickerClickListener"
+            name="openMediaPickerClickListener"
             type="View.OnClickListener" />
         <variable
             name="openCameraClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="openFilePickerClickListener"
             type="View.OnClickListener" />
         <variable
             name="viewModel"
@@ -29,13 +32,6 @@
             android:visibility="@{viewModel.isVoiceRecording ? View.INVISIBLE : View.VISIBLE}"
             app:constraint_referenced_ids="attach_file, message_area_background, message_to_send" />
 
-        <androidx.constraintlayout.widget.Group
-            android:id="@+id/extra_actions"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="@{viewModel.isVoiceRecording ? View.INVISIBLE : (viewModel.isKeyboardOpen || viewModel.isCallConversation || !viewModel.isFileTransferServerAvailable) ? View.GONE : View.VISIBLE}"
-            app:constraint_referenced_ids="emoji_picker_toggle, capture_image" />
-
         <include
             android:id="@+id/reply_area"
             layout="@layout/chat_conversation_reply_area"
@@ -52,15 +48,6 @@
             android:visibility="@{viewModel.isFileAttachmentsListOpen ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintTop_toBottomOf="@id/reply_area" />
 
-        <include
-            android:id="@+id/participants"
-            layout="@layout/chat_conversation_participants_area"
-            bind:viewModel="@{viewModel}"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="@{viewModel.isParticipantsListOpen ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintTop_toBottomOf="@id/attachments" />
-
         <androidx.emoji2.emojipicker.EmojiPickerView
             android:id="@+id/emoji_picker"
             android:layout_width="match_parent"
@@ -70,12 +57,32 @@
             app:emojiPickedListener="@{(emoji) -> viewModel.insertEmoji(emoji.emoji)}"
             app:layout_constraintTop_toBottomOf="@id/attachments" />
 
+        <include
+            android:id="@+id/file_pickers"
+            layout="@layout/chat_conversation_file_pickers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.areFilePickersOpen ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintTop_toBottomOf="@id/emoji_picker"
+            bind:openMediaPickerClickListener="@{openMediaPickerClickListener}"
+            bind:openCameraClickListener="@{openCameraClickListener}"
+            bind:openFilePickerClickListener="@{openFilePickerClickListener}" />
+
+        <include
+            android:id="@+id/participants"
+            layout="@layout/chat_conversation_participants_area"
+            bind:viewModel="@{viewModel}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.isParticipantsListOpen ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintTop_toBottomOf="@id/file_pickers" />
+
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/top_barrier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="bottom"
-            app:constraint_referenced_ids="emoji_picker, participants, attachments, reply_area" />
+            app:constraint_referenced_ids="file_pickers, emoji_picker, participants, attachments, reply_area" />
 
         <ImageView
             android:id="@+id/emoji_picker_toggle"
@@ -96,30 +103,15 @@
             android:layout_width="40dp"
             android:layout_height="0dp"
             android:layout_marginStart="5dp"
-            android:onClick="@{openFilePickerClickListener}"
+            android:onClick="@{() -> viewModel.toggleFilePickersVisibility()}"
             android:enabled="@{!viewModel.maxNumberOfAttachmentsReached}"
             android:padding="8dp"
-            android:src="@drawable/paperclip"
-            android:contentDescription="@string/content_description_chat_open_attach_media"
-            app:layout_constraintBottom_toBottomOf="@id/message_area_background"
-            app:layout_constraintEnd_toStartOf="@id/capture_image"
-            app:layout_constraintStart_toEndOf="@id/emoji_picker_toggle"
-            app:layout_constraintTop_toTopOf="@id/message_area_background"
-            app:tint="@color/icon_color_selector" />
-
-        <ImageView
-            android:id="@+id/capture_image"
-            android:layout_width="40dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="5dp"
-            android:onClick="@{openCameraClickListener}"
-            android:enabled="@{!viewModel.maxNumberOfAttachmentsReached}"
-            android:padding="8dp"
-            android:src="@drawable/camera"
-            android:contentDescription="@string/content_description_chat_take_picture"
+            android:contentDescription="@string/content_description_chat_open_attach_file"
+            android:src="@{viewModel.areFilePickersOpen ? @drawable/x : @drawable/paperclip, default=@drawable/paperclip}"
+            android:visibility="@{viewModel.isVoiceRecording ? View.INVISIBLE : (viewModel.isKeyboardOpen || viewModel.isCallConversation || !viewModel.isFileTransferServerAvailable) ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="@id/message_area_background"
             app:layout_constraintEnd_toStartOf="@id/message_area_background"
-            app:layout_constraintStart_toEndOf="@id/attach_file"
+            app:layout_constraintStart_toEndOf="@id/emoji_picker_toggle"
             app:layout_constraintTop_toTopOf="@id/message_area_background"
             app:tint="@color/icon_color_selector" />
 
@@ -133,7 +125,7 @@
             android:contentDescription="@null"
             app:layout_constraintBottom_toBottomOf="@id/message_to_send"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/capture_image"
+            app:layout_constraintStart_toEndOf="@id/attach_file"
             app:layout_constraintTop_toTopOf="@id/message_to_send" />
 
         <org.linphone.ui.main.chat.view.RichEditText

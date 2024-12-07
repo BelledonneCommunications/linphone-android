@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="openMediaPickerClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="openCameraClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="openFilePickerClickListener"
+            type="View.OnClickListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/color_main2_000">
+
+        <View
+            android:id="@+id/file_pickers_separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?attr/color_main2_300"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/capture_image"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:onClick="@{openCameraClickListener}"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:drawableTop="@drawable/camera"
+            android:text="@string/conversation_take_picture_label"
+            android:textAlignment="center"
+            android:drawablePadding="5dp"
+            app:drawableTint="@color/icon_color_selector"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/attach_media"
+            app:layout_constraintTop_toBottomOf="@id/file_pickers_separator"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/attach_media"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:onClick="@{openMediaPickerClickListener}"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:drawableTop="@drawable/image"
+            android:text="@string/conversation_pick_file_from_gallery_label"
+            android:textAlignment="center"
+            android:drawablePadding="5dp"
+            app:drawableTint="@color/icon_color_selector"
+            app:layout_constraintStart_toEndOf="@id/capture_image"
+            app:layout_constraintEnd_toStartOf="@id/attach_file"
+            app:layout_constraintTop_toBottomOf="@id/file_pickers_separator"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/attach_file"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:onClick="@{openFilePickerClickListener}"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:drawableTop="@drawable/file"
+            android:text="@string/conversation_pick_any_file_label"
+            android:textAlignment="center"
+            android:drawablePadding="5dp"
+            app:drawableTint="@color/icon_color_selector"
+            app:layout_constraintStart_toEndOf="@id/attach_media"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/file_pickers_separator"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -70,6 +70,8 @@ class SendMessageInConversationViewModel @UiThread constructor() : GenericViewMo
 
     val isEmojiPickerOpen = MutableLiveData<Boolean>()
 
+    val areFilePickersOpen = MutableLiveData<Boolean>()
+
     val isParticipantsListOpen = MutableLiveData<Boolean>()
 
     val participants = MutableLiveData<ArrayList<ParticipantModel>>()
@@ -151,6 +153,7 @@ class SendMessageInConversationViewModel @UiThread constructor() : GenericViewMo
         }
 
         isEmojiPickerOpen.value = false
+        areFilePickersOpen.value = false
         isPlayingVoiceRecord.value = false
         isCallConversation.value = false
         maxNumberOfAttachmentsReached.value = false
@@ -199,11 +202,25 @@ class SendMessageInConversationViewModel @UiThread constructor() : GenericViewMo
         if (isEmojiPickerOpen.value == true) {
             requestKeyboardHidingEvent.value = Event(true)
         }
+        closeFilePickerBottomSheet()
+        closeParticipantsList()
     }
 
     @UiThread
     fun insertEmoji(emoji: String) {
         emojiToAddEvent.value = Event(emoji)
+    }
+
+    @UiThread
+    fun toggleFilePickersVisibility() {
+        areFilePickersOpen.value = areFilePickersOpen.value == false
+        isEmojiPickerOpen.value = false
+        closeParticipantsList()
+    }
+
+    @UiThread
+    fun closeFilePickerBottomSheet() {
+        areFilePickersOpen.value = false
     }
 
     @UiThread
@@ -300,6 +317,13 @@ class SendMessageInConversationViewModel @UiThread constructor() : GenericViewMo
 
             chatMessageToReplyTo = null
         }
+    }
+
+    @UiThread
+    fun openParticipantsList() {
+        isParticipantsListOpen.value = true
+        isEmojiPickerOpen.value = false
+        closeFilePickerBottomSheet()
     }
 
     @UiThread
@@ -417,6 +441,10 @@ class SendMessageInConversationViewModel @UiThread constructor() : GenericViewMo
             askRecordAudioPermissionEvent.postValue(Event(true))
             return
         }
+
+        isEmojiPickerOpen.value = false
+        closeFilePickerBottomSheet()
+        closeParticipantsList()
 
         coreContext.postOnCoreThread {
             requestKeyboardHidingEvent.postValue(Event(true))

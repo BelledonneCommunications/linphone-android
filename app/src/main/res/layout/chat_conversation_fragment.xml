@@ -15,10 +15,13 @@
             name="showMenuClickListener"
             type="View.OnClickListener" />
         <variable
-            name="openFilePickerClickListener"
+            name="openMediaPickerClickListener"
             type="View.OnClickListener" />
         <variable
             name="openCameraClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="openFilePickerClickListener"
             type="View.OnClickListener" />
         <variable
             name="scrollToBottomClickListener"
@@ -313,8 +316,9 @@
                     android:visibility="@{viewModel.isReadOnly || viewModel.isDisabledBecauseNotSecured || viewModel.searchBarVisible ? View.GONE : View.VISIBLE}"
                     layout="@layout/chat_conversation_send_area"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    bind:openFilePickerClickListener="@{openFilePickerClickListener}"
+                    bind:openMediaPickerClickListener="@{openMediaPickerClickListener}"
                     bind:openCameraClickListener="@{openCameraClickListener}"
+                    bind:openFilePickerClickListener="@{openFilePickerClickListener}"
                     bind:viewModel="@{sendMessageViewModel}"/>
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton

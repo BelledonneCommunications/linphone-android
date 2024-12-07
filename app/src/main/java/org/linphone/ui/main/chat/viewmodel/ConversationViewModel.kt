@@ -323,6 +323,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         itemToScrollTo.value = -1
     }
 
+    @UiThread
     override fun onCleared() {
         super.onCleared()
 
@@ -335,6 +336,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         }
     }
 
+    @WorkerThread
     override fun beforeNotifyingChatRoomFound(sameOne: Boolean) {
         if (!sameOne) {
             Log.i("$TAG Conversation found and not the same as before, configuring it...")
