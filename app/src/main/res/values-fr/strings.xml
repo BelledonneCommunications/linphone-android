@@ -743,6 +743,10 @@
     <string name="generic_address_picker_contacts_list_title">Contacts</string>
     <string name="generic_address_picker_suggestions_list_title">Suggestions</string>
     <string name="post_notifications_permission_not_granted">La permission de poster des notifications n\'est pas donnée !</string>
+    <plurals name="mwi_messages_are_waiting">
+        <item quantity="one">%s message vocal en attente</item>
+        <item quantity="other">%s messages vocaux en attente</item>
+    </plurals>
 
     <!-- Keep <u></u> in the following strings translations! -->
     <string name="welcome_carousel_skip"><u>Passer</u></string>

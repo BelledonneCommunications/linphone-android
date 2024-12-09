@@ -40,6 +40,7 @@ import org.linphone.core.ChatRoom
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.GlobalState
+import org.linphone.core.MessageWaitingIndication
 import org.linphone.core.RegistrationState
 import org.linphone.core.VFS
 import org.linphone.core.tools.Log
@@ -53,6 +54,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
         private const val TAG = "[Main ViewModel]"
 
         const val NONE = 0
+        const val MWI_MESSAGES_WAITING = 4
         const val NON_DEFAULT_ACCOUNT_NOTIFICATIONS = 5
         const val NON_DEFAULT_ACCOUNT_NOT_CONNECTED = 10
         const val SEND_NOTIFICATIONS_PERMISSION_NOT_GRANTED = 17
@@ -286,6 +288,32 @@ class MainViewModel @UiThread constructor() : ViewModel() {
             if (core.accountList.isEmpty()) {
                 Log.w("$TAG No more account configured, going into assistant")
                 lastAccountRemovedEvent.postValue(Event(true))
+            }
+        }
+
+        @WorkerThread
+        override fun onMessageWaitingIndicationChanged(
+            core: Core,
+            event: org.linphone.core.Event,
+            mwi: MessageWaitingIndication
+        ) {
+            if (mwi.hasMessageWaiting()) {
+                val summaries = mwi.summaries
+                Log.i(
+                    "$TAG MWI NOTIFY received, messages are waiting ([${summaries.size}] summaries)"
+                )
+                if (summaries.isNotEmpty()) {
+                    val summary = summaries.first()
+                    val label = AppUtils.getStringWithPlural(
+                        R.plurals.mwi_messages_are_waiting,
+                        summary.nbNew,
+                        summary.nbNew.toString()
+                    )
+                    addAlert(MWI_MESSAGES_WAITING, label)
+                }
+            } else {
+                Log.i("$TAG MWI NOTIFY received, no message is waiting")
+                removeAlert(MWI_MESSAGES_WAITING)
             }
         }
     }

@@ -781,6 +781,10 @@
     <string name="generic_address_picker_contacts_list_title">Contacts</string>
     <string name="generic_address_picker_suggestions_list_title">Suggestions</string>
     <string name="post_notifications_permission_not_granted">Post notifications permission not granted!</string>
+    <plurals name="mwi_messages_are_waiting">
+        <item quantity="one">%s new voice message</item>
+        <item quantity="other">%s new voice messages</item>
+    </plurals>
 
     <!-- Keep <u></u> in the following strings translations! -->
     <string name="welcome_carousel_skip"><u>Skip</u></string>
