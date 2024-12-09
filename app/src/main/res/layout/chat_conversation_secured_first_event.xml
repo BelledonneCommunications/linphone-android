@@ -17,8 +17,9 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@null"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
             android:background="@drawable/shape_squircle_main2_200_chat_event_border"
-            app:layout_constraintWidth_max="300dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -26,32 +27,31 @@
 
         <ImageView
             android:id="@+id/secured_icon"
-            android:layout_width="@dimen/small_icon_size"
-            android:layout_height="0dp"
-            android:layout_marginEnd="5dp"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
             android:paddingTop="3dp"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
             android:src="@drawable/lock_simple_bold"
             app:tint="@color/blue_info_500"
             app:layout_constraintTop_toTopOf="@id/secured_title"
-            app:layout_constraintBottom_toBottomOf="@id/secured_title"
-            app:layout_constraintEnd_toStartOf="@id/secured_title"/>
+            app:layout_constraintBottom_toBottomOf="@id/secured_subtitle"
+            app:layout_constraintStart_toStartOf="@id/secured_background"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_700"
             android:id="@+id/secured_title"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="15dp"
             android:text="@string/conversation_end_to_end_encrypted_event_title"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentTop="true"
             android:textSize="12sp"
             android:textColor="@color/blue_info_500"
-            app:layout_constraintWidth_max="280dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/secured_icon"
+            app:layout_constraintEnd_toEndOf="@id/secured_background"
             app:layout_constraintTop_toTopOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -59,17 +59,16 @@
             android:id="@+id/secured_subtitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:paddingBottom="5dp"
-            android:gravity="center"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="15dp"
             android:text="@string/conversation_end_to_end_encrypted_event_subtitle"
             android:textColor="?attr/color_grey_400"
             android:textSize="12sp"
-            app:layout_constraintWidth_max="300dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/secured_title"/>
+            app:layout_constraintStart_toEndOf="@id/secured_icon"
+            app:layout_constraintEnd_toEndOf="@id/secured_background"
+            app:layout_constraintTop_toBottomOf="@id/secured_title"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

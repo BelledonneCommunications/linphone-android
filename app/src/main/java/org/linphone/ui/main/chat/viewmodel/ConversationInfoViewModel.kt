@@ -556,21 +556,23 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
                 participantsList.add(model)
             }
 
-            // Add ourselves at the end of the list
-            val meParticipant = chatRoom.me
-            if (meParticipant != null) {
-                val model = ParticipantModel(
-                    meParticipant.address,
-                    selfAdmin,
-                    isParticipantAdmin = selfAdmin,
-                    showMenu = false,
-                    isParticipantMyself = true,
-                    onMenuClicked = { view, model ->
-                        // openMenu
-                        showParticipantAdminPopupMenuEvent.postValue(Event(Pair(view, model)))
-                    }
-                )
-                participantsList.add(model)
+            if (!chatRoom.isReadOnly) {
+                // Add ourselves at the end of the list
+                val meParticipant = chatRoom.me
+                if (meParticipant != null) {
+                    val model = ParticipantModel(
+                        meParticipant.address,
+                        selfAdmin,
+                        isParticipantAdmin = selfAdmin,
+                        showMenu = false,
+                        isParticipantMyself = true,
+                        onMenuClicked = { view, model ->
+                            // openMenu
+                            showParticipantAdminPopupMenuEvent.postValue(Event(Pair(view, model)))
+                        }
+                    )
+                    participantsList.add(model)
+                }
             }
         }
 
