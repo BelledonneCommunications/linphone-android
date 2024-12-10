@@ -34,6 +34,12 @@
             name="copyPeerSipUriClickListener"
             type="View.OnClickListener" />
         <variable
+            name="goToSharedMediaClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="goToSharedDocumentsClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.main.chat.viewmodel.ConversationInfoViewModel" />
     </data>
@@ -340,6 +346,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:layout_marginBottom="10dp"
                     android:background="@drawable/tertiary_button_background"
                     android:drawableStart="@drawable/plus_circle"
                     android:drawablePadding="8dp"
@@ -354,10 +361,78 @@
                     android:text="@string/conversation_info_add_participants_label"
                     android:visibility="@{!viewModel.expandParticipants || !viewModel.isMyselfAdmin || !viewModel.isGroup || viewModel.isReadOnly ? View.GONE : View.VISIBLE, default=gone}"
                     app:drawableTint="?attr/color_main1_500"
-                    app:layout_constraintBottom_toTopOf="@id/actions"
+                    app:layout_constraintBottom_toTopOf="@id/media_actions"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/participants" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/media_actions"
+                    style="@style/section_header_style"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="26dp"
+                    android:layout_marginBottom="8dp"
+                    android:padding="5dp"
+                    android:text="@string/contact_details_media_documents_title"
+                    app:layout_constraintBottom_toTopOf="@id/media_actions_background"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/add_participants" />
+
+                <ImageView
+                    android:id="@+id/media_actions_background"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:src="@drawable/shape_squircle_white_background"
+                    android:contentDescription="@null"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/media_actions"
+                    app:layout_constraintBottom_toBottomOf="@id/action_documents"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/action_media"
+                    style="@style/context_menu_action_label_style"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/action_background"
+                    android:drawableStart="@drawable/image"
+                    android:onClick="@{goToSharedMediaClickListener}"
+                    android:text="@string/conversation_media_list_title"
+                    app:layout_constraintEnd_toEndOf="@id/media_actions_background"
+                    app:layout_constraintStart_toStartOf="@id/media_actions_background"
+                    app:layout_constraintTop_toTopOf="@id/media_actions_background" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="?attr/color_main2_200"
+                    app:layout_constraintEnd_toEndOf="@id/action_media"
+                    app:layout_constraintStart_toStartOf="@id/action_media"
+                    app:layout_constraintTop_toBottomOf="@id/action_media" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/action_documents"
+                    style="@style/context_menu_action_label_style"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="@dimen/screen_bottom_margin"
+                    android:background="@drawable/action_background"
+                    android:drawableStart="@drawable/file_pdf"
+                    android:onClick="@{goToSharedDocumentsClickListener}"
+                    android:text="@string/conversation_document_list_title"
+                    app:layout_constraintEnd_toEndOf="@id/media_actions_background"
+                    app:layout_constraintStart_toStartOf="@id/media_actions_background"
+                    app:layout_constraintTop_toBottomOf="@id/action_media" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/actions"
@@ -373,8 +448,7 @@
                     app:layout_constraintBottom_toTopOf="@id/actions_background"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/add_participants"
-                    app:layout_constraintVertical_bias="0" />
+                    app:layout_constraintTop_toBottomOf="@id/media_actions_background" />
 
                 <ImageView
                     android:id="@+id/actions_background"
@@ -497,11 +571,9 @@
                     android:drawableStart="@drawable/trash_simple"
                     android:onClick="@{deleteHistoryClickListener}"
                     android:text="@string/conversation_info_delete_history_action"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@id/actions_background"
                     app:layout_constraintStart_toStartOf="@id/actions_background"
-                    app:layout_constraintTop_toBottomOf="@id/action_leave_group"
-                    app:layout_constraintVertical_bias="0" />
+                    app:layout_constraintTop_toBottomOf="@id/action_leave_group" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -28,7 +28,6 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat
-import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -116,14 +115,10 @@ class MeetingWaitingRoomFragment : GenericMainFragment() {
         viewModel.conferenceInfoFoundEvent.observe(viewLifecycleOwner) {
             it.consume { found ->
                 if (found) {
-                    (view.parent as? ViewGroup)?.doOnPreDraw {
-                        startPostponedEnterTransition()
-                    }
+                    startPostponedEnterTransition()
                 } else {
                     Log.e("$TAG Failed to find meeting with URI [$uri], going back")
-                    (view.parent as? ViewGroup)?.doOnPreDraw {
-                        goBack()
-                    }
+                    goBack()
                 }
             }
         }

@@ -27,7 +27,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
-import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -117,9 +116,7 @@ class ConversationDocumentsListFragment : SlidingPaneChildFragment() {
 
         viewModel.chatRoomFoundEvent.observe(viewLifecycleOwner) {
             it.consume {
-                (view.parent as? ViewGroup)?.doOnPreDraw {
-                    startPostponedEnterTransition()
-                }
+                startPostponedEnterTransition()
             }
         }
 

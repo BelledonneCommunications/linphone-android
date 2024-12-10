@@ -316,7 +316,7 @@ class ConferenceViewModel
         conferenceLayout.postValue(currentLayout)
         if (currentLayout == GRID_LAYOUT && screenSharing) {
             Log.w(
-                "$TAG Conference has a participant sharing it's screen, changing layout from mosaic to active speaker"
+                "$TAG Conference has a participant sharing its screen, changing layout from mosaic to active speaker"
             )
             setNewLayout(ACTIVE_SPEAKER_LAYOUT)
         }

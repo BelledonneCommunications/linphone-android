@@ -403,6 +403,7 @@
     <string name="contact_details_trust_title">Trust</string>
     <string name="contact_details_no_device_found">No device found…</string>
     <string name="contact_details_trusted_devices_count">Number of trusted devices:</string>
+    <string name="contact_details_media_documents_title">Media &amp; documents</string>
     <string name="contact_details_actions_title">Other actions</string>
     <string name="contact_details_edit">Edit</string>
     <string name="contact_details_add_to_favourites">Add to favourites</string>
@@ -726,7 +727,7 @@
     <string name="conference_participant_was_kicked_out_toast">Participant was kicked out of conference</string>
     <string name="conference_participant_joining_text">Joining…</string>
     <string name="conference_participant_paused_text">Paused</string>
-    <string name="conference_active_speaker_is_screen_sharing">is sharing it\'s screen</string>
+    <string name="conference_active_speaker_is_screen_sharing">is sharing its screen</string>
     <string name="conference_failed_to_add_participant_invalid_address_toast">Invalid SIP address, can\'t be added to conference</string>
 
     <string name="conference_layout_grid">Mosaic</string>

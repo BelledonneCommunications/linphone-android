@@ -129,7 +129,7 @@ abstract class AddressSelectionViewModel
 
     @UiThread
     fun switchToMultipleSelectionMode() {
-        Log.i("$$TAG Multiple selection mode ON")
+        Log.i("$TAG Multiple selection mode ON")
         multipleSelectionMode.value = true
 
         selectionCount.postValue(

@@ -136,7 +136,7 @@ class ConferenceParticipantDeviceModel
             screenSharing: Boolean
         ) {
             Log.i(
-                "$TAG Participant device [${participantDevice.address.asStringUriOnly()}] is ${if (screenSharing) "sharing it's screen" else "no longer sharing it's screen"}"
+                "$TAG Participant device [${participantDevice.address.asStringUriOnly()}] is ${if (screenSharing) "sharing its screen" else "no longer sharing its screen"}"
             )
             isScreenSharing.postValue(screenSharing)
         }
@@ -193,7 +193,7 @@ class ConferenceParticipantDeviceModel
         val screenSharing = device.isScreenSharingEnabled
         isScreenSharing.postValue(screenSharing)
         if (screenSharing) {
-            Log.i("$TAG Participant [${device.address.asStringUriOnly()}] is sharing it's screen")
+            Log.i("$TAG Participant [${device.address.asStringUriOnly()}] is sharing its screen")
         }
 
         isVideoAvailable.postValue(device.getStreamAvailability(StreamType.Video))

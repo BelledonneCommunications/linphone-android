@@ -29,7 +29,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import androidx.annotation.UiThread
-import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -119,19 +118,15 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
                     Log.i(
                         "$TAG Found matching conversation for local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
                     )
-                    (view.parent as? ViewGroup)?.doOnPreDraw {
-                        startPostponedEnterTransition()
-                    }
+                    startPostponedEnterTransition()
                 } else {
-                    (view.parent as? ViewGroup)?.doOnPreDraw {
-                        Log.e("$TAG Failed to find conversation, going back")
-                        goBack()
-                        val message = getString(R.string.conversation_to_display_no_found_toast)
-                        (requireActivity() as GenericActivity).showRedToast(
-                            message,
-                            R.drawable.warning_circle
-                        )
-                    }
+                    Log.e("$TAG Failed to find conversation, going back")
+                    goBack()
+                    val message = getString(R.string.conversation_to_display_no_found_toast)
+                    (requireActivity() as GenericActivity).showRedToast(
+                        message,
+                        R.drawable.warning_circle
+                    )
                 }
             }
         }
@@ -332,6 +327,24 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
 
         binding.setCopyPeerSipUriClickListener {
             copyAddressToClipboard(viewModel.peerSipUri.value.orEmpty())
+        }
+
+        binding.setGoToSharedMediaClickListener {
+            if (findNavController().currentDestination?.id == R.id.conversationInfoFragment) {
+                Log.i("$TAG Going to shared media fragment")
+                val action =
+                    ConversationInfoFragmentDirections.actionConversationInfoFragmentToConversationMediaListFragment(localSipUri, remoteSipUri)
+                findNavController().navigate(action)
+            }
+        }
+
+        binding.setGoToSharedDocumentsClickListener {
+            if (findNavController().currentDestination?.id == R.id.conversationInfoFragment) {
+                Log.i("$TAG Going to shared documents fragment")
+                val action =
+                    ConversationInfoFragmentDirections.actionConversationInfoFragmentToConversationDocumentsListFragment(localSipUri, remoteSipUri)
+                findNavController().navigate(action)
+            }
         }
     }
 

@@ -32,7 +32,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.core.content.FileProvider
-import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -125,10 +124,8 @@ class ContactFragment : SlidingPaneChildFragment() {
         viewModel.contactFoundEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG Contact has been found, start postponed enter transition")
-                (view.parent as? ViewGroup)?.doOnPreDraw {
-                    startPostponedEnterTransition()
-                    sharedViewModel.openSlidingPaneEvent.value = Event(true)
-                }
+                startPostponedEnterTransition()
+                sharedViewModel.openSlidingPaneEvent.value = Event(true)
             }
         }
 
