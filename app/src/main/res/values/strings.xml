@@ -30,14 +30,14 @@
     <string name="help_advanced_send_debug_logs_email_address" translatable="false">linphone-android@belledonne-communications.com</string>
 
     <string name="website_contact_url" translatable="false">https://linphone.org/contact</string>
-    <string name="website_download_url" translatable="false">https://linphone.org/download</string>
-    <string name="website_privacy_policy_url" translatable="false">https://linphone.org/privacy-policy</string>
-    <string name="website_terms_and_conditions_url" translatable="false">https://linphone.org/general-terms</string>
+    <string name="website_download_url" translatable="false">https://linphone.org/linphone-softphone</string>
+    <string name="website_privacy_policy_url" translatable="false">https://linphone.org/en/privacy-policy</string>
+    <string name="website_terms_and_conditions_url" translatable="false">https://www.linphone.org/en/terms-of-use</string>
     <string name="web_platform_register_email_url" translatable="false">https://subscribe.linphone.org/register/email</string>
     <string name="web_platform_forgotten_password_url" translatable="false">https://subscribe.linphone.org/</string>
     <string name="website_translate_weblate_url" translatable="false">https://weblate.linphone.org/</string>
     <string name="website_open_source_licences_usage_url" translatable="false">https://wiki.linphone.org/xwiki/wiki/public/view/Linphone/Third%20party%20components%20/#Hlinphone-android</string>
-    <string name="conversation_end_to_end_encrypted_bottom_sheet_link" translatable="false"><u>https://linphone.org/security</u></string>
+    <string name="conversation_end_to_end_encrypted_bottom_sheet_link" translatable="false"><u>https://linphone.org/en/features/#security</u></string>
 
     <string name="conversation_one_to_one_hidden_subject" translatable="false">Dummy subject</string>
 
