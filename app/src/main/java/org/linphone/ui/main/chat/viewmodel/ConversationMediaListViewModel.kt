@@ -27,7 +27,9 @@ import org.linphone.ui.main.chat.model.FileModel
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
-class ConversationMediaListViewModel @UiThread constructor() : AbstractConversationViewModel() {
+class ConversationMediaListViewModel
+    @UiThread
+    constructor() : AbstractConversationViewModel() {
     companion object {
         private const val TAG = "[Conversation Media List ViewModel]"
     }

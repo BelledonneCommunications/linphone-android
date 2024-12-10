@@ -43,7 +43,9 @@ import org.linphone.ui.main.contacts.model.NewOrEditNumberOrAddressModel
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 
-class ContactNewOrEditViewModel @UiThread constructor() : GenericViewModel() {
+class ContactNewOrEditViewModel
+    @UiThread
+    constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Contact New/Edit View Model]"
 

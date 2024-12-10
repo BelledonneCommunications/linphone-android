@@ -43,7 +43,9 @@ import org.linphone.ui.main.settings.model.CodecModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
-class SettingsViewModel @UiThread constructor() : GenericViewModel() {
+class SettingsViewModel
+    @UiThread
+    constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Settings ViewModel]"
     }

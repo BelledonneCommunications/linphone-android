@@ -40,7 +40,9 @@ import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils
 
-class AccountModel @WorkerThread constructor(
+class AccountModel
+    @WorkerThread
+    constructor(
     val account: Account,
     private val onMenuClicked: ((view: View, account: Account) -> Unit)? = null
 ) : AbstractAvatarModel() {

@@ -24,7 +24,9 @@ import androidx.lifecycle.MutableLiveData
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
-class ConfirmCallTransferDialogModel @UiThread constructor(
+class ConfirmCallTransferDialogModel
+    @UiThread
+    constructor(
     toTransfer: String,
     toReceiveTransfer: String
 ) {

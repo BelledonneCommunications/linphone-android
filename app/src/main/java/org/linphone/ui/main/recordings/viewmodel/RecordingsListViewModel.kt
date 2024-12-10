@@ -30,7 +30,9 @@ import org.linphone.ui.main.recordings.model.RecordingModel
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 
-class RecordingsListViewModel @UiThread constructor() : GenericViewModel() {
+class RecordingsListViewModel
+    @UiThread
+    constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Recordings List ViewModel]"
 

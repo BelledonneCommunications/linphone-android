@@ -31,7 +31,9 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
 import org.linphone.utils.Event
 
-class QrCodeViewModel @UiThread constructor() : GenericViewModel() {
+class QrCodeViewModel
+    @UiThread
+    constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Qr Code Scanner ViewModel]"
     }

@@ -1,4 +1,4 @@
-package org.linphone.ui.file_viewer
+package org.linphone.ui.fileviewer
 
 import android.content.Intent
 import android.net.Uri
@@ -20,8 +20,8 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.FileViewerActivityBinding
 import org.linphone.ui.GenericActivity
-import org.linphone.ui.file_viewer.adapter.PdfPagesListAdapter
-import org.linphone.ui.file_viewer.viewmodel.FileViewModel
+import org.linphone.ui.fileviewer.adapter.PdfPagesListAdapter
+import org.linphone.ui.fileviewer.viewmodel.FileViewModel
 import org.linphone.utils.FileUtils
 
 @UiThread

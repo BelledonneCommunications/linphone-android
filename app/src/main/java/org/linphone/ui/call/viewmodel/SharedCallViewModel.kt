@@ -25,7 +25,9 @@ import androidx.window.layout.FoldingFeature
 import org.linphone.ui.GenericViewModel
 import org.linphone.utils.Event
 
-class SharedCallViewModel @UiThread constructor() : GenericViewModel() {
+class SharedCallViewModel
+    @UiThread
+    constructor() : GenericViewModel() {
     val toggleFullScreenEvent = MutableLiveData<Event<Boolean>>()
 
     val foldingState = MutableLiveData<FoldingFeature>()

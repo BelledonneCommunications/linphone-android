@@ -24,7 +24,9 @@ import androidx.lifecycle.MutableLiveData
 import org.linphone.ui.GenericViewModel
 import org.linphone.utils.Event
 
-class ZrtpAlertDialogModel @UiThread constructor(val allowTryAgain: Boolean) : GenericViewModel() {
+class ZrtpAlertDialogModel
+    @UiThread
+    constructor(val allowTryAgain: Boolean) : GenericViewModel() {
     companion object {
         private const val TAG = "[ZRTP Alert Dialog]"
     }

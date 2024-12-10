@@ -25,7 +25,9 @@ import org.linphone.R
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
-class AuthRequestedDialogModel @UiThread constructor(identity: String) {
+class AuthRequestedDialogModel
+    @UiThread
+    constructor(identity: String) {
     val message = MutableLiveData<String>()
 
     val password = MutableLiveData<String>()

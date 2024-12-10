@@ -1,4 +1,4 @@
-package org.linphone.ui.file_viewer
+package org.linphone.ui.fileviewer
 
 import android.content.Intent
 import android.net.Uri
@@ -21,8 +21,8 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.FileMediaViewerActivityBinding
 import org.linphone.ui.GenericActivity
-import org.linphone.ui.file_viewer.adapter.MediaListAdapter
-import org.linphone.ui.file_viewer.viewmodel.MediaListViewModel
+import org.linphone.ui.fileviewer.adapter.MediaListAdapter
+import org.linphone.ui.fileviewer.viewmodel.MediaListViewModel
 import org.linphone.ui.main.chat.model.FileModel
 import org.linphone.ui.main.viewmodel.SharedMainViewModel
 import org.linphone.utils.AppUtils

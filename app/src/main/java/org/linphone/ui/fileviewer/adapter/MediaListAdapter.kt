@@ -17,15 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.file_viewer.adapter
+package org.linphone.ui.fileviewer.adapter
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import org.linphone.core.tools.Log
-import org.linphone.ui.file_viewer.fragment.MediaViewerFragment
-import org.linphone.ui.file_viewer.viewmodel.MediaListViewModel
+import org.linphone.ui.fileviewer.fragment.MediaViewerFragment
+import org.linphone.ui.fileviewer.viewmodel.MediaListViewModel
 
 class MediaListAdapter(
     fragmentActivity: FragmentActivity,

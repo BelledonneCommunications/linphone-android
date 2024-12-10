@@ -35,7 +35,9 @@ import org.linphone.ui.main.viewmodel.AbstractMainViewModel
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
-class HistoryListViewModel @UiThread constructor() : AbstractMainViewModel() {
+class HistoryListViewModel
+    @UiThread
+    constructor() : AbstractMainViewModel() {
     companion object {
         private const val TAG = "[History List ViewModel]"
     }

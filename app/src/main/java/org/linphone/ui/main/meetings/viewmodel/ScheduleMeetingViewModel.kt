@@ -46,7 +46,9 @@ import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
 
-class ScheduleMeetingViewModel @UiThread constructor() : GenericViewModel() {
+class ScheduleMeetingViewModel
+    @UiThread
+    constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Schedule Meeting ViewModel]"
     }
@@ -514,9 +516,9 @@ class ScheduleMeetingViewModel @UiThread constructor() : GenericViewModel() {
 
             isBroadcastSelected.postValue(false) // TODO FIXME: not implemented yet
 
-            startTimestamp = conferenceInfo.dateTime * 1000 /* Linphone timestamps are in seconds */
+            startTimestamp = conferenceInfo.dateTime * 1000 // Linphone timestamps are in seconds
             endTimestamp =
-                (conferenceInfo.dateTime + conferenceInfo.duration * 60) * 1000 /* Linphone timestamps are in seconds */
+                (conferenceInfo.dateTime + conferenceInfo.duration * 60) * 1000 // Linphone timestamps are in seconds
             Log.i(
                 "$TAG Loaded start date is [$startTimestamp], loaded end date is [$endTimestamp]"
             )

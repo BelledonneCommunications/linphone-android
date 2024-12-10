@@ -27,7 +27,9 @@ import org.linphone.core.MediaEncryption
 import org.linphone.core.StreamType
 import org.linphone.utils.AppUtils
 
-class CallMediaEncryptionModel @WorkerThread constructor(
+class CallMediaEncryptionModel
+    @WorkerThread
+    constructor(
     private val showZrtpSasValidationDialog: () -> Unit
 ) {
     val mediaEncryption = MutableLiveData<String>()

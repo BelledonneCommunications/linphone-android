@@ -49,7 +49,9 @@ import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
 
-class ConversationViewModel @UiThread constructor() : AbstractConversationViewModel() {
+class ConversationViewModel
+    @UiThread
+    constructor() : AbstractConversationViewModel() {
     companion object {
         private const val TAG = "[Conversation ViewModel]"
         private const val MESSAGES_PER_PAGE = 30

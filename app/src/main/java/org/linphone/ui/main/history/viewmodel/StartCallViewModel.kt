@@ -40,7 +40,9 @@ import org.linphone.ui.main.viewmodel.AddressSelectionViewModel
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
-class StartCallViewModel @UiThread constructor() : AddressSelectionViewModel() {
+class StartCallViewModel
+    @UiThread
+    constructor() : AddressSelectionViewModel() {
     companion object {
         private const val TAG = "[Start Call ViewModel]"
     }

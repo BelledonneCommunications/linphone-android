@@ -29,7 +29,9 @@ import org.linphone.core.EventLog
 import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils
 
-class EventModel @WorkerThread constructor(private val eventLog: EventLog) {
+class EventModel
+    @WorkerThread
+    constructor(private val eventLog: EventLog) {
     val text: String
 
     val icon: Drawable?

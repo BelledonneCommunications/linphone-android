@@ -28,7 +28,9 @@ import java.io.FileOutputStream
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.contacts.ContactLoader.Companion.LINPHONE_ADDRESS_BOOK_FRIEND_LIST
 
-class CorePreferences @UiThread constructor(private val context: Context) {
+class CorePreferences
+    @UiThread
+    constructor(private val context: Context) {
     companion object {
         private const val TAG = "[Preferences]"
 
@@ -100,7 +102,7 @@ class CorePreferences @UiThread constructor(private val context: Context) {
             config.setString("app", "device", value.trim())
         }
 
-    /* Call settings */
+    // Call settings
 
     // This won't be done if bluetooth or wired headset is used
     @get:WorkerThread @set:WorkerThread
@@ -124,7 +126,7 @@ class CorePreferences @UiThread constructor(private val context: Context) {
             config.setBool("app", "show_confirmation_dialog_zrtp_trust_call", value)
         }
 
-    /* Conversation related */
+    // Conversation related
 
     var markConversationAsReadWhenDismissingMessageNotification: Boolean
         get() = config.getBool("app", "mark_as_read_notif_dismissal", false)
@@ -132,7 +134,7 @@ class CorePreferences @UiThread constructor(private val context: Context) {
             config.setBool("app", "mark_as_read_notif_dismissal", value)
         }
 
-    /* Contacts related */
+    // Contacts related
 
     @get:WorkerThread @set:WorkerThread
     var contactsFilter: String
@@ -159,14 +161,14 @@ class CorePreferences @UiThread constructor(private val context: Context) {
             config.setString("app", "friend_list_to_store_newly_created_contacts", value)
         }
 
-    /* Voice recordings related */
+    // Voice recordings related
 
     @get:WorkerThread @set:WorkerThread
     var voiceRecordingMaxDuration: Int
         get() = config.getInt("app", "voice_recording_max_duration", 600000) // in ms
         set(value) = config.setInt("app", "voice_recording_max_duration", value)
 
-    /* User interface related */
+    // User interface related
 
     // -1 means auto, 0 no, 1 yes
     @get:WorkerThread @set:WorkerThread
@@ -274,7 +276,7 @@ class CorePreferences @UiThread constructor(private val context: Context) {
     val automaticallyShowDialpad: Boolean
         get() = config.getBool("ui", "automatically_show_dialpad", false)
 
-    /* Paths */
+    // Paths
 
     @get:WorkerThread
     val defaultDomain: String

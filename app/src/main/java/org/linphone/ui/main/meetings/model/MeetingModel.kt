@@ -28,7 +28,9 @@ import org.linphone.core.Participant
 import org.linphone.core.tools.Log
 import org.linphone.utils.TimestampUtils
 
-class MeetingModel @WorkerThread constructor(val conferenceInfo: ConferenceInfo) {
+class MeetingModel
+    @WorkerThread
+    constructor(val conferenceInfo: ConferenceInfo) {
     companion object {
         private const val TAG = "[Meeting Model]"
     }

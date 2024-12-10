@@ -38,7 +38,9 @@ import org.linphone.ui.GenericViewModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
-open class AccountLoginViewModel @UiThread constructor() : GenericViewModel() {
+open class AccountLoginViewModel
+    @UiThread
+    constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Account Login ViewModel]"
     }

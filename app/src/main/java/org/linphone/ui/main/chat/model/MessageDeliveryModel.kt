@@ -31,7 +31,9 @@ import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.TimestampUtils
 
-class MessageDeliveryModel @WorkerThread constructor(
+class MessageDeliveryModel
+    @WorkerThread
+    constructor(
     private val chatMessage: ChatMessage,
     private val onDeliveryUpdated: ((model: MessageDeliveryModel) -> Unit)? = null
 ) {

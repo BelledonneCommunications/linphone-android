@@ -29,7 +29,9 @@ import org.linphone.core.MediaDirection
 import org.linphone.core.StreamType
 import org.linphone.utils.AppUtils
 
-class CallStatsModel @WorkerThread constructor() {
+class CallStatsModel
+    @WorkerThread
+    constructor() {
     val audioCodec = MutableLiveData<String>()
     val audioBandwidth = MutableLiveData<String>()
     val lossRate = MutableLiveData<String>()

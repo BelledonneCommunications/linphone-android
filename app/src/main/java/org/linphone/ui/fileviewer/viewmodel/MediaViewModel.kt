@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.file_viewer.viewmodel
+package org.linphone.ui.fileviewer.viewmodel
 
 import android.media.AudioAttributes
 import android.media.MediaPlayer
@@ -35,7 +35,9 @@ import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.TimestampUtils
 
-class MediaViewModel @UiThread constructor() : GenericViewModel() {
+class MediaViewModel
+    @UiThread
+    constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Media ViewModel]"
     }

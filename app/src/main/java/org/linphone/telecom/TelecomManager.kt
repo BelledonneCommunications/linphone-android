@@ -36,7 +36,9 @@ import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
 
-class TelecomManager @WorkerThread constructor(context: Context) {
+class TelecomManager
+    @WorkerThread
+    constructor(context: Context) {
     companion object {
         private const val TAG = "[Telecom Manager]"
     }

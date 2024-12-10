@@ -49,7 +49,7 @@ task("getGitVersion") {
                 "git",
                 "rev-list",
                 gitVersionStream.toString().trim() + "..HEAD",
-                "--count"
+                "--count",
             )
             standardOutput = gitCommitsCount
         }
@@ -62,12 +62,14 @@ task("getGitVersion") {
             standardOutput = gitBranch
         }
 
-        gitVersion = if (gitCommitsCount.toString().trim().toInt() == 0) {
-            gitVersionStream.toString().trim()
-        } else {
-            gitVersionStream.toString().trim() + "." + gitCommitsCount.toString()
-                .trim() + "+" + gitCommitHash.toString().trim()
-        }
+        gitVersion =
+            if (gitCommitsCount.toString().trim().toInt() == 0) {
+                gitVersionStream.toString().trim()
+            } else {
+                gitVersionStream.toString().trim() + "." +
+                    gitCommitsCount.toString()
+                        .trim() + "+" + gitCommitHash.toString().trim()
+            }
         println("Git version: $gitVersion")
     } catch (e: Exception) {
         println("Git not found [$e], using $gitVersion")
@@ -168,7 +170,7 @@ android {
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
             signingConfig = signingConfigs.getByName("release")
 
@@ -251,25 +253,62 @@ dependencies {
     implementation(libs.linphone)
 }
 
-ktlint {
-    android = true
-    ignoreFailures = true
+configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
+    android.set(true)
+    ignoreFailures.set(true)
+    additionalEditorconfig.set(
+        mapOf(
+            "max_line_length" to "120",
+            "ktlint_standard_max-line-length" to "disabled",
+            "ktlint_standard_function-signature" to "disabled",
+            "ktlint_standard_no-blank-line-before-rbrace" to "disabled",
+            "ktlint_standard_no-empty-class-body" to "disabled",
+            "ktlint_standard_annotation-spacing" to "disabled",
+            "ktlint_standard_class-signature" to "disabled",
+            "ktlint_standard_function-expression-body" to "disabled",
+            "ktlint_standard_function-type-modifier-spacing" to "disabled",
+            "ktlint_standard_if-else-wrapping" to "disabled",
+            "ktlint_standard_argument-list-wrapping" to "disabled",
+            "ktlint_standard_trailing-comma-on-call-site" to "disabled",
+            "ktlint_standard_trailing-comma-on-declaration-site" to "disabled",
+            "ktlint_standard_no-empty-first-line-in-class-body" to "disabled",
+            "ktlint_standard_no-empty-first-line-in-method-block" to "disabled",
+            "ktlint_standard_no-trailing-spaces" to "disabled",
+            "ktlint_standard_no-blank-line-in-list" to "disabled",
+            "ktlint_standard_no-multi-spaces" to "disabled",
+            "ktlint_standard_try-catch-finally-spacing" to "disabled",
+            "ktlint_standard_block-comment-initial-star-alignment" to "disabled",
+            "ktlint_standard_spacing-between-declarations-with-comments" to "disabled",
+            "ktlint_standard_no-consecutive-comments" to "disabled",
+            "ktlint_standard_multiline-expression-wrapping" to "disabled",
+            "ktlint_standard_parameter-list-wrapping" to "disabled",
+            "ktlint_standard_comment-wrapping" to "disabled",
+            "ktlint_standard_discouraged-comment-location" to "disabled",
+            "ktlint_standard_string-template-indent" to "disabled",
+            "ktlint_standard_parameter-list-spacing" to "disabled",
+            "ktlint_standard_statement-wrapping" to "disabled",
+            "ktlint_standard_import-ordering" to "disabled",
+            "ktlint_standard_paren-spacing" to "disabled",
+            "ktlint_standard_curly-spacing" to "disabled",
+            "ktlint_standard_indent" to "disabled",
+        )
+    )
 }
 project.tasks.preBuild.dependsOn("ktlintFormat")
 
 if (crashlyticsAvailable) {
     afterEvaluate {
         tasks.getByName("assembleDebug").finalizedBy(
-            tasks.getByName("uploadCrashlyticsSymbolFileDebug")
+            tasks.getByName("uploadCrashlyticsSymbolFileDebug"),
         )
         tasks.getByName("packageDebug").finalizedBy(
-            tasks.getByName("uploadCrashlyticsSymbolFileDebug")
+            tasks.getByName("uploadCrashlyticsSymbolFileDebug"),
         )
         tasks.getByName("assembleRelease").finalizedBy(
-            tasks.getByName("uploadCrashlyticsSymbolFileRelease")
+            tasks.getByName("uploadCrashlyticsSymbolFileRelease"),
         )
         tasks.getByName("packageRelease").finalizedBy(
-            tasks.getByName("uploadCrashlyticsSymbolFileRelease")
+            tasks.getByName("uploadCrashlyticsSymbolFileRelease"),
         )
     }
 }

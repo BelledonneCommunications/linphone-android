@@ -41,7 +41,9 @@ import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
-class ConversationInfoViewModel @UiThread constructor() : AbstractConversationViewModel() {
+class ConversationInfoViewModel
+    @UiThread
+    constructor() : AbstractConversationViewModel() {
     companion object {
         private const val TAG = "[Conversation Info ViewModel]"
     }

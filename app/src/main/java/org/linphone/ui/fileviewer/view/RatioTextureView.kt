@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.file_viewer.view
+package org.linphone.ui.fileviewer.view
 
 import android.content.Context
 import android.util.AttributeSet

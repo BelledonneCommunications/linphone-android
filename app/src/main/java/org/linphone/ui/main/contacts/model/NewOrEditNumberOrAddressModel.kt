@@ -23,7 +23,9 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 
-class NewOrEditNumberOrAddressModel @WorkerThread constructor(
+class NewOrEditNumberOrAddressModel
+    @WorkerThread
+    constructor(
     defaultValue: String,
     val isSip: Boolean,
     val label: String? = "",

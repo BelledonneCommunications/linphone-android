@@ -64,7 +64,9 @@ import org.linphone.utils.AudioUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
-class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
+class CurrentCallViewModel
+    @UiThread
+    constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Current Call ViewModel]"
     }

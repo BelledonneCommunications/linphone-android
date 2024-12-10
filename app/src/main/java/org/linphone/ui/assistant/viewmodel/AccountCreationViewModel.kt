@@ -50,7 +50,9 @@ import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
-class AccountCreationViewModel @UiThread constructor() : GenericViewModel() {
+class AccountCreationViewModel
+    @UiThread
+    constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Account Creation ViewModel]"
 

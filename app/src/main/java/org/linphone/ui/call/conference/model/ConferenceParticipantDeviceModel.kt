@@ -31,7 +31,9 @@ import org.linphone.core.StreamType
 import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
 
-class ConferenceParticipantDeviceModel @WorkerThread constructor(
+class ConferenceParticipantDeviceModel
+    @WorkerThread
+    constructor(
     val device: ParticipantDevice,
     val isMe: Boolean = false
 ) {

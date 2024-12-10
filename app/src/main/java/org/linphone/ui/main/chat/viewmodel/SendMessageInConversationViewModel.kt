@@ -57,7 +57,9 @@ import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
 
-class SendMessageInConversationViewModel @UiThread constructor() : GenericViewModel() {
+class SendMessageInConversationViewModel
+    @UiThread
+    constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Send Message In Conversation ViewModel]"
 

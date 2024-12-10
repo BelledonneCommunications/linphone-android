@@ -34,7 +34,7 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.HelpDebugFragmentBinding
 import org.linphone.ui.GenericActivity
-import org.linphone.ui.file_viewer.FileViewerActivity
+import org.linphone.ui.fileviewer.FileViewerActivity
 import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.help.viewmodel.HelpViewModel
 

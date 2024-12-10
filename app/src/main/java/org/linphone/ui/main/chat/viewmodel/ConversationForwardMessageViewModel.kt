@@ -39,7 +39,9 @@ import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
-class ConversationForwardMessageViewModel @UiThread constructor() : AddressSelectionViewModel() {
+class ConversationForwardMessageViewModel
+    @UiThread
+    constructor() : AddressSelectionViewModel() {
     companion object {
         private const val TAG = "[Conversation Forward Message ViewModel]"
     }

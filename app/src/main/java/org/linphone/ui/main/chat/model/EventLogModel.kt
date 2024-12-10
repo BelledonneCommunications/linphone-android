@@ -25,7 +25,9 @@ import org.linphone.core.EventLog
 import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
 
-class EventLogModel @WorkerThread constructor(
+class EventLogModel
+    @WorkerThread
+    constructor(
     val eventLog: EventLog,
     isFromGroup: Boolean = false,
     isGroupedWithPreviousOne: Boolean = false,

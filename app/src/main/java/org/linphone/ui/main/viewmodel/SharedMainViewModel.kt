@@ -31,8 +31,10 @@ import org.linphone.ui.main.chat.model.MessageModel
 import org.linphone.ui.main.recordings.model.RecordingModel
 import org.linphone.utils.Event
 
-class SharedMainViewModel @UiThread constructor() : ViewModel() {
-    /* Sliding Pane & navigation related */
+class SharedMainViewModel
+    @UiThread
+    constructor() : ViewModel() {
+    // Sliding Pane & navigation related
 
     val isSlidingPaneSlideable = MutableLiveData<Boolean>()
 
@@ -62,7 +64,7 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
 
     var currentlyDisplayedFragment = MutableLiveData<Int>()
 
-    /* Top bar related */
+    // Top bar related
 
     val searchFilter: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
@@ -76,13 +78,13 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    /* Account Profile related */
+    // Account Profile related
 
     val goToAccountProfileEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
 
-    /* Contacts related */
+    // Contacts related
 
     var displayedFriend: Friend? = null // Prevents the need to go look for the friend
     val showContactEvent: MutableLiveData<Event<String>> by lazy {
@@ -95,7 +97,7 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
 
     var sipAddressToAddToNewContact: String = ""
 
-    /* Call logs related */
+    // Call logs related
 
     val forceRefreshCallLogsListEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
@@ -105,7 +107,7 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    /* Conversation related */
+    // Conversation related
 
     val textToShareFromIntent = MutableLiveData<String>()
 
@@ -155,7 +157,7 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    /* Meetings related */
+    // Meetings related
 
     var displayedMeeting: ConferenceInfo? = null // Prevents the need to go look for the conference info
 
@@ -175,11 +177,11 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Pair<String, ArrayList<String>>>>()
     }
 
-    /* Recordings related */
+    // Recordings related
 
     var playingRecording: RecordingModel? = null
 
-    /* Other */
+    // Other
 
     val mediaViewerFullScreenMode = MutableLiveData<Boolean>()
 

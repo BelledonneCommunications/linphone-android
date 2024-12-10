@@ -30,7 +30,9 @@ import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
 
-class RecordingModel @WorkerThread constructor(
+class RecordingModel
+    @WorkerThread
+    constructor(
     val filePath: String,
     val fileName: String,
     isLegacy: Boolean = false

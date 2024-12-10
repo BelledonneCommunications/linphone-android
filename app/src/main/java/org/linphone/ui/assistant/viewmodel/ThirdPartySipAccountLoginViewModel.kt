@@ -40,7 +40,9 @@ import org.linphone.ui.GenericViewModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
-class ThirdPartySipAccountLoginViewModel @UiThread constructor() : GenericViewModel() {
+class ThirdPartySipAccountLoginViewModel
+    @UiThread
+    constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Third Party SIP Account Login ViewModel]"
     }

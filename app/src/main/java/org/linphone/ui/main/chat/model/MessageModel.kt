@@ -64,7 +64,9 @@ import org.linphone.utils.PatternClickableSpan
 import org.linphone.utils.SpannableClickedListener
 import org.linphone.utils.TimestampUtils
 
-class MessageModel @WorkerThread constructor(
+class MessageModel
+    @WorkerThread
+    constructor(
     val chatMessage: ChatMessage,
     val isFromGroup: Boolean,
     val isReply: Boolean,

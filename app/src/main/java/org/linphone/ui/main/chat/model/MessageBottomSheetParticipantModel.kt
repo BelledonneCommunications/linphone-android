@@ -24,7 +24,9 @@ import androidx.annotation.WorkerThread
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Address
 
-class MessageBottomSheetParticipantModel @WorkerThread constructor(
+class MessageBottomSheetParticipantModel
+    @WorkerThread
+    constructor(
     address: Address,
     val value: String,
     val timestamp: Long,

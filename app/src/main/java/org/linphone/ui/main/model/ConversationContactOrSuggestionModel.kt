@@ -28,7 +28,9 @@ import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils
 
-class ConversationContactOrSuggestionModel @WorkerThread constructor(
+class ConversationContactOrSuggestionModel
+    @WorkerThread
+    constructor(
     val address: Address,
     val localAddress: Address? = null,
     conversationSubject: String? = null,

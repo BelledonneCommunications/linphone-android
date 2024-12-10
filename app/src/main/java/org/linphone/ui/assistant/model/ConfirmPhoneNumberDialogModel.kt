@@ -23,7 +23,9 @@ import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.utils.Event
 
-class ConfirmPhoneNumberDialogModel @UiThread constructor(phoneNumber: String) {
+class ConfirmPhoneNumberDialogModel
+    @UiThread
+    constructor(phoneNumber: String) {
     val message = MutableLiveData<String>()
 
     val dismissEvent = MutableLiveData<Event<Boolean>>()

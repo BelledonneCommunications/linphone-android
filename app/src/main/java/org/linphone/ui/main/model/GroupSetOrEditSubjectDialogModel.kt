@@ -24,7 +24,9 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import org.linphone.utils.Event
 
-class GroupSetOrEditSubjectDialogModel @UiThread constructor(
+class GroupSetOrEditSubjectDialogModel
+    @UiThread
+    constructor(
     initialSubject: String,
     val isGroupConversation: Boolean
 ) {

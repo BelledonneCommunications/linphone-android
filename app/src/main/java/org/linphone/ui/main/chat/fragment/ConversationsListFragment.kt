@@ -37,8 +37,8 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatListFragmentBinding
 import org.linphone.ui.GenericActivity
-import org.linphone.ui.file_viewer.FileViewerActivity
-import org.linphone.ui.file_viewer.MediaViewerActivity
+import org.linphone.ui.fileviewer.FileViewerActivity
+import org.linphone.ui.fileviewer.MediaViewerActivity
 import org.linphone.ui.main.chat.adapter.ConversationsListAdapter
 import org.linphone.ui.main.chat.viewmodel.ConversationsListViewModel
 import org.linphone.ui.main.fragment.AbstractMainFragment

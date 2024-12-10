@@ -26,7 +26,9 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Address
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 
-class ParticipantModel @WorkerThread constructor(
+class ParticipantModel
+    @WorkerThread
+    constructor(
     val address: Address,
     val isMyselfAdmin: Boolean = false,
     val isParticipantAdmin: Boolean = false,

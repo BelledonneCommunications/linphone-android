@@ -25,7 +25,9 @@ import org.linphone.core.AccountDevice
 import org.linphone.core.tools.Log
 import org.linphone.utils.TimestampUtils
 
-class AccountDeviceModel @WorkerThread constructor(
+class AccountDeviceModel
+    @WorkerThread
+    constructor(
     private val accountDevice: AccountDevice,
     private val onRemove: (model: AccountDeviceModel, accountDevice: AccountDevice) -> (Unit)
 ) {

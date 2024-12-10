@@ -25,7 +25,9 @@ import androidx.lifecycle.MutableLiveData
 import org.linphone.core.Address
 import org.linphone.core.Friend
 
-class ContactNumberOrAddressModel @WorkerThread constructor(
+class ContactNumberOrAddressModel
+    @WorkerThread
+    constructor(
     val friend: Friend,
     val address: Address?,
     val displayedValue: String,

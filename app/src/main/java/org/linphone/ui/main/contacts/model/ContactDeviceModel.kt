@@ -23,7 +23,9 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import org.linphone.core.Address
 
-class ContactDeviceModel @WorkerThread constructor(
+class ContactDeviceModel
+    @WorkerThread
+    constructor(
     val name: String,
     val address: Address,
     val trusted: Boolean,

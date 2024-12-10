@@ -76,7 +76,9 @@ import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.ShortcutUtils
 
-class NotificationsManager @MainThread constructor(private val context: Context) {
+class NotificationsManager
+    @MainThread
+    constructor(private val context: Context) {
     companion object {
         private const val TAG = "[Notifications Manager]"
 
@@ -876,7 +878,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             contact,
             displayName,
             address.asStringUriOnly(),
-            message.time * 1000, /* Linphone timestamps are in seconds */
+            message.time * 1000, // Linphone timestamps are in seconds
             isOutgoing = false,
             isReaction = true,
             reactionToMessageId = message.messageId,
@@ -998,7 +1000,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             contact,
             displayName,
             address.asStringUriOnly(),
-            message.time * 1000, /* Linphone timestamps are in seconds */
+            message.time * 1000, // Linphone timestamps are in seconds
             isOutgoing = message.isOutgoing
         )
 

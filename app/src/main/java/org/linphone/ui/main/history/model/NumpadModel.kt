@@ -24,7 +24,9 @@ import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.tools.Log
 
-open class NumpadModel @UiThread constructor(
+open class NumpadModel
+    @UiThread
+    constructor(
     private val inCallNumpad: Boolean,
     private val onDigitClicked: (value: String) -> (Unit),
     private val onVoicemailClicked: () -> (Unit),

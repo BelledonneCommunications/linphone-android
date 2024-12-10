@@ -40,7 +40,9 @@ import org.linphone.ui.main.recordings.model.RecordingModel
 import org.linphone.utils.AudioUtils
 import org.linphone.utils.Event
 
-class RecordingMediaPlayerViewModel @UiThread constructor() : GenericViewModel() {
+class RecordingMediaPlayerViewModel
+    @UiThread
+    constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Recording Media Player ViewModel]"
     }

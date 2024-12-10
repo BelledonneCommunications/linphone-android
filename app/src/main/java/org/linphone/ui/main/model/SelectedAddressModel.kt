@@ -24,7 +24,9 @@ import androidx.annotation.WorkerThread
 import org.linphone.core.Address
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 
-class SelectedAddressModel @WorkerThread constructor(
+class SelectedAddressModel
+    @WorkerThread
+    constructor(
     val address: Address,
     val avatarModel: ContactAvatarModel?,
     private val onRemovedFromSelection: ((model: SelectedAddressModel) -> Unit)? = null

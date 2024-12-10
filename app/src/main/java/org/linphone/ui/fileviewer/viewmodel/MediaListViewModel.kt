@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.file_viewer.viewmodel
+package org.linphone.ui.fileviewer.viewmodel
 
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
@@ -28,7 +28,9 @@ import org.linphone.ui.main.chat.viewmodel.AbstractConversationViewModel
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
 
-class MediaListViewModel @UiThread constructor() : AbstractConversationViewModel() {
+class MediaListViewModel
+    @UiThread
+    constructor() : AbstractConversationViewModel() {
     companion object {
         private const val TAG = "[Media List ViewModel]"
     }

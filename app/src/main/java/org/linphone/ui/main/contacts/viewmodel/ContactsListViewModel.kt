@@ -43,7 +43,9 @@ import org.linphone.ui.main.viewmodel.AbstractMainViewModel
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 
-class ContactsListViewModel @UiThread constructor() : AbstractMainViewModel() {
+class ContactsListViewModel
+    @UiThread
+    constructor() : AbstractMainViewModel() {
     companion object {
         private const val TAG = "[Contacts List ViewModel]"
     }

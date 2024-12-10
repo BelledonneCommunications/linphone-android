@@ -23,7 +23,9 @@ import androidx.annotation.WorkerThread
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Address
 
-class ParticipantModel @WorkerThread constructor(address: Address, val isOrganizer: Boolean) {
+class ParticipantModel
+    @WorkerThread
+    constructor(address: Address, val isOrganizer: Boolean) {
     val sipUri = address.asStringUriOnly()
 
     val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(address)

@@ -13,7 +13,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.file_viewer.viewmodel.FileViewModel" />
+            type="org.linphone.ui.fileviewer.viewmodel.FileViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

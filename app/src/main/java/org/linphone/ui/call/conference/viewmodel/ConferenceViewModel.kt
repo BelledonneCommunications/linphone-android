@@ -40,7 +40,9 @@ import org.linphone.ui.call.conference.view.GridBoxLayout
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
-class ConferenceViewModel @UiThread constructor() : GenericViewModel() {
+class ConferenceViewModel
+    @UiThread
+    constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Conference ViewModel]"
 

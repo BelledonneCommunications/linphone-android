@@ -22,7 +22,9 @@ package org.linphone.ui.main.meetings.model
 import androidx.annotation.WorkerThread
 import org.linphone.utils.TimestampUtils
 
-class MeetingListItemModel @WorkerThread constructor(
+class MeetingListItemModel
+    @WorkerThread
+    constructor(
     meetingModel: MeetingModel?,
     val firstMeetingOfTheWeek: Boolean
 ) {

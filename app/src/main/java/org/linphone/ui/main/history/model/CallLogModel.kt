@@ -32,7 +32,9 @@ import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
 
-class CallLogModel @WorkerThread constructor(private val callLog: CallLog) {
+class CallLogModel
+    @WorkerThread
+    constructor(private val callLog: CallLog) {
     companion object {
         private const val TAG = "[Call Log Model]"
     }

@@ -25,7 +25,9 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
 import org.linphone.utils.Event
 
-class ZrtpSasConfirmationDialogModel @UiThread constructor(
+class ZrtpSasConfirmationDialogModel
+    @UiThread
+    constructor(
     authTokenToRead: String,
     authTokensToListen: List<String>,
     val cacheMismatch: Boolean

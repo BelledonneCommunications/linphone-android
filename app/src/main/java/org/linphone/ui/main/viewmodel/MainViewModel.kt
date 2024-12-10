@@ -49,7 +49,9 @@ import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
 
-class MainViewModel @UiThread constructor() : ViewModel() {
+class MainViewModel
+    @UiThread
+    constructor() : ViewModel() {
     companion object {
         private const val TAG = "[Main ViewModel]"
 

@@ -33,7 +33,9 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
 import org.linphone.utils.Event
 
-class CardDavViewModel @UiThread constructor() : GenericViewModel() {
+class CardDavViewModel
+    @UiThread
+    constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[CardDAV ViewModel]"
     }

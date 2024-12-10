@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.file_viewer.adapter
+package org.linphone.ui.fileviewer.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -25,7 +25,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
-import org.linphone.ui.file_viewer.viewmodel.FileViewModel
+import org.linphone.ui.fileviewer.viewmodel.FileViewModel
 
 class PdfPagesListAdapter(private val viewModel: FileViewModel) : RecyclerView.Adapter<PdfPagesListAdapter.PdfPageViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PdfPageViewHolder {

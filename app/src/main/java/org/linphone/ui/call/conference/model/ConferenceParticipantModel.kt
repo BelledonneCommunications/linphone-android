@@ -27,7 +27,9 @@ import org.linphone.core.Participant
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 
-class ConferenceParticipantModel @WorkerThread constructor(
+class ConferenceParticipantModel
+    @WorkerThread
+    constructor(
     val participant: Participant,
     val avatarModel: ContactAvatarModel,
     isMyselfAdmin: Boolean,

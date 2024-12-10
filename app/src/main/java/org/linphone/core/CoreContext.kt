@@ -48,7 +48,9 @@ import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
-class CoreContext @UiThread constructor(val context: Context) : HandlerThread("Core Thread") {
+class CoreContext
+    @UiThread
+    constructor(val context: Context) : HandlerThread("Core Thread") {
     companion object {
         private const val TAG = "[Core Context]"
     }

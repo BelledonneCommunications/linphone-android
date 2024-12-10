@@ -31,7 +31,11 @@ import androidx.loader.content.CursorLoader
 import androidx.loader.content.Loader
 import java.lang.Exception
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.core.*
+import org.linphone.core.Factory
+import org.linphone.core.Friend
+import org.linphone.core.FriendList
+import org.linphone.core.GlobalState
+import org.linphone.core.SubscribePolicy
 import org.linphone.core.tools.Log
 import org.linphone.utils.PhoneNumberUtils
 

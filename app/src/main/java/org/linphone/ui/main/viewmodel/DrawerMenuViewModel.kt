@@ -35,7 +35,9 @@ import org.linphone.ui.main.model.AccountModel
 import org.linphone.ui.main.model.ShortcutModel
 import org.linphone.utils.Event
 
-class DrawerMenuViewModel @UiThread constructor() : GenericViewModel() {
+class DrawerMenuViewModel
+    @UiThread
+    constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Drawer Menu ViewModel]"
     }

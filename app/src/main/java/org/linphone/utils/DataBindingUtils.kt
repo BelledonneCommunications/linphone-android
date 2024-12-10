@@ -608,7 +608,7 @@ fun validateOnInput(editText: EditText, onValidate: () -> (Unit)) {
     })
 }
 
-@BindingAdapter("app:layout_wrapBefore")
+@BindingAdapter("layout_wrapBefore")
 fun setFlexboxLayoutWrapBefore(view: View, wrap: Boolean = false) {
     val params = view.layoutParams as FlexboxLayout.LayoutParams
     params.isWrapBefore = wrap

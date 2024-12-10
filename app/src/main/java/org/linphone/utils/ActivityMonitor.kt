@@ -113,8 +113,10 @@ class ActivityMonitor : ActivityLifecycleCallbacks {
     }
 
     override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+
     internal inner class InactivityChecker : Runnable {
         private var isCanceled = false
+
         fun cancel() {
             isCanceled = true
         }

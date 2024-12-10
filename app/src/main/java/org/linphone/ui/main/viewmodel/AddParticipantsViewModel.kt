@@ -29,7 +29,9 @@ import org.linphone.ui.main.model.SelectedAddressModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
-class AddParticipantsViewModel @UiThread constructor() : AddressSelectionViewModel() {
+class AddParticipantsViewModel
+    @UiThread
+    constructor() : AddressSelectionViewModel() {
     companion object {
         private const val TAG = "[Add Participants ViewModel]"
     }

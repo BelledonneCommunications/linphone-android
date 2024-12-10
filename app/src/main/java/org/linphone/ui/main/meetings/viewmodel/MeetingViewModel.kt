@@ -38,7 +38,9 @@ import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
 
-class MeetingViewModel @UiThread constructor() : GenericViewModel() {
+class MeetingViewModel
+    @UiThread
+    constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Meeting ViewModel]"
     }

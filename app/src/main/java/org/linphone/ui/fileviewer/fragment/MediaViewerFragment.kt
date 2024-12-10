@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.file_viewer.fragment
+package org.linphone.ui.fileviewer.fragment
 
 import android.graphics.SurfaceTexture
 import android.os.Bundle
@@ -30,7 +30,7 @@ import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.core.tools.Log
 import org.linphone.databinding.FileMediaViewerChildFragmentBinding
-import org.linphone.ui.file_viewer.viewmodel.MediaViewModel
+import org.linphone.ui.fileviewer.viewmodel.MediaViewModel
 import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.viewmodel.SharedMainViewModel
 import org.linphone.utils.FileUtils

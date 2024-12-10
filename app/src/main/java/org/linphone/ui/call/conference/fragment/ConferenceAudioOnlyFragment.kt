@@ -32,6 +32,7 @@ import org.linphone.databinding.CallConferenceAudioOnlyFragmentBinding
 import org.linphone.ui.call.conference.viewmodel.ConferenceViewModel
 import org.linphone.ui.call.fragment.GenericCallFragment
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
+
 @UiThread
 class ConferenceAudioOnlyFragment : GenericCallFragment() {
     companion object {

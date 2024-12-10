@@ -40,7 +40,9 @@ import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 
-class HelpViewModel @UiThread constructor() : GenericViewModel() {
+class HelpViewModel
+    @UiThread
+    constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Help ViewModel]"
     }

@@ -36,7 +36,9 @@ import org.linphone.core.tools.Log
 import org.linphone.utils.FileUtils
 import org.linphone.utils.TimestampUtils
 
-class FileModel @AnyThread constructor(
+class FileModel
+    @AnyThread
+    constructor(
     val path: String,
     val fileName: String,
     val fileSize: Long,

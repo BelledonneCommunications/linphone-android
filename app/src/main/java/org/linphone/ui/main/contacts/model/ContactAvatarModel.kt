@@ -36,7 +36,9 @@ import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.TimestampUtils
 
-class ContactAvatarModel @WorkerThread constructor(val friend: Friend, val address: Address? = null) : AbstractAvatarModel() {
+class ContactAvatarModel
+    @WorkerThread
+    constructor(val friend: Friend, val address: Address? = null) : AbstractAvatarModel() {
     companion object {
         private const val TAG = "[Contact Avatar Model]"
     }

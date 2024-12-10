@@ -220,6 +220,7 @@ class ConversationEventAdapter :
             }
         }
     }
+
     inner class EventViewHolder(
         val binding: ChatConversationEventBinding
     ) : RecyclerView.ViewHolder(binding.root) {

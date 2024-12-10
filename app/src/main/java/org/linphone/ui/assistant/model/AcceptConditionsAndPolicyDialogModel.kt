@@ -32,7 +32,9 @@ import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
-class AcceptConditionsAndPolicyDialogModel @UiThread constructor() {
+class AcceptConditionsAndPolicyDialogModel
+    @UiThread
+    constructor() {
     companion object {
         private const val TAG = "[Accept Terms & Policy Dialog Model]"
     }

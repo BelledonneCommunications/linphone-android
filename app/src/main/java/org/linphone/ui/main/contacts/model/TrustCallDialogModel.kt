@@ -24,7 +24,9 @@ import androidx.lifecycle.MutableLiveData
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
-class TrustCallDialogModel @UiThread constructor(contact: String, device: String) {
+class TrustCallDialogModel
+    @UiThread
+    constructor(contact: String, device: String) {
     val message = MutableLiveData<String>()
 
     val doNotShowAnymore = MutableLiveData<Boolean>()

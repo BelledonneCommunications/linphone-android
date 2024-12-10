@@ -23,7 +23,9 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 
-class CodecModel @WorkerThread constructor(
+class CodecModel
+    @WorkerThread
+    constructor(
     val mimeType: String,
     clockRate: Int,
     recvFmtp: String?,

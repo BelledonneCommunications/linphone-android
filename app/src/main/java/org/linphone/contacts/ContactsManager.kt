@@ -67,7 +67,9 @@ import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.PhoneNumberUtils
 import org.linphone.utils.ShortcutUtils
 
-class ContactsManager @UiThread constructor() {
+class ContactsManager
+    @UiThread
+    constructor() {
     companion object {
         private const val TAG = "[Contacts Manager]"
 
@@ -101,7 +103,7 @@ class ContactsManager @UiThread constructor() {
 
             var found = false
             if (results.isNotEmpty()) {
-                val result = results.first() {
+                val result = results.first {
                     it.friend != null
                 }
                 if (result != null) {

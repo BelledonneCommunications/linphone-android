@@ -36,7 +36,9 @@ import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
-class StartConversationViewModel @UiThread constructor() : AddressSelectionViewModel() {
+class StartConversationViewModel
+    @UiThread
+    constructor() : AddressSelectionViewModel() {
     companion object {
         private const val TAG = "[Start Conversation ViewModel]"
     }

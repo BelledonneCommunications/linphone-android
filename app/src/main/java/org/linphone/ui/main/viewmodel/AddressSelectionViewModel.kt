@@ -42,7 +42,9 @@ import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils
 
-abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccountChangedViewModel() {
+abstract class AddressSelectionViewModel
+    @UiThread
+    constructor() : DefaultAccountChangedViewModel() {
     companion object {
         private const val TAG = "[Address Selection ViewModel]"
     }

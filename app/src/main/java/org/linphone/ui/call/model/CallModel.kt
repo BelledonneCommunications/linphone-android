@@ -29,7 +29,9 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.LinphoneUtils
 
-class CallModel @WorkerThread constructor(val call: Call) {
+class CallModel
+    @WorkerThread
+    constructor(val call: Call) {
     companion object {
         private const val TAG = "[Call Model]"
     }

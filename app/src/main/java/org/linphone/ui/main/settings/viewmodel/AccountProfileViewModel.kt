@@ -46,7 +46,9 @@ import org.linphone.ui.main.settings.model.AccountDeviceModel
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 
-class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
+class AccountProfileViewModel
+    @UiThread
+    constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Account Profile ViewModel]"
     }

@@ -28,7 +28,9 @@ import org.linphone.core.ChatMessageListenerStub
 import org.linphone.core.ChatMessageReaction
 import org.linphone.core.tools.Log
 
-class MessageReactionsModel @WorkerThread constructor(
+class MessageReactionsModel
+    @WorkerThread
+    constructor(
     private val chatMessage: ChatMessage,
     private val onReactionsUpdated: ((model: MessageReactionsModel) -> Unit)? = null
 ) {

@@ -22,7 +22,9 @@ package org.linphone.ui.call.model
 import androidx.annotation.WorkerThread
 import org.linphone.core.AudioDevice
 
-data class AudioDeviceModel @WorkerThread constructor(
+data class AudioDeviceModel
+    @WorkerThread
+    constructor(
     val audioDevice: AudioDevice,
     val name: String,
     val type: AudioDevice.Type,

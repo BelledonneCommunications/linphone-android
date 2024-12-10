@@ -27,7 +27,9 @@ import java.util.concurrent.atomic.AtomicBoolean
  * This class allows to limit the number of notification for an event.
  * The first one to consume the event will stop the dispatch.
  */
-open class Event<out T> @AnyThread constructor(private val content: T) {
+open class Event<out T>
+    @AnyThread
+    constructor(private val content: T) {
     private val handled = AtomicBoolean(false)
 
     @UiThread
