@@ -21,17 +21,19 @@ package org.linphone
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.content.Context
 import android.os.PowerManager
 import androidx.annotation.MainThread
-import coil.ImageLoader
-import coil.ImageLoaderFactory
-import coil.decode.ImageDecoderDecoder
-import coil.decode.SvgDecoder
-import coil.decode.VideoFrameDecoder
-import coil.disk.DiskCache
-import coil.imageLoader
-import coil.memory.MemoryCache
-import coil.request.CachePolicy
+import coil3.ImageLoader
+import coil3.SingletonImageLoader
+import coil3.disk.DiskCache
+import coil3.disk.directory
+import coil3.imageLoader
+import coil3.memory.MemoryCache
+import coil3.request.CachePolicy
+import coil3.request.crossfade
+import coil3.svg.SvgDecoder
+import coil3.video.VideoFrameDecoder
 import com.google.android.material.color.DynamicColors
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.CoreContext
@@ -43,7 +45,7 @@ import org.linphone.core.VFS
 import org.linphone.core.tools.Log
 
 @MainThread
-class LinphoneApplication : Application(), ImageLoaderFactory {
+class LinphoneApplication : Application(), SingletonImageLoader.Factory {
     companion object {
         private const val TAG = "[Linphone Application]"
 
@@ -113,7 +115,7 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
         super.onTrimMemory(level)
     }
 
-    override fun newImageLoader(): ImageLoader {
+    override fun newImageLoader(context: Context): ImageLoader {
         // When VFS is enabled, prevent Coil from keeping plain version of files on disk
         val diskCachePolicy = if (VFS.isEnabled(applicationContext)) {
             CachePolicy.DISABLED
@@ -126,16 +128,16 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
             .components {
                 add(VideoFrameDecoder.Factory())
                 add(SvgDecoder.Factory())
-                add(ImageDecoderDecoder.Factory())
             }
             .memoryCache {
-                MemoryCache.Builder(this)
-                    .maxSizePercent(0.25)
+                MemoryCache.Builder()
+                    .maxSizePercent(context, 0.25)
                     .build()
             }
             .diskCache {
+                val cache = cacheDir.resolve("image_cache")
                 DiskCache.Builder()
-                    .directory(cacheDir.resolve("image_cache"))
+                    .directory(cache)
                     .maxSizePercent(0.02)
                     .build()
             }

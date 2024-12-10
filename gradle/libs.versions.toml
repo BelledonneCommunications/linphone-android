@@ -3,7 +3,7 @@ agp = "8.7.3"
 kotlin = "2.0.21"
 gmsGoogleServices = "4.4.2"
 firebaseCrashlytics = "3.0.2"
-firebaseBomVersion = "33.6.0"
+firebaseBomVersion = "33.7.0"
 ktlint = "11.3.1"
 
 annotations = "1.9.1"
@@ -26,8 +26,8 @@ flexbox = "3.0.0"
 #noinspection GradleDependency
 material = "1.11.0"
 protobuf = "3.25.5"
-coil = "2.7.0"
-dotsIndicator = "5.0"
+coil = "3.0.4"
+dotsIndicator = "5.1.0"
 photoview = "2.3.0"
 openidAppauth = "0.11.1"
 linphone = "5.4.+"
@@ -58,10 +58,10 @@ google-flexbox = { group = "com.google.android.flexbox", name = "flexbox", versi
 google-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 google-protobuf = { group = "com.google.protobuf", name = "protobuf-javalite", version.ref = "protobuf" }
 
-coil = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
-coil-gif = { group = "io.coil-kt", name = "coil-gif", version.ref = "coil" }
-coil-svg = { group = "io.coil-kt", name = "coil-svg", version.ref = "coil" }
-coil-video = { group = "io.coil-kt", name = "coil-video", version.ref = "coil" }
+coil = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil" }
+coil-gif = { group = "io.coil-kt.coil3", name = "coil-gif", version.ref = "coil" }
+coil-svg = { group = "io.coil-kt.coil3", name = "coil-svg", version.ref = "coil" }
+coil-video = { group = "io.coil-kt.coil3", name = "coil-video", version.ref = "coil" }
 dots-indicator = { group = "com.tbuonomo", name = "dotsindicator", version.ref = "dotsIndicator" }
 photoview = { group = "com.github.chrisbanes", name = "PhotoView", version.ref = "photoview" }
 openid-appauth = { group = "net.openid", name = "appauth", version.ref = "openidAppauth" }
