@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "915834270055",
+    "project_id": "elasticcx-uc",
+    "storage_bucket": "elasticcx-uc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:915834270055:android:27b7fff333394417fdffc2",
+        "android_client_info": {
+          "package_name": "com.ipintegration.elasticcx.uc"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuAwh6vA56jyFw6hpWjM7iGCE3kznbvt8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
