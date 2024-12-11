@@ -121,7 +121,7 @@
             android:layout_height="0dp"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="16dp"
-            android:src="@drawable/edit_text_background"
+            android:src="@drawable/chat_message_sending_edit_text_background"
             android:contentDescription="@null"
             app:layout_constraintBottom_toBottomOf="@id/message_to_send"
             app:layout_constraintEnd_toEndOf="parent"
@@ -129,8 +129,8 @@
             app:layout_constraintTop_toTopOf="@id/message_to_send" />
 
         <org.linphone.ui.main.chat.view.RichEditText
-            android:id="@+id/message_to_send"
             style="@style/default_text_style"
+            android:id="@+id/message_to_send"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -144,7 +144,6 @@
             android:maxLines="3"
             android:minHeight="48dp"
             android:text="@={viewModel.textToSend}"
-            android:textColorHint="?attr/color_main2_400"
             android:textSize="14sp"
             android:enabled="@{!viewModel.isVoiceRecording}"
             app:layout_constraintBottom_toBottomOf="parent"

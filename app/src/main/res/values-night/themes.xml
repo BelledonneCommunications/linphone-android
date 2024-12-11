@@ -63,6 +63,7 @@
         <item name="color_chat_bubble_incoming">@color/background_color_alt_dark_mode</item>
         <item name="color_chat_bubble_outgoing">@color/text_field_background_color_dark_mode</item>
         <item name="color_chat_bubble_reply">@color/gray_500</item>
+        <item name="color_message_text_field_background">@color/gray_500</item>
 
         <item name="color_gradient_start">@color/background_color_alt_dark_mode</item>
         <item name="color_gradient_end">@color/background_color_alt_dark_mode</item>

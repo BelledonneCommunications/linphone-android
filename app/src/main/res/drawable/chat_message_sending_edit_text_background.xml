@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true"
+        android:drawable="@drawable/shape_edit_text_focused_background" />
+    <item android:state_enabled="false"
+        android:drawable="@drawable/shape_edit_text_disabled_background" />
+    <item
+        android:drawable="@drawable/shape_chat_message_sending_edit_text_background" />
+</selector>
