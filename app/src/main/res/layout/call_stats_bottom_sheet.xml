@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:padding="11dp"
             android:src="@drawable/shape_drawer_handle"
-            app:tint="@color/white"
+            app:tint="@color/bc_white"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -54,7 +54,7 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/call_stats_audio_title"
                 android:textSize="12sp"
-                android:textColor="@color/white"
+                android:textColor="@color/bc_white"
                 android:gravity="center" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@{model.audioCodec, default=@string/call_stats_codec_label}"
-                android:textColor="@color/white"
+                android:textColor="@color/bc_white"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:gravity="center" />
@@ -74,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@{model.audioBandwidth, default=@string/call_stats_bandwidth_label}"
-                android:textColor="@color/white"
+                android:textColor="@color/bc_white"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:gravity="center" />
@@ -85,7 +85,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@{model.lossRate, default=@string/call_stats_loss_rate_label}"
-                android:textColor="@color/white"
+                android:textColor="@color/bc_white"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:gravity="center" />
@@ -97,7 +97,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:text="@{model.jitterBuffer, default=@string/call_stats_jitter_buffer_label}"
-                android:textColor="@color/white"
+                android:textColor="@color/bc_white"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:gravity="center" />
@@ -126,7 +126,7 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/call_stats_video_title"
                 android:textSize="12sp"
-                android:textColor="@color/white"
+                android:textColor="@color/bc_white"
                 android:gravity="center" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -135,7 +135,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@{model.videoCodec, default=@string/call_stats_codec_label}"
-                android:textColor="@color/white"
+                android:textColor="@color/bc_white"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:gravity="center" />
@@ -146,7 +146,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@{model.videoBandwidth, default=@string/call_stats_bandwidth_label}"
-                android:textColor="@color/white"
+                android:textColor="@color/bc_white"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:gravity="center" />
@@ -157,7 +157,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@{model.videoLossRate, default=@string/call_stats_loss_rate_label}"
-                android:textColor="@color/white"
+                android:textColor="@color/bc_white"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:gravity="center" />
@@ -168,7 +168,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@{model.videoResolution, default=@string/call_stats_resolution_label}"
-                android:textColor="@color/white"
+                android:textColor="@color/bc_white"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:gravity="center" />
@@ -180,7 +180,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:text="@{model.videoFps, default=@string/call_stats_fps_label}"
-                android:textColor="@color/white"
+                android:textColor="@color/bc_white"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:gravity="center" />
@@ -209,7 +209,7 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/call_stats_fec_title"
                 android:textSize="12sp"
-                android:textColor="@color/white"
+                android:textColor="@color/bc_white"
                 android:gravity="center" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -218,7 +218,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@{model.lostPackets, default=@string/call_stats_fec_lost_packets_label}"
-                android:textColor="@color/white"
+                android:textColor="@color/bc_white"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:gravity="center" />
@@ -229,7 +229,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@{model.repairedPackets, default=@string/call_stats_fec_repaired_packets_label}"
-                android:textColor="@color/white"
+                android:textColor="@color/bc_white"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:gravity="center" />
@@ -240,7 +240,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@{model.fecBandwidth, default=@string/call_stats_fec_lost_bandwidth_label}"
-                android:textColor="@color/white"
+                android:textColor="@color/bc_white"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:gravity="center" />

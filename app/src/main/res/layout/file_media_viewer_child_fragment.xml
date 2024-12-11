@@ -17,7 +17,7 @@
         android:onClick="@{toggleFullScreenModeClickListener}"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black">
+        android:background="@color/bc_black">
 
         <androidx.constraintlayout.widget.Group
             android:layout_width="wrap_content"
@@ -46,7 +46,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:tint="@color/white" />
+            app:tint="@color/bc_white" />
 
         <com.github.chrisbanes.photoview.PhotoView
             android:id="@+id/image"
@@ -70,7 +70,7 @@
             android:src="@{viewModel.isMediaPlaying ? @drawable/pause_fill : @drawable/play_fill, default=@drawable/play_fill}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:tint="@color/white"/>
+            app:tint="@color/bc_white"/>
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/progress"
@@ -97,7 +97,7 @@
             android:layout_marginEnd="16dp"
             android:text="@{viewModel.formattedDuration, default=`00:42`}"
             android:textSize="13sp"
-            android:textColor="@color/white"
+            android:textColor="@color/bc_white"
             app:layout_constraintTop_toTopOf="@id/play_pause_audio_playback"
             app:layout_constraintBottom_toBottomOf="@id/play_pause_audio_playback"
             app:layout_constraintEnd_toEndOf="parent" />

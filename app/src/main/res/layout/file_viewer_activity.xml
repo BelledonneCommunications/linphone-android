@@ -19,7 +19,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black">
+        android:background="@color/bc_black">
 
         <androidx.constraintlayout.widget.Group
             android:layout_width="wrap_content"
@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:background="@color/white"
+            android:background="@color/bc_white"
             android:visibility="@{viewModel.isPdf ? View.VISIBLE : View.GONE, default=gone}" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -54,7 +54,7 @@
             android:paddingBottom="2dp"
             android:visibility="@{viewModel.isPdf ? View.VISIBLE : View.GONE, default=gone}"
             android:text="@{viewModel.pdfCurrentPage + ` / ` + viewModel.pdfPages, default=`1 / 30`}"
-            android:textColor="@color/white"
+            android:textColor="@color/bc_white"
             android:background="#80000000"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/pdf_view_pager"
@@ -87,7 +87,7 @@
             android:id="@+id/top_bar_background"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/white"
+            android:background="@color/bc_white"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/top_bar_barrier"
             app:layout_constraintStart_toStartOf="parent"

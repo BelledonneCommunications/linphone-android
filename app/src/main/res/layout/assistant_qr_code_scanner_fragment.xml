@@ -15,7 +15,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black">
+        android:background="@color/bc_black">
 
         <org.linphone.ui.call.view.RoundCornersTextureView
             android:id="@+id/qr_code_preview"
@@ -37,7 +37,7 @@
             android:padding="15dp"
             android:src="@drawable/caret_left"
             android:contentDescription="@string/content_description_go_back_icon"
-            app:tint="@color/white"
+            app:tint="@color/bc_white"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 

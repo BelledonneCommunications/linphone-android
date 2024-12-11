@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="transparent_color">#00000000</color>
-    <color name="black">#000000</color>
-    <color name="white">#FFFFFF</color>
+    <color name="bc_black">#000000</color>
+    <color name="bc_white">#FFFFFF</color>
     <color name="dialog_background">#99000000</color><!-- 60% opacity -->
     <color name="shadow">#10000000</color>
+
+    <color name="background_color_dark_mode">#191919</color>
+    <color name="background_color_alt_dark_mode">#303030</color>
+    <color name="text_field_background_color_dark_mode">#142932</color>
 
     <color name="orange_main_100">#FFEACB</color>
     <color name="orange_main_100_alpha_50">#80FFEACB</color>

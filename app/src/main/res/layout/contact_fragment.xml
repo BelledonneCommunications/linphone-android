@@ -66,7 +66,7 @@
                 android:src="@drawable/pencil_simple"
                 android:contentDescription="@string/content_description_contact_edit"
                 android:visibility="@{viewModel.isStored ? View.VISIBLE : View.GONE}"
-                app:tint="?attr/color_main1_500"
+                app:tint="?attr/color_main2_500"
                 app:layout_constraintBottom_toBottomOf="@id/invisible_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/invisible_title" />
@@ -103,7 +103,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:constraint_referenced_ids="trusted_devices_count, trusted_devices_progress, devices, trusted_devices_progress_label"
-                        android:visibility="@{viewModel.showContactTrustAndDevices ? (viewModel.expandDevicesTrust &amp;&amp; viewModel.devices.size() > 0 ? View.VISIBLE : View.GONE) : View.GONE, default=gone}" />
+                        android:visibility="@{viewModel.showContactTrustAndDevices ? (viewModel.expandDevicesTrust &amp;&amp; viewModel.devices.size() > 0 ? View.VISIBLE : View.GONE) : View.GONE}" />
 
                     <include
                         android:id="@+id/avatar"
@@ -410,22 +410,34 @@
                         app:layout_constraintEnd_toEndOf="@id/trust_background"
                         app:layout_constraintTop_toTopOf="@id/trust_background" />
 
-                    <com.google.android.material.progressindicator.LinearProgressIndicator
-                        android:id="@+id/trusted_devices_progress"
+                    <View
+                        android:id="@+id/trusted_devices_progress_background"
                         android:layout_width="0dp"
                         android:layout_height="28dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:max="100"
-                        android:progress="@{viewModel.trustedDevicesPercentage, default=75}"
-                        app:trackCornerRadius="50dp"
-                        app:trackThickness="22dp"
-                        app:trackColor="?attr/color_main2_100"
-                        app:indicatorColor="?attr/color_info_500"
+                        android:background="@drawable/shape_squircle_contact_trust_r50_background"
                         app:layout_constraintStart_toStartOf="@id/trust_background"
                         app:layout_constraintEnd_toEndOf="@id/trust_background"
-                        app:layout_constraintTop_toBottomOf="@id/trusted_devices_count"/>
+                        app:layout_constraintTop_toBottomOf="@id/trusted_devices_count" />
+
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        android:id="@+id/trusted_devices_progress"
+                        android:layout_width="0dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="3dp"
+                        android:layout_marginEnd="3dp"
+                        android:max="100"
+                        android:progress="@{viewModel.trustedDevicesPercentage, default=20}"
+                        app:trackCornerRadius="50dp"
+                        app:trackThickness="22dp"
+                        app:trackColor="@color/transparent_color"
+                        app:indicatorColor="?attr/color_trust_track"
+                        app:layout_constraintStart_toStartOf="@id/trusted_devices_progress_background"
+                        app:layout_constraintEnd_toEndOf="@id/trusted_devices_progress_background"
+                        app:layout_constraintTop_toTopOf="@id/trusted_devices_progress_background"
+                        app:layout_constraintBottom_toBottomOf="@id/trusted_devices_progress_background"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/default_text_style_700"
@@ -434,10 +446,10 @@
                         android:layout_height="0dp"
                         android:layout_marginStart="5dp"
                         android:layout_marginEnd="5dp"
-                        android:text="@{String.valueOf(viewModel.trustedDevicesPercentage) + `%`, default=`75%`}"
-                        android:textColor="?attr/color_main2_000"
+                        android:text="@{String.valueOf(viewModel.trustedDevicesPercentage) + `%`, default=`20%`}"
+                        android:textColor="@{viewModel.trustedDevicesPercentage > 15 ? @color/bc_white : @color/gray_main2_400, default=@color/bc_white}"
                         android:textSize="12sp"
-                        app:layout_constraintHorizontal_bias="@{viewModel.trustedDevicesPercentageFloat, default=0.37}"
+                        app:layout_constraintHorizontal_bias="@{viewModel.trustedDevicesPercentageFloat, default=0.1}"
                         app:layout_constraintStart_toStartOf="@id/trusted_devices_progress"
                         app:layout_constraintEnd_toEndOf="@id/trusted_devices_progress"
                         app:layout_constraintTop_toTopOf="@id/trusted_devices_progress"
@@ -556,7 +568,7 @@
                         android:layout_height="1dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:background="?attr/color_main2_200"
+                        android:background="@color/gray_main2_200"
                         android:visibility="@{viewModel.isStored ? View.VISIBLE : View.GONE}"
                         app:layout_constraintEnd_toEndOf="@id/action_edit"
                         app:layout_constraintStart_toStartOf="@id/action_edit"
@@ -567,7 +579,7 @@
                         android:layout_height="1dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:background="?attr/color_main2_200"
+                        android:background="@color/gray_main2_200"
                         android:visibility="@{viewModel.isStored ? View.VISIBLE : View.GONE}"
                         app:layout_constraintEnd_toEndOf="@id/action_favorite"
                         app:layout_constraintStart_toStartOf="@id/action_favorite"
@@ -578,7 +590,7 @@
                         android:layout_height="1dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:background="?attr/color_main2_200"
+                        android:background="@color/gray_main2_200"
                         android:visibility="@{viewModel.isStored ? View.VISIBLE : View.GONE}"
                         app:layout_constraintEnd_toEndOf="@id/action_share"
                         app:layout_constraintStart_toStartOf="@id/action_share"

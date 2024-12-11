@@ -109,7 +109,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="?attr/color_main2_200"
+                    android:background="?attr/color_separator"
                     android:visibility="@{viewModel.isMessageInError &amp;&amp; viewModel.isMessageOutgoing ? View.VISIBLE : View.GONE, default=gone}"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -124,7 +124,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="?attr/color_main2_200"/>
+                    android:background="?attr/color_separator"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/popup_menu_action_label_style"
@@ -139,7 +139,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="?attr/color_main2_200"/>
+                    android:background="?attr/color_separator"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/popup_menu_action_label_style"
@@ -154,7 +154,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="?attr/color_main2_200"
+                    android:background="?attr/color_separator"
                     android:visibility="@{viewModel.hideCopyTextToClipboard ? View.GONE : View.VISIBLE}"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -170,7 +170,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="?attr/color_main2_200"/>
+                    android:background="?attr/color_separator"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/popup_menu_danger_action_label_style"

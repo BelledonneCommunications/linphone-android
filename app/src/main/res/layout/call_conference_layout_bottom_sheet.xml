@@ -51,14 +51,14 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:text="@string/conference_layout_active_speaker"
-            android:textColor="@color/white"
+            android:textColor="@color/bc_white"
             android:gravity="center_vertical"
             android:layout_marginBottom="1dp"
             android:drawableEnd="@drawable/picture_in_picture"
-            android:drawableTint="@color/white"
+            android:drawableTint="@color/bc_white"
             android:checked="@{viewModel.conferenceLayout == ConferenceViewModel.ACTIVE_SPEAKER_LAYOUT}"
             app:useMaterialThemeColors="false"
-            app:buttonTint="@color/white"/>
+            app:buttonTint="@color/bc_white"/>
 
         <com.google.android.material.radiobutton.MaterialRadioButton
             style="@style/context_menu_action_label_style"
@@ -68,14 +68,14 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:text="@string/conference_layout_audio_only"
-            android:textColor="@color/white"
+            android:textColor="@color/bc_white"
             android:gravity="center_vertical"
             android:layout_marginBottom="1dp"
             android:drawableEnd="@drawable/waveform"
-            android:drawableTint="@color/white"
+            android:drawableTint="@color/bc_white"
             android:checked="@{viewModel.conferenceLayout == ConferenceViewModel.AUDIO_ONLY_LAYOUT}"
             app:useMaterialThemeColors="false"
-            app:buttonTint="@color/white"/>
+            app:buttonTint="@color/bc_white"/>
 
     </LinearLayout>
 

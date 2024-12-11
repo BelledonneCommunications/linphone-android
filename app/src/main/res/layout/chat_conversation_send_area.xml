@@ -22,7 +22,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/color_grey_100">
+        android:background="?attr/color_conversation_send_area_background">
         <!-- Keep behavior to have it at the bottom -->
 
         <androidx.constraintlayout.widget.Group

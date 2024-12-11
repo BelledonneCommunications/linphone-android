@@ -23,7 +23,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?attr/color_main2_000">
+            android:background="?attr/color_background_contrast_in_dark_mode">
 
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/multiple_selection_group"
@@ -61,6 +61,7 @@
                 android:id="@+id/background"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:background="?attr/color_main2_000"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -71,12 +72,14 @@
                 android:id="@+id/multiple_selection_count"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="5dp"
                 android:text="@{viewModel.selectionCount, default=`0 selected`}"
                 android:textSize="12sp"
                 android:textColor="?attr/color_main2_900"
-                app:layout_constraintStart_toStartOf="@id/title"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/title" />
+                app:layout_constraintTop_toBottomOf="@id/back" />
 
             <HorizontalScrollView
                 android:id="@+id/multiple_selection"

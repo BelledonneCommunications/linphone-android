@@ -15,7 +15,7 @@
         android:id="@+id/bottom_nav_bar"
         android:layout_width="@dimen/landscape_nav_bar_width"
         android:layout_height="match_parent"
-        android:background="?attr/color_main2_000">
+        android:background="?attr/color_background_contrast_in_dark_mode">
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/bottom_nav_bar_label_style"

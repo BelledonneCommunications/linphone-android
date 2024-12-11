@@ -24,7 +24,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?attr/color_main2_000">
+            android:background="?attr/color_background_contrast_in_dark_mode">
 
             <ImageView
                 android:id="@+id/back"
@@ -62,7 +62,7 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/dots_three_vertical"
                 android:contentDescription="@string/content_description_show_popup_menu"
-                app:tint="?attr/color_main1_500"
+                app:tint="?attr/color_main2_500"
                 app:layout_constraintBottom_toBottomOf="@id/title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/title" />

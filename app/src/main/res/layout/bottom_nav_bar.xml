@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="16dp"
-        android:background="?attr/color_main2_000">
+        android:background="?attr/color_background_contrast_in_dark_mode">
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/bottom_nav_bar_label_style"

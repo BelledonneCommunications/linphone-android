@@ -81,7 +81,7 @@
                 android:contentDescription="@string/content_description_go_back_icon"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/hinge_top"
-                app:tint="@color/white" />
+                app:tint="@color/bc_white" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/call_header_style"
@@ -145,7 +145,7 @@
                 android:src="@drawable/camera_rotate"
                 android:contentDescription="@string/content_description_change_camera"
                 android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; viewModel.showSwitchCamera &amp;&amp; conferenceViewModel.isMeParticipantSendingVideo ? View.VISIBLE : View.GONE}"
-                app:tint="@color/white"
+                app:tint="@color/bc_white"
                 app:layout_constraintTop_toTopOf="@id/back"
                 app:layout_constraintBottom_toBottomOf="@id/back"
                 app:layout_constraintEnd_toStartOf="@+id/paused" />
@@ -172,7 +172,7 @@
                 android:src="@{viewModel.qualityIcon, default=@drawable/cell_signal_full}"
                 android:contentDescription="@string/content_description_show_call_statistics"
                 android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; !conferenceViewModel.isPaused ? View.VISIBLE : View.GONE}"
-                android:tint="@{viewModel.qualityValue >= 2 ? @color/white : viewModel.qualityValue >= 1 ? @color/orange_warning_600 : @color/red_danger_500, default=@color/white}"
+                android:tint="@{viewModel.qualityValue >= 2 ? @color/bc_white : viewModel.qualityValue >= 1 ? @color/orange_warning_600 : @color/red_danger_500, default=@color/bc_white}"
                 app:layout_constraintTop_toTopOf="@id/back"
                 app:layout_constraintBottom_toBottomOf="@id/back"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -197,7 +197,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
                 android:text="@string/conference_call_empty"
-                android:textColor="@color/white"
+                android:textColor="@color/bc_white"
                 android:textSize="22sp"
                 android:gravity="center"
                 android:visibility="@{conferenceViewModel.participantDevices.size() > 1 ? View.GONE : View.VISIBLE}"

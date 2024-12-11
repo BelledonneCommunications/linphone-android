@@ -40,7 +40,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/color_main2_000">
+        android:background="?attr/color_background_contrast_in_dark_mode">
 
             <ImageView
                 android:id="@+id/back"

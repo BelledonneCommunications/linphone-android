@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:text="@{model.audioVideoDuration, default=`00:42`}"
-            android:textColor="@{model.isVideoPreview ? @color/white : @color/main2_600}"
+            android:textColor="@{model.isVideoPreview ? @color/bc_white : @color/main2_600}"
             android:textSize="12sp"
             android:visibility="@{(model.isVideoPreview || model.isAudio) &amp;&amp; model.audioVideoDuration.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -89,7 +89,7 @@
             app:layout_constraintBottom_toBottomOf="@id/image"
             app:layout_constraintStart_toStartOf="@id/image"
             app:layout_constraintEnd_toEndOf="@id/image"
-            app:tint="@color/white" />
+            app:tint="@color/bc_white" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

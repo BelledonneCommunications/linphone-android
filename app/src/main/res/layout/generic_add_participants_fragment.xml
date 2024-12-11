@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.selectionCount, default=`0 selected`}"
                 android:textSize="12sp"
-                android:textColor="@color/black"
+                android:textColor="@color/bc_black"
                 app:layout_constraintStart_toStartOf="@id/title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title" />

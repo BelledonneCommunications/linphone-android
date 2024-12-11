@@ -499,7 +499,7 @@ class DialogUtils {
                 setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
                 val d: Drawable = ColorDrawable(
-                    context.getColor(R.color.black)
+                    context.getColor(R.color.bc_black)
                 )
                 d.alpha = 153 // 60% opacity
                 setBackgroundDrawable(d)

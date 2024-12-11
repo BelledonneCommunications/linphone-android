@@ -24,7 +24,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/color_main2_200">
+        android:background="?attr/color_separator">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/add_to_contact"

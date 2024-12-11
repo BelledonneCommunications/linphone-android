@@ -28,7 +28,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/call_display_name"
             app:layout_constraintBottom_toBottomOf="@id/call_display_name"
-            app:tint="@color/white" />
+            app:tint="@color/bc_white" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_800"
@@ -41,7 +41,7 @@
             android:layout_marginBottom="5dp"
             android:gravity="center_vertical"
             android:text="@{viewModel.callsTopBarLabel, default=`John Doe`}"
-            android:textColor="@color/white"
+            android:textColor="@color/bc_white"
             android:textSize="16sp"
             android:visibility="@{viewModel.callsCount > 1 || viewModel.showTopBar ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintEnd_toStartOf="@id/call_time"
@@ -57,7 +57,7 @@
             android:layout_marginEnd="16dp"
             android:gravity="center_vertical"
             android:text="@{viewModel.callsTopBarStatus, default=`Paused`}"
-            android:textColor="@color/white"
+            android:textColor="@color/bc_white"
             android:textSize="14sp"
             android:visibility="@{viewModel.callsCount > 1 || viewModel.showTopBar ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintEnd_toEndOf="parent"

@@ -71,7 +71,7 @@ class AAScreen(context: CarContext) : Screen(context) {
                         coreContext.context
                     ).setInitials(
                         AppUtils.getInitials(friend.name.orEmpty())
-                    ).buildBitmap()
+                    ).buildBitmap(useTransparentBackground = false)
                     builder.setImage(
                         CarIcon.Builder(IconCompat.createWithBitmap(bitmap))
                             .build(),

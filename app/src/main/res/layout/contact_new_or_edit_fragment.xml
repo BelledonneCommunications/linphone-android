@@ -22,7 +22,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/color_grey_100">
+        android:background="?attr/color_background_contrast_in_dark_mode">
 
         <ImageView
             android:id="@+id/back"
@@ -33,7 +33,6 @@
             android:padding="15dp"
             android:src="@drawable/caret_left"
             android:contentDescription="@string/content_description_go_back_icon"
-            android:background="?attr/color_main2_000"
             app:tint="?attr/color_main1_500"
             app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintStart_toStartOf="parent"
@@ -45,7 +44,6 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/top_bar_height"
             android:paddingStart="10dp"
-            android:background="?attr/color_main2_000"
             android:text="@{viewModel.isEdit ? @string/contact_edit_title : @string/contact_new_title, default=@string/contact_new_title}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/back"
@@ -57,6 +55,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:fillViewport="true"
+            android:background="?attr/color_grey_100"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title"
@@ -87,7 +86,7 @@
                     android:src="@drawable/smiley"
                     android:contentDescription="@null"
                     android:visibility="@{viewModel.picturePath.empty ? View.VISIBLE : View.GONE}"
-                    app:tint="@color/gray_main2_600"
+                    app:tint="?attr/color_avatar_text"
                     app:layout_constraintEnd_toEndOf="@id/avatar"
                     app:layout_constraintStart_toStartOf="@id/avatar"
                     app:layout_constraintTop_toTopOf="@id/avatar"

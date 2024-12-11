@@ -47,7 +47,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/color_main2_000">
+        android:background="?attr/color_background_contrast_in_dark_mode">
 
         <ImageView
             android:id="@+id/back"
@@ -419,7 +419,7 @@
                     android:layout_height="1dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:background="?attr/color_main2_200"
+                    android:background="@color/gray_main2_200"
                     app:layout_constraintEnd_toEndOf="@id/action_media"
                     app:layout_constraintStart_toStartOf="@id/action_media"
                     app:layout_constraintTop_toBottomOf="@id/action_media" />
@@ -523,7 +523,7 @@
                     android:layout_height="1dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:background="?attr/color_main2_200"
+                    android:background="@color/gray_main2_200"
                     android:visibility="@{!viewModel.isGroup &amp;&amp; !viewModel.friendAvailable ? View.VISIBLE : View.GONE, default=gone}"
                     app:layout_constraintEnd_toEndOf="@id/action_add_to_contacts"
                     app:layout_constraintStart_toStartOf="@id/action_add_to_contacts"
@@ -534,7 +534,7 @@
                     android:layout_height="1dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:background="?attr/color_main2_200"
+                    android:background="@color/gray_main2_200"
                     android:visibility="@{!viewModel.isGroup &amp;&amp; viewModel.friendAvailable ? View.VISIBLE : View.GONE, default=gone}"
                     app:layout_constraintEnd_toEndOf="@id/action_see_contact"
                     app:layout_constraintStart_toStartOf="@id/action_see_contact"
@@ -545,7 +545,7 @@
                     android:layout_height="1dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:background="?attr/color_main2_200"
+                    android:background="@color/gray_main2_200"
                     android:visibility="@{viewModel.isEndToEndEncrypted &amp;&amp; !viewModel.isReadOnly ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="@id/action_ephemeral_messages"
                     app:layout_constraintStart_toStartOf="@id/action_ephemeral_messages"
@@ -556,7 +556,7 @@
                     android:layout_height="1dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:background="?attr/color_main2_200"
+                    android:background="@color/gray_main2_200"
                     android:visibility="@{viewModel.isGroup &amp;&amp; !viewModel.isReadOnly ? View.VISIBLE : View.GONE, default=gone}"
                     app:layout_constraintEnd_toEndOf="@id/action_leave_group"
                     app:layout_constraintStart_toStartOf="@id/action_leave_group"

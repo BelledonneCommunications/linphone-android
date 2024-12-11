@@ -45,7 +45,7 @@
                 android:paddingBottom="10dp"
                 android:text="@string/call_dialog_zrtp_validate_trust_title"
                 android:textSize="14sp"
-                android:textColor="@color/white"
+                android:textColor="@color/bc_white"
                 app:layout_constraintTop_toBottomOf="@id/header_icon"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -62,7 +62,7 @@
                 android:paddingStart="20dp"
                 android:text="@string/call_zrtp_sas_validation_skip"
                 android:textSize="13sp"
-                android:textColor="@color/white"
+                android:textColor="@color/bc_white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 

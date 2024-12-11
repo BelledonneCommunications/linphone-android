@@ -46,6 +46,7 @@
             android:textSize="14sp"
             android:maxLines="1"
             android:ellipsize="end"
+            android:textColor="?attr/color_main2_700"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/avatar"/>

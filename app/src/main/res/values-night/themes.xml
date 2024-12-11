@@ -1,6 +1,6 @@
 <resources>
     <style name="AppSplashScreenTheme" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/black</item>
+        <item name="windowSplashScreenBackground">@color/background_color_dark_mode</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/linphone_splashscreen</item>
         <item name="postSplashScreenTheme">@style/Theme.Linphone</item>
     </style>
@@ -10,7 +10,7 @@
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
         <!-- Customize your theme here. -->
         <item name="android:windowActivityTransitions">true</item>
-        <item name="android:windowBackground">@color/black</item>
+        <item name="android:windowBackground">@color/background_color_dark_mode</item>
         <item name="android:statusBarColor">?attr/color_main1_500</item>
 
         <item name="color_main1_100">@color/orange_main_900</item>
@@ -19,16 +19,16 @@
         <item name="color_main1_500">@color/orange_main_500</item>
         <item name="color_main1_700">@color/orange_main_700</item>
 
-        <item name="color_main2_000">@color/black</item>
+        <item name="color_main2_000">@color/background_color_dark_mode</item>
         <item name="color_main2_100">@color/gray_main2_800</item>
         <item name="color_main2_200">@color/gray_main2_700</item>
         <item name="color_main2_300">@color/gray_main2_700</item>
         <item name="color_main2_400">@color/gray_main2_400</item>
-        <item name="color_main2_500">@color/gray_main2_300</item>
+        <item name="color_main2_500">@color/gray_main2_200</item>
         <item name="color_main2_600">@color/gray_main2_200</item>
         <item name="color_main2_700">@color/gray_main2_300</item>
         <item name="color_main2_800">@color/gray_main2_200</item>
-        <item name="color_main2_900">@color/white</item>
+        <item name="color_main2_900">@color/bc_white</item>
 
         <item name="color_grey_100">@color/gray_200_night</item>
         <item name="color_grey_200">@color/gray_600</item>
@@ -51,7 +51,23 @@
 
         <item name="color_warning_600">@color/orange_warning_600_night</item>
 
-        <item name="color_on_main">@color/white</item>
+        <item name="color_on_main">@color/bc_white</item>
+        <item name="color_background_contrast_in_dark_mode">@color/background_color_alt_dark_mode</item>
+        <item name="color_separator">@color/gray_main2_200</item>
+        <item name="color_text">@color/gray_main2_100</item>
+        <item name="color_hint_text">@color/gray_main2_300</item>
+
+        <item name="color_text_field_background">@color/text_field_background_color_dark_mode</item>
+        <item name="color_avatar_background">@color/text_field_background_color_dark_mode</item>
+        <item name="color_avatar_text">@color/gray_main2_300</item>
+        <item name="color_chat_bubble_incoming">@color/background_color_alt_dark_mode</item>
+        <item name="color_chat_bubble_outgoing">@color/text_field_background_color_dark_mode</item>
+
+        <item name="color_gradient_start">@color/background_color_alt_dark_mode</item>
+        <item name="color_gradient_end">@color/background_color_alt_dark_mode</item>
+        <item name="color_trust_background">@color/gray_main2_600</item>
+        <item name="color_trust_track">@color/text_field_background_color_dark_mode</item>
+        <item name="color_conversation_send_area_background">@color/background_color_alt_dark_mode</item>
     </style>
 
     <style name="Theme.LinphoneYellow" parent="Theme.Linphone">

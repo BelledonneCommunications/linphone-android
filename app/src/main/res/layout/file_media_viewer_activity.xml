@@ -24,7 +24,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black">
+        android:background="@color/bc_black">
 
         <androidx.constraintlayout.widget.Group
             android:layout_width="wrap_content"
@@ -49,7 +49,7 @@
             android:id="@+id/top_bar_background"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/white"
+            android:background="@color/bc_white"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/top_bar_barrier"
             app:layout_constraintStart_toStartOf="parent"

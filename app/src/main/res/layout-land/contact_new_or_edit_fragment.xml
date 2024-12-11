@@ -22,7 +22,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/color_grey_100">
+        android:background="?attr/color_background_contrast_in_dark_mode">
 
         <ImageView
             android:id="@+id/back"
@@ -57,6 +57,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:fillViewport="true"
+            android:background="?attr/color_grey_100"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title"
@@ -87,7 +88,7 @@
                     android:src="@drawable/smiley"
                     android:contentDescription="@null"
                     android:visibility="@{viewModel.picturePath.empty ? View.VISIBLE : View.GONE}"
-                    app:tint="@color/gray_main2_600"
+                    app:tint="?attr/color_avatar_text"
                     app:layout_constraintEnd_toEndOf="@id/avatar"
                     app:layout_constraintStart_toStartOf="@id/avatar"
                     app:layout_constraintTop_toTopOf="@id/avatar"

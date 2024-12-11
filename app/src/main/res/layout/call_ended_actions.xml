@@ -23,7 +23,7 @@
             android:src="@drawable/animated_caret_to_handle"
             android:visibility="invisible"
             android:contentDescription="@string/content_description_toggle_bottom_sheet"
-            app:tint="@color/white"
+            app:tint="@color/bc_white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

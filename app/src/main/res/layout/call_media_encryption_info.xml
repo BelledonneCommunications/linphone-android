@@ -52,7 +52,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/wait_for_encryption_info_label"
             app:layout_constraintBottom_toBottomOf="@id/wait_for_encryption_info_label"
-            app:tint="@color/white" />
+            app:tint="@color/bc_white" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
@@ -62,7 +62,7 @@
             android:layout_marginStart="5dp"
             android:text="@string/call_waiting_for_encryption_info"
             android:textSize="12sp"
-            android:textColor="@color/white"
+            android:textColor="@color/bc_white"
             android:maxLines="1"
             android:ellipsize="end"
             app:layout_constraintStart_toEndOf="@id/wait_for_encryption_info_icon"
@@ -79,7 +79,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/no_media_encryption_label"
             app:layout_constraintBottom_toBottomOf="@id/no_media_encryption_label"
-            app:tint="@color/white" />
+            app:tint="@color/bc_white" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
@@ -89,7 +89,7 @@
             android:layout_marginStart="5dp"
             android:text="@string/call_not_encrypted"
             android:textSize="12sp"
-            android:textColor="@color/white"
+            android:textColor="@color/bc_white"
             android:maxLines="1"
             android:ellipsize="end"
             app:layout_constraintStart_toEndOf="@id/no_media_encryption_icon"

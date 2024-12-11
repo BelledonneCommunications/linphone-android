@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="AppSplashScreenTheme" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/black</item>
+        <item name="windowSplashScreenBackground">@color/bc_black</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/linphone_splashscreen</item>
         <item name="postSplashScreenTheme">@style/Theme.Linphone</item>
         <item name="android:windowSplashScreenBrandingImage">

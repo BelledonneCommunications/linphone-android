@@ -32,7 +32,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?attr/color_main2_000">
+            android:background="?attr/color_background_contrast_in_dark_mode">
 
             <ImageView
                 android:id="@+id/back"
@@ -65,6 +65,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:fillViewport="true"
+                android:background="?attr/color_main2_000"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title"
@@ -240,10 +241,10 @@
                         android:layout_width="0dp"
                         android:layout_height="1dp"
                         android:layout_marginTop="10dp"
+                        android:background="?attr/color_separator"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/subject"
-                        android:background="?attr/color_main2_200" />
+                        app:layout_constraintTop_toBottomOf="@id/subject" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/default_text_style_700"
@@ -365,10 +366,10 @@
                         android:layout_width="0dp"
                         android:layout_height="1dp"
                         android:layout_marginTop="16dp"
+                        android:background="?attr/color_separator"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/repeat"
-                        android:background="?attr/color_main2_200" />
+                        app:layout_constraintTop_toBottomOf="@id/repeat" />
 
                     <androidx.appcompat.widget.AppCompatEditText
                         style="@style/default_text_style_700"
@@ -397,11 +398,11 @@
                         android:layout_width="0dp"
                         android:layout_height="1dp"
                         android:layout_marginTop="16dp"
+                        android:background="?attr/color_separator"
                         android:visibility="@{viewModel.isBroadcastSelected ? View.VISIBLE : View.GONE}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/description"
-                        android:background="?attr/color_main2_200" />
+                        app:layout_constraintTop_toBottomOf="@id/description" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/default_text_style_700"
@@ -427,10 +428,10 @@
                         android:layout_width="0dp"
                         android:layout_height="1dp"
                         android:layout_marginTop="16dp"
+                        android:background="?attr/color_separator"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/speakers"
-                        android:background="?attr/color_main2_200" />
+                        app:layout_constraintTop_toBottomOf="@id/speakers" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/default_text_style_700"
@@ -497,10 +498,10 @@
                         android:layout_width="0dp"
                         android:layout_height="1dp"
                         android:layout_marginTop="16dp"
+                        android:background="?attr/color_separator"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/participants_list"
-                        android:background="?attr/color_main2_200" />
+                        app:layout_constraintTop_toBottomOf="@id/participants_list" />
 
                     <com.google.android.material.materialswitch.MaterialSwitch
                         style="@style/material_switch_style"

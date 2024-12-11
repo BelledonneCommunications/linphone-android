@@ -92,7 +92,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     android:text="@{viewModel.displayedName, default=`John Doe`}"
-                    android:textColor="@color/white"
+                    android:textColor="@color/bc_white"
                     android:textSize="22sp" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -101,7 +101,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@{viewModel.displayedAddress, default=`sip:johndoe@sip.linphone.org`}"
-                    android:textColor="@color/white"
+                    android:textColor="@color/bc_white"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -137,7 +137,7 @@
                 android:contentDescription="@string/content_description_go_back_icon"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/hinge_top"
-                app:tint="@color/white" />
+                app:tint="@color/bc_white" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/call_header_style"
@@ -204,7 +204,7 @@
                 android:src="@drawable/camera_rotate"
                 android:contentDescription="@string/content_description_change_camera"
                 android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; viewModel.isSendingVideo &amp;&amp; viewModel.showSwitchCamera ? View.VISIBLE : View.GONE}"
-                app:tint="@color/white"
+                app:tint="@color/bc_white"
                 app:layout_constraintTop_toTopOf="@id/back"
                 app:layout_constraintBottom_toBottomOf="@id/back"
                 app:layout_constraintEnd_toStartOf="@+id/paused" />
@@ -231,7 +231,7 @@
                 android:src="@{viewModel.qualityIcon, default=@drawable/cell_signal_full}"
                 android:contentDescription="@string/content_description_show_call_statistics"
                 android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; !(viewModel.isPaused || viewModel.isPausedByRemote) ? View.VISIBLE : View.GONE}"
-                android:tint="@{viewModel.qualityValue >= 2 ? @color/white : viewModel.qualityValue >= 1 ? @color/orange_warning_600 : @color/red_danger_500, default=@color/white}"
+                android:tint="@{viewModel.qualityValue >= 2 ? @color/bc_white : viewModel.qualityValue >= 1 ? @color/orange_warning_600 : @color/red_danger_500, default=@color/bc_white}"
                 app:layout_constraintTop_toTopOf="@id/back"
                 app:layout_constraintBottom_toBottomOf="@id/back"
                 app:layout_constraintEnd_toEndOf="parent"

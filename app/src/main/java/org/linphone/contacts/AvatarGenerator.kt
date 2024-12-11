@@ -27,6 +27,7 @@ import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.drawable.BitmapDrawable
 import android.text.TextPaint
+import android.util.TypedValue
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.IconCompat
@@ -38,7 +39,18 @@ class AvatarGenerator(private val context: Context) {
     private var textColor: Int = ContextCompat.getColor(context, R.color.gray_main2_600)
     private var avatarSize: Int = AppUtils.getDimension(R.dimen.avatar_list_cell_size).toInt()
     private var initials = " "
+    private var transparentColor: Int = ContextCompat.getColor(context, R.color.transparent_color)
     private var backgroundColor: Int = ContextCompat.getColor(context, R.color.gray_main2_200)
+
+    init {
+        val textTypedValue = TypedValue()
+        context.theme.resolveAttribute(R.attr.color_avatar_text, textTypedValue, true)
+        textColor = textTypedValue.data
+
+        val backgroundTypedValue = TypedValue()
+        context.theme.resolveAttribute(R.attr.color_avatar_background, backgroundTypedValue, true)
+        backgroundColor = backgroundTypedValue.data
+    }
 
     fun setTextSize(size: Float) = apply {
         textSize = size
@@ -52,9 +64,9 @@ class AvatarGenerator(private val context: Context) {
         initials = label
     }
 
-    fun buildBitmap(): Bitmap {
+    fun buildBitmap(useTransparentBackground: Boolean): Bitmap {
         val textPainter = getTextPainter()
-        val painter = getPainter()
+        val painter = if (useTransparentBackground) getTransparentPainter() else getBackgroundPainter()
 
         val bitmap = Bitmap.createBitmap(avatarSize, avatarSize, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
@@ -73,11 +85,11 @@ class AvatarGenerator(private val context: Context) {
     }
 
     fun buildDrawable(): BitmapDrawable {
-        return BitmapDrawable(context.resources, buildBitmap())
+        return BitmapDrawable(context.resources, buildBitmap(true))
     }
 
     fun buildIcon(): IconCompat {
-        return IconCompat.createWithAdaptiveBitmap(buildBitmap())
+        return IconCompat.createWithAdaptiveBitmap(buildBitmap(false))
     }
 
     private fun getTextPainter(): TextPaint {
@@ -89,7 +101,14 @@ class AvatarGenerator(private val context: Context) {
         return textPainter
     }
 
-    private fun getPainter(): Paint {
+    private fun getTransparentPainter(): Paint {
+        val painter = Paint()
+        painter.isAntiAlias = true
+        painter.color = transparentColor
+        return painter
+    }
+
+    private fun getBackgroundPainter(): Paint {
         val painter = Paint()
         painter.isAntiAlias = true
         painter.color = backgroundColor

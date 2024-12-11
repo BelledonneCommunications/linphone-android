@@ -1,6 +1,6 @@
 <resources>
     <style name="AppSplashScreenTheme" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenBackground">@color/bc_white</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/linphone_splashscreen</item>
         <item name="postSplashScreenTheme">@style/Theme.Linphone</item>
     </style>
@@ -11,7 +11,7 @@
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
         <!-- Customize your theme here. -->
         <item name="android:windowActivityTransitions">true</item>
-        <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowBackground">@color/bc_white</item>
         <item name="android:statusBarColor">?attr/color_main1_500</item>
 
         <item name="color_main1_100">@color/orange_main_100</item>
@@ -20,7 +20,7 @@
         <item name="color_main1_500">@color/orange_main_500</item>
         <item name="color_main1_700">@color/orange_main_700</item>
 
-        <item name="color_main2_000">@color/white</item>
+        <item name="color_main2_000">@color/bc_white</item>
         <item name="color_main2_100">@color/gray_main2_100</item>
         <item name="color_main2_200">@color/gray_main2_200</item>
         <item name="color_main2_300">@color/gray_main2_300</item>
@@ -29,7 +29,7 @@
         <item name="color_main2_600">@color/gray_main2_600</item>
         <item name="color_main2_700">@color/gray_main2_700</item>
         <item name="color_main2_800">@color/gray_main2_800</item>
-        <item name="color_main2_900">@color/black</item>
+        <item name="color_main2_900">@color/bc_black</item>
 
         <item name="color_grey_100">@color/gray_100</item>
         <item name="color_grey_200">@color/gray_200</item>
@@ -52,7 +52,23 @@
 
         <item name="color_warning_600">@color/orange_warning_600</item>
 
-        <item name="color_on_main">@color/white</item>
+        <item name="color_on_main">@color/bc_white</item>
+        <item name="color_background_contrast_in_dark_mode">@color/bc_white</item>
+        <item name="color_separator">@color/gray_main2_200</item>
+        <item name="color_text">@color/gray_main2_600</item>
+        <item name="color_hint_text">@color/gray_main2_400</item>
+
+        <item name="color_text_field_background">@color/gray_100</item>
+        <item name="color_avatar_background">@color/gray_main2_200</item>
+        <item name="color_avatar_text">@color/gray_main2_600</item>
+        <item name="color_chat_bubble_incoming">@color/gray_main2_100</item>
+        <item name="color_chat_bubble_outgoing">@color/orange_main_100</item>
+
+        <item name="color_gradient_start">@color/gray_main2_100</item>
+        <item name="color_gradient_end">@color/bc_white</item>
+        <item name="color_trust_background">@color/gray_main2_100</item>
+        <item name="color_trust_track">@color/blue_info_500</item>
+        <item name="color_conversation_send_area_background">@color/gray_100</item>
     </style>
 
     <style name="Theme.LinphoneYellow" parent="Theme.Linphone">
@@ -61,6 +77,7 @@
         <item name="color_main1_300">@color/yellow_main_300</item>
         <item name="color_main1_500">@color/yellow_main_500</item>
         <item name="color_main1_700">@color/yellow_main_700</item>
+        <item name="color_chat_bubble_outgoing">@color/yellow_main_100</item>
     </style>
 
     <style name="Theme.LinphoneGreen" parent="Theme.Linphone">
@@ -69,6 +86,7 @@
         <item name="color_main1_300">@color/green_main_300</item>
         <item name="color_main1_500">@color/green_main_500</item>
         <item name="color_main1_700">@color/green_main_700</item>
+        <item name="color_chat_bubble_outgoing">@color/green_main_100</item>
     </style>
 
     <style name="Theme.LinphoneBlue" parent="Theme.Linphone">
@@ -77,6 +95,7 @@
         <item name="color_main1_300">@color/blue_main_300</item>
         <item name="color_main1_500">@color/blue_main_500</item>
         <item name="color_main1_700">@color/blue_main_700</item>
+        <item name="color_chat_bubble_outgoing">@color/blue_main_100</item>
     </style>
 
     <style name="Theme.LinphoneRed" parent="Theme.Linphone">
@@ -85,6 +104,7 @@
         <item name="color_main1_300">@color/red_main_300</item>
         <item name="color_main1_500">@color/red_main_500</item>
         <item name="color_main1_700">@color/red_main_700</item>
+        <item name="color_chat_bubble_outgoing">@color/red_main_100</item>
     </style>
 
     <style name="Theme.LinphonePink" parent="Theme.Linphone">
@@ -93,6 +113,7 @@
         <item name="color_main1_300">@color/pink_main_300</item>
         <item name="color_main1_500">@color/pink_main_500</item>
         <item name="color_main1_700">@color/pink_main_700</item>
+        <item name="color_chat_bubble_outgoing">@color/pink_main_100</item>
     </style>
 
     <style name="Theme.LinphonePurple" parent="Theme.Linphone">
@@ -101,6 +122,7 @@
         <item name="color_main1_300">@color/purple_main_300</item>
         <item name="color_main1_500">@color/purple_main_500</item>
         <item name="color_main1_700">@color/purple_main_700</item>
+        <item name="color_chat_bubble_outgoing">@color/purple_main_100</item>
     </style>
 
     <!-- In-call application theme. -->

@@ -32,7 +32,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?attr/color_main2_000">
+            android:background="?attr/color_background_contrast_in_dark_mode">
 
             <ImageView
                 android:id="@+id/back"
@@ -70,7 +70,7 @@
                 android:src="@drawable/pencil_simple"
                 android:contentDescription="@string/content_description_meeting_edit"
                 android:visibility="@{viewModel.isEditable ? View.VISIBLE : View.GONE}"
-                app:tint="@color/primary_color_selector"
+                app:tint="?attr/color_main2_500"
                 app:layout_constraintStart_toEndOf="@id/title"
                 app:layout_constraintEnd_toStartOf="@id/menu"
                 app:layout_constraintBottom_toBottomOf="@id/title"
@@ -85,7 +85,7 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/dots_three_vertical"
                 android:contentDescription="@string/content_description_show_popup_menu"
-                app:tint="@color/primary_color_selector"
+                app:tint="?attr/color_main2_500"
                 app:layout_constraintStart_toEndOf="@id/edit"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="@id/title"
@@ -96,6 +96,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:fillViewport="true"
+                android:background="?attr/color_main2_000"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title"
@@ -131,7 +132,7 @@
                         android:layout_width="0dp"
                         android:layout_height="1dp"
                         android:layout_marginTop="16dp"
-                        android:background="?attr/color_main2_200"
+                        android:background="?attr/color_separator"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/subject" />
@@ -215,7 +216,7 @@
                         android:layout_width="0dp"
                         android:layout_height="1dp"
                         android:layout_marginTop="16dp"
-                        android:background="?attr/color_main2_200"
+                        android:background="?attr/color_separator"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/timezone" />
@@ -246,7 +247,7 @@
                         android:layout_width="0dp"
                         android:layout_height="1dp"
                         android:layout_marginTop="16dp"
-                        android:background="?attr/color_main2_200"
+                        android:background="?attr/color_separator"
                         android:visibility="@{viewModel.description.length() > 0 ? View.VISIBLE : View.GONE}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -292,7 +293,7 @@
                         android:layout_width="0dp"
                         android:layout_height="1dp"
                         android:layout_marginTop="16dp"
-                        android:background="?attr/color_main2_200"
+                        android:background="?attr/color_separator"
                         android:visibility="@{viewModel.isBroadcast ? View.VISIBLE : View.GONE}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -333,7 +334,7 @@
                 android:id="@+id/separator_5"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:background="?attr/color_main2_200"
+                android:background="?attr/color_separator"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/scrollView" />

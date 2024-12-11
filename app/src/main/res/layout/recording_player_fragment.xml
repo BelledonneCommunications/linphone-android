@@ -22,7 +22,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black">
+        android:background="@color/bc_black">
 
         <TextureView
             android:id="@+id/video_player"
@@ -44,7 +44,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:tint="@color/white" />
+            app:tint="@color/bc_white" />
 
         <ImageView
             android:id="@+id/play_pause_audio_playback"
@@ -58,7 +58,7 @@
             android:src="@{viewModel.isPlaying ? @drawable/pause_fill : @drawable/play_fill, default=@drawable/play_fill}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:tint="@color/white"/>
+            app:tint="@color/bc_white"/>
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/progress"
@@ -85,7 +85,7 @@
             android:layout_marginEnd="16dp"
             android:text="@{viewModel.recordingModel.formattedDuration, default=`00:42`}"
             android:textSize="13sp"
-            android:textColor="@color/white"
+            android:textColor="@color/bc_white"
             app:layout_constraintTop_toTopOf="@id/play_pause_audio_playback"
             app:layout_constraintBottom_toBottomOf="@id/play_pause_audio_playback"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -101,7 +101,7 @@
             android:id="@+id/top_bar_background"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/white"
+            android:background="@color/bc_white"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/top_bar_barrier"
             app:layout_constraintStart_toStartOf="parent"

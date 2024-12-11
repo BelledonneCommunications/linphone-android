@@ -57,7 +57,6 @@
             android:textSize="13sp"
             android:maxLines="1"
             android:ellipsize="middle"
-            android:background="@drawable/shape_squircle_white_r10_background"
             app:layout_constraintStart_toEndOf="@id/file_icon"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

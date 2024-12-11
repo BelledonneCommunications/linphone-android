@@ -32,7 +32,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/answer_call"
             app:layout_constraintStart_toStartOf="parent"
-            app:tint="@color/white" />
+            app:tint="@color/bc_white" />
 
         <ImageView
             android:id="@+id/answer_call"
@@ -51,7 +51,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/answer_video_call"
             app:layout_constraintStart_toEndOf="@id/hang_up"
-            app:tint="@color/white" />
+            app:tint="@color/bc_white" />
 
         <ImageView
             android:id="@+id/answer_video_call"
@@ -70,7 +70,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/answer_call"
-            app:tint="@color/white" />
+            app:tint="@color/bc_white" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

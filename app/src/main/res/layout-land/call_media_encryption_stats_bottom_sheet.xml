@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:padding="11dp"
         android:src="@drawable/shape_drawer_handle"
-        app:tint="@color/white"
+        app:tint="@color/bc_white"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -52,7 +52,7 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/call_stats_media_encryption_title"
                 android:textSize="12sp"
-                android:textColor="@color/white"
+                android:textColor="@color/bc_white"
                 android:gravity="center"
                 app:layout_columnSpan="2"/>
 
@@ -64,7 +64,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="10dp"
                 android:text="@{model.mediaEncryption, default=`Media Encryption: Post Quantum ZRTP`}"
-                android:textColor="@color/white"
+                android:textColor="@color/bc_white"
                 android:gravity="center"
                 app:layout_columnWeight="1" />
 
@@ -76,7 +76,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="10dp"
                 android:text="@{model.zrtpCipher, default=@string/call_stats_zrtp_cipher_algo}"
-                android:textColor="@color/white"
+                android:textColor="@color/bc_white"
                 android:gravity="center"
                 android:visibility="@{model.isMediaEncryptionZrtp ? View.VISIBLE : View.GONE}"
                 app:layout_columnWeight="1"/>
@@ -89,7 +89,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="10dp"
                 android:text="@{model.zrtpKeyAgreement, default=@string/call_stats_zrtp_key_agreement_algo}"
-                android:textColor="@color/white"
+                android:textColor="@color/bc_white"
                 android:gravity="center"
                 android:visibility="@{model.isMediaEncryptionZrtp ? View.VISIBLE : View.GONE}"
                 app:layout_columnWeight="1" />
@@ -102,7 +102,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="10dp"
                 android:text="@{model.zrtpHash, default=@string/call_stats_zrtp_hash_algo}"
-                android:textColor="@color/white"
+                android:textColor="@color/bc_white"
                 android:gravity="center"
                 android:visibility="@{model.isMediaEncryptionZrtp ? View.VISIBLE : View.GONE}"
                 app:layout_columnWeight="1" />
@@ -115,7 +115,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="10dp"
                 android:text="@{model.zrtpAuthTag, default=@string/call_stats_zrtp_auth_tag_algo}"
-                android:textColor="@color/white"
+                android:textColor="@color/bc_white"
                 android:gravity="center"
                 android:visibility="@{model.isMediaEncryptionZrtp ? View.VISIBLE : View.GONE}"
                 app:layout_columnWeight="1" />
@@ -128,7 +128,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="10dp"
                 android:text="@{model.zrtpAuthSas, default=@string/call_stats_zrtp_sas_algo}"
-                android:textColor="@color/white"
+                android:textColor="@color/bc_white"
                 android:gravity="center"
                 android:visibility="@{model.isMediaEncryptionZrtp ? View.VISIBLE : View.GONE}"
                 app:layout_columnWeight="1" />

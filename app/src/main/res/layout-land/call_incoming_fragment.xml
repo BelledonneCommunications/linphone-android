@@ -26,7 +26,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:visibility="invisible"
-            app:tint="@color/white" />
+            app:tint="@color/bc_white" />
 
         <ImageView
             android:id="@+id/call_direction_icon"
@@ -86,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:text="@{viewModel.displayedName, default=`John Doe`}"
-                android:textColor="@color/white"
+                android:textColor="@color/bc_white"
                 android:textSize="22sp" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -95,7 +95,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.displayedAddress, default=`sip:johndoe@sip.linphone.org`}"
-                android:textColor="@color/white"
+                android:textColor="@color/bc_white"
                 android:textSize="14sp"
                 android:visibility="@{viewModel.conferenceModel.isCurrentCallInConference ? View.GONE : View.VISIBLE}" />
 
@@ -106,7 +106,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:indeterminate="true"
-            app:indicatorColor="@color/white"
+            app:indicatorColor="@color/bc_white"
             app:indicatorSize="28dp"
             app:layout_constraintStart_toEndOf="@id/name_address"
             app:layout_constraintEnd_toEndOf="parent"
