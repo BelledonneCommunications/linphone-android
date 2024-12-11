@@ -45,11 +45,17 @@ class AvatarGenerator(private val context: Context) {
     init {
         val textTypedValue = TypedValue()
         context.theme.resolveAttribute(R.attr.color_avatar_text, textTypedValue, true)
-        textColor = textTypedValue.data
+        // This will fail for notifications
+        if (textTypedValue.data != 0) {
+            textColor = textTypedValue.data
+        }
 
         val backgroundTypedValue = TypedValue()
         context.theme.resolveAttribute(R.attr.color_avatar_background, backgroundTypedValue, true)
-        backgroundColor = backgroundTypedValue.data
+        // This will fail for notifications
+        if (backgroundTypedValue.data != 0) {
+            backgroundColor = backgroundTypedValue.data
+        }
     }
 
     fun setTextSize(size: Float) = apply {
