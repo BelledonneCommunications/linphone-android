@@ -84,7 +84,8 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/screen_bottom_margin">
 
                     <androidx.constraintlayout.widget.Group
                         android:layout_width="wrap_content"
@@ -485,91 +486,103 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/trust_background"/>
 
-                    <LinearLayout
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:onClick="@{() -> viewModel.editContact()}"
+                        style="@style/context_menu_action_label_style"
+                        android:id="@+id/action_edit"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:layout_marginBottom="@dimen/screen_bottom_margin"
-                        android:paddingBottom="8dp"
-                        android:paddingTop="8dp"
-                        android:background="@drawable/shape_squircle_white_background"
-                        app:layout_constraintVertical_bias="0"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/contact_details_edit"
+                        android:drawableStart="@drawable/pencil_simple"
+                        android:background="@drawable/action_background_top"
+                        android:visibility="@{viewModel.isStored ? View.VISIBLE : View.GONE}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/actions"
-                        app:layout_constraintBottom_toBottomOf="parent">
+                        app:layout_constraintTop_toBottomOf="@id/actions"/>
 
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:onClick="@{() -> viewModel.editContact()}"
-                            style="@style/context_menu_action_label_style"
-                            android:id="@+id/action_edit"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/contact_details_edit"
-                            android:drawableStart="@drawable/pencil_simple"
-                            android:background="@drawable/action_background"
-                            android:visibility="@{viewModel.isStored ? View.VISIBLE : View.GONE}" />
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:onClick="@{() -> viewModel.toggleFavourite()}"
+                        style="@style/context_menu_action_label_style"
+                        android:id="@+id/action_favorite"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@drawable/action_background_middle"
+                        android:visibility="@{viewModel.isStored ? View.VISIBLE : View.GONE}"
+                        android:text="@{viewModel.isFavourite ? @string/contact_details_remove_from_favourites : @string/contact_details_add_to_favourites, default=@string/contact_details_add_to_favourites}"
+                        android:drawableStart="@{viewModel.isFavourite ? @drawable/heart_fill : @drawable/heart, default=@drawable/heart_fill}"
+                        android:drawableTint="@{viewModel.isFavourite ? @color/danger_500 : @color/main2_500, default=@color/main2_500}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/action_edit" />
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginEnd="16dp"
-                            android:background="?attr/color_main2_200"
-                            android:visibility="@{viewModel.isStored ? View.VISIBLE : View.GONE}"/>
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:onClick="@{shareClickListener}"
+                        style="@style/context_menu_action_label_style"
+                        android:id="@+id/action_share"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@{viewModel.isStored ? @drawable/action_background_middle : @drawable/action_background_full, default=@drawable/action_background_middle}"
+                        android:text="@string/contact_details_share"
+                        android:drawableStart="@drawable/share_network"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/action_favorite"/>
 
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:onClick="@{() -> viewModel.toggleFavourite()}"
-                            style="@style/context_menu_action_label_style"
-                            android:id="@+id/action_favorite"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/action_background"
-                            android:visibility="@{viewModel.isStored ? View.VISIBLE : View.GONE}"
-                            android:text="@{viewModel.isFavourite ? @string/contact_details_remove_from_favourites : @string/contact_details_add_to_favourites, default=@string/contact_details_add_to_favourites}"
-                            android:drawableStart="@{viewModel.isFavourite ? @drawable/heart_fill : @drawable/heart, default=@drawable/heart_fill}"
-                            android:drawableTint="@{viewModel.isFavourite ? @color/danger_500 : @color/main2_500, default=@color/main2_500}" />
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:onClick="@{deleteClickListener}"
+                        style="@style/context_menu_danger_action_label_style"
+                        android:id="@+id/action_delete"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@drawable/action_background_bottom"
+                        android:text="@string/contact_details_delete"
+                        android:drawableStart="@drawable/trash_simple"
+                        android:visibility="@{viewModel.isStored ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/action_share"/>
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginEnd="16dp"
-                            android:background="?attr/color_main2_200"
-                            android:visibility="@{viewModel.isStored ? View.VISIBLE : View.GONE}"/>
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="?attr/color_main2_200"
+                        android:visibility="@{viewModel.isStored ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintEnd_toEndOf="@id/action_edit"
+                        app:layout_constraintStart_toStartOf="@id/action_edit"
+                        app:layout_constraintTop_toBottomOf="@+id/action_edit"/>
 
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:onClick="@{shareClickListener}"
-                            style="@style/context_menu_action_label_style"
-                            android:id="@+id/action_share"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/action_background"
-                            android:text="@string/contact_details_share"
-                            android:drawableStart="@drawable/share_network"/>
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="?attr/color_main2_200"
+                        android:visibility="@{viewModel.isStored ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintEnd_toEndOf="@id/action_favorite"
+                        app:layout_constraintStart_toStartOf="@id/action_favorite"
+                        app:layout_constraintTop_toBottomOf="@+id/action_favorite"/>
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginEnd="16dp"
-                            android:background="?attr/color_main2_200"
-                            android:visibility="@{viewModel.isStored ? View.VISIBLE : View.GONE}"/>
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:onClick="@{deleteClickListener}"
-                            style="@style/context_menu_danger_action_label_style"
-                            android:id="@+id/action_delete"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/action_background"
-                            android:text="@string/contact_details_delete"
-                            android:drawableStart="@drawable/trash_simple"
-                            android:visibility="@{viewModel.isStored ? View.VISIBLE : View.GONE}"/>
-
-                    </LinearLayout>
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="?attr/color_main2_200"
+                        android:visibility="@{viewModel.isStored ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintEnd_toEndOf="@id/action_share"
+                        app:layout_constraintStart_toStartOf="@id/action_share"
+                        app:layout_constraintTop_toBottomOf="@+id/action_share"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
