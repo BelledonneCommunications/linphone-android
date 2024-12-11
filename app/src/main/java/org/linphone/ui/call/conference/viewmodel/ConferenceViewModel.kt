@@ -497,7 +497,9 @@ class ConferenceViewModel
 
     @WorkerThread
     private fun computeParticipants(skipDevices: Boolean) {
-        participantDevices.value.orEmpty().forEach(ConferenceParticipantDeviceModel::destroy)
+        if (!skipDevices) {
+            participantDevices.value.orEmpty().forEach(ConferenceParticipantDeviceModel::destroy)
+        }
 
         val participantsList = arrayListOf<ConferenceParticipantModel>()
         val devicesList = arrayListOf<ConferenceParticipantDeviceModel>()
@@ -557,9 +559,15 @@ class ConferenceViewModel
                 }
             }
         }
-        Log.i(
-            "$TAG [${devicesList.size}] participant devices for [${participantsList.size}] participants will be displayed (not counting ourselves)"
-        )
+        if (skipDevices) {
+            Log.i(
+                "$TAG [${participantsList.size}] participants will be displayed (not counting ourselves), devices were skipped"
+            )
+        } else {
+            Log.i(
+                "$TAG [${devicesList.size}] participant devices for [${participantsList.size}] participants will be displayed (not counting ourselves)"
+            )
+        }
 
         val meAvatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
             meParticipant.address
