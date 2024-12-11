@@ -487,20 +487,6 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/devices_list"/>
 
-                    <ImageView
-                        android:id="@+id/actions_background"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/shape_squircle_white_background"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/actions"
-                        app:layout_constraintBottom_toBottomOf="@id/action_delete" />
-
                     <androidx.appcompat.widget.AppCompatTextView
                         android:onClick="@{settingsClickListener}"
                         style="@style/context_menu_action_label_style"
@@ -509,21 +495,13 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:background="@drawable/action_background"
+                        android:background="@drawable/action_background_top"
                         android:text="@string/manage_account_settings"
                         android:drawableStart="@drawable/gear"
                         android:visibility="@{viewModel.hideAccountSettings ? View.GONE : View.VISIBLE}"
-                        app:layout_constraintTop_toTopOf="@id/actions_background"
-                        app:layout_constraintStart_toStartOf="@id/actions_background"
-                        app:layout_constraintEnd_toEndOf="@id/actions_background"/>
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:background="?attr/color_main2_200"
-                        app:layout_constraintStart_toStartOf="@id/action_settings"
-                        app:layout_constraintEnd_toEndOf="@id/action_settings"
-                        app:layout_constraintTop_toBottomOf="@+id/action_settings"/>
+                        app:layout_constraintTop_toBottomOf="@id/actions"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:onClick="@{deleteAccountClickListener}"
@@ -534,12 +512,22 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:layout_marginBottom="@dimen/screen_bottom_margin"
-                        android:background="@drawable/action_background"
+                        android:background="@drawable/action_background_bottom"
                         android:text="@string/manage_account_delete"
                         android:drawableStart="@drawable/sign_out"
                         app:layout_constraintTop_toBottomOf="@id/action_settings"
-                        app:layout_constraintStart_toStartOf="@id/actions_background"
-                        app:layout_constraintEnd_toEndOf="@id/actions_background"/>
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="?attr/color_separator"
+                        app:layout_constraintStart_toStartOf="@id/action_settings"
+                        app:layout_constraintEnd_toEndOf="@id/action_settings"
+                        app:layout_constraintTop_toBottomOf="@+id/action_settings"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
