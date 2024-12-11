@@ -140,6 +140,7 @@
                     android:layout_marginEnd="16dp"
                     android:src="@drawable/caret_down"
                     android:contentDescription="@null"
+                    app:tint="?attr/color_main2_600"
                     app:layout_constraintTop_toTopOf="@id/media_encryption"
                     app:layout_constraintBottom_toBottomOf="@id/media_encryption"
                     app:layout_constraintEnd_toEndOf="@id/media_encryption"/>
@@ -211,7 +212,6 @@
                     android:paddingEnd="20dp"
                     android:text="@={viewModel.deviceName}"
                     android:textSize="14sp"
-                    android:textColor="@color/gray_main2_600"
                     android:maxLines="1"
                     android:background="@drawable/edit_text_background"
                     android:inputType="text|textUri"
@@ -245,7 +245,6 @@
                     android:paddingEnd="20dp"
                     android:text="@={viewModel.fileSharingServerUrl}"
                     android:textSize="14sp"
-                    android:textColor="@color/gray_main2_600"
                     android:maxLines="1"
                     android:background="@drawable/edit_text_background"
                     android:inputType="text|textUri"
@@ -279,7 +278,6 @@
                     android:paddingEnd="20dp"
                     android:text="@={viewModel.remoteProvisioningUrl}"
                     android:textSize="14sp"
-                    android:textColor="@color/gray_main2_600"
                     android:maxLines="1"
                     android:background="@drawable/edit_text_background"
                     android:inputType="text|textUri"
@@ -386,6 +384,7 @@
                         android:src="@drawable/caret_down"
                         android:contentDescription="@null"
                         android:visibility="@{viewModel.expandAudioDevices ? View.VISIBLE : View.GONE}"
+                        app:tint="?attr/color_main2_600"
                         app:layout_constraintTop_toTopOf="@id/input_audio_device"
                         app:layout_constraintBottom_toBottomOf="@id/input_audio_device"
                         app:layout_constraintEnd_toEndOf="@id/input_audio_device"/>
@@ -433,6 +432,7 @@
                         android:src="@drawable/caret_down"
                         android:contentDescription="@null"
                         android:visibility="@{viewModel.expandAudioDevices ? View.VISIBLE : View.GONE}"
+                        app:tint="?attr/color_main2_600"
                         app:layout_constraintTop_toTopOf="@id/output_audio_device"
                         app:layout_constraintBottom_toBottomOf="@id/output_audio_device"
                         app:layout_constraintEnd_toEndOf="@id/output_audio_device"/>

@@ -69,6 +69,13 @@
                     app:constraint_referenced_ids="cancel_search, search, search_up, search_down"
                     android:visibility="@{viewModel.searchBarVisible ? View.VISIBLE : View.GONE, default=gone}" />
 
+                <androidx.constraintlayout.widget.Barrier
+                    android:id="@+id/background_barrier"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:barrierDirection="bottom"
+                    app:constraint_referenced_ids="back, cancel_search" />
+
                 <ImageView
                     android:id="@+id/back"
                     android:layout_width="wrap_content"
@@ -271,7 +278,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/back" />
+                    app:layout_constraintTop_toBottomOf="@id/background_barrier" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/events_list"

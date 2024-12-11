@@ -60,6 +60,7 @@
         <attr name="color_avatar_text" format="color"/>
         <attr name="color_chat_bubble_incoming" format="color"/>
         <attr name="color_chat_bubble_outgoing" format="color"/>
+        <attr name="color_chat_bubble_reply" format="color"/>
 
         <attr name="color_gradient_start" format="color"/>
         <attr name="color_gradient_end" format="color"/>

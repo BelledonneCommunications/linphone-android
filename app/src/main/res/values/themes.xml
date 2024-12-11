@@ -63,6 +63,7 @@
         <item name="color_avatar_text">@color/gray_main2_600</item>
         <item name="color_chat_bubble_incoming">@color/gray_main2_100</item>
         <item name="color_chat_bubble_outgoing">@color/orange_main_100</item>
+        <item name="color_chat_bubble_reply">@color/gray_200</item>
 
         <item name="color_gradient_start">@color/gray_main2_100</item>
         <item name="color_gradient_end">@color/bc_white</item>

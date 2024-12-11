@@ -66,6 +66,7 @@
             android:layout_marginEnd="@dimen/spinner_caret_end_margin"
             android:src="@drawable/caret_down"
             android:contentDescription="@string/content_description_spinner_caret"
+            app:tint="?attr/color_main2_600"
             app:layout_constraintTop_toTopOf="@id/theme_spinner"
             app:layout_constraintBottom_toBottomOf="@id/theme_spinner"
             app:layout_constraintEnd_toEndOf="@id/theme_spinner"/>
@@ -108,6 +109,7 @@
             android:layout_marginEnd="@dimen/spinner_caret_end_margin"
             android:src="@drawable/caret_down"
             android:contentDescription="@string/content_description_spinner_caret"
+            app:tint="?attr/color_main2_600"
             app:layout_constraintTop_toTopOf="@id/color_spinner"
             app:layout_constraintBottom_toBottomOf="@id/color_spinner"
             app:layout_constraintEnd_toEndOf="@id/color_spinner"/>

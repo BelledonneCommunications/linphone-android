@@ -169,6 +169,7 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/caret_down"
                     android:contentDescription="@null"
+                    app:tint="?attr/color_main2_600"
                     app:layout_constraintTop_toTopOf="@id/prefix"
                     app:layout_constraintBottom_toBottomOf="@id/prefix"
                     app:layout_constraintEnd_toEndOf="@id/prefix"/>

@@ -272,6 +272,7 @@
                 android:layout_marginEnd="20dp"
                 android:src="@drawable/caret_down"
                 android:contentDescription="@null"
+                app:tint="?attr/color_main2_600"
                 app:layout_constraintTop_toTopOf="@id/transport"
                 app:layout_constraintBottom_toBottomOf="@id/transport"
                 app:layout_constraintEnd_toEndOf="@id/transport"/>

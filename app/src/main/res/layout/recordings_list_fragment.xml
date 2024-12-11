@@ -32,6 +32,13 @@
             android:visibility="@{viewModel.searchBarVisible ? View.VISIBLE : View.GONE, default=gone}"
             app:constraint_referenced_ids="cancel_search, search, clear_field" />
 
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/background_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="back, cancel_search" />
+
         <ImageView
             android:id="@+id/back"
             android:layout_width="wrap_content"
@@ -87,8 +94,8 @@
             app:tint="?attr/color_main2_500" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/search"
             style="?attr/textInputFilledStyle"
+            android:id="@+id/search"
             android:layout_width="0dp"
             android:layout_height="@dimen/top_bar_height"
             android:gravity="center_vertical"
@@ -137,7 +144,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/back" />
+            app:layout_constraintTop_toBottomOf="@id/background_barrier" />
 
         <ImageView
             android:id="@+id/no_recording_image"
