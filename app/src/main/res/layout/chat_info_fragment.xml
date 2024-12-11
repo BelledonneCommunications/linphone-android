@@ -376,7 +376,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="26dp"
                     android:padding="5dp"
-                    android:text="@string/contact_details_media_documents_title"
+                    android:text="@string/conversation_details_media_documents_title"
                     app:layout_constraintBottom_toTopOf="@id/action_media"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

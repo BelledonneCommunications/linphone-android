@@ -249,7 +249,7 @@
     <string name="settings_contacts_carddav_sync_successful_toast">Synchronization was successful</string>
     <string name="settings_contacts_carddav_sync_error_toast">Synchronization error!</string>
     <string name="settings_contacts_carddav_deleted_toast">CardDAV account removed</string>
-    <string name="settings_contacts_carddav_mandatory_field_not_filled_toast">At least one mandatory field wasn\'t filled</string>
+    <string name="settings_contacts_carddav_mandatory_field_not_filled_toast">Please fill at least the display name and the server URL</string>
     <string name="settings_contacts_ldap_server_url_title">Server URL (can\'t be empty)</string>
     <string name="settings_contacts_ldap_bind_dn_title">Bind DN</string>
     <string name="settings_contacts_ldap_password_title">Password</string>
@@ -395,7 +395,7 @@
     <string name="contact_editor_error_saving_contact_toast">Failed to create contact!</string>
     <string name="contact_editor_dialog_abort_confirmation_title">Don\'t save changes?</string>
     <string name="contact_editor_dialog_abort_confirmation_message">All changes will be lost</string>
-    <string name="contact_editor_mandatory_field_not_filled_toast">At least one mandatory field wasn\'t filled</string>
+    <string name="contact_editor_mandatory_field_not_filled_toast">Please fill either first name, last name or company name</string>
 
     <string name="contact_details_numbers_and_addresses_title">Phone numbers &amp; SIP addresses</string>
     <string name="contact_details_company_name">Company:</string>
@@ -403,7 +403,6 @@
     <string name="contact_details_trust_title">Trust</string>
     <string name="contact_details_no_device_found">No device found…</string>
     <string name="contact_details_trusted_devices_count">Number of trusted devices:</string>
-    <string name="contact_details_media_documents_title">Media &amp; documents</string>
     <string name="contact_details_actions_title">Other actions</string>
     <string name="contact_details_edit">Edit</string>
     <string name="contact_details_add_to_favourites">Add to favourites</string>
@@ -553,6 +552,7 @@
     <string name="conversation_event_ephemeral_messages_disabled">Ephemeral messages have been disabled</string>
     <string name="conversation_event_ephemeral_messages_lifetime_changed">Ephemeral lifetime is now %s</string>
 
+    <string name="conversation_details_media_documents_title">Media &amp; documents</string>
     <string name="conversation_media_list_title">Shared media</string>
     <string name="conversation_document_list_title">Shared documents</string>
 
@@ -606,7 +606,7 @@
     <string name="meeting_info_cancelled_toast">Meeting has been cancelled</string>
     <string name="meeting_info_cancelled">Meeting cancelled</string>
     <string name="meeting_failed_to_schedule_toast">Failed to schedule meeting!</string>
-    <string name="meeting_schedule_mandatory_field_not_filled_toast">A least a mandatory field wasn\'t filled</string>
+    <string name="meeting_schedule_mandatory_field_not_filled_toast">Please fill the title and select at least one participant</string>
     <string name="meeting_failed_to_send_invites_toast">Failed to send all invites to meeting!</string>
     <string name="meeting_failed_to_send_part_of_invites_toast">Failed to send invites to some participants of the meeting!</string>
     <string name="meeting_address_copied_to_clipboard_toast">Meeting address copied into clipboard</string>

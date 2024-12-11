@@ -212,7 +212,7 @@
     <string name="settings_contacts_carddav_sync_successful_toast">Synchronization réussie</string>
     <string name="settings_contacts_carddav_sync_error_toast">Erreur de synchronization !</string>
     <string name="settings_contacts_carddav_deleted_toast">Compte CardDAV supprimé</string>
-    <string name="settings_contacts_carddav_mandatory_field_not_filled_toast">Au moins un champ obligatoire n\'est pas rempli</string>
+    <string name="settings_contacts_carddav_mandatory_field_not_filled_toast">Veuillez remplir au moins le nom d\'affichage et l\'URL du serveur</string>
     <string name="settings_contacts_ldap_server_url_title">URL du serveur (ne peut être vide)</string>
     <string name="settings_contacts_ldap_bind_dn_title">Bind DN</string>
     <string name="settings_contacts_ldap_password_title">Mot de passe</string>
@@ -357,7 +357,7 @@
     <string name="contact_editor_error_saving_contact_toast">Erreur lors de la création du contact</string>
     <string name="contact_editor_dialog_abort_confirmation_title">Ne pas sauvegarder vos changements</string>
     <string name="contact_editor_dialog_abort_confirmation_message">Toutes vos modifications seront perdues.</string>
-    <string name="contact_editor_mandatory_field_not_filled_toast">Au moins un champ obligatoire n\'est pas rempli</string>
+    <string name="contact_editor_mandatory_field_not_filled_toast">Veuillez saisir au moins un nom, prénom ou le nom de l\'entreprise</string>
 
     <string name="contact_details_numbers_and_addresses_title">Numéros de téléphone et adresses SIP</string>
     <string name="contact_details_company_name">Entreprise :</string>
@@ -514,6 +514,7 @@
     <string name="conversation_event_ephemeral_messages_disabled">Les messages éphémères ont été désactivés</string>
     <string name="conversation_event_ephemeral_messages_lifetime_changed">La durée des messages éphémères est de %s</string>
 
+    <string name="conversation_details_media_documents_title">Médias &amp; documents</string>
     <string name="conversation_media_list_title">Médias partagés</string>
     <string name="conversation_document_list_title">Documents partagés</string>
 
@@ -567,7 +568,7 @@
     <string name="meeting_info_cancelled_toast">La réunion a été annulée</string>
     <string name="meeting_info_cancelled">Réunion annulée</string>
     <string name="meeting_failed_to_schedule_toast">Échec de la création de la réunion !</string>
-    <string name="meeting_schedule_mandatory_field_not_filled_toast">Au moins un champ obligatoire n\'a pas été rempli</string>
+    <string name="meeting_schedule_mandatory_field_not_filled_toast">Veuillez saisir un titre et sélectionner au moins un participant</string>
     <string name="meeting_failed_to_send_invites_toast">Échec de l\'envoi des invitations à la réunion !</string>
     <string name="meeting_failed_to_send_part_of_invites_toast">Échec de l\'envoi des invitations à la réunion pour certains des participants !</string>
     <string name="meeting_address_copied_to_clipboard_toast">L\'adresse de la réunion a été copiée</string>
