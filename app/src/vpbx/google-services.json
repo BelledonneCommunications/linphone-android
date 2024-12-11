@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "747173228880",
+    "project_id": "virtualpbx-phone-9d13a",
+    "storage_bucket": "virtualpbx-phone-9d13a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:747173228880:android:3ac662984153b2726b3c55",
+        "android_client_info": {
+          "package_name": "com.virtualpbx.phone"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgIWJPsfkEtbxhAqvOpvKSEabJR145sQk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
