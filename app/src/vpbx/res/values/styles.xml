@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="VpbxAppSplashScreenTheme" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#2ca9e8</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/vpbx_splash_logo</item>
+        <item name="postSplashScreenTheme">@style/AppTheme</item>
+    </style>
+</resources>

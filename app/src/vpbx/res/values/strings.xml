@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!DOCTYPE resources [
+    <!ENTITY appName "VirtualPBX Phone">
+    ]>
+
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="app_name" translatable="false">&appName;</string>
+    <string name="app_name_debug" translatable="false">&appName; (debug)</string>
+    <string name="user_agent_app_name" translatable="false">&appName; UCM Android</string>
+    <string name="service_name">&appName; Service</string>
+    <string name="service_auto_start_description">&appName; has been started automatically</string>
+    <string name="sync_account_name">&appName; contacts</string>
+
+    <!-- About screen -->
+    <string name="about_link" translatable="false">https://linphone.org</string>
+    <string name="about_privacy_policy_link" translatable="false">https://www.linphone.org/privacy-policy</string>
+    <string name="about_license_link" translatable="false">https://www.gnu.org/licenses/gpl-3.0.html</string>
+    <string name="about_version" translatable="false">&appName; Android %s</string>
+    <string name="about_liblinphone_sdk_version" translatable="false">&appName; SDK %s</string>
+    <string name="about_text" translatable="false">GNU General Public License v3.0\n © 2010–2023 Belledonne Communications</string>
+    <string name="about_weblate_link" translatable="false">https://weblate.linphone.org/projects/linphone/</string>
+    <string name="about_weblate_translation">Help us translate &appName;</string>
+
+    <!-- Contacts -->
+    <string name="contacts_new_contact_wont_be_visible_warning_dialog">You are about to create a new contact without a SIP URI nor a phone number, thus it won\'t be visible in &appName;.\n\nDo you want to create it anyway?</string>
+
+    <!-- Conference -->
+    <string name="conference_schedule_send_invite_chat">Send invite via &appName;</string>
+    <string name="conference_schedule_send_updated_invite_chat">Send update via &appName;</string>
+    <string name="conference_schedule_send_invite_chat_summary">Invite will be sent out from my &appName; account</string>
+
+    <!-- Contacts settings -->
+    <string name="contacts_settings_native_presence_summary">Inserting information shortcuts from the &appName; contact into native Android contacts</string>
+
+    <!-- Notifications -->
+
+    <string name="notification_channel_service_name">&appName; service notification</string>
+    <string name="notification_channel_missed_call_name">&appName; missed calls notifications</string>
+    <string name="notification_channel_incoming_call_name">&appName; incoming calls notifications</string>
+    <string name="notification_channel_chat_name">&appName; instant messages notifications</string>
+
+    <!-- Content description -->
+    <string name="content_description_linphone_user">Contact is a &appName; user</string>
+</resources>
