@@ -197,9 +197,10 @@ android {
             }
         }
 
-        voyager { initWith release }
-        ecx { initWith release }
         bryteCall { initWith release }
+        ecx { initWith release }
+        voyager { initWith release }
+        vpbx { initWith release }
     }
 
     buildFeatures {

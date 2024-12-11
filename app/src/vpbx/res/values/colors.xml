@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary_color">#2ca9e8</color><!-- Try to have a color that renders well on both light & dark theme -->
+    <!-- You can use https://material.io/design/color/#tools-for-picking-colors to get dark color value from primary -->
+    <color name="primary_dark_color">#3c4549</color>
+    <color name="primary_light_color">#e7ebef</color>
+    <color name="navbar_color">#000000</color>
+
+    <!--Sidebar #2e3548 -->
+    <color name="voip_dark_color">#3c4549</color>  <!-- Background -->
+    <color name="voip_dark_color2">#2c3538</color>  <!-- Light gray -->
+    <color name="voip_dark_color3">#1e2426</color> <!-- Extra buttons -->
+    <color name="voip_dark_color4">#2c3538</color> <!-- Top bars -->
+</resources>

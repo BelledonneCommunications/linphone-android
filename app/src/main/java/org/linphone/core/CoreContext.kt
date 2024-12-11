@@ -531,7 +531,7 @@ class CoreContext(
 
             // FIXME: this feels rotten to the core
             runBlocking {
-                val appId = BuildConfig.APPLICATION_ID;
+                val appId = BuildConfig.APPLICATION_ID
                 val pushToken = FirebaseMessaging.getInstance().token.await()
                 if (!pushToken.isNullOrEmpty()) {
                     Log.i("RegisterSipAccount: We have a push token, setting contact")
