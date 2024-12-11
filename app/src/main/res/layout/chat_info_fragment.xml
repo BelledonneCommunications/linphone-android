@@ -95,7 +95,8 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/screen_bottom_margin">
 
                 <include
                     android:id="@+id/avatar"
@@ -361,39 +362,25 @@
                     android:text="@string/conversation_info_add_participants_label"
                     android:visibility="@{!viewModel.expandParticipants || !viewModel.isMyselfAdmin || !viewModel.isGroup || viewModel.isReadOnly ? View.GONE : View.VISIBLE, default=gone}"
                     app:drawableTint="?attr/color_main1_500"
-                    app:layout_constraintBottom_toTopOf="@id/media_actions"
+                    app:layout_constraintBottom_toTopOf="@id/media_documents_actions"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/participants" />
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/media_actions"
+                    android:id="@+id/media_documents_actions"
                     style="@style/section_header_style"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="26dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="26dp"
-                    android:layout_marginBottom="8dp"
                     android:padding="5dp"
                     android:text="@string/contact_details_media_documents_title"
-                    app:layout_constraintBottom_toTopOf="@id/media_actions_background"
+                    app:layout_constraintBottom_toTopOf="@id/action_media"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/add_participants" />
-
-                <ImageView
-                    android:id="@+id/media_actions_background"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:src="@drawable/shape_squircle_white_background"
-                    android:contentDescription="@null"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/media_actions"
-                    app:layout_constraintBottom_toBottomOf="@id/action_documents"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/action_media"
@@ -402,21 +389,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:background="@drawable/action_background"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/action_background_top"
                     android:drawableStart="@drawable/image"
                     android:onClick="@{goToSharedMediaClickListener}"
                     android:text="@string/conversation_media_list_title"
-                    app:layout_constraintEnd_toEndOf="@id/media_actions_background"
-                    app:layout_constraintStart_toStartOf="@id/media_actions_background"
-                    app:layout_constraintTop_toTopOf="@id/media_actions_background" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:background="?attr/color_main2_200"
-                    app:layout_constraintEnd_toEndOf="@id/action_media"
-                    app:layout_constraintStart_toStartOf="@id/action_media"
-                    app:layout_constraintTop_toBottomOf="@id/action_media" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/media_documents_actions" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/action_documents"
@@ -426,42 +406,37 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="@dimen/screen_bottom_margin"
-                    android:background="@drawable/action_background"
+                    android:background="@drawable/action_background_bottom"
                     android:drawableStart="@drawable/file_pdf"
                     android:onClick="@{goToSharedDocumentsClickListener}"
                     android:text="@string/conversation_document_list_title"
-                    app:layout_constraintEnd_toEndOf="@id/media_actions_background"
-                    app:layout_constraintStart_toStartOf="@id/media_actions_background"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/action_media" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="?attr/color_main2_200"
+                    app:layout_constraintEnd_toEndOf="@id/action_media"
+                    app:layout_constraintStart_toStartOf="@id/action_media"
                     app:layout_constraintTop_toBottomOf="@id/action_media" />
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/actions"
+                    android:id="@+id/other_actions"
                     style="@style/section_header_style"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="26dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="26dp"
-                    android:layout_marginBottom="8dp"
                     android:padding="5dp"
                     android:text="@string/contact_details_actions_title"
-                    app:layout_constraintBottom_toTopOf="@id/actions_background"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/media_actions_background" />
-
-                <ImageView
-                    android:id="@+id/actions_background"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:src="@drawable/shape_squircle_white_background"
-                    android:contentDescription="@null"
-                    app:layout_constraintBottom_toBottomOf="@id/action_delete"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/actions" />
+                    app:layout_constraintTop_toBottomOf="@id/action_documents" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/action_see_contact"
@@ -470,22 +445,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:background="@drawable/action_background"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/action_background_top"
                     android:drawableStart="@drawable/address_book"
                     android:onClick="@{goToContactClickListener}"
                     android:text="@string/conversation_info_menu_go_to_contact"
                     android:visibility="@{!viewModel.isGroup &amp;&amp; viewModel.friendAvailable ? View.VISIBLE : View.GONE, default=gone}"
-                    app:layout_constraintEnd_toEndOf="@id/actions_background"
-                    app:layout_constraintStart_toStartOf="@id/actions_background"
-                    app:layout_constraintTop_toTopOf="@id/actions_background" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:background="?attr/color_main2_200"
-                    app:layout_constraintEnd_toEndOf="@id/action_see_contact"
-                    app:layout_constraintStart_toStartOf="@id/action_see_contact"
-                    app:layout_constraintTop_toBottomOf="@+id/action_see_contact" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/other_actions" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/action_add_to_contacts"
@@ -494,22 +462,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:background="@drawable/action_background"
+                    android:background="@drawable/action_background_top"
                     android:drawableStart="@drawable/user_plus"
                     android:onClick="@{addToContactsClickListener}"
                     android:text="@string/conversation_info_menu_add_to_contacts"
                     android:visibility="@{!viewModel.isGroup &amp;&amp; !viewModel.friendAvailable ? View.VISIBLE : View.GONE, default=gone}"
-                    app:layout_constraintEnd_toEndOf="@id/actions_background"
-                    app:layout_constraintStart_toStartOf="@id/actions_background"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/action_see_contact" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:background="?attr/color_main2_200"
-                    app:layout_constraintEnd_toEndOf="@id/action_add_to_contacts"
-                    app:layout_constraintStart_toStartOf="@id/action_add_to_contacts"
-                    app:layout_constraintTop_toBottomOf="@+id/action_add_to_contacts" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/action_ephemeral_messages"
@@ -518,22 +478,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:background="@drawable/action_background"
+                    android:background="@{!viewModel.isGroup ? @drawable/action_background_middle : @drawable/action_background_top, default=@drawable/action_background_top}"
                     android:drawableStart="@drawable/clock_countdown"
                     android:onClick="@{configureEphemeralMessagesClickListener}"
                     android:text="@string/conversation_action_configure_ephemeral_messages"
                     android:visibility="@{viewModel.isEndToEndEncrypted &amp;&amp; !viewModel.isReadOnly ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintEnd_toEndOf="@id/actions_background"
-                    app:layout_constraintStart_toStartOf="@id/actions_background"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/action_add_to_contacts" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:background="?attr/color_main2_200"
-                    app:layout_constraintEnd_toEndOf="@id/action_ephemeral_messages"
-                    app:layout_constraintStart_toStartOf="@id/action_ephemeral_messages"
-                    app:layout_constraintTop_toBottomOf="@+id/action_ephemeral_messages" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/action_leave_group"
@@ -542,22 +494,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:background="@drawable/action_background"
+                    android:background="@{viewModel.isEndToEndEncrypted &amp;&amp; !viewModel.isReadOnly ? @drawable/action_background_middle : @drawable/action_background_top, default=@drawable/action_background_middle}"
                     android:drawableStart="@drawable/sign_out"
                     android:onClick="@{() -> viewModel.leaveGroup()}"
                     android:text="@string/conversation_action_leave_group"
-                    android:visibility="@{viewModel.isGroup &amp;&amp; !viewModel.isReadOnly ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintEnd_toEndOf="@id/actions_background"
-                    app:layout_constraintStart_toStartOf="@id/actions_background"
+                    android:visibility="@{viewModel.isGroup &amp;&amp; !viewModel.isReadOnly ? View.VISIBLE : View.GONE, default=gone}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/action_ephemeral_messages" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:background="?attr/color_main2_200"
-                    app:layout_constraintEnd_toEndOf="@id/action_leave_group"
-                    app:layout_constraintStart_toStartOf="@id/action_leave_group"
-                    app:layout_constraintTop_toBottomOf="@+id/action_leave_group" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/action_delete"
@@ -566,14 +510,57 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="@dimen/screen_bottom_margin"
-                    android:background="@drawable/action_background"
+                    android:background="@{viewModel.isGroup &amp;&amp; viewModel.isReadOnly ? @drawable/action_background_full : @drawable/action_background_bottom, default=@drawable/action_background_bottom}"
                     android:drawableStart="@drawable/trash_simple"
                     android:onClick="@{deleteHistoryClickListener}"
                     android:text="@string/conversation_info_delete_history_action"
-                    app:layout_constraintEnd_toEndOf="@id/actions_background"
-                    app:layout_constraintStart_toStartOf="@id/actions_background"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/action_leave_group" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="?attr/color_main2_200"
+                    android:visibility="@{!viewModel.isGroup &amp;&amp; !viewModel.friendAvailable ? View.VISIBLE : View.GONE, default=gone}"
+                    app:layout_constraintEnd_toEndOf="@id/action_add_to_contacts"
+                    app:layout_constraintStart_toStartOf="@id/action_add_to_contacts"
+                    app:layout_constraintTop_toBottomOf="@+id/action_add_to_contacts" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="?attr/color_main2_200"
+                    android:visibility="@{!viewModel.isGroup &amp;&amp; viewModel.friendAvailable ? View.VISIBLE : View.GONE, default=gone}"
+                    app:layout_constraintEnd_toEndOf="@id/action_see_contact"
+                    app:layout_constraintStart_toStartOf="@id/action_see_contact"
+                    app:layout_constraintTop_toBottomOf="@+id/action_see_contact" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="?attr/color_main2_200"
+                    android:visibility="@{viewModel.isEndToEndEncrypted &amp;&amp; !viewModel.isReadOnly ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="@id/action_ephemeral_messages"
+                    app:layout_constraintStart_toStartOf="@id/action_ephemeral_messages"
+                    app:layout_constraintTop_toBottomOf="@+id/action_ephemeral_messages" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="?attr/color_main2_200"
+                    android:visibility="@{viewModel.isGroup &amp;&amp; !viewModel.isReadOnly ? View.VISIBLE : View.GONE, default=gone}"
+                    app:layout_constraintEnd_toEndOf="@id/action_leave_group"
+                    app:layout_constraintStart_toStartOf="@id/action_leave_group"
+                    app:layout_constraintTop_toBottomOf="@+id/action_leave_group" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
