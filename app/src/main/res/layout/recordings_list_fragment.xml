@@ -137,7 +137,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:contentDescription="@null"
-            android:src="@drawable/illu"
+            android:src="@drawable/illu_recordings"
             app:layout_constraintBottom_toTopOf="@id/no_recording_label"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
