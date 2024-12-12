@@ -53,7 +53,7 @@
 
         <item name="color_on_main">@color/bc_white</item>
         <item name="color_background_contrast_in_dark_mode">@color/background_color_alt_dark_mode</item>
-        <item name="color_separator">@color/gray_main2_200</item>
+        <item name="color_separator">@color/gray_main2_400</item>
         <item name="color_text">@color/gray_main2_100</item>
         <item name="color_hint_text">@color/gray_main2_300</item>
 
