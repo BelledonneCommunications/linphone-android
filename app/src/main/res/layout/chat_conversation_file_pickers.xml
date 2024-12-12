@@ -24,7 +24,7 @@
             android:id="@+id/file_pickers_separator"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?attr/color_main2_300"
+            android:background="?attr/color_separator"
             app:layout_constraintTop_toTopOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatTextView

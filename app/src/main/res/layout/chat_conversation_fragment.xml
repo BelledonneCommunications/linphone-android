@@ -69,13 +69,6 @@
                     app:constraint_referenced_ids="cancel_search, search, search_up, search_down"
                     android:visibility="@{viewModel.searchBarVisible ? View.VISIBLE : View.GONE, default=gone}" />
 
-                <androidx.constraintlayout.widget.Barrier
-                    android:id="@+id/background_barrier"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:barrierDirection="bottom"
-                    app:constraint_referenced_ids="back, cancel_search" />
-
                 <ImageView
                     android:id="@+id/back"
                     android:layout_width="wrap_content"
@@ -274,11 +267,12 @@
                     android:id="@+id/background"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
+                    android:layout_marginTop="@dimen/top_bar_height"
                     android:background="?attr/color_main2_000"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/background_barrier" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/events_list"
@@ -310,7 +304,6 @@
                     android:background="?attr/color_main2_000"
                     android:text="@{viewModel.composingLabel, default=`John Doe is composing...`}"
                     android:textSize="12sp"
-                    android:textColor="?attr/color_main2_400"
                     android:visibility="@{viewModel.composingLabel.length() == 0 ? View.GONE : View.VISIBLE}"
                     app:layout_constraintBottom_toTopOf="@id/warning_disabled_not_secured"
                     app:layout_constraintStart_toStartOf="parent"
