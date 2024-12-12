@@ -49,6 +49,9 @@ fec_enabled=1
 [magic_search]
 return_empty_friends=1
 
+[chat]
+imdn_to_everybody_threshold=1
+
 [ui]
 contacts_filter=sip.linphone.org
 

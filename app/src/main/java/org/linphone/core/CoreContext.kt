@@ -514,6 +514,9 @@ class CoreContext
                     core.logCollectionUploadServerUrl = "https://files.linphone.org/http-file-transfer-server/hft.php"
                 }
 
+                // Set IMDN threshold to 1
+                core.imdnToEverybodyThreshold = 1
+
                 Log.i("$TAG Removing previous grammar files (without .belr extension)")
                 corePreferences.clearPreviousGrammars()
             }
