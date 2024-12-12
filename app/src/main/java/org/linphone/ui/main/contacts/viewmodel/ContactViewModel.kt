@@ -638,7 +638,11 @@ class ContactViewModel
             if (devicesList.isNotEmpty()) {
                 val percentage = trustedDevicesCount * 100 / devicesCount
                 trustedDevicesPercentage.postValue(percentage)
-                trustedDevicesPercentageFloat.postValue(percentage / 100f / 2)
+                if (percentage == 0) {
+                    trustedDevicesPercentageFloat.postValue(0.5f)
+                } else {
+                    trustedDevicesPercentageFloat.postValue(percentage / 100f / 2)
+                }
             }
         }
 
