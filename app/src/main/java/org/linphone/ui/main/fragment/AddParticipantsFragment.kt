@@ -23,6 +23,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.UiThread
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
@@ -46,6 +47,31 @@ class AddParticipantsFragment : GenericAddressPickerFragment() {
     override lateinit var viewModel: AddParticipantsViewModel
 
     private val args: AddParticipantsFragmentArgs by navArgs()
+
+    private val onBackPressedCallback = object : OnBackPressedCallback(false) {
+        override fun handleOnBackPressed() {
+            Log.d("$TAG ${getFragmentRealClassName()} handleOnBackPressed")
+            try {
+                if (!goBack()) {
+                    Log.d(
+                        "$TAG ${getFragmentRealClassName()}'s goBack() method returned false, disabling back pressed callback and trying again"
+                    )
+                    isEnabled = false
+                    try {
+                        requireActivity().onBackPressedDispatcher.onBackPressed()
+                    } catch (ise: IllegalStateException) {
+                        Log.w(
+                            "$TAG ${getFragmentRealClassName()} Can't go back: $ise"
+                        )
+                    }
+                }
+            } catch (ise: IllegalStateException) {
+                Log.e(
+                    "$TAG ${getFragmentRealClassName()} Can't go back: $ise"
+                )
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,6 +100,11 @@ class AddParticipantsFragment : GenericAddressPickerFragment() {
 
         postponeEnterTransition()
         super.onViewCreated(view, savedInstanceState)
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            onBackPressedCallback
+        )
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
@@ -110,5 +141,29 @@ class AddParticipantsFragment : GenericAddressPickerFragment() {
                 goBack()
             }
         }
+
+        sharedViewModel.isSlidingPaneSlideable.observe(viewLifecycleOwner) { slideable ->
+            val enabled = backPressedCallBackEnabled(slideable)
+            onBackPressedCallback.isEnabled = enabled
+            Log.d(
+                "$TAG ${getFragmentRealClassName()} Our own back press callback is ${if (enabled) "enabled" else "disabled"}"
+            )
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        onBackPressedCallback.remove()
+    }
+
+    private fun backPressedCallBackEnabled(slideable: Boolean): Boolean {
+        // This allow to navigate a SlidingPane child nav graph.
+        // This only concerns fragments for which the nav graph is inside a SlidingPane layout.
+        // In our case it's all graphs except the main one.
+        Log.d(
+            "$TAG ${getFragmentRealClassName()} Sliding pane is ${if (slideable) "slideable" else "flat"}"
+        )
+        return slideable
     }
 }

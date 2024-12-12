@@ -102,13 +102,14 @@ class TelecomManager
             CallAttributesCompat.DIRECTION_INCOMING
         }
 
+        val type = CallAttributesCompat.CALL_TYPE_AUDIO_CALL or CallAttributesCompat.CALL_TYPE_VIDEO_CALL
         val capabilities = CallAttributesCompat.SUPPORTS_SET_INACTIVE or CallAttributesCompat.SUPPORTS_TRANSFER
 
         val callAttributes = CallAttributesCompat(
             displayName,
             uri,
             direction,
-            CallAttributesCompat.CALL_TYPE_AUDIO_CALL,
+            type,
             capabilities
         )
         Log.i("$TAG Adding call to Telecom's CallsManager with attributes [$callAttributes]")
