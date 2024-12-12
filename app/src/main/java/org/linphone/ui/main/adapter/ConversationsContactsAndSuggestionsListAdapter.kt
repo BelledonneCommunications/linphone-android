@@ -47,8 +47,9 @@ class ConversationsContactsAndSuggestionsListAdapter :
     HeaderAdapter {
     companion object {
         private const val CONTACT_TYPE = 0
-        private const val SUGGESTION_TYPE = 1
-        private const val CONVERSATION_TYPE = 2
+        private const val FAVORITE_TYPE = 1
+        private const val SUGGESTION_TYPE = 2
+        private const val CONVERSATION_TYPE = 3
     }
 
     val onClickedEvent: MutableLiveData<Event<ConversationContactOrSuggestionModel>> by lazy {
@@ -56,7 +57,7 @@ class ConversationsContactsAndSuggestionsListAdapter :
     }
 
     override fun displayHeaderForPosition(position: Int): Boolean {
-        if (position == 0) { // Conversations
+        if (position == 0) { // Always start by a header
             return true
         }
 
@@ -74,6 +75,9 @@ class ConversationsContactsAndSuggestionsListAdapter :
             SUGGESTION_TYPE -> {
                 AppUtils.getString(R.string.generic_address_picker_suggestions_list_title)
             }
+            FAVORITE_TYPE -> {
+                AppUtils.getString(R.string.generic_address_picker_favorites_list_title)
+            }
             else -> {
                 AppUtils.getString(R.string.generic_address_picker_contacts_list_title)
             }
@@ -86,7 +90,11 @@ class ConversationsContactsAndSuggestionsListAdapter :
         return if (model.localAddress != null) {
             CONVERSATION_TYPE
         } else if (model.friend != null) {
-            CONTACT_TYPE
+            if (model.friend.starred) {
+                FAVORITE_TYPE
+            } else {
+                CONTACT_TYPE
+            }
         } else {
             SUGGESTION_TYPE
         }
@@ -110,7 +118,7 @@ class ConversationsContactsAndSuggestionsListAdapter :
                 }
                 ConversationViewHolder(binding)
             }
-            CONTACT_TYPE -> {
+            CONTACT_TYPE, FAVORITE_TYPE -> {
                 val binding: GenericAddressPickerContactListCellBinding = DataBindingUtil.inflate(
                     LayoutInflater.from(parent.context),
                     R.layout.generic_address_picker_contact_list_cell,
@@ -148,7 +156,7 @@ class ConversationsContactsAndSuggestionsListAdapter :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
             CONVERSATION_TYPE -> (holder as ConversationViewHolder).bind(getItem(position))
-            CONTACT_TYPE -> (holder as ContactViewHolder).bind(getItem(position))
+            CONTACT_TYPE, FAVORITE_TYPE -> (holder as ContactViewHolder).bind(getItem(position))
             else -> (holder as SuggestionViewHolder).bind(getItem(position))
         }
     }

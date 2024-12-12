@@ -783,6 +783,7 @@
     <string name="operation_in_progress_overlay">Operation in progress, please wait</string>
     <string name="generic_address_picker_conversations_list_title">Conversations</string>
     <string name="generic_address_picker_contacts_list_title">Contacts</string>
+    <string name="generic_address_picker_favorites_list_title">Favorites</string>
     <string name="generic_address_picker_suggestions_list_title">Suggestions</string>
     <string name="post_notifications_permission_not_granted">Post notifications permission not granted!</string>
     <plurals name="mwi_messages_are_waiting">

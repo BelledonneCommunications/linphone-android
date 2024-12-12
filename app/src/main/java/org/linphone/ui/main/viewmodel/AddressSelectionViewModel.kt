@@ -262,6 +262,7 @@ abstract class AddressSelectionViewModel
             arrayListOf()
         }
 
+        val favoritesList = arrayListOf<ConversationContactOrSuggestionModel>()
         val contactsList = arrayListOf<ConversationContactOrSuggestionModel>()
         val suggestionsList = arrayListOf<ConversationContactOrSuggestionModel>()
 
@@ -289,7 +290,11 @@ abstract class AddressSelectionViewModel
                     )
                     model.avatarModel.postValue(avatarModel)
 
-                    contactsList.add(model)
+                    if (friend.starred) {
+                        favoritesList.add(model)
+                    } else {
+                        contactsList.add(model)
+                    }
                 } else {
                     val defaultAccountAddress = coreContext.core.defaultAccount?.params?.identityAddress
                     if (defaultAccountAddress != null && address.weakEqual(defaultAccountAddress)) {
@@ -307,6 +312,9 @@ abstract class AddressSelectionViewModel
         }
 
         val collator = Collator.getInstance(Locale.getDefault())
+        favoritesList.sortWith { model1, model2 ->
+            collator.compare(model1.name, model2.name)
+        }
         contactsList.sortWith { model1, model2 ->
             collator.compare(model1.name, model2.name)
         }
@@ -316,12 +324,13 @@ abstract class AddressSelectionViewModel
 
         val list = arrayListOf<ConversationContactOrSuggestionModel>()
         list.addAll(conversationsList)
+        list.addAll(favoritesList)
         list.addAll(contactsList)
         list.addAll(suggestionsList)
         modelsList.postValue(list)
         isEmpty.postValue(list.isEmpty())
         Log.i(
-            "$TAG Processed [${results.size}] results: [${conversationsList.size}] conversations, [${contactsList.size}] contacts and [${suggestionsList.size}] suggestions"
+            "$TAG Processed [${results.size}] results: [${conversationsList.size}] conversations, [${favoritesList.size}] favorites, [${contactsList.size}] contacts and [${suggestionsList.size}] suggestions"
         )
     }
 
