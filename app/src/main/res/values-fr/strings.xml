@@ -114,7 +114,7 @@
     <string name="assistant_create_account_using_email_on_our_web_platform">Créez un compte avec votre email ici :</string>
     <string name="assistant_already_have_an_account">Vous avez déjà un compte ?</string>
     <string name="assistant_sip_account_transport_protocol">Transport</string>
-    <string name="assistant_third_party_sip_account_warning_explanation">Certaines fonctionalités telles que les conversations de groupe, les vidéo-conférences, etc… nécessitent un compte &appName;.\n\nCes fonctionalités seront masquées si vous utilisez un compte SIP tiers.\n\nPour les activer dans un projet commercial, merci de nous contacter.</string>
+    <string name="assistant_third_party_sip_account_warning_explanation">Certaines fonctionnalités telles que les conversations de groupe, les vidéo-conférences, etc… nécessitent un compte &appName;.\n\nCes fonctionnalités seront masquées si vous utilisez un compte SIP tiers.\n\nPour les activer dans un projet commercial, merci de nous contacter.</string>
     <string name="assistant_third_party_sip_account_create_linphone_account">Je préfère créer un compte</string>
     <string name="assistant_third_party_sip_account_warning_ok">J\'ai compris</string>
     <string name="assistant_third_party_sip_account_username_or_identity">Nom d\'utilisateur ou identité SIP*</string>
@@ -633,7 +633,7 @@
     <string name="call_dialog_zrtp_security_alert_try_again">Réessayer</string>
     <string name="call_dialog_zrtp_security_alert_message">La confidentialité de votre appel peut être compromise !</string>
 
-    <string name="call_audio_device_type_earpiece">Oreilette</string>
+    <string name="call_audio_device_type_earpiece">Oreillette</string>
     <string name="call_audio_device_type_speaker">Haut parleur</string>
     <string name="call_audio_device_type_bluetooth">Bluetooth (%s)</string>
     <string name="call_audio_device_type_hearing_aid">Aide auditive (%s)</string>
@@ -665,7 +665,7 @@
     <string name="call_history_deleted_toast">L\'historique des appels a été supprimé</string>
     <string name="call_can_be_trusted_toast">Appareil authentifié</string>
     <string name="call_transfer_in_progress_toast">Appel en cours de transfert</string>
-    <string name="call_transfer_successful_toast">L\'appel a été transferré</string>
+    <string name="call_transfer_successful_toast">L\'appel a été transféré</string>
     <string name="call_transfer_failed_toast">Le transfert a échoué !</string>
     <string name="call_error_user_busy_toast">L\'utilisateur est occupé</string>
     <string name="call_error_user_not_found_toast">L\'utilisateur n\'a pu être trouvé</string>
