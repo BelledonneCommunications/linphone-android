@@ -448,6 +448,14 @@ class CoreContext
         val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         audioManager.registerAudioDeviceCallback(audioDeviceCallback, coreThread)
 
+        val accounts = core.accountList
+        if (core.defaultAccount == null && accounts.isNotEmpty()) {
+            Log.e("$TAG No default account set but accounts list not empty!")
+            val firstAccount = accounts.first()
+            core.defaultAccount = firstAccount
+            Log.w("$TAG Set account [${firstAccount?.params?.identityAddress?.asStringUriOnly()}] as default")
+        }
+
         computeUserAgent()
         Log.i("$TAG Core has been configured with user-agent [${core.userAgent}], starting it")
         core.start()
