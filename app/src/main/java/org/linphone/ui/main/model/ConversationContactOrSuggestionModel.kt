@@ -39,6 +39,8 @@ class ConversationContactOrSuggestionModel
 ) {
     val id = friend?.refKey ?: address.asStringUriOnly().hashCode()
 
+    val starred = friend?.starred == true
+
     val name = conversationSubject
         ?: if (friend != null) {
             friend.name ?: LinphoneUtils.getDisplayName(address)

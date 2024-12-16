@@ -90,7 +90,7 @@ class ConversationsContactsAndSuggestionsListAdapter :
         return if (model.localAddress != null) {
             CONVERSATION_TYPE
         } else if (model.friend != null) {
-            if (model.friend.starred) {
+            if (model.starred) {
                 FAVORITE_TYPE
             } else {
                 CONTACT_TYPE
