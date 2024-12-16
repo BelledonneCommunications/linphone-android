@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:bind="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <import type="android.view.View" />
@@ -22,7 +22,7 @@
         app:behavior_hideable="true"
         app:behavior_peekHeight="0dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        tools:ignore="HardcodedText">
+        bind:ignore="HardcodedText">
 
         <com.google.android.material.bottomsheet.BottomSheetDragHandleView
             android:id="@+id/numpad_handle"
@@ -87,125 +87,133 @@
             app:flow_maxElementsWrap="3"
             app:constraint_referenced_ids="digit_1, digit_2, digit_3, digit_4, digit_5, digit_6, digit_7, digit_8, digit_9, digit_star, digit_0, digit_sharp" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{() -> model.onDigitClicked(`1`)}"
-            style="@style/call_numpad_digits_style"
+        <include
             android:id="@+id/digit_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1"
+            android:layout_width="@dimen/call_dtmf_button_size"
+            android:layout_height="@dimen/call_dtmf_button_size"
+            layout="@layout/call_numpad_digit"
+            bind:digit="@{`1`}"
+            bind:model="@{model}"
             app:layout_constraintTop_toBottomOf="@id/numpad_handle"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{() -> model.onDigitClicked(`2`)}"
-            style="@style/call_numpad_digits_style"
+        <include
             android:id="@+id/digit_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="2"
+            android:layout_width="@dimen/call_dtmf_button_size"
+            android:layout_height="@dimen/call_dtmf_button_size"
+            layout="@layout/call_numpad_digit_with_letters"
+            bind:digit="@{`2`}"
+            bind:letters="@{`abc`}"
+            bind:model="@{model}"
             app:layout_constraintTop_toBottomOf="@id/numpad_handle"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{() -> model.onDigitClicked(`3`)}"
-            style="@style/call_numpad_digits_style"
+        <include
             android:id="@+id/digit_3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="3"
+            android:layout_width="@dimen/call_dtmf_button_size"
+            android:layout_height="@dimen/call_dtmf_button_size"
+            layout="@layout/call_numpad_digit_with_letters"
+            bind:digit="@{`3`}"
+            bind:letters="@{`def`}"
+            bind:model="@{model}"
             app:layout_constraintTop_toBottomOf="@id/numpad_handle"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{() -> model.onDigitClicked(`4`)}"
-            style="@style/call_numpad_digits_style"
+        <include
             android:id="@+id/digit_4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="4"
+            android:layout_width="@dimen/call_dtmf_button_size"
+            android:layout_height="@dimen/call_dtmf_button_size"
+            layout="@layout/call_numpad_digit_with_letters"
+            bind:digit="@{`4`}"
+            bind:letters="@{`ghi`}"
+            bind:model="@{model}"
             app:layout_constraintTop_toBottomOf="@id/numpad_handle"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{() -> model.onDigitClicked(`5`)}"
-            style="@style/call_numpad_digits_style"
+        <include
             android:id="@+id/digit_5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="5"
+            android:layout_width="@dimen/call_dtmf_button_size"
+            android:layout_height="@dimen/call_dtmf_button_size"
+            layout="@layout/call_numpad_digit_with_letters"
+            bind:digit="@{`5`}"
+            bind:letters="@{`jkl`}"
+            bind:model="@{model}"
             app:layout_constraintTop_toBottomOf="@id/numpad_handle"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{() -> model.onDigitClicked(`6`)}"
-            style="@style/call_numpad_digits_style"
+        <include
             android:id="@+id/digit_6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="6"
+            android:layout_width="@dimen/call_dtmf_button_size"
+            android:layout_height="@dimen/call_dtmf_button_size"
+            layout="@layout/call_numpad_digit_with_letters"
+            bind:digit="@{`6`}"
+            bind:letters="@{`mno`}"
+            bind:model="@{model}"
             app:layout_constraintTop_toBottomOf="@id/numpad_handle"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{() -> model.onDigitClicked(`7`)}"
-            style="@style/call_numpad_digits_style"
+        <include
             android:id="@+id/digit_7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="7"
+            android:layout_width="@dimen/call_dtmf_button_size"
+            android:layout_height="@dimen/call_dtmf_button_size"
+            layout="@layout/call_numpad_digit_with_letters"
+            bind:digit="@{`7`}"
+            bind:letters="@{`pqrs`}"
+            bind:model="@{model}"
             app:layout_constraintTop_toBottomOf="@id/numpad_handle"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{() -> model.onDigitClicked(`8`)}"
-            style="@style/call_numpad_digits_style"
+        <include
             android:id="@+id/digit_8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="8"
+            android:layout_width="@dimen/call_dtmf_button_size"
+            android:layout_height="@dimen/call_dtmf_button_size"
+            layout="@layout/call_numpad_digit_with_letters"
+            bind:digit="@{`8`}"
+            bind:letters="@{`tuv`}"
+            bind:model="@{model}"
             app:layout_constraintTop_toBottomOf="@id/numpad_handle"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{() -> model.onDigitClicked(`9`)}"
-            style="@style/call_numpad_digits_style"
+        <include
             android:id="@+id/digit_9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="9"
+            android:layout_width="@dimen/call_dtmf_button_size"
+            android:layout_height="@dimen/call_dtmf_button_size"
+            layout="@layout/call_numpad_digit_with_letters"
+            bind:digit="@{`9`}"
+            bind:letters="@{`wxyz`}"
+            bind:model="@{model}"
             app:layout_constraintTop_toBottomOf="@id/numpad_handle"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{() -> model.onDigitClicked(`*`)}"
-            style="@style/call_numpad_digits_style"
+        <include
             android:id="@+id/digit_star"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="*"
+            android:layout_width="@dimen/call_dtmf_button_size"
+            android:layout_height="@dimen/call_dtmf_button_size"
+            layout="@layout/call_numpad_digit"
+            bind:digit="@{`*`}"
+            bind:model="@{model}"
             app:layout_constraintTop_toBottomOf="@id/numpad_handle"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{() -> model.onDigitClicked(`0`)}"
-            style="@style/call_numpad_digits_style"
+        <include
             android:id="@+id/digit_0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0"
+            android:layout_width="@dimen/call_dtmf_button_size"
+            android:layout_height="@dimen/call_dtmf_button_size"
+            layout="@layout/call_numpad_digit"
+            bind:digit="@{`0`}"
+            bind:model="@{model}"
             app:layout_constraintTop_toBottomOf="@id/numpad_handle"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{() -> model.onDigitClicked(`#`)}"
-            style="@style/call_numpad_digits_style"
+        <include
             android:id="@+id/digit_sharp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="#"
+            android:layout_width="@dimen/call_dtmf_button_size"
+            android:layout_height="@dimen/call_dtmf_button_size"
+            layout="@layout/call_numpad_digit"
+            bind:digit="@{`#`}"
+            bind:model="@{model}"
             app:layout_constraintTop_toBottomOf="@id/numpad_handle"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

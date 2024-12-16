@@ -170,14 +170,6 @@
         <item name="android:layout_marginTop">-10dp</item>
         <item name="android:layout_marginBottom">5dp</item>
     </style>
-    <style name="call_numpad_digits_style">
-        <item name="android:fontFamily">@font/noto_sans</item>
-        <item name="android:textColor">@color/bc_white</item>
-        <item name="android:textSize">32sp</item>
-        <item name="android:gravity">center</item>
-        <item name="android:elevation">3dp</item>
-        <item name="android:background">@drawable/in_call_button_background_red</item>
-    </style>
     <style name="in_call_extra_action_label_style">
         <item name="android:fontFamily">@font/noto_sans</item>
         <item name="android:textSize">14sp</item>
