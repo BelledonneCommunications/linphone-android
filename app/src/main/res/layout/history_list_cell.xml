@@ -51,7 +51,7 @@
             android:layout_marginStart="10dp"
             android:text="@{model.avatarModel.name, default=`John Doe`}"
             android:textSize="14sp"
-            android:textColor="?attr/color_main2_700"
+            android:textColor="?attr/color_main2_800"
             app:layout_constraintStart_toEndOf="@id/avatar"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/date_time"/>

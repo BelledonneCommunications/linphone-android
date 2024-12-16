@@ -77,7 +77,7 @@
             android:text="@{model.name, default=`John Doe`}"
             android:textSize="14sp"
             android:layout_marginStart="10dp"
-            android:textColor="?attr/color_main2_700"
+            android:textColor="?attr/color_main2_800"
             app:layout_constraintStart_toEndOf="@id/avatar"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>

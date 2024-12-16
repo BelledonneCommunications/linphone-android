@@ -38,6 +38,7 @@
             android:layout_height="wrap_content"
             android:text="@{model.avatarModel.name, default=`John Doe`}"
             android:textSize="14sp"
+            android:textColor="?attr/color_main2_800"
             android:layout_marginStart="10dp"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintStart_toEndOf="@id/avatar"

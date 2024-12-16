@@ -108,7 +108,7 @@
                 android:layout_marginEnd="16dp"
                 android:text="@{model.subject, default=`Meeting with John`}"
                 android:textSize="13sp"
-                android:textColor="?attr/color_main2_600"
+                android:textColor="?attr/color_main2_800"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:drawableStart="@{model.isBroadcast ? @drawable/slideshow : @drawable/video_conference, default=@drawable/video_conference}"

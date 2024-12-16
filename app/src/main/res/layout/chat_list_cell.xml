@@ -89,7 +89,7 @@
             android:gravity="center_vertical|start"
             android:text="@{model.lastMessageTextSender, default=`John Doe:`}"
             android:textSize="14sp"
-            android:textColor="?attr/color_main2_400"
+            android:textColor="?attr/color_main2_500"
             android:visibility="@{model.isBeingDeleted || model.lastMessageTextSender.length() == 0 || model.isComposing ? View.GONE : View.VISIBLE}"
             textFont="@{model.isBeingDeleted || model.unreadMessageCount > 0 || model.isComposing ? NotoSansFont.NotoSansBold : NotoSansFont.NotoSansRegular}"
             app:layout_constraintStart_toStartOf="@id/title"
@@ -121,7 +121,7 @@
             android:ellipsize="end"
             android:text="@{model.isBeingDeleted ? @string/conversations_list_is_being_removed_label : model.isComposing ? model.composingLabel : model.lastMessageText, default=`Hello there!`}"
             android:textSize="14sp"
-            android:textColor="?attr/color_main2_400"
+            android:textColor="?attr/color_main2_500"
             textFont="@{model.isBeingDeleted || model.unreadMessageCount > 0 || model.isComposing ? NotoSansFont.NotoSansBold : NotoSansFont.NotoSansRegular}"
             app:layout_constraintStart_toEndOf="@id/last_message_forward"
             app:layout_constraintEnd_toStartOf="@id/right_border"
@@ -181,7 +181,7 @@
             app:layout_constraintEnd_toStartOf="@id/last_sent_message_status"
             app:layout_constraintTop_toBottomOf="@id/date_time"
             app:layout_constraintBottom_toTopOf="@id/separator"
-            app:tint="?attr/color_main2_400" />
+            app:tint="?attr/color_main2_600" />
 
         <ImageView
             android:id="@+id/ephemeral"
@@ -194,7 +194,7 @@
             app:layout_constraintEnd_toStartOf="@id/muted"
             app:layout_constraintTop_toBottomOf="@id/date_time"
             app:layout_constraintBottom_toTopOf="@id/separator"
-            app:tint="?attr/color_main2_400" />
+            app:tint="?attr/color_main2_600" />
 
         <ImageView
             android:id="@+id/warning_not_secured"

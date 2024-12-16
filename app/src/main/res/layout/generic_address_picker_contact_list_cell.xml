@@ -75,7 +75,7 @@
             android:textSize="14sp"
             android:maxLines="1"
             android:ellipsize="end"
-            android:textColor="?attr/color_main2_700"
+            android:textColor="?attr/color_main2_800"
             app:layout_constraintStart_toEndOf="@id/avatar"
             app:layout_constraintEnd_toStartOf="@id/selected"
             app:layout_constraintTop_toTopOf="parent"

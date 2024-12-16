@@ -1,6 +1,6 @@
 <resources>
     <style name="AppSplashScreenTheme" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/background_color_dark_mode</item>
+        <item name="windowSplashScreenBackground">@color/background_color_alt_dark_mode</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/linphone_splashscreen</item>
         <item name="postSplashScreenTheme">@style/Theme.Linphone</item>
     </style>
@@ -10,7 +10,7 @@
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
         <!-- Customize your theme here. -->
         <item name="android:windowActivityTransitions">true</item>
-        <item name="android:windowBackground">@color/background_color_dark_mode</item>
+        <item name="android:windowBackground">@color/background_color_alt_dark_mode</item>
         <item name="android:statusBarColor">?attr/color_main1_500</item>
 
         <item name="color_main1_100">@color/orange_main_900</item>
