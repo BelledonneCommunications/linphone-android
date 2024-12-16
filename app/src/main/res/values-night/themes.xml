@@ -13,7 +13,7 @@
         <item name="android:windowBackground">@color/background_color_alt_dark_mode</item>
         <item name="android:statusBarColor">?attr/color_main1_500</item>
 
-        <item name="color_main1_100">@color/orange_main_900</item>
+        <item name="color_main1_100">@color/orange_main_100</item>
         <item name="color_main1_100_alpha_50">@color/orange_main_100_alpha_50</item>
         <item name="color_main1_300">@color/orange_main_300</item>
         <item name="color_main1_500">@color/orange_main_500</item>
@@ -83,50 +83,56 @@
     </style>
 
     <style name="Theme.LinphoneYellow" parent="Theme.Linphone">
-        <item name="color_main1_100">@color/yellow_main_900</item>
+        <item name="color_main1_100">@color/yellow_main_100</item>
         <item name="color_main1_100_alpha_50">@color/yellow_main_100_alpha_50</item>
         <item name="color_main1_300">@color/yellow_main_300</item>
         <item name="color_main1_500">@color/yellow_main_500</item>
         <item name="color_main1_700">@color/yellow_main_700</item>
+        <item name="color_chat_bubble_outgoing">@color/text_field_background_color_dark_mode</item>
     </style>
 
     <style name="Theme.LinphoneGreen" parent="Theme.Linphone">
-        <item name="color_main1_100">@color/green_main_900</item>
+        <item name="color_main1_100">@color/green_main_100</item>
         <item name="color_main1_100_alpha_50">@color/green_main_100_alpha_50</item>
         <item name="color_main1_300">@color/green_main_300</item>
         <item name="color_main1_500">@color/green_main_500</item>
         <item name="color_main1_700">@color/green_main_700</item>
+        <item name="color_chat_bubble_outgoing">@color/text_field_background_color_dark_mode</item>
     </style>
 
     <style name="Theme.LinphoneBlue" parent="Theme.Linphone">
-        <item name="color_main1_100">@color/blue_main_900</item>
+        <item name="color_main1_100">@color/blue_main_100</item>
         <item name="color_main1_100_alpha_50">@color/blue_main_100_alpha_50</item>
         <item name="color_main1_300">@color/blue_main_300</item>
         <item name="color_main1_500">@color/blue_main_500</item>
         <item name="color_main1_700">@color/blue_main_700</item>
+        <item name="color_chat_bubble_outgoing">@color/text_field_background_color_dark_mode</item>
     </style>
 
     <style name="Theme.LinphoneRed" parent="Theme.Linphone">
-        <item name="color_main1_100">@color/red_main_900</item>
+        <item name="color_main1_100">@color/red_main_100</item>
         <item name="color_main1_100_alpha_50">@color/red_main_100_alpha_50</item>
         <item name="color_main1_300">@color/red_main_300</item>
         <item name="color_main1_500">@color/red_main_500</item>
         <item name="color_main1_700">@color/red_main_700</item>
+        <item name="color_chat_bubble_outgoing">@color/text_field_background_color_dark_mode</item>
     </style>
 
     <style name="Theme.LinphonePink" parent="Theme.Linphone">
-        <item name="color_main1_100">@color/pink_main_900</item>
+        <item name="color_main1_100">@color/pink_main_100</item>
         <item name="color_main1_100_alpha_50">@color/pink_main_100_alpha_50</item>
         <item name="color_main1_300">@color/pink_main_300</item>
         <item name="color_main1_500">@color/pink_main_500</item>
         <item name="color_main1_700">@color/pink_main_700</item>
+        <item name="color_chat_bubble_outgoing">@color/text_field_background_color_dark_mode</item>
     </style>
 
     <style name="Theme.LinphonePurple" parent="Theme.Linphone">
-        <item name="color_main1_100">@color/purple_main_900</item>
+        <item name="color_main1_100">@color/purple_main_100</item>
         <item name="color_main1_100_alpha_50">@color/purple_main_100_alpha_50</item>
         <item name="color_main1_300">@color/purple_main_300</item>
         <item name="color_main1_500">@color/purple_main_500</item>
         <item name="color_main1_700">@color/purple_main_700</item>
+        <item name="color_chat_bubble_outgoing">@color/text_field_background_color_dark_mode</item>
     </style>
 </resources>
