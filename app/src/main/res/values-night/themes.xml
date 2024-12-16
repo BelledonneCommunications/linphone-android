@@ -57,12 +57,12 @@
         <item name="color_text">@color/gray_main2_100</item>
         <item name="color_hint_text">@color/gray_main2_300</item>
 
-        <item name="color_text_field_background">@color/text_field_background_color_dark_mode</item>
+        <item name="color_text_field_background">@color/gray_main2_700</item>
         <item name="color_avatar_background">@color/gray_main2_700</item>
         <item name="color_avatar_text">@color/gray_main2_200</item>
 
         <item name="color_chat_bubble_incoming">@color/background_color_alt_dark_mode</item>
-        <item name="color_chat_bubble_outgoing">@color/text_field_background_color_dark_mode</item>
+        <item name="color_chat_bubble_outgoing">@color/gray_main2_700</item>
         <item name="color_chat_bubble_reply">@color/gray_500</item>
 
         <item name="color_message_text_field_background">@color/gray_500</item>
@@ -76,7 +76,7 @@
         <item name="color_gradient_end">@color/background_color_alt_dark_mode</item>
 
         <item name="color_trust_background">@color/gray_main2_600</item>
-        <item name="color_trust_track">@color/text_field_background_color_dark_mode</item>
+        <item name="color_trust_track">#142932</item>
 
         <item name="color_bottom_sheet_handle">@color/gray_main2_400</item>
         <item name="color_bottom_sheet_background">@color/background_color_alt_dark_mode</item>
@@ -88,7 +88,7 @@
         <item name="color_main1_300">@color/yellow_main_300</item>
         <item name="color_main1_500">@color/yellow_main_500</item>
         <item name="color_main1_700">@color/yellow_main_700</item>
-        <item name="color_chat_bubble_outgoing">@color/text_field_background_color_dark_mode</item>
+        <item name="color_chat_bubble_outgoing">@color/gray_main2_700</item>
     </style>
 
     <style name="Theme.LinphoneGreen" parent="Theme.Linphone">
@@ -97,7 +97,7 @@
         <item name="color_main1_300">@color/green_main_300</item>
         <item name="color_main1_500">@color/green_main_500</item>
         <item name="color_main1_700">@color/green_main_700</item>
-        <item name="color_chat_bubble_outgoing">@color/text_field_background_color_dark_mode</item>
+        <item name="color_chat_bubble_outgoing">@color/gray_main2_700</item>
     </style>
 
     <style name="Theme.LinphoneBlue" parent="Theme.Linphone">
@@ -106,7 +106,7 @@
         <item name="color_main1_300">@color/blue_main_300</item>
         <item name="color_main1_500">@color/blue_main_500</item>
         <item name="color_main1_700">@color/blue_main_700</item>
-        <item name="color_chat_bubble_outgoing">@color/text_field_background_color_dark_mode</item>
+        <item name="color_chat_bubble_outgoing">@color/gray_main2_700</item>
     </style>
 
     <style name="Theme.LinphoneRed" parent="Theme.Linphone">
@@ -115,7 +115,7 @@
         <item name="color_main1_300">@color/red_main_300</item>
         <item name="color_main1_500">@color/red_main_500</item>
         <item name="color_main1_700">@color/red_main_700</item>
-        <item name="color_chat_bubble_outgoing">@color/text_field_background_color_dark_mode</item>
+        <item name="color_chat_bubble_outgoing">@color/gray_main2_700</item>
     </style>
 
     <style name="Theme.LinphonePink" parent="Theme.Linphone">
@@ -124,7 +124,7 @@
         <item name="color_main1_300">@color/pink_main_300</item>
         <item name="color_main1_500">@color/pink_main_500</item>
         <item name="color_main1_700">@color/pink_main_700</item>
-        <item name="color_chat_bubble_outgoing">@color/text_field_background_color_dark_mode</item>
+        <item name="color_chat_bubble_outgoing">@color/gray_main2_700</item>
     </style>
 
     <style name="Theme.LinphonePurple" parent="Theme.Linphone">
@@ -133,6 +133,6 @@
         <item name="color_main1_300">@color/purple_main_300</item>
         <item name="color_main1_500">@color/purple_main_500</item>
         <item name="color_main1_700">@color/purple_main_700</item>
-        <item name="color_chat_bubble_outgoing">@color/text_field_background_color_dark_mode</item>
+        <item name="color_chat_bubble_outgoing">@color/gray_main2_700</item>
     </style>
 </resources>

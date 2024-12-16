@@ -8,7 +8,6 @@
 
     <color name="background_color_dark_mode">#191919</color>
     <color name="background_color_alt_dark_mode">#303030</color>
-    <color name="text_field_background_color_dark_mode">#142932</color>
 
     <color name="orange_main_100">#FFEACB</color>
     <color name="orange_main_100_alpha_50">#80FFEACB</color>
