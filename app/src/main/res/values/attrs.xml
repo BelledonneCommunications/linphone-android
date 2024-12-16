@@ -68,5 +68,6 @@
         <attr name="color_trust_background" format="color"/>
         <attr name="color_trust_track" format="color"/>
         <attr name="color_conversation_send_area_background" format="color"/>
+        <attr name="color_bottom_sheet_handle" format="color"/>
     </declare-styleable>
 </resources>

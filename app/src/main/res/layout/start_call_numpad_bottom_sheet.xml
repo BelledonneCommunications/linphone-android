@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:padding="11dp"
             android:src="@drawable/shape_drawer_handle"
-            app:tint="?attr/color_main2_300"
+            app:tint="?attr/color_bottom_sheet_handle"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -205,7 +205,7 @@
             android:contentDescription="@string/content_description_call_start"
             android:elevation="3dp"
             android:background="@drawable/squircle_green_button_background"
-            app:tint="?attr/color_main2_000"
+            app:tint="@color/bc_white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/digit_0"
@@ -223,7 +223,8 @@
             app:layout_constraintStart_toStartOf="@id/digit_sharp"
             app:layout_constraintEnd_toEndOf="@id/digit_sharp"
             app:layout_constraintTop_toTopOf="@id/call"
-            app:layout_constraintBottom_toBottomOf="@id/call"/>
+            app:layout_constraintBottom_toBottomOf="@id/call"
+            app:tint="?attr/color_main2_600" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

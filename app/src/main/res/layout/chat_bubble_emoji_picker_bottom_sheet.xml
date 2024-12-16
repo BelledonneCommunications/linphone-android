@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:padding="11dp"
             android:src="@drawable/shape_drawer_handle"
-            app:tint="?attr/color_main2_300"
+            app:tint="?attr/color_bottom_sheet_handle"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
