@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:text="@{model.dayNumber, default=`19`}"
             android:visibility="@{model.firstMeetingOfTheDay ? View.VISIBLE : View.INVISIBLE}"
-            android:textColor="@{model.isToday ? @color/main2_000 : @color/main2_500, default=`#ffffff`}"
+            android:textColor="@{model.isToday ? @color/bc_white : @color/main2_500, default=@color/bc_white}"
             android:textSize="20sp"
             android:paddingBottom="4dp"
             app:layout_constraintStart_toStartOf="@id/today_background"
