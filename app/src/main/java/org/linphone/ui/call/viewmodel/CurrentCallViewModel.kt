@@ -1064,12 +1064,7 @@ class CurrentCallViewModel
             updateEncryption()
         }
 
-        val remoteContactAddress = call.remoteContactAddress
-        val conferenceInfo = if (remoteContactAddress != null) {
-            call.core.findConferenceInformationFromUri(remoteContactAddress)
-        } else {
-            call.callLog.conferenceInfo
-        }
+        val conferenceInfo = LinphoneUtils.getConferenceInfoIfAny(call)
         if (call.conference != null || conferenceInfo != null) {
             val subject = call.conference?.subject ?: conferenceInfo?.subject
             Log.i("$TAG Conference [$subject] found, going to conference fragment")

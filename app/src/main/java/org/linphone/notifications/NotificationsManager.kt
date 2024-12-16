@@ -1038,13 +1038,8 @@ class NotificationsManager
         val answerIntent = getCallAnswerPendingIntent(notifiable)
 
         val remoteAddress = call.callLog.remoteAddress
-        val remoteContactAddress = call.remoteContactAddress
-        val conferenceInfo = if (remoteContactAddress != null) {
-            call.core.findConferenceInformationFromUri(remoteContactAddress) ?: call.callLog.conferenceInfo
-        } else {
-            call.callLog.conferenceInfo
-        }
         val conference = call.conference
+        val conferenceInfo = LinphoneUtils.getConferenceInfoIfAny(call)
         val isConference = conference != null || conferenceInfo != null
 
         val caller = if (isConference) {
@@ -1066,13 +1061,7 @@ class NotificationsManager
             getPerson(contact, displayName)
         }
 
-        val isVideo = if (isConference) {
-            true
-        } else if (isIncoming) {
-            call.remoteParams?.isVideoEnabled == true && call.remoteParams?.videoDirection != MediaDirection.Inactive
-        } else {
-            call.currentParams.isVideoEnabled && call.currentParams.videoDirection != MediaDirection.Inactive
-        }
+        val isVideo = LinphoneUtils.isVideoEnabled(call)
 
         val smallIcon = if (isConference) {
             R.drawable.video_conference

@@ -48,6 +48,7 @@ import org.linphone.core.ConferenceScheduler
 import org.linphone.core.Core
 import org.linphone.core.Factory
 import org.linphone.core.Friend
+import org.linphone.core.MediaDirection
 import org.linphone.core.Reason
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
@@ -214,6 +215,31 @@ class LinphoneUtils {
         @WorkerThread
         fun isRemoteConferencingAvailable(core: Core): Boolean {
             return core.defaultAccount?.params?.audioVideoConferenceFactoryAddress != null
+        }
+
+        @WorkerThread
+        fun isVideoEnabled(call: Call): Boolean {
+            val conference = call.conference
+            val isConference = conference != null
+
+            val isIncoming = isCallIncoming(call.state)
+            return if (isConference || getConferenceInfoIfAny(call) != null) {
+                true
+            } else if (isIncoming) {
+                call.remoteParams?.isVideoEnabled == true && call.remoteParams?.videoDirection != MediaDirection.Inactive
+            } else {
+                call.currentParams.isVideoEnabled && call.currentParams.videoDirection != MediaDirection.Inactive
+            }
+        }
+
+        @WorkerThread
+        fun getConferenceInfoIfAny(call: Call): ConferenceInfo? {
+            val remoteContactAddress = call.remoteContactAddress
+            return if (remoteContactAddress != null) {
+                call.core.findConferenceInformationFromUri(remoteContactAddress) ?: call.callLog.conferenceInfo
+            } else {
+                call.callLog.conferenceInfo
+            }
         }
 
         @WorkerThread

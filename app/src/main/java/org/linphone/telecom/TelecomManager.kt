@@ -91,9 +91,6 @@ class TelecomManager
         Log.i("$TAG Call to [${call.remoteAddress.asStringUriOnly()}] created")
 
         val address = call.callLog.remoteAddress
-        val friend = coreContext.contactsManager.findContactByAddress(address)
-        val displayName = friend?.name ?: LinphoneUtils.getDisplayName(address)
-
         val uri = Uri.parse(address.asStringUriOnly())
 
         val direction = if (call.dir == Call.Dir.Outgoing) {
@@ -102,8 +99,18 @@ class TelecomManager
             CallAttributesCompat.DIRECTION_INCOMING
         }
 
-        val type = CallAttributesCompat.CALL_TYPE_AUDIO_CALL or CallAttributesCompat.CALL_TYPE_VIDEO_CALL
+        val conferenceInfo = LinphoneUtils.getConferenceInfoIfAny(call)
         val capabilities = CallAttributesCompat.SUPPORTS_SET_INACTIVE or CallAttributesCompat.SUPPORTS_TRANSFER
+
+        val displayName = if (call.conference != null || conferenceInfo != null) {
+            conferenceInfo?.subject ?: call.conference?.subject ?: LinphoneUtils.getDisplayName(address)
+        } else {
+            val friend = coreContext.contactsManager.findContactByAddress(address)
+            friend?.name ?: LinphoneUtils.getDisplayName(address)
+        }
+
+        // When call is created, it is ringing (incoming or outgoing, do not set video)
+        val type = CallAttributesCompat.Companion.CALL_TYPE_AUDIO_CALL
 
         val callAttributes = CallAttributesCompat(
             displayName,

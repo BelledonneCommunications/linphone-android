@@ -58,8 +58,14 @@ class TelecomCallControlCallback(
             if (state == Call.State.Connected) {
                 if (call.dir == Call.Dir.Incoming) {
                     scope.launch {
-                        Log.i("$TAG Answering call")
-                        callControl.answer(CallAttributesCompat.CALL_TYPE_AUDIO_CALL)
+                        val isVideo = LinphoneUtils.isVideoEnabled(call)
+                        Log.i("$TAG Answering ${if (isVideo) "video" else "audio"} call")
+                        val type = if (isVideo) {
+                            CallAttributesCompat.Companion.CALL_TYPE_VIDEO_CALL
+                        } else {
+                            CallAttributesCompat.Companion.CALL_TYPE_AUDIO_CALL
+                        }
+                        callControl.answer(type)
                     }
                 } else {
                     scope.launch {
