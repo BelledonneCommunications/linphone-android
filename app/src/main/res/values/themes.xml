@@ -72,6 +72,7 @@
         <item name="color_trust_track">@color/blue_info_500</item>
         <item name="color_conversation_send_area_background">@color/gray_100</item>
         <item name="color_bottom_sheet_handle">@color/gray_main2_300</item>
+        <item name="color_bottom_sheet_background">@color/gray_100</item>
     </style>
 
     <style name="Theme.LinphoneYellow" parent="Theme.Linphone">
