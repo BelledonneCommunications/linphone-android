@@ -58,16 +58,24 @@
         <attr name="color_text_field_background" format="color"/>
         <attr name="color_avatar_background" format="color"/>
         <attr name="color_avatar_text" format="color"/>
+
         <attr name="color_chat_bubble_incoming" format="color"/>
         <attr name="color_chat_bubble_outgoing" format="color"/>
         <attr name="color_chat_bubble_reply" format="color"/>
+
         <attr name="color_message_text_field_background" format="color"/>
+        <attr name="color_conversation_send_area_background" format="color"/>
+
+        <attr name="color_button_background" format="color" />
+        <attr name="color_button_pressed_background" format="color" />
+        <attr name="color_button_disabled_background" format="color" />
 
         <attr name="color_gradient_start" format="color"/>
         <attr name="color_gradient_end" format="color"/>
+
         <attr name="color_trust_background" format="color"/>
         <attr name="color_trust_track" format="color"/>
-        <attr name="color_conversation_send_area_background" format="color"/>
+
         <attr name="color_bottom_sheet_handle" format="color"/>
         <attr name="color_bottom_sheet_background" format="color"/>
     </declare-styleable>
