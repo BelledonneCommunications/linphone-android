@@ -47,7 +47,6 @@ import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.contacts.model.ContactDeviceModel
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
-import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
@@ -259,14 +258,11 @@ class ContactViewModel
             chatDisabled.postValue(corePreferences.disableChat)
             videoCallDisabled.postValue(!core.isVideoEnabled)
 
+            val defaultDomain = LinphoneUtils.getDefaultAccount()?.params?.domain == corePreferences.defaultDomain
             // Only show contact's devices for Linphone accounts
-            showContactTrustAndDevices.postValue(
-                LinphoneUtils.getDefaultAccount()?.params?.domain == corePreferences.defaultDomain
-            )
-            // Only expand contacts' devices & trust by default if in E2E encrypted mode
-            expandDevicesTrust.postValue(
-                isEndToEndEncryptionMandatory()
-            )
+            showContactTrustAndDevices.postValue(defaultDomain)
+
+            expandDevicesTrust.postValue(defaultDomain)
             coreContext.contactsManager.addListener(contactsListener)
         }
     }
@@ -642,6 +638,9 @@ class ContactViewModel
                     trustedDevicesPercentageFloat.postValue(0.5f)
                 } else {
                     trustedDevicesPercentageFloat.postValue(percentage / 100f / 2)
+                }
+                if (percentage == 100) {
+                    expandDevicesTrust.postValue(false)
                 }
             }
         }

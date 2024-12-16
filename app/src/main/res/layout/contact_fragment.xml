@@ -102,8 +102,8 @@
                     <androidx.constraintlayout.widget.Group
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:constraint_referenced_ids="trusted_devices_count, trusted_devices_progress, devices, trusted_devices_progress_label"
-                        android:visibility="@{viewModel.showContactTrustAndDevices ? (viewModel.expandDevicesTrust &amp;&amp; viewModel.devices.size() > 0 ? View.VISIBLE : View.GONE) : View.GONE}" />
+                        app:constraint_referenced_ids="trusted_devices_count, trusted_devices_progress, devices, trusted_devices_progress_label, trusted_devices_progress_background"
+                        android:visibility="@{viewModel.showContactTrustAndDevices ? (viewModel.expandDevicesTrust &amp;&amp; viewModel.devices.size() > 0 ? View.VISIBLE : View.GONE) : View.GONE, default=gone}" />
 
                     <include
                         android:id="@+id/avatar"
