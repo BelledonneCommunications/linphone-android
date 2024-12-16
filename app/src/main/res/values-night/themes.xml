@@ -58,8 +58,8 @@
         <item name="color_hint_text">@color/gray_main2_300</item>
 
         <item name="color_text_field_background">@color/text_field_background_color_dark_mode</item>
-        <item name="color_avatar_background">@color/text_field_background_color_dark_mode</item>
-        <item name="color_avatar_text">@color/gray_main2_300</item>
+        <item name="color_avatar_background">@color/gray_main2_700</item>
+        <item name="color_avatar_text">@color/gray_main2_200</item>
 
         <item name="color_chat_bubble_incoming">@color/background_color_alt_dark_mode</item>
         <item name="color_chat_bubble_outgoing">@color/text_field_background_color_dark_mode</item>
