@@ -69,8 +69,8 @@ class PhoneNumberUtils {
                 ContactsContract.CommonDataKinds.Phone.TYPE_WORK_MOBILE -> "work,cell"
                 ContactsContract.CommonDataKinds.Phone.TYPE_WORK_PAGER -> "work,pager"
                 ContactsContract.CommonDataKinds.BaseTypes.TYPE_CUSTOM -> {
-                    Log.i(
-                        "$TAG Found custom phone label type using default value [$default] or 'custom' if null"
+                    Log.d(
+                        "$TAG Found custom phone label type using default value [$default] or will use 'custom' if null"
                     )
                     default ?: "custom"
                 }
