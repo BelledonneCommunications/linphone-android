@@ -75,8 +75,13 @@ class TelecomCallControlCallback(
                 }
             } else if (state == Call.State.End) {
                 scope.launch {
-                    Log.i("$TAG Disconnecting call")
+                    Log.i("$TAG Disconnecting call because it has ended")
                     callControl.disconnect(DisconnectCause(DisconnectCause.LOCAL))
+                }
+            } else if (state == Call.State.Error) {
+                scope.launch {
+                    Log.w("$TAG Disconnecting call due to error [$message]")
+                    callControl.disconnect(DisconnectCause(DisconnectCause.ERROR))
                 }
             } else if (state == Call.State.Pausing) {
                 scope.launch {
