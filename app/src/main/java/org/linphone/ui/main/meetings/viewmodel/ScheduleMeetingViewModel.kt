@@ -45,6 +45,7 @@ import org.linphone.ui.main.model.SelectedAddressModel
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
+import java.util.Locale
 
 class ScheduleMeetingViewModel
     @UiThread
@@ -60,8 +61,6 @@ class ScheduleMeetingViewModel
     val subject = MutableLiveData<String>()
 
     val description = MutableLiveData<String>()
-
-    val allDayMeeting = MutableLiveData<Boolean>()
 
     val fromDate = MutableLiveData<String>()
 
@@ -591,18 +590,19 @@ class ScheduleMeetingViewModel
     private fun computeTimeLabels() {
         val timeZoneId = selectedTimeZone.value?.id ?: TimeZone.getDefault().id
         Log.i("$TAG Updating timestamps using time zone [${selectedTimeZone.value}]($timeZoneId)")
-        val cal = Calendar.getInstance(
-            TimeZone.getTimeZone(timeZoneId)
-        )
+        val cal = Calendar.getInstance(TimeZone.getTimeZone(timeZoneId))
+
         cal.timeInMillis = startTimestamp
         if (startHour != -1 && startMinutes != -1) {
             cal.set(Calendar.HOUR_OF_DAY, startHour)
             cal.set(Calendar.MINUTE, startMinutes)
         }
         startTimestamp = cal.timeInMillis
-        val start = TimestampUtils.timeToString(startTimestamp, timestampInSecs = false)
-        Log.i("$TAG Computed start time for timestamp [$startTimestamp] is [$start]")
-        fromTime.postValue(start)
+
+        // Manually printing calendar hour & minute to prevent timezone selection to convert selected time
+        val startHoursToDisplay = String.format(Locale.getDefault(), "%02d", cal.get(Calendar.HOUR_OF_DAY))
+        val startMinutesToDisplay = String.format(Locale.getDefault(), "%02d", cal.get(Calendar.MINUTE))
+        fromTime.postValue("$startHoursToDisplay:$startMinutesToDisplay")
 
         cal.timeInMillis = endTimestamp
         if (endHour != -1 && endMinutes != -1) {
@@ -618,8 +618,12 @@ class ScheduleMeetingViewModel
             }
         }
         endTimestamp = cal.timeInMillis
-        val end = TimestampUtils.timeToString(endTimestamp, timestampInSecs = false)
-        Log.i("$TAG Computed end time for timestamp [$endTimestamp] is [$end]")
-        toTime.postValue(end)
+
+        // Manually printing calendar hour & minute to prevent timezone selection to convert selected time
+        val endHoursToDisplay = String.format(Locale.getDefault(), "%02d", cal.get(Calendar.HOUR_OF_DAY))
+        val endMinutesToDisplay = String.format(Locale.getDefault(), "%02d", cal.get(Calendar.MINUTE))
+        toTime.postValue("$endHoursToDisplay:$endMinutesToDisplay")
+
+        Log.i("$TAG Start timestamp is now [$startTimestamp] and end timestamp is now [$endTimestamp]")
     }
 }
