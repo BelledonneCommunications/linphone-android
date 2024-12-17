@@ -434,7 +434,7 @@ class MessageModel
                             "$TAG Found file ready to be displayed [$path] with MIME [${content.type}/${content.subtype}] for message [${chatMessage.messageId}]"
                         )
 
-                        val wrapBefore = allContentsAreMedia && filesContentCount == 3
+                        val wrapBefore = allContentsAreMedia && exactly4Contents && filesContentCount == 3
                         val fileSize = content.fileSize.toLong()
                         val timestamp = content.creationTimestamp
                         val fileModel = FileModel(
