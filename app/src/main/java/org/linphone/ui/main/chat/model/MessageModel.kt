@@ -736,10 +736,7 @@ class MessageModel
             meetingDay.postValue(TimestampUtils.dayOfWeek(timestamp))
             meetingDayNumber.postValue(TimestampUtils.dayOfMonth(timestamp))
 
-            var count = 0
-            for (info in conferenceInfo.participantInfos) {
-                count += 1
-            }
+            val count = conferenceInfo.participantInfos.size
             meetingParticipants.postValue(
                 AppUtils.getStringWithPlural(
                     R.plurals.conference_participants_list_title,
