@@ -11,6 +11,9 @@
             name="addParticipantsClickListener"
             type="View.OnClickListener" />
         <variable
+            name="showMenuClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.call.viewmodel.CurrentCallViewModel" />
     </data>
@@ -18,7 +21,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/color_main2_000">
+        android:background="?attr/color_background_contrast_in_dark_mode">
 
         <ImageView
             android:id="@+id/back"
@@ -45,6 +48,29 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/back"
             app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+            android:id="@+id/show_menu"
+            android:onClick="@{showMenuClickListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/top_bar_height"
+            android:padding="15dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/dots_three_vertical"
+            android:contentDescription="@string/content_description_show_popup_menu"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="?attr/color_main2_500"/>
+
+        <View
+            android:id="@+id/background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="?attr/color_main2_000"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/back" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/participants_list"

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="shareInvitationClickListener"
+            type="View.OnClickListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/popup_menu_padding"
+        android:paddingStart="@dimen/popup_menu_padding"
+        android:background="@drawable/shape_round_popup_menu_background">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/share_invitation"
+            android:onClick="@{shareInvitationClickListener}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/popup_menu_item_top_margin"
+            android:text="@string/conference_share_link_title"
+            android:textSize="14sp"
+            android:textColor="?attr/color_main2_500"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:drawablePadding="5dp"
+            android:drawableStart="@drawable/share_network"
+            app:drawableTint="?attr/color_main2_700"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/bottom_anchor"/>
+
+        <View
+            android:id="@+id/bottom_anchor"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/popup_menu_item_top_margin"
+            app:layout_constraintWidth_max="@dimen/popup_menu_width"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/share_invitation"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
