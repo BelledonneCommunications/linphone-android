@@ -36,6 +36,7 @@ import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.AppUtils
+import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.ShortcutUtils
 import org.linphone.utils.TimestampUtils
@@ -77,9 +78,9 @@ class ConversationModel
 
     val lastMessageText = MutableLiveData<Spannable>()
 
-    val lastMessageIcon = MutableLiveData<Int>()
+    val lastMessageDeliveryIcon = MutableLiveData<Int>()
 
-    val isLastMessageForwarded = MutableLiveData<Boolean>()
+    val lastMessageContentIcon = MutableLiveData<Int>()
 
     val isLastMessageOutgoing = MutableLiveData<Boolean>()
 
@@ -186,6 +187,7 @@ class ConversationModel
         Log.d(
             "$TAG Ephemeral messages are [${if (chatRoom.isEphemeralEnabled) "enabled" else "disabled"}], lifetime is [${chatRoom.ephemeralLifetime}]"
         )
+        lastMessageContentIcon.postValue(0)
 
         updateLastMessage()
         updateLastUpdatedTime()
@@ -292,9 +294,36 @@ class ConversationModel
 
         isLastMessageOutgoing.postValue(isOutgoing)
         if (isOutgoing) {
-            lastMessageIcon.postValue(LinphoneUtils.getChatIconResId(message.state))
+            lastMessageDeliveryIcon.postValue(LinphoneUtils.getChatIconResId(message.state))
         }
-        isLastMessageForwarded.postValue(message.isForward)
+
+        if (message.isForward) {
+            lastMessageContentIcon.postValue(R.drawable.forward)
+        } else {
+            val firstContent = message.contents.firstOrNull()
+            val icon = if (firstContent?.isIcalendar == true) {
+                R.drawable.calendar
+            } else if (firstContent?.isVoiceRecording == true) {
+                R.drawable.waveform
+            } else if (firstContent?.isFile == true) {
+                val mime = "${firstContent.type}/${firstContent.subtype}"
+                val mimeType = FileUtils.getMimeType(mime)
+                val drawable = when (mimeType) {
+                    FileUtils.MimeType.Image -> R.drawable.file_image
+                    FileUtils.MimeType.Video -> R.drawable.file_video
+                    FileUtils.MimeType.Audio -> R.drawable.file_audio
+                    FileUtils.MimeType.Pdf -> R.drawable.file_pdf
+                    FileUtils.MimeType.PlainText -> R.drawable.file_text
+                    else -> R.drawable.file
+                }
+                drawable
+            } else if (firstContent?.isFileTransfer == true) {
+                R.drawable.download_simple
+            } else {
+                0
+            }
+            lastMessageContentIcon.postValue(icon)
+        }
     }
 
     @WorkerThread
@@ -307,6 +336,9 @@ class ConversationModel
             updateLastMessageStatus(message)
 
             if (message.isOutgoing && message.state != ChatMessage.State.Displayed) {
+                message.addListener(chatMessageListener)
+                lastMessage = message
+            } else if (message.contents.find { it.isFileTransfer == true } != null) {
                 message.addListener(chatMessageListener)
                 lastMessage = message
             }
