@@ -81,7 +81,12 @@ class TelecomCallControlCallback(
             } else if (state == Call.State.Error) {
                 scope.launch {
                     Log.w("$TAG Disconnecting call due to error [$message]")
-                    callControl.disconnect(DisconnectCause(DisconnectCause.ERROR))
+                    try {
+                        // For some reason DisconnectCause.ERROR triggers an IllegalArgumentException
+                        callControl.disconnect(DisconnectCause(DisconnectCause.REJECTED))
+                    } catch (ise: IllegalArgumentException) {
+                        Log.e("$TAG Couldn't terminate call control with REJECTED cause: $ise")
+                    }
                 }
             } else if (state == Call.State.Pausing) {
                 scope.launch {
