@@ -45,7 +45,6 @@ import org.linphone.ui.main.model.SelectedAddressModel
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
-import java.util.Locale
 
 class ScheduleMeetingViewModel
     @UiThread
@@ -63,8 +62,6 @@ class ScheduleMeetingViewModel
     val description = MutableLiveData<String>()
 
     val fromDate = MutableLiveData<String>()
-
-    val toDate = MutableLiveData<String>()
 
     val fromTime = MutableLiveData<String>()
 
@@ -89,6 +86,9 @@ class ScheduleMeetingViewModel
 
     private var startTimestamp = 0L
     private var endTimestamp = 0L
+
+    internal var startDayOfYear = 0
+    internal var startYear = 0
 
     internal var startHour = 0
     internal var startMinutes = 0
@@ -212,6 +212,10 @@ class ScheduleMeetingViewModel
             TimeZone.getTimeZone(selectedTimeZone.value?.id ?: TimeZone.getDefault().id)
         )
         cal.timeInMillis = now
+
+        startYear = cal.get(Calendar.YEAR)
+        startDayOfYear = cal.get(Calendar.DAY_OF_YEAR)
+
         cal.add(Calendar.HOUR, 1)
         cal.set(Calendar.MINUTE, 0)
         cal.set(Calendar.SECOND, 0)
@@ -220,12 +224,12 @@ class ScheduleMeetingViewModel
         startMinutes = 0
 
         cal.add(Calendar.HOUR, 1)
-        val twoHoursLater = cal.timeInMillis
+        val oneHourLater = cal.timeInMillis
         endHour = cal.get(Calendar.HOUR_OF_DAY)
         endMinutes = 0
 
         startTimestamp = nextFullHour
-        endTimestamp = twoHoursLater
+        endTimestamp = oneHourLater
 
         Log.i(
             "$TAG Default start time is [$startHour:$startMinutes], default end time is [$startHour:$startMinutes]"
@@ -288,35 +292,34 @@ class ScheduleMeetingViewModel
 
     @UiThread
     fun getCurrentlySelectedStartDate(): Long {
-        return startTimestamp
+        val cal = Calendar.getInstance()
+        cal.set(Calendar.YEAR, startYear)
+        cal.set(Calendar.DAY_OF_YEAR, startDayOfYear)
+
+        return cal.timeInMillis
     }
 
     @UiThread
     fun setStartDate(timestamp: Long) {
-        val cal = Calendar.getInstance(
-            TimeZone.getTimeZone(selectedTimeZone.value?.id ?: TimeZone.getDefault().id)
-        )
+        val cal = Calendar.getInstance()
         cal.timeInMillis = timestamp
-        cal.set(Calendar.HOUR_OF_DAY, startHour)
-        cal.set(Calendar.MINUTE, startMinutes)
-        startTimestamp = cal.timeInMillis
 
-        cal.set(Calendar.HOUR_OF_DAY, endHour)
-        cal.set(Calendar.MINUTE, endMinutes)
-        endTimestamp = cal.timeInMillis
+        startYear = cal.get(Calendar.YEAR)
+        startDayOfYear = cal.get(Calendar.DAY_OF_YEAR)
+        Log.i("$TAG Date picker returned timestamp [$timestamp], day of year is now [$startDayOfYear] for year [$startYear], updating displayed date")
 
         computeDateLabels()
-        computeTimeLabels()
     }
 
     @UiThread
     fun updateTimeZone(timeZone: TimeZoneModel) {
         selectedTimeZone.value = timeZone
-        computeTimeLabels()
+        Log.i("$TAG Newly selected time zone is [$timeZone]")
     }
 
     @UiThread
     fun setStartTime(hours: Int, minutes: Int) {
+        Log.i("$TAG Newly selected start time is [$hours:$minutes], updating displayed start/end hours")
         startHour = hours
         startMinutes = minutes
 
@@ -328,6 +331,7 @@ class ScheduleMeetingViewModel
 
     @UiThread
     fun setEndTime(hours: Int, minutes: Int) {
+        Log.i("$TAG Newly selected end time is [$hours:$minutes], updating displayed end hours")
         endHour = hours
         endMinutes = minutes
 
@@ -414,6 +418,9 @@ class ScheduleMeetingViewModel
             // Allows to have a chat room within the conference
             conferenceInfo.setCapability(StreamType.Text, true)
 
+            Log.i("$TAG Computing timestamps")
+            computeTimestampsForSelectedTimezone()
+
             val startTime = startTimestamp / 1000 // Linphone expects timestamp in seconds
             val duration =
                 (((endTimestamp - startTimestamp) / 1000) / 60).toInt() // Linphone expects duration in minutes
@@ -470,6 +477,9 @@ class ScheduleMeetingViewModel
             conferenceInfo.subject = subject.value
             conferenceInfo.description = description.value
 
+            Log.i("$TAG Computing timestamps")
+            computeTimestampsForSelectedTimezone()
+
             val startTime = startTimestamp / 1000 // Linphone expects timestamp in seconds
             conferenceInfo.dateTime = startTime
             val duration = (((endTimestamp - startTimestamp) / 1000) / 60).toInt() // Linphone expects duration in minutes
@@ -525,8 +535,13 @@ class ScheduleMeetingViewModel
                 TimeZone.getTimeZone(selectedTimeZone.value?.id ?: TimeZone.getDefault().id)
             )
             cal.timeInMillis = startTimestamp
+
+            startYear = cal.get(Calendar.YEAR)
+            startDayOfYear = cal.get(Calendar.DAY_OF_YEAR)
+
             startHour = cal.get(Calendar.HOUR_OF_DAY)
             startMinutes = cal.get(Calendar.MINUTE)
+
             cal.timeInMillis = endTimestamp
             endHour = cal.get(Calendar.HOUR_OF_DAY)
             endMinutes = cal.get(Calendar.MINUTE)
@@ -564,66 +579,65 @@ class ScheduleMeetingViewModel
     }
 
     @AnyThread
-    private fun computeDateLabels() {
-        val start = TimestampUtils.toString(
-            startTimestamp,
-            onlyDate = true,
-            timestampInSecs = false,
-            shortDate = false,
-            hideYear = false
-        )
-        fromDate.postValue(start)
-        Log.i("$TAG Computed start date for timestamp [$startTimestamp] is [$start]")
+    private fun computeTimestampsForSelectedTimezone() {
+        val timeZone = TimeZone.getTimeZone(selectedTimeZone.value?.id ?: TimeZone.getDefault().id)
+        Log.i("$TAG Computing timestamps using time zone [$timeZone]")
 
-        val end = TimestampUtils.toString(
-            endTimestamp,
+        val cal = Calendar.getInstance(timeZone)
+        cal.set(Calendar.YEAR, startYear)
+        cal.set(Calendar.DAY_OF_YEAR, startDayOfYear)
+        cal.set(Calendar.HOUR_OF_DAY, startHour)
+        cal.set(Calendar.MINUTE, startMinutes)
+        startTimestamp = cal.timeInMillis
+        Log.i("$TAG Computed start timestamp is [$startTimestamp]")
+
+        cal.set(Calendar.HOUR_OF_DAY, endHour)
+        cal.set(Calendar.MINUTE, endMinutes)
+        if (endHour < startHour || (endHour == startHour && endMinutes <= startMinutes)) {
+            // Make sure if endTime is after startTime that it is on the next day
+            if (cal.timeInMillis <= startTimestamp) {
+                Log.i("$TAG endTime < startTime, adding 1 day to endTimestamp")
+                cal.add(Calendar.DAY_OF_YEAR, 1)
+            }
+        }
+        endTimestamp = cal.timeInMillis
+        Log.i("$TAG Computed end timestamp is [$endTimestamp]")
+    }
+
+    @AnyThread
+    private fun computeDateLabels() {
+        val cal = Calendar.getInstance()
+        cal.set(Calendar.YEAR, startYear)
+        cal.set(Calendar.DAY_OF_YEAR, startDayOfYear)
+
+        val date = TimestampUtils.toString(
+            cal.timeInMillis,
             onlyDate = true,
             timestampInSecs = false,
             shortDate = false,
             hideYear = false
         )
-        toDate.postValue(end)
-        Log.i("$TAG Computed end date for timestamp [$endTimestamp] is [$end]")
+        fromDate.postValue(date)
+        Log.i("$TAG Computed date is [$date]")
     }
 
     @AnyThread
     private fun computeTimeLabels() {
-        val timeZoneId = selectedTimeZone.value?.id ?: TimeZone.getDefault().id
-        Log.i("$TAG Updating timestamps using time zone [${selectedTimeZone.value}]($timeZoneId)")
-        val cal = Calendar.getInstance(TimeZone.getTimeZone(timeZoneId))
-
-        cal.timeInMillis = startTimestamp
+        val cal = Calendar.getInstance()
         if (startHour != -1 && startMinutes != -1) {
             cal.set(Calendar.HOUR_OF_DAY, startHour)
             cal.set(Calendar.MINUTE, startMinutes)
         }
-        startTimestamp = cal.timeInMillis
+        val startTime = TimestampUtils.timeToString(cal.timeInMillis, timestampInSecs = false)
+        fromTime.postValue(startTime)
 
-        // Manually printing calendar hour & minute to prevent timezone selection to convert selected time
-        val startHoursToDisplay = String.format(Locale.getDefault(), "%02d", cal.get(Calendar.HOUR_OF_DAY))
-        val startMinutesToDisplay = String.format(Locale.getDefault(), "%02d", cal.get(Calendar.MINUTE))
-        fromTime.postValue("$startHoursToDisplay:$startMinutesToDisplay")
-
-        cal.timeInMillis = endTimestamp
         if (endHour != -1 && endMinutes != -1) {
             cal.set(Calendar.HOUR_OF_DAY, endHour)
             cal.set(Calendar.MINUTE, endMinutes)
-
-            if (endHour < startHour || (endHour == startHour && endMinutes <= startMinutes)) {
-                // Make sure if endTime is after startTime that it is on the next day
-                if (cal.timeInMillis <= startTimestamp) {
-                    Log.i("$TAG endTime < startTime, adding 1 day to endTimestamp")
-                    cal.add(Calendar.DAY_OF_YEAR, 1)
-                }
-            }
         }
-        endTimestamp = cal.timeInMillis
+        val endTime = TimestampUtils.timeToString(cal.timeInMillis, timestampInSecs = false)
+        toTime.postValue(endTime)
 
-        // Manually printing calendar hour & minute to prevent timezone selection to convert selected time
-        val endHoursToDisplay = String.format(Locale.getDefault(), "%02d", cal.get(Calendar.HOUR_OF_DAY))
-        val endMinutesToDisplay = String.format(Locale.getDefault(), "%02d", cal.get(Calendar.MINUTE))
-        toTime.postValue("$endHoursToDisplay:$endMinutesToDisplay")
-
-        Log.i("$TAG Start timestamp is now [$startTimestamp] and end timestamp is now [$endTimestamp]")
+        Log.i("$TAG Computed start time is [$startTime] and end time is [$endTime]")
     }
 }
