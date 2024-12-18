@@ -301,7 +301,8 @@ class ScheduleMeetingViewModel
 
     @UiThread
     fun setStartDate(timestamp: Long) {
-        val cal = Calendar.getInstance()
+        // Material date picker always returns a timestamp in UTC timezone !
+        val cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
         cal.timeInMillis = timestamp
 
         startYear = cal.get(Calendar.YEAR)
