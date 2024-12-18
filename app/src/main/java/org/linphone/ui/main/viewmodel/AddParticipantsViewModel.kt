@@ -44,6 +44,11 @@ class AddParticipantsViewModel
     }
 
     @UiThread
+    fun isSelectionEmpty(): Boolean {
+        return selection.value.orEmpty().isEmpty()
+    }
+
+    @UiThread
     fun addSelectedParticipants(participants: Array<String>) {
         coreContext.postOnCoreThread { core ->
             Log.i("$TAG Adding [${participants.size}] pre-selected participants")

@@ -121,7 +121,8 @@ class AddParticipantsFragment : GenericAddressPickerFragment() {
         viewModel.modelsList.observe(
             viewLifecycleOwner
         ) {
-            if (!participants.isNullOrEmpty()) {
+            if (!participants.isNullOrEmpty() && viewModel.isSelectionEmpty()) {
+                Log.i("$TAG Found participants in arguments and selection is currently empty, adding them")
                 viewModel.addSelectedParticipants(participants)
             }
 
