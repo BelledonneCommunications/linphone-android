@@ -106,6 +106,7 @@
             android:layout_marginTop="3dp"
             android:src="@drawable/forward"
             android:visibility="@{model.isLastMessageForwarded ? View.VISIBLE : View.GONE, default=gone}"
+            android:contentDescription="@null"
             app:layout_constraintStart_toEndOf="@id/last_message_sender"
             app:layout_constraintEnd_toStartOf="@id/last_message_or_composing"
             app:layout_constraintTop_toTopOf="@id/last_message_or_composing"

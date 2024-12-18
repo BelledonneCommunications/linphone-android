@@ -177,7 +177,7 @@ class MeetingsListViewModel
                 val organizerCheck = info.organizer?.asStringUriOnly()?.contains(
                     filter,
                     ignoreCase = true
-                ) ?: false
+                ) == true
                 val subjectCheck = info.subject?.contains(filter, ignoreCase = true) == true
                 val descriptionCheck = info.description?.contains(filter, ignoreCase = true) == true
                 val participantsCheck = info.participantInfos.find {

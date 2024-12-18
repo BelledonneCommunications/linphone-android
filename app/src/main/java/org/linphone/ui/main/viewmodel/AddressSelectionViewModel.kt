@@ -328,7 +328,7 @@ abstract class AddressSelectionViewModel
         list.addAll(contactsList)
         list.addAll(suggestionsList)
         modelsList.postValue(list)
-        isEmpty.postValue(list.isEmpty())
+        isEmpty.postValue(list.isEmpty)
         Log.i(
             "$TAG Processed [${results.size}] results: [${conversationsList.size}] conversations, [${favoritesList.size}] favorites, [${contactsList.size}] contacts and [${suggestionsList.size}] suggestions"
         )

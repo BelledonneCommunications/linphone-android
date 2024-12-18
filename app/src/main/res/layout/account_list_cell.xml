@@ -104,6 +104,7 @@
             android:layout_marginEnd="16dp"
             android:src="@drawable/voicemail"
             android:visibility="@{model.showMwi ? View.VISIBLE : View.GONE, default=gone}"
+            android:contentDescription="@string/content_description_voicemail_available"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/voicemail_count"
             app:layout_constraintEnd_toStartOf="@id/notifications_count"/>

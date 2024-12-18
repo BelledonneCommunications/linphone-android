@@ -863,7 +863,6 @@
     <string name="content_description_chat_cancel_reply">Message will no longer be a reply to a previous message</string>
     <string name="content_description_chat_open_emoji_picker">Opens emoji picker</string>
     <string name="content_description_chat_open_attach_file">Opens file picker</string>
-    <string name="content_description_chat_take_picture">Opens camera to take a picture</string>
     <string name="content_description_chat_edit_conversation_subject">Click to edit the subject of this conversation</string>
     <string name="content_description_chat_toggle_mute">Silences on/off this conversation</string>
     <string name="content_description_chat_removal_in_progress">Conversation is being removed</string>
@@ -889,6 +888,8 @@
     <string name="content_description_ldap_save">Save LDAP configuration</string>
     <string name="content_description_play_call_recording">Plays the call recording</string>
     <string name="content_description_go_to_conversation">Go to conversation</string>
+    <string name="content_description_copy_text_to_clipboard">Copy text to clipboard</string>
+    <string name="content_description_voicemail_available">Voice message are available</string>
 
     <!-- Copy of private hosts_allowlist_sample in androidx.car.app:app:1.7.0-beta01, as they recommend it -->
     <string-array name="hosts_allowlist_sample_copy" translatable="false">

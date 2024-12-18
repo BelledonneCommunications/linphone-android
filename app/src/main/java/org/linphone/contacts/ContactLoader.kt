@@ -291,7 +291,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
 
         if (core.globalState == GlobalState.Shutdown || core.globalState == GlobalState.Off) {
             Log.w("$TAG Core is being stopped or already destroyed, abort")
-        } else if (friends.isEmpty()) {
+        } else if (friends.isEmpty) {
             Log.w("$TAG No friend created!")
         } else {
             Log.i("$TAG ${friends.size} friends fetched")
