@@ -135,7 +135,7 @@
     <string name="assistant_dialog_privacy_policy_label">privacy policy</string>
     <string name="assistant_dialog_general_terms_and_privacy_policy_message">By continuing, you accept our %1$s and %2$s.</string>
     <string name="assistant_dialog_confirm_phone_number_title">Confirm phone number</string>
-    <string name="assistant_dialog_confirm_phone_number_message">Are you sure you want to use this phone number?</string>
+    <string name="assistant_dialog_confirm_phone_number_message">Are you sure your phone number is %s?</string>
     <string name="assistant_account_login">Login</string>
     <string name="assistant_scan_qr_code">Scan QR code</string>
     <string name="assistant_qr_code_invalid_toast">Invalid QR code!</string>

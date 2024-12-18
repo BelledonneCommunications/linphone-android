@@ -21,7 +21,9 @@ package org.linphone.ui.assistant.model
 
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
+import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
+import org.linphone.R
 
 class ConfirmPhoneNumberDialogModel
     @UiThread
@@ -33,7 +35,7 @@ class ConfirmPhoneNumberDialogModel
     val confirmPhoneNumberEvent = MutableLiveData<Event<Boolean>>()
 
     init {
-        message.value = "Are you sure you want to use $phoneNumber phone number?"
+        message.value = AppUtils.getFormattedString(R.string.assistant_dialog_confirm_phone_number_message, phoneNumber)
     }
 
     @UiThread
