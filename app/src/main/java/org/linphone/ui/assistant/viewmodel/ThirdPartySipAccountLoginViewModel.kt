@@ -65,6 +65,10 @@ class ThirdPartySipAccountLoginViewModel
 
     val showPassword = MutableLiveData<Boolean>()
 
+    val expandAdvancedSettings = MutableLiveData<Boolean>()
+
+    val outboundProxy = MutableLiveData<String>()
+
     val loginEnabled = MediatorLiveData<Boolean>()
 
     val registrationInProgress = MutableLiveData<Boolean>()
@@ -131,6 +135,7 @@ class ThirdPartySipAccountLoginViewModel
 
     init {
         showPassword.value = false
+        expandAdvancedSettings.value = false
         registrationInProgress.value = false
 
         loginEnabled.addSource(username) {
@@ -218,11 +223,22 @@ class ThirdPartySipAccountLoginViewModel
             val accountParams = core.createAccountParams()
 
             if (displayName.value.orEmpty().isNotEmpty()) {
-                identityAddress?.displayName = displayName.value.orEmpty().trim()
+                identityAddress.displayName = displayName.value.orEmpty().trim()
             }
             accountParams.identityAddress = identityAddress
 
-            val serverAddress = Factory.instance().createAddress("sip:$domain")
+            val outboundProxyValue = outboundProxy.value.orEmpty().trim()
+            val serverAddress = if (outboundProxyValue.isNotEmpty()) {
+                val server = if (outboundProxyValue.startsWith("sip:")) {
+                    outboundProxyValue
+                } else {
+                    "sip:$outboundProxyValue"
+                }
+                Factory.instance().createAddress(server)
+            } else {
+                Factory.instance().createAddress("sip:$domain")
+            }
+
             serverAddress?.transport = when (transport.value.orEmpty().trim()) {
                 TransportType.Tcp.name.uppercase(Locale.getDefault()) -> TransportType.Tcp
                 TransportType.Tls.name.uppercase(Locale.getDefault()) -> TransportType.Tls
@@ -264,5 +280,10 @@ class ThirdPartySipAccountLoginViewModel
     private fun isLoginButtonEnabled(): Boolean {
         // Password isn't mandatory as authentication could be Bearer
         return username.value.orEmpty().isNotEmpty() && domain.value.orEmpty().isNotEmpty()
+    }
+
+    @UiThread
+    fun toggleAdvancedSettingsExpand() {
+        expandAdvancedSettings.value = expandAdvancedSettings.value == false
     }
 }

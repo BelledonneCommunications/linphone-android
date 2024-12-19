@@ -95,38 +95,6 @@
                 app:layout_constraintEnd_toEndOf="parent"/>
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/authentication_id_label"
-                style="@style/header_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:text="@string/authentication_id"
-                app:layout_constraintTop_toBottomOf="@id/username"
-                app:layout_constraintStart_toStartOf="@id/authentication_id"/>
-
-            <androidx.appcompat.widget.AppCompatEditText
-                style="@style/default_text_style"
-                android:id="@+id/authentication_id"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:text="@={viewModel.authId}"
-                android:textSize="14sp"
-                android:textColor="?attr/color_main2_600"
-                android:background="@drawable/edit_text_background"
-                android:inputType="text"
-                android:hint="@string/authentication_id"
-                app:layout_constraintWidth_max="@dimen/text_input_max_width"
-                app:layout_constraintTop_toBottomOf="@id/authentication_id_label"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
-
-            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/password_label"
                 style="@style/header_style"
                 android:layout_width="wrap_content"
@@ -135,7 +103,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/password"
-                app:layout_constraintTop_toBottomOf="@id/authentication_id"
+                app:layout_constraintTop_toBottomOf="@id/username"
                 app:layout_constraintStart_toStartOf="@id/password"/>
 
             <androidx.appcompat.widget.AppCompatEditText
@@ -278,6 +246,94 @@
                 app:layout_constraintEnd_toEndOf="@id/transport"/>
 
             <androidx.appcompat.widget.AppCompatTextView
+                style="@style/section_header_style"
+                android:onClick="@{() -> viewModel.toggleAdvancedSettingsExpand()}"
+                android:id="@+id/advanced_settings"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:layout_marginStart="26dp"
+                android:layout_marginEnd="26dp"
+                android:layout_marginTop="32dp"
+                android:text="@string/settings_advanced_title"
+                android:drawableEnd="@{viewModel.expandAdvancedSettings ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
+                android:drawableTint="?attr/color_main2_600"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/transport"/>
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/advanced_settings_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="authentication_id_label, authentication_id, outbound_proxy_label, outbound_proxy"
+                android:visibility="@{viewModel.expandAdvancedSettings ? View.VISIBLE : View.GONE, default=gone}" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/authentication_id_label"
+                style="@style/header_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/authentication_id"
+                app:layout_constraintTop_toBottomOf="@id/advanced_settings"
+                app:layout_constraintStart_toStartOf="@id/authentication_id"/>
+
+            <androidx.appcompat.widget.AppCompatEditText
+                style="@style/default_text_style"
+                android:id="@+id/authentication_id"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@={viewModel.authId}"
+                android:textSize="14sp"
+                android:textColor="?attr/color_main2_600"
+                android:background="@drawable/edit_text_background"
+                android:inputType="text"
+                android:hint="@string/authentication_id"
+                app:layout_constraintWidth_max="@dimen/text_input_max_width"
+                app:layout_constraintTop_toBottomOf="@id/authentication_id_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/outbound_proxy_label"
+                style="@style/header_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/account_settings_sip_proxy_url_title"
+                app:layout_constraintTop_toBottomOf="@id/authentication_id"
+                app:layout_constraintStart_toStartOf="@id/outbound_proxy"/>
+
+            <androidx.appcompat.widget.AppCompatEditText
+                style="@style/default_text_style"
+                android:id="@+id/outbound_proxy"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@={viewModel.outboundProxy, default=`sip12.example.net`}"
+                android:textSize="14sp"
+                android:textColor="?attr/color_main2_600"
+                android:background="@drawable/edit_text_background"
+                android:inputType="text|textUri"
+                android:hint="@string/account_settings_sip_proxy_url_title"
+                app:layout_constraintWidth_max="@dimen/text_input_max_width"
+                app:layout_constraintTop_toBottomOf="@id/outbound_proxy_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
                 android:onClick="@{() -> viewModel.login()}"
                 android:enabled="@{viewModel.loginEnabled &amp;&amp; !viewModel.registrationInProgress, default=false}"
                 style="@style/primary_button_label_style"
@@ -293,7 +349,7 @@
                 android:text="@string/assistant_account_login"
                 app:layout_constraintWidth_max="@dimen/button_max_width"
                 app:layout_constraintVertical_bias="1"
-                app:layout_constraintTop_toBottomOf="@id/transport"
+                app:layout_constraintTop_toBottomOf="@id/outbound_proxy"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
