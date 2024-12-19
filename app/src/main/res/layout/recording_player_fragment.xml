@@ -72,6 +72,8 @@
             app:trackThickness="10dp"
             app:trackColor="?attr/color_main1_100"
             app:indicatorColor="?attr/color_main1_500"
+            app:trackStopIndicatorSize="0dp"
+            app:indicatorTrackGapSize="0dp"
             app:layout_constraintTop_toTopOf="@id/play_pause_audio_playback"
             app:layout_constraintBottom_toBottomOf="@id/play_pause_audio_playback"
             app:layout_constraintStart_toEndOf="@id/play_pause_audio_playback"
