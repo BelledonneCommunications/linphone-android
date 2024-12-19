@@ -12,8 +12,12 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { // for com.github.chrisbanes:PhotoView
-            url = uri("https://www.jitpack.io")
+
+        maven {
+            url = uri("https://jitpack.io")
+            content {
+                includeGroup ("com.github.chrisbanes")
+            }
         }
 
         val localSdk = File("${providers.gradleProperty("LinphoneSdkBuildDir").get()}/maven_repository/org/linphone/linphone-sdk-android/maven-metadata.xml")
