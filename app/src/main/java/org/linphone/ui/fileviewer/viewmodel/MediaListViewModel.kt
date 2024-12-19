@@ -41,6 +41,8 @@ class MediaListViewModel
 
     val currentlyDisplayedFileDateTime = MutableLiveData<String>()
 
+    private lateinit var temporaryModel: FileModel
+
     override fun beforeNotifyingChatRoomFound(sameOne: Boolean) {
         loadMediaList()
     }
@@ -49,12 +51,17 @@ class MediaListViewModel
         super.onCleared()
 
         mediaList.value.orEmpty().forEach(FileModel::destroy)
+        if (::temporaryModel.isInitialized) {
+            temporaryModel.destroy()
+        }
     }
 
     @UiThread
     fun initTempModel(path: String, timestamp: Long, isEncrypted: Boolean, originalPath: String) {
         val name = FileUtils.getNameFromFilePath(path)
         val model = FileModel(path, name, 0, timestamp, isEncrypted, originalPath)
+        temporaryModel = model
+        Log.i("$TAG Temporary model for file [$name] created, use it while other media for conversation are being loaded")
         mediaList.postValue(arrayListOf(model))
     }
 
@@ -66,6 +73,13 @@ class MediaListViewModel
 
         val media = chatRoom.mediaContents
         Log.i("$TAG [${media.size}] media have been fetched")
+
+        var tempFileModelFound = false
+        var tempFilePath = ""
+        if (::temporaryModel.isInitialized) {
+            tempFilePath = temporaryModel.path
+        }
+
         for (mediaContent in media) {
             // Do not display voice recordings here, even if they are media file
             if (mediaContent.isVoiceRecording) continue
@@ -87,8 +101,19 @@ class MediaListViewModel
                 val model = FileModel(path, name, size, timestamp, isEncrypted, originalPath)
                 list.add(model)
             }
+
+            if (tempFilePath.isNotEmpty() && !tempFileModelFound) {
+                if (path == tempFilePath) {
+                    tempFileModelFound = true
+                }
+            }
         }
         Log.i("$TAG [${list.size}] media have been processed")
-        mediaList.postValue(list)
+
+        if (tempFileModelFound || tempFilePath.isEmpty()) {
+            mediaList.postValue(list)
+        } else {
+            Log.w("$TAG Temporary file [$tempFilePath] not found in processed media, keeping only temporary model")
+        }
     }
 }
