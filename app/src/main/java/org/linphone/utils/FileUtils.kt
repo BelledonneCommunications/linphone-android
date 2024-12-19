@@ -206,7 +206,7 @@ class FileUtils {
                         Log.e(
                             "$TAG Couldn't get URI for file [$file] using file provider ${context.getString(
                                 R.string.file_provider
-                            )}"
+                            )}: $e"
                         )
                         Uri.parse(path)
                     }

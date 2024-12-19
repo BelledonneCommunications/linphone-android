@@ -153,9 +153,15 @@ open class ConversationFragment : SlidingPaneChildFragment() {
     ) { files ->
         sendMessageViewModel.closeFilePickerBottomSheet()
         for (fileUri in files) {
-            val path = fileUri.toString()
-            Log.i("$TAG Picked file [$path]")
-            sendMessageViewModel.addAttachment(path)
+            lifecycleScope.launch {
+                val path = FileUtils.getFilePath(requireContext(), fileUri, false).orEmpty()
+                if (path.isNotEmpty()) {
+                    Log.i("$TAG Picked file [$path]")
+                    sendMessageViewModel.addAttachment(path)
+                } else {
+                    Log.e("$TAG Failed to pick file [$fileUri]")
+                }
+            }
         }
     }
 
