@@ -21,7 +21,7 @@
             android:layout_margin="1dp"
             android:adjustViewBounds="true"
             android:padding="18dp"
-            android:background="@drawable/shape_squircle_main2_200_5dp"
+            android:background="@drawable/shape_squircle_file_background_5dp"
             android:visibility="@{model.mediaPreviewAvailable ? View.GONE : View.VISIBLE, default=gone}"
             android:contentDescription="@{model.isVideoPreview ? @string/content_description_chat_bubble_video : @string/content_description_chat_bubble_image}"
             android:src="@{model.isVideoPreview ? @drawable/file_video : @drawable/file_image, default=@drawable/file_video}"

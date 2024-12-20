@@ -62,6 +62,7 @@
         <attr name="color_chat_bubble_incoming" format="color"/>
         <attr name="color_chat_bubble_outgoing" format="color"/>
         <attr name="color_chat_bubble_reply" format="color"/>
+        <attr name="color_chat_bubble_file" format="color"/>
 
         <attr name="color_message_text_field_background" format="color"/>
         <attr name="color_conversation_send_area_background" format="color"/>

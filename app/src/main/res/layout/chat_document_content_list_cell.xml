@@ -27,7 +27,7 @@
             android:padding="18dp"
             android:contentDescription="@string/content_description_chat_bubble_file"
             android:src="@{model.isWaitingToBeDownloaded ? @drawable/download_simple : model.isPdf ? @drawable/file_pdf : model.isAudio ? @drawable/file_audio : @drawable/file, default=@drawable/file_pdf}"
-            android:background="@drawable/shape_squircle_main2_200_left"
+            android:background="@drawable/shape_squircle_file_background_left"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
