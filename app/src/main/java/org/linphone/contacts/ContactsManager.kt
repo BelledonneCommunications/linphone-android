@@ -524,9 +524,10 @@ class ContactsManager
     }
 
     @WorkerThread
-    fun isContactTemporary(friend: Friend): Boolean {
+    fun isContactTemporary(friend: Friend, allowNullFriendList: Boolean = false): Boolean {
         val friendList = friend.friendList
-        return friendList == null || friendList.displayName == FRIEND_LIST_TEMPORARY_STORED_NATIVE || friendList.displayName == FRIEND_LIST_TEMPORARY_STORED_REMOTE_DIRECTORY
+        if (friendList == null && !allowNullFriendList) return true
+        return friendList?.displayName == FRIEND_LIST_TEMPORARY_STORED_NATIVE || friendList?.displayName == FRIEND_LIST_TEMPORARY_STORED_REMOTE_DIRECTORY
     }
 
     @WorkerThread

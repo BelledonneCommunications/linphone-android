@@ -287,7 +287,7 @@ class ContactsListViewModel
         for (result in results) {
             val friend = result.friend
             if (friend != null) {
-                if (coreContext.contactsManager.isContactTemporary(friend)) continue
+                if (coreContext.contactsManager.isContactTemporary(friend, allowNullFriendList = true)) continue
 
                 if (friend.refKey.orEmpty().isEmpty()) {
                     if (friend.vcard != null) {
@@ -333,7 +333,7 @@ class ContactsListViewModel
         favourites.postValue(favouritesList)
         contactsList.postValue(list)
 
-        Log.i("$TAG Processed [${results.size}] results")
+        Log.i("$TAG Processed [${results.size}] results into [${list.size} contacts]")
         firstLoad = false
     }
 }
