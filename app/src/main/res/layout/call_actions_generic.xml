@@ -52,7 +52,7 @@
             android:layout_height="@dimen/call_button_size"
             android:layout_marginEnd="16dp"
             android:padding="@dimen/call_button_icon_padding"
-            android:enabled="@{!viewModel.isPaused &amp;&amp; !viewModel.isPausedByRemote}"
+            android:enabled="@{!viewModel.isPaused &amp;&amp; !viewModel.isPausedByRemote &amp;&amp; !viewModel.videoUpdateInProgress}"
             android:visibility="@{viewModel.hideVideo ? View.GONE : View.VISIBLE}"
             android:src="@{viewModel.isSendingVideo ? @drawable/video_camera : @drawable/video_camera_slash, default=@drawable/video_camera}"
             android:background="@drawable/in_call_button_background_red"
@@ -64,6 +64,17 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/hang_up"
             app:layout_constraintEnd_toStartOf="@id/toggle_mute_mic" />
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/video_update_in_progress"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="@{viewModel.videoUpdateInProgress ? View.VISIBLE : View.GONE}"
+            android:indeterminate="true"
+            app:layout_constraintTop_toTopOf="@id/toggle_video"
+            app:layout_constraintBottom_toBottomOf="@id/toggle_video"
+            app:layout_constraintStart_toStartOf="@id/toggle_video"
+            app:layout_constraintEnd_toEndOf="@id/toggle_video"/>
 
         <ImageView
             android:onClick="@{() -> viewModel.toggleMuteMicrophone()}"

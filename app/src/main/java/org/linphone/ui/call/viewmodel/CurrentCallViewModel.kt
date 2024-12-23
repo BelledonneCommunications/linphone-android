@@ -85,6 +85,8 @@ class CurrentCallViewModel
 
     val showSwitchCamera = MutableLiveData<Boolean>()
 
+    val videoUpdateInProgress = MutableLiveData<Boolean>()
+
     val isOutgoing = MutableLiveData<Boolean>()
 
     val isOutgoingRinging = MutableLiveData<Boolean>()
@@ -361,6 +363,7 @@ class CurrentCallViewModel
                         conferenceModel.destroy()
                     }
                 } else if (call.state == Call.State.StreamsRunning) {
+                    videoUpdateInProgress.postValue(false)
                     updateCallDuration()
                     if (corePreferences.automaticallyStartCallRecording) {
                         isRecording.postValue(call.params.isRecording)
@@ -533,6 +536,7 @@ class CurrentCallViewModel
         fullScreenMode.value = false
         operationInProgress.value = false
         proximitySensorEnabled.value = false
+        videoUpdateInProgress.value = false
 
         coreContext.postOnCoreThread { core ->
             coreContext.contactsManager.addListener(contactsListener)
@@ -831,6 +835,7 @@ class CurrentCallViewModel
                     )
                 }
                 currentCall.update(params)
+                videoUpdateInProgress.postValue(true)
             }
         }
     }
