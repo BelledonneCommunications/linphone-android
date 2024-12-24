@@ -247,8 +247,7 @@ class MessageModel
         ) {
             val percent = ((offset * 100.0) / total).toInt() // Conversion from int to double and back to int is required
 
-            val model = transferringFileModel
-            if (model == null) {
+            if (transferringFileModel == null) {
                 Log.w("$TAG A file is being uploaded/downloaded but no transferringFileModel set!")
                 val found = filesList.value.orEmpty().find {
                     it.fileName == content.name
@@ -262,7 +261,7 @@ class MessageModel
                     )
                 }
             }
-            model?.updateTransferProgress(percent)
+            transferringFileModel?.updateTransferProgress(percent)
         }
 
         @WorkerThread

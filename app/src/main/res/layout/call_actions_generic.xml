@@ -71,6 +71,7 @@
             android:layout_height="0dp"
             android:visibility="@{viewModel.videoUpdateInProgress ? View.VISIBLE : View.GONE}"
             android:indeterminate="true"
+            app:indicatorColor="?attr/color_main1_500"
             app:layout_constraintTop_toTopOf="@id/toggle_video"
             app:layout_constraintBottom_toBottomOf="@id/toggle_video"
             app:layout_constraintStart_toStartOf="@id/toggle_video"
