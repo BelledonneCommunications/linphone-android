@@ -1,8 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 
-<!DOCTYPE resources [
-    <!ENTITY appName "Linphone">
-]>
+<!DOCTYPE resources [<!ENTITY appName "Linphone">]>
 
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Common words -->
@@ -81,16 +79,16 @@
     <string name="welcome_page_3_message">Une application open source et un <b>service gratuit</b> depuis <b>2001</b>.</string>
 
     <!-- Generic toasts -->
-    <string name="sip_address_copied_to_clipboard_toast">L\'adresse SIP a été copiée</string>
+    <string name="sip_address_copied_to_clipboard_toast">Adresse copiée</string>
     <string name="new_account_configured_toast">Nouveau compte ajouté</string>
     <string name="default_account_connection_state_error_toast">Erreur de connexion !</string>
-    <string name="file_successfully_exported_to_media_store_toast">Le media a été exporté</string>
-    <string name="export_file_to_media_store_error_toast">Le media n\'a pas pû être exporté !</string>
-    <string name="file_successfully_exported_to_documents_toast">Le document a été exporté</string>
-    <string name="export_file_to_documents_error_toast">Le document n\'a pas pû être exporté !</string>
-    <string name="media_playback_low_volume_warning_toast">Le volume media est bas, vous pourriez ne rien entendre !</string>
-    <string name="remote_provisioning_config_applied_toast">Configuration appliquée avec succès</string>
-    <string name="remote_provisioning_config_failed_toast">Erreur durant la récupération ou l\'application de la configuration</string>
+    <string name="file_successfully_exported_to_media_store_toast">Média exporté</string>
+    <string name="export_file_to_media_store_error_toast">Échec de l\'exportation</string>
+    <string name="file_successfully_exported_to_documents_toast">Document exporté</string>
+    <string name="export_file_to_documents_error_toast">Échec de l\'exportation</string>
+    <string name="media_playback_low_volume_warning_toast">Volume faible : vous risquez de ne pas entendre</string>
+    <string name="remote_provisioning_config_applied_toast">Configuration appliquée</string>
+    <string name="remote_provisioning_config_failed_toast">Erreur lors du chargement ou de l\'application de la configuration</string>
 
     <!-- Assistant related string (account register / login / etc...) -->
     <string name="assistant_dialog_general_terms_and_privacy_policy_title">Conditions de service &amp; politique de confidentialité</string>
@@ -98,18 +96,18 @@
     <string name="assistant_dialog_privacy_policy_label">politique de confidentialité</string>
     <string name="assistant_dialog_general_terms_and_privacy_policy_message">En continuant, vous acceptez nos %1$s et %2$s.</string>
     <string name="assistant_dialog_confirm_phone_number_title">Confirmez votre numéro de téléphone</string>
-    <string name="assistant_dialog_confirm_phone_number_message">Êtes-vous sûr que votre numéro de téléphone est le %s ?</string>
+    <string name="assistant_dialog_confirm_phone_number_message">Êtes-vous sûr de vouloir utiliser ce numéro de téléphone ?</string>
     <string name="assistant_account_login">Connexion</string>
     <string name="assistant_scan_qr_code">Scanner un QR code</string>
     <string name="assistant_qr_code_invalid_toast">Ce QR code est invalide !</string>
     <string name="assistant_login_third_party_sip_account">J\'ai un compte SIP tiers</string>
     <string name="assistant_login_using_single_sign_on">Single sign on</string>
-    <string name="assistant_login_cant_parse_address_toast">L\'adresse SIP est invalide !</string>
+    <string name="assistant_login_cant_parse_address_toast">Adresse SIP invalide</string>
     <string name="assistant_login_address_without_username_toast">L\'adresse SIP ne contient pas de nom d\'utilisateur !</string>
     <string name="assistant_no_account_yet">Pas encore de compte ?</string>
     <string name="assistant_account_register">Créer un compte</string>
     <string name="assistant_account_creation_sms_confirmation_explanation">On vous a envoyé un code de vérification par SMS au numéro %1$s.\n\nMerci de le saisir ci-dessous :</string>
-    <string name="assistant_account_creation_wrong_phone_number">Mauvais numéro ?</string>
+    <string name="assistant_account_creation_wrong_phone_number">Numéro incorrect ?</string>
     <string name="assistant_account_create">Créer</string>
     <string name="assistant_create_account_using_email_on_our_web_platform">Créez un compte avec votre email ici :</string>
     <string name="assistant_already_have_an_account">Vous avez déjà un compte ?</string>
@@ -118,8 +116,8 @@
     <string name="assistant_third_party_sip_account_create_linphone_account">Je préfère créer un compte</string>
     <string name="assistant_third_party_sip_account_warning_ok">J\'ai compris</string>
     <string name="assistant_third_party_sip_account_username_or_identity">Nom d\'utilisateur ou identité SIP*</string>
-    <string name="assistant_account_register_unavailable_no_push_toast">Les notifications poussées ne sont pas disponibles, la création de compte est donc désactivée.</string>
-    <string name="assistant_account_register_push_notification_not_received_error">La notification poussée avec le jeton d\'authentification n\'a pas été reçue dans les 5 secondes, merci de réessayer plus tard</string>
+    <string name="assistant_account_register_unavailable_no_push_toast">Notifications push indisponible, la création de compte est donc désactivée.</string>
+    <string name="assistant_account_register_push_notification_not_received_error">Notification push non reçue, merci de réessayer plus tard</string>
     <string name="assistant_account_register_unexpected_error">Un erreur inattendue est survenue, merci de réessayer plus tard</string>
     <string name="assistant_account_login_forbidden_error">Mauvais nom d\'utilisateur ou mot de passe</string>
     <string name="assistant_account_login_error">Erreur durant la connexion: %s</string>
@@ -139,11 +137,11 @@
     <string name="bottom_navigation_meetings_label">Réunions</string>
 
     <!-- Side menu -->
-    <string name="drawer_menu_manage_account">Paramètres du profil</string>
+    <string name="drawer_menu_manage_account">Mon compte</string>
     <string name="drawer_menu_account_connection_status_connected">Connecté</string>
-    <string name="drawer_menu_account_connection_status_refreshing">En cours de rafraîchissement…</string>
+    <string name="drawer_menu_account_connection_status_refreshing">Rafraîchissement…</string>
     <string name="drawer_menu_account_connection_status_cleared">Désactivé</string>
-    <string name="drawer_menu_account_connection_status_progress">En cours de connexion…</string>
+    <string name="drawer_menu_account_connection_status_progress">Connexion…</string>
     <string name="drawer_menu_account_connection_status_failed">Erreur</string>
     <string name="drawer_menu_no_account_configured_yet">Aucun compte configuré</string>
     <string name="drawer_menu_add_account">Ajouter un compte</string>
@@ -189,11 +187,11 @@
     <string name="settings_calls_calibrate_echo_canceller_done_no_echo">pas d\'écho</string>
     <string name="settings_calls_calibrate_echo_canceller_done">%s ms</string>
     <string name="settings_calls_calibrate_echo_canceller_failed">échec</string>
-    <string name="settings_calls_adaptive_rate_control_title">Contrôle qualité adaptatif</string>
-    <string name="settings_calls_enable_video_title">Activer la vidéo</string>
+    <string name="settings_calls_adaptive_rate_control_title">Contrôle automatique de la qualité</string>
+    <string name="settings_calls_enable_video_title">Autoriser la vidéo</string>
     <string name="settings_calls_enable_fec_title">Activer la FEC vidéo</string>
-    <string name="settings_calls_vibrate_while_ringing_title">Vibrer lors de la réception d\'un appel</string>
-    <string name="settings_calls_auto_record_title">Démarrer l\'enregistrement des appels automatiquement</string>
+    <string name="settings_calls_vibrate_while_ringing_title">Vibration lors de l\'appel</string>
+    <string name="settings_calls_auto_record_title">Enregistrement automatique des appels</string>
     <string name="settings_calls_change_ringtone_title">Changer de sonnerie</string>
     <string name="settings_conversations_title">Conversations</string>
     <string name="settings_conversations_auto_download_title">Télécharger automatiquement les fichiers</string>
@@ -254,7 +252,7 @@
 
     <string name="settings_advanced_title">Paramètres avancés</string>
     <string name="settings_advanced_keep_alive_service_title">Garder l\'app en vie via un Service</string>
-    <string name="settings_advanced_device_id">Nom du périphérique</string>
+    <string name="settings_advanced_device_id">Nom de l\'appareil</string>
     <string name="settings_advanced_device_id_hint">Caractères alpha-numériques uniquement</string>
     <string name="settings_advanced_upload_server_url">URL du serveur de partage de fichier</string>
     <string name="settings_advanced_media_encryption_title">Chiffrement du média</string>
@@ -268,19 +266,19 @@
     <string name="settings_advanced_video_codecs_title">Codecs vidéo</string>
 
     <!-- Account profile & settings -->
-    <string name="manage_account_title">Votre compte</string>
+    <string name="manage_account_title">Mon compte</string>
     <string name="manage_account_details_title">Détails</string>
     <string name="manage_account_devices_title">Appareils</string>
     <string name="manage_account_add_picture">Ajouter une image</string>
-    <string name="manage_account_edit_picture">Modifier l\'image</string>
-    <string name="manage_account_remove_picture">Enlever l\'image</string>
+    <string name="manage_account_edit_picture">Modifier </string>
+    <string name="manage_account_remove_picture">Suprimmer</string>
     <string name="manage_account_status_connected_summary">Vous êtes en ligne, on peut vous joindre.</string>
     <string name="manage_account_status_cleared_summary">Compte désactivé, vous ne recevrez ni appel ni message.</string>
     <string name="manage_account_status_progress_summary">Connexion en cours, merci de patienter…</string>
     <string name="manage_account_status_failed_summary">Erreur de connexion, vérifiez vos paramètres.</string>
     <string name="manage_account_international_prefix">Indicatif international</string>
     <string name="manage_account_dialog_international_prefix_help_message">Choisissez votre pays pour permettre à &appName; de faire le lien avec vos contacts.</string>
-    <string name="manage_account_settings">Paramètres de compte</string>
+    <string name="manage_account_settings">Mon compte</string>
     <string name="manage_account_delete">Se déconnecter</string>
     <string name="manage_account_choose_mode_title">Choisir le mode</string>
     <string name="manage_account_choose_mode_apply_label">Appliquer</string>
@@ -294,8 +292,8 @@
     <string name="manage_account_dialog_remove_account_message">Si vous souhaitez supprimer définitivement votre compte rendez-vous sur : https://sip.linphone.org</string>
 
     <string name="account_settings_title">Paramètres de compte</string>
-    <string name="account_settings_push_notification_title">Autoriser les notifications poussées</string>
-    <string name="account_settings_push_notification_not_available_title">Les notifications poussées ne sont pas disponibles !</string>
+    <string name="account_settings_push_notification_title">Activer les notifications push</string>
+    <string name="account_settings_push_notification_not_available_title">Notifications push non disponibles</string>
     <string name="account_settings_im_encryption_mandatory_title">Chiffrement obligatoire des conversations</string>
     <string name="account_settings_sip_proxy_url_title">URL du serveur mandataire</string>
     <string name="account_settings_outbound_proxy_title">Serveur mandataire sortant</string>
@@ -307,13 +305,13 @@
     <string name="account_settings_turn_password_title">Mot de passe TURN</string>
     <string name="account_settings_avpf_title">AVPF</string>
     <string name="account_settings_expire_title">Expiration (en secondes)</string>
-    <string name="account_settings_conference_factory_uri_title">URI de l\'usine à conversations</string>
-    <string name="account_settings_audio_video_conference_factory_uri_title">URI de l\'usine à réunions</string>
+    <string name="account_settings_conference_factory_uri_title">URI du serveur de conversations</string>
+    <string name="account_settings_audio_video_conference_factory_uri_title">URI du serveur de réunions</string>
     <string name="account_settings_ccmp_server_url_title">URL du serveur CCMP</string>
     <string name="account_settings_lime_server_url_title">URL du serveur d\'échange de clés de chiffrement</string>
     <string name="account_settings_bundle_mode_title">Mode "bundle"</string>
     <string name="account_settings_cpim_in_basic_conversations_title">Utiliser CPIM dans les conversations \"basiques\"</string>
-    <string name="account_settings_voicemail_uri_title">URI du serveur de messagerie vocale</string>
+    <string name="account_settings_voicemail_uri_title">URI de la messagerie vocale</string>
     <string name="account_settings_mwi_uri_title">URI du serveur MWI (Message Waiting Indicator)</string>
     <string name="account_settings_update_password_title">Mettre à jour le mot de passe</string>
 
@@ -332,18 +330,18 @@
     <string name="history_list_empty_history">Aucun appel dans votre historique…</string>
     <string name="history_group_call_go_to_conversation">Conversation</string>
 
-    <string name="history_dialog_delete_all_call_logs_title">Voulez-vous tout supprimer ?</string>
-    <string name="history_dialog_delete_all_call_logs_message">Tout votre historique d\'appels sera supprimé.</string>
-    <string name="history_dialog_delete_call_logs_title">Voulez-vous supprimer tout les appels avec cette personne ?</string>
-    <string name="history_dialog_delete_call_logs_message">TOut l\'historique d\'appel avec cette personne sera supprimmé.</string>
+    <string name="history_dialog_delete_all_call_logs_title">Supprimer l\'historique d\'appels ?</string>
+    <string name="history_dialog_delete_all_call_logs_message">L\'ensemble de votre historique d\'appels sera définitivement supprimé.</string>
+    <string name="history_dialog_delete_call_logs_title">Supprimer l\'historique d\'appels ?</string>
+    <string name="history_dialog_delete_call_logs_message">L\'ensemble de votre historique d\'appels avec ce correspondant sera définitivement supprimé.</string>
 
     <!-- Contacts -->
     <string name="contacts_list_empty">Aucun contact pour le moment…</string>
     <string name="contacts_list_favourites_title">Favoris</string>
     <string name="contacts_list_all_contacts_title">Tous les contacts</string>
-    <string name="contacts_list_filter_popup_see_all">Voir tous les contacts</string>
-    <string name="contacts_list_filter_popup_see_linphone_only">Voir les contacts &appName;</string>
-    <string name="contacts_list_filter_popup_see_sip_only">Voir les contacts SIP</string>
+    <string name="contacts_list_filter_popup_see_all">Tous les contacts</string>
+    <string name="contacts_list_filter_popup_see_linphone_only">Contacts &appName;</string>
+    <string name="contacts_list_filter_popup_see_sip_only">Contacts SIP</string>
 
     <string name="contact_new_title">Nouveau contact</string>
     <string name="contact_edit_title">Modifier contact</string>
@@ -351,32 +349,32 @@
     <string name="contact_editor_last_name">Nom de famille</string>
     <string name="contact_editor_company">Entreprise</string>
     <string name="contact_editor_job_title">Poste</string>
-    <string name="contact_editor_saved_changes_toast">Les changements ont été sauvegardés</string>
+    <string name="contact_editor_saved_changes_toast">Modifications sauvegardés</string>
     <string name="contact_editor_error_saving_changes_toast">Erreur lors de la sauvegarde des changements</string>
-    <string name="contact_editor_saved_contact_toast">Le contact a été créé</string>
+    <string name="contact_editor_saved_contact_toast">Contact créé</string>
     <string name="contact_editor_error_saving_contact_toast">Erreur lors de la création du contact</string>
-    <string name="contact_editor_dialog_abort_confirmation_title">Ne pas sauvegarder vos changements</string>
+    <string name="contact_editor_dialog_abort_confirmation_title">Ignorer les modifications ?</string>
     <string name="contact_editor_dialog_abort_confirmation_message">Toutes vos modifications seront perdues.</string>
     <string name="contact_editor_mandatory_field_not_filled_toast">Veuillez saisir au moins un nom, prénom ou le nom de l\'entreprise</string>
 
-    <string name="contact_details_numbers_and_addresses_title">Numéros de téléphone et adresses SIP</string>
+    <string name="contact_details_numbers_and_addresses_title">Coordonnées</string>
     <string name="contact_details_company_name">Entreprise :</string>
     <string name="contact_details_job_title">Poste :</string>
     <string name="contact_details_trust_title">Confiance</string>
-    <string name="contact_details_no_device_found">Aucun appareil n\'a été trouvé…</string>
-    <string name="contact_details_trusted_devices_count">Appareils de confiance :</string>
+    <string name="contact_details_no_device_found">Aucun appareil trouvé</string>
+    <string name="contact_details_trusted_devices_count">Appareils du contact :</string>
     <string name="contact_details_actions_title">Autres actions</string>
     <string name="contact_details_edit">Modifier</string>
     <string name="contact_details_add_to_favourites">Ajouter aux favoris</string>
-    <string name="contact_details_remove_from_favourites">Enlever des favoris</string>
+    <string name="contact_details_remove_from_favourites">Retirer des favoris</string>
     <string name="contact_details_share">Partager</string>
     <string name="contact_details_delete">Supprimer</string>
     <string name="contact_sms_invite_content">Salut, rejoins moi sur &appName; ! Tu peux le télécharger gratuitement sur %s</string>
-    <string name="contact_deleted_toast">Le contact a été supprimé</string>
-    <string name="contact_details_phone_number_copied_to_clipboard_toast">Le numéro de téléphone a été copié</string>
+    <string name="contact_deleted_toast">Contact supprimé</string>
+    <string name="contact_details_phone_number_copied_to_clipboard_toast">Numéro de téléphone copié</string>
 
-    <string name="contact_dialog_increase_trust_level_title">Augmenter le niveau de confiance</string>
-    <string name="contact_dialog_increase_trust_level_message">Vous êtes sur le point de passer un appel vers l\'appareil %2$s\ de %1$s.\Voulez-vous démarrer l\'appel ?</string>
+    <string name="contact_dialog_increase_trust_level_title">Vérifier l\'appareil ?</string>
+    <string name="contact_dialog_increase_trust_level_message">Voulez-vous appeler l\’appareil %2$s de %1$s ?</string>
     <string name="contact_dialog_devices_trust_help_title">Niveau de confiance</string>
     <string name="contact_dialog_devices_trust_help_message">Vérifiez les appareils de votre contact pour confirmer que vos communications seront sécurisées et sans compromission.\nQuand tous seront vérifiés, vous atteindrez le niveau de confiance maximal.</string>
     <string name="contact_dialog_delete_title">Supprimer %s ?</string>
@@ -385,7 +383,7 @@
 
     <string name="contact_presence_status_online">En ligne</string>
     <string name="contact_presence_status_was_online_on">En ligne il y a %s</string>
-    <string name="contact_presence_status_was_online_today_at">En ligne aujourd\'hui à %s</string>
+    <string name="contact_presence_status_was_online_today_at">En ligne à %s</string>
     <string name="contact_presence_status_was_online_yesterday_at">En ligne hier à %s</string>
     <string name="contact_presence_status_away">Absent</string>
     <string name="contact_presence_status_do_not_disturb">Ne pas déranger</string>
@@ -407,13 +405,13 @@
 
     <string name="conversation_action_mark_as_read">Marquer comme lu</string>
     <string name="conversation_action_mute">Mettre en sourdine</string>
-    <string name="conversation_action_unmute">Enlever la sourdine</string>
+    <string name="conversation_action_unmute">Réactiver les notifications</string>
     <string name="conversation_action_call">Appeler</string>
     <string name="conversation_action_delete">Supprimer la conversation</string>
-    <string name="conversation_action_leave_group">Quitter le groupe</string>
+    <string name="conversation_action_leave_group">Quitter la conversation</string>
     <string name="conversation_action_configure_ephemeral_messages">Configurer les messages éphémères</string>
     <string name="conversation_ephemeral_messages_title">Messages éphémères</string>
-    <string name="conversation_ephemeral_messages_subtitle">Les messages éphémères seront automatiquement supprimés une fois lu par tout le monde et après un certain délai :</string>
+    <string name="conversation_ephemeral_messages_subtitle">Les messages éphémères seront automatiquement supprimés après avoir été lus par tous et une fois le délai suivant écoulé :</string>
     <string name="conversation_ephemeral_messages_duration_disabled">Désactiver</string>
     <string name="conversation_ephemeral_messages_duration_one_minute">1 minute</string>
     <string name="conversation_ephemeral_messages_duration_one_hour">1 heure</string>
@@ -421,8 +419,8 @@
     <string name="conversation_ephemeral_messages_duration_three_days">3 jours</string>
     <string name="conversation_ephemeral_messages_duration_one_week">1 semaine</string>
     <string name="new_conversation_title">Créer une conversation</string>
-    <string name="new_group_conversation_title">Créer un groupe</string>
-    <string name="conversation_invalid_empty_subject_toast">Veuillez choisir un sujet pour la conversation</string>
+    <string name="new_group_conversation_title">Nouvelle conversation de groupe</string>
+    <string name="conversation_invalid_empty_subject_toast">Veuillez nommer la conversation</string>
     <string name="new_conversation_search_bar_filter_hint">Chercher un contact</string>
     <string name="new_conversation_create_group">Créer une conversation de groupe</string>
     <string name="new_conversation_no_contact">Aucun contact ni suggestion pour le moment…</string>
@@ -433,7 +431,7 @@
         <item quantity="other">%s sont en train d\'écrire…</item>
     </plurals>
     <string name="conversation_creation_error_toast">Échec de la création de la conversation !</string>
-    <string name="conversation_add_participants_title">Ajouter des membres</string>
+    <string name="conversation_add_participants_title">Ajouter des participants</string>
     <string name="conversation_reply_to_message_title">En réponse à :</string>
     <string name="conversation_menu_search_in_messages">Chercher</string>
     <string name="conversation_menu_go_to_info">Informations</string>
@@ -453,21 +451,21 @@
     <string name="conversation_maximum_number_of_attachments_reached">Nombre maximum de fichiers atteint !</string>
     <string name="conversation_dialog_set_subject">Nommer la conversation</string>
     <string name="conversation_dialog_edit_subject">Renommer la conversation</string>
-    <string name="conversation_dialog_subject_cant_be_empty_error">Un nom est obligatoire</string>
+    <string name="conversation_dialog_subject_cant_be_empty_error">Nom obligatoire</string>
     <string name="conversation_dialog_subject_hint">Nom de la conversation</string>
     <string name="conversation_dialog_open_or_export_file_title">Ouvrir ou sauvegarder le fichier ?</string>
     <string name="conversation_dialog_open_or_export_file_message">&appName; ne peut ouvrir ce fichier.\n\nVoulez-vous l\'ouvrir dans une autre app (si possible), ou le sauvegarder sur votre appareil ?</string>
     <string name="conversation_dialog_open_file_label">Ouvrir le fichier</string>
     <string name="conversation_dialog_export_file_label">Sauvegarder le fichier</string>
     <string name="conversation_failed_to_play_voice_recording_message">Impossible de lire le message vocal !</string>
-    <string name="conversation_message_deleted_toast">Le message a été supprimé</string>
-    <string name="conversation_failed_to_create_toast">Échec de la création de la conversation !</string>
+    <string name="conversation_message_deleted_toast">Message supprimé</string>
+    <string name="conversation_failed_to_create_toast">Échec de création de la conversation !</string>
     <string name="conversation_invalid_participant_due_to_security_mode_toast">Pour des raisons de sécurité, la création d\'une conversation avec un participant d\'un domaine tiers est désactivé.</string>
-    <string name="conversation_media_not_found_toast">Le média selectionné est introuvable !</string>
-    <string name="conversation_subject_changed_toast">Le nom de la conversation a changé</string>
-    <string name="conversation_ephemeral_messages_enabled_toast">Les messages éphémères ont été activés</string>
-    <string name="conversation_ephemeral_messages_disabled_toast">Les messages éphémères ont été désactivés</string>
-    <string name="conversation_ephemeral_messages_lifetime_changed_toast">La durée des messages éphémères a changé</string>
+    <string name="conversation_media_not_found_toast">Média selectionné introuvable !</string>
+    <string name="conversation_subject_changed_toast">Nom de conversation modifié</string>
+    <string name="conversation_ephemeral_messages_enabled_toast">Messages éphémères activés</string>
+    <string name="conversation_ephemeral_messages_disabled_toast">Messages éphémères désactivés</string>
+    <string name="conversation_ephemeral_messages_lifetime_changed_toast">Durée des messages éphémères modifiée</string>
     <string name="conversation_voice_recording_max_duration_reached_toast">Durée maximale atteinte</string>
     <string name="conversation_failed_to_add_participant_to_group_conversation_toast">Un ou plusieurs participants n\'ont pû être ajoutés</string>
     <string name="conversation_deleted_toast">Conversation supprimée</string>
@@ -480,47 +478,47 @@
     <string name="conversation_pick_file_from_gallery_label">Ouvrir la gallerie</string>
     <string name="conversation_pick_any_file_label">Choisir un fichier</string>
 
-    <string name="conversation_info_participants_list_title">Membres du groupe (%s)</string>
-    <string name="conversation_info_add_participants_label">Ajouter des membres</string>
+    <string name="conversation_info_participants_list_title">Participants (%s)</string>
+    <string name="conversation_info_add_participants_label">Ajouter des participants</string>
     <string name="conversation_info_participant_is_admin_label">Administrateur</string>
     <string name="conversation_info_delete_history_action">Supprimer l\'historique</string>
-    <string name="conversation_info_admin_menu_remove_participant">Retirer du groupe</string>
-    <string name="conversation_info_admin_menu_set_participant_admin">Donner les privilèges administrateur</string>
-    <string name="conversation_info_admin_menu_unset_participant_admin">Retirer les privilèges administrateur</string>
+    <string name="conversation_info_admin_menu_remove_participant">Retirer participant</string>
+    <string name="conversation_info_admin_menu_set_participant_admin">Donner les droits admin</string>
+    <string name="conversation_info_admin_menu_unset_participant_admin">Retirer les droits admin</string>
     <string name="conversation_info_menu_go_to_contact">Voir le contact</string>
     <string name="conversation_info_menu_add_to_contacts">Ajouter aux contacts</string>
-    <string name="conversation_info_dialog_delete_all_call_logs_title">Voulez-vous tout supprimer ?</string>
+    <string name="conversation_info_dialog_delete_all_call_logs_title">Supprimer l\'historique ? </string>
     <string name="conversation_info_dialog_delete_all_message">Tout les messages de cette conversation seront supprimés.</string>
     <string name="conversation_info_history_deleted_toast">Historique supprimé</string>
     <string name="conversation_info_participant_added_to_conversation_toast">%s a rejoint la conversation</string>
     <string name="conversation_info_participant_removed_from_conversation_toast">%s a quitté la conversation</string>
-    <string name="conversation_info_participant_has_been_granted_admin_rights_toast">%s is now admin</string>
-    <string name="conversation_info_participant_no_longer_has_admin_rights_toast">%s is no longer admin</string>
+    <string name="conversation_info_participant_has_been_granted_admin_rights_toast">%s est admin</string>
+    <string name="conversation_info_participant_no_longer_has_admin_rights_toast">%s n\'est plus admin</string>
     <string name="conversation_info_cant_find_contact_to_display_toast">Contact non trouvé</string>
     <string name="conversation_info_no_address_to_add_to_contact_toast">Aucune adresse à ajouter au contact</string>
-    <string name="conversation_info_confirm_start_group_call_dialog_title">Démarrer un appel de groupe ?</string>
+    <string name="conversation_info_confirm_start_group_call_dialog_title">Lancer un appel de groupe ?</string>
     <string name="conversation_info_confirm_start_group_call_dialog_message">Tous les participants de la conversation recevront un appel.</string>
 
-    <string name="conversation_event_conference_created">Vous avez rejoint le groupe</string>
-    <string name="conversation_event_conference_destroyed">Vous avez quitté le groupe</string>
-    <string name="conversation_event_participant_added">%s a rejoint le groupe</string>
-    <string name="conversation_event_participant_removed">%s a quitté le groupe</string>
+    <string name="conversation_event_conference_created">Vous avez rejoint la conversation</string>
+    <string name="conversation_event_conference_destroyed">Vous avez quitté la conversation</string>
+    <string name="conversation_event_participant_added">%s a rejoint la conversation</string>
+    <string name="conversation_event_participant_removed">%s a quitté la conversation</string>
     <string name="conversation_event_device_added">Nouvel appareil pour %s</string>
     <string name="conversation_event_device_removed">Appareil supprimé pour %s</string>
-    <string name="conversation_event_subject_changed">Le groupe a été renommé : %s</string>
-    <string name="conversation_event_admin_set">%s est maintenant administrateur</string>
-    <string name="conversation_event_admin_unset">%s n\'est plus administrateur</string>
-    <string name="conversation_event_ephemeral_messages_enabled">Les messages éphémères ont été activés</string>
-    <string name="conversation_event_ephemeral_messages_disabled">Les messages éphémères ont été désactivés</string>
-    <string name="conversation_event_ephemeral_messages_lifetime_changed">La durée des messages éphémères est de %s</string>
+    <string name="conversation_event_subject_changed">la conversation a été renommée : %s</string>
+    <string name="conversation_event_admin_set">%s est admin</string>
+    <string name="conversation_event_admin_unset">%s n\'est plus admin</string>
+    <string name="conversation_event_ephemeral_messages_enabled">Messages éphémères activés</string>
+    <string name="conversation_event_ephemeral_messages_disabled">Messages éphémères désactivés</string>
+    <string name="conversation_event_ephemeral_messages_lifetime_changed">Messages éphémères : %s</string>
 
     <string name="conversation_details_media_documents_title">Médias &amp; documents</string>
     <string name="conversation_media_list_title">Médias partagés</string>
     <string name="conversation_document_list_title">Documents partagés</string>
 
     <string name="conversation_forward_message_title">Transférer à…</string>
-    <string name="conversation_message_forwarded_toast">Le message a été transféré</string>
-    <string name="conversation_message_forward_cancelled_toast">Transfert du message abandonné</string>
+    <string name="conversation_message_forwarded_toast">Message transféré</string>
+    <string name="conversation_message_forward_cancelled_toast">Transfert annulé</string>
 
     <string name="message_delivery_info_read_title">Lu %s</string>
     <string name="message_delivery_info_received_title">Reçu %s</string>
@@ -553,31 +551,31 @@
     <string name="meeting_schedule_add_participants_title">Ajouter des participants</string>
     <string name="meeting_schedule_add_more_participants_title">Cliquez pour ajouter des participants</string>
     <string name="meeting_schedule_add_speaker_title">Ajouter un intervenant</string>
-    <string name="meeting_schedule_send_invitations_title">Envoyer une invitation aux participants</string>
+    <string name="meeting_schedule_send_invitations_title">Envoyer l\'invitation par message aux participants</string>
     <string name="meeting_info_join_title">Rejoindre la réunion</string>
     <string name="meeting_info_organizer_label">Organisateur</string>
     <string name="meeting_info_delete">Supprimer la réunion</string>
-    <string name="meeting_info_export_as_calendar_event">Ajouter un évènement dans le calendrier</string>
-    <string name="meeting_info_deleted_toast">La réunion a été supprimée</string>
+    <string name="meeting_info_export_as_calendar_event">Ajouter dans le calendrier</string>
+    <string name="meeting_info_deleted_toast">Réunion supprimée</string>
     <string name="meeting_schedule_description_title">Description</string>
     <string name="meeting_schedule_edit_title">Modifier la réunion</string>
     <string name="meeting_schedule_cancel_dialog_title">Annuler la réunion?</string>
     <string name="meeting_schedule_cancel_dialog_message">Voulez-vous annuler la réunion et envoyer une notification aux participants ?</string>
-    <string name="meeting_info_created_toast">La réunion a été créée</string>
-    <string name="meeting_info_updated_toast">La réunion a été mise à jour</string>
-    <string name="meeting_info_cancelled_toast">La réunion a été annulée</string>
+    <string name="meeting_info_created_toast">Réunion créée</string>
+    <string name="meeting_info_updated_toast">Réunion mise à jour</string>
+    <string name="meeting_info_cancelled_toast">Réunion annulée</string>
     <string name="meeting_info_cancelled">Réunion annulée</string>
-    <string name="meeting_failed_to_schedule_toast">Échec de la création de la réunion !</string>
+    <string name="meeting_failed_to_schedule_toast">Échec de création de la réunion !</string>
     <string name="meeting_schedule_mandatory_field_not_filled_toast">Veuillez saisir un titre et sélectionner au moins un participant</string>
     <string name="meeting_failed_to_send_invites_toast">Échec de l\'envoi des invitations à la réunion !</string>
-    <string name="meeting_failed_to_send_part_of_invites_toast">Échec de l\'envoi des invitations à la réunion pour certains des participants !</string>
-    <string name="meeting_address_copied_to_clipboard_toast">L\'adresse de la réunion a été copiée</string>
+    <string name="meeting_failed_to_send_part_of_invites_toast">Échec de l\'envoi des invitations à certains des participants !</string>
+    <string name="meeting_address_copied_to_clipboard_toast">Adresse de la réunion copiée</string>
 
     <string name="meeting_waiting_room_join">Rejoindre</string>
     <string name="meeting_waiting_room_cancel">Annuler</string>
     <string name="meeting_waiting_room_joining_title">Connexion à la réunion</string>
     <string name="meeting_waiting_room_joining_subtitle">Vous allez rejoindre la réunion dans quelques instants…</string>
-    <string name="meeting_waiting_room_failed_to_join_toast">Echec lors de la connexion à la conférence!</string>
+    <string name="meeting_waiting_room_failed_to_join_toast">Echec de connexion à la conférence!</string>
 
     <!-- Call related -->
     <string name="call_outgoing">Appel sortant</string>
@@ -617,7 +615,7 @@
     <string name="call_srtp_point_to_point_encrypted">Appel chiffré de point à point</string>
     <string name="call_not_encrypted">Appel non chiffré</string>
     <string name="calls_list_title">Liste des appels</string>
-    <string name="call_remote_is_recording">%s est en train d\'enregistrer</string>
+    <string name="call_remote_is_recording">%s enregistre l\'appel</string>
     <string name="calls_count_label">%s appels</string>
     <string name="calls_paused_count_label">%s appels en pause</string>
     <string name="calls_list_dialog_merge_into_conference_title">Fusionner les appels en une conférence ?</string>
@@ -662,13 +660,13 @@
     <string name="call_stats_zrtp_auth_tag_algo">Algorithme d\'authentification : %s</string>
     <string name="call_stats_zrtp_sas_algo">Algorithme SAS : %s</string>
 
-    <string name="call_history_deleted_toast">L\'historique des appels a été supprimé</string>
+    <string name="call_history_deleted_toast">Historique supprimé</string>
     <string name="call_can_be_trusted_toast">Appareil authentifié</string>
-    <string name="call_transfer_in_progress_toast">Appel en cours de transfert</string>
-    <string name="call_transfer_successful_toast">L\'appel a été transféré</string>
-    <string name="call_transfer_failed_toast">Le transfert a échoué !</string>
-    <string name="call_error_user_busy_toast">L\'utilisateur est occupé</string>
-    <string name="call_error_user_not_found_toast">L\'utilisateur n\'a pu être trouvé</string>
+    <string name="call_transfer_in_progress_toast">Transfert en cours</string>
+    <string name="call_transfer_successful_toast">Appel transféré</string>
+    <string name="call_transfer_failed_toast">Echec du transfert</string>
+    <string name="call_error_user_busy_toast">Utilisateur occupé</string>
+    <string name="call_error_user_not_found_toast">Utilisateur introuvable</string>
     <string name="call_error_incompatible_media_params_toast">Paramètres media incompatibles</string>
     <string name="call_error_io_error_toast">Service indisponible ou erreur réseau</string>
     <string name="call_error_server_timeout_toast">Délai d\'attente du serveur dépassé</string>
@@ -679,18 +677,18 @@
     <string name="conference_call_empty">En attente d\'autres participants…</string>
     <string name="conference_action_screen_sharing">Partage d\'écran</string>
     <string name="conference_action_show_participants">Participants</string>
-    <string name="conference_failed_to_create_group_call_toast">L\'appel de groupe n\'a pas pu être créé!</string>
+    <string name="conference_failed_to_create_group_call_toast">Echec de l\'appel de groupe</string>
     <plurals name="conference_participants_list_title" tools:ignore="MissingQuantity">
         <item quantity="one">%s participant</item>
         <item quantity="other">%s participants</item>
     </plurals>
-    <string name="conference_confirm_removing_participant_dialog_title">Retirer %s de la conférence ?</string>
-    <string name="conference_confirm_removing_participant_dialog_message">Voulez-vous vraiment retirer ce participant de la conférence ?</string>
-    <string name="conference_participant_was_kicked_out_toast">Le participant a été exclu de la conférence</string>
+    <string name="conference_confirm_removing_participant_dialog_title">Retirer %s de la réunion ?</string>
+    <string name="conference_confirm_removing_participant_dialog_message">Voulez-vous retirer ce participant de la réunion ?</string>
+    <string name="conference_participant_was_kicked_out_toast">Le participant a été exclu de la réunion</string>
     <string name="conference_participant_joining_text">En train de rejoindre…</string>
     <string name="conference_participant_paused_text">En pause</string>
     <string name="conference_active_speaker_is_screen_sharing">partage son écran</string>
-    <string name="conference_failed_to_add_participant_invalid_address_toast">L\'adresse SIP est invalide, elle ne peut être ajoutée à la conférence</string>
+    <string name="conference_failed_to_add_participant_invalid_address_toast">Adresse SIP invalide, ajout impossible à la réunion</string>
 
     <string name="conference_layout_grid">Mosaïque</string>
     <string name="conference_layout_active_speaker">Intervenant actif</string>
@@ -706,13 +704,13 @@
 
     <!-- Android Auto UI texts -->
     <string name="car_favorites_contacts_title">Favoris</string>
-    <string name="car_favorites_contacts_list_empty">Aucun contact dans la liste des favoris</string>
+    <string name="car_favorites_contacts_list_empty">Aucun contact favori</string>
 
     <!-- Various menu entries -->
     <string name="menu_add_address_to_contacts">Ajouter aux contacts</string>
     <string name="menu_see_existing_contact">Voir le contact</string>
     <string name="menu_copy_sip_address">Copier l\'adresse SIP</string>
-    <string name="menu_copy_phone_number">Copier le numéro de téléphone</string>
+    <string name="menu_copy_phone_number">Copier le numéro</string>
     <string name="menu_delete_history">Supprimer l\'historique d\'appels</string>
     <string name="menu_delete_selected_item">Supprimer</string>
     <string name="menu_invite">Inviter</string>
