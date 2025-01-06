@@ -21,6 +21,7 @@ package org.linphone.ui.main.settings.viewmodel
 
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import java.io.File
@@ -78,6 +79,8 @@ class AccountProfileViewModel
     val expandDevices = MutableLiveData<Boolean>()
 
     val isOnDefaultDomain = MutableLiveData<Boolean>()
+
+    val emptyDevices = MediatorLiveData<Boolean>()
 
     val devicesFetchInProgress = MutableLiveData<Boolean>()
 
@@ -175,6 +178,11 @@ class AccountProfileViewModel
         showDeviceId.value = false
         devicesFetchInProgress.value = true
         isOnDefaultDomain.value = false
+
+        emptyDevices.value = true
+        emptyDevices.addSource(devices) { list ->
+            emptyDevices.value = list.orEmpty().isEmpty()
+        }
 
         coreContext.postOnCoreThread {
             hideAccountSettings.postValue(corePreferences.hideAccountSettings)

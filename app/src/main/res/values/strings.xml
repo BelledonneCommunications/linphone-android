@@ -308,6 +308,7 @@
     <string name="manage_account_title">Manage account</string>
     <string name="manage_account_details_title">Details</string>
     <string name="manage_account_devices_title">Devices</string>
+    <string name="manage_account_empty_devices_label">No device found…</string>
     <string name="manage_account_add_picture">Add a picture</string>
     <string name="manage_account_edit_picture">Edit picture</string>
     <string name="manage_account_remove_picture">Remove picture</string>

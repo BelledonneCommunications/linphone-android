@@ -269,6 +269,7 @@
     <string name="manage_account_title">Mon compte</string>
     <string name="manage_account_details_title">Détails</string>
     <string name="manage_account_devices_title">Appareils</string>
+    <string name="manage_account_empty_devices_label">Aucun appareil…</string>
     <string name="manage_account_add_picture">Ajouter une image</string>
     <string name="manage_account_edit_picture">Modifier </string>
     <string name="manage_account_remove_picture">Suprimmer</string>

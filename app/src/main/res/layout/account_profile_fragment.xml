@@ -459,6 +459,21 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/devices" />
 
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/default_text_style"
+                        android:id="@+id/empty_devices_list"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="@string/manage_account_empty_devices_label"
+                        android:visibility="@{viewModel.isOnDefaultDomain &amp;&amp; viewModel.expandDevices &amp;&amp; !viewModel.devicesFetchInProgress &amp;&amp; viewModel.emptyDevices ? View.VISIBLE : View.GONE, default=gone}"
+                        app:layout_constraintTop_toTopOf="@id/devices_list"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toBottomOf="@id/devices_list"/>
+
                     <com.google.android.material.progressindicator.CircularProgressIndicator
                         android:id="@+id/devices_fetch_progress"
                         android:layout_width="wrap_content"
@@ -467,7 +482,6 @@
                         app:indicatorColor="?attr/color_main1_500"
                         android:indeterminate="true"
                         android:visibility="@{viewModel.devicesFetchInProgress &amp;&amp; viewModel.expandDevices ? View.VISIBLE : View.GONE, default=gone}"
-                        app:layout_constraintVertical_chainStyle="packed"
                         app:layout_constraintTop_toTopOf="@id/devices_list"
                         app:layout_constraintStart_toStartOf="@id/devices_list"
                         app:layout_constraintEnd_toEndOf="@id/devices_list"
