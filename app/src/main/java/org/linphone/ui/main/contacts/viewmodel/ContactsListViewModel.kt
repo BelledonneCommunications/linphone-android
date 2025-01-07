@@ -58,6 +58,8 @@ class ContactsListViewModel
 
     val showFavourites = MutableLiveData<Boolean>()
 
+    val showFilter = MutableLiveData<Boolean>()
+
     val isListFiltered = MutableLiveData<Boolean>()
 
     val isDefaultAccountLinphone = MutableLiveData<Boolean>()
@@ -100,6 +102,7 @@ class ContactsListViewModel
     init {
         fetchInProgress.value = true
         showFavourites.value = corePreferences.showFavoriteContacts
+        showFilter.value = !corePreferences.hidePhoneNumbers
 
         coreContext.postOnCoreThread { core ->
             updateDomainFilter()

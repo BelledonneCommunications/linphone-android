@@ -31,6 +31,7 @@ import androidx.core.text.toSpannable
 import java.text.SimpleDateFormat
 import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.contacts.getListOfSipAddresses
 import org.linphone.core.Account
@@ -116,7 +117,7 @@ class LinphoneUtils {
             val numbersCount = friend.phoneNumbers.size
 
             // Do not consider phone numbers if default account is in secure mode
-            val enablePhoneNumbers = !isEndToEndEncryptionMandatory()
+            val enablePhoneNumbers = !corePreferences.hidePhoneNumbers && !isEndToEndEncryptionMandatory()
 
             if (addressesCount == 1 && (numbersCount == 0 || !enablePhoneNumbers)) {
                 val address = addresses.first()

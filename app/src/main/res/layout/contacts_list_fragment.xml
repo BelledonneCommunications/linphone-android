@@ -40,7 +40,7 @@
                     android:id="@+id/top_bar"
                     layout="@layout/main_activity_top_bar"
                     bind:viewModel="@{viewModel}"
-                    bind:enableExtraAction="@{true}"
+                    bind:enableExtraAction="@{viewModel.showFilter}"
                     bind:extraActionIcon="@{@drawable/funnel}"
                     bind:extraActionClickListener="@{filterClickListener}"
                     bind:extraActionContentDescription="@{@string/content_description_contacts_list_filters}"

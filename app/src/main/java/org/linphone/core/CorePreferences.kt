@@ -229,6 +229,10 @@ class CorePreferences
         get() = config.getInt("ui", "max_account", 0) // 0 means no max
 
     @get:WorkerThread
+    val hidePhoneNumbers: Boolean
+        get() = config.getBool("ui", "hide_phone_numbers", false)
+
+    @get:WorkerThread
     val hideSettings: Boolean
         get() = config.getBool("ui", "hide_settings", false)
 

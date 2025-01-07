@@ -860,8 +860,11 @@ fun Friend.getListOfSipAddressesAndPhoneNumbers(listener: ContactNumberOrAddress
         )
         addressesAndNumbers.add(data)
     }
-    val indexOfLastSipAddress = addressesAndNumbers.count()
+    if (corePreferences.hidePhoneNumbers) {
+        return addressesAndNumbers
+    }
 
+    val indexOfLastSipAddress = addressesAndNumbers.count()
     for (number in phoneNumbersWithLabel) {
         val presenceModel = getPresenceModelForUriOrTel(number.phoneNumber)
         val hasPresenceInfo = !presenceModel?.contact.isNullOrEmpty()
