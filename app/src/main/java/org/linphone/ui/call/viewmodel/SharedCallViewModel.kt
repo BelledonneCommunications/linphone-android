@@ -31,4 +31,8 @@ class SharedCallViewModel
     val toggleFullScreenEvent = MutableLiveData<Event<Boolean>>()
 
     val foldingState = MutableLiveData<FoldingFeature>()
+
+    // For moving video preview purposes
+    var videoPreviewX: Float = 0f
+    var videoPreviewY: Float = 0f
 }

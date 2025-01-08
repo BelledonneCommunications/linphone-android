@@ -492,7 +492,7 @@ class CallActivity : GenericActivity() {
     }
 
     private fun hideUI(hide: Boolean) {
-        Log.i("$TAG Switching full screen mode to ${if (hide) "ON" else "OFF"}")
+        Log.i("$TAG Switching full screen mode to [${if (hide) "ON" else "OFF"}]")
         val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
         if (hide) {
             windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())

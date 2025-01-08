@@ -19,11 +19,14 @@
  */
 package org.linphone.ui.call.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.ui.GenericFragment
+import org.linphone.ui.call.view.RoundCornersTextureView
 import org.linphone.ui.call.viewmodel.SharedCallViewModel
 
 @UiThread
@@ -34,11 +37,56 @@ abstract class GenericCallFragment : GenericFragment() {
 
     protected lateinit var sharedViewModel: SharedCallViewModel
 
+    // For moving video preview purposes
+    private val videoPreviewTouchListener = View.OnTouchListener { view, event ->
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                sharedViewModel.videoPreviewX = view.x - event.rawX
+                sharedViewModel.videoPreviewY = view.y - event.rawY
+                true
+            }
+            MotionEvent.ACTION_UP -> {
+                sharedViewModel.videoPreviewX = view.translationX
+                sharedViewModel.videoPreviewY = view.translationY
+                true
+            }
+            MotionEvent.ACTION_MOVE -> {
+                view.animate()
+                    .x(event.rawX + sharedViewModel.videoPreviewX)
+                    .y(event.rawY + sharedViewModel.videoPreviewY)
+                    .setDuration(0)
+                    .start()
+                true
+            }
+            else -> {
+                view.performClick()
+                false
+            }
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this)[SharedCallViewModel::class.java]
         }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    protected fun setupVideoPreview(localPreviewVideoSurface: RoundCornersTextureView) {
+        // To restore video preview position if possible
+        localPreviewVideoSurface.animate()
+            .x(sharedViewModel.videoPreviewX)
+            .y(sharedViewModel.videoPreviewY)
+            .setDuration(0)
+            .start()
+
+        localPreviewVideoSurface.setOnTouchListener(videoPreviewTouchListener)
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    protected fun cleanVideoPreview(localPreviewVideoSurface: RoundCornersTextureView) {
+        localPreviewVideoSurface.setOnTouchListener(null)
     }
 }

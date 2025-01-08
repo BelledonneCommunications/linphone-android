@@ -126,6 +126,20 @@ class CorePreferences
             config.setBool("app", "show_confirmation_dialog_zrtp_trust_call", value)
         }
 
+    @get:WorkerThread @set:WorkerThread
+    var acceptEarlyMedia: Boolean
+        get() = config.getBool("sip", "incoming_calls_early_media", false)
+        set(value) {
+            config.setBool("sip", "incoming_calls_early_media", value)
+        }
+
+    @get:WorkerThread @set:WorkerThread
+    var allowOutgoingEarlyMedia: Boolean
+        get() = config.getBool("misc", "real_early_media", false)
+        set(value) {
+            config.setBool("misc", "real_early_media", value)
+        }
+
     // Conversation related
 
     var markConversationAsReadWhenDismissingMessageNotification: Boolean

@@ -19,12 +19,10 @@
  */
 package org.linphone.ui.call.fragment
 
-import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
@@ -66,33 +64,6 @@ class ActiveCallFragment : GenericCallFragment() {
     private lateinit var callsViewModel: CallsViewModel
 
     private var zrtpSasDialog: Dialog? = null
-
-    // For moving video preview purposes
-
-    private var previewX: Float = 0f
-    private var previewY: Float = 0f
-
-    private val previewTouchListener = View.OnTouchListener { view, event ->
-        when (event.action) {
-            MotionEvent.ACTION_DOWN -> {
-                previewX = view.x - event.rawX
-                previewY = view.y - event.rawY
-                true
-            }
-            MotionEvent.ACTION_MOVE -> {
-                view.animate()
-                    .x(event.rawX + previewX)
-                    .y(event.rawY + previewY)
-                    .setDuration(0)
-                    .start()
-                true
-            }
-            else -> {
-                view.performClick()
-                false
-            }
-        }
-    }
 
     private val actionsBottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -253,7 +224,7 @@ class ActiveCallFragment : GenericCallFragment() {
         }
 
         callViewModel.fullScreenMode.observe(viewLifecycleOwner) { hide ->
-            Log.i("$TAG Switching full screen mode to ${if (hide) "ON" else "OFF"}")
+            Log.i("$TAG Switching full screen mode to [${if (hide) "ON" else "OFF"}]")
             sharedViewModel.toggleFullScreenEvent.value = Event(hide)
             numpadBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             callStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
@@ -420,14 +391,14 @@ class ActiveCallFragment : GenericCallFragment() {
         )
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     override fun onResume() {
         super.onResume()
 
-        coreContext.postOnCoreThread { core ->
-            core.nativeVideoWindowId = binding.remoteVideoSurface
+        setupVideoPreview(binding.localPreviewVideoSurface)
 
-            binding.localPreviewVideoSurface.setOnTouchListener(previewTouchListener)
+        coreContext.postOnCoreThread { core ->
+            Log.i("$TAG Fragment resuming, setting native video window ID")
+            core.nativeVideoWindowId = binding.remoteVideoSurface
 
             // Need to be done manually
             callViewModel.updateCallDuration()
@@ -442,14 +413,13 @@ class ActiveCallFragment : GenericCallFragment() {
         }
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     override fun onPause() {
         super.onPause()
 
         zrtpSasDialog?.dismiss()
         zrtpSasDialog = null
 
-        binding.localPreviewVideoSurface.setOnTouchListener(null)
+        cleanVideoPreview(binding.localPreviewVideoSurface)
     }
 
     private fun updateHingeRelatedConstraints(feature: FoldingFeature) {

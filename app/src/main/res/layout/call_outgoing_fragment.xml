@@ -39,6 +39,21 @@
             app:layout_constraintStart_toEndOf="@id/call_direction_icon"
             app:layout_constraintTop_toTopOf="parent"/>
 
+        <ImageView
+            android:onClick="@{() -> viewModel.switchCamera()}"
+            android:id="@+id/switch_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/top_bar_height"
+            android:padding="10dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:src="@drawable/camera_rotate"
+            android:contentDescription="@string/content_description_change_camera"
+            android:visibility="gone"
+            app:tint="@color/bc_white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/in_progress"
             android:layout_width="wrap_content"
@@ -90,6 +105,20 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
+        <org.linphone.ui.call.view.RoundCornersTextureView
+            android:id="@+id/local_preview_video_surface"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            app:alignTopRight="true"
+            app:displayMode="black_bars"
+            roundCornersRadius="@dimen/call_round_corners_texture_view_radius"
+            app:layout_constraintBottom_toTopOf="@id/bottom_bar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_max="@dimen/call_video_preview_max_size"
+            app:layout_constraintWidth_max="@dimen/call_video_preview_max_size" />
 
         <include
             bind:viewModel="@{viewModel}"

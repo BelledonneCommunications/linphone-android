@@ -257,6 +257,8 @@
     <string name="settings_advanced_upload_server_url">URL du serveur de partage de fichier</string>
     <string name="settings_advanced_media_encryption_title">Chiffrement du média</string>
     <string name="settings_advanced_media_encryption_mandatory_title">Rendre le chiffrement du média obligatoire</string>
+    <string name="settings_advanced_accept_early_media_title">Accepter l\'early media</string>
+    <string name="settings_advanced_allow_outgoing_early_media_title">Autoriser l\'early media pour les appels sortants</string>
     <string name="settings_advanced_remote_provisioning_url">URL de configuration distante</string>
     <string name="settings_advanced_download_apply_remote_provisioning">Télécharger &amp; appliquer</string>
     <string name="settings_advanced_audio_devices_title">Périphériques audio</string>

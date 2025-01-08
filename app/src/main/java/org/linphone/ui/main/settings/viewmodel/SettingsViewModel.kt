@@ -187,6 +187,8 @@ class SettingsViewModel
     val mediaEncryptionLabels = arrayListOf<String>()
     private val mediaEncryptionValues = arrayListOf<MediaEncryption>()
     val mediaEncryptionMandatory = MutableLiveData<Boolean>()
+    val acceptEarlyMedia = MutableLiveData<Boolean>()
+    val allowOutgoingEarlyMedia = MutableLiveData<Boolean>()
 
     val expandAudioDevices = MutableLiveData<Boolean>()
     val inputAudioDeviceIndex = MutableLiveData<Int>()
@@ -671,6 +673,8 @@ class SettingsViewModel
         }
 
         mediaEncryptionMandatory.postValue(core.isMediaEncryptionMandatory)
+        acceptEarlyMedia.postValue(corePreferences.acceptEarlyMedia)
+        allowOutgoingEarlyMedia.postValue(corePreferences.allowOutgoingEarlyMedia)
     }
 
     @UiThread
@@ -693,6 +697,26 @@ class SettingsViewModel
         coreContext.postOnCoreThread { core ->
             core.isMediaEncryptionMandatory = newValue
             mediaEncryptionMandatory.postValue(newValue)
+        }
+    }
+
+    @UiThread
+    fun toggleAcceptEarlyMedia() {
+        val newValue = acceptEarlyMedia.value == false
+
+        coreContext.postOnCoreThread { core ->
+            corePreferences.acceptEarlyMedia = newValue
+            acceptEarlyMedia.postValue(newValue)
+        }
+    }
+
+    @UiThread
+    fun toggleAllowOutgoingEarlyMedia() {
+        val newValue = allowOutgoingEarlyMedia.value == false
+
+        coreContext.postOnCoreThread { core ->
+            corePreferences.allowOutgoingEarlyMedia = newValue
+            allowOutgoingEarlyMedia.postValue(newValue)
         }
     }
 

@@ -57,6 +57,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/settings_title_style"
+                    android:id="@+id/keep_alive_service_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/settings_advanced_keep_alive_service_title"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    app:layout_constraintTop_toTopOf="@id/keep_alive_service_switch"
+                    app:layout_constraintBottom_toBottomOf="@id/keep_alive_service_switch"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/keep_alive_service_switch"/>
+
                 <com.google.android.material.materialswitch.MaterialSwitch
                     style="@style/material_switch_style"
                     android:id="@+id/keep_alive_service_switch"
@@ -174,21 +189,61 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/media_encryption" />
 
-
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/settings_title_style"
-                    android:id="@+id/push_notifications_title"
+                    android:onClick="@{() -> viewModel.toggleAcceptEarlyMedia()}"
+                    android:id="@+id/accept_early_media_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="10dp"
-                    android:text="@string/settings_advanced_keep_alive_service_title"
+                    android:text="@string/settings_advanced_accept_early_media_title"
                     android:maxLines="2"
                     android:ellipsize="end"
-                    app:layout_constraintTop_toTopOf="@id/keep_alive_service_switch"
-                    app:layout_constraintBottom_toBottomOf="@id/keep_alive_service_switch"
+                    app:layout_constraintTop_toTopOf="@id/accept_early_media_switch"
+                    app:layout_constraintBottom_toBottomOf="@id/accept_early_media_switch"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/keep_alive_service_switch"/>
+                    app:layout_constraintEnd_toStartOf="@id/accept_early_media_switch"/>
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    style="@style/material_switch_style"
+                    android:id="@+id/accept_early_media_switch"
+                    android:onClick="@{() -> viewModel.toggleAcceptEarlyMedia()}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="16dp"
+                    android:checked="@{viewModel.acceptEarlyMedia}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/media_encryption_mandatory_switch" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/settings_title_style"
+                    android:onClick="@{() -> viewModel.toggleAllowOutgoingEarlyMedia()}"
+                    android:id="@+id/allow_outgoing_early_media_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/settings_advanced_allow_outgoing_early_media_title"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    app:layout_constraintTop_toTopOf="@id/allow_outgoing_early_media_switch"
+                    app:layout_constraintBottom_toBottomOf="@id/allow_outgoing_early_media_switch"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/allow_outgoing_early_media_switch"/>
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    style="@style/material_switch_style"
+                    android:id="@+id/allow_outgoing_early_media_switch"
+                    android:onClick="@{() -> viewModel.toggleAllowOutgoingEarlyMedia()}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="16dp"
+                    android:checked="@{viewModel.allowOutgoingEarlyMedia}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/accept_early_media_switch" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/settings_title_style"
@@ -201,7 +256,7 @@
                     android:paddingBottom="8dp"
                     android:text="@string/settings_advanced_device_id"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/media_encryption_mandatory_switch"/>
+                    app:layout_constraintTop_toBottomOf="@id/allow_outgoing_early_media_switch"/>
 
                 <androidx.appcompat.widget.AppCompatEditText
                     style="@style/default_text_style"

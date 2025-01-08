@@ -87,9 +87,13 @@ class CurrentCallViewModel
 
     val videoUpdateInProgress = MutableLiveData<Boolean>()
 
+    val isIncomingEarlyMedia = MutableLiveData<Boolean>()
+
     val isOutgoing = MutableLiveData<Boolean>()
 
     val isOutgoingRinging = MutableLiveData<Boolean>()
+
+    val isOutgoingEarlyMedia = MutableLiveData<Boolean>()
 
     val isRecordingEnabled = MutableLiveData<Boolean>()
 
@@ -420,6 +424,8 @@ class CurrentCallViewModel
             message: String
         ) {
             isOutgoingRinging.postValue(call.state == Call.State.OutgoingRinging)
+            isIncomingEarlyMedia.postValue(call.state == Call.State.IncomingEarlyMedia)
+            isOutgoingEarlyMedia.postValue(call.state == Call.State.OutgoingEarlyMedia)
 
             if (::currentCall.isInitialized) {
                 if (call != currentCall) {
@@ -1129,10 +1135,13 @@ class CurrentCallViewModel
         updateOutputAudioDevice(audioDevice)
 
         isOutgoing.postValue(call.dir == Call.Dir.Outgoing)
-        isOutgoingRinging.postValue(call.state == Call.State.OutgoingRinging)
+        val state = call.state
+        isOutgoingRinging.postValue(state == Call.State.OutgoingRinging)
+        isIncomingEarlyMedia.postValue(state == Call.State.IncomingEarlyMedia)
+        isOutgoingEarlyMedia.postValue(state == Call.State.OutgoingEarlyMedia)
 
         isPaused.postValue(isCallPaused())
-        isPausedByRemote.postValue(call.state == Call.State.PausedByRemote)
+        isPausedByRemote.postValue(state == Call.State.PausedByRemote)
         canBePaused.postValue(canCallBePaused())
 
         val address = call.callLog.remoteAddress

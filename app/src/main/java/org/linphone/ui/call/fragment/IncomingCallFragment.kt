@@ -26,11 +26,16 @@ import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.tools.Log
 import org.linphone.databinding.CallIncomingFragmentBinding
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
 
 @UiThread
 class IncomingCallFragment : GenericCallFragment() {
+    companion object {
+        private const val TAG = "[Incoming Call Fragment]"
+    }
+
     private lateinit var binding: CallIncomingFragmentBinding
 
     private lateinit var callViewModel: CurrentCallViewModel
@@ -53,6 +58,15 @@ class IncomingCallFragment : GenericCallFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = callViewModel
+
+        callViewModel.isIncomingEarlyMedia.observe(viewLifecycleOwner) { earlyMedia ->
+            if (earlyMedia) {
+                coreContext.postOnCoreThread { core ->
+                    Log.i("$TAG Incoming early-media call, setting video surface")
+                    core.nativeVideoWindowId = binding.remoteVideoSurface
+                }
+            }
+        }
     }
 
     override fun onResume() {
