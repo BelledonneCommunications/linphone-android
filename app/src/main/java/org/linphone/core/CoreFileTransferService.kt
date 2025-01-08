@@ -94,6 +94,18 @@ class CoreFileTransferService : FileTransferService() {
     override fun createServiceNotification() {
         Log.i("$TAG Creating notification")
 
+        buildNotification()
+        postNotification()
+
+        coreContext.postOnCoreThread { core ->
+            val downloadingFilesCount = core.remainingDownloadFileCount
+            val uploadingFilesCount = core.remainingUploadFileCount
+            updateNotificationContent(downloadingFilesCount, uploadingFilesCount)
+        }
+    }
+
+    @AnyThread
+    private fun buildNotification() {
         val intent = Intent(applicationContext, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         val pendingIntent = PendingIntent.getActivity(
@@ -117,13 +129,6 @@ class CoreFileTransferService : FileTransferService() {
             .setProgress(0, 0, true)
             .setContentIntent(pendingIntent)
             .build()
-        postNotification()
-
-        coreContext.postOnCoreThread { core ->
-            val downloadingFilesCount = core.remainingDownloadFileCount
-            val uploadingFilesCount = core.remainingUploadFileCount
-            updateNotificationContent(downloadingFilesCount, uploadingFilesCount)
-        }
     }
 
     @WorkerThread
@@ -159,6 +164,9 @@ class CoreFileTransferService : FileTransferService() {
             uploadText
         }
 
+        if (mServiceNotification == null) {
+            buildNotification()
+        }
         mServiceNotification = builder.setContentText(message).build()
         postNotification()
     }
