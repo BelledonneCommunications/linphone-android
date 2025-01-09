@@ -24,6 +24,7 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
@@ -278,6 +279,14 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         ) {
             listViewModel.updateContactsList(false)
         }
+
+        binding.searchBar.setOnEditorActionListener({ view, id, event ->
+            if (id == EditorInfo.IME_ACTION_SEARCH) {
+                (requireActivity() as MainActivity).hideKeyboard()
+                return@setOnEditorActionListener true
+            }
+            return@setOnEditorActionListener false
+        })
 
         binding.setNewContactClickListener {
             // Remove any previously selected contact
