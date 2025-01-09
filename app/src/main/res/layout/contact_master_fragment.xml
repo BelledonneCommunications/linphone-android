@@ -146,6 +146,7 @@
                 android:inputType="textPersonName|textNoSuggestions"
                 android:drawableLeft="@drawable/search"
                 android:drawablePadding="10dp"
+                android:imeOptions="actionSearch"
                 android:background="@color/transparent_color"
                 android:backgroundTint="@color/transparent_color"
                 android:hint="@string/contact_filter_hint"/>
