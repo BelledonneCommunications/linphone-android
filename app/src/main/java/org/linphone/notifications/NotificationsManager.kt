@@ -1111,6 +1111,7 @@ class NotificationsManager
                     "$TAG Can't use notification call style: $iae"
                 )
             }
+            setColor(context.resources.getColor(R.color.gray_600, context.theme))
             setColorized(true)
             setOnlyAlertOnce(true)
             setSmallIcon(smallIcon)
