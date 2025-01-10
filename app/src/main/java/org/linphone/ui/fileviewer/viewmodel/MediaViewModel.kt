@@ -93,7 +93,7 @@ class MediaViewModel
         val name = FileUtils.getNameFromFilePath(file)
         fileName.value = name
 
-        val extension = FileUtils.getExtensionFromFileName(name)
+        val extension = FileUtils.getExtensionFromFileName(file)
         val mime = FileUtils.getMimeTypeFromExtension(extension)
         when (FileUtils.getMimeType(mime)) {
             FileUtils.MimeType.Image -> {

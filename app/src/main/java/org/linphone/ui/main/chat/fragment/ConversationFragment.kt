@@ -1092,6 +1092,8 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         Log.i("$TAG Navigating to file viewer fragment with path [$path]")
         val extension = FileUtils.getExtensionFromFileName(path)
         val mime = FileUtils.getMimeTypeFromExtension(extension)
+        val mimeType = FileUtils.getMimeType(mime)
+        Log.i("$TAG Extension for file [$path] is [$extension], associated MIME type is [$mimeType]")
 
         val bundle = Bundle()
         bundle.apply {
@@ -1102,7 +1104,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             putLong("timestamp", fileModel.fileCreationTimestamp)
             putString("originalPath", fileModel.originalPath)
         }
-        when (FileUtils.getMimeType(mime)) {
+        when (mimeType) {
             FileUtils.MimeType.Image, FileUtils.MimeType.Video, FileUtils.MimeType.Audio -> {
                 bundle.putBoolean("isMedia", true)
                 sharedViewModel.displayFileEvent.value = Event(bundle)

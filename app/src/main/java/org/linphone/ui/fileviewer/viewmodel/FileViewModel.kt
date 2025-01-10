@@ -125,10 +125,11 @@ class FileViewModel
         }
 
         filePath = file
-        val extension = FileUtils.getExtensionFromFileName(name)
+        val extension = FileUtils.getExtensionFromFileName(file)
         val mime = FileUtils.getMimeTypeFromExtension(extension)
         mimeType.postValue(mime)
-        when (FileUtils.getMimeType(mime)) {
+        val mimeType = FileUtils.getMimeType(mime)
+        when (mimeType) {
             FileUtils.MimeType.Pdf -> {
                 Log.d("$TAG File [$file] seems to be a PDF")
                 loadPdf()
@@ -138,7 +139,7 @@ class FileViewModel
                 loadPlainText()
             }
             else -> {
-                Log.e("$TAG Unexpected MIME type [$mime] for file at [$file]")
+                Log.e("$TAG Unexpected MIME type [$mimeType] for file at [$file] with extension [$extension]")
                 fileReadyEvent.value = Event(false)
             }
         }

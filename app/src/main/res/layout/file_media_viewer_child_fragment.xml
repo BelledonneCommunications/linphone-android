@@ -17,6 +17,7 @@
         android:onClick="@{toggleFullScreenModeClickListener}"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:keepScreenOn="true"
         android:background="@color/bc_black">
 
         <androidx.constraintlayout.widget.Group
