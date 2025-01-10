@@ -477,23 +477,7 @@ class ContactsManager
             return ContactAvatarModel(fakeFriend)
         }
 
-        val address = friend.address ?: friend.addresses.firstOrNull()
-            ?: return ContactAvatarModel(friend)
-        Log.d(
-            "$TAG Looking for avatar model for friend [${friend.name}] using SIP URI  [${address.asStringUriOnly()}]"
-        )
-
-        val key = friend.refKey ?: LinphoneUtils.getAddressAsCleanStringUriOnly(address)
-        val foundInMap = getAvatarModelFromCache(key)
-        if (foundInMap != null) {
-            Log.d("$TAG Found avatar model in map using SIP URI [$key]")
-            return foundInMap
-        }
-
-        Log.w("$TAG Avatar model not found in map with SIP URI [$key]")
-        val avatar = ContactAvatarModel(friend, address)
-        knownContactsAvatarsMap[key] = avatar
-
+        val avatar = ContactAvatarModel(friend)
         return avatar
     }
 
