@@ -58,6 +58,16 @@ class StartCallFragment : GenericAddressPickerFragment() {
 
     override lateinit var viewModel: StartCallViewModel
 
+    private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            if (newState == BottomSheetBehavior.STATE_COLLAPSED || newState == BottomSheetBehavior.STATE_HIDDEN) {
+                viewModel.isNumpadVisible.value = false
+            }
+        }
+
+        override fun onSlide(bottomSheet: View, slideOffset: Float) { }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -144,12 +154,15 @@ class StartCallFragment : GenericAddressPickerFragment() {
             }
         }
 
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.numpadLayout.root)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
+
         viewModel.isNumpadVisible.observe(viewLifecycleOwner) { visible ->
-            val standardBottomSheetBehavior = BottomSheetBehavior.from(binding.numpadLayout.root)
             if (visible) {
-                standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             } else {
-                standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
         }
 
