@@ -22,7 +22,9 @@ package org.linphone.ui.main.history.model
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.tools.Log
+import org.linphone.utils.LinphoneUtils
 
 open class NumpadModel
     @UiThread
@@ -40,6 +42,20 @@ open class NumpadModel
 
     val digits = MutableLiveData<String>()
 
+    val voicemailAvailable = MutableLiveData<Boolean>()
+
+    val showLetters = MutableLiveData<Boolean>()
+
+    init {
+        coreContext.postOnCoreThread {
+            showLetters.postValue(corePreferences.showLettersOnDialpad)
+
+            val account = LinphoneUtils.getDefaultAccount()
+            val voicemailAddress = account?.params?.voicemailAddress
+            voicemailAvailable.postValue(voicemailAddress != null)
+        }
+    }
+
     @UiThread
     fun onDigitClicked(value: String) {
         Log.i("$TAG Clicked on digit [$value]")
@@ -54,16 +70,22 @@ open class NumpadModel
 
     @UiThread
     fun onDigitLongClicked(value: String): Boolean {
-        Log.i("$TAG Long clicked on digit [$value]")
-        onDigitClicked.invoke(value)
-        return true
+        if (value == "0") { // Special case
+            Log.i("$TAG Long clicked on digit [$value]")
+            onDigitClicked.invoke("+")
+            return true
+        }
+        return false
     }
 
     @UiThread
     fun onVoicemailLongClicked(): Boolean {
-        Log.i("$TAG Long clicked on voicemail icon")
-        onVoicemailClicked.invoke()
-        return true
+        if (voicemailAvailable.value == true) {
+            Log.i("$TAG Long clicked on voicemail icon")
+            onVoicemailClicked.invoke()
+            return true
+        }
+        return false
     }
 
     @UiThread

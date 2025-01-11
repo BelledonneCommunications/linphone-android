@@ -17,7 +17,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:onClick="@{() -> model.onDigitClicked(digit)}"
-        android:onLongClick="@{() -> model.onDigitLongClicked(digit)}"
+        android:onLongClick="@{() -> model.onVoicemailLongClicked()}"
         android:layout_width="@dimen/call_dtmf_button_size"
         android:layout_height="@dimen/call_dtmf_button_size"
         android:background="@drawable/in_call_button_background_red">
@@ -25,7 +25,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
             android:id="@+id/digit_label"
-            android:text="@{digit, default=`9`}"
+            android:text="@{digit, default=`1`}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="25sp"
@@ -33,24 +33,21 @@
             android:textColor="@color/bc_white"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/letters_label"
+            app:layout_constraintBottom_toTopOf="@id/letters_drawable"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style"
-            android:id="@+id/letters_label"
-            android:text="@{letters, default=`wxyz`}"
+        <ImageView
+            android:id="@+id/letters_drawable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:includeFontPadding="false"
-            android:textColor="@color/bc_white"
-            android:visibility="@{model.showLetters ? View.VISIBLE : View.GONE, default=gone}"
+            android:src="@drawable/voicemail"
+            android:visibility="@{model.voicemailAvailable ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintTop_toBottomOf="@id/digit_label"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/bc_white" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -280,6 +280,10 @@ class CorePreferences
     val automaticallyShowDialpad: Boolean
         get() = config.getBool("ui", "automatically_show_dialpad", false)
 
+    @get:WorkerThread
+    val showLettersOnDialpad: Boolean
+        get() = config.getBool("ui", "show_letters_on_dialpad", true)
+
     // Paths
 
     @get:WorkerThread

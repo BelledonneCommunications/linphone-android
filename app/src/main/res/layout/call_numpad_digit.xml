@@ -19,7 +19,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
-            android:text="@{digit}"
+            android:text="@{digit, default=`#`}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="25sp"

@@ -8,9 +8,6 @@
             name="digit"
             type="String" />
         <variable
-            name="letters"
-            type="String" />
-        <variable
             name="model"
             type="org.linphone.ui.main.history.model.NumpadModel" />
     </data>
@@ -25,7 +22,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
             android:id="@+id/digit_label"
-            android:text="@{digit, default=`9`}"
+            android:text="@{digit, default=`0`}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="25sp"
@@ -40,13 +37,12 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
             android:id="@+id/letters_label"
-            android:text="@{letters, default=`wxyz`}"
+            android:text="+"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14sp"
             android:includeFontPadding="false"
             android:textColor="@color/bc_white"
-            android:visibility="@{model.showLetters ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintTop_toBottomOf="@id/digit_label"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
