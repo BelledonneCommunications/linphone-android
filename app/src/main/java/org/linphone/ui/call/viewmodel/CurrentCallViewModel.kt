@@ -149,6 +149,10 @@ class CurrentCallViewModel
         MutableLiveData<Event<String>>()
     }
 
+    val finishActivityEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     val requestRecordAudioPermission: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -314,27 +318,11 @@ class CurrentCallViewModel
                         configureCall(newCurrentCall)
                         updateEncryption()
                     } else {
-                        Log.e(
-                            "$TAG Failed to get a valid call to display, go to ended call fragment"
-                        )
-                        updateCallDuration()
-                        val text = if (call.state == Call.State.Error) {
-                            LinphoneUtils.getCallErrorInfoToast(call)
-                        } else {
-                            ""
-                        }
-                        goToEndedCallEvent.postValue(Event(text))
+                        Log.e("$TAG Failed to get a valid call to display")
+                        endCall(call)
                     }
                 } else {
-                    updateCallDuration()
-                    Log.i("$TAG Call is ending, go to ended call fragment")
-                    // Show that call was ended for a few seconds, then leave
-                    val text = if (call.state == Call.State.Error) {
-                        LinphoneUtils.getCallErrorInfoToast(call)
-                    } else {
-                        ""
-                    }
-                    goToEndedCallEvent.postValue(Event(text))
+                    endCall(call)
                 }
             } else {
                 val videoEnabled = call.currentParams.isVideoEnabled
@@ -1425,5 +1413,31 @@ class CurrentCallViewModel
             return null
         }
         return params
+    }
+
+    @WorkerThread
+    private fun endCall(call: Call) {
+        val reason = call.reason
+        val status = call.callLog.status
+        Log.i("$TAG Call is ending with status [$status] because of reason [$reason]")
+
+        when (status) {
+            Call.Status.AcceptedElsewhere, Call.Status.DeclinedElsewhere -> {
+                Log.i("$TAG Call was accepted/declined on another device, do not show ended call fragment")
+                finishActivityEvent.postValue(Event(true))
+            }
+            else -> {
+                Log.i("$TAG Go to ended call fragment")
+                updateCallDuration()
+
+                // Show that call was ended for a few seconds, then leave
+                val text = if (call.state == Call.State.Error) {
+                    LinphoneUtils.getCallErrorInfoToast(call)
+                } else {
+                    ""
+                }
+                goToEndedCallEvent.postValue(Event(text))
+            }
+        }
     }
 }

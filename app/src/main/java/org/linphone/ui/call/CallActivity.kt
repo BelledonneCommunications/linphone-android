@@ -233,6 +233,13 @@ class CallActivity : GenericActivity() {
             }
         }
 
+        callViewModel.finishActivityEvent.observe(this) {
+            it.consume {
+                Log.i("$TAG Finishing activity")
+                finish()
+            }
+        }
+
         callViewModel.requestRecordAudioPermission.observe(this) {
             it.consume {
                 Log.w("$TAG Asking for RECORD_AUDIO permission")
