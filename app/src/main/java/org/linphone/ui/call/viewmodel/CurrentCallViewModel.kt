@@ -1427,6 +1427,12 @@ class CurrentCallViewModel
                 finishActivityEvent.postValue(Event(true))
             }
             else -> {
+                if (pipMode.value == true) {
+                    Log.i("$TAG Activity currently displayed in PiP, do not go to ended call fragment")
+                    finishActivityEvent.postValue(Event(true))
+                    return
+                }
+
                 Log.i("$TAG Go to ended call fragment")
                 updateCallDuration()
 

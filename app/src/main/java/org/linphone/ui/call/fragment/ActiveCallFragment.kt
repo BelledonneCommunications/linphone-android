@@ -145,7 +145,8 @@ class ActiveCallFragment : GenericCallFragment() {
             Log.i("$TAG Back gesture/click detected, no bottom sheet is expanded, going back")
             isEnabled = false
             try {
-                requireActivity().onBackPressedDispatcher.onBackPressed()
+                Log.i("$TAG Back gesture detected, going to MainActivity")
+                (requireActivity() as CallActivity).goToMainActivity()
             } catch (ise: IllegalStateException) {
                 Log.w(
                     "$TAG Can't go back: $ise"
@@ -210,7 +211,7 @@ class ActiveCallFragment : GenericCallFragment() {
         callMediaEncryptionStatsBottomSheetBehavior.skipCollapsed = true
 
         binding.setBackClickListener {
-            requireActivity().finish()
+            (requireActivity() as CallActivity).goToMainActivity()
         }
 
         binding.setTransferCallClickListener {

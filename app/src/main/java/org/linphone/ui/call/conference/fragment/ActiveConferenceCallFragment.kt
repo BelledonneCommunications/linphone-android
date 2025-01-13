@@ -40,6 +40,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallActiveConferenceFragmentBinding
+import org.linphone.ui.call.CallActivity
 import org.linphone.ui.call.fragment.GenericCallFragment
 import org.linphone.ui.call.viewmodel.CallsViewModel
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
@@ -129,7 +130,8 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
             Log.i("$TAG Back gesture/click detected, no bottom sheet is expanded, going back")
             isEnabled = false
             try {
-                requireActivity().onBackPressedDispatcher.onBackPressed()
+                Log.i("$TAG Back gesture detected, going to MainActivity")
+                (requireActivity() as CallActivity).goToMainActivity()
             } catch (ise: IllegalStateException) {
                 Log.w("$TAG Can't go back: $ise")
             }
@@ -279,7 +281,7 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
         }
 
         binding.setBackClickListener {
-            requireActivity().finish()
+            (requireActivity() as CallActivity).goToMainActivity()
         }
 
         binding.setCallsListClickListener {

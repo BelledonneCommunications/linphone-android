@@ -49,6 +49,7 @@ import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.compatibility.Api28Compatibility
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallActivityBinding
@@ -64,6 +65,7 @@ import org.linphone.ui.call.model.AudioDeviceModel
 import org.linphone.ui.call.viewmodel.CallsViewModel
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
 import org.linphone.ui.call.viewmodel.SharedCallViewModel
+import org.linphone.ui.main.MainActivity
 
 @UiThread
 class CallActivity : GenericActivity() {
@@ -376,13 +378,35 @@ class CallActivity : GenericActivity() {
 
         if (::callViewModel.isInitialized) {
             if (isPipSupported && callViewModel.isVideoEnabled.value == true) {
-                Log.i("$TAG User leave hint, entering PiP mode")
+                Log.i("$TAG User leave hint, try entering PiP mode")
                 val pipMode = Compatibility.enterPipMode(this)
                 if (!pipMode) {
                     Log.e("$TAG Failed to enter PiP mode")
                     callViewModel.pipMode.value = false
                 }
             }
+        }
+    }
+
+    @UiThread
+    fun goToMainActivity() {
+        if (isPipSupported && callViewModel.isVideoEnabled.value == true) {
+            Log.i("$TAG User is going back to MainActivity, try entering PiP mode")
+            val pipMode = Api28Compatibility.enterPipMode(this)
+            if (!pipMode) {
+                Log.e("$TAG Failed to enter PiP mode, finishing Activity")
+                callViewModel.pipMode.value = false
+                finish()
+                return
+            }
+
+            Log.i("$TAG Launching MainActivity to have PiP above it")
+            val intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+            startActivity(intent)
+        } else {
+            Log.i("$TAG Either PiP isn't supported or video is not enabled, finishing Activity")
+            finish()
         }
     }
 
