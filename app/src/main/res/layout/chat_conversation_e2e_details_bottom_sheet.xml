@@ -70,6 +70,8 @@
             android:textSize="12sp"
             android:textStyle="bold"
             android:textColor="?attr/color_main1_500"
+            android:textColorLink="?attr/color_main1_500"
+            android:autoLink="web"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
