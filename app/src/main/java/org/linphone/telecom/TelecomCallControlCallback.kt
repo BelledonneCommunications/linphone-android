@@ -57,14 +57,14 @@ class TelecomCallControlCallback(
             Log.i("$TAG Call [${call.remoteAddress.asStringUriOnly()}] state changed [$state]")
             if (state == Call.State.Connected) {
                 if (call.dir == Call.Dir.Incoming) {
+                    val isVideo = LinphoneUtils.isVideoEnabled(call)
+                    val type = if (isVideo) {
+                        CallAttributesCompat.Companion.CALL_TYPE_VIDEO_CALL
+                    } else {
+                        CallAttributesCompat.Companion.CALL_TYPE_AUDIO_CALL
+                    }
                     scope.launch {
-                        val isVideo = LinphoneUtils.isVideoEnabled(call)
                         Log.i("$TAG Answering ${if (isVideo) "video" else "audio"} call")
-                        val type = if (isVideo) {
-                            CallAttributesCompat.Companion.CALL_TYPE_VIDEO_CALL
-                        } else {
-                            CallAttributesCompat.Companion.CALL_TYPE_AUDIO_CALL
-                        }
                         callControl.answer(type)
                     }
                 } else {
