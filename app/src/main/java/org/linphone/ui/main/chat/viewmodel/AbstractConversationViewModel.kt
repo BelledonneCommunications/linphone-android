@@ -28,6 +28,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Address
 import org.linphone.core.ChatRoom
+import org.linphone.core.Conference
 import org.linphone.core.ConferenceParams
 import org.linphone.core.ConferenceScheduler
 import org.linphone.core.ConferenceSchedulerListenerStub
@@ -221,6 +222,15 @@ abstract class AbstractConversationViewModel : GenericViewModel() {
 
             // Allows to have a chat room within the conference
             conferenceInfo.setCapability(StreamType.Text, true)
+
+            // Enable end-to-end encryption if client supports it
+            conferenceInfo.securityLevel = if (LinphoneUtils.isEndToEndEncryptedChatAvailable(core)) {
+                Log.i("$TAG Requesting EndToEnd security level for conference")
+                Conference.SecurityLevel.EndToEnd
+            } else {
+                Log.i("$TAG Requesting PointToPoint security level for conference")
+                Conference.SecurityLevel.PointToPoint
+            }
 
             val participants = arrayOfNulls<ParticipantInfo>(chatRoom.participants.size)
             var index = 0

@@ -419,6 +419,15 @@ class ScheduleMeetingViewModel
             // Allows to have a chat room within the conference
             conferenceInfo.setCapability(StreamType.Text, true)
 
+            // Enable end-to-end encryption if client supports it
+            conferenceInfo.securityLevel = if (LinphoneUtils.isEndToEndEncryptedChatAvailable(core)) {
+                Log.i("$TAG Requesting EndToEnd security level for conference")
+                Conference.SecurityLevel.EndToEnd
+            } else {
+                Log.i("$TAG Requesting PointToPoint security level for conference")
+                Conference.SecurityLevel.PointToPoint
+            }
+
             Log.i("$TAG Computing timestamps")
             computeTimestampsForSelectedTimezone()
 

@@ -28,6 +28,7 @@ import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.core.Conference
 import org.linphone.core.ConferenceScheduler
 import org.linphone.core.ConferenceSchedulerListenerStub
 import org.linphone.core.Factory
@@ -225,6 +226,15 @@ class StartCallViewModel
 
             // Allows to have a chat room within the conference
             conferenceInfo.setCapability(StreamType.Text, true)
+
+            // Enable end-to-end encryption if client supports it
+            conferenceInfo.securityLevel = if (LinphoneUtils.isEndToEndEncryptedChatAvailable(core)) {
+                Log.i("$TAG Requesting EndToEnd security level for conference")
+                Conference.SecurityLevel.EndToEnd
+            } else {
+                Log.i("$TAG Requesting PointToPoint security level for conference")
+                Conference.SecurityLevel.PointToPoint
+            }
 
             val participants = arrayOfNulls<ParticipantInfo>(selection.value.orEmpty().size)
             var index = 0
