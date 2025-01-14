@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2024 Belledonne Communications SARL.
+ * Copyright (c) 2010-2025 Belledonne Communications SARL.
  *
  * This file is part of linphone-android
  * (see https://www.linphone.org).
@@ -17,28 +17,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui
+package org.linphone.ui.main.settings.model
 
+import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import org.linphone.utils.Event
 
-open class GenericViewModel : ViewModel() {
-    // Message res id, icon
-    val showGreenToastEvent: MutableLiveData<Event<Pair<Int, Int>>> by lazy {
-        MutableLiveData<Event<Pair<Int, Int>>>()
+class ConfirmVfsDialogModel
+    @UiThread
+    constructor() {
+    val cancelEvent = MutableLiveData<Event<Boolean>>()
+
+    val confirmEvent = MutableLiveData<Event<Boolean>>()
+
+    @UiThread
+    fun cancel() {
+        cancelEvent.value = Event(true)
     }
 
-    val showFormattedGreenToastEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
-        MutableLiveData<Event<Pair<String, Int>>>()
-    }
-
-    // Message res id, icon
-    val showRedToastEvent: MutableLiveData<Event<Pair<Int, Int>>> by lazy {
-        MutableLiveData<Event<Pair<Int, Int>>>()
-    }
-
-    val showFormattedRedToastEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
-        MutableLiveData<Event<Pair<String, Int>>>()
+    @UiThread
+    fun confirm() {
+        confirmEvent.value = Event(true)
     }
 }

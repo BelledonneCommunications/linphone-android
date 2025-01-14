@@ -35,7 +35,9 @@ import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsFragmentBinding
 import org.linphone.ui.main.fragment.GenericMainFragment
+import org.linphone.ui.main.settings.model.ConfirmVfsDialogModel
 import org.linphone.ui.main.settings.viewmodel.SettingsViewModel
+import org.linphone.utils.DialogUtils
 
 @UiThread
 class SettingsFragment : GenericMainFragment() {
@@ -263,6 +265,10 @@ class SettingsFragment : GenericMainFragment() {
             binding.tunnelSettings.tunnelModeSpinner.setSelection(index)
         }
 
+        binding.setTurnOnVfsClickListener {
+            showConfirmVfsDialog()
+        }
+
         startPostponedEnterTransition()
     }
 
@@ -279,5 +285,32 @@ class SettingsFragment : GenericMainFragment() {
         }
 
         super.onPause()
+    }
+
+    private fun showConfirmVfsDialog() {
+        val model = ConfirmVfsDialogModel()
+        val dialog = DialogUtils.getConfirmTurningOnVfsDialog(
+            requireActivity(),
+            model
+        )
+
+        model.cancelEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                viewModel.isVfsEnabled.value = false
+                dialog.dismiss()
+            }
+        }
+
+        model.confirmEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.w("$TAG Try turning on VFS")
+                viewModel.enableVfs()
+
+                dialog.dismiss()
+                findNavController().popBackStack()
+            }
+        }
+
+        dialog.show()
     }
 }

@@ -332,6 +332,8 @@ class SettingsViewModel
                 Log.i("$TAG VFS has been enabled")
             }
         } else {
+            showRedToastEvent.postValue(Event(Pair(R.string.settings_security_enable_vfs_failure_toast, R.drawable.warning_circle)))
+            isVfsEnabled.postValue(false)
             Log.e("$TAG Failed to enable VFS!")
         }
     }

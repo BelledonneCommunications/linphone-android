@@ -39,6 +39,7 @@ import org.linphone.databinding.DialogAssistantCreateAccountConfirmPhoneNumberBi
 import org.linphone.databinding.DialogCallConfirmTransferBinding
 import org.linphone.databinding.DialogCancelContactChangesBinding
 import org.linphone.databinding.DialogCancelMeetingBinding
+import org.linphone.databinding.DialogConfirmTurningOnVfsBinding
 import org.linphone.databinding.DialogContactConfirmTrustCallBinding
 import org.linphone.databinding.DialogContactTrustProcessBinding
 import org.linphone.databinding.DialogDeleteContactBinding
@@ -69,6 +70,7 @@ import org.linphone.ui.main.contacts.model.TrustCallDialogModel
 import org.linphone.ui.main.history.model.ConfirmationDialogModel
 import org.linphone.ui.main.model.AuthRequestedDialogModel
 import org.linphone.ui.main.model.GroupSetOrEditSubjectDialogModel
+import org.linphone.ui.main.settings.model.ConfirmVfsDialogModel
 import org.linphone.ui.main.settings.model.UpdatePasswordDialogModel
 
 class DialogUtils {
@@ -137,6 +139,22 @@ class DialogUtils {
             )
             binding.viewModel = viewModel
             binding.message.visibility = if (showDeleteAccountLink) View.VISIBLE else View.GONE
+
+            return getDialog(context, binding)
+        }
+
+        @UiThread
+        fun getConfirmTurningOnVfsDialog(
+            context: Context,
+            viewModel: ConfirmVfsDialogModel
+        ): Dialog {
+            val binding: DialogConfirmTurningOnVfsBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_confirm_turning_on_vfs,
+                null,
+                false
+            )
+            binding.viewModel = viewModel
 
             return getDialog(context, binding)
         }

@@ -6,6 +6,9 @@
     <data>
         <import type="android.view.View" />
         <variable
+            name="turnOnVfsClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.main.settings.viewmodel.SettingsViewModel" />
     </data>
@@ -18,11 +21,13 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/settings_title_style"
+            android:onClick="@{turnOnVfsClickListener}"
             android:id="@+id/enable_vfs_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="10dp"
+            android:enabled="@{!viewModel.isVfsEnabled}"
             android:text="@string/settings_security_enable_vfs_title"
             android:maxLines="2"
             android:ellipsize="end"
@@ -34,10 +39,12 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/settings_subtitle_style"
             android:id="@+id/enable_vfs_subtitle"
+            android:onClick="@{turnOnVfsClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="10dp"
+            android:enabled="@{!viewModel.isVfsEnabled}"
             android:text="@string/settings_security_enable_vfs_subtitle"
             app:layout_constraintTop_toBottomOf="@id/enable_vfs_title"
             app:layout_constraintBottom_toBottomOf="@id/enable_vfs_switch"
@@ -47,7 +54,7 @@
         <com.google.android.material.materialswitch.MaterialSwitch
             style="@style/material_switch_style"
             android:id="@+id/enable_vfs_switch"
-            android:onClick="@{() -> viewModel.enableVfs()}"
+            android:onClick="@{turnOnVfsClickListener}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
