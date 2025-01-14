@@ -274,7 +274,7 @@
     <string name="manage_account_empty_devices_label">Aucun appareil…</string>
     <string name="manage_account_add_picture">Ajouter une image</string>
     <string name="manage_account_edit_picture">Modifier </string>
-    <string name="manage_account_remove_picture">Suprimmer</string>
+    <string name="manage_account_remove_picture">Supprimer</string>
     <string name="manage_account_status_connected_summary">Vous êtes en ligne, on peut vous joindre.</string>
     <string name="manage_account_status_cleared_summary">Compte désactivé, vous ne recevrez ni appel ni message.</string>
     <string name="manage_account_status_progress_summary">Connexion en cours, merci de patienter…</string>
