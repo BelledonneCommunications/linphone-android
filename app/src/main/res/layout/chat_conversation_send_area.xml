@@ -108,7 +108,7 @@
             android:padding="8dp"
             android:contentDescription="@string/content_description_chat_open_attach_file"
             android:src="@{viewModel.areFilePickersOpen ? @drawable/x : @drawable/paperclip, default=@drawable/paperclip}"
-            android:visibility="@{viewModel.isVoiceRecording ? View.INVISIBLE : (viewModel.isKeyboardOpen || viewModel.isCallConversation || !viewModel.isFileTransferServerAvailable) ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.isVoiceRecording ? View.INVISIBLE : (viewModel.isKeyboardOpen || !viewModel.isFileTransferServerAvailable) ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="@id/message_area_background"
             app:layout_constraintEnd_toStartOf="@id/message_area_background"
             app:layout_constraintStart_toEndOf="@id/emoji_picker_toggle"
