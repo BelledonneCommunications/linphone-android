@@ -184,7 +184,8 @@ class MeetingsListAdapter :
                 return oldItem.model.subject.value.orEmpty().isNotEmpty() &&
                     oldItem.model.subject.value == newItem.model.subject.value &&
                     oldItem.model.time == newItem.model.time &&
-                    oldItem.firstMeetingOfTheWeek == newItem.firstMeetingOfTheWeek
+                    oldItem.firstMeetingOfTheWeek == newItem.firstMeetingOfTheWeek &&
+                    oldItem.model.firstMeetingOfTheDay.value == newItem.model.firstMeetingOfTheDay.value
             }
             return false
         }
