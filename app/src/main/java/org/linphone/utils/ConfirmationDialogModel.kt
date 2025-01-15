@@ -17,25 +17,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.assistant.model
+package org.linphone.utils
 
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
-import org.linphone.utils.AppUtils
-import org.linphone.utils.Event
-import org.linphone.R
 
-class ConfirmPhoneNumberDialogModel
+class ConfirmationDialogModel
     @UiThread
-    constructor(phoneNumber: String) {
+    constructor(text: String = "") {
     val message = MutableLiveData<String>()
+
+    val doNotShowAnymore = MutableLiveData<Boolean>()
 
     val dismissEvent = MutableLiveData<Event<Boolean>>()
 
-    val confirmPhoneNumberEvent = MutableLiveData<Event<Boolean>>()
+    val cancelEvent = MutableLiveData<Event<Boolean>>()
+
+    val confirmEvent = MutableLiveData<Event<Boolean>>()
 
     init {
-        message.value = AppUtils.getFormattedString(R.string.assistant_dialog_confirm_phone_number_message, phoneNumber)
+        message.value = text
     }
 
     @UiThread
@@ -44,7 +45,12 @@ class ConfirmPhoneNumberDialogModel
     }
 
     @UiThread
-    fun confirmPhoneNumber() {
-        confirmPhoneNumberEvent.value = Event(true)
+    fun cancel() {
+        cancelEvent.value = Event(true)
+    }
+
+    @UiThread
+    fun confirm() {
+        confirmEvent.value = Event(true)
     }
 }

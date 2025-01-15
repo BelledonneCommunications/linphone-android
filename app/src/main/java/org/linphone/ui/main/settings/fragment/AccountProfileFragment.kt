@@ -41,7 +41,7 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.AccountProfileFragmentBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.fragment.GenericMainFragment
-import org.linphone.ui.main.history.model.ConfirmationDialogModel
+import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.ui.main.settings.viewmodel.AccountProfileViewModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event

@@ -44,7 +44,7 @@ import org.linphone.databinding.MeetingFragmentBinding
 import org.linphone.databinding.MeetingPopupMenuBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.fragment.SlidingPaneChildFragment
-import org.linphone.ui.main.history.model.ConfirmationDialogModel
+import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.ui.main.meetings.adapter.MeetingParticipantsAdapter
 import org.linphone.ui.main.meetings.viewmodel.MeetingViewModel
 import org.linphone.utils.DialogUtils

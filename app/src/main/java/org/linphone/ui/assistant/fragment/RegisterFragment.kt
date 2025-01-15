@@ -44,8 +44,9 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantRegisterFragmentBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.GenericFragment
-import org.linphone.ui.assistant.model.ConfirmPhoneNumberDialogModel
 import org.linphone.ui.assistant.viewmodel.AccountCreationViewModel
+import org.linphone.utils.ConfirmationDialogModel
+import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.PhoneNumberUtils
 
@@ -210,7 +211,8 @@ class RegisterFragment : GenericFragment() {
     }
 
     private fun showPhoneNumberConfirmationDialog(number: String) {
-        val model = ConfirmPhoneNumberDialogModel(number)
+        val label  = AppUtils.getFormattedString(R.string.assistant_dialog_confirm_phone_number_message, number)
+        val model = ConfirmationDialogModel(label)
         val dialog = DialogUtils.getAccountCreationPhoneNumberConfirmationDialog(
             requireActivity(),
             model
@@ -222,7 +224,7 @@ class RegisterFragment : GenericFragment() {
             }
         }
 
-        model.confirmPhoneNumberEvent.observe(viewLifecycleOwner) {
+        model.confirmEvent.observe(viewLifecycleOwner) {
             it.consume {
                 viewModel.startAccountCreation()
                 dialog.dismiss()

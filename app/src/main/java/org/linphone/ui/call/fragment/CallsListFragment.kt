@@ -31,7 +31,7 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.CallsListFragmentBinding
 import org.linphone.ui.call.adapter.CallsListAdapter
 import org.linphone.ui.call.viewmodel.CallsViewModel
-import org.linphone.ui.main.history.model.ConfirmationDialogModel
+import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.utils.DialogUtils
 
 class CallsListFragment : GenericCallFragment() {

@@ -43,7 +43,7 @@ import org.linphone.ui.main.chat.adapter.ConversationParticipantsAdapter
 import org.linphone.ui.main.chat.model.ParticipantModel
 import org.linphone.ui.main.chat.viewmodel.ConversationInfoViewModel
 import org.linphone.ui.main.fragment.SlidingPaneChildFragment
-import org.linphone.ui.main.history.model.ConfirmationDialogModel
+import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.ui.main.model.GroupSetOrEditSubjectDialogModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event

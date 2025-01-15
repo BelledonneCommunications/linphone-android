@@ -82,7 +82,7 @@ import org.linphone.ui.main.chat.viewmodel.ChatMessageLongPressViewModel
 import org.linphone.ui.main.chat.viewmodel.ConversationViewModel
 import org.linphone.ui.main.chat.viewmodel.SendMessageInConversationViewModel
 import org.linphone.ui.main.fragment.SlidingPaneChildFragment
-import org.linphone.ui.main.history.model.ConfirmationDialogModel
+import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils

@@ -64,11 +64,12 @@ import org.linphone.ui.GenericActivity
 import org.linphone.ui.assistant.AssistantActivity
 import org.linphone.ui.main.chat.fragment.ConversationsListFragmentDirections
 import org.linphone.ui.main.help.fragment.DebugFragmentDirections
-import org.linphone.ui.main.model.AuthRequestedDialogModel
+import org.linphone.utils.PasswordDialogModel
 import org.linphone.ui.main.sso.fragment.SingleSignOnFragmentDirections
 import org.linphone.ui.main.viewmodel.MainViewModel
 import org.linphone.ui.main.viewmodel.SharedMainViewModel
 import org.linphone.ui.welcome.WelcomeActivity
+import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
@@ -752,7 +753,11 @@ class MainActivity : GenericActivity() {
     private fun showAuthenticationRequestedDialog(identity: String) {
         currentlyDisplayedAuthDialog?.dismiss()
 
-        val model = AuthRequestedDialogModel(identity)
+        val label = AppUtils.getFormattedString(
+            R.string.account_settings_dialog_invalid_password_message,
+            identity
+        )
+        val model = PasswordDialogModel(label)
         val dialog = DialogUtils.getAuthRequestedDialog(this, model)
 
         model.dismissEvent.observe(this) {

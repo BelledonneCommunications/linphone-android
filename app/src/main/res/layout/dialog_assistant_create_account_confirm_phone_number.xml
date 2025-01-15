@@ -7,7 +7,7 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.assistant.model.ConfirmPhoneNumberDialogModel" />
+            type="org.linphone.utils.ConfirmationDialogModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -75,7 +75,7 @@
             app:layout_constraintBottom_toTopOf="@id/confirm"/>
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{() -> viewModel.confirmPhoneNumber()}"
+            android:onClick="@{() -> viewModel.confirm()}"
             style="@style/primary_button_label_style"
             android:id="@+id/confirm"
             android:layout_width="0dp"

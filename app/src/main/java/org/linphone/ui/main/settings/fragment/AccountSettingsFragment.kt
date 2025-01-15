@@ -37,7 +37,7 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.AccountSettingsFragmentBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.fragment.GenericMainFragment
-import org.linphone.ui.main.settings.model.UpdatePasswordDialogModel
+import org.linphone.utils.PasswordDialogModel
 import org.linphone.ui.main.settings.viewmodel.AccountSettingsViewModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
@@ -153,7 +153,7 @@ class AccountSettingsFragment : GenericMainFragment() {
     }
 
     private fun showUpdatePasswordDialog() {
-        val model = UpdatePasswordDialogModel()
+        val model = PasswordDialogModel()
         val dialog = DialogUtils.getUpdatePasswordDialog(requireContext(), model)
 
         model.dismissEvent.observe(viewLifecycleOwner) {

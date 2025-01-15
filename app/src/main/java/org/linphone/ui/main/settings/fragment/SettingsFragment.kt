@@ -35,7 +35,7 @@ import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsFragmentBinding
 import org.linphone.ui.main.fragment.GenericMainFragment
-import org.linphone.ui.main.settings.model.ConfirmVfsDialogModel
+import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.ui.main.settings.viewmodel.SettingsViewModel
 import org.linphone.utils.DialogUtils
 
@@ -288,7 +288,7 @@ class SettingsFragment : GenericMainFragment() {
     }
 
     private fun showConfirmVfsDialog() {
-        val model = ConfirmVfsDialogModel()
+        val model = ConfirmationDialogModel()
         val dialog = DialogUtils.getConfirmTurningOnVfsDialog(
             requireActivity(),
             model

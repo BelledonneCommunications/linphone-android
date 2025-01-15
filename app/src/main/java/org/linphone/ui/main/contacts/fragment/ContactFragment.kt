@@ -46,10 +46,10 @@ import org.linphone.databinding.ContactFragmentBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.contacts.model.ContactTrustDialogModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
-import org.linphone.ui.main.contacts.model.TrustCallDialogModel
 import org.linphone.ui.main.contacts.viewmodel.ContactViewModel
 import org.linphone.ui.main.fragment.SlidingPaneChildFragment
-import org.linphone.ui.main.history.model.ConfirmationDialogModel
+import org.linphone.utils.AppUtils
+import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 
@@ -318,7 +318,12 @@ class ContactFragment : SlidingPaneChildFragment() {
     }
 
     private fun showConfirmTrustCallDialog(contactName: String, deviceSipUri: String) {
-        val model = TrustCallDialogModel(contactName, deviceSipUri)
+        val label = AppUtils.getFormattedString(
+            org.linphone.R.string.contact_dialog_increase_trust_level_message,
+            contactName,
+            deviceSipUri
+        )
+        val model = ConfirmationDialogModel(label)
         val dialog = DialogUtils.getContactTrustCallConfirmationDialog(requireActivity(), model)
 
         model.dismissEvent.observe(viewLifecycleOwner) {
@@ -327,7 +332,7 @@ class ContactFragment : SlidingPaneChildFragment() {
             }
         }
 
-        model.confirmCallEvent.observe(viewLifecycleOwner) {
+        model.confirmEvent.observe(viewLifecycleOwner) {
             it.consume {
                 coreContext.postOnCoreThread {
                     if (model.doNotShowAnymore.value == true) {

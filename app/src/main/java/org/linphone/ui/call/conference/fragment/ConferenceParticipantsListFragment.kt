@@ -43,7 +43,7 @@ import org.linphone.ui.GenericActivity
 import org.linphone.ui.call.adapter.ConferenceParticipantsListAdapter
 import org.linphone.ui.call.fragment.GenericCallFragment
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
-import org.linphone.ui.main.history.model.ConfirmationDialogModel
+import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.utils.DialogUtils
 
 class ConferenceParticipantsListFragment : GenericCallFragment() {

@@ -45,7 +45,7 @@ import org.linphone.databinding.HistoryListPopupMenuBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.fragment.AbstractMainFragment
 import org.linphone.ui.main.history.adapter.HistoryListAdapter
-import org.linphone.ui.main.history.model.ConfirmationDialogModel
+import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.ui.main.history.viewmodel.HistoryListViewModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event

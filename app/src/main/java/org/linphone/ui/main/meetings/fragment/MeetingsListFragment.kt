@@ -37,7 +37,7 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.MeetingsListFragmentBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.fragment.AbstractMainFragment
-import org.linphone.ui.main.history.model.ConfirmationDialogModel
+import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.ui.main.meetings.adapter.MeetingsListAdapter
 import org.linphone.ui.main.meetings.model.MeetingModel
 import org.linphone.ui.main.meetings.viewmodel.MeetingsListViewModel

@@ -34,7 +34,7 @@ import org.linphone.databinding.HelpFragmentBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.help.viewmodel.HelpViewModel
-import org.linphone.ui.main.history.model.ConfirmationDialogModel
+import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.utils.DialogUtils
 
 @UiThread

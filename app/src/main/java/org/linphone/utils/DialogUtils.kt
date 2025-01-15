@@ -60,18 +60,11 @@ import org.linphone.databinding.DialogUpdateAvailableBinding
 import org.linphone.databinding.DialogZrtpSasValidationBinding
 import org.linphone.databinding.DialogZrtpSecurityAlertBinding
 import org.linphone.ui.assistant.model.AcceptConditionsAndPolicyDialogModel
-import org.linphone.ui.assistant.model.ConfirmPhoneNumberDialogModel
-import org.linphone.ui.call.model.ConfirmCallTransferDialogModel
 import org.linphone.ui.call.model.ZrtpAlertDialogModel
 import org.linphone.ui.call.model.ZrtpSasConfirmationDialogModel
 import org.linphone.ui.main.contacts.model.ContactTrustDialogModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
-import org.linphone.ui.main.contacts.model.TrustCallDialogModel
-import org.linphone.ui.main.history.model.ConfirmationDialogModel
-import org.linphone.ui.main.model.AuthRequestedDialogModel
 import org.linphone.ui.main.model.GroupSetOrEditSubjectDialogModel
-import org.linphone.ui.main.settings.model.ConfirmVfsDialogModel
-import org.linphone.ui.main.settings.model.UpdatePasswordDialogModel
 
 class DialogUtils {
     companion object {
@@ -95,7 +88,7 @@ class DialogUtils {
         @UiThread
         fun getAccountCreationPhoneNumberConfirmationDialog(
             context: Context,
-            viewModel: ConfirmPhoneNumberDialogModel
+            viewModel: ConfirmationDialogModel
         ): Dialog {
             val binding: DialogAssistantCreateAccountConfirmPhoneNumberBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
@@ -146,7 +139,7 @@ class DialogUtils {
         @UiThread
         fun getConfirmTurningOnVfsDialog(
             context: Context,
-            viewModel: ConfirmVfsDialogModel
+            viewModel: ConfirmationDialogModel
         ): Dialog {
             val binding: DialogConfirmTurningOnVfsBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
@@ -178,7 +171,7 @@ class DialogUtils {
         @UiThread
         fun getContactTrustCallConfirmationDialog(
             context: Context,
-            viewModel: TrustCallDialogModel
+            viewModel: ConfirmationDialogModel
         ): Dialog {
             val binding: DialogContactConfirmTrustCallBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
@@ -371,7 +364,7 @@ class DialogUtils {
         @UiThread
         fun getAuthRequestedDialog(
             context: Context,
-            viewModel: AuthRequestedDialogModel
+            viewModel: PasswordDialogModel
         ): Dialog {
             val binding: DialogUpdateAccountPasswordAfterRegisterFailureBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
@@ -388,7 +381,7 @@ class DialogUtils {
         @UiThread
         fun getUpdatePasswordDialog(
             context: Context,
-            viewModel: UpdatePasswordDialogModel
+            viewModel: PasswordDialogModel
         ): Dialog {
             val binding: DialogUpdateAccountPasswordBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
@@ -453,7 +446,7 @@ class DialogUtils {
         @UiThread
         fun getConfirmCallTransferCallDialog(
             context: Context,
-            viewModel: ConfirmCallTransferDialogModel
+            viewModel: ConfirmationDialogModel
         ): Dialog {
             val binding: DialogCallConfirmTransferBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
