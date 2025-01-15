@@ -484,6 +484,7 @@ class NotificationsManager
     fun onInCallServiceDestroyed() {
         Log.i("$TAG Service has been destroyed")
         inCallService = null
+        currentInCallServiceNotificationId = -1
     }
 
     @MainThread
@@ -768,10 +769,10 @@ class NotificationsManager
             )
             service.stopForeground(STOP_FOREGROUND_REMOVE)
             service.stopSelf()
-            currentInCallServiceNotificationId = -1
         } else {
             Log.w("$TAG Can't stop foreground Service & notif, no Service was found")
         }
+        currentInCallServiceNotificationId = -1
     }
 
     @WorkerThread
@@ -1500,12 +1501,12 @@ class NotificationsManager
             )
             service.stopForeground(STOP_FOREGROUND_REMOVE)
             service.stopSelf()
-            currentKeepAliveThirdPartyAccountsForegroundServiceNotificationId = -1
         } else {
             Log.w(
                 "$TAG Can't stop keep alive for third party accounts foreground Service & notif, no Service was found"
             )
         }
+        currentKeepAliveThirdPartyAccountsForegroundServiceNotificationId = -1
     }
 
     @MainThread
