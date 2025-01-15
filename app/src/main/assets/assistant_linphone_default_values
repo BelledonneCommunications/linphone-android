@@ -21,6 +21,7 @@
     <entry name="cpim_in_basic_chat_rooms_enabled" overwrite="true">1</entry>
     <entry name="rtp_bundle" overwrite="true">1</entry>
     <entry name="lime_server_url" overwrite="true">https://lime.linphone.org/lime-server/lime-server.php</entry>
+    <entry name="lime_algo" overwrite="true">c25519</entry>
   </section>
   <section name="nat_policy_default_values">
     <entry name="stun_server" overwrite="true">stun.linphone.org</entry>

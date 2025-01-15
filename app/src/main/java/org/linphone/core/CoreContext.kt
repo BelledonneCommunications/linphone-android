@@ -474,57 +474,15 @@ class CoreContext
             Log.w("$TAG Migrating configuration to [$currentVersion]")
 
             if (oldVersion < 600000) { // 6.0.0 initial release
-                val policy = core.videoActivationPolicy.clone()
-                policy.automaticallyInitiate = false
-                policy.automaticallyAccept = true
-                policy.automaticallyAcceptDirection = MediaDirection.RecvOnly
-                core.videoActivationPolicy = policy
-                Log.i(
-                    "$TAG Updated video activation policy to disable auto initiate, enable auto accept with media direction RecvOnly"
-                )
-
-                core.isFecEnabled = true
-                Log.i("$TAG Video FEC has been enabled")
-
-                core.config.setBool("magic_search", "return_empty_friends", true)
-                Log.i("$TAG Showing 'empty' friends enabled")
-
-                if (LinphoneUtils.getDefaultAccount()?.params?.domain == corePreferences.defaultDomain) {
-                    corePreferences.contactsFilter = corePreferences.defaultDomain
-                    Log.i(
-                        "$TAG Setting default contacts list filter to [${corePreferences.contactsFilter}]"
-                    )
-                }
-
-                Log.i("$TAG Making sure both RFC2833 & SIP INFO are enabled for DTMFs")
-                core.useRfc2833ForDtmf = true
-                core.useInfoForDtmf = true
-
-                // Add that flag back, was disabled for a time during dev process
-                core.config.setBool("misc", "hide_empty_chat_rooms", true)
-
-                // Replace old URLs by new ones
-                if (corePreferences.checkForUpdateServerUrl == "https://www.linphone.org/releases") {
-                    corePreferences.checkForUpdateServerUrl = "https://download.linphone.org/releases"
-                }
-                if (core.fileTransferServer == "https://www.linphone.org:444/lft.php") {
-                    core.fileTransferServer = "https://files.linphone.org/http-file-transfer-server/hft.php"
-                }
-                if (core.logCollectionUploadServerUrl == "https://www.linphone.org:444/lft.php") {
-                    core.logCollectionUploadServerUrl = "https://files.linphone.org/http-file-transfer-server/hft.php"
-                }
-
-                // Set IMDN threshold to 1
-                core.imdnToEverybodyThreshold = 1
-
-                Log.i("$TAG Removing previous grammar files (without .belr extension)")
-                corePreferences.clearPreviousGrammars()
+                configurationMigration5To6()
             }
 
             corePreferences.linphoneConfigurationVersion = currentVersion
             Log.w(
                 "$TAG Core configuration updated to version [${corePreferences.linphoneConfigurationVersion}]"
             )
+        } else {
+            Log.i("$TAG No configuration migration required")
         }
 
         if (corePreferences.keepServiceAlive) {
@@ -907,5 +865,65 @@ class CoreContext
     @WorkerThread
     fun enableLogcat(enable: Boolean) {
         logcatEnabled = enable
+    }
+
+    @WorkerThread
+    private fun configurationMigration5To6() {
+        val policy = core.videoActivationPolicy.clone()
+        policy.automaticallyInitiate = false
+        policy.automaticallyAccept = true
+        policy.automaticallyAcceptDirection = MediaDirection.RecvOnly
+        core.videoActivationPolicy = policy
+        Log.i(
+            "$TAG Updated video activation policy to disable auto initiate, enable auto accept with media direction RecvOnly"
+        )
+
+        core.isFecEnabled = true
+        Log.i("$TAG Video FEC has been enabled")
+
+        core.config.setBool("magic_search", "return_empty_friends", true)
+        Log.i("$TAG Showing 'empty' friends enabled")
+
+        if (LinphoneUtils.getDefaultAccount()?.params?.domain == corePreferences.defaultDomain) {
+            corePreferences.contactsFilter = corePreferences.defaultDomain
+            Log.i(
+                "$TAG Setting default contacts list filter to [${corePreferences.contactsFilter}]"
+            )
+        }
+
+        for (account in core.accountList) {
+            val params = account.params
+            if (params.domain == corePreferences.defaultDomain && params.limeAlgo.isNullOrEmpty()) {
+                val clone = params.clone()
+                clone.limeAlgo = "c25519"
+                Log.i("$TAG Updating account [${params.identityAddress?.asStringUriOnly()}] params to use LIME algo c25519")
+                account.params = clone
+            }
+        }
+
+        Log.i("$TAG Making sure both RFC2833 & SIP INFO are enabled for DTMFs")
+        core.useRfc2833ForDtmf = true
+        core.useInfoForDtmf = true
+
+        // Add that flag back, was disabled for a time during dev process
+        Log.i("$TAG Enabling hiding empty chat rooms")
+        core.config.setBool("misc", "hide_empty_chat_rooms", true)
+
+        // Replace old URLs by new ones
+        if (corePreferences.checkForUpdateServerUrl == "https://www.linphone.org/releases") {
+            corePreferences.checkForUpdateServerUrl = "https://download.linphone.org/releases"
+        }
+        if (core.fileTransferServer == "https://www.linphone.org:444/lft.php") {
+            core.fileTransferServer = "https://files.linphone.org/http-file-transfer-server/hft.php"
+        }
+        if (core.logCollectionUploadServerUrl == "https://www.linphone.org:444/lft.php") {
+            core.logCollectionUploadServerUrl = "https://files.linphone.org/http-file-transfer-server/hft.php"
+        }
+
+        Log.i("$TAG IMDN threshold set to 1 (meaning only sender will receive delivery & read notifications)")
+        core.imdnToEverybodyThreshold = 1
+
+        Log.i("$TAG Removing previous grammar files (without .belr extension)")
+        corePreferences.clearPreviousGrammars()
     }
 }
