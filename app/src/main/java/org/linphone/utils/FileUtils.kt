@@ -115,8 +115,9 @@ class FileUtils {
                 type.endsWith("/log") -> MimeType.PlainText
                 type.startsWith("video/") -> MimeType.Video
                 type.startsWith("audio/") -> MimeType.Audio
-                type.startsWith("application/pdf") -> MimeType.Pdf
-                type.startsWith("application/json") -> MimeType.PlainText
+                type == "application/pdf" -> MimeType.Pdf
+                type == "application/json" -> MimeType.PlainText
+                type == "application/xml" -> MimeType.PlainText
                 else -> MimeType.Unknown
             }
             Log.d("$TAG MIME type for [$type] is [$mime]")

@@ -503,6 +503,9 @@
     <string name="conversation_dialog_open_or_export_file_message">&appName; can\'t open this file.\n\nDo you want to open it in another app (if possible), or export it on your device?</string>
     <string name="conversation_dialog_open_file_label">Open file</string>
     <string name="conversation_dialog_export_file_label">Export file</string>
+    <string name="conversation_no_app_registered_to_handle_content_type_dialog_title">Open as plain text?</string>
+    <string name="conversation_no_app_registered_to_handle_content_type_dialog_message">No app found to open this kind of file.\n\nWould you like to try opening it as plain text?</string>
+    <string name="conversation_dialog_open_plain_text_label">Open as plain text</string>
     <string name="conversation_failed_to_play_voice_recording_message">Voice recording cannot be played!</string>
     <string name="conversation_message_deleted_toast">Message has been deleted</string>
     <string name="conversation_failed_to_create_toast">Failed to create conversation!</string>
@@ -523,6 +526,7 @@
     <string name="conversation_take_picture_label">Take picture</string>
     <string name="conversation_pick_file_from_gallery_label">Open gallery</string>
     <string name="conversation_pick_any_file_label">Pick file</string>
+    <string name="conversation_file_cant_be_opened_error_toast">File can\'t be opened!</string>
 
     <string name="conversation_info_participants_list_title">Group members (%s)</string>
     <string name="conversation_info_add_participants_label">Add participants</string>

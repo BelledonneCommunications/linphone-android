@@ -138,6 +138,10 @@ class FileViewModel
                 Log.d("$TAG File [$file] seems to be plain text")
                 loadPlainText()
             }
+            FileUtils.MimeType.Unknown -> {
+                Log.w("$TAG Unknown MIME type for file at [$file], opening it as plain text")
+                loadPlainText()
+            }
             else -> {
                 Log.e("$TAG Unexpected MIME type [$mimeType] for file at [$file] with extension [$extension]")
                 fileReadyEvent.value = Event(false)
@@ -333,6 +337,14 @@ class FileViewModel
                     // TODO FIXME : improve performances !
                 } catch (e: Exception) {
                     Log.e("$TAG Exception trying to read file [$filePath] as text: $e")
+                    showRedToastEvent.postValue(
+                        Event(
+                            Pair(
+                                R.string.conversation_file_cant_be_opened_error_toast,
+                                R.drawable.warning_circle
+                            )
+                        )
+                    )
                 }
             }
         }

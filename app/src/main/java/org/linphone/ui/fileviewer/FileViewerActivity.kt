@@ -84,6 +84,14 @@ class FileViewerActivity : GenericActivity() {
             finish()
         }
 
+        viewModel.showRedToastEvent.observe(this) {
+            it.consume { pair ->
+                val message = getString(pair.first)
+                val icon = pair.second
+                showRedToast(message, icon)
+            }
+        }
+
         viewModel.fileReadyEvent.observe(this) {
             it.consume { done ->
                 if (!done) {

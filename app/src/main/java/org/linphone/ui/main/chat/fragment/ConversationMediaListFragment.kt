@@ -178,10 +178,10 @@ class ConversationMediaListFragment : SlidingPaneChildFragment() {
             putBoolean("isEncrypted", fileModel.isEncrypted)
             putLong("timestamp", fileModel.fileCreationTimestamp)
             putString("originalPath", fileModel.originalPath)
+            putBoolean("isMedia", true)
         }
         when (FileUtils.getMimeType(mime)) {
             FileUtils.MimeType.Image, FileUtils.MimeType.Video, FileUtils.MimeType.Audio -> {
-                bundle.putBoolean("isMedia", true)
                 sharedViewModel.displayFileEvent.value = Event(bundle)
             }
             else -> {

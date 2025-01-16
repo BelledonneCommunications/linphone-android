@@ -69,7 +69,6 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatConversationFragmentBinding
 import org.linphone.databinding.ChatConversationPopupMenuBinding
 import org.linphone.ui.GenericActivity
-import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.chat.ConversationScrollListener
 import org.linphone.ui.main.chat.adapter.ConversationEventAdapter
 import org.linphone.ui.main.chat.adapter.MessageBottomSheetAdapter
@@ -1093,7 +1092,11 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         val extension = FileUtils.getExtensionFromFileName(path)
         val mime = FileUtils.getMimeTypeFromExtension(extension)
         val mimeType = FileUtils.getMimeType(mime)
-        Log.i("$TAG Extension for file [$path] is [$extension], associated MIME type is [$mimeType]")
+        if (mimeType == FileUtils.MimeType.Unknown && extension.contains("/")) {
+            Log.w("$TAG Slash character found in 'extension' [$extension] deduced from file path [$path]; MIME type will be Unknown")
+        } else {
+            Log.i("$TAG Extension for file [$path] is [$extension], associated MIME type is [$mimeType]")
+        }
 
         val bundle = Bundle()
         bundle.apply {
@@ -1114,7 +1117,8 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                 sharedViewModel.displayFileEvent.value = Event(bundle)
             }
             else -> {
-                showOpenOrExportFileDialog(path, mime)
+                bundle.putBoolean("isMedia", false)
+                showOpenOrExportFileDialog(path, mime, bundle)
             }
         }
     }
@@ -1413,7 +1417,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         bottomSheetDialog = unsafeConversationDetailsBottomSheet
     }
 
-    private fun showOpenOrExportFileDialog(path: String, mime: String) {
+    private fun showOpenOrExportFileDialog(path: String, mime: String, bundle: Bundle) {
         val model = ConfirmationDialogModel()
         val dialog = DialogUtils.getOpenOrExportFileDialog(
             requireActivity(),
@@ -1428,7 +1432,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
 
         model.cancelEvent.observe(viewLifecycleOwner) {
             it.consume {
-                openFileInAnotherApp(path, mime)
+                openFileInAnotherApp(path, mime, bundle)
                 dialog.dismiss()
             }
         }
@@ -1466,7 +1470,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         dialog.show()
     }
 
-    private fun openFileInAnotherApp(path: String, mime: String) {
+    private fun openFileInAnotherApp(path: String, mime: String, bundle: Bundle) {
         val intent = Intent(Intent.ACTION_VIEW)
         val contentUri: Uri =
             FileUtils.getPublicFilePath(requireContext(), path)
@@ -1477,12 +1481,37 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             requireContext().startActivity(intent)
         } catch (anfe: ActivityNotFoundException) {
             Log.e("$TAG Can't open file [$path] in third party app: $anfe")
-            val message = getString(
-                R.string.conversation_no_app_registered_to_handle_content_type_error_toast
-            )
-            val icon = R.drawable.file
-            (requireActivity() as MainActivity).showRedToast(message, icon)
+            showOpenAsPlainTextDialog(bundle)
         }
+    }
+
+    private fun showOpenAsPlainTextDialog(bundle: Bundle) {
+        val model = ConfirmationDialogModel()
+        val dialog = DialogUtils.getOpenAsPlainTextDialog(
+            requireActivity(),
+            model
+        )
+
+        model.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        model.cancelEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        model.confirmEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                sharedViewModel.displayFileEvent.value = Event(bundle)
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
     }
 
     private fun exportFile(path: String, mime: String) {

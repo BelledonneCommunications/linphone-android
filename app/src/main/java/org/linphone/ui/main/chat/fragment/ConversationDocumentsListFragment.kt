@@ -31,14 +31,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatDocumentsFragmentBinding
-import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.chat.adapter.ConversationsFilesAdapter
 import org.linphone.ui.main.chat.model.FileModel
 import org.linphone.ui.main.chat.viewmodel.ConversationDocumentsListViewModel
 import org.linphone.ui.main.fragment.SlidingPaneChildFragment
+import org.linphone.utils.ConfirmationDialogModel
+import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.RecyclerViewHeaderDecoration
@@ -149,10 +149,10 @@ class ConversationDocumentsListFragment : SlidingPaneChildFragment() {
             putBoolean("isEncrypted", fileModel.isEncrypted)
             putLong("timestamp", fileModel.fileCreationTimestamp)
             putString("originalPath", fileModel.originalPath)
+            putBoolean("isMedia", false)
         }
         when (FileUtils.getMimeType(mime)) {
             FileUtils.MimeType.Pdf, FileUtils.MimeType.PlainText -> {
-                bundle.putBoolean("isMedia", false)
                 sharedViewModel.displayFileEvent.value = Event(bundle)
             }
             else -> {
@@ -165,13 +165,38 @@ class ConversationDocumentsListFragment : SlidingPaneChildFragment() {
                     requireContext().startActivity(intent)
                 } catch (anfe: ActivityNotFoundException) {
                     Log.e("$TAG Can't open file [$path] in third party app: $anfe")
-                    val message = getString(
-                        R.string.conversation_no_app_registered_to_handle_content_type_error_toast
-                    )
-                    val icon = R.drawable.file
-                    (requireActivity() as GenericActivity).showRedToast(message, icon)
+                    showOpenAsPlainTextDialog(bundle)
                 }
             }
         }
+    }
+
+    private fun showOpenAsPlainTextDialog(bundle: Bundle) {
+        val model = ConfirmationDialogModel()
+        val dialog = DialogUtils.getOpenAsPlainTextDialog(
+            requireActivity(),
+            model
+        )
+
+        model.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        model.cancelEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        model.confirmEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                sharedViewModel.displayFileEvent.value = Event(bundle)
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
     }
 }

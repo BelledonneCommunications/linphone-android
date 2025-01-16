@@ -47,6 +47,7 @@ import org.linphone.databinding.DialogKickFromConferenceBinding
 import org.linphone.databinding.DialogManageAccountInternationalPrefixHelpBinding
 import org.linphone.databinding.DialogMergeCallsIntoConferenceBinding
 import org.linphone.databinding.DialogOpenExportFileBinding
+import org.linphone.databinding.DialogOpenPlainTextBinding
 import org.linphone.databinding.DialogPickNumberOrAddressBinding
 import org.linphone.databinding.DialogRemoveAccountBinding
 import org.linphone.databinding.DialogRemoveAllCallLogsBinding
@@ -335,6 +336,22 @@ class DialogUtils {
             val binding: DialogOpenExportFileBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
                 R.layout.dialog_open_export_file,
+                null,
+                false
+            )
+            binding.viewModel = viewModel
+
+            return getDialog(context, binding)
+        }
+
+        @UiThread
+        fun getOpenAsPlainTextDialog(
+            context: Context,
+            viewModel: ConfirmationDialogModel
+        ): Dialog {
+            val binding: DialogOpenPlainTextBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_open_plain_text,
                 null,
                 false
             )
