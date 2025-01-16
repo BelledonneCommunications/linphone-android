@@ -155,24 +155,32 @@ class ConversationsListViewModel
 
     @WorkerThread
     private fun addChatRoom(chatRoom: ChatRoom) {
+        val localAddress = chatRoom.localAddress
+        val peerAddress = chatRoom.peerAddress
+
         val defaultAccount = LinphoneUtils.getDefaultAccount()
-        if (defaultAccount == null || defaultAccount.params.identityAddress?.weakEqual(
-                chatRoom.localAddress
-            ) == false
-        ) {
+        if (defaultAccount == null ||
+            defaultAccount.params.identityAddress?.weakEqual(localAddress) == false
+        )
+        {
             Log.w(
-                "$TAG A chat room was created but not displaying it because it doesn't belong to currently default account"
+                "$TAG Chat room with local address [${localAddress.asStringUriOnly()}] and peer address [${peerAddress.asStringUriOnly()}] was created but not displaying it because it doesn't belong to currently default account"
             )
             return
         }
 
+        val hideEmptyChatRooms = coreContext.core.config.getBool("misc", "hide_empty_chat_rooms", true)
+        if (hideEmptyChatRooms && chatRoom.lastMessageInHistory == null) {
+            Log.w("$TAG Chat room with local address [${localAddress.asStringUriOnly()}] and peer address [${peerAddress.asStringUriOnly()}] is empty, not adding it to match Core setting")
+            return
+        }
+
         val currentList = conversations.value.orEmpty()
-        val peerAddress = chatRoom.peerAddress
         val found = currentList.find {
             it.chatRoom.peerAddress.weakEqual(peerAddress)
         }
         if (found != null) {
-            Log.w("$TAG Created chat room is already in the list, skipping")
+            Log.w("$TAG Created chat room with local address [${localAddress.asStringUriOnly()}] and peer address [${peerAddress.asStringUriOnly()}] is already in the list, skipping")
             return
         }
 
@@ -188,7 +196,7 @@ class ConversationsListViewModel
         val model = ConversationModel(chatRoom)
         newList.add(model)
         newList.addAll(currentList)
-        Log.i("$TAG Adding chat room to list")
+        Log.i("$TAG Adding chat room with local address [${localAddress.asStringUriOnly()}] and peer address [${peerAddress.asStringUriOnly()}] to list")
         conversations.postValue(newList)
     }
 
