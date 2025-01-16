@@ -1317,14 +1317,28 @@ class CurrentCallViewModel
         val localAddress = call.callLog.localAddress
         val remoteAddress = call.remoteAddress
 
-        val params = getChatRoomParams(call) ?: return null
-        val participants = arrayOf(remoteAddress)
-        val existingConversation = call.core.searchChatRoom(
-            params,
-            localAddress,
-            null,
-            participants
-        )
+        val params: ConferenceParams? = null
+        val existingConversation = if (call.conference != null) {
+            call.core.searchChatRoom(
+                params,
+                localAddress,
+                remoteAddress,
+                arrayOf()
+            )
+        } else {
+            val participants = arrayOf(remoteAddress)
+            call.core.searchChatRoom(
+                params,
+                localAddress,
+                null,
+                participants
+            )
+        }
+        if (existingConversation != null) {
+            Log.i("$TAG Found existing conversation [${existingConversation.peerAddress.asStringUriOnly()}] found for current call with local address [${localAddress.asStringUriOnly()}] and remote address [${remoteAddress.asStringUriOnly()}]")
+        } else {
+            Log.w("$TAG No existing conversation found for current call with local address [${localAddress.asStringUriOnly()}] and remote address [${remoteAddress.asStringUriOnly()}]")
+        }
         return existingConversation
     }
 
