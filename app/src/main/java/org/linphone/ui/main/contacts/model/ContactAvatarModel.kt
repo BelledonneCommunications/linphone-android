@@ -115,8 +115,13 @@ class ContactAvatarModel
             else -> SecurityLevel.None
         }*/
 
-        var lowestSecurityLevel = SecurityLevel.EndToEndEncryptedAndVerified
-        for (participant in chatRoom.participants) {
+        val participants = chatRoom.participants
+        var lowestSecurityLevel = if (participants.isEmpty()) {
+            SecurityLevel.None
+        } else {
+            SecurityLevel.EndToEndEncryptedAndVerified
+        }
+        for (participant in participants) {
             val avatar = coreContext.contactsManager.getContactAvatarModelForAddress(
                 participant.address
             )
