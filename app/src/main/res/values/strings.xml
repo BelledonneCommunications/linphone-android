@@ -557,6 +557,10 @@
     <string name="conversation_event_ephemeral_messages_enabled">Ephemeral messages have been enabled</string>
     <string name="conversation_event_ephemeral_messages_disabled">Ephemeral messages have been disabled</string>
     <string name="conversation_event_ephemeral_messages_lifetime_changed">Ephemeral lifetime is now %s</string>
+    <string name="conversation_event_security_event_lime_identity_key_changed">LIME identity key changed for %s</string>
+    <string name="conversation_event_security_event_man_in_the_middle_detected">Man-in-the-middle attack detected for %s</string>
+    <string name="conversation_event_security_event_level_downgraded">Security level decreased because of %s</string>
+    <string name="conversation_event_security_event_max_participant_count_exceeded">Max participant count exceeded by %s</string>
 
     <string name="conversation_details_media_documents_title">Media &amp; documents</string>
     <string name="conversation_media_list_title">Shared media</string>

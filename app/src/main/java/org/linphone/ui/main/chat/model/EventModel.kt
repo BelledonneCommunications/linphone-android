@@ -37,6 +37,8 @@ class EventModel
     val icon: Drawable?
 
     init {
+        val name = getName()
+
         text = when (eventLog.type) {
             EventLog.Type.ConferenceCreated -> AppUtils.getString(
                 R.string.conversation_event_conference_created
@@ -46,11 +48,11 @@ class EventModel
             )
             EventLog.Type.ConferenceParticipantAdded -> AppUtils.getFormattedString(
                 R.string.conversation_event_participant_added,
-                getName()
+                name
             )
             EventLog.Type.ConferenceParticipantRemoved -> AppUtils.getFormattedString(
                 R.string.conversation_event_participant_removed,
-                getName()
+                name
             )
             EventLog.Type.ConferenceSubjectChanged -> AppUtils.getFormattedString(
                 R.string.conversation_event_subject_changed,
@@ -58,19 +60,19 @@ class EventModel
             )
             EventLog.Type.ConferenceParticipantSetAdmin -> AppUtils.getFormattedString(
                 R.string.conversation_event_admin_set,
-                getName()
+                name
             )
             EventLog.Type.ConferenceParticipantUnsetAdmin -> AppUtils.getFormattedString(
                 R.string.conversation_event_admin_unset,
-                getName()
+                name
             )
             EventLog.Type.ConferenceParticipantDeviceAdded -> AppUtils.getFormattedString(
                 R.string.conversation_event_device_added,
-                getName()
+                name
             )
             EventLog.Type.ConferenceParticipantDeviceRemoved -> AppUtils.getFormattedString(
                 R.string.conversation_event_device_removed,
-                getName()
+                name
             )
             EventLog.Type.ConferenceEphemeralMessageEnabled -> AppUtils.getString(
                 R.string.conversation_event_ephemeral_messages_enabled
@@ -84,6 +86,23 @@ class EventModel
                     Locale.getDefault()
                 )
             )
+            EventLog.Type.ConferenceSecurityEvent -> {
+                when (eventLog.securityEventType) {
+                    EventLog.SecurityEventType.SecurityLevelDowngraded -> AppUtils.getFormattedString(
+                        R.string.conversation_event_security_event_level_downgraded, name
+                    )
+                    EventLog.SecurityEventType.ParticipantMaxDeviceCountExceeded -> AppUtils.getFormattedString(
+                        R.string.conversation_event_security_event_max_participant_count_exceeded, name
+                    )
+                    EventLog.SecurityEventType.EncryptionIdentityKeyChanged -> AppUtils.getFormattedString(
+                        R.string.conversation_event_security_event_lime_identity_key_changed, name
+                    )
+                    EventLog.SecurityEventType.ManInTheMiddleDetected -> AppUtils.getFormattedString(
+                        R.string.conversation_event_security_event_man_in_the_middle_detected, name
+                    )
+                    else -> eventLog.securityEventType.name
+                }
+            }
             else -> {
                 eventLog.type.name
             }
@@ -97,7 +116,8 @@ class EventModel
                 EventLog.Type.ConferenceEphemeralMessageLifetimeChanged -> {
                     R.drawable.clock_countdown
                 }
-                EventLog.Type.ConferenceTerminated -> {
+                EventLog.Type.ConferenceTerminated,
+                EventLog.Type.ConferenceSecurityEvent -> {
                     R.drawable.warning_circle
                 }
                 EventLog.Type.ConferenceSubjectChanged -> {
@@ -121,7 +141,11 @@ class EventModel
 
     @WorkerThread
     fun getName(): String {
-        val address = eventLog.participantAddress ?: eventLog.peerAddress
+        val address = if (eventLog.type == EventLog.Type.ConferenceSecurityEvent) {
+             eventLog.securityEventFaultyDeviceAddress
+        } else {
+            eventLog.participantAddress ?: eventLog.peerAddress
+        }
         val name = if (address != null) {
             coreContext.contactsManager.findDisplayName(address)
         } else {

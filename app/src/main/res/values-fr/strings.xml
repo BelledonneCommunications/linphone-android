@@ -517,6 +517,10 @@
     <string name="conversation_event_ephemeral_messages_enabled">Messages éphémères activés</string>
     <string name="conversation_event_ephemeral_messages_disabled">Messages éphémères désactivés</string>
     <string name="conversation_event_ephemeral_messages_lifetime_changed">Messages éphémères : %s</string>
+    <string name="conversation_event_security_event_lime_identity_key_changed">Les clés de sécurité ont changé pour %s</string>
+    <string name="conversation_event_security_event_man_in_the_middle_detected">Attaque de l\'homme du milieu détectée pour %s</string>
+    <string name="conversation_event_security_event_level_downgraded">Baisse du niveau de sécurité due à %s</string>
+    <string name="conversation_event_security_event_max_participant_count_exceeded">Nombre maximum de terminaux dépassé pour %s</string>
 
     <string name="conversation_details_media_documents_title">Médias &amp; documents</string>
     <string name="conversation_media_list_title">Médias partagés</string>
