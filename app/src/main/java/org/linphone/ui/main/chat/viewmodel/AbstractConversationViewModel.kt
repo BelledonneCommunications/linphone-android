@@ -28,14 +28,9 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Address
 import org.linphone.core.ChatRoom
-import org.linphone.core.Conference
 import org.linphone.core.ConferenceParams
-import org.linphone.core.ConferenceScheduler
-import org.linphone.core.ConferenceSchedulerListenerStub
 import org.linphone.core.Factory
-import org.linphone.core.Participant
-import org.linphone.core.ParticipantInfo
-import org.linphone.core.StreamType
+import org.linphone.core.MediaDirection
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
 import org.linphone.utils.Event
@@ -62,47 +57,6 @@ abstract class AbstractConversationViewModel : GenericViewModel() {
 
     fun isChatRoomInitialized(): Boolean {
         return ::chatRoom.isInitialized
-    }
-
-    private val conferenceSchedulerListener = object : ConferenceSchedulerListenerStub() {
-        override fun onStateChanged(
-            conferenceScheduler: ConferenceScheduler,
-            state: ConferenceScheduler.State
-        ) {
-            Log.i("$TAG Conference scheduler state is $state")
-            if (state == ConferenceScheduler.State.Ready) {
-                conferenceScheduler.removeListener(this)
-
-                val conferenceAddress = conferenceScheduler.info?.uri
-                if (conferenceAddress != null) {
-                    Log.i(
-                        "$TAG Conference info created, address is ${conferenceAddress.asStringUriOnly()}"
-                    )
-                    coreContext.startVideoCall(conferenceAddress)
-                } else {
-                    Log.e("$TAG Conference info URI is null!")
-                    showRedToastEvent.postValue(
-                        Event(
-                            Pair(
-                                R.string.conference_failed_to_create_group_call_toast,
-                                R.drawable.warning_circle
-                            )
-                        )
-                    )
-                }
-            } else if (state == ConferenceScheduler.State.Error) {
-                conferenceScheduler.removeListener(this)
-                Log.e("$TAG Failed to create group call!")
-                showRedToastEvent.postValue(
-                    Event(
-                        Pair(
-                            R.string.conference_failed_to_create_group_call_toast,
-                            R.drawable.warning_circle
-                        )
-                    )
-                )
-            }
-        }
     }
 
     @WorkerThread
@@ -216,41 +170,44 @@ abstract class AbstractConversationViewModel : GenericViewModel() {
                 return@postOnCoreThread
             }
 
-            val conferenceInfo = Factory.instance().createConferenceInfo()
-            conferenceInfo.organizer = account.params.identityAddress
-            conferenceInfo.subject = chatRoom.subject
-
-            // Allows to have a chat room within the conference
-            conferenceInfo.setCapability(StreamType.Text, true)
-
-            // Enable end-to-end encryption if client supports it
-            conferenceInfo.securityLevel = if (LinphoneUtils.isEndToEndEncryptedChatAvailable(core)) {
-                Log.i("$TAG Requesting EndToEnd security level for conference")
-                Conference.SecurityLevel.EndToEnd
-            } else {
-                Log.i("$TAG Requesting PointToPoint security level for conference")
-                Conference.SecurityLevel.PointToPoint
+            val conference = LinphoneUtils.createGroupCall(account, chatRoom.subject.orEmpty())
+            if (conference == null) {
+                Log.e("$TAG Failed to create group call!")
+                showRedToastEvent.postValue(
+                    Event(
+                        Pair(
+                            R.string.conference_failed_to_create_group_call_toast,
+                            R.drawable.warning_circle
+                        )
+                    )
+                )
+                return@postOnCoreThread
             }
 
-            val participants = arrayOfNulls<ParticipantInfo>(chatRoom.participants.size)
+            val callParams = core.createCallParams(null)
+            callParams?.isVideoEnabled = true
+            callParams?.videoDirection = MediaDirection.RecvOnly
+
+            val participants = arrayOfNulls<Address>(chatRoom.participants.size)
             var index = 0
             for (participant in chatRoom.participants) {
-                val info = Factory.instance().createParticipantInfo(participant.address)
-                // For meetings, all participants must have Speaker role
-                info?.role = Participant.Role.Speaker
-                participants[index] = info
+                participants[index] = participant.address
                 index += 1
             }
-            conferenceInfo.setParticipantInfos(participants)
-
             Log.i(
-                "$TAG Creating group call with subject ${conferenceInfo.subject} and ${participants.size} participant(s)"
+                "$TAG Inviting ${participants.size} participant(s) into newly created conference"
             )
-            val conferenceScheduler = LinphoneUtils.createConferenceScheduler(account)
-            conferenceScheduler.addListener(conferenceSchedulerListener)
-            conferenceScheduler.account = account
-            // Will trigger the conference creation/update automatically
-            conferenceScheduler.info = conferenceInfo
+            if (conference.inviteParticipants(participants, callParams) != 0) {
+                Log.e("$TAG Failed to invite participants into group call!")
+                showRedToastEvent.postValue(
+                    Event(
+                        Pair(
+                            R.string.conference_failed_to_create_group_call_toast,
+                            R.drawable.warning_circle
+                        )
+                    )
+                )
+            }
         }
     }
 }

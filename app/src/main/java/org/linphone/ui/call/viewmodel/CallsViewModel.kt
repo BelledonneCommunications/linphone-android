@@ -228,12 +228,20 @@ class CallsViewModel
                 AppUtils.getString(R.string.conference_locally_hosted_title)
             }
 
-            val params = core.createConferenceParams(null)
-            params.subject = subject
-            // Prevent group call to start in audio only layout
-            params.isVideoEnabled = true
-            val conference = core.createConferenceWithParams(params)
-            conference?.addParticipants(core.calls)
+            val conference = LinphoneUtils.createGroupCall(defaultAccount, subject)
+            if (conference == null) {
+                Log.e("$TAG Failed to create conference!")
+                showRedToastEvent.postValue(
+                    Event(
+                        Pair(
+                            R.string.conference_failed_to_merge_calls_into_conference_toast,
+                            R.drawable.warning_circle
+                        )
+                    )
+                )
+            } else {
+                conference.addParticipants(core.calls)
+            }
         }
     }
 

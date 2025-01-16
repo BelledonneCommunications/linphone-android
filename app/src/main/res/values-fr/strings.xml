@@ -697,6 +697,7 @@
     <string name="conference_action_screen_sharing">Partage d\'écran</string>
     <string name="conference_action_show_participants">Participants</string>
     <string name="conference_failed_to_create_group_call_toast">Echec de l\'appel de groupe</string>
+    <string name="conference_failed_to_merge_calls_into_conference_toast">Echec de la fusion des appels</string>
     <plurals name="conference_participants_list_title" tools:ignore="MissingQuantity">
         <item quantity="one">%s participant</item>
         <item quantity="other">%s participants</item>

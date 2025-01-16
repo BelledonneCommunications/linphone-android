@@ -737,6 +737,7 @@
     <string name="conference_action_screen_sharing">Screen share</string>
     <string name="conference_action_show_participants">Participants</string>
     <string name="conference_failed_to_create_group_call_toast">Failed to create a group call!</string>
+    <string name="conference_failed_to_merge_calls_into_conference_toast">Failed to merge call!</string>
     <plurals name="conference_participants_list_title">
         <item quantity="one">%s participant</item>
         <item quantity="other">%s participants</item>

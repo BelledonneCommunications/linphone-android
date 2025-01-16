@@ -264,6 +264,30 @@ class LinphoneUtils {
         }
 
         @WorkerThread
+        fun createGroupCall(account: Account?, subject: String): Conference? {
+            val core = coreContext.core
+            val conferenceParams = core.createConferenceParams(null)
+            conferenceParams.isVideoEnabled = true
+            conferenceParams.account = account
+            conferenceParams.subject = subject
+
+            // Enable end-to-end encryption if client supports it
+            conferenceParams.securityLevel = if (isEndToEndEncryptedChatAvailable(core)) {
+                Log.i("$TAG Requesting EndToEnd security level for conference")
+                Conference.SecurityLevel.EndToEnd
+            } else {
+                Log.i("$TAG Requesting PointToPoint security level for conference")
+                Conference.SecurityLevel.PointToPoint
+            }
+
+            // Allows to have a chat room within the conference
+            conferenceParams.isChatEnabled = true
+
+            Log.i("$TAG Creating group call with subject ${conferenceParams.subject}")
+            return core.createConferenceWithParams(conferenceParams)
+        }
+
+        @WorkerThread
         fun getChatRoomParamsToCancelMeeting(): ConferenceParams? {
             val chatRoomParams = coreContext.core.createConferenceParams(null)
             chatRoomParams.isChatEnabled = true
