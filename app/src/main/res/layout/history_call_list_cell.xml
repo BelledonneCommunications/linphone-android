@@ -14,39 +14,40 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp">
+        android:layout_marginEnd="16dp">
 
         <ImageView
             android:id="@+id/call_status"
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:layout_marginStart="2dp"
+            android:layout_marginTop="3dp"
             android:src="@{model.iconResId, default=@drawable/outgoing_call}"
             android:contentDescription="@null"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/direction_label"
+            app:layout_constraintBottom_toBottomOf="@id/direction_label" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
             android:id="@+id/direction_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:layout_marginStart="8dp"
             android:layout_marginBottom="5dp"
             android:text="@{model.isOutgoing() ? @string/call_outgoing : @string/call_audio_incoming, default=@string/call_outgoing}"
             android:textSize="14sp"
             android:textColor="?attr/color_main2_700"
             app:layout_constraintStart_toEndOf="@id/call_status"
-            app:layout_constraintTop_toTopOf="@id/call_status"
-            app:layout_constraintBottom_toBottomOf="@id/call_status"/>
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_300"
             android:id="@+id/date_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:gravity="center"
             android:text="@{model.dateTime, default=`August 13th 2023 | 07:47 PM`}"
             android:textSize="12sp"
@@ -73,7 +74,6 @@
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="11dp"
             android:background="?attr/color_separator"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
