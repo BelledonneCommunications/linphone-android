@@ -95,6 +95,7 @@ class ScheduleMeetingViewModel
 
     internal var endHour = 0
     internal var endMinutes = 0
+    internal var endTimeSetByUser = false
 
     private lateinit var conferenceScheduler: ConferenceScheduler
 
@@ -324,8 +325,13 @@ class ScheduleMeetingViewModel
         startHour = hours
         startMinutes = minutes
 
-        endHour = hours + 1
-        endMinutes = minutes
+        if (!endTimeSetByUser) {
+            Log.i("$TAG User didn't changed end time manually, adjusting it to one hour after the newly set start time")
+            endHour = hours + 1
+            endMinutes = minutes
+        } else {
+            Log.i("$TAG User did choose end time manually, do not alter it")
+        }
 
         computeTimeLabels()
     }
@@ -335,6 +341,7 @@ class ScheduleMeetingViewModel
         Log.i("$TAG Newly selected end time is [$hours:$minutes], updating displayed end hours")
         endHour = hours
         endMinutes = minutes
+        endTimeSetByUser = true
 
         computeTimeLabels()
     }
@@ -532,6 +539,9 @@ class ScheduleMeetingViewModel
         if (::conferenceInfo.isInitialized) {
             subject.postValue(conferenceInfo.subject)
             description.postValue(conferenceInfo.description)
+
+            // Consider end time has been manually set, so changing start time won't alter it
+            endTimeSetByUser = true
 
             isBroadcastSelected.postValue(false) // TODO FIXME: not implemented yet
 
