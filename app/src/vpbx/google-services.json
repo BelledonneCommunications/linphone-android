@@ -7,6 +7,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:747173228880:android:da8dfc21633d349d6b3c55",
+        "android_client_info": {
+          "package_name": "com.virtualpbx.mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgIWJPsfkEtbxhAqvOpvKSEabJR145sQk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:747173228880:android:3ac662984153b2726b3c55",
         "android_client_info": {
           "package_name": "com.virtualpbx.phone"
