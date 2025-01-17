@@ -69,7 +69,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      find . -name "build.gradle" | xargs sed -i "s/cloud.xarios.dimensions/com.virtualpbx.phone/g"
+      find . -name "build.gradle" | xargs sed -i "s/cloud.xarios.dimensions/com.virtualpbx.mobile/g"
     workingDirectory: '$(Build.SourcesDirectory)/app/'
     
 - task: Bash@3
