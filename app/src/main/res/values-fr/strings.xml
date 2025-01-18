@@ -284,7 +284,7 @@
     <string name="manage_account_status_failed_summary">Erreur de connexion, vérifiez vos paramètres.</string>
     <string name="manage_account_international_prefix">Indicatif international</string>
     <string name="manage_account_dialog_international_prefix_help_message">Choisissez votre pays pour permettre à &appName; de faire le lien avec vos contacts.</string>
-    <string name="manage_account_settings">Mon compte</string>
+    <string name="manage_account_settings">Paramètres</string>
     <string name="manage_account_delete">Se déconnecter</string>
     <string name="manage_account_choose_mode_title">Choisir le mode</string>
     <string name="manage_account_choose_mode_apply_label">Appliquer</string>
