@@ -218,7 +218,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                                     data1
                                 }
 
-                            if (number != null) {
+                            if (!number.isNullOrEmpty()) {
                                 if (friend.phoneNumbersWithLabel.find {
                                     PhoneNumberUtils.arePhoneNumberWeakEqual(it.phoneNumber, number)
                                 } == null
@@ -231,7 +231,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                         }
                         ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE -> {
                             val sipAddress: String? = cursor.getString(sipAddressColumn)
-                            if (sipAddress != null) {
+                            if (!sipAddress.isNullOrEmpty()) {
                                 val address = core.interpretUrl(sipAddress, false)
                                 if (address != null) {
                                     friend.addAddress(address)
@@ -240,12 +240,12 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                         }
                         ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE -> {
                             val organization: String? = cursor.getString(companyColumn)
-                            if (organization != null) {
+                            if (!organization.isNullOrEmpty()) {
                                 friend.organization = organization
                             }
 
                             val job: String? = cursor.getString(jobTitleColumn)
-                            if (job != null) {
+                            if (!job.isNullOrEmpty()) {
                                 friend.jobTitle = job
                             }
                         }

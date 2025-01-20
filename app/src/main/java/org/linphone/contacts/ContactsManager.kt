@@ -22,7 +22,6 @@ package org.linphone.contacts
 import android.Manifest
 import android.content.ContentUris
 import android.content.pm.PackageManager
-import android.database.Cursor
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
@@ -88,7 +87,6 @@ class ContactsManager
     private val magicSearchMap = hashMapOf<String, MagicSearch>()
 
     private val unknownRemoteContactDirectoriesContactsMap = arrayListOf<String>()
-    private val unknownAndroidContactsMap = arrayListOf<String>()
 
     private val coroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var reloadContactsJob: Job? = null
@@ -315,7 +313,6 @@ class ContactsManager
         unknownContactsAvatarsMap.clear()
         conferenceAvatarMap.values.forEach(ContactAvatarModel::destroy)
         conferenceAvatarMap.clear()
-        unknownAndroidContactsMap.clear()
         unknownRemoteContactDirectoriesContactsMap.clear()
 
         notifyContactsListChanged()
@@ -572,118 +569,9 @@ class ContactsManager
 
     @WorkerThread
     fun findNativeContact(address: String, username: String, searchAsPhoneNumber: Boolean): Friend? {
-        if (nativeContactsLoaded) {
-            Log.d(
-                "$TAG Native contacts already loaded, no need to search further, no native contact matches address [$address]"
-            )
-            return null
-        }
-        if (unknownAndroidContactsMap.contains(address)) {
-            Log.d(
-                "$TAG Address [$address] already looked in Android native contacts and not found, do not do it again"
-            )
-            return null
-        }
-
-        val context = coreContext.context
-        val core = coreContext.core
-        if (ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.READ_CONTACTS
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            Log.d(
-                "$TAG Looking for native contact with address [$address] ${if (searchAsPhoneNumber) "or phone number [$username]" else ""}"
-            )
-
-            val temporaryFriendList = getTemporaryFriendList(native = true)
-            try {
-                val selection = if (searchAsPhoneNumber) {
-                    "${ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER} LIKE ? OR ${ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS} LIKE ? OR ${ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS} LIKE ? OR ${ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS} LIKE ?"
-                } else {
-                    "${ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS} LIKE ? OR ${ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS} LIKE ? OR ${ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS} LIKE ?"
-                }
-                val selectionParams = if (searchAsPhoneNumber) {
-                    arrayOf(username, address, "sip:$address", username)
-                } else {
-                    arrayOf(address, "sip:$address", username)
-                }
-                val cursor: Cursor? = context.contentResolver.query(
-                    ContactsContract.Data.CONTENT_URI,
-                    arrayOf(
-                        ContactsContract.Data.CONTACT_ID,
-                        ContactsContract.Contacts.LOOKUP_KEY,
-                        ContactsContract.Data.DISPLAY_NAME_PRIMARY
-                    ),
-                    selection,
-                    selectionParams,
-                    null
-                )
-
-                if (cursor != null && cursor.moveToNext()) {
-                    val friend = coreContext.core.createFriend()
-                    friend.edit()
-
-                    val parsedAddress = core.interpretUrl(address, false)
-                    if (parsedAddress != null) {
-                        friend.address = parsedAddress
-                    } else {
-                        Log.e("$TAG Failed to parse [$address] as Address!")
-                    }
-
-                    do {
-                        val id: String =
-                            cursor.getString(
-                                cursor.getColumnIndexOrThrow(ContactsContract.Data.CONTACT_ID)
-                            )
-                        friend.refKey = id
-
-                        if (friend.name.isNullOrEmpty()) {
-                            val displayName: String? =
-                                cursor.getString(
-                                    cursor.getColumnIndexOrThrow(
-                                        ContactsContract.Data.DISPLAY_NAME_PRIMARY
-                                    )
-                                )
-                            friend.name = displayName
-                        }
-
-                        if (friend.photo.isNullOrEmpty()) {
-                            val uri = friend.getNativeContactPictureUri()
-                            if (uri != null) {
-                                friend.photo = uri.toString()
-                            }
-                        }
-
-                        if (friend.nativeUri.isNullOrEmpty()) {
-                            val lookupKey =
-                                cursor.getString(
-                                    cursor.getColumnIndexOrThrow(
-                                        ContactsContract.Contacts.LOOKUP_KEY
-                                    )
-                                )
-                            friend.nativeUri =
-                                "${ContactsContract.Contacts.CONTENT_LOOKUP_URI}/$lookupKey"
-                        }
-                    } while (cursor.moveToNext())
-
-                    friend.done()
-                    temporaryFriendList.addLocalFriend(friend)
-
-                    Log.d("$TAG Found native contact [${friend.name}] with address [$address]")
-                    cursor.close()
-                    return friend
-                }
-
-                Log.w("$TAG Failed to find native contact with address [$address]")
-                unknownAndroidContactsMap.add(address)
-                return null
-            } catch (e: IllegalArgumentException) {
-                Log.e("$TAG Failed to search for native contact with address [$address]: $e")
-            }
-        } else {
-            Log.w("$TAG READ_CONTACTS permission not granted, can't check native address book")
-        }
+        // As long as read contacts permission is granted, friends will be stored in DB,
+        // so if Core didn't find a matching item it in the FriendList, there's no reason the native address book
+        // shall contain a matching contact.
         return null
     }
 
