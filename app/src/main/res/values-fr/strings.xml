@@ -634,6 +634,8 @@
     <string name="calls_paused_count_label">%s appels en pause</string>
     <string name="calls_list_dialog_merge_into_conference_title">Fusionner les appels en une conférence ?</string>
     <string name="calls_list_dialog_merge_into_conference_label">Créer une conférence</string>
+    <string name="call_audio_record_permission_not_granted_toast">Permission d\'enregistrer l\'audio déclinée !</string>
+    <string name="call_camera_permission_not_granted_toast">Permission d\'utliser la caméra déclinée !</string>
 
     <string name="call_dialog_zrtp_validate_trust_title">Vérification de sécurité</string>
     <string name="call_dialog_zrtp_validate_trust_message">Pour garantir le chiffrement, nous avons besoin d’authentifier l’appareil de votre correspondant.\nVeuillez échanger vos codes :</string>

@@ -653,6 +653,7 @@ class CurrentCallViewModel
                 Manifest.permission.RECORD_AUDIO
             ) != PackageManager.PERMISSION_GRANTED
         ) {
+            Log.w("$TAG RECORD_AUDIO permission isn't granted, requesting it")
             requestRecordAudioPermission.postValue(Event(true))
             return
         }
@@ -789,6 +790,7 @@ class CurrentCallViewModel
                 Manifest.permission.CAMERA
             ) != PackageManager.PERMISSION_GRANTED
         ) {
+            Log.w("$TAG CAMERA permission isn't granted, requesting it")
             requestCameraPermission.postValue(Event(true))
             return
         }

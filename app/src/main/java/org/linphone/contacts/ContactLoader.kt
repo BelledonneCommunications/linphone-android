@@ -372,28 +372,21 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
 
                 // Check for newly created friends since last sync
                 val localFriends = friendsList.friends
-                for (key in friends.keys) {
+                for ((key, newFriend) in friends.entries) {
                     val found = localFriends.find {
                         it.refKey == key
                     }
                     if (found == null) {
-                        val newFriend = friends[key]
-                        if (newFriend != null) {
-                            if (newFriend.refKey == null) {
-                                Log.w(
-                                    "$TAG Found friend [${newFriend.name}] with no refKey, using ID [$key]"
-                                )
-                                newFriend.refKey = key
-                            }
-                            Log.i(
-                                "$TAG Friend [${newFriend.name}] with ref key [${newFriend.refKey}] not found in currently stored list, adding it"
+                        if (newFriend.refKey == null) {
+                            Log.w(
+                                "$TAG Found friend [${newFriend.name}] with no refKey, using ID [$key]"
                             )
-                            friendsList.addLocalFriend(newFriend)
-                        } else {
-                            Log.e(
-                                "$TAG Expected to find newly fetched friend with ref key [$key] but was null!"
-                            )
+                            newFriend.refKey = key
                         }
+                        Log.i(
+                            "$TAG Friend [${newFriend.name}] with ref key [${newFriend.refKey}] not found in currently stored list, adding it"
+                        )
+                        friendsList.addLocalFriend(newFriend)
                     }
                 }
                 Log.i("$TAG Friends synchronized")

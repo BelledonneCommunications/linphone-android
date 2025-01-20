@@ -24,12 +24,15 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.os.PowerManager
+import android.provider.Settings
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
+import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -93,6 +96,7 @@ class CallActivity : GenericActivity() {
             callViewModel.toggleVideo()
         } else {
             Log.e("$TAG CAMERA permission has been denied")
+            goToAndroidPermissionSettings()
         }
     }
 
@@ -104,6 +108,7 @@ class CallActivity : GenericActivity() {
             callViewModel.toggleMuteMicrophone()
         } else {
             Log.e("$TAG RECORD_AUDIO permission has been denied")
+            goToAndroidPermissionSettings()
         }
     }
 
@@ -328,6 +333,28 @@ class CallActivity : GenericActivity() {
             }
             callsViewModel.showTopBar.postValue(showTopBar)
         }
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.RECORD_AUDIO
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            Log.e("$TAG RECORD_AUDIO permission isn't granted")
+            val message = R.string.call_audio_record_permission_not_granted_toast
+            val icon = R.drawable.warning_circle
+            showRedToast(getString(message), icon)
+        }
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            Log.e("$TAG CAMERA permission isn't granted")
+            val message = R.string.call_camera_permission_not_granted_toast
+            val icon = R.drawable.warning_circle
+            showRedToast(getString(message), icon)
+        }
     }
 
     override fun onResume() {
@@ -523,5 +550,18 @@ class CallActivity : GenericActivity() {
             )
             proximityWakeLock.release(PowerManager.RELEASE_FLAG_WAIT_FOR_NO_PROXIMITY)
         }
+    }
+
+    private fun goToAndroidPermissionSettings() {
+        Log.i("$TAG Going into Android settings for our app")
+        val intent = Intent(
+            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.fromParts(
+                "package",
+            packageName, null
+            )
+        )
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
     }
 }
