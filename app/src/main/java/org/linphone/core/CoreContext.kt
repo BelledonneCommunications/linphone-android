@@ -125,7 +125,9 @@ class CoreContext
                         "$TAG Added device [${device.productName}] with ID [${device.id}] and type [${device.type}]"
                     )
                 }
-                core.reloadSoundDevices()
+
+                Log.i("$TAG Reloading sound devices in 500ms")
+                postOnCoreThreadDelayed({ core.reloadSoundDevices() }, 500)
             }
         }
 
@@ -139,8 +141,8 @@ class CoreContext
                     )
                 }
                 if (telecomManager.getCurrentlyFollowedCalls() <= 0) {
-                    Log.i("$TAG No call found in Telecom's CallsManager, reloading sound devices")
-                    core.reloadSoundDevices()
+                    Log.i("$TAG No call found in Telecom's CallsManager, reloading sound devices in 500ms")
+                    postOnCoreThreadDelayed({ core.reloadSoundDevices() }, 500)
                 } else {
                     Log.i(
                         "$TAG At least one active call in Telecom's CallsManager, let it handle the removed device"
