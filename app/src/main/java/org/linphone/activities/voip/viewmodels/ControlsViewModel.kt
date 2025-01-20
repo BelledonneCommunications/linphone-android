@@ -561,13 +561,13 @@ class ControlsViewModel : ViewModel() {
                     Log.i(
                         "[Call Controls] Call is in outgoing state [$state], enabling proximity sensor"
                     )
-                    return true
+                    return forceDisableProximitySensor.value == false
                 }
                 Call.State.IncomingEarlyMedia, Call.State.IncomingReceived -> {
                     Log.i(
                         "[Call Controls] Call is in incoming state [$state], enabling proximity sensor"
                     )
-                    return true
+                    return forceDisableProximitySensor.value == false
                 }
                 else -> { }
             }
