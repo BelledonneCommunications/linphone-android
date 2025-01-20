@@ -447,6 +447,10 @@ class ActiveCallFragment : GenericCallFragment() {
         authTokensToListen: List<String>,
         cacheMismatch: Boolean
     ) {
+        if (zrtpSasDialog != null) {
+            zrtpSasDialog?.dismiss()
+        }
+
         val model = ZrtpSasConfirmationDialogModel(
             authTokenToRead,
             authTokensToListen,
@@ -476,6 +480,10 @@ class ActiveCallFragment : GenericCallFragment() {
     }
 
     private fun showZrtpAlertDialog(allowTryAgain: Boolean = true) {
+        if (zrtpSasDialog != null) {
+            zrtpSasDialog?.dismiss()
+        }
+
         val model = ZrtpAlertDialogModel(allowTryAgain)
         val dialog = DialogUtils.getZrtpAlertDialog(requireActivity(), model)
 
