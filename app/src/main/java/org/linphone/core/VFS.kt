@@ -111,12 +111,12 @@ class VFS {
         }
 
         private fun getEncryptedSharedPreferences(context: Context): SharedPreferences? {
-            val masterKey: MasterKey = MasterKey.Builder(
-                context,
-                MasterKey.DEFAULT_MASTER_KEY_ALIAS
-            ).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build()
-
             return try {
+                val masterKey: MasterKey = MasterKey.Builder(
+                    context,
+                    MasterKey.DEFAULT_MASTER_KEY_ALIAS
+                ).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build()
+
                 EncryptedSharedPreferences.create(
                     context,
                     ENCRYPTED_SHARED_PREFS_FILE,
