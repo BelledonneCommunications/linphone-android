@@ -401,6 +401,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                 findNavController().navigate(action)
                 return true
             }
+            return false
         }
         return true
     }
