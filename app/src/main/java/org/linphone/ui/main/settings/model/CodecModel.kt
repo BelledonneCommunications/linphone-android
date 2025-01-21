@@ -22,12 +22,15 @@ package org.linphone.ui.main.settings.model
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
+import org.linphone.utils.AppUtils
+import org.linphone.R
 
 class CodecModel
     @WorkerThread
     constructor(
     val mimeType: String,
     clockRate: Int,
+    channels: Int,
     recvFmtp: String?,
     isAudioCodec: Boolean,
     enabled: Boolean,
@@ -40,7 +43,12 @@ class CodecModel
     init {
         isEnabled.postValue(enabled)
         if (isAudioCodec) {
-            subtitle.postValue("$clockRate Hz")
+            val monoStereo = if (channels > 1) {
+                AppUtils.getString(R.string.settings_advanced_audio_codecs_stereo_subtitle)
+            } else {
+                AppUtils.getString(R.string.settings_advanced_audio_codecs_mono_subtitle)
+            }
+            subtitle.postValue("$clockRate Hz ($monoStereo)")
         } else {
             subtitle.postValue(recvFmtp.orEmpty())
         }

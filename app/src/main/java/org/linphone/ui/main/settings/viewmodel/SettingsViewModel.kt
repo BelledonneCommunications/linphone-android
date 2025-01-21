@@ -853,6 +853,7 @@ class SettingsViewModel
             val model = CodecModel(
                 payload.mimeType,
                 payload.clockRate,
+                payload.channels,
                 null,
                 true,
                 payload.enabled()
@@ -865,7 +866,7 @@ class SettingsViewModel
 
         val videoCodecsList = arrayListOf<CodecModel>()
         for (payload in core.videoPayloadTypes) {
-            val model = CodecModel(payload.mimeType, -1, payload.recvFmtp, false, payload.enabled()) { enabled ->
+            val model = CodecModel(payload.mimeType, -1, 0, payload.recvFmtp, false, payload.enabled()) { enabled ->
                 payload.enable(enabled)
             }
             videoCodecsList.add(model)

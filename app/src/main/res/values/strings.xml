@@ -307,6 +307,8 @@
     <string name="settings_advanced_input_audio_device_title">Default input audio device</string>
     <string name="settings_advanced_output_audio_device_title">Default output audio device</string>
     <string name="settings_advanced_audio_codecs_title">Audio codecs</string>
+    <string name="settings_advanced_audio_codecs_mono_subtitle">mono</string>
+    <string name="settings_advanced_audio_codecs_stereo_subtitle">stereo</string>
     <string name="settings_advanced_video_codecs_title">Video codecs</string>
     <string name="settings_advanced_go_to_android_app_settings_title">&appName; Android settings</string>
 
