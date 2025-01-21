@@ -269,6 +269,7 @@
     <string name="settings_advanced_output_audio_device_title">Périphérique d\'écoute par défaut</string>
     <string name="settings_advanced_audio_codecs_title">Codecs audio</string>
     <string name="settings_advanced_video_codecs_title">Codecs vidéo</string>
+    <string name="settings_advanced_go_to_android_app_settings_title">Paramètres Android de &appName;</string>
 
     <!-- Account profile & settings -->
     <string name="manage_account_title">Mon compte</string>

@@ -19,7 +19,10 @@
  */
 package org.linphone.ui.main.settings.fragment
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,6 +31,7 @@ import android.widget.ArrayAdapter
 import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
+import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsAdvancedFragmentBinding
 import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.settings.viewmodel.SettingsViewModel
@@ -92,6 +96,10 @@ class SettingsAdvancedFragment : GenericMainFragment() {
             goBack()
         }
 
+        binding.setAndroidSettingsClickListener {
+            goToAndroidPermissionSettings()
+        }
+
         viewModel.mediaEncryptionIndex.observe(viewLifecycleOwner) {
             setupMediaEncryptionPicker()
         }
@@ -152,5 +160,18 @@ class SettingsAdvancedFragment : GenericMainFragment() {
         binding.outputAudioDevice.adapter = adapter
         binding.outputAudioDevice.onItemSelectedListener = outputAudioDeviceDropdownListener
         binding.outputAudioDevice.setSelection(index)
+    }
+
+    private fun goToAndroidPermissionSettings() {
+        Log.i("$TAG Going into Android settings for our app")
+        val intent = Intent(
+            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.fromParts(
+                "package",
+                requireContext().packageName, null
+            )
+        )
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
     }
 }

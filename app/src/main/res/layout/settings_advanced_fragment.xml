@@ -8,6 +8,9 @@
             name="backClickListener"
             type="View.OnClickListener" />
         <variable
+            name="androidSettingsClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.main.settings.viewmodel.SettingsViewModel" />
     </data>
@@ -555,7 +558,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="@dimen/screen_bottom_margin"
                     android:layout_marginTop="8dp"
                     android:orientation="vertical"
                     android:paddingBottom="16dp"
@@ -564,9 +566,25 @@
                     entries="@{viewModel.videoCodecs}"
                     layout="@{@layout/settings_codec_list_cell}"
                     app:layout_constraintTop_toBottomOf="@id/video_codecs_title"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/settings_title_style"
+                    android:id="@+id/android_settings"
+                    android:onClick="@{androidSettingsClickListener}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_margin="16dp"
+                    android:text="@string/settings_advanced_go_to_android_app_settings_title"
+                    android:drawableEnd="@drawable/arrow_square_out"
+                    android:drawableTint="?attr/color_main2_600"
+                    app:layout_constraintHorizontal_bias="1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/video_codecs"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
