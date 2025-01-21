@@ -27,6 +27,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
@@ -96,8 +97,13 @@ class QrCodeScannerFragment : GenericFragment() {
         }
 
         if (!isCameraPermissionGranted()) {
-            Log.w("$TAG CAMERA permission wasn't granted yet, asking for it now")
-            requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+            if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.CAMERA)) {
+                Log.w("$TAG CAMERA permission wasn't granted yet, asking for it now")
+                requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+            } else {
+                Log.i("$TAG Permission request for CAMERA will be automatically denied, go to android app settings instead")
+                (requireActivity() as GenericActivity).goToAndroidPermissionSettings()
+            }
         }
     }
 

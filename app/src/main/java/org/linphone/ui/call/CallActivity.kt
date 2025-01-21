@@ -24,10 +24,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
 import android.os.PowerManager
-import android.provider.Settings
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -96,7 +94,6 @@ class CallActivity : GenericActivity() {
             callViewModel.toggleVideo()
         } else {
             Log.e("$TAG CAMERA permission has been denied")
-            goToAndroidPermissionSettings()
         }
     }
 
@@ -108,7 +105,6 @@ class CallActivity : GenericActivity() {
             callViewModel.toggleMuteMicrophone()
         } else {
             Log.e("$TAG RECORD_AUDIO permission has been denied")
-            goToAndroidPermissionSettings()
         }
     }
 
@@ -249,15 +245,25 @@ class CallActivity : GenericActivity() {
 
         callViewModel.requestRecordAudioPermission.observe(this) {
             it.consume {
-                Log.w("$TAG Asking for RECORD_AUDIO permission")
-                requestRecordAudioPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
+                    Log.w("$TAG Asking for RECORD_AUDIO permission")
+                    requestRecordAudioPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                } else {
+                    Log.i("$TAG Permission request for RECORD_AUDIO will be automatically denied, go to android app settings instead")
+                    goToAndroidPermissionSettings()
+                }
             }
         }
 
         callViewModel.requestCameraPermission.observe(this) {
             it.consume {
-                Log.w("$TAG Asking for CAMERA permission")
-                requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+                    Log.w("$TAG Asking for CAMERA permission")
+                    requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+                } else {
+                    Log.i("$TAG Permission request for CAMERA will be automatically denied, go to android app settings instead")
+                    goToAndroidPermissionSettings()
+                }
             }
         }
 
@@ -550,18 +556,5 @@ class CallActivity : GenericActivity() {
             )
             proximityWakeLock.release(PowerManager.RELEASE_FLAG_WAIT_FOR_NO_PROXIMITY)
         }
-    }
-
-    private fun goToAndroidPermissionSettings() {
-        Log.i("$TAG Going into Android settings for our app")
-        val intent = Intent(
-            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-            Uri.fromParts(
-                "package",
-            packageName, null
-            )
-        )
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
     }
 }

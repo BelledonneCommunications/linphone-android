@@ -723,8 +723,14 @@ open class ConversationFragment : SlidingPaneChildFragment() {
 
         sendMessageViewModel.askRecordAudioPermissionEvent.observe(viewLifecycleOwner) {
             it.consume {
-                Log.w("$TAG Asking for RECORD_AUDIO permission")
                 requestRecordAudioPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.RECORD_AUDIO)) {
+                    Log.w("$TAG Asking for RECORD_AUDIO permission")
+                    requestRecordAudioPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                } else {
+                    Log.i("$TAG Permission request for RECORD_AUDIO will be automatically denied, go to android app settings instead")
+                    (requireActivity() as GenericActivity).goToAndroidPermissionSettings()
+                }
             }
         }
 

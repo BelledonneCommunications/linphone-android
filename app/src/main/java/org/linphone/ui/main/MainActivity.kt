@@ -37,6 +37,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
 import androidx.car.app.connection.CarConnection
+import androidx.core.app.ActivityCompat
 import androidx.core.os.bundleOf
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
@@ -188,7 +189,13 @@ class MainActivity : GenericActivity() {
 
         viewModel.askPostNotificationsPermissionEvent.observe(this) {
             it.consume {
-                postNotificationsPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.POST_NOTIFICATIONS)) {
+                    Log.w("$TAG Asking for POST_NOTIFICATIONS permission")
+                    postNotificationsPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                } else {
+                    Log.i("$TAG Permission request for POST_NOTIFICATIONS will be automatically denied, go to android app settings instead")
+                    goToAndroidPermissionSettings()
+                }
             }
         }
 

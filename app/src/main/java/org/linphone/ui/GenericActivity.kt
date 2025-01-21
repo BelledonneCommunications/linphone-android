@@ -20,9 +20,12 @@
 package org.linphone.ui
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.annotation.DrawableRes
@@ -217,6 +220,19 @@ open class GenericActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    fun goToAndroidPermissionSettings() {
+        Log.i("$TAG Going into Android settings for our app")
+        val intent = Intent(
+            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.fromParts(
+                "package",
+                packageName, null
+            )
+        )
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
     }
 
     private fun enableWindowSecureMode(enable: Boolean) {
