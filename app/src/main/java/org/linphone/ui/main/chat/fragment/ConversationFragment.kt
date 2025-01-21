@@ -389,7 +389,8 @@ open class ConversationFragment : SlidingPaneChildFragment() {
     }
 
     override fun goBack(): Boolean {
-        if (!findNavController().popBackStack()) {
+        val backStack = findNavController().currentBackStackEntry
+        if (backStack == null || backStack.destination.id == R.id.emptyFragment || !findNavController().popBackStack()) {
             sharedViewModel.closeSlidingPaneEvent.value = Event(true)
             sharedViewModel.displayedChatRoom = null
 
@@ -400,7 +401,6 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                 findNavController().navigate(action)
                 return true
             }
-            return false
         }
         return true
     }
