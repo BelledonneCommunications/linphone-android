@@ -1123,7 +1123,7 @@ class NotificationsManager
             } else {
                 setPriority(NotificationCompat.PRIORITY_HIGH)
             }
-            setWhen(System.currentTimeMillis())
+            setWhen(call.callLog.startDate * 1000) // Linphone timestamps are in seconds
             setAutoCancel(false)
             setOngoing(true)
             setContentIntent(pendingIntent)
