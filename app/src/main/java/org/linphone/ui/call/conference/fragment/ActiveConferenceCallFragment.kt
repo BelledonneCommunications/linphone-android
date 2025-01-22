@@ -29,6 +29,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.view.doOnLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
@@ -303,7 +304,9 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
     override fun onResume() {
         super.onResume()
 
-        setupVideoPreview(binding.localPreviewVideoSurface)
+        (binding.root as? ViewGroup)?.doOnLayout {
+            setupVideoPreview(binding.localPreviewVideoSurface)
+        }
 
         coreContext.postOnCoreThread {
             // Need to be done manually

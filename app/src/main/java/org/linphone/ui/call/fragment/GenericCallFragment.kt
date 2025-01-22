@@ -25,6 +25,7 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModelProvider
+import org.linphone.core.tools.Log
 import org.linphone.ui.GenericFragment
 import org.linphone.ui.call.view.RoundCornersTextureView
 import org.linphone.ui.call.viewmodel.SharedCallViewModel
@@ -46,8 +47,8 @@ abstract class GenericCallFragment : GenericFragment() {
                 true
             }
             MotionEvent.ACTION_UP -> {
-                sharedViewModel.videoPreviewX = view.translationX
-                sharedViewModel.videoPreviewY = view.translationY
+                sharedViewModel.videoPreviewX = view.x
+                sharedViewModel.videoPreviewY = view.y
                 true
             }
             MotionEvent.ACTION_MOVE -> {
@@ -75,12 +76,17 @@ abstract class GenericCallFragment : GenericFragment() {
 
     @SuppressLint("ClickableViewAccessibility")
     protected fun setupVideoPreview(localPreviewVideoSurface: RoundCornersTextureView) {
+        if (requireActivity().isInPictureInPictureMode) {
+            Log.i("$TAG Activity is in PiP mode, do not move video preview")
+            return
+        }
+
         // To restore video preview position if possible
-        localPreviewVideoSurface.animate()
-            .x(sharedViewModel.videoPreviewX)
-            .y(sharedViewModel.videoPreviewY)
-            .setDuration(0)
-            .start()
+        if (sharedViewModel.videoPreviewX != 0f && sharedViewModel.videoPreviewY != 0f) {
+            Log.i("$TAG Restoring video preview position with position X [${sharedViewModel.videoPreviewX}] and Y [${sharedViewModel.videoPreviewY}]")
+            localPreviewVideoSurface.x = sharedViewModel.videoPreviewX
+            localPreviewVideoSurface.y = sharedViewModel.videoPreviewY
+        }
 
         localPreviewVideoSurface.setOnTouchListener(videoPreviewTouchListener)
     }

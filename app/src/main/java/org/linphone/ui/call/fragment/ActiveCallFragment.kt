@@ -30,6 +30,7 @@ import android.view.animation.AnimationUtils
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.UiThread
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.view.doOnLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
@@ -394,7 +395,9 @@ class ActiveCallFragment : GenericCallFragment() {
     override fun onResume() {
         super.onResume()
 
-        setupVideoPreview(binding.localPreviewVideoSurface)
+        (binding.root as? ViewGroup)?.doOnLayout {
+            setupVideoPreview(binding.localPreviewVideoSurface)
+        }
 
         coreContext.postOnCoreThread { core ->
             Log.i("$TAG Fragment resuming, setting native video window ID")

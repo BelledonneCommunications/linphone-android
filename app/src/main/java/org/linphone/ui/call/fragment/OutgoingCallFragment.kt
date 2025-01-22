@@ -24,6 +24,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
+import androidx.core.view.doOnLayout
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.tools.Log
@@ -72,7 +73,9 @@ class OutgoingCallFragment : GenericCallFragment() {
     override fun onResume() {
         super.onResume()
 
-        setupVideoPreview(binding.localPreviewVideoSurface)
+        (binding.root as? ViewGroup)?.doOnLayout {
+            setupVideoPreview(binding.localPreviewVideoSurface)
+        }
     }
 
     override fun onPause() {
