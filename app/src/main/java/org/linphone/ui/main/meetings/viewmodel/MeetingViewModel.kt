@@ -199,14 +199,19 @@ class MeetingViewModel
     @UiThread
     fun refreshInfo(uri: String) {
         coreContext.postOnCoreThread { core ->
+            Log.i("$TAG Looking for conference info with URI [$uri]")
             val address = Factory.instance().createAddress(uri)
             if (address != null) {
                 val found = core.findConferenceInformationFromUri(address)
                 if (found != null) {
-                    Log.i("$TAG Conference info with SIP URI [$uri] was found, updating info")
+                    Log.i("$TAG Conference info with SIP address [${address.asStringUriOnly()}] was found, updating info")
                     conferenceInfo = found
                     configureConferenceInfo()
+                } else {
+                    Log.w("$TAG No conference info with SIP address [${address.asStringUriOnly()}] was found")
                 }
+            } else {
+                Log.e("$TAG Failed to parse URI [$uri] as a SIP address!")
             }
         }
     }
@@ -235,7 +240,9 @@ class MeetingViewModel
             val endTime = TimestampUtils.timeToString(end)
             startTimeStamp.postValue(timestamp * 1000)
             endTimeStamp.postValue(end * 1000)
-            dateTime.postValue("$date | $startTime - $endTime")
+            val displayedTimestamp = "$date | $startTime - $endTime"
+            dateTime.postValue(displayedTimestamp)
+            Log.i("$TAG Conference is scheduled for [$displayedTimestamp]")
 
             timezone.postValue(TimeZoneModel(TimeZone.getDefault()).toString())
 
@@ -245,7 +252,9 @@ class MeetingViewModel
                     val address = account.params.identityAddress
                     address != null && organizerAddress.weakEqual(address)
                 }
-                isEditable.postValue(localAccount != null)
+                val canMeetingBeEdited = localAccount != null
+                isEditable.postValue(canMeetingBeEdited)
+                Log.i("$TAG Conference organizer is [${organizerAddress.asStringUriOnly()}], we [${if (canMeetingBeEdited) "can" else "can't"}] edit it")
             } else {
                 isEditable.postValue(false)
                 Log.e(
@@ -264,7 +273,9 @@ class MeetingViewModel
         var allSpeaker = true
         val organizer = conferenceInfo.organizer
         var organizerFound = false
-        for (info in conferenceInfo.participantInfos) {
+        val participantsInfo = conferenceInfo.participantInfos
+        Log.i("$TAG Found [${participantsInfo.size}] participants information")
+        for (info in participantsInfo) {
             val participant = info.address
             val isOrganizer = organizer?.weakEqual(participant) == true
             Log.d(
@@ -282,7 +293,7 @@ class MeetingViewModel
             }
         }
         Log.i(
-            "$TAG Found [${speakersList.size}] participants for conference [${conferenceInfo.uri?.asStringUriOnly()}]"
+            "$TAG Found [${speakersList.size}] speakers for conference [${conferenceInfo.uri?.asStringUriOnly()}] and [${participantsList.size}] listeners"
         )
 
         if (allSpeaker) {

@@ -145,6 +145,9 @@ class MeetingFragment : SlidingPaneChildFragment() {
         }
 
         binding.setJoinClickListener {
+            // Release the currently displayed meeting
+            sharedViewModel.displayedMeeting = null
+
             val conferenceUri = args.conferenceUri
             Log.i("$TAG Requesting to go to waiting room for conference URI [$conferenceUri]")
             sharedViewModel.goToMeetingWaitingRoomEvent.value = Event(conferenceUri)
