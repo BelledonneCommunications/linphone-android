@@ -389,21 +389,22 @@ open class ConversationFragment : SlidingPaneChildFragment() {
     }
 
     override fun goBack(): Boolean {
-        val backStack = findNavController().currentBackStackEntry
-        if (backStack == null || backStack.destination.id == R.id.emptyFragment || !findNavController().popBackStack()) {
-            sharedViewModel.closeSlidingPaneEvent.value = Event(true)
-            sharedViewModel.displayedChatRoom = null
-
-            if (findNavController().currentDestination?.id == R.id.conversationFragment) {
-                // If not done this fragment won't be paused, which will cause us issues
-                val action =
-                    ConversationFragmentDirections.actionConversationFragmentToEmptyFragment()
-                findNavController().navigate(action)
-                return true
-            }
-            return false
+        if (viewModel.isCallConversation.value == true) {
+            Log.i("$TAG Conversation is call related, going back to previous fragment")
+            return findNavController().popBackStack()
         }
-        return true
+
+        sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+        sharedViewModel.displayedChatRoom = null
+
+        if (findNavController().currentDestination?.id == R.id.conversationFragment) {
+            // If not done this fragment won't be paused, which will cause us issues
+            val action =
+                ConversationFragmentDirections.actionConversationFragmentToEmptyFragment()
+            findNavController().navigate(action)
+            return true
+        }
+        return false
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
