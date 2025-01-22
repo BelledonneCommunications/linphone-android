@@ -5,6 +5,7 @@
 
     <dimen name="screen_bottom_margin">10dp</dimen>
 
+    <dimen name="portrait_nav_bar_height">85dp</dimen>
     <dimen name="landscape_nav_bar_width">75dp</dimen>
     <dimen name="sliding_pane_left_fragment_width">350dp</dimen>
     <dimen name="sliding_pane_right_fragment_width">300dp</dimen>
