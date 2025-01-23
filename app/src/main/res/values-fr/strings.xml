@@ -699,8 +699,8 @@
     <string name="conference_failed_to_create_group_call_toast">Echec de l\'appel de groupe</string>
     <string name="conference_failed_to_merge_calls_into_conference_toast">Echec de la fusion des appels</string>
     <plurals name="conference_participants_list_title" tools:ignore="MissingQuantity">
-        <item quantity="one">%s participant</item>
-        <item quantity="other">%s participants</item>
+        <item quantity="one">Participant (%s)</item>
+        <item quantity="other">Participants (%s)</item>
     </plurals>
     <string name="conference_confirm_removing_participant_dialog_title">Retirer %s de la réunion ?</string>
     <string name="conference_confirm_removing_participant_dialog_message">Voulez-vous retirer ce participant de la réunion ?</string>

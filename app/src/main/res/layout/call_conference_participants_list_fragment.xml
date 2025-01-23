@@ -44,7 +44,7 @@
             android:layout_height="@dimen/top_bar_height"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:text="@{viewModel.conferenceModel.participantsLabel, default=`1 participant`}"
+            android:text="@{viewModel.conferenceModel.participantsLabel, default=`Participant (1)`}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/back"
             app:layout_constraintTop_toTopOf="parent"/>

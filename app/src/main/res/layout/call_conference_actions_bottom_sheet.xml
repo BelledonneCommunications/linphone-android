@@ -207,7 +207,8 @@
             android:onClick="@{participantsListClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/conference_action_show_participants"
+            android:ellipsize="middle"
+            android:text="@{viewModel.conferenceModel.participantsLabel, default=@string/conference_action_show_participants}"
             app:layout_constraintTop_toBottomOf="@id/participants"
             app:layout_constraintStart_toEndOf="@id/screen_sharing_label"
             app:layout_constraintEnd_toStartOf="@id/calls_list_label" />

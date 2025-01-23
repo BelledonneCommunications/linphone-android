@@ -739,8 +739,8 @@
     <string name="conference_failed_to_create_group_call_toast">Failed to create a group call!</string>
     <string name="conference_failed_to_merge_calls_into_conference_toast">Failed to merge call!</string>
     <plurals name="conference_participants_list_title">
-        <item quantity="one">%s participant</item>
-        <item quantity="other">%s participants</item>
+        <item quantity="one">Participant (%s)</item>
+        <item quantity="other">Participants (%s)</item>
     </plurals>
     <string name="conference_confirm_removing_participant_dialog_title">Remove %s from conference?</string>
     <string name="conference_confirm_removing_participant_dialog_message">Are you sure you want to remove this participant from the conference?</string>
