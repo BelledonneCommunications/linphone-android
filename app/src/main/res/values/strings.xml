@@ -951,6 +951,7 @@
     <string name="content_description_menu_chat">Conversations</string>
     <string name="content_description_dialer_erase">Remove last character</string>
     <string name="content_description_add_contact">Create contact</string>
+    <string name="content_description_upload_logs">Upload logs</string>
     <string name="content_description_go_to_contact">Go to contact details</string>
     <string name="content_description_show_all_calls">Show all calls</string>
     <string name="content_description_show_missed_calls">Only show missed calls</string>

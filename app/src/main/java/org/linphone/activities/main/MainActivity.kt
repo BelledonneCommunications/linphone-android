@@ -47,6 +47,7 @@ import androidx.navigation.findNavController
 import androidx.window.layout.FoldingFeature
 import coil.imageLoader
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
 import kotlin.math.abs
@@ -287,6 +288,13 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
         CoroutineScope(Dispatchers.IO).launch {
             val user = UserService.getInstance(applicationContext).user.awaitFirst()
+
+            Log.i("MainActivity.handleAuthIntent.CorouteScope")
+            Log.i("IsAuthorised::" + asm.current.isAuthorized)
+            Log.i("UserId::" + user.id)
+            Log.i("User::" + user.displayName)
+            Log.i("Permissions::" + Gson().toJson(user.permissions))
+
             if (!user.hasClientPermission()) {
                 redirectToLogin("You do not have permission to use the client.")
             }

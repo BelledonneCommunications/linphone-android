@@ -1,5 +1,6 @@
 package org.linphone.middleware
 
+import java.util.UUID
 import java8.util.concurrent.CompletableFuture
 import net.openid.appauth.AuthorizationService
 import okhttp3.Authenticator
@@ -20,27 +21,32 @@ class AuthAuthenticator(
     }
 
     override fun authenticate(route: Route?, response: Response): Request? {
+        val requestUid = UUID.randomUUID()
+
         val future = CompletableFuture<Request?>()
 
         val authState = authManager.current
 
         if (authState.needsTokenRefresh) {
-            Log.i("AUTH needs refresh")
+            Log.i("authenticate($requestUid) - AUTH needs refresh")
             isRefreshingToken = true
         }
 
-        Log.i("AUTH Using refresh token: " + authState.refreshToken)
-        Log.i("AUTH ID token: " + authState.idToken)
+        Log.i("authenticate($requestUid) - REQUEST: " + response.request.url)
+        Log.i("authenticate($requestUid) - AUTH Using refresh token: " + authState.refreshToken)
+        Log.i("authenticate($requestUid) - AUTH ID token: " + authState.idToken)
         Log.i(
-            "AUTH access token: " + authState.accessToken + " exp:" + authState.accessTokenExpirationTime
+            "authenticate($requestUid) - AUTH access token: " + authState.accessToken + " exp:" + authState.accessTokenExpirationTime
         )
 
         authState.performActionWithFreshTokens(authService) { accessToken, _, ex ->
             if (ex != null) {
-                Log.e("Failed to authorize: $ex")
+                Log.e("authenticate($requestUid) - Failed to authorize: $ex")
             }
 
-            Log.i("AUTH performActionWithFreshTokens $accessToken")
+            Log.i(
+                "authenticate($requestUid) - AUTH performActionWithFreshTokens $accessToken, isRefreshingToken= $isRefreshingToken"
+            )
 
             if (isRefreshingToken) {
                 isRefreshingToken = false

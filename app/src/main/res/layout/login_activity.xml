@@ -91,7 +91,6 @@
 
             </LinearLayout>
 
-            <!-- displayed if there is an error. -->
             <LinearLayout
                 android:id="@+id/error_container"
                 android:layout_width="match_parent"
@@ -110,10 +109,31 @@
 
                 <Button
                     android:id="@+id/retry"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/retry_label" />
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/send_logs_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                >
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="5" />
+                <ImageView
+                    android:id="@+id/send_logs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/content_description_upload_logs"
+                    android:src="@drawable/icon_upload_file"
+                    android:padding="5dp"/>
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

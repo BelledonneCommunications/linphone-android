@@ -44,6 +44,7 @@ import org.linphone.environment.DimensionsEnvironmentService
 import org.linphone.environment.DimensionsEnvironmentService.Companion.getInstance
 import org.linphone.environment.EnvironmentSelectionAdapter
 import org.linphone.middleware.FileTree
+import org.linphone.services.DiagnosticsService
 import org.linphone.services.UserService
 import org.linphone.utils.Log
 import timber.log.Timber
@@ -107,6 +108,7 @@ class LoginActivity : AppCompatActivity() {
             )
         }
         findViewById<View>(R.id.start_auth).setOnClickListener { _: View? -> startAuth() }
+        findViewById<View>(R.id.send_logs).setOnClickListener { _: View? -> uploadLogs() }
         MultiTapDetector(findViewById(R.id.login_scrollview)) { nTaps, isComplete ->
             toggleDevMode(nTaps, isComplete)
         }
@@ -257,6 +259,39 @@ class LoginActivity : AppCompatActivity() {
             // WrongThread inference is incorrect for lambdas
             // noinspection WrongThread
             mExecutor.submit { this.doAuth() }
+        }
+    }
+
+    @MainThread
+    fun uploadLogs() {
+        val dimensionsEnvironment = getInstance(applicationContext).getCurrentEnvironment()
+        if (dimensionsEnvironment == null) {
+            Snackbar
+                .make(
+                    findViewById(R.id.login_coordinator),
+                    "Please select a region first",
+                    Snackbar.LENGTH_SHORT
+                ).show()
+        } else {
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    DiagnosticsService.uploadDiagnostics(applicationContext)
+                    Snackbar
+                        .make(
+                            findViewById(R.id.login_coordinator),
+                            "Logs uploaded to server",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                } catch (e: Exception) {
+                    Log.e("[LoginActivity] Failed to upload logs, $e")
+                    Snackbar
+                        .make(
+                            findViewById(R.id.login_coordinator),
+                            "Failed to upload logs! " + e.message,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                }
+            }
         }
     }
 
