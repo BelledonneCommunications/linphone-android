@@ -575,10 +575,12 @@ class ContactsManager
 
     @WorkerThread
     fun onCoreStarted(core: Core) {
+        Log.i("$TAG Core has been started")
         loadContactsOnlyFromDefaultDirectory = corePreferences.fetchContactsFromDefaultDirectory
 
         core.addListener(coreListener)
         for (list in core.friendsLists) {
+            Log.i("$TAG Found existing friend list [${list.displayName}]")
             list.addListener(friendListListener)
         }
 
@@ -604,6 +606,7 @@ class ContactsManager
 
     @WorkerThread
     fun onCoreStopped(core: Core) {
+        Log.w("$TAG Core has been stopped")
         coroutineScope.cancel()
 
         core.removeListener(coreListener)
