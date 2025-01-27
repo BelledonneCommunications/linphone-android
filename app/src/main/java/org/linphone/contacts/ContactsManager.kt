@@ -172,10 +172,54 @@ class ContactsManager
                     conferenceAvatarMap.values.forEach(ContactAvatarModel::destroy)
                     conferenceAvatarMap.clear()
 
-                    for (listener in listeners) {
-                        listener.onContactsLoaded()
-                    }
+                    notifyContactsListChanged()
                 }
+            }
+        }
+
+        @WorkerThread
+        override fun onContactCreated(friendList: FriendList, linphoneFriend: Friend) {
+            for (address in linphoneFriend.addresses) {
+                removeUnknownAddressFromMap(address)
+            }
+        }
+
+        @WorkerThread
+        override fun onContactDeleted(friendList: FriendList, linphoneFriend: Friend) {
+            for (address in linphoneFriend.addresses) {
+                removeKnownAddressFromMap(address)
+            }
+        }
+
+        @WorkerThread
+        override fun onContactUpdated(
+            friendList: FriendList,
+            newFriend: Friend,
+            oldFriend: Friend
+        ) {
+            for (address in oldFriend.addresses) {
+                removeKnownAddressFromMap(address)
+            }
+            for (address in newFriend.addresses) {
+                removeUnknownAddressFromMap(address)
+            }
+        }
+
+        @WorkerThread
+        override fun onSyncStatusChanged(
+            friendList: FriendList,
+            status: FriendList.SyncStatus?,
+            message: String?
+        ) {
+            Log.i("$TAG Friend list [${friendList.displayName}] sync status changed to [$status]")
+            when (status) {
+                FriendList.SyncStatus.Successful -> {
+                    notifyContactsListChanged()
+                }
+                FriendList.SyncStatus.Failure -> {
+                    Log.e("$TAG Friend list [${friendList.displayName}] sync failed: $message")
+                }
+                else -> {}
             }
         }
     }
@@ -236,6 +280,24 @@ class ContactsManager
     }
 
     @WorkerThread
+    fun removeKnownAddressFromMap(address: Address) {
+        val key = address.asStringUriOnly()
+        val wasKnown = knownContactsAvatarsMap.remove(key)
+        if (wasKnown != null) {
+            Log.d("$TAG Removed address [$key] from knownContactsAvatarsMap")
+        }
+    }
+
+    @WorkerThread
+    fun removeUnknownAddressFromMap(address: Address) {
+        val key = address.asStringUriOnly()
+        val wasUnknown = unknownContactsAvatarsMap.remove(key)
+        if (wasUnknown != null) {
+            Log.d("$TAG Removed address [$key] from unknownContactsAvatarsMap")
+        }
+    }
+
+    @WorkerThread
     private fun newContactAddedWithSipUri(friend: Friend, sipUri: String) {
         if (unknownContactsAvatarsMap.keys.contains(sipUri)) {
             Log.d("$TAG Found SIP URI [$sipUri] in unknownContactsAvatarsMap, removing it")
@@ -266,7 +328,7 @@ class ContactsManager
 
         conferenceAvatarMap.values.forEach(ContactAvatarModel::destroy)
         conferenceAvatarMap.clear()
-        coreContext.contactsManager.notifyContactsListChanged()
+        notifyContactsListChanged()
     }
 
     @WorkerThread
@@ -291,7 +353,7 @@ class ContactsManager
 
         conferenceAvatarMap.values.forEach(ContactAvatarModel::destroy)
         conferenceAvatarMap.clear()
-        coreContext.contactsManager.notifyContactsListChanged()
+        notifyContactsListChanged()
     }
 
     @WorkerThread
