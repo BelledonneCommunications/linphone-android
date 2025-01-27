@@ -20,6 +20,7 @@
 package org.linphone.ui.main.history.viewmodel
 
 import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -29,6 +30,8 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.Address
+import org.linphone.core.Conference
+import org.linphone.core.ConferenceListenerStub
 import org.linphone.core.MediaDirection
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.history.model.NumpadModel
@@ -75,6 +78,16 @@ class StartCallViewModel
 
     val leaveFragmentEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
+    }
+
+    private val conferenceListener = object : ConferenceListenerStub() {
+        @WorkerThread
+        override fun onStateChanged(conference: Conference, newState: Conference.State?) {
+            Log.i("$TAG Conference state changed [$newState]")
+            if (newState == Conference.State.Created || newState == Conference.State.CreationFailed) {
+                operationInProgress.postValue(false)
+            }
+        }
     }
 
     init {
@@ -182,6 +195,7 @@ class StartCallViewModel
                         )
                     )
                 )
+                operationInProgress.postValue(false)
                 return@postOnCoreThread
             }
 
@@ -198,6 +212,7 @@ class StartCallViewModel
             Log.i(
                 "$TAG Inviting ${participants.size} participant(s) into newly created conference"
             )
+            conference.addListener(conferenceListener)
             if (conference.inviteParticipants(participants, callParams) != 0) {
                 Log.e("$TAG Failed to invite participants into group call!")
                 showRedToastEvent.postValue(
@@ -208,8 +223,8 @@ class StartCallViewModel
                         )
                     )
                 )
+                operationInProgress.postValue(false)
             }
-            operationInProgress.postValue(false)
         }
     }
 }
