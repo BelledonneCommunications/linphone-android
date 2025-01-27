@@ -614,10 +614,16 @@ class NotificationsManager
             Log.i("$TAG Updating missed calls notification count to $missedCallCount")
         } else {
             val remoteAddress = call.callLog.remoteAddress
-            val friend: Friend? = coreContext.contactsManager.findContactByAddress(remoteAddress)
-            body = context.getString(R.string.notification_missed_call)
-                .format(friend?.name ?: LinphoneUtils.getDisplayName(remoteAddress))
-            Log.i("$TAG Creating missed call notification")
+            val conferenceInfo = call.callLog.conferenceInfo
+            body = if (conferenceInfo != null) {
+                context.getString(R.string.notification_missed_group_call)
+                    .format(conferenceInfo.subject ?: LinphoneUtils.getDisplayName(remoteAddress))
+            } else {
+                val friend: Friend? = coreContext.contactsManager.findContactByAddress(remoteAddress)
+                context.getString(R.string.notification_missed_call)
+                    .format(friend?.name ?: LinphoneUtils.getDisplayName(remoteAddress))
+            }
+            Log.i("$TAG Creating missed call notification with title [$body]")
         }
 
         val pendingIntent = NavDeepLinkBuilder(context)

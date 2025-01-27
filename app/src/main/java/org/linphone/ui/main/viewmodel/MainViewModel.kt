@@ -472,17 +472,14 @@ class MainViewModel
             val currentCall = core.currentCall ?: core.calls.firstOrNull()
             if (currentCall != null) {
                 val address = currentCall.callLog.remoteAddress
-                val contact = coreContext.contactsManager.findContactByAddress(address)
-                val label = if (contact != null) {
-                    contact.name ?: LinphoneUtils.getDisplayName(address)
+                val conferenceInfo = LinphoneUtils.getConferenceInfoIfAny(currentCall)
+                val label = if (conferenceInfo != null) {
+                    conferenceInfo.subject ?: LinphoneUtils.getDisplayName(address)
                 } else {
-                    val conferenceInfo = coreContext.core.findConferenceInformationFromUri(
-                        address
-                    )
-                    conferenceInfo?.subject ?: LinphoneUtils.getDisplayName(
-                        address
-                    )
+                    val contact = coreContext.contactsManager.findContactByAddress(address)
+                    contact?.name ?: LinphoneUtils.getDisplayName(address)
                 }
+                Log.i("$TAG Showing single call alert with label [$label]")
                 addAlert(SINGLE_CALL, label)
                 callsStatus.postValue(LinphoneUtils.callStateToString(currentCall.state))
             }
