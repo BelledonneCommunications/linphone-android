@@ -92,6 +92,7 @@
     <string name="notification_mark_message_as_read">Mark as read</string>
     <string name="notification_reply_to_message">Reply</string>
     <string name="notification_missed_call">Missed call from %s</string>
+    <string name="notification_missed_group_call">Missed group call: %s</string>
     <string name="notification_missed_calls">%s missed calls</string>
     <string name="notification_missed_call_title">Missed call</string>
     <string name="notification_push_received_title">&appName;</string>

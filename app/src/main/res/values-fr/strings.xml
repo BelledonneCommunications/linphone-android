@@ -54,6 +54,7 @@
     <string name="notification_mark_message_as_read">Marquer comme lu</string>
     <string name="notification_reply_to_message">Répondre</string>
     <string name="notification_missed_call">Appel manqué de %s</string>
+    <string name="notification_missed_group_call">Appel de groupe manqué : %s</string>
     <string name="notification_missed_calls">%s appels manqués</string>
     <string name="notification_missed_call_title">Appel manqué</string>
     <string name="notification_push_received_title">&appName;</string>
