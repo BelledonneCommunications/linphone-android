@@ -144,6 +144,14 @@ class ContactsManager
 
     private val friendListListener: FriendListListenerStub = object : FriendListListenerStub() {
         @WorkerThread
+        override fun onPresenceReceived(friendList: FriendList, friends: Array<out Friend?>) {
+            if (friendList.isSubscriptionBodyless) {
+                Log.i("$TAG Bodyless friendlist [${friendList.displayName}] presence received")
+                notifyContactsListChanged()
+            }
+        }
+
+        @WorkerThread
         override fun onNewSipAddressDiscovered(
             friendList: FriendList,
             friend: Friend,
