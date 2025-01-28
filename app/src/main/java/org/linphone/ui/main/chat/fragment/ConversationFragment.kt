@@ -275,14 +275,20 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         }
 
         override fun afterTextChanged(p0: Editable?) {
-            sendMessageViewModel.closeParticipantsList()
+            if (viewModel.isGroup.value == true) {
+                sendMessageViewModel.closeParticipantsList()
 
-            val split = p0.toString().split(" ")
-            for (part in split) {
-                if (part == "@") {
-                    Log.i("$TAG '@' found, opening participants list")
-                    sendMessageViewModel.openParticipantsList()
+                val split = p0.toString().split(" ")
+                for (part in split) {
+                    if (part == "@") {
+                        Log.i("$TAG '@' found, opening participants list")
+                        sendMessageViewModel.openParticipantsList()
+                    }
                 }
+            }
+
+            if (p0.toString().isNotEmpty()) {
+                sendMessageViewModel.notifyChatMessageIsBeingComposed()
             }
         }
     }
@@ -786,13 +792,6 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             }
         }
 
-        viewModel.isGroup.observe(viewLifecycleOwner) { group ->
-            if (group) {
-                Log.i("$TAG Adding text observer to message sending area")
-                binding.sendArea.messageToSend.addTextChangedListener(textObserver)
-            }
-        }
-
         viewModel.messageDeletedEvent.observe(viewLifecycleOwner) {
             it.consume {
                 val message = getString(R.string.conversation_message_deleted_toast)
@@ -945,6 +944,8 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                 sendMessageViewModel.isEmojiPickerOpen.value = false
             }
         }
+
+        binding.sendArea.messageToSend.addTextChangedListener(textObserver)
 
         scrollListener = object : ConversationScrollListener(layoutManager) {
             @UiThread

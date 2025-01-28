@@ -322,6 +322,13 @@ class SendMessageInConversationViewModel
     }
 
     @UiThread
+    fun notifyChatMessageIsBeingComposed() {
+        coreContext.postOnCoreThread {
+            chatRoom.compose()
+        }
+    }
+
+    @UiThread
     fun openParticipantsList() {
         isParticipantsListOpen.value = true
         isEmojiPickerOpen.value = false
