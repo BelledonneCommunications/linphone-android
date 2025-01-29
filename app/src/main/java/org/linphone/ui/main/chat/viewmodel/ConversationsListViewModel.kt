@@ -76,7 +76,17 @@ class ConversationsListViewModel
             chatRoom: ChatRoom,
             messages: Array<out ChatMessage>
         ) {
-            reorderChatRooms()
+            val id = LinphoneUtils.getChatRoomId(chatRoom)
+            val found = conversations.value.orEmpty().find {
+                it.id == id
+            }
+            if (found == null) {
+                Log.i("$TAG Message(s) received for a conversation not yet in the list (probably was empty), adding it")
+                addChatRoom(chatRoom)
+            } else {
+                Log.i("$TAG Message(s) received for an existing conversation, re-order them")
+                reorderChatRooms()
+            }
         }
     }
 
@@ -170,7 +180,8 @@ class ConversationsListViewModel
         }
 
         val hideEmptyChatRooms = coreContext.core.config.getBool("misc", "hide_empty_chat_rooms", true)
-        if (hideEmptyChatRooms && chatRoom.lastMessageInHistory == null) {
+        // Hide empty chat rooms only applies to 1-1 conversations
+        if (hideEmptyChatRooms && !LinphoneUtils.isChatRoomAGroup(chatRoom) && chatRoom.lastMessageInHistory == null) {
             Log.w("$TAG Chat room with local address [${localAddress.asStringUriOnly()}] and peer address [${peerAddress.asStringUriOnly()}] is empty, not adding it to match Core setting")
             return
         }
