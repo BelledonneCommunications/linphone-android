@@ -114,6 +114,17 @@ open class AbstractMainViewModel
         }
 
         @WorkerThread
+        override fun onChatRoomStateChanged(
+            core: Core,
+            chatRoom: ChatRoom,
+            state: ChatRoom.State?
+        ) {
+            if (state == ChatRoom.State.Deleted) {
+                computeUnreadMessagesCount()
+            }
+        }
+
+        @WorkerThread
         override fun onMessagesReceived(
             core: Core,
             chatRoom: ChatRoom,
