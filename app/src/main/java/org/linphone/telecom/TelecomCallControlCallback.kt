@@ -34,6 +34,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.AudioDevice
 import org.linphone.core.Call
 import org.linphone.core.CallListenerStub
+import org.linphone.core.Reason
 import org.linphone.core.tools.Log
 import org.linphone.utils.AudioUtils
 import org.linphone.utils.Event
@@ -74,18 +75,39 @@ class TelecomCallControlCallback(
                     }
                 }
             } else if (state == Call.State.End) {
+                val reason = call.reason
+                val direction = call.dir
                 scope.launch {
-                    Log.i("$TAG Disconnecting call because it has ended")
-                    callControl.disconnect(DisconnectCause(DisconnectCause.LOCAL))
+                    val disconnectCause = when (reason) {
+                        Reason.NotAnswered -> DisconnectCause.REMOTE
+                        Reason.Declined -> DisconnectCause.REJECTED
+                        Reason.Busy -> {
+                            if (direction == Call.Dir.Incoming) {
+                                DisconnectCause.MISSED
+                            } else {
+                                DisconnectCause.BUSY
+                            }
+                        }
+                        else -> DisconnectCause.LOCAL
+                    }
+                    Log.i("$TAG Disconnecting [${if (direction == Call.Dir.Incoming)"incoming" else "outgoing"}] call with cause [${disconnectCauseToString(disconnectCause)}] because it has ended with reason [$reason]")
+                    try {
+                        callControl.disconnect(DisconnectCause(disconnectCause))
+                    } catch (ise: IllegalArgumentException) {
+                        Log.e("$TAG Couldn't disconnect call control with cause [${disconnectCauseToString(disconnectCause)}]: $ise")
+                    }
                 }
             } else if (state == Call.State.Error) {
+                val reason = call.reason
                 scope.launch {
-                    Log.w("$TAG Disconnecting call due to error [$message]")
+                    // For some reason DisconnectCause.ERROR or DisconnectCause.BUSY triggers an IllegalArgumentException with following message
+                    // Valid DisconnectCause codes are limited to [DisconnectCause.LOCAL, DisconnectCause.REMOTE, DisconnectCause.MISSED, or DisconnectCause.REJECTED]
+                    val disconnectCause = DisconnectCause.REJECTED
+                    Log.w("$TAG Disconnecting call with cause [${disconnectCauseToString(disconnectCause)}] due to error [$message] and reason [$reason]")
                     try {
-                        // For some reason DisconnectCause.ERROR triggers an IllegalArgumentException
-                        callControl.disconnect(DisconnectCause(DisconnectCause.REJECTED))
+                        callControl.disconnect(DisconnectCause(disconnectCause))
                     } catch (ise: IllegalArgumentException) {
-                        Log.e("$TAG Couldn't terminate call control with REJECTED cause: $ise")
+                        Log.e("$TAG Couldn't disconnect call control with cause [${disconnectCauseToString(disconnectCause)}]: $ise")
                     }
                 }
             } else if (state == Call.State.Pausing) {
@@ -259,5 +281,24 @@ class TelecomCallControlCallback(
             Log.e("$TAG No matching endpoint found")
         }
         return false
+    }
+
+    private fun disconnectCauseToString(cause: Int): String {
+        return when (cause) {
+            DisconnectCause.UNKNOWN -> "UNKNOWN"
+            DisconnectCause.ERROR -> "ERROR"
+            DisconnectCause.LOCAL -> "LOCAL"
+            DisconnectCause.REMOTE -> "REMOTE"
+            DisconnectCause.CANCELED -> "CANCELED"
+            DisconnectCause.MISSED -> "MISSED"
+            DisconnectCause.REJECTED -> "REJECTED"
+            DisconnectCause.BUSY -> "BUSY"
+            DisconnectCause.RESTRICTED -> "RESTRICTED"
+            DisconnectCause.OTHER -> "OTHER"
+            DisconnectCause.CONNECTION_MANAGER_NOT_SUPPORTED -> "CONNECTION_MANAGER_NOT_SUPPORTED"
+            DisconnectCause.ANSWERED_ELSEWHERE -> "ANSWERED_ELSEWHERE"
+            DisconnectCause.CALL_PULLED -> "CALL_PULLED"
+            else -> "UNEXPECTED: $cause"
+        }
     }
 }
