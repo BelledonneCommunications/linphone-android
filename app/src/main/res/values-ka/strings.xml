@@ -324,7 +324,7 @@
     <string name="chat_settings_downloaded_media_public_title">გადმოტვირთული მედიას გასაჯაროება</string>
     <string name="chat_settings_launcher_shortcuts_title">საუბრის ოთახებისთვის იარლიყების შექმნა გამშვებში</string>
     <string name="chat_settings_hide_empty_rooms_title">ცარიელი საუბრის ოთახების დამალვა</string>
-    <string name="chat_settings_hide_rooms_removed_proxies_title">წაშლილი პროქსის კონფიგურაციის საუბრის ოთახების დამალვა</string>
+    <string name="chat_settings_hide_rooms_removed_proxies_title">წაშლილი ანგარიშების სასაუბროს ოთახების დამალვა</string>
     <string name="chat_settings_go_to_android_notification_settings">Android-ის შეტყობინებების პარამეტრები</string>
     <string name="chat_settings_use_in_app_file_viewer_summary">კვლავ შეძლებთ მათ ექსპორტირებას მესამე პირის აპებში</string>
     <string name="network_settings_wifi_only_title">მხოლოდ WiFi-ს გამოყენება</string>
@@ -684,7 +684,7 @@
     <string name="account_settings_default_title">ნაგულისხმევად გამოყენება</string>
     <string name="account_settings_delete_title">წაშლა</string>
     <string name="account_settings_advanced_title">გაფართოებული</string>
-    <string name="account_settings_push_notification_summary">პროქსი კონფიგურაცია არ აუქმებს რეგისტრირებას</string>
+    <string name="account_settings_push_notification_summary">ანგარიში არ აუქმებს რეგისტრირებას</string>
     <string name="account_settings_transport_tls">TLS</string>
     <string name="account_settings_outbound_proxy_title">გამავალი პროქსი</string>
     <string name="account_settings_ice_title">ICE-ის ჩართვა</string>
@@ -784,4 +784,63 @@
     <string name="zrtp_dialog_explanation">უსაფრთხოების დონის გასაზრდელად, შეგიძლიათ თქვენს მოკავშირესთან შეამოწმოთ შემდეგი კოდები.</string>
     <string name="zrtp_dialog_later_button_label">მოგვიანებით</string>
     <string name="zrtp_dialog_correct_button_label">შესწორება</string>
+    <string name="dialog_apply_remote_provisioning_title">გსურთ გადმოტვირთოთ და გამოიყენოთ კონფიგურაცია ამ URL-იდან\?</string>
+    <string name="chat_room_presence_do_not_disturb">არ შემაწუხოთ</string>
+    <string name="yes">დიახ</string>
+    <string name="no">არა</string>
+    <string name="error_unexpected">მოულოდნელი შეცდომა…</string>
+    <string name="chat_message_one_reaction">%s რეაქცია</string>
+    <string name="chat_message_many_reactions">%s რეაქცია</string>
+    <string name="chat_room_presence_away">გასული</string>
+    <string name="chat_message_voice_recording_notification_short_desc">ხმოვანი შეტყობინება</string>
+    <string name="chat_message_reaction_received">%s მოახდინა რეაგირება %s-თი %s-ზე</string>
+    <string name="contacts_new_contact_wont_be_visible_warning_dialog">თქვენ აპირებთ შექმნათ ახალი კონტაქტი SIP URI-ს და ტელეფონის ნომრის გარეშე, შესაბამისად იგი არ იქნება ხილვადი &appName;-ში.
+\n
+\nმაინც გსურთ მისი შექმნა\?</string>
+    <string name="assistant_no_push_warning">თქვენს მოწყობილობას არ შეუძლია push შეტყობინებების მიღება.
+\n
+\nრადგან ჩვენ აწი ესენი გვჭირდება ანგარიში შექმნის პროცესისთვის, თქვენ ვერ შეძლებთ შექმნათ ანგარიში აპის შიგნიდან, თუმცა შეგიძლიათ იგი შექმნათ ჩვენს ვებ-საიტზე:</string>
+    <string name="settings_password_protection_dialog_title">პარამეტრებზე ზვდომისთვის გთხოვთ, ქვემოთ შეიყვანოთ თქვენი პაროლი</string>
+    <string name="settings_password_protection_dialog_invalid_input">არასწორი პაროლი!</string>
+    <string name="android_14_full_screen_intent_permission_not_granted">უფლება, რომელიც საჭიროა შემომავალი ზარების საჩვენებლად, ჯერ არ არის მიცემული</string>
+    <string name="conference_schedule_broadcast_address_title">ერთერის მისამართი</string>
+    <string name="conference_waiting_room_listener_broadcast">თქვენ არ ხართ მოლაპარაკე ამ ეთერში</string>
+    <string name="conference_invitation_notification_short_desc">მოწვევა შეხვედრაზე</string>
+    <string name="content_description_presence_do_not_disturb">მომხმარებელი ითხოვს, რომ არ შეაწუხონ</string>
+    <string name="audio_settings_software_echo_cancellation_title">პროგრამული ექოს დახშობა</string>
+    <string name="assistant_alternative_way_create_account">ანგარიშის ელ. ფოსტის გამოყენებით შესაქმნელად:</string>
+    <string name="assistant_create_email_account_not_validated">თქვენი ანგარიში ჯერ არ არის გააქტიურებული, გთხოვთ დააჭიროთ ბმულს, რომელიც მიიღეთ ელ. ფოსტით</string>
+    <string name="chat_room_last_message_sender_format">%s:</string>
+    <string name="account_setting_disable_bundle_mode_title">გაერთიანებული რეჟიმის გათიშვა</string>
+    <string name="conference_schedule_mode">რეჟიმი</string>
+    <string name="conference_schedule_mode_meeting">შეხვედრა</string>
+    <string name="conference_schedule_mode_broadcast">ეთერი</string>
+    <string name="conference_schedule_speakers_list">მოლაპრაკეთა სია</string>
+    <string name="conference_schedule_speakers_list_empty">აირჩიეთ მინიმუმ ერთი მოლაპარაკე</string>
+    <string name="conference_schedule_participants_list_empty">აირჩიეთ მინიმუმ ერთი მონაწილე</string>
+    <string name="conference_schedule_broadcast_summary">ეთერის ინფორმაცია</string>
+    <string name="conference_broadcast_start">ეთერის დაგეგმვა</string>
+    <string name="conference_broadcast_edit">ეთერის რედაქტირება</string>
+    <string name="conference_broadcast_invite_title">ეთერის მოსაწვევი:</string>
+    <string name="conference_broadcast_invite_you_are_speaker">(თქვენ ხართ მოლაპარაკე)</string>
+    <string name="conference_meeting_title">შეხვედრა:</string>
+    <string name="conference_broadcast_title">ეთერი:</string>
+    <string name="conference_invite_speakers_list_title">მოლაპარაკეები</string>
+    <string name="conference_invite_participants_list_title">მონაწილეები</string>
+    <string name="conference_participants_list_speaker_label">მოლაპარაკე</string>
+    <string name="assistant_error_invalid_international_prefix">არასწორი საერთაშორისო პრეფიქსი</string>
+    <string name="settings_password_protection_dialog_input_hint">პაროლი</string>
+    <string name="settings_password_protection_dialog_ok_label">დადასტურება</string>
+    <string name="conferences_settings_enable_broadcast_title">ეთერების დაშვება</string>
+    <string name="conferences_settings_enable_broadcast_summary">ფუნქცია ბეტაშია!</string>
+    <string name="dialog_apply_remote_provisioning_button">გამოყენება</string>
+    <string name="dialog_authentication_required_title">საჭიროა აუთენტიფიკაცია</string>
+    <string name="dialog_authentication_required_message">კავშირი ვერ შესრულდა, რადგან აუთენტიფიკაცია არ არის ან არასწორია ანგარიშისთვის
+\n%s.
+\n
+\nშეგიძლიათ კიდევ ერთხელ შეიყვანოთ პაროლი ან შეამოწმოთ თქვენი ანგარიშის კონფიგურაცია პარამეტრებში.</string>
+    <string name="dialog_authentication_required_change_password_label">დადასტურება</string>
+    <string name="android_14_go_to_full_screen_intent_permission_setting">ჩვენება</string>
+    <string name="content_description_contact_is_speaker">კონტაქტი მოლაპარაკეა</string>
+    <string name="content_description_emoji_picker">ემოძის ამრჩევის ხილვადობის გადართვა</string>
 </resources>

@@ -2,7 +2,7 @@
 <!DOCTYPE resources [
 <!ENTITY appName "Linphone">
 ]>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="service_auto_start_description">&appName; is automatisch gestart</string>
     <string name="service_description">Dit is vereist om oproepen te ontvangen in de achtergrond</string>
     <string name="sync_account_name">&appName; contacten</string>
@@ -113,7 +113,7 @@
     <string name="call_error_user_not_found">Gebruiker niet gevonden</string>
     <string name="call_error_incompatible_media_params">Incompatibele media parameters</string>
     <string name="call_error_network_unreachable">Netwerk is onbereikbaar</string>
-    <string name="call_error_io_error">Netwerkfout</string>
+    <string name="call_error_io_error">Beller is niet bereikbaar</string>
     <string name="call_video_update_requested_dialog">Tegenpartij wenst dat u video inschakelt</string>
     <string name="call_stats_audio">Audio</string>
     <string name="call_stats_video">Video</string>
@@ -148,4 +148,54 @@
     <string name="chat_room_last_message_sender_format">%s:</string>
     <string name="chat_message_download_file">Downloaden</string>
     <string name="assistant_display_name_optional">Gebruikersnaam (optioneel)</string>
+    <string name="tunnel_settings_port_title">Poort</string>
+    <string name="call_remote_recording">Dit gesprek is opgenomen.</string>
+    <string name="call_remotely_paused_title">Gesprek is gepauzeerd door ander zijde.</string>
+    <string name="call_locally_paused_subtitle">Klik op de play knop om te hervatten.</string>
+    <string name="call_context_action_answer">Beantwoorden gesprek</string>
+    <string name="call_context_action_transfer">Doorverbinden gesprek</string>
+    <string name="settings_advanced_title">Geavanceerd</string>
+    <string name="advanced_settings_other_title">Andere settings</string>
+    <string name="received_chat_notification_mark_as_read_label">Markeren als gelezen</string>
+    <string name="advanced_settings_background_mode_title">Achtergrond mode</string>
+    <string name="incoming_call_notification_answer_action_label">Beantwoorden</string>
+    <string name="no">nee</string>
+    <string name="error_unexpected">Onverwachte fout…</string>
+    <string name="account_settings_delete_title">Verwijderen</string>
+    <string name="missed_calls_notification_body" tools:ignore="PluralsCandidate">%d gemiste gesprekken</string>
+    <string name="advanced_settings_send_debug_logs_title">Verzenden logs</string>
+    <string name="advanced_settings_reset_debug_logs_title">Verwijderen logs</string>
+    <string name="account_settings_user_name_title">Gebruikersnaam</string>
+    <string name="account_settings_display_name_title">Display naam</string>
+    <string name="account_settings_advanced_title">Geavanceerd</string>
+    <string name="dialog_zrtp_local_sas">Zeg:</string>
+    <string name="dialog_do_not_ask_again">Laat dit niet meer zien</string>
+    <string name="dialog_cancel">Annuleren</string>
+    <string name="tunnel_settings_disabled_mode">Uitgeschakeld</string>
+    <string name="tunnel_settings_always_mode">Debug instellingen</string>
+    <string name="account_settings_password_title">Wachtwoord</string>
+    <string name="call_settings_auto_answer_delay_title">Auto beantwoord tijd</string>
+    <string name="advanced_settings_debug_title">Debug instellingen</string>
+    <string name="call_context_action_hangup">Beëindigen gesprek</string>
+    <string name="advanced_settings_device_name_title">Toestel naam</string>
+    <string name="settings_contacts_title">Contacten</string>
+    <string name="call_action_attended_transfer_call">aangekondigd doorverbinden</string>
+    <string name="advanced_settings_dark_mode_label_no">nee</string>
+    <string name="call_action_transfer_call">Doorverbinden</string>
+    <string name="call_context_action_resume">Hervatten gesprek</string>
+    <string name="call_context_action_pause">Pauze gesprek</string>
+    <string name="call_locally_paused_title">Je hebt het gesprek gepauzeerd.</string>
+    <string name="settings_call_title">Bellen</string>
+    <string name="settings_primary_account_username_title">Gebruikersnaam</string>
+    <string name="settings_password_protection_dialog_invalid_input">Verkeerd wachtwoord!</string>
+    <string name="tunnel_settings_hostname_url_title">Hostnaam</string>
+    <string name="advanced_settings_go_to_battery_optimization_settings">Batterij optimalisatie instellingen</string>
+    <string name="advanced_settings_dark_mode_label_yes">Ja</string>
+    <string name="incoming_call_notification_title">Inkomende oproep</string>
+    <string name="incoming_group_call_notification_title">Binnenkomende groepsgesprek</string>
+    <string name="incoming_call_notification_hangup_action_label">Beëindigen</string>
+    <string name="received_chat_notification_reply_label">Herhalen</string>
+    <string name="missed_call_notification_title">Gesprek gemist</string>
+    <string name="missed_call_notification_body">aantal gesprekken gemist %s</string>
+    <string name="zrtp_dialog_title">communicatie beveiliging</string>
 </resources>

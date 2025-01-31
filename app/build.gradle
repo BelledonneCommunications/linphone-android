@@ -6,8 +6,8 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
-def appVersionName = "5.2.3"
-def appVersionCode = 52003
+def appVersionName = "5.2.5"
+def appVersionCode = 52005
 
 def packageName = "org.calloutvoip"
 

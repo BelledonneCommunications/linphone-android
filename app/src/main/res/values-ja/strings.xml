@@ -398,7 +398,7 @@
     <string name="advanced_settings_go_to_power_manager_settings">電源管理設定</string>
     <string name="tunnel_settings_dual_hostname_url_title">第二サーバーのホスト名</string>
     <string name="tunnel_settings_dual_port_title">第二サーバーのポート</string>
-    <string name="account_settings_push_notification_summary">プロキシ構成は登録を解除しません</string>
+    <string name="account_settings_push_notification_summary">アカウントは登録解除されません</string>
     <string name="dialog_accept">許可</string>
     <string name="zrtp_dialog_title">通信セキュリティ</string>
     <string name="dialog_lime_security_message">インスタントメッセージは、安全な会話でエンドツーエンドで暗号化されます。参加者を認証することにより、会話のセキュリティレベルをアップグレードすることができます。これを行うには、連絡先を呼び出し、認証プロセスに従ってください。</string>
@@ -809,8 +809,34 @@
 \n
 \n本当に作成しますか？</string>
     <string name="chat_message_voice_recording_notification_short_desc">音声メッセージ</string>
-    <string name="chat_message_reaction_received">%sは%sにより反応しました: %s</string>
+    <string name="chat_message_reaction_received">%sが次の投稿に%sで反応しました: %s</string>
     <string name="chat_message_many_reactions">%s リアクション</string>
     <string name="chat_message_one_reaction">%s リアクション</string>
     <string name="conference_invitation_notification_short_desc">会議の招待状</string>
+    <string name="conference_schedule_broadcast_address_title">配信アドレス</string>
+    <string name="conference_schedule_participants_list_empty">少なくとも1人の参加者を選択</string>
+    <string name="conference_waiting_room_listener_broadcast">この配信ではあなたは発言者ではありません</string>
+    <string name="content_description_contact_is_speaker">連絡先は発言者です</string>
+    <string name="content_description_presence_do_not_disturb">ユーザーは取り込み中であると伝えています</string>
+    <string name="call_action_attended_transfer_call">移籍出席</string>
+    <string name="account_setting_disable_bundle_mode_title">バンドルモードを無効にする</string>
+    <string name="chat_room_presence_away">不在</string>
+    <string name="chat_room_presence_do_not_disturb">取り込み中です</string>
+    <string name="conference_schedule_mode">モード</string>
+    <string name="conference_schedule_mode_meeting">会議</string>
+    <string name="conference_schedule_mode_broadcast">配信</string>
+    <string name="conference_schedule_speakers_list">発言者リスト</string>
+    <string name="conference_schedule_speakers_list_empty">少なくとも1人の発言者を選択</string>
+    <string name="conference_schedule_broadcast_summary">配信情報</string>
+    <string name="conference_broadcast_start">配信予定</string>
+    <string name="conference_broadcast_edit">配信を編集</string>
+    <string name="conference_broadcast_invite_title">配信への招待:</string>
+    <string name="conference_broadcast_invite_you_are_speaker">（あなたは発言者です）</string>
+    <string name="conference_meeting_title">会議:</string>
+    <string name="conference_broadcast_title">配信:</string>
+    <string name="conference_invite_speakers_list_title">発言者</string>
+    <string name="conference_invite_participants_list_title">参加者</string>
+    <string name="conference_participants_list_speaker_label">発言者</string>
+    <string name="conferences_settings_enable_broadcast_title">配信可能にする</string>
+    <string name="conferences_settings_enable_broadcast_summary">これは現在ベータ機能です！</string>
 </resources>
