@@ -90,7 +90,7 @@
                 <androidx.appcompat.widget.AppCompatEditText
                     style="@style/default_text_style"
                     android:id="@+id/username"
-                    android:enabled="@{viewModel.pushNotificationsAvailable}"
+                    android:enabled="@{viewModel.pushNotificationsAvailable &amp;&amp; !viewModel.lockUsernameAndPassword}"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_marginStart="16dp"
@@ -223,7 +223,7 @@
                 <androidx.appcompat.widget.AppCompatEditText
                     style="@style/default_text_style"
                     android:id="@+id/password"
-                    android:enabled="@{viewModel.pushNotificationsAvailable}"
+                    android:enabled="@{viewModel.pushNotificationsAvailable &amp;&amp; !viewModel.lockUsernameAndPassword}"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_marginStart="16dp"
