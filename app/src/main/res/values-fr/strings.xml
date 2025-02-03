@@ -599,7 +599,8 @@
     <string name="call_outgoing">Appel sortant</string>
     <string name="call_audio_incoming">Appel entrant</string>
     <string name="call_video_incoming">Appel vidéo entrant</string>
-    <string name="call_ended">Appel terminé</string>
+    <string name="call_locally_ended">Vous avez terminé l\'appel</string>
+    <string name="call_remotely_ended">Votre correspondant a terminé l\'appel</string>
     <string name="call_audio_incoming_for_account">Appel entrant pour %s</string>
     <string name="call_video_incoming_for_account">Appel vidéo entrant pour %s</string>
     <string name="call_transfer_current_call_title">Transférer %s à…</string>

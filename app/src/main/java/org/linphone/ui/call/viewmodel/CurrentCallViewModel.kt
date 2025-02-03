@@ -143,7 +143,7 @@ class CurrentCallViewModel
 
     val qualityIcon = MutableLiveData<Int>()
 
-    var terminatedByUsed = false
+    var terminatedByUser = false
 
     val isRemoteRecordingEvent: MutableLiveData<Event<Pair<Boolean, String>>> by lazy {
         MutableLiveData<Event<Pair<Boolean, String>>>()
@@ -616,7 +616,7 @@ class CurrentCallViewModel
         coreContext.postOnCoreThread {
             if (::currentCall.isInitialized) {
                 Log.i("$TAG Terminating call [${currentCall.remoteAddress.asStringUriOnly()}]")
-                terminatedByUsed = true
+                terminatedByUser = true
                 coreContext.terminateCall(currentCall)
             }
         }
@@ -1060,7 +1060,7 @@ class CurrentCallViewModel
         )
         contact.value?.destroy()
 
-        terminatedByUsed = false
+        terminatedByUser = false
         currentCall = call
         callStatsModel.update(call, call.audioStats)
         callMediaEncryptionModel.update(call)

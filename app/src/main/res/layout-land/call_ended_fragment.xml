@@ -33,32 +33,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="@string/call_ended"
+            android:text="@{viewModel.terminatedByUser ? @string/call_locally_ended : @string/call_remotely_ended, default=@string/call_locally_ended}"
             app:layout_constraintStart_toEndOf="@id/back"
             app:layout_constraintTop_toTopOf="@id/back"
             app:layout_constraintBottom_toBottomOf="@id/back"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/call_header_style"
-            android:id="@+id/separator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:text="@string/vertical_separator"
-            app:layout_constraintStart_toEndOf="@id/call_direction_label"
-            app:layout_constraintTop_toTopOf="@id/call_direction_label"
-            app:layout_constraintBottom_toBottomOf="@id/call_direction_label"/>
-
-        <Chronometer
-            style="@style/call_header_style"
-            android:id="@+id/chronometer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:visibility="@{viewModel.isPaused || viewModel.isPausedByRemote ? View.GONE : View.VISIBLE}"
-            app:layout_constraintStart_toEndOf="@id/separator"
-            app:layout_constraintTop_toTopOf="@id/call_direction_label"
-            app:layout_constraintBottom_toBottomOf="@id/call_direction_label"/>
 
         <include
             android:id="@+id/call_media_encryption_info"
