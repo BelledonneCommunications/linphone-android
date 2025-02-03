@@ -358,7 +358,11 @@ class CurrentCallViewModel
                     videoUpdateInProgress.postValue(false)
                     updateCallDuration()
                     if (corePreferences.automaticallyStartCallRecording) {
-                        isRecording.postValue(call.params.isRecording)
+                        val recording = call.params.isRecording
+                        isRecording.postValue(recording)
+                        if (recording) {
+                            showRecordingToast()
+                        }
                     }
 
                     // MediaEncryption None & SRTP won't be notified through onEncryptionChanged callback,
@@ -855,8 +859,12 @@ class CurrentCallViewModel
                     Log.i("$TAG Starting call recording")
                     currentCall.startRecording()
                 }
+
                 val recording = currentCall.params.isRecording
                 isRecording.postValue(recording)
+                if (recording) {
+                    showRecordingToast()
+                }
             }
         }
     }
@@ -1172,7 +1180,11 @@ class CurrentCallViewModel
         contact.postValue(model)
         displayedName.postValue(model.friend.name)
 
-        isRecording.postValue(call.params.isRecording)
+        val recording = call.params.isRecording
+        isRecording.postValue(recording)
+        if (recording) {
+            showRecordingToast()
+        }
 
         val isRemoteRecording = call.remoteParams?.isRecording == true
         if (isRemoteRecording) {
@@ -1470,5 +1482,17 @@ class CurrentCallViewModel
                 goToEndedCallEvent.postValue(Event(text))
             }
         }
+    }
+
+    @AnyThread
+    private fun showRecordingToast() {
+        showGreenToastEvent.postValue(
+            Event(
+                Pair(
+                    R.string.call_is_being_recorded,
+                    R.drawable.record_fill
+                )
+            )
+        )
     }
 }

@@ -55,6 +55,7 @@ class IncomingCallFragment : GenericCallFragment() {
         callViewModel = requireActivity().run {
             ViewModelProvider(this)[CurrentCallViewModel::class.java]
         }
+        observeToastEvents(callViewModel)
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = callViewModel

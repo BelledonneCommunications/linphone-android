@@ -633,6 +633,7 @@
     <string name="call_srtp_point_to_point_encrypted">Appel chiffré de point à point</string>
     <string name="call_not_encrypted">Appel non chiffré</string>
     <string name="calls_list_title">Liste des appels</string>
+    <string name="call_is_being_recorded">L\'appel est enregistré</string>
     <string name="call_remote_is_recording">%s enregistre l\'appel</string>
     <string name="calls_count_label">%s appels</string>
     <string name="calls_paused_count_label">%s appels en pause</string>

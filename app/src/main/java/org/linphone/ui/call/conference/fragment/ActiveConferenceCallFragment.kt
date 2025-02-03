@@ -125,10 +125,13 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
         callViewModel = requireActivity().run {
             ViewModelProvider(this)[CurrentCallViewModel::class.java]
         }
+        observeToastEvents(callViewModel)
+        observeToastEvents(callViewModel.conferenceModel)
 
         callsViewModel = requireActivity().run {
             ViewModelProvider(this)[CallsViewModel::class.java]
         }
+        observeToastEvents(callsViewModel)
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = callViewModel

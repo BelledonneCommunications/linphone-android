@@ -673,6 +673,7 @@
     <string name="call_srtp_point_to_point_encrypted">Point-to-point encrypted by SRTP</string>
     <string name="call_not_encrypted">Call is not encrypted</string>
     <string name="calls_list_title">Calls list</string>
+    <string name="call_is_being_recorded">Call is being recorded</string>
     <string name="call_remote_is_recording">%s is recording</string>
     <string name="calls_count_label">%s calls</string>
     <string name="calls_paused_count_label">%s paused calls</string>
