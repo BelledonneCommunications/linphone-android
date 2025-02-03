@@ -15,38 +15,26 @@
         android:layout_height="match_parent"
         android:background="@color/gray_900">
 
-        <ImageView
-            android:id="@+id/back"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/top_bar_height"
-            android:adjustViewBounds="true"
-            android:padding="15dp"
-            android:src="@drawable/caret_left"
-            android:contentDescription="@string/content_description_go_back_icon"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/bc_white" />
-
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/call_header_style"
             android:id="@+id/call_direction_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
             android:text="@{viewModel.terminatedByUser ? @string/call_locally_ended : @string/call_remotely_ended, default=@string/call_locally_ended}"
-            app:layout_constraintStart_toEndOf="@id/back"
-            app:layout_constraintTop_toTopOf="@id/back"
-            app:layout_constraintBottom_toBottomOf="@id/back"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <include
             android:id="@+id/call_media_encryption_info"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:visibility="@{viewModel.callDuration > 0 ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{viewModel.callDuration > 0 ? View.VISIBLE : View.GONE}"
             layout="@layout/call_media_encryption_info"
             bind:viewModel="@{viewModel}"
             app:layout_constraintTop_toBottomOf="@id/call_direction_label"
-            app:layout_constraintStart_toEndOf="@id/back"
+            app:layout_constraintStart_toStartOf="@id/call_direction_label"
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <include

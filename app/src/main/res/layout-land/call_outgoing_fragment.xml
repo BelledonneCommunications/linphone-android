@@ -16,19 +16,6 @@
         android:background="@color/gray_900">
 
         <ImageView
-            android:id="@+id/back"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/top_bar_height"
-            android:adjustViewBounds="true"
-            android:padding="15dp"
-            android:src="@drawable/caret_left"
-            android:contentDescription="@string/content_description_go_back_icon"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:visibility="invisible"
-            app:tint="@color/bc_white" />
-
-        <ImageView
             android:id="@+id/call_direction_icon"
             android:layout_width="12dp"
             android:layout_height="12dp"
@@ -50,8 +37,7 @@
             android:layout_marginBottom="10dp"
             android:text="@string/call_outgoing"
             app:layout_constraintStart_toEndOf="@id/call_direction_icon"
-            app:layout_constraintTop_toTopOf="@id/back"
-            app:layout_constraintBottom_toBottomOf="@id/back"/>
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <include
             android:id="@+id/avatar"
