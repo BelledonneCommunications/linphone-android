@@ -191,6 +191,7 @@ class SendMessageInConversationViewModel
 
     @UiThread
     fun configureChatRoom(room: ChatRoom) {
+        Log.i("$TAG Chat room configured")
         chatRoom = room
         coreContext.postOnCoreThread {
             chatRoom.addListener(chatRoomListener)
@@ -324,7 +325,9 @@ class SendMessageInConversationViewModel
     @UiThread
     fun notifyChatMessageIsBeingComposed() {
         coreContext.postOnCoreThread {
-            chatRoom.compose()
+            if (::chatRoom.isInitialized) {
+                chatRoom.compose()
+            }
         }
     }
 
