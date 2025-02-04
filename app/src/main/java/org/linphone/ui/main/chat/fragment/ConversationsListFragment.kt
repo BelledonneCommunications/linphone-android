@@ -214,6 +214,8 @@ class ConversationsListFragment : AbstractMainFragment() {
                             uri
                         )
                     findNavController().navigate(action)
+                } else {
+                    Log.e("$TAG Failed to navigate to meeting waiting room, wrong current destination (expected conversationsListFragment but was something else)")
                 }
             }
         }

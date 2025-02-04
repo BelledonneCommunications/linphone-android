@@ -198,7 +198,7 @@ class MeetingFragment : SlidingPaneChildFragment() {
 
         viewModel.conferenceCancelledEvent.observe(viewLifecycleOwner) {
             it.consume {
-                Log.i("$TAG Meeting has been cancelled successfully, deleting it")
+                Log.i("$TAG Meeting has been cancelled successfully")
                 (requireActivity() as GenericActivity).showGreenToast(
                     getString(R.string.meeting_info_cancelled_toast),
                     R.drawable.trash_simple
@@ -222,11 +222,15 @@ class MeetingFragment : SlidingPaneChildFragment() {
             true
         )
 
+        val isUserOrganizer = viewModel.isEditable.value == true && viewModel.isCancelled.value == false
+        popupView.cancelInsteadOfDelete = isUserOrganizer
         popupView.setDeleteClickListener {
-            if (viewModel.isEditable.value == true) {
+            if (isUserOrganizer) {
+                // In case we are organizer of the meeting, ask user confirmation before cancelling it
                 showCancelMeetingDialog()
             } else {
-                viewModel.delete()
+                // If we're not organizer, ask user confirmation of removing itself from participants & deleting it locally
+                showDeleteMeetingDialog()
             }
             popupWindow.dismiss()
         }
@@ -283,8 +287,7 @@ class MeetingFragment : SlidingPaneChildFragment() {
     }
 
     private fun showCancelMeetingDialog() {
-        Log.i("$TAG Meeting is editable, asking whether to cancel it or not before deleting it")
-
+        Log.i("$TAG Meeting is editable, asking whether to cancel it or not")
         val model = ConfirmationDialogModel()
         val dialog = DialogUtils.getCancelMeetingDialog(requireContext(), model)
 
@@ -296,7 +299,6 @@ class MeetingFragment : SlidingPaneChildFragment() {
 
         model.cancelEvent.observe(viewLifecycleOwner) {
             it.consume {
-                viewModel.delete()
                 dialog.dismiss()
             }
         }
@@ -304,6 +306,33 @@ class MeetingFragment : SlidingPaneChildFragment() {
         model.confirmEvent.observe(viewLifecycleOwner) {
             it.consume {
                 viewModel.cancel()
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun showDeleteMeetingDialog() {
+        Log.i("$TAG Meeting is not editable or already cancelled, asking whether to delete it or not")
+        val model = ConfirmationDialogModel()
+        val dialog = DialogUtils.getDeleteMeetingDialog(requireContext(), model)
+
+        model.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        model.cancelEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        model.confirmEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                viewModel.delete()
                 dialog.dismiss()
             }
         }

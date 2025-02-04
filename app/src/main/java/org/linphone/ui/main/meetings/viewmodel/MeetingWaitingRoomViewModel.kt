@@ -190,6 +190,14 @@ class MeetingWaitingRoomViewModel
                     conferenceInfoFoundEvent.postValue(Event(true))
                 } else {
                     Log.e("$TAG Conference info with SIP URI [$uri] couldn't be found!")
+                    showRedToastEvent.postValue(
+                        Event(
+                            Pair(
+                                R.string.meeting_info_not_found_toast,
+                                R.drawable.warning_circle
+                            )
+                        )
+                    )
                     conferenceInfoFoundEvent.postValue(Event(false))
                 }
             } else {

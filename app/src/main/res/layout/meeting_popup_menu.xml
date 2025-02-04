@@ -11,6 +11,9 @@
         <variable
             name="createCalendarEventListener"
             type="View.OnClickListener" />
+        <variable
+            name="cancelInsteadOfDelete"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -49,7 +52,7 @@
             android:layout_marginBottom="20dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:text="@string/meeting_info_delete"
+            android:text="@{cancelInsteadOfDelete ? @string/meeting_cancel_action_label : @string/meeting_delete_action_label, default=@string/meeting_delete_action_label}"
             android:textSize="14sp"
             android:textColor="?attr/color_danger_500"
             android:drawableStart="@drawable/trash_simple"

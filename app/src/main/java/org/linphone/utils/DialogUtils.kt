@@ -43,6 +43,7 @@ import org.linphone.databinding.DialogConfirmTurningOnVfsBinding
 import org.linphone.databinding.DialogContactConfirmTrustCallBinding
 import org.linphone.databinding.DialogContactTrustProcessBinding
 import org.linphone.databinding.DialogDeleteContactBinding
+import org.linphone.databinding.DialogDeleteMeetingBinding
 import org.linphone.databinding.DialogKickFromConferenceBinding
 import org.linphone.databinding.DialogManageAccountInternationalPrefixHelpBinding
 import org.linphone.databinding.DialogMergeCallsIntoConferenceBinding
@@ -505,6 +506,22 @@ class DialogUtils {
             val binding: DialogCancelMeetingBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
                 R.layout.dialog_cancel_meeting,
+                null,
+                false
+            )
+            binding.viewModel = viewModel
+
+            return getDialog(context, binding)
+        }
+
+        @UiThread
+        fun getDeleteMeetingDialog(
+            context: Context,
+            viewModel: ConfirmationDialogModel
+        ): Dialog {
+            val binding: DialogDeleteMeetingBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_delete_meeting,
                 null,
                 false
             )
