@@ -319,6 +319,7 @@ class SendMessageInConversationViewModel
             attachments.postValue(attachmentsList)
 
             chatMessageToReplyTo = null
+            maxNumberOfAttachmentsReached.postValue(false)
         }
     }
 
