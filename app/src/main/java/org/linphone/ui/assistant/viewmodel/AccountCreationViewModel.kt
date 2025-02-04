@@ -168,14 +168,7 @@ class AccountCreationViewModel
             operationInProgress.postValue(false)
 
             if (!errorMessage.isNullOrEmpty()) {
-                showFormattedRedToastEvent.postValue(
-                    Event(
-                        Pair(
-                            errorMessage,
-                            R.drawable.warning_circle
-                        )
-                    )
-                )
+                showFormattedRedToast(errorMessage, R.drawable.warning_circle)
             }
 
             for (parameter in parameterErrors?.keys.orEmpty()) {

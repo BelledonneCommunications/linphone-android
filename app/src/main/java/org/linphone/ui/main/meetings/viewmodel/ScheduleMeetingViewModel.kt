@@ -111,14 +111,7 @@ class ScheduleMeetingViewModel
             when (state) {
                 ConferenceScheduler.State.Error -> {
                     operationInProgress.postValue(false)
-                    showRedToastEvent.postValue(
-                        Event(
-                            Pair(
-                                R.string.meeting_failed_to_schedule_toast,
-                                R.drawable.warning_circle
-                            )
-                        )
-                    )
+                    showRedToast(R.string.meeting_failed_to_schedule_toast, R.drawable.warning_circle)
                 }
                 ConferenceScheduler.State.Ready -> {
                     val conferenceAddress = conferenceScheduler.info?.uri
@@ -166,28 +159,14 @@ class ScheduleMeetingViewModel
                 }
                 participants.value.orEmpty().size -> {
                     Log.e("$TAG No invitation sent!")
-                    showRedToastEvent.postValue(
-                        Event(
-                            Pair(
-                                R.string.meeting_failed_to_send_invites_toast,
-                                R.drawable.warning_circle
-                            )
-                        )
-                    )
+                    showRedToast(R.string.meeting_failed_to_send_invites_toast, R.drawable.warning_circle)
                 }
                 else -> {
                     Log.w("$TAG [$failedCount] invitations couldn't have been sent for:")
                     for (failed in failedInvitations.orEmpty()) {
                         Log.w(failed.asStringUriOnly())
                     }
-                    showRedToastEvent.postValue(
-                        Event(
-                            Pair(
-                                R.string.meeting_failed_to_send_part_of_invites_toast,
-                                R.drawable.warning_circle
-                            )
-                        )
-                    )
+                    showRedToast(R.string.meeting_failed_to_send_part_of_invites_toast, R.drawable.warning_circle)
                 }
             }
 
@@ -398,14 +377,7 @@ class ScheduleMeetingViewModel
             Log.e(
                 "$TAG Either no subject was set or no participant was selected, can't schedule meeting."
             )
-            showRedToastEvent.postValue(
-                Event(
-                    Pair(
-                        R.string.meeting_schedule_mandatory_field_not_filled_toast,
-                        R.drawable.warning_circle
-                    )
-                )
-            )
+            showRedToast(R.string.meeting_schedule_mandatory_field_not_filled_toast, R.drawable.warning_circle)
             return
         }
 

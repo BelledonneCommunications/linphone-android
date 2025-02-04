@@ -33,7 +33,6 @@ import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.chat.model.ConversationModel
 import org.linphone.ui.main.viewmodel.AbstractMainViewModel
-import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
 class ConversationsListViewModel
@@ -231,11 +230,7 @@ class ConversationsListViewModel
             )
         }
 
-        showGreenToastEvent.postValue(
-            Event(
-                Pair(R.string.conversation_deleted_toast, R.drawable.chat_teardrop_text)
-            )
-        )
+        showGreenToast(R.string.conversation_deleted_toast, R.drawable.chat_teardrop_text)
     }
 
     @WorkerThread

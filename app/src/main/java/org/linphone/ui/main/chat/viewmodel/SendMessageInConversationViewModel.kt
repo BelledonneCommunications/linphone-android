@@ -364,14 +364,7 @@ class SendMessageInConversationViewModel
             Log.w(
                 "$TAG Max number of attachments [$MAX_FILES_TO_ATTACH] reached, file [$file] won't be attached"
             )
-            showRedToastEvent.postValue(
-                Event(
-                    Pair(
-                        R.string.conversation_maximum_number_of_attachments_reached,
-                        R.drawable.warning_circle
-                    )
-                )
-            )
+            showRedToast(R.string.conversation_maximum_number_of_attachments_reached, R.drawable.warning_circle)
             viewModelScope.launch {
                 Log.i("$TAG Deleting temporary file [$file]")
                 FileUtils.deleteFile(file)
@@ -434,9 +427,7 @@ class SendMessageInConversationViewModel
                 Log.i("$TAG Sending forwarded message")
                 forwardedMessage.send()
 
-                showGreenToastEvent.postValue(
-                    Event(Pair(R.string.conversation_message_forwarded_toast, R.drawable.forward))
-                )
+                showGreenToast(R.string.conversation_message_forwarded_toast, R.drawable.forward)
             }
         }
     }
@@ -591,14 +582,7 @@ class SendMessageInConversationViewModel
                         "$TAG Max duration for voice recording exceeded (${maxVoiceRecordDuration}ms), stopping."
                     )
                     stopVoiceRecorder()
-                    showRedToastEvent.postValue(
-                        Event(
-                            Pair(
-                                R.string.conversation_voice_recording_max_duration_reached_toast,
-                                R.drawable.warning_circle
-                            )
-                        )
-                    )
+                    showRedToast(R.string.conversation_voice_recording_max_duration_reached_toast, R.drawable.warning_circle)
                 }
             }
         }.launchIn(viewModelScope)
@@ -663,11 +647,7 @@ class SendMessageInConversationViewModel
         val lowMediaVolume = AudioUtils.isMediaVolumeLow(context)
         if (lowMediaVolume) {
             Log.w("$TAG Media volume is low, notifying user as they may not hear voice message")
-            showRedToastEvent.postValue(
-                Event(
-                    Pair(R.string.media_playback_low_volume_warning_toast, R.drawable.speaker_slash)
-                )
-            )
+            showRedToast(R.string.media_playback_low_volume_warning_toast, R.drawable.speaker_slash)
         }
 
         if (voiceRecordAudioFocusRequest == null) {

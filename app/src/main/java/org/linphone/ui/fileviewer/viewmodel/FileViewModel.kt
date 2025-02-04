@@ -239,24 +239,10 @@ class FileViewModel
                     Log.i(
                         "$TAG File [$filePath] has been successfully exported to documents"
                     )
-                    showGreenToastEvent.postValue(
-                        Event(
-                            Pair(
-                                R.string.file_successfully_exported_to_documents_toast,
-                                R.drawable.check
-                            )
-                        )
-                    )
+                    showGreenToast(R.string.file_successfully_exported_to_documents_toast, R.drawable.check)
                 } else {
                     Log.e("$TAG Failed to export file [$filePath] to documents!")
-                    showRedToastEvent.postValue(
-                        Event(
-                            Pair(
-                                R.string.export_file_to_documents_error_toast,
-                                R.drawable.warning_circle
-                            )
-                        )
-                    )
+                    showRedToast(R.string.export_file_to_documents_error_toast, R.drawable.warning_circle)
                 }
             }
         }
@@ -272,24 +258,13 @@ class FileViewModel
                     Log.i(
                         "$TAG Text has been successfully exported to documents"
                     )
-                    showGreenToastEvent.postValue(
-                        Event(
-                            Pair(
+                    showGreenToast(
                                 R.string.file_successfully_exported_to_documents_toast,
                                 R.drawable.check
                             )
-                        )
-                    )
                 } else {
                     Log.e("$TAG Failed to save text to documents!")
-                    showRedToastEvent.postValue(
-                        Event(
-                            Pair(
-                                R.string.export_file_to_documents_error_toast,
-                                R.drawable.warning_circle
-                            )
-                        )
-                    )
+                    showRedToast(R.string.export_file_to_documents_error_toast, R.drawable.warning_circle)
                 }
             }
         }
@@ -337,14 +312,7 @@ class FileViewModel
                     // TODO FIXME : improve performances !
                 } catch (e: Exception) {
                     Log.e("$TAG Exception trying to read file [$filePath] as text: $e")
-                    showRedToastEvent.postValue(
-                        Event(
-                            Pair(
-                                R.string.conversation_file_cant_be_opened_error_toast,
-                                R.drawable.warning_circle
-                            )
-                        )
-                    )
+                    showRedToast(R.string.conversation_file_cant_be_opened_error_toast, R.drawable.warning_circle)
                 }
             }
         }

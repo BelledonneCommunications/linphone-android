@@ -38,7 +38,6 @@ import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.fragment.SlidingPaneChildFragment
 import org.linphone.utils.DialogUtils
-import org.linphone.utils.Event
 import org.linphone.utils.RecyclerViewHeaderDecoration
 
 @UiThread
@@ -66,11 +65,7 @@ class ConversationForwardMessageFragment : SlidingPaneChildFragment() {
     override fun goBack(): Boolean {
         sharedViewModel.messageToForwardEvent.value?.consume {
             Log.w("$TAG Cancelling message forward")
-            viewModel.showRedToastEvent.postValue(
-                Event(
-                    Pair(R.string.conversation_message_forward_cancelled_toast, R.drawable.forward)
-                )
-            )
+            viewModel.showRedToast(R.string.conversation_message_forward_cancelled_toast, R.drawable.forward)
         }
 
         return findNavController().popBackStack()

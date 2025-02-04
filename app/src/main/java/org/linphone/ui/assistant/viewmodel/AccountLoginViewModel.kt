@@ -175,14 +175,7 @@ open class AccountLoginViewModel
             val identityAddress = Factory.instance().createAddress(identity)
             if (identityAddress == null) {
                 Log.e("$TAG Can't parse [$identity] as Address!")
-                showRedToastEvent.postValue(
-                    Event(
-                        Pair(
-                            R.string.assistant_login_cant_parse_address_toast,
-                            R.drawable.warning_circle
-                        )
-                    )
-                )
+                showRedToast(R.string.assistant_login_cant_parse_address_toast, R.drawable.warning_circle)
                 return@postOnCoreThread
             }
 
@@ -191,14 +184,7 @@ open class AccountLoginViewModel
                 Log.e(
                     "$TAG Address [${identityAddress.asStringUriOnly()}] doesn't contains an username!"
                 )
-                showRedToastEvent.postValue(
-                    Event(
-                        Pair(
-                            R.string.assistant_login_address_without_username_toast,
-                            R.drawable.warning_circle
-                        )
-                    )
-                )
+                showRedToast(R.string.assistant_login_address_without_username_toast, R.drawable.warning_circle)
                 return@postOnCoreThread
             }
 

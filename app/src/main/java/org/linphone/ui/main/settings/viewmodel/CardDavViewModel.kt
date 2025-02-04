@@ -81,14 +81,7 @@ class CardDavViewModel
             when (status) {
                 FriendList.SyncStatus.Successful -> {
                     syncInProgress.postValue(false)
-                    showGreenToastEvent.postValue(
-                        Event(
-                            Pair(
-                                R.string.settings_contacts_carddav_sync_successful_toast,
-                                R.drawable.check
-                            )
-                        )
-                    )
+                    showGreenToast(R.string.settings_contacts_carddav_sync_successful_toast, R.drawable.check)
 
                     Log.i("$TAG Notifying contacts manager that contacts have changed")
                     coreContext.contactsManager.notifyContactsListChanged()
@@ -97,14 +90,7 @@ class CardDavViewModel
                 }
                 FriendList.SyncStatus.Failure -> {
                     syncInProgress.postValue(false)
-                    showRedToastEvent.postValue(
-                        Event(
-                            Pair(
-                                R.string.settings_contacts_carddav_sync_error_toast,
-                                R.drawable.warning_circle
-                            )
-                        )
-                    )
+                    showRedToast(R.string.settings_contacts_carddav_sync_error_toast, R.drawable.warning_circle)
                     if (isEdit.value == false) {
                         Log.e("$TAG Synchronization failed, removing Friend list from Core")
                         friendList.removeListener(this)
@@ -166,14 +152,7 @@ class CardDavViewModel
                 }
                 core.removeFriendList(friendList)
                 Log.i("$TAG Removed friends list with display name [$name]")
-                showGreenToastEvent.postValue(
-                    Event(
-                        Pair(
-                            R.string.settings_contacts_carddav_deleted_toast,
-                            R.drawable.trash_simple
-                        )
-                    )
-                )
+                showGreenToast(R.string.settings_contacts_carddav_deleted_toast, R.drawable.trash_simple)
 
                 Log.i("$TAG Notifying contacts manager that contacts have changed")
                 coreContext.contactsManager.notifyContactsListChanged()
@@ -193,14 +172,7 @@ class CardDavViewModel
         val name = displayName.value.orEmpty().trim()
         val server = serverUrl.value.orEmpty().trim()
         if (name.isEmpty() || server.isEmpty()) {
-            showRedToastEvent.postValue(
-                Event(
-                    Pair(
-                        R.string.settings_contacts_carddav_mandatory_field_not_filled_toast,
-                        R.drawable.warning_circle
-                    )
-                )
-            )
+            showRedToast(R.string.settings_contacts_carddav_mandatory_field_not_filled_toast, R.drawable.warning_circle)
             return
         }
 

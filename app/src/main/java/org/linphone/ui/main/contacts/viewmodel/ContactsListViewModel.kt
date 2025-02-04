@@ -242,9 +242,7 @@ class ContactsListViewModel
             coreContext.contactsManager.contactRemoved(contactModel.friend)
             contactModel.friend.remove()
             coreContext.contactsManager.notifyContactsListChanged()
-            showGreenToastEvent.postValue(
-                Event(Pair(R.string.contact_deleted_toast, R.drawable.warning_circle))
-            )
+            showGreenToast(R.string.contact_deleted_toast, R.drawable.warning_circle)
         }
     }
 

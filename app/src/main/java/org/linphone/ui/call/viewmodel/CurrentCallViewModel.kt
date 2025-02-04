@@ -1486,13 +1486,6 @@ class CurrentCallViewModel
 
     @AnyThread
     private fun showRecordingToast() {
-        showGreenToastEvent.postValue(
-            Event(
-                Pair(
-                    R.string.call_is_being_recorded,
-                    R.drawable.record_fill
-                )
-            )
-        )
+        showGreenToast(R.string.call_is_being_recorded, R.drawable.record_fill)
     }
 }

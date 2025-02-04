@@ -19,6 +19,8 @@
  */
 package org.linphone.ui
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.utils.Event
@@ -40,5 +42,21 @@ open class GenericViewModel : ViewModel() {
 
     val showFormattedRedToastEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
         MutableLiveData<Event<Pair<String, Int>>>()
+    }
+
+    fun showGreenToast(@StringRes message: Int, @DrawableRes icon: Int) {
+        showGreenToastEvent.postValue(Event(Pair(message, icon)))
+    }
+
+    fun showFormattedGreenToast(message: String, @DrawableRes icon: Int) {
+        showFormattedGreenToastEvent.postValue(Event(Pair(message, icon)))
+    }
+
+    fun showRedToast(@StringRes message: Int, @DrawableRes icon: Int) {
+        showRedToastEvent.postValue(Event(Pair(message, icon)))
+    }
+
+    fun showFormattedRedToast(message: String, @DrawableRes icon: Int) {
+        showFormattedRedToastEvent.postValue(Event(Pair(message, icon)))
     }
 }

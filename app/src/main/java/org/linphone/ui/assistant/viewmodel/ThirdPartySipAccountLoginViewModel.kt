@@ -199,14 +199,7 @@ class ThirdPartySipAccountLoginViewModel
             val identityAddress = Factory.instance().createAddress(identity)
             if (identityAddress == null) {
                 Log.e("$TAG Can't parse [$identity] as Address!")
-                showRedToastEvent.postValue(
-                    Event(
-                        Pair(
-                            R.string.assistant_login_cant_parse_address_toast,
-                            R.drawable.warning_circle
-                        )
-                    )
-                )
+                showRedToast(R.string.assistant_login_cant_parse_address_toast, R.drawable.warning_circle)
                 return@postOnCoreThread
             }
 

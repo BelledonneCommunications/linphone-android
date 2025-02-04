@@ -102,14 +102,7 @@ class ConversationForwardMessageViewModel
                 Log.e("$TAG Conversation [$id] creation has failed!")
                 chatRoom.removeListener(this)
                 operationInProgress.postValue(false)
-                showRedToastEvent.postValue(
-                    Event(
-                        Pair(
-                            R.string.conversation_failed_to_create_toast,
-                            R.drawable.warning_circle
-                        )
-                    )
-                )
+                showRedToast(R.string.conversation_failed_to_create_toast, R.drawable.warning_circle)
             }
         }
     }
@@ -222,14 +215,7 @@ class ConversationForwardMessageViewModel
                 "$TAG Account is in secure mode, can't chat with SIP address of different domain [${remote.asStringUriOnly()}]"
             )
             operationInProgress.postValue(false)
-            showRedToastEvent.postValue(
-                Event(
-                    Pair(
-                        R.string.conversation_invalid_participant_due_to_security_mode_toast,
-                        R.drawable.warning_circle
-                    )
-                )
-            )
+            showRedToast(R.string.conversation_invalid_participant_due_to_security_mode_toast, R.drawable.warning_circle)
             return
         }
 
@@ -275,14 +261,7 @@ class ConversationForwardMessageViewModel
             } else {
                 Log.e("$TAG Failed to create 1-1 conversation with [${remote.asStringUriOnly()}]!")
                 operationInProgress.postValue(false)
-                showRedToastEvent.postValue(
-                    Event(
-                        Pair(
-                            R.string.conversation_failed_to_create_toast,
-                            R.drawable.warning_circle
-                        )
-                    )
-                )
+                showRedToast(R.string.conversation_failed_to_create_toast, R.drawable.warning_circle)
             }
         } else {
             Log.w(

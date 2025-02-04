@@ -173,14 +173,7 @@ abstract class AbstractConversationViewModel : GenericViewModel() {
             val conference = LinphoneUtils.createGroupCall(account, chatRoom.subject.orEmpty())
             if (conference == null) {
                 Log.e("$TAG Failed to create group call!")
-                showRedToastEvent.postValue(
-                    Event(
-                        Pair(
-                            R.string.conference_failed_to_create_group_call_toast,
-                            R.drawable.warning_circle
-                        )
-                    )
-                )
+                showRedToast(R.string.conference_failed_to_create_group_call_toast, R.drawable.warning_circle)
                 return@postOnCoreThread
             }
 
@@ -199,14 +192,7 @@ abstract class AbstractConversationViewModel : GenericViewModel() {
             )
             if (conference.inviteParticipants(participants, callParams) != 0) {
                 Log.e("$TAG Failed to invite participants into group call!")
-                showRedToastEvent.postValue(
-                    Event(
-                        Pair(
-                            R.string.conference_failed_to_create_group_call_toast,
-                            R.drawable.warning_circle
-                        )
-                    )
-                )
+                showRedToast(R.string.conference_failed_to_create_group_call_toast, R.drawable.warning_circle)
             }
         }
     }

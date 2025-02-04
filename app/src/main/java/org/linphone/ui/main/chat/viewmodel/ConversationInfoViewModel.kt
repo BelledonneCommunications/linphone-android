@@ -108,7 +108,7 @@ class ConversationInfoViewModel
                 R.string.conversation_info_participant_added_to_conversation_toast,
                 getParticipant(eventLog)
             )
-            showFormattedGreenToastEvent.postValue(Event(Pair(message, R.drawable.user_circle)))
+            showFormattedGreenToast(message, R.drawable.user_circle)
 
             computeParticipantsList()
             infoChangedEvent.postValue(Event(true))
@@ -121,7 +121,7 @@ class ConversationInfoViewModel
                 R.string.conversation_info_participant_removed_from_conversation_toast,
                 getParticipant(eventLog)
             )
-            showFormattedGreenToastEvent.postValue(Event(Pair(message, R.drawable.user_circle)))
+            showFormattedGreenToast(message, R.drawable.user_circle)
 
             computeParticipantsList()
             infoChangedEvent.postValue(Event(true))
@@ -143,7 +143,7 @@ class ConversationInfoViewModel
                     getParticipant(eventLog)
                 )
             }
-            showFormattedGreenToastEvent.postValue(Event(Pair(message, R.drawable.user_circle)))
+            showFormattedGreenToast(message, R.drawable.user_circle)
 
             computeParticipantsList()
         }
@@ -153,9 +153,7 @@ class ConversationInfoViewModel
             Log.i(
                 "$TAG Conversation [${LinphoneUtils.getChatRoomId(chatRoom)}] has a new subject [${chatRoom.subject}]"
             )
-            showGreenToastEvent.postValue(
-                Event(Pair(R.string.conversation_subject_changed_toast, R.drawable.check))
-            )
+            showGreenToast(R.string.conversation_subject_changed_toast, R.drawable.check)
 
             subject.postValue(chatRoom.subject)
             infoChangedEvent.postValue(Event(true))
@@ -166,34 +164,13 @@ class ConversationInfoViewModel
             Log.i("$TAG Ephemeral event [${eventLog.type}]")
             when (eventLog.type) {
                 EventLog.Type.ConferenceEphemeralMessageEnabled -> {
-                    showGreenToastEvent.postValue(
-                        Event(
-                            Pair(
-                                R.string.conversation_ephemeral_messages_enabled_toast,
-                                R.drawable.clock_countdown
-                            )
-                        )
-                    )
+                    showGreenToast(R.string.conversation_ephemeral_messages_enabled_toast, R.drawable.clock_countdown)
                 }
                 EventLog.Type.ConferenceEphemeralMessageDisabled -> {
-                    showGreenToastEvent.postValue(
-                        Event(
-                            Pair(
-                                R.string.conversation_ephemeral_messages_disabled_toast,
-                                R.drawable.clock_countdown
-                            )
-                        )
-                    )
+                    showGreenToast(R.string.conversation_ephemeral_messages_disabled_toast, R.drawable.clock_countdown)
                 }
                 else -> {
-                    showGreenToastEvent.postValue(
-                        Event(
-                            Pair(
-                                R.string.conversation_ephemeral_messages_lifetime_changed_toast,
-                                R.drawable.clock_countdown
-                            )
-                        )
-                    )
+                    showGreenToast(R.string.conversation_ephemeral_messages_lifetime_changed_toast, R.drawable.clock_countdown)
                 }
             }
         }
@@ -431,14 +408,7 @@ class ConversationInfoViewModel
                     val ok = chatRoom.addParticipants(toAddList.toTypedArray())
                     if (!ok) {
                         Log.w("$TAG Failed to add some/all participants to the group!")
-                        showRedToastEvent.postValue(
-                            Event(
-                                Pair(
-                                    R.string.conversation_failed_to_add_participant_to_group_conversation_toast,
-                                    R.drawable.warning_circle
-                                )
-                            )
-                        )
+                        showRedToast(R.string.conversation_failed_to_add_participant_to_group_conversation_toast, R.drawable.warning_circle)
                     }
                 }
             }

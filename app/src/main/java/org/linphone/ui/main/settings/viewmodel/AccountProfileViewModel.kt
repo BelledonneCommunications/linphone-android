@@ -156,14 +156,7 @@ class AccountProfileViewModel
             if (!errorMessage.isNullOrEmpty()) {
                 when (request.type) {
                     AccountManagerServicesRequest.Type.GetDevicesList, AccountManagerServicesRequest.Type.DeleteDevice -> {
-                        showFormattedRedToastEvent.postValue(
-                            Event(
-                                Pair(
-                                    errorMessage,
-                                    R.drawable.warning_circle
-                                )
-                            )
-                        )
+                        showFormattedRedToast(errorMessage, R.drawable.warning_circle)
                         devicesFetchInProgress.postValue(false)
                     }
                     else -> {}

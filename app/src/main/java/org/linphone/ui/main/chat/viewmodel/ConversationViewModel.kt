@@ -925,11 +925,7 @@ class ConversationViewModel
             } else {
                 R.string.conversation_search_no_more_match
             }
-            showRedToastEvent.postValue(
-                Event(
-                    Pair(message, R.drawable.magnifying_glass)
-                )
-            )
+            showRedToast(message, R.drawable.magnifying_glass)
         } else {
             Log.i(
                 "$TAG Found result [${match.chatMessage?.messageId}] while looking up for message with text [$textToSearch] in direction [$direction] starting from message [${latestMatch?.chatMessage?.messageId}]"
@@ -971,24 +967,10 @@ class ConversationViewModel
                     Log.i(
                         "$TAG File [$filePath] has been successfully exported to documents"
                     )
-                    showGreenToastEvent.postValue(
-                        Event(
-                            Pair(
-                                R.string.file_successfully_exported_to_documents_toast,
-                                R.drawable.check
-                            )
-                        )
-                    )
+                    showGreenToast(R.string.file_successfully_exported_to_documents_toast, R.drawable.check)
                 } else {
                     Log.e("$TAG Failed to export file [$filePath] to documents!")
-                    showRedToastEvent.postValue(
-                        Event(
-                            Pair(
-                                R.string.export_file_to_documents_error_toast,
-                                R.drawable.warning_circle
-                            )
-                        )
-                    )
+                    showRedToast(R.string.export_file_to_documents_error_toast, R.drawable.warning_circle)
                 }
             }
         }

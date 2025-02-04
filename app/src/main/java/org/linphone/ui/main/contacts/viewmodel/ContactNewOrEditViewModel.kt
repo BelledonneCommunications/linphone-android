@@ -145,14 +145,7 @@ class ContactNewOrEditViewModel
         val organization = company.value.orEmpty().trim()
         if (fn.isEmpty() && ln.isEmpty() && organization.isEmpty()) {
             Log.e("$TAG At least a mandatory field wasn't filled, aborting save")
-            showRedToastEvent.postValue(
-                Event(
-                    Pair(
-                        R.string.contact_editor_mandatory_field_not_filled_toast,
-                        R.drawable.warning_circle
-                    )
-                )
-            )
+            showRedToast(R.string.contact_editor_mandatory_field_not_filled_toast, R.drawable.warning_circle)
             return
         }
 

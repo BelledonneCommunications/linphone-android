@@ -38,7 +38,6 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
 import org.linphone.ui.main.recordings.model.RecordingModel
 import org.linphone.utils.AudioUtils
-import org.linphone.utils.Event
 
 class RecordingMediaPlayerViewModel
     @UiThread
@@ -122,11 +121,7 @@ class RecordingMediaPlayerViewModel
         val lowMediaVolume = AudioUtils.isMediaVolumeLow(coreContext.context)
         if (lowMediaVolume) {
             Log.w("$TAG Media volume is low, notifying user as they may not hear voice message")
-            showRedToastEvent.postValue(
-                Event(
-                    Pair(R.string.media_playback_low_volume_warning_toast, R.drawable.speaker_slash)
-                )
-            )
+            showRedToast(R.string.media_playback_low_volume_warning_toast, R.drawable.speaker_slash)
         }
 
         if (player.state == Player.State.Closed) {
