@@ -399,7 +399,7 @@ class ScheduleMeetingViewModel
             conferenceInfo.setCapability(StreamType.Text, true)
 
             // Enable end-to-end encryption if client supports it
-            conferenceInfo.securityLevel = if (LinphoneUtils.isEndToEndEncryptedChatAvailable(core)) {
+            conferenceInfo.securityLevel = if (corePreferences.createEndToEndEncryptedMeetingsAndGroupCalls) {
                 Log.i("$TAG Requesting EndToEnd security level for conference")
                 Conference.SecurityLevel.EndToEnd
             } else {

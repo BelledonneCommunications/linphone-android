@@ -300,6 +300,7 @@
     <string name="settings_advanced_upload_server_url">File sharing server URL</string>
     <string name="settings_advanced_media_encryption_title">Media encryption</string>
     <string name="settings_advanced_media_encryption_mandatory_title">Media encryption mandatory</string>
+    <string name="settings_advanced_create_e2e_encrypted_conferences_title">Create end-to-end encrypted meetings &amp; group calls</string>
     <string name="settings_advanced_accept_early_media_title">Accept early media</string>
     <string name="settings_advanced_allow_outgoing_early_media_title">Allow outgoing early media</string>
     <string name="settings_advanced_remote_provisioning_url">Remote provisioning URL</string>

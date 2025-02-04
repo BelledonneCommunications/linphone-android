@@ -142,10 +142,20 @@ class CorePreferences
 
     // Conversation related
 
+    @get:WorkerThread @set:WorkerThread
     var markConversationAsReadWhenDismissingMessageNotification: Boolean
         get() = config.getBool("app", "mark_as_read_notif_dismissal", false)
         set(value) {
             config.setBool("app", "mark_as_read_notif_dismissal", value)
+        }
+
+    // Conference related
+
+    @get:WorkerThread @set:WorkerThread
+    var createEndToEndEncryptedMeetingsAndGroupCalls: Boolean
+        get() = config.getBool("app", "create_e2e_encrypted_conferences", false)
+        set(value) {
+            config.setBool("app", "create_e2e_encrypted_conferences", value)
         }
 
     // Contacts related

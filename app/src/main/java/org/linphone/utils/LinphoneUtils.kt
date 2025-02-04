@@ -272,7 +272,7 @@ class LinphoneUtils {
             conferenceParams.subject = subject
 
             // Enable end-to-end encryption if client supports it
-            conferenceParams.securityLevel = if (isEndToEndEncryptedChatAvailable(core)) {
+            conferenceParams.securityLevel = if (corePreferences.createEndToEndEncryptedMeetingsAndGroupCalls) {
                 Log.i("$TAG Requesting EndToEnd security level for conference")
                 Conference.SecurityLevel.EndToEnd
             } else {
