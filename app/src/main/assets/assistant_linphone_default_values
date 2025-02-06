@@ -22,6 +22,7 @@
     <entry name="rtp_bundle" overwrite="true">1</entry>
     <entry name="lime_server_url" overwrite="true">https://lime.linphone.org/lime-server/lime-server.php</entry>
     <entry name="lime_algo" overwrite="true">c25519</entry>
+    <entry name="supported" overwrite="true"></entry>
   </section>
   <section name="nat_policy_default_values">
     <entry name="stun_server" overwrite="true">stun.linphone.org</entry>
