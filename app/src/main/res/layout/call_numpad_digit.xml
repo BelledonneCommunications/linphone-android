@@ -14,8 +14,17 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:onClick="@{() -> model.onDigitClicked(digit)}"
         android:layout_width="@dimen/call_dtmf_button_size"
-        android:layout_height="@dimen/call_dtmf_button_size"
-        android:background="@drawable/in_call_button_background_red">
+        android:layout_height="@dimen/call_dtmf_button_size">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/in_call_button_background_red"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
