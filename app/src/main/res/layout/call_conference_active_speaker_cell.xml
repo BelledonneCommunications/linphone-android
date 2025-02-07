@@ -60,21 +60,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/joining_label" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style"
-            android:id="@+id/joining_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/conference_participant_joining_text"
-            android:textColor="@color/bc_white"
-            android:textSize="11sp"
-            android:visibility="@{model.isJoining ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintTop_toBottomOf="@id/joining"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent" />
 
         <ImageView
             android:id="@+id/paused"
@@ -98,6 +84,8 @@
             android:text="@string/conference_participant_paused_text"
             android:textColor="@color/bc_white"
             android:textSize="11sp"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:visibility="@{!model.isInConference &amp;&amp; !model.isJoining ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintTop_toBottomOf="@id/paused"
             app:layout_constraintBottom_toBottomOf="parent"

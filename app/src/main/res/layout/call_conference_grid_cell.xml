@@ -70,6 +70,8 @@
             android:text="@string/conference_participant_joining_text"
             android:textColor="@color/bc_white"
             android:textSize="16sp"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:visibility="@{model.isJoining ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintTop_toBottomOf="@id/joining"
             app:layout_constraintBottom_toBottomOf="parent"
