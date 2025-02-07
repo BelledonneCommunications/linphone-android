@@ -66,7 +66,17 @@ class ConversationsListViewModel
 
         @WorkerThread
         override fun onMessageSent(core: Core, chatRoom: ChatRoom, message: ChatMessage) {
-            reorderChatRooms()
+            val id = LinphoneUtils.getChatRoomId(chatRoom)
+            val found = conversations.value.orEmpty().find {
+                it.id == id
+            }
+            if (found == null) {
+                Log.i("$TAG Message sent for a conversation not yet in the list (probably was empty), adding it")
+                addChatRoom(chatRoom)
+            } else {
+                Log.i("$TAG Message sent for an existing conversation, re-order them")
+                reorderChatRooms()
+            }
         }
 
         @WorkerThread
