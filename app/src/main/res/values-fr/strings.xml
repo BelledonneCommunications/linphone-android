@@ -102,11 +102,13 @@
     <string name="assistant_scan_qr_code">Scanner un QR code</string>
     <string name="assistant_qr_code_invalid_toast">Ce QR code est invalide !</string>
     <string name="assistant_login_third_party_sip_account">J\'ai un compte SIP tiers</string>
+    <string name="assistant_login_third_party_sip_account_title">Compte SIP tiers</string>
     <string name="assistant_login_using_single_sign_on">Single sign on</string>
     <string name="assistant_login_cant_parse_address_toast">Adresse SIP invalide</string>
     <string name="assistant_login_address_without_username_toast">L\'adresse SIP ne contient pas de nom d\'utilisateur !</string>
     <string name="assistant_no_account_yet">Pas encore de compte ?</string>
     <string name="assistant_account_register">Créer un compte</string>
+    <string name="assistant_account_creation_sms_confirmation_title">Confirmez votre numéro</string>
     <string name="assistant_account_creation_sms_confirmation_explanation">On vous a envoyé un code de vérification par SMS au numéro %1$s.\n\nMerci de le saisir ci-dessous :</string>
     <string name="assistant_account_creation_wrong_phone_number">Numéro incorrect ?</string>
     <string name="assistant_account_create">Créer</string>

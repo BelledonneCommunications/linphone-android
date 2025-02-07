@@ -30,34 +30,39 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:onClick="@{backClickListener}"
                 android:id="@+id/back"
+                android:onClick="@{backClickListener}"
                 android:layout_width="@dimen/top_bar_height"
                 android:layout_height="@dimen/top_bar_height"
+                android:layout_marginStart="40dp"
                 android:padding="15dp"
                 android:src="@drawable/caret_left"
                 android:contentDescription="@string/content_description_go_back_icon"
                 app:tint="?attr/color_main2_500"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintTop_toTopOf="@id/title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/title"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/assistant_page_title_style"
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="100dp"
+                android:layout_height="@dimen/top_bar_height"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="@dimen/assistant_title_top_margin"
                 android:text="@string/assistant_login_third_party_sip_account_title"
-                android:textColor="?attr/color_main2_600"
+                android:textColor="?attr/color_text"
+                android:textSize="28sp"
+                android:drawableStart="@drawable/user_circle"
+                android:drawablePadding="10dp"
+                app:layout_constraintWidth_min="@dimen/button_max_width"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintStart_toEndOf="@id/back"/>
 
             <ImageView
                 android:id="@+id/no_chat"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
-                android:layout_marginTop="68dp"
                 android:layout_marginEnd="30dp"
                 android:background="@drawable/circle_light_blue_button_background"
                 android:padding="16dp"
@@ -65,39 +70,38 @@
                 android:contentDescription="@null"
                 app:tint="?attr/color_main2_500"
                 app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintVertical_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="@id/title"
                 app:layout_constraintEnd_toStartOf="@id/no_video"
-                app:layout_constraintTop_toBottomOf="@id/title"/>
+                app:layout_constraintTop_toBottomOf="@id/title"
+                app:layout_constraintBottom_toTopOf="@id/message"/>
 
             <ImageView
                 android:id="@+id/no_video"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
-                android:layout_marginTop="68dp"
                 android:background="@drawable/circle_light_blue_button_background"
                 android:padding="16dp"
                 android:src="@drawable/video_camera_slash"
                 android:contentDescription="@null"
                 app:tint="?attr/color_main2_500"
                 app:layout_constraintStart_toEndOf="@id/no_chat"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/title"/>
+                app:layout_constraintEnd_toEndOf="@id/message"
+                app:layout_constraintTop_toTopOf="@id/no_chat"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style"
                 android:id="@+id/message"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="42dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/assistant_third_party_sip_account_warning_explanation"
                 android:textSize="14sp"
-                android:gravity="center"
-                app:layout_constraintWidth_max="@dimen/text_input_max_width"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/no_chat"/>
+                android:gravity="start"
+                app:layout_constraintWidth_max="@dimen/button_max_width"
+                app:layout_constraintStart_toStartOf="@id/title"
+                app:layout_constraintTop_toBottomOf="@id/no_chat"
+                app:layout_constraintBottom_toTopOf="@id/contact"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:onClick="@{contactClickListener}"
@@ -105,7 +109,7 @@
                 android:id="@+id/contact"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="42dp"
+                android:layout_marginTop="16dp"
                 android:paddingTop="6dp"
                 android:paddingBottom="6dp"
                 android:paddingStart="12dp"
@@ -115,9 +119,10 @@
                 android:textColor="@color/secondary_button_label_color"
                 android:gravity="center"
                 android:background="@drawable/secondary_button_background"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/message"/>
+                app:layout_constraintStart_toStartOf="@id/message"
+                app:layout_constraintEnd_toEndOf="@id/message"
+                app:layout_constraintTop_toBottomOf="@id/message"
+                app:layout_constraintBottom_toTopOf="@id/create_linphone_account"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:onClick="@{createAccountClickListener}"
@@ -128,14 +133,13 @@
                 android:layout_marginTop="32dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="20dp"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
                 android:text="@string/assistant_third_party_sip_account_create_linphone_account"
                 app:layout_constraintWidth_max="@dimen/button_max_width"
                 app:layout_constraintVertical_bias="1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/title"
+                app:layout_constraintEnd_toEndOf="@id/message"
                 app:layout_constraintTop_toBottomOf="@id/contact"
                 app:layout_constraintBottom_toTopOf="@id/continue_third_party_account_login" />
 
@@ -145,17 +149,43 @@
                 android:id="@+id/continue_third_party_account_login"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="@dimen/screen_bottom_margin"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
                 android:text="@string/assistant_third_party_sip_account_warning_ok"
                 app:layout_constraintWidth_max="@dimen/button_max_width"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/create_linphone_account"
+                app:layout_constraintBottom_toTopOf="@id/header"
+                app:layout_constraintStart_toStartOf="@id/title"
+                app:layout_constraintEnd_toEndOf="@id/message" />
+
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:contentDescription="@null"
+                android:src="@drawable/assistant_logo"
+                app:layout_constraintStart_toEndOf="@id/message"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/header"
+                app:layout_constraintTop_toBottomOf="@id/title" />
+
+            <ImageView
+                android:id="@+id/header"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/mountains"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:contentDescription="@null"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:tint="?attr/color_main1_500" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
