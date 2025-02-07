@@ -149,9 +149,9 @@ class StartCallViewModel
     @UiThread
     fun updateGroupCallButtonVisibility() {
         coreContext.postOnCoreThread { core ->
-            val hideGroupCall = corePreferences.disableMeetings || !LinphoneUtils.isRemoteConferencingAvailable(
-                core
-            )
+            val hideGroupCall = corePreferences.disableMeetings ||
+                !LinphoneUtils.isRemoteConferencingAvailable(core) ||
+                core.callsNb > 0
             hideGroupCallButton.postValue(hideGroupCall)
         }
     }
