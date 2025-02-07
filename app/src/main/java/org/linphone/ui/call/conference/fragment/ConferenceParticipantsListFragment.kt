@@ -30,10 +30,12 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.PopupWindow
+import androidx.core.view.doOnLayout
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Participant
 import org.linphone.core.tools.Log
@@ -129,6 +131,32 @@ class ConferenceParticipantsListFragment : GenericCallFragment() {
                 showKickParticipantDialog(displayName, participant)
             }
         }
+
+        viewModel.isSendingVideo.observe(viewLifecycleOwner) { sending ->
+            coreContext.postOnCoreThread { core ->
+                core.nativePreviewWindowId = if (sending) {
+                    Log.i("$TAG We are sending video, setting capture preview surface")
+                    binding.localPreviewVideoSurface
+                } else {
+                    Log.i("$TAG We are not sending video, clearing capture preview surface")
+                    null
+                }
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        (binding.root as? ViewGroup)?.doOnLayout {
+            setupVideoPreview(binding.localPreviewVideoSurface)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        cleanVideoPreview(binding.localPreviewVideoSurface)
     }
 
     private fun showKickParticipantDialog(displayName: String, participant: Participant) {

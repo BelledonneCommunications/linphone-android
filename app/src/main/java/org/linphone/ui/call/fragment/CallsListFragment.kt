@@ -23,14 +23,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.doOnLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallsListFragmentBinding
 import org.linphone.ui.call.adapter.CallsListAdapter
 import org.linphone.ui.call.viewmodel.CallsViewModel
+import org.linphone.ui.call.viewmodel.CurrentCallViewModel
 import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.utils.DialogUtils
 
@@ -42,6 +45,8 @@ class CallsListFragment : GenericCallFragment() {
     private lateinit var binding: CallsListFragmentBinding
 
     private lateinit var viewModel: CallsViewModel
+
+    private lateinit var callViewModel: CurrentCallViewModel
 
     private lateinit var adapter: CallsListAdapter
 
@@ -73,6 +78,11 @@ class CallsListFragment : GenericCallFragment() {
         binding.viewModel = viewModel
         observeToastEvents(viewModel)
 
+        callViewModel = requireActivity().run {
+            ViewModelProvider(this)[CurrentCallViewModel::class.java]
+        }
+        observeToastEvents(callViewModel)
+
         binding.callsList.setHasFixedSize(true)
         binding.callsList.layoutManager = LinearLayoutManager(requireContext())
 
@@ -101,6 +111,18 @@ class CallsListFragment : GenericCallFragment() {
             showMergeCallsIntoConferenceConfirmationDialog()
         }
 
+        callViewModel.isSendingVideo.observe(viewLifecycleOwner) { sending ->
+            coreContext.postOnCoreThread { core ->
+                core.nativePreviewWindowId = if (sending) {
+                    Log.i("$TAG We are sending video, setting capture preview surface")
+                    binding.localPreviewVideoSurface
+                } else {
+                    Log.i("$TAG We are not sending video, clearing capture preview surface")
+                    null
+                }
+            }
+        }
+
         viewModel.calls.observe(viewLifecycleOwner) {
             Log.i("$TAG Calls list updated with [${it.size}] items")
             adapter.submitList(it)
@@ -113,11 +135,21 @@ class CallsListFragment : GenericCallFragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        (binding.root as? ViewGroup)?.doOnLayout {
+            setupVideoPreview(binding.localPreviewVideoSurface)
+        }
+    }
+
     override fun onPause() {
         super.onPause()
 
         bottomSheetDialog?.dismiss()
         bottomSheetDialog = null
+
+        cleanVideoPreview(binding.localPreviewVideoSurface)
     }
 
     private fun showMergeCallsIntoConferenceConfirmationDialog() {
