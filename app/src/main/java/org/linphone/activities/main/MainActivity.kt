@@ -48,10 +48,11 @@ import androidx.window.layout.FoldingFeature
 import coil.imageLoader
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
+import io.reactivex.rxjava3.subjects.PublishSubject
+import kotlinx.coroutines.CoroutineScope
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
 import kotlin.math.abs
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -89,6 +90,7 @@ import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.CorePreferences
 import org.linphone.databinding.MainActivityBinding
+import org.linphone.models.AuthenticatedUser
 import org.linphone.services.UserService
 import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
@@ -126,6 +128,8 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     private var initPosX = 0f
     private var initPosY = 0f
     private var overlay: View? = null
+
+    private val destroy = PublishSubject.create<Unit>()
 
     private val componentCallbacks = object : ComponentCallbacks2 {
         override fun onConfigurationChanged(newConfig: Configuration) { }
@@ -286,19 +290,26 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             }
         }
 
-        CoroutineScope(Dispatchers.IO).launch {
-            val user = UserService.getInstance(applicationContext).user.awaitFirst()
+        // TODO this may bleed on subsequent logins
+        val userSubscription = UserService.getInstance(applicationContext).user
+            .distinctUntilChanged { user -> user.id ?: "" }
+            .takeUntil(destroy)
+            .subscribe { user ->
+                try {
+                    if (user.id != "" && user.id != AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER) {
+                        Log.i("User::" + user.displayName)
+                        Log.i("Permissions::" + Gson().toJson(user.permissions))
 
-            Log.i("MainActivity.handleAuthIntent.CorouteScope")
-            Log.i("IsAuthorised::" + asm.current.isAuthorized)
-            Log.i("UserId::" + user.id)
-            Log.i("User::" + user.displayName)
-            Log.i("Permissions::" + Gson().toJson(user.permissions))
-
-            if (!user.hasClientPermission()) {
-                redirectToLogin("You do not have permission to use the client.")
+                        if (!user.hasClientPermission()) {
+                            redirectToLogin("You do not have permission to use the client.")
+                        }
+                    } else {
+                        Log.i("InvalidUser::" + user.id)
+                    }
+                } catch (ex: Exception) {
+                    Log.e(ex)
+                }
             }
-        }
     }
 
     private fun redirectToLogin(reason: String) {
@@ -392,7 +403,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         }
 
         shouldTabsBeVisibleDependingOnDestination = when (destination.id) {
-            R.id.masterCallLogsFragment, R.id.masterContactsFragment, R.id.dialerFragment, R.id.masterChatRoomsFragment ->
+            R.id.masterCallLogsFragment, R.id.dimensionsContactsFragment, R.id.dialerFragment, R.id.masterChatRoomsFragment ->
                 true
             else -> false
         }

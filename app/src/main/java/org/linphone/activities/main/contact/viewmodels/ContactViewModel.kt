@@ -29,6 +29,7 @@ import kotlinx.coroutines.CoroutineScope
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.activities.main.contact.data.ContactAdditionalData
 import org.linphone.activities.main.contact.data.ContactNumberOrAddressClickListener
 import org.linphone.activities.main.contact.data.ContactNumberOrAddressData
 import org.linphone.activities.main.viewmodels.MessageNotifierViewModel
@@ -36,6 +37,9 @@ import org.linphone.contact.ContactDataInterface
 import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.contact.hasLongTermPresence
 import org.linphone.core.*
+import org.linphone.models.search.UserDataModel
+import org.linphone.services.DirectoriesService
+import org.linphone.services.PhoneFormatterService
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.Log
@@ -53,8 +57,10 @@ class ContactViewModelFactory(private val friend: Friend) :
 class ContactViewModel(friend: Friend) : MessageNotifierViewModel(), ContactDataInterface {
     override val contact: MutableLiveData<Friend> = MutableLiveData<Friend>()
     override val displayName: MutableLiveData<String> = MutableLiveData<String>()
-    override val securityLevel: MutableLiveData<ChatRoom.SecurityLevel> = MutableLiveData<ChatRoom.SecurityLevel>()
-    override val presenceStatus: MutableLiveData<ConsolidatedPresence> = MutableLiveData<ConsolidatedPresence>()
+    override val securityLevel: MutableLiveData<ChatRoom.SecurityLevel> =
+        MutableLiveData<ChatRoom.SecurityLevel>()
+    override val presenceStatus: MutableLiveData<ConsolidatedPresence> =
+        MutableLiveData<ConsolidatedPresence>()
     override val coroutineScope: CoroutineScope = viewModelScope
 
     var fullName = ""
@@ -62,6 +68,9 @@ class ContactViewModel(friend: Friend) : MessageNotifierViewModel(), ContactData
     val displayOrganization = corePreferences.displayOrganization
 
     val numbersAndAddresses = MutableLiveData<ArrayList<ContactNumberOrAddressData>>()
+    val additionalData = MutableLiveData<ArrayList<ContactAdditionalData>>()
+    val isFavourite = MutableLiveData<Boolean>()
+    val canBeFavourite = MutableLiveData<Boolean>()
 
     val sendSmsToEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
@@ -154,6 +163,9 @@ class ContactViewModel(friend: Friend) : MessageNotifierViewModel(), ContactData
             presenceStatus.value = it.consolidatedPresence
             hasLongTermPresence.value = it.hasLongTermPresence()
         }
+
+        updateAdditionalData()
+        updateIsFavourite()
     }
 
     override fun onCleared() {
@@ -199,6 +211,21 @@ class ContactViewModel(friend: Friend) : MessageNotifierViewModel(), ContactData
         }
     }
 
+    private fun updateAdditionalData() {
+        val friend = contact.value ?: return
+        val userData = friend.userData as? UserDataModel ?: return
+
+        additionalData.value = userData.additionalData
+    }
+
+    private fun updateIsFavourite() {
+        val friend = contact.value ?: return
+        val userData = friend.userData as? UserDataModel
+
+        canBeFavourite.value = userData != null
+        isFavourite.value = userData?.isInFavourites
+    }
+
     fun updateNumbersAndAddresses() {
         val list = arrayListOf<ContactNumberOrAddressData>()
         val friend = contact.value ?: return
@@ -210,18 +237,30 @@ class ContactViewModel(friend: Friend) : MessageNotifierViewModel(), ContactData
             val value = address.asStringUriOnly()
             val presenceModel = friend.getPresenceModelForUriOrTel(value)
             val hasPresence = presenceModel?.basicStatus == PresenceBasicStatus.Open
-            val isMe = coreContext.core.defaultAccount?.params?.identityAddress?.weakEqual(address) ?: false
+            val isMe = coreContext.core.defaultAccount?.params?.identityAddress?.weakEqual(address)
+                ?: false
             val hasLimeCapability = corePreferences.allowEndToEndEncryptedChatWithoutPresence || (
                 friend.getPresenceModelForUriOrTel(
                     value
                 )?.hasCapability(Friend.Capability.LimeX3Dh) ?: false
                 )
-            val secureChatAllowed = LinphoneUtils.isEndToEndEncryptedChatAvailable() && !isMe && hasLimeCapability
-            val displayValue = if (coreContext.core.defaultAccount?.params?.domain == address.domain) (address.username ?: value) else value
+            val secureChatAllowed =
+                LinphoneUtils.isEndToEndEncryptedChatAvailable() && !isMe && hasLimeCapability
+            val displayValue =
+                if (coreContext.core.defaultAccount?.params?.domain == address.domain) {
+                    (
+                        address.username
+                            ?: value
+                        )
+                } else {
+                    value
+                }
             val noa = ContactNumberOrAddressData(
                 address,
                 hasPresence,
-                displayValue,
+                PhoneFormatterService.getInstance(coreContext.context).formatPhoneNumber(
+                    displayValue
+                ),
                 showSecureChat = secureChatAllowed,
                 listener = listener
             )
@@ -231,7 +270,8 @@ class ContactViewModel(friend: Friend) : MessageNotifierViewModel(), ContactData
         for (phoneNumber in friend.phoneNumbersWithLabel) {
             val number = phoneNumber.phoneNumber
             val presenceModel = friend.getPresenceModelForUriOrTel(number)
-            val hasPresence = presenceModel != null && presenceModel.basicStatus == PresenceBasicStatus.Open
+            val hasPresence =
+                presenceModel != null && presenceModel.basicStatus == PresenceBasicStatus.Open
             val contactAddress = presenceModel?.contact ?: number
             val address = coreContext.core.interpretUrl(
                 contactAddress,
@@ -250,22 +290,74 @@ class ContactViewModel(friend: Friend) : MessageNotifierViewModel(), ContactData
                     number
                 )?.hasCapability(Friend.Capability.LimeX3Dh) ?: false
                 )
-            val secureChatAllowed = LinphoneUtils.isEndToEndEncryptedChatAvailable() && !isMe && hasLimeCapability
+            val secureChatAllowed =
+                LinphoneUtils.isEndToEndEncryptedChatAvailable() && !isMe && hasLimeCapability
             val label = PhoneNumberUtils.vcardParamStringToAddressBookLabel(
                 coreContext.context.resources,
                 phoneNumber.label ?: ""
             )
+
             val noa = ContactNumberOrAddressData(
                 address,
                 hasPresence,
-                number,
+                PhoneFormatterService.getInstance(coreContext.context).formatPhoneNumber(number),
                 isSip = false,
                 showSecureChat = secureChatAllowed,
-                typeLabel = label,
+                typeLabel = "($label)",
                 listener = listener
             )
             list.add(noa)
         }
-        numbersAndAddresses.postValue(list)
+        numbersAndAddresses.value = list
+    }
+
+    fun toggleFavorite() {
+        val canBeFavourite = canBeFavourite.value
+        if (canBeFavourite == null || !canBeFavourite) return
+
+        val friend = contact.value ?: return
+        val userData = friend.userData as? UserDataModel ?: return
+
+        val directoriesService = DirectoriesService.getInstance(coreContext.context)
+
+        var isFavorite = isFavourite.value
+        if (isFavorite == null) isFavorite = false
+
+        if (isFavorite) {
+            if (userData.user != null) {
+                directoriesService.removeUserFromFavourites(userData.user.id)
+            }
+
+            if (userData.contact != null) {
+                directoriesService.removeContactFromFavourites(userData.contact.id)
+            }
+
+            userData.isInFavourites = false
+
+            isFavourite.postValue(false)
+        } else {
+            if (userData.user != null) {
+                directoriesService.addUserToFavourites(userData.user.id)
+            }
+
+            if (userData.contact != null) {
+                directoriesService.addContactToFavourites(userData.contact)
+            }
+
+            userData.isInFavourites = true
+            isFavourite.postValue(true)
+        }
+    }
+
+    fun startCall() {
+        val numbersAndAddresses = numbersAndAddresses.value
+        if (numbersAndAddresses != null && numbersAndAddresses.any()) {
+            numbersAndAddresses.first().startCall()
+        }
+    }
+
+    fun canStartCall(): Boolean {
+        val numbersAndAddresses = numbersAndAddresses.value
+        return numbersAndAddresses != null && numbersAndAddresses.any()
     }
 }

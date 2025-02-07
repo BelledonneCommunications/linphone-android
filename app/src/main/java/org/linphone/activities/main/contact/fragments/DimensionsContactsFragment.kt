@@ -24,6 +24,9 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
@@ -31,6 +34,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.transition.MaterialSharedAxis
+import io.reactivex.rxjava3.disposables.Disposable
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -39,17 +43,19 @@ import org.linphone.activities.clearDisplayedContact
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.contact.adapters.ContactsListAdapter
 import org.linphone.activities.main.contact.viewmodels.ContactsListViewModel
+import org.linphone.activities.main.contact.viewmodels.UserGroupViewModel
 import org.linphone.activities.main.fragments.MasterFragment
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.navigateToContact
 import org.linphone.activities.navigateToContactEditor
 import org.linphone.core.Factory
 import org.linphone.core.Friend
-import org.linphone.databinding.ContactMasterFragmentBinding
+import org.linphone.databinding.ContactDimensionsFragmentBinding
+import org.linphone.services.UserGroupService
 import org.linphone.utils.*
 import org.linphone.utils.Log
 
-class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, ContactsListAdapter>() {
+class DimensionsContactsFragment : MasterFragment<ContactDimensionsFragmentBinding, ContactsListAdapter>() {
     override val dialogConfirmationMessageBeforeRemoval = R.plurals.contact_delete_dialog
     private lateinit var listViewModel: ContactsListViewModel
 
@@ -57,10 +63,17 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
     private var editOnClick: Boolean = false
     private var contactIdToDisplay: String? = null
 
-    override fun getLayoutId(): Int = R.layout.contact_master_fragment
+    private var userGroupService: UserGroupService? = null
+    private var usergroupSubscription: Disposable? = null
+
+    override fun getLayoutId(): Int = R.layout.contact_dimensions_fragment
 
     override fun onDestroyView() {
         binding.contactsList.adapter = null
+        binding.userGroupSpinner.adapter = null
+
+        usergroupSubscription?.dispose()
+
         super.onDestroyView()
     }
 
@@ -73,7 +86,6 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         binding.viewModel = listViewModel
 
         /* Shared view model & sliding pane related */
-
         setUpSlidingPane(binding.slidingPane)
 
         useMaterialSharedAxisXForwardAnimation = false
@@ -279,6 +291,12 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
             listViewModel.updateContactsList(false)
         }
 
+        listViewModel.userGroup.observe(
+            viewLifecycleOwner
+        ) {
+            listViewModel.updateContactsList(false)
+        }
+
         binding.setNewContactClickListener {
             // Remove any previously selected contact
             sharedViewModel.selectedContact.value = null
@@ -335,6 +353,24 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
                 requestPermissions(arrayOf(android.Manifest.permission.READ_CONTACTS), 0)
             }
         }
+
+        val usergroupSpinner: Spinner = requireView().findViewById(R.id.userGroupSpinner)
+        usergroupSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                // required to satisfy compiler
+            }
+
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
+                showUserGroup(usergroupSpinner.selectedItem as UserGroupViewModel)
+            }
+        }
+
+        userGroupService = UserGroupService.getInstance(requireContext())
+        usergroupSubscription = userGroupService!!.userGroups.subscribe(
+            { response -> updateSpinnerAdapter(response) },
+            { error -> Log.e(error) }
+        )
     }
 
     override fun deleteItems(indexesOfItemToDelete: ArrayList<Int>) {
@@ -363,6 +399,21 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
     override fun onResume() {
         super.onResume()
         listViewModel.updateContactsList(true)
+    }
+
+    private fun updateSpinnerAdapter(userGroups: List<UserGroupViewModel>) {
+        val spinner: Spinner = requireView().findViewById(R.id.userGroupSpinner)
+        val adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            userGroups
+        )
+
+        spinner.adapter = adapter
+    }
+
+    private fun showUserGroup(userGroupModel: UserGroupViewModel) {
+        listViewModel.userGroup.value = userGroupModel
     }
 
     @Deprecated("Deprecated in Java")

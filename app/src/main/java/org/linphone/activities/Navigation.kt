@@ -39,7 +39,7 @@ import org.linphone.activities.main.chat.fragments.MasterChatRoomsFragment
 import org.linphone.activities.main.conference.fragments.*
 import org.linphone.activities.main.contact.fragments.ContactEditorFragment
 import org.linphone.activities.main.contact.fragments.DetailContactFragment
-import org.linphone.activities.main.contact.fragments.MasterContactsFragment
+import org.linphone.activities.main.contact.fragments.DimensionsContactsFragment
 import org.linphone.activities.main.dialer.fragments.DialerFragment
 import org.linphone.activities.main.fragments.TabsFragment
 import org.linphone.activities.main.history.fragments.DetailCallLogFragment
@@ -92,9 +92,9 @@ internal fun MainActivity.navigateToChatRoom(localAddress: String?, peerAddress:
 
 internal fun MainActivity.navigateToContacts() {
     findNavController(R.id.nav_host_fragment).navigate(
-        R.id.action_global_masterContactsFragment,
+        R.id.action_global_dimensionsContactsFragment,
         null,
-        popupTo(R.id.masterContactsFragment, true)
+        popupTo(R.id.dimensionsContactsFragment, true)
     )
 }
 
@@ -102,7 +102,7 @@ internal fun MainActivity.navigateToContact(contactId: String?) {
     val deepLink = "linphone-android://contact/view/$contactId"
     findNavController(R.id.nav_host_fragment).navigate(
         Uri.parse(deepLink),
-        popupTo(R.id.masterContactsFragment, true)
+        popupTo(R.id.dimensionsContactsFragment, true)
     )
 }
 
@@ -110,7 +110,7 @@ internal fun MainActivity.navigateToContact(contactId: String?) {
 
 internal fun TabsFragment.navigateToCallHistory() {
     val action = when (findNavController().currentDestination?.id) {
-        R.id.masterContactsFragment -> R.id.action_masterContactsFragment_to_masterCallLogsFragment
+        R.id.dimensionsContactsFragment -> R.id.action_dimensionsContactsFragment_to_masterCallLogsFragment
         R.id.dialerFragment -> R.id.action_dialerFragment_to_masterCallLogsFragment
         R.id.masterChatRoomsFragment -> R.id.action_masterChatRoomsFragment_to_masterCallLogsFragment
         else -> R.id.action_global_masterCallLogsFragment
@@ -124,22 +124,22 @@ internal fun TabsFragment.navigateToCallHistory() {
 
 internal fun TabsFragment.navigateToContacts() {
     val action = when (findNavController().currentDestination?.id) {
-        R.id.masterCallLogsFragment -> R.id.action_masterCallLogsFragment_to_masterContactsFragment
-        R.id.dialerFragment -> R.id.action_dialerFragment_to_masterContactsFragment
-        R.id.masterChatRoomsFragment -> R.id.action_masterChatRoomsFragment_to_masterContactsFragment
-        else -> R.id.action_global_masterContactsFragment
+        R.id.masterCallLogsFragment -> R.id.action_masterCallLogsFragment_to_dimensionsContactsFragment
+        R.id.dialerFragment -> R.id.action_dialerFragment_to_dimensionsContactsFragment
+        R.id.masterChatRoomsFragment -> R.id.action_masterChatRoomsFragment_to_dimensionsContactsFragment
+        else -> R.id.action_global_dimensionsContactsFragment
     }
     findNavController().navigate(
         action,
         null,
-        popupTo(R.id.masterContactsFragment, true)
+        popupTo(R.id.dimensionsContactsFragment, true)
     )
 }
 
 internal fun TabsFragment.navigateToDialer() {
     val action = when (findNavController().currentDestination?.id) {
         R.id.masterCallLogsFragment -> R.id.action_masterCallLogsFragment_to_dialerFragment
-        R.id.masterContactsFragment -> R.id.action_masterContactsFragment_to_dialerFragment
+        R.id.dimensionsContactsFragment -> R.id.action_dimensionsContactsFragment_to_dialerFragment
         R.id.masterChatRoomsFragment -> R.id.action_masterChatRoomsFragment_to_dialerFragment
         else -> R.id.action_global_dialerFragment
     }
@@ -153,7 +153,7 @@ internal fun TabsFragment.navigateToDialer() {
 internal fun TabsFragment.navigateToChatRooms() {
     val action = when (findNavController().currentDestination?.id) {
         R.id.masterCallLogsFragment -> R.id.action_masterCallLogsFragment_to_masterChatRoomsFragment
-        R.id.masterContactsFragment -> R.id.action_masterContactsFragment_to_masterChatRoomsFragment
+        R.id.dimensionsContactsFragment -> R.id.action_dimensionsContactsFragment_to_masterChatRoomsFragment
         R.id.dialerFragment -> R.id.action_dialerFragment_to_masterChatRoomsFragment
         else -> R.id.action_global_masterChatRoomsFragment
     }
@@ -175,7 +175,7 @@ internal fun DialerFragment.navigateToContacts(uriToAdd: String?) {
     val deepLink = "linphone-android://contact/new/$uriToAdd"
     findNavController().navigate(
         Uri.parse(deepLink),
-        popupTo(R.id.masterContactsFragment, true)
+        popupTo(R.id.dimensionsContactsFragment, true)
     )
 }
 
@@ -488,8 +488,8 @@ internal fun GroupInfoFragment.navigateToChatRoom(args: Bundle?, created: Boolea
 
 /* Contacts related */
 
-internal fun MasterContactsFragment.navigateToContact() {
-    if (findNavController().currentDestination?.id == R.id.masterContactsFragment) {
+internal fun DimensionsContactsFragment.navigateToContact() {
+    if (findNavController().currentDestination?.id == R.id.dimensionsContactsFragment) {
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.contacts_nav_container) as NavHostFragment
         navHostFragment.navController.navigate(
@@ -500,11 +500,11 @@ internal fun MasterContactsFragment.navigateToContact() {
     }
 }
 
-internal fun MasterContactsFragment.navigateToContactEditor(
+internal fun DimensionsContactsFragment.navigateToContactEditor(
     sipUriToAdd: String? = null,
     slidingPane: SlidingPaneLayout
 ) {
-    if (findNavController().currentDestination?.id == R.id.masterContactsFragment) {
+    if (findNavController().currentDestination?.id == R.id.dimensionsContactsFragment) {
         val bundle = if (sipUriToAdd != null) bundleOf("SipUri" to sipUriToAdd) else Bundle()
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.contacts_nav_container) as NavHostFragment
@@ -517,8 +517,8 @@ internal fun MasterContactsFragment.navigateToContactEditor(
     }
 }
 
-internal fun MasterContactsFragment.clearDisplayedContact() {
-    if (findNavController().currentDestination?.id == R.id.masterContactsFragment) {
+internal fun DimensionsContactsFragment.clearDisplayedContact() {
+    if (findNavController().currentDestination?.id == R.id.dimensionsContactsFragment) {
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.contacts_nav_container) as NavHostFragment
         navHostFragment.navController.navigate(

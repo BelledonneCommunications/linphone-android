@@ -13,6 +13,10 @@
             name="editClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
+            name="toggleFavouriteListener"
+            type="android.view.View.OnClickListener"/>
+
+        <variable
             name="viewModel"
             type="org.linphone.activities.main.contact.viewmodels.ContactViewModel" />
         <variable
@@ -22,9 +26,11 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="?attr/lightToolbarBackgroundColor"
+        >
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/top_bar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/main_activity_top_bar_size"
@@ -35,97 +41,104 @@
                 android:id="@+id/back"
                 android:visibility="@{sharedMainViewModel.isSlidingPaneSlideable ? View.VISIBLE : View.GONE}"
                 android:contentDescription="@string/content_description_go_back"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="0.2"
                 android:background="?attr/button_background_drawable"
                 android:padding="15dp"
                 android:src="@drawable/icon_back" />
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.4" />
+            <TextView
+                style="@style/contact_header_font"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_centerInParent="true"
+                android:text="@string/contact_details" />
 
-            <ImageView
-                android:onClick="@{editClickListener}"
-                android:visibility="@{viewModel.isNativeContact &amp;&amp; !viewModel.readOnlyNativeAddressBook ? View.VISIBLE : View.INVISIBLE}"
-                android:contentDescription="@string/content_description_edit_contact"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.2"
-                android:background="?attr/button_background_drawable"
-                android:padding="15dp"
-                android:src="@drawable/icon_edit" />
-
-            <ImageView
-                android:onClick="@{deleteClickListener}"
-                android:visibility="@{viewModel.isNativeContact &amp;&amp; !viewModel.readOnlyNativeAddressBook ? View.VISIBLE : View.INVISIBLE}"
-                android:contentDescription="@string/content_description_delete_contact"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.2"
-                android:background="?attr/button_background_drawable"
-                android:padding="15dp"
-                android:src="@drawable/icon_delete" />
-
-        </LinearLayout>
+        </RelativeLayout>
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/top_bar">
+            android:layout_below="@id/top_bar"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:gravity="start"
                 android:orientation="vertical"
                 android:paddingTop="20dp">
 
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical">
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/avatar"
+                            android:layout_width="@dimen/contact_avatar_big_size"
+                            android:layout_height="@dimen/contact_avatar_big_size"
+                            coilContactBig="@{viewModel}"
+                            android:background="@drawable/generated_avatar_bg"
+                            android:src="@drawable/voip_single_contact_avatar"
+                            android:contentDescription="@null"/>
+
+                        <ImageView
+                            android:layout_width="@dimen/contact_presence_big_badge_size"
+                            android:layout_height="@dimen/contact_presence_big_badge_size"
+                            android:layout_alignBottom="@id/avatar"
+                            android:layout_marginStart="70dp"
+                            android:adjustViewBounds="true"
+                            android:background="@drawable/led_background"
+                            android:padding="@dimen/contact_presence_big_badge_padding"
+                            app:presenceIcon="@{viewModel.presenceStatus}"
+                            android:visibility="@{viewModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE, default=gone}"
+                            tools:ignore="ContentDescription" />
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:layout_marginStart="10dp">
+                        <TextView
+                            android:text="@{viewModel.contact.name ?? viewModel.displayName}"
+                            style="@style/big_contact_name_font"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:layout_gravity="center" />
+
+                        <org.linphone.views.MarqueeTextView
+                            android:visibility="@{viewModel.displayOrganization ? View.VISIBLE : View.GONE}"
+                            android:text="@{viewModel.contact.organization}"
+                            style="@style/contact_organization_font"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:singleLine="true" />
+
+                    </LinearLayout>
 
                     <ImageView
-                        android:id="@+id/avatar"
-                        android:layout_width="@dimen/contact_avatar_big_size"
-                        android:layout_height="@dimen/contact_avatar_big_size"
-                        coilContactBig="@{viewModel}"
-                        android:background="@drawable/generated_avatar_bg"
-                        android:src="@drawable/voip_single_contact_avatar"
-                        android:contentDescription="@null" />
-
-                    <ImageView
-                        android:layout_width="@dimen/contact_presence_big_badge_size"
-                        android:layout_height="@dimen/contact_presence_big_badge_size"
-                        android:layout_alignBottom="@id/avatar"
-                        android:layout_marginStart="70dp"
-                        android:adjustViewBounds="true"
-                        android:background="@drawable/led_background"
-                        android:padding="@dimen/contact_presence_big_badge_padding"
-                        app:presenceIcon="@{viewModel.presenceStatus}"
-                        android:visibility="@{viewModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE, default=gone}"
-                        tools:ignore="ContentDescription" />
-
-                </RelativeLayout>
-
-                <TextView
-                    android:text="@{viewModel.contact.name ?? viewModel.displayName}"
-                    style="@style/big_contact_name_font"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:layout_gravity="center" />
-
-                <org.linphone.views.MarqueeTextView
-                    android:visibility="@{viewModel.displayOrganization ? View.VISIBLE : View.GONE}"
-                    android:text="@{viewModel.contact.organization}"
-                    style="@style/contact_organization_font"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:singleLine="true" />
+                        android:onClick="@{toggleFavouriteListener}"
+                        android:contentDescription="@string/content_description_is_favourite"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="0.2"
+                        android:padding="5dp"
+                        android:src="@{viewModel.isFavourite ? @drawable/icon_star_filled : @drawable/icon_star}"
+                        android:alpha="@{viewModel.canBeFavourite ? 1.0f : 0.25f }"
+                        app:tint="?attr/accentColor"/>
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -134,6 +147,27 @@
                     android:orientation="vertical"
                     app:entries="@{viewModel.numbersAndAddresses}"
                     app:layout="@{@layout/contact_detail_cell}"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:orientation="vertical"
+                    app:entries="@{viewModel.additionalData}"
+                    app:layout="@{@layout/contact_additional_detail_cell}"/>
+
+                <ImageView
+                    android:onClick="@{() -> viewModel.startCall()}"
+                    android:enabled="@{viewModel.canStartCall()}"
+                    android:contentDescription="@string/content_description_start_call"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_margin="10dp"
+                    android:padding="12dp"
+                    android:layout_gravity="center_horizontal"
+                    app:tint="@color/dark_primary_text_color"
+                    android:background="@drawable/round_orange_button_background"
+                    android:src="@drawable/icon_call" />
 
             </LinearLayout>
 
@@ -146,3 +180,4 @@
     </RelativeLayout>
 
 </layout>
+

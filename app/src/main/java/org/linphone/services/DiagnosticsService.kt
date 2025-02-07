@@ -35,7 +35,6 @@ class DiagnosticsService {
 
             return APIClientService()
                 .getUCGatewayService(
-                    context,
                     env.gatewayApiUri,
                     AuthorizationServiceManager.getInstance(context).authorizationServiceInstance,
                     AuthStateManager.getInstance(context)

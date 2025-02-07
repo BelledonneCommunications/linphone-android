@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="data"
+            type="org.linphone.activities.main.contact.data.ContactAdditionalData" />
+    </data>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:text="@{data.fieldName}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:width="150dp"
+                android:textColor="?attr/primarySubtextDarkColor"/>
+
+            <TextView
+                android:text="@{data.value}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="20dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="?attr/primarySubtextDarkColor"/>
+
+        </LinearLayout>
+
+
+</layout>

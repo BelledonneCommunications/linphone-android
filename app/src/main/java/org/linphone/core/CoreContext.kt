@@ -41,6 +41,7 @@ import androidx.loader.app.LoaderManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.GsonBuilder
+import io.reactivex.rxjava3.disposables.Disposable
 import java.io.File
 import java.math.BigInteger
 import java.nio.charset.StandardCharsets
@@ -329,6 +330,8 @@ class CoreContext(
         }
     }
 
+    private var deviceSubscription: Disposable? = null
+
     init {
         if (context.resources.getBoolean(R.bool.crashlytics_enabled)) {
             loggingService.addListener(loggingServiceListener)
@@ -429,7 +432,7 @@ class CoreContext(
         audioManager.registerAudioDeviceCallback(audioDeviceCallback, handler)
         Log.i("[Context] Started")
 
-        val deviceSubscription = DimensionsAccountsManager.getInstance(context).devicesSubject.subscribe(
+        deviceSubscription = DimensionsAccountsManager.getInstance(context).devicesSubject.subscribe(
             { response -> registerSipEndpoints(response.userDevices) },
             { error -> Log.e(error) }
         )
@@ -628,6 +631,8 @@ class CoreContext(
         loggingService.removeListener(loggingServiceListener)
 
         (context as Application).unregisterActivityLifecycleCallbacks(activityMonitor)
+
+        deviceSubscription?.dispose()
     }
 
     fun onForeground() {

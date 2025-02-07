@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="allContactsToggleClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="sipContactsToggleClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="newContactClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="editClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.main.contact.viewmodels.ContactsListViewModel" />
+    </data>
+
+    <androidx.slidingpanelayout.widget.SlidingPaneLayout
+        android:id="@+id/sliding_pane"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity">
+
+        <RelativeLayout
+            android:layout_width="@dimen/master_fragment_width"
+            android:layout_height="match_parent"
+            android:background="?attr/backgroundColor"
+            android:layout_gravity="start">
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/list_edit_top_bar_fragment"
+                android:name="org.linphone.activities.main.fragments.ListTopBarFragment"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/main_activity_top_bar_size"
+                android:layout_alignTop="@id/top_bar"
+                tools:layout="@layout/list_edit_top_bar_fragment" />
+
+            <EditText
+                android:id="@+id/searchBar"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_below="@id/top_bar"
+                android:layout_margin="10dp"
+                android:background="@color/transparent_color"
+                android:backgroundTint="@color/transparent_color"
+                android:drawableLeft="@drawable/icon_search"
+                android:drawablePadding="10dp"
+                android:hint="@string/contact_filter_hint"
+                android:inputType="textPersonName|textNoSuggestions"
+                android:text="@={viewModel.filter}" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/searchBar"
+                android:background="?attr/dividerColor" />
+
+            <Spinner
+                android:id="@+id/userGroupSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/searchBar"
+                android:padding="17dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/contactsList"
+                android:layout_below="@+id/userGroupSpinner"
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/searchBar">
+
+                <TextView
+                    style="@style/empty_list_font"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="@string/no_sip_contact"
+                    android:visibility="@{viewModel.sipContactsSelected &amp;&amp; viewModel.contactsList.empty ? View.VISIBLE : View.GONE}" />
+
+                <TextView
+                    style="@style/empty_list_font"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="@string/no_contact"
+                    android:visibility="@{!viewModel.sipContactsSelected &amp;&amp; viewModel.contactsList.empty ? View.VISIBLE : View.GONE}" />
+
+                <include
+                    layout="@layout/wait_layout"
+                    app:visibility="@{viewModel.fetchInProgress}"/>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:background="?attr/dividerColor" />
+
+        </RelativeLayout>
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/contacts_nav_container"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:defaultNavHost="false"
+            app:navGraph="@navigation/contacts_nav_graph"/>
+
+    </androidx.slidingpanelayout.widget.SlidingPaneLayout>
+
+</layout>

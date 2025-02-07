@@ -335,8 +335,13 @@
 
     <!-- Contact related -->
 
-    <style name="contact_organization_font" parent="@android:style/TextAppearance.Small">
+    <style name="contact_header_font" parent="@android:style/TextAppearance.Large">
         <item name="android:textColor">?attr/primaryTextColor</item>
+        <item name="android:textSize">21sp</item>
+    </style>
+
+    <style name="contact_organization_font" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">?attr/accentColor</item>
         <item name="android:textSize">13sp</item>
     </style>
 
@@ -346,7 +351,7 @@
     </style>
 
     <style name="big_contact_name_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">?attr/primaryTextColor</item>
+        <item name="android:textColor">?attr/accentColor</item>
         <item name="android:textSize">30sp</item>
     </style>
 

@@ -76,7 +76,6 @@ class BrandingService(val context: Context) : DefaultLifecycleObserver {
         Log.d("Fetch branding...")
 
         apiClient.getUCGatewayService(
-            context,
             dimensionsEnvironment!!.gatewayApiUri,
             AuthorizationServiceManager.getInstance(context).authorizationServiceInstance,
             AuthStateManager.getInstance(context)

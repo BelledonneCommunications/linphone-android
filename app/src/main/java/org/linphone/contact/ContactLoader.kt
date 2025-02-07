@@ -38,7 +38,10 @@ import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.activities.main.contact.viewmodels.UserGroupViewModel
 import org.linphone.core.*
+import org.linphone.models.usergroup.UserGroupModel
+import org.linphone.services.UserGroupService
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Log
 import org.linphone.utils.PhoneNumberUtils
@@ -228,7 +231,10 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                                             } == null
                                         ) {
                                             val phoneNumber = Factory.instance()
-                                                .createFriendPhoneNumber(number, label)
+                                                .createFriendPhoneNumber(
+                                                    number,
+                                                    label
+                                                )
                                             friend.addPhoneNumberWithLabel(phoneNumber)
                                             friendsPhoneNumbers.add(number)
                                         }
@@ -279,6 +285,21 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                         } catch (e: Exception) {
                             Log.e("[Contacts Loader] Exception: $e")
                         }
+                    }
+
+                    val userGroupModel = UserGroupModel()
+                    userGroupModel.id = UserGroupViewModel.ANDROID_CONTACTS_GROUP_NAME
+                    userGroupModel.name = coreContext.context.resources.getString(
+                        R.string.contacts_androidContactsGroup
+                    )
+
+                    val userGroupViewModel = UserGroupViewModel(userGroupModel)
+                    for (friendHash in friends) {
+                        userGroupViewModel.friends.add(friendHash.value)
+
+                        UserGroupService.getInstance(coreContext.context).localContactsSubject.onNext(
+                            userGroupViewModel
+                        )
                     }
 
                     withContext(Dispatchers.Main) {

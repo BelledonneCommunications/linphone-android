@@ -38,10 +38,25 @@
                 android:layout_height="24dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:focusableInTouchMode="true"
-                android:src="@drawable/icon_backspace" />
+                android:src="@drawable/icon_backspace"
+                android:layout_toStartOf="@+id/paste"
+                />
+
+            <ImageView
+                android:id="@+id/paste"
+                android:onClick="@{() -> viewModel.pasteUri()}"
+                android:contentDescription="Paste"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:layout_centerVertical="true"
+                android:focusableInTouchMode="true"
+                android:src="@drawable/icon_paste"
+                android:layout_alignParentEnd="true"
+                />
 
             <EditText
                 android:id="@+id/sip_uri_input"
@@ -52,14 +67,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@id/erase"
+                android:layout_toStartOf="@id/erase"
                 android:background="@color/transparent_color"
                 android:backgroundTint="@color/transparent_color"
                 android:ellipsize="start"
                 android:inputType="textEmailAddress|textUri|textNoSuggestions"
-                android:paddingLeft="20dp"
-                android:paddingRight="5dp"
-                android:textColorHint="@color/light_grey_color" />
+                android:paddingStart="20dp"
+                android:paddingEnd="5dp"
+                android:textColorHint="@color/light_grey_color"
+                />
 
         </RelativeLayout>
 

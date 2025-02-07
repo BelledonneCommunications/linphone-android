@@ -1,6 +1,5 @@
 package org.linphone.services
 
-import android.content.Context
 import net.openid.appauth.AuthorizationService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -8,19 +7,19 @@ import org.linphone.authentication.AuthStateManager
 import org.linphone.interfaces.CTGatewayService
 import org.linphone.middleware.AuthAuthenticator
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 class APIClientService {
     private lateinit var ctGatewayService: CTGatewayService
 
     fun getUCGatewayService(
-        context: Context,
         baseUrl: String,
         authService: AuthorizationService,
         asm: AuthStateManager
     ): CTGatewayService {
         if (!::ctGatewayService.isInitialized) {
-            ctGatewayService = getRetrofit(context, baseUrl, authService, asm).create(
+            ctGatewayService = getRetrofit(baseUrl, authService, asm).create(
                 CTGatewayService::class.java
             )
         }
@@ -29,20 +28,19 @@ class APIClientService {
     }
 
     private fun getRetrofit(
-        context: Context,
         baseUrl: String,
         authService: AuthorizationService,
         asm: AuthStateManager
     ): Retrofit {
         return Retrofit.Builder()
             .baseUrl(baseUrl)
+            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
-            .client(getOkHttpClient(context, authService, asm))
+            .client(getOkHttpClient(authService, asm))
             .build()
     }
 
     private fun getOkHttpClient(
-        context: Context,
         authService: AuthorizationService,
         asm: AuthStateManager
     ): OkHttpClient {

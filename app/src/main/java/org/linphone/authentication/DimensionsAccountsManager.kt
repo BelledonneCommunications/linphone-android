@@ -71,7 +71,6 @@ class DimensionsAccountsManager(context: Context) {
 
         val apiClientService = APIClientService()
         val ucGatewayService = apiClientService.getUCGatewayService(
-            mContext,
             dimensionsEnvironment!!.gatewayApiUri,
             AuthorizationServiceManager.getInstance(mContext).getAuthorizationServiceInstance(),
             asm

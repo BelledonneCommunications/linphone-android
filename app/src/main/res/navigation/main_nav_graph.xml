@@ -17,8 +17,8 @@
             android:id="@+id/action_masterChatRoomsFragment_to_masterCallLogsFragment"
             app:destination="@id/masterCallLogsFragment" />
         <action
-            android:id="@+id/action_masterChatRoomsFragment_to_masterContactsFragment"
-            app:destination="@id/masterContactsFragment" />
+            android:id="@+id/action_masterChatRoomsFragment_to_dimensionsContactsFragment"
+            app:destination="@id/dimensionsContactsFragment" />
         <argument
             android:name="LocalSipUri"
             app:argType="string"
@@ -37,33 +37,6 @@
         android:id="@+id/action_global_masterChatRoomsFragment"
         app:destination="@id/masterChatRoomsFragment" />
     <fragment
-        android:id="@+id/masterContactsFragment"
-        android:name="org.linphone.activities.main.contact.fragments.MasterContactsFragment"
-        android:label="MasterContactsFragment"
-        tools:layout="@layout/contact_master_fragment" >
-        <action
-            android:id="@+id/action_masterContactsFragment_to_masterCallLogsFragment"
-            app:destination="@id/masterCallLogsFragment" />
-        <action
-            android:id="@+id/action_masterContactsFragment_to_dialerFragment"
-            app:destination="@id/dialerFragment" />
-        <action
-            android:id="@+id/action_masterContactsFragment_to_masterChatRoomsFragment"
-            app:destination="@id/masterChatRoomsFragment" />
-        <deepLink
-            app:uri="linphone-android://contact/view/{id}"
-            android:autoVerify="true" />
-        <deepLink
-            app:uri="linphone-android://contact/view-friend/{address}"
-            android:autoVerify="true" />
-        <deepLink
-            app:uri="linphone-android://contact/new/{sipUri}"
-            android:autoVerify="true" />
-    </fragment>
-    <action
-        android:id="@+id/action_global_masterContactsFragment"
-        app:destination="@id/masterContactsFragment" />
-    <fragment
         android:id="@+id/masterCallLogsFragment"
         android:name="org.linphone.activities.main.history.fragments.MasterCallLogsFragment"
         android:label="MasterCallLogsFragment"
@@ -72,8 +45,8 @@
             android:id="@+id/action_masterCallLogsFragment_to_dialerFragment"
             app:destination="@id/dialerFragment" />
         <action
-            android:id="@+id/action_masterCallLogsFragment_to_masterContactsFragment"
-            app:destination="@id/masterContactsFragment" />
+            android:id="@+id/action_masterCallLogsFragment_to_dimensionsContactsFragment"
+            app:destination="@id/dimensionsContactsFragment" />
         <action
             android:id="@+id/action_masterCallLogsFragment_to_masterChatRoomsFragment"
             app:destination="@id/masterChatRoomsFragment" />
@@ -90,8 +63,8 @@
             android:id="@+id/action_dialerFragment_to_masterCallLogsFragment"
             app:destination="@id/masterCallLogsFragment"/>
         <action
-            android:id="@+id/action_dialerFragment_to_masterContactsFragment"
-            app:destination="@id/masterContactsFragment" />
+            android:id="@+id/action_dialerFragment_to_dimensionsContactsFragment"
+            app:destination="@id/dimensionsContactsFragment" />
         <action
             android:id="@+id/action_dialerFragment_to_masterChatRoomsFragment"
             app:destination="@id/masterChatRoomsFragment" />
@@ -221,4 +194,31 @@
         android:id="@+id/action_global_scheduledConferencesFragment"
         app:destination="@id/scheduledConferencesFragment"/>
 
+    <fragment
+        android:id="@+id/dimensionsContactsFragment"
+        android:name="org.linphone.activities.main.contact.fragments.DimensionsContactsFragment"
+        android:label="DimensionsContactFragment"
+        tools:layout="@layout/contact_dimensions_fragment" >
+        <action
+            android:id="@+id/action_dimensionsContactsFragment_to_masterCallLogsFragment"
+            app:destination="@id/masterCallLogsFragment" />
+        <action
+            android:id="@+id/action_dimensionsContactsFragment_to_dialerFragment"
+            app:destination="@id/dialerFragment" />
+        <action
+            android:id="@+id/action_dimensionsContactsFragment_to_masterChatRoomsFragment"
+            app:destination="@id/masterChatRoomsFragment" />
+        <deepLink
+            app:uri="linphone-android://contact/view/{id}"
+            android:autoVerify="true" />
+        <deepLink
+            app:uri="linphone-android://contact/view-friend/{address}"
+            android:autoVerify="true" />
+        <deepLink
+            app:uri="linphone-android://contact/new/{sipUri}"
+            android:autoVerify="true" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_dimensionsContactsFragment"
+        app:destination="@id/dimensionsContactsFragment" />
 </navigation>

@@ -12,7 +12,7 @@ import org.linphone.models.AuthenticatedUser
 import org.linphone.models.UserInfo
 import org.linphone.utils.Log
 
-class UserService public constructor(context: Context) {
+class UserService(context: Context) {
 
     companion object {
         private val instance: AtomicReference<UserService> = AtomicReference<UserService>()
@@ -39,7 +39,6 @@ class UserService public constructor(context: Context) {
         val dimensionsEnvironment = DimensionsEnvironmentService.getInstance(context).getCurrentEnvironment()
 
         ucGatewayService = apiClientService.getUCGatewayService(
-            context,
             dimensionsEnvironment!!.gatewayApiUri,
             AuthorizationServiceManager.getInstance(context).getAuthorizationServiceInstance(),
             asm

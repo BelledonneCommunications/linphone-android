@@ -24,15 +24,18 @@ import android.provider.ContactsContract
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import java.util.*
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.subjects.BehaviorSubject
+import kotlin.collections.ArrayList
 import kotlinx.coroutines.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.core.*
+import org.linphone.services.DirectoriesService
 import org.linphone.utils.Event
 import org.linphone.utils.Log
-
 class ContactsListViewModel : ViewModel() {
     val sipContactsSelected = MutableLiveData<Boolean>()
 
@@ -51,7 +54,47 @@ class ContactsListViewModel : ViewModel() {
     private var fastFetchJob: Job? = null
 
     val filter = MutableLiveData<String>()
+
     private var previousFilter = "NotSet"
+
+    val userGroup = MutableLiveData<UserGroupViewModel>()
+
+    private val userGroupResultsSubject = BehaviorSubject.createDefault(
+        arrayListOf<ContactViewModel>()
+    )
+    private val magicSearchResultsSubject = BehaviorSubject.createDefault(
+        arrayListOf<ContactViewModel>()
+    )
+    private val contactSearchResultsSubject = BehaviorSubject.createDefault(
+        arrayListOf<ContactViewModel>()
+    )
+
+    private val userGroupResults = userGroupResultsSubject.startWithItem(arrayListOf())
+    private val magicSearchResults = magicSearchResultsSubject.startWithItem(arrayListOf())
+    private val contactSearchResults = contactSearchResultsSubject.startWithItem(arrayListOf())
+
+    // TODO: these subscriptions should be mopped up.
+    private var searchSubscription: Disposable? = null
+    private var combinedSearchSubscription: Disposable? = null
+
+    private val combinedSearch = Observable.combineLatest(
+        DirectoriesService.getInstance(coreContext.context).dialSearchText,
+        userGroupResults,
+        magicSearchResults,
+        contactSearchResults
+    ) { searchText, userGroup, magicSearch, contactSearch ->
+        if (searchText.isBlank() || searchText.length < 3) {
+            return@combineLatest ArrayList<ContactViewModel>(
+                userGroup.sortedBy { r -> r.fullName }
+            )
+        }
+
+        val combinedResults = magicSearch + contactSearch
+
+        return@combineLatest ArrayList<ContactViewModel>(
+            combinedResults.sortedBy { r -> r.fullName }
+        )
+    }
 
     val moreResultsAvailableEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
@@ -94,6 +137,18 @@ class ContactsListViewModel : ViewModel() {
 
         coreContext.contactsManager.addListener(contactsUpdatedListener)
         coreContext.contactsManager.magicSearch.addListener(magicSearchListener)
+
+        searchSubscription =
+            DirectoriesService.getInstance(coreContext.context).searchResults.subscribe { r ->
+                processContactSearchResults(
+                    r
+                )
+            }
+
+        combinedSearchSubscription = combinedSearch.subscribe { r ->
+            contactsList.value.orEmpty().forEach(ContactViewModel::destroy)
+            contactsList.postValue(r)
+        }
     }
 
     override fun onCleared() {
@@ -118,58 +173,110 @@ class ContactsListViewModel : ViewModel() {
         }
         previousFilter = filterValue
 
-        val domain = if (sipContactsSelected.value == true) coreContext.core.defaultAccount?.params?.domain ?: "" else ""
-        val sources = MagicSearch.Source.Friends.toInt() or MagicSearch.Source.LdapServers.toInt()
-        val aggregation = MagicSearch.Aggregation.Friend
-        searchResultsPending = true
-        fastFetchJob?.cancel()
-        Log.i(
-            "[Contacts] Asking Magic search for contacts matching filter [$filterValue], domain [$domain] and in sources [$sources]"
-        )
-        coreContext.contactsManager.magicSearch.getContactsListAsync(
-            filterValue,
-            domain,
-            sources,
-            aggregation
-        )
+        val selectedUserGroup = userGroup.value
+        if (filterValue.isBlank() && selectedUserGroup != null) {
+            // we have no search to display and we have a user group selected we should display the
+            // contents of the user group
+            processUserGroupResults(selectedUserGroup)
+        } else {
+            val domain = if (sipContactsSelected.value == true) coreContext.core.defaultAccount?.params?.domain ?: "" else ""
+            val sources = MagicSearch.Source.Friends.toInt() or MagicSearch.Source.LdapServers.toInt()
+            val aggregation = MagicSearch.Aggregation.Friend
+            searchResultsPending = true
+            fastFetchJob?.cancel()
+            Log.i(
+                "[Contacts] Asking Magic search for contacts matching filter [$filterValue], domain [$domain] and in sources [$sources]"
+            )
+            coreContext.contactsManager.magicSearch.getContactsListAsync(
+                filterValue,
+                domain,
+                sources,
+                aggregation
+            )
 
-        val spinnerDelay = corePreferences.delayBeforeShowingContactsSearchSpinner.toLong()
-        fastFetchJob = viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                delay(spinnerDelay)
-            }
-            withContext(Dispatchers.Main) {
-                if (searchResultsPending) {
-                    fetchInProgress.value = true
+            DirectoriesService.getInstance(coreContext.context).dialSearchTextSubject.onNext(
+                filterValue
+            )
+
+            val spinnerDelay = corePreferences.delayBeforeShowingContactsSearchSpinner.toLong()
+            fastFetchJob = viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    delay(spinnerDelay)
+                }
+                withContext(Dispatchers.Main) {
+                    if (searchResultsPending) {
+                        fetchInProgress.value = true
+                    }
                 }
             }
         }
     }
 
-    private fun processMagicSearchResults(results: Array<SearchResult>) {
-        Log.i("[Contacts] Processing ${results.size} results")
-        contactsList.value.orEmpty().forEach(ContactViewModel::destroy)
+    private fun processUserGroupResults(results: UserGroupViewModel) {
+        CoroutineScope(Dispatchers.Main).launch {
+            Log.i(
+                "processUserGroupResults Processing ${results.count()} results"
+            )
+            val list = arrayListOf<ContactViewModel>()
 
-        val list = arrayListOf<ContactViewModel>()
-
-        for (result in results) {
-            val friend = result.friend
-
-            val viewModel = if (friend != null) {
-                ContactViewModel(friend)
-            } else {
-                Log.w("[Contacts] SearchResult [$result] has no Friend!")
-                val fakeFriend = coreContext.contactsManager.createFriendFromSearchResult(
-                    result
-                )
-                ContactViewModel(fakeFriend)
+            for (friend in results.friends) {
+                list.add(ContactViewModel(friend))
             }
 
-            list.add(viewModel)
-        }
+            list.sortBy { contactViewModel -> contactViewModel.fullName }
 
-        contactsList.value = list
-        Log.i("[Contacts] Processed ${results.size} results")
+            userGroupResultsSubject.onNext(list)
+
+            Log.i("processUserGroupResults Processed ${list.size} results")
+        }
+    }
+
+    private fun processMagicSearchResults(results: Array<SearchResult>) {
+        CoroutineScope(Dispatchers.Main).launch {
+            Log.i("processMagicSearchResults Processing ${results.size} results")
+
+            val list = arrayListOf<ContactViewModel>()
+
+            for (result in results) {
+                val friend = result.friend
+
+                val viewModel = if (friend != null) {
+                    ContactViewModel(friend)
+                } else {
+                    Log.w("[Contacts] SearchResult [$result] has no Friend!")
+                    val fakeFriend = coreContext.contactsManager.createFriendFromSearchResult(
+                        result
+                    )
+                    ContactViewModel(fakeFriend)
+                }
+
+                list.add(viewModel)
+            }
+
+            list.sortBy { contactViewModel -> contactViewModel.fullName }
+
+            magicSearchResultsSubject.onNext(list)
+
+            Log.i("processMagicSearchResults Processed ${list.size} results")
+        }
+    }
+
+    private fun processContactSearchResults(results: UserGroupViewModel) {
+        CoroutineScope(Dispatchers.Main).launch {
+            Log.i("processContactSearchResults Processing ${results.count()} results")
+
+            val list = arrayListOf<ContactViewModel>()
+
+            for (friend in results.friends) {
+                list.add(ContactViewModel(friend))
+            }
+
+            list.sortBy { contactViewModel -> contactViewModel.fullName }
+
+            contactSearchResultsSubject.onNext(list)
+
+            Log.i("processUserGroupResults Processed ${results.count()} results")
+        }
     }
 
     fun deleteContact(friend: Friend) {
@@ -177,7 +284,7 @@ class ContactsListViewModel : ViewModel() {
 
         val id = friend.refKey
         if (id == null) {
-            Log.w("[Contacts] Friend has no refkey, can't delete it from native address book")
+            Log.w("[Contacts] Friend has no ref key, can't delete it from native address book")
             return
         }
 

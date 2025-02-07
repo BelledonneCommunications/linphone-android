@@ -19,6 +19,7 @@
  */
 package org.linphone.activities.main.dialer.viewmodels
 
+import android.content.ClipboardManager
 import android.content.Context
 import android.os.Vibrator
 import android.text.Editable
@@ -189,6 +190,16 @@ class DialerViewModel : LogsUploadViewModel() {
 
     fun eraseLastChar() {
         enteredUri.value = enteredUri.value?.dropLast(1)
+    }
+
+    fun pasteUri(): Boolean {
+        val clipboard = coreContext.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipData = clipboard.primaryClip
+        if (clipData != null && clipData.itemCount > 0) {
+            val clipboardText = clipData.getItemAt(0).text
+            enteredUri.value = clipboardText.toString()
+        }
+        return true
     }
 
     fun eraseAll(): Boolean {

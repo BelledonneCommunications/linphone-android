@@ -95,7 +95,7 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
 
         binding.setNewContactClickListener {
             sharedViewModel.updateDialerAnimationsBasedOnDestination.value = Event(
-                R.id.masterContactsFragment
+                R.id.dimensionsContactsFragment
             )
             sharedViewModel.updateContactsAnimationsBasedOnDestination.value = Event(
                 R.id.dialerFragment
