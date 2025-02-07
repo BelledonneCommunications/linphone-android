@@ -72,7 +72,7 @@ class DimensionsContactsFragment : MasterFragment<ContactDimensionsFragmentBindi
         binding.contactsList.adapter = null
         binding.userGroupSpinner.adapter = null
 
-        usergroupSubscription?.dispose()
+        // usergroupSubscription?.dispose()
 
         super.onDestroyView()
     }

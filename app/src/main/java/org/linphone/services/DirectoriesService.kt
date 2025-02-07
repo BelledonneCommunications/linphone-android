@@ -73,8 +73,8 @@ class DirectoriesService(val context: Context) : DefaultLifecycleObserver {
         destroy.onNext(Unit)
         destroy.onComplete()
 
-        contactDirectoriesSubscription?.dispose()
-        allUsersSubscription?.dispose()
+        // contactDirectoriesSubscription?.dispose()
+        // allUsersSubscription?.dispose()
     }
 
     init {
@@ -226,6 +226,10 @@ class DirectoriesService(val context: Context) : DefaultLifecycleObserver {
             }
             contactItemLists.flatten()
         }
+            .onErrorResumeNext { e: Throwable ->
+                Log.e(e, "Error searching directories.")
+                Observable.just(listOf())
+            }
     }
 
     private fun searchDirectory(id: String, searchText: String): List<ContactItemModel> {
