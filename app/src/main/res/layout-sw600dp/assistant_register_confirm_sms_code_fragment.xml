@@ -60,6 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
                 android:text="@{viewModel.confirmationMessage, default=@string/assistant_account_creation_sms_confirmation_explanation}"
                 android:textSize="14sp"
                 android:textColor="?attr/color_main2_600"
