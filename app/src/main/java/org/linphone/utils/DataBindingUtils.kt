@@ -497,7 +497,7 @@ fun loadBigContactPictureWithCoil(imageView: ImageView, contact: ContactDataInte
                 contact,
                 false,
                 R.dimen.contact_avatar_big_size,
-                R.dimen.contact_avatar_text_big_size
+                R.dimen.contact_avatar_text_medium_size
             )
         }
     }

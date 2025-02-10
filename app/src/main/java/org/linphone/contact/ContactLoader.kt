@@ -39,6 +39,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.contact.viewmodels.UserGroupViewModel
+import org.linphone.activities.main.contact.viewmodels.UserGroupViewModelSubjectWrapper
 import org.linphone.core.*
 import org.linphone.models.usergroup.UserGroupModel
 import org.linphone.services.UserGroupService
@@ -298,7 +299,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                         userGroupViewModel.friends.add(friendHash.value)
 
                         UserGroupService.getInstance(coreContext.context).localContactsSubject.onNext(
-                            userGroupViewModel
+                            UserGroupViewModelSubjectWrapper(userGroupViewModel)
                         )
                     }
 

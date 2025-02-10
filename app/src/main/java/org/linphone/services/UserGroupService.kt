@@ -11,6 +11,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import java.util.concurrent.atomic.AtomicReference
 import org.linphone.R
 import org.linphone.activities.main.contact.viewmodels.UserGroupViewModel
+import org.linphone.activities.main.contact.viewmodels.UserGroupViewModelSubjectWrapper
 import org.linphone.authentication.AuthStateManager
 import org.linphone.authentication.AuthorizationServiceManager
 import org.linphone.core.Friend
@@ -35,7 +36,7 @@ class UserGroupService(val context: Context) : DefaultLifecycleObserver {
 
     private val tenantUserGroupsSubject = BehaviorSubject.create<List<UserGroupViewModel>>()
     private val personalUserGroupsSubject = BehaviorSubject.create<List<UserGroupViewModel>>()
-    val localContactsSubject = BehaviorSubject.create<UserGroupViewModel>()
+    val localContactsSubject = BehaviorSubject.create<UserGroupViewModelSubjectWrapper>()
 
     var favouritesGroup: UserGroupViewModel? = null
 
@@ -68,6 +69,8 @@ class UserGroupService(val context: Context) : DefaultLifecycleObserver {
 
     init {
         Log.d("Created UserGroupService")
+
+        localContactsSubject.onNext(UserGroupViewModelSubjectWrapper(null))
 
         contactDirectoriesSubscription = DirectoriesService.getInstance(context).contactDirectories
             .takeUntil(destroy)
@@ -193,7 +196,7 @@ class UserGroupService(val context: Context) : DefaultLifecycleObserver {
     private fun mergeUserGroups(
         tenantUserGroups: List<UserGroupViewModel>,
         personalUserGroups: List<UserGroupViewModel>,
-        localContactsUserGroup: UserGroupViewModel
+        localContactsUserGroup: UserGroupViewModelSubjectWrapper
     ): List<UserGroupViewModel> {
         val favorites = personalUserGroups.firstOrNull { x ->
             x.name == context.resources.getString(
@@ -219,6 +222,8 @@ class UserGroupService(val context: Context) : DefaultLifecycleObserver {
             }.thenBy { it.name }
         )
 
-        return sortedUserGroups + localContactsUserGroup
+        if (localContactsUserGroup.userGroupViewModel == null) return sortedUserGroups
+
+        return sortedUserGroups + localContactsUserGroup.userGroupViewModel
     }
 }

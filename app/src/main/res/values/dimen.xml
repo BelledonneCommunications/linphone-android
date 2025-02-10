@@ -19,6 +19,8 @@
     <dimen name="tabs_fragment_unread_count_bounce_offset">5dp</dimen>
     <dimen name="contact_avatar_size">35dp</dimen>
     <dimen name="contact_avatar_text_size">21sp</dimen>
+    <dimen name="contact_avatar_medium_size">75dp</dimen>
+    <dimen name="contact_avatar_text_medium_size">45sp</dimen>
     <dimen name="contact_avatar_big_size">100dp</dimen>
     <dimen name="contact_avatar_text_big_size">60sp</dimen>
     <dimen name="field_button_size">20dp</dimen>
