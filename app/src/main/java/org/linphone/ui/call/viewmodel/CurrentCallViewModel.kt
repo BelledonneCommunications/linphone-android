@@ -710,7 +710,11 @@ class CurrentCallViewModel
         val routeAudioToSpeaker = isSpeakerEnabled.value != true
 
         coreContext.postOnCoreThread { core ->
+            var earpieceFound = false
             val audioDevices = core.audioDevices
+            val currentDevice = currentCall.outputAudioDevice
+            Log.i("$TAG Currently used output audio device is [${currentDevice?.deviceName} (${currentDevice?.type}])")
+
             val list = arrayListOf<AudioDeviceModel>()
             for (device in audioDevices) {
                 // Only list output audio devices
@@ -718,6 +722,7 @@ class CurrentCallViewModel
 
                 val name = when (device.type) {
                     AudioDevice.Type.Earpiece -> {
+                        earpieceFound = true
                         AppUtils.getString(R.string.call_audio_device_type_earpiece)
                     }
                     AudioDevice.Type.Speaker -> {
@@ -743,7 +748,6 @@ class CurrentCallViewModel
                     }
                     else -> device.deviceName
                 }
-                val currentDevice = currentCall.outputAudioDevice
                 val isCurrentlyInUse = device.type == currentDevice?.type && device.deviceName == currentDevice.deviceName
                 val model = AudioDeviceModel(device, name, device.type, isCurrentlyInUse, true) {
                     // onSelected
@@ -769,8 +773,8 @@ class CurrentCallViewModel
                 Log.i("$TAG Found audio device [${device.id}]")
             }
 
-            if (list.size > 2) {
-                Log.i("$TAG Found more than two devices, showing list to let user choose")
+            if (list.size > 2 || (list.size > 1 && !earpieceFound)) {
+                Log.i("$TAG Found more than two devices (or more than 1 but no earpiece), showing list to let user choose")
                 showAudioDevicesListEvent.postValue(Event(list))
             } else {
                 Log.i(
@@ -1216,6 +1220,7 @@ class CurrentCallViewModel
 
     @WorkerThread
     private fun updateOutputAudioDevice(audioDevice: AudioDevice?) {
+        Log.i("$TAG Output audio device updated to [${audioDevice?.deviceName} (${audioDevice?.type})]")
         isSpeakerEnabled.postValue(audioDevice?.type == AudioDevice.Type.Speaker)
         isHeadsetEnabled.postValue(
             audioDevice?.type == AudioDevice.Type.Headphones || audioDevice?.type == AudioDevice.Type.Headset
