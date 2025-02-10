@@ -248,6 +248,8 @@ class SendMessageInConversationViewModel
     @UiThread
     fun sendMessage() {
         coreContext.postOnCoreThread {
+            val isBasicChatRoom: Boolean = chatRoom.hasCapability(ChatRoom.Capabilities.Basic.toInt())
+
             val messageToReplyTo = chatMessageToReplyTo
             val message = if (messageToReplyTo != null) {
                 Log.i("$TAG Sending message as reply to [${messageToReplyTo.messageId}]")
@@ -255,10 +257,12 @@ class SendMessageInConversationViewModel
             } else {
                 chatRoom.createEmptyMessage()
             }
+            var contentAdded = false
 
             val toSend = textToSend.value.orEmpty().trim()
             if (toSend.isNotEmpty()) {
                 message.addUtf8TextContent(toSend)
+                contentAdded = true
             }
 
             if (isVoiceRecording.value == true && voiceMessageRecorder.file != null) {
@@ -268,7 +272,14 @@ class SendMessageInConversationViewModel
                     Log.i(
                         "$TAG Voice recording content created, file name is ${content.name} and duration is ${content.fileDuration}"
                     )
-                    message.addContent(content)
+                    if (isBasicChatRoom && contentAdded) {
+                        val voiceMessage = chatRoom.createEmptyMessage()
+                        voiceMessage.addContent(content)
+                        voiceMessage.send()
+                    } else {
+                        message.addContent(content)
+                        contentAdded = true
+                    }
                 } else {
                     Log.e("$TAG Voice recording content couldn't be created!")
                 }
@@ -293,7 +304,14 @@ class SendMessageInConversationViewModel
                     // Let the file body handler take care of the upload
                     content.filePath = attachment.path
 
-                    message.addFileContent(content)
+                    if (isBasicChatRoom && contentAdded) {
+                        val fileMessage = chatRoom.createEmptyMessage()
+                        fileMessage.addFileContent(content)
+                        fileMessage.send()
+                    } else {
+                        message.addFileContent(content)
+                        contentAdded = true
+                    }
                 }
             }
 
