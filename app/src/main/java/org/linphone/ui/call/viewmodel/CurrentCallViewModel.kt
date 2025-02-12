@@ -711,6 +711,7 @@ class CurrentCallViewModel
 
         coreContext.postOnCoreThread { core ->
             var earpieceFound = false
+            var speakerFound = false
             val audioDevices = core.audioDevices
             val currentDevice = currentCall.outputAudioDevice
             Log.i("$TAG Currently used output audio device is [${currentDevice?.deviceName} (${currentDevice?.type}])")
@@ -726,6 +727,7 @@ class CurrentCallViewModel
                         AppUtils.getString(R.string.call_audio_device_type_earpiece)
                     }
                     AudioDevice.Type.Speaker -> {
+                        speakerFound = true
                         AppUtils.getString(R.string.call_audio_device_type_speaker)
                     }
                     AudioDevice.Type.Headset -> {
@@ -773,8 +775,8 @@ class CurrentCallViewModel
                 Log.i("$TAG Found audio device [${device.id}]")
             }
 
-            if (list.size > 2 || (list.size > 1 && !earpieceFound)) {
-                Log.i("$TAG Found more than two devices (or more than 1 but no earpiece), showing list to let user choose")
+            if (list.size > 2 || (list.size > 1 && (!earpieceFound || !speakerFound))) {
+                Log.i("$TAG Found more than two devices (or more than 1 but no earpiece or speaker), showing list to let user choose")
                 showAudioDevicesListEvent.postValue(Event(list))
             } else {
                 Log.i(
