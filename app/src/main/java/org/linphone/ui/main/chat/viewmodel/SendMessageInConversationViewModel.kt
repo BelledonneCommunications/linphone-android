@@ -154,8 +154,10 @@ class SendMessageInConversationViewModel
             isFileTransferServerAvailable.postValue(!core.fileTransferServer.isNullOrEmpty())
         }
 
+        isKeyboardOpen.value = false
         isEmojiPickerOpen.value = false
         areFilePickersOpen.value = false
+        isVoiceRecording.value = false
         isPlayingVoiceRecord.value = false
         isCallConversation.value = false
         maxNumberOfAttachmentsReached.value = false

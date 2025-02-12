@@ -212,6 +212,13 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                 .viewTreeObserver
                 .removeOnGlobalLayoutListener(this)
 
+            binding.root.setKeyboardInsetListener { keyboardVisible ->
+                sendMessageViewModel.isKeyboardOpen.value = keyboardVisible
+                if (keyboardVisible) {
+                    sendMessageViewModel.isEmojiPickerOpen.value = false
+                }
+            }
+
             if (::scrollListener.isInitialized) {
                 binding.eventsList.addOnScrollListener(scrollListener)
             }
@@ -937,13 +944,6 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                     sendMessageViewModel.sendMessage()
                 }
             })
-
-        binding.root.setKeyboardInsetListener { keyboardVisible ->
-            sendMessageViewModel.isKeyboardOpen.value = keyboardVisible
-            if (keyboardVisible) {
-                sendMessageViewModel.isEmojiPickerOpen.value = false
-            }
-        }
 
         binding.sendArea.messageToSend.addTextChangedListener(textObserver)
 
