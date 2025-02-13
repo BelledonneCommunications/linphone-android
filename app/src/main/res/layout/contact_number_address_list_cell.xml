@@ -35,14 +35,16 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
             android:id="@+id/number_or_address"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:text="@{model.displayedValue, default=`sip:johndoe@sip.linphone.org`}"
             android:textSize="14sp"
             android:maxLines="1"
             android:ellipsize="end"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/call"
             app:layout_constraintTop_toBottomOf="@id/header"/>
 
         <ImageView
