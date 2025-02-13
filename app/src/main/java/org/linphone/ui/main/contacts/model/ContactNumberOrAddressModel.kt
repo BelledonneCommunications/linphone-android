@@ -39,15 +39,24 @@ class ContactNumberOrAddressModel
 ) {
     val selected = MutableLiveData<Boolean>()
 
+    private var actionDoneCallback: (() -> Unit)? = null
+
+    @UiThread
+    fun setActionDoneCallback(lambda: () -> Unit) {
+        actionDoneCallback = lambda
+    }
+
     @UiThread
     fun onClicked() {
         listener.onClicked(this)
+        actionDoneCallback?.invoke()
     }
 
     @UiThread
     fun onLongPress(): Boolean {
         selected.value = true
         listener.onLongPress(this)
+        actionDoneCallback?.invoke()
         return true
     }
 }

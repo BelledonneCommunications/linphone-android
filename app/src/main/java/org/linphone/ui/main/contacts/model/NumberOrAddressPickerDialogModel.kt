@@ -33,6 +33,11 @@ class NumberOrAddressPickerDialogModel
     val dismissEvent = MutableLiveData<Event<Boolean>>()
 
     init {
+        for (model in list) {
+            model.setActionDoneCallback {
+                dismiss()
+            }
+        }
         sipAddressesAndPhoneNumbers.value = list
     }
 
