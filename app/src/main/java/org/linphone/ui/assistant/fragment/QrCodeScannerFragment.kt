@@ -85,14 +85,16 @@ class QrCodeScannerFragment : GenericFragment() {
 
         viewModel.qrCodeFoundEvent.observe(viewLifecycleOwner) {
             it.consume { isValid ->
-                if (!isValid) {
-                    (requireActivity() as GenericActivity).showRedToast(
-                        getString(R.string.assistant_qr_code_invalid_toast),
-                        R.drawable.warning_circle
-                    )
-                } else {
+                if (isValid) {
                     requireActivity().finish()
                 }
+            }
+        }
+
+        viewModel.onErrorEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                // Core has restarted but something went wrong, restart video capture
+                enableQrCodeVideoScanner()
             }
         }
 
