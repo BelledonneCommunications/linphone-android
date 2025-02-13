@@ -484,14 +484,11 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         }
         RecyclerViewSwipeUtils(callbacks).attachToRecyclerView(binding.eventsList)
 
-        val localSipUri = args.localSipUri
-        val remoteSipUri = args.remoteSipUri
-        Log.i(
-            "$TAG Looking up for conversation with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
-        )
+        val conversationId = args.conversationId
+        Log.i("$TAG Looking up for conversation with conversation ID [$conversationId]")
         val chatRoom = sharedViewModel.displayedChatRoom
-        viewModel.findChatRoom(chatRoom, localSipUri, remoteSipUri)
-        Compatibility.setLocusIdInContentCaptureSession(binding.root, localSipUri, remoteSipUri)
+        viewModel.findChatRoom(chatRoom, conversationId)
+        Compatibility.setLocusIdInContentCaptureSession(binding.root, conversationId)
 
         viewModel.chatRoomFoundEvent.observe(viewLifecycleOwner) {
             it.consume { found ->
@@ -1092,8 +1089,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         if (findNavController().currentDestination?.id == R.id.conversationFragment) {
             val action =
                 ConversationFragmentDirections.actionConversationFragmentToConversationInfoFragment(
-                    viewModel.localSipUri,
-                    viewModel.remoteSipUri
+                    viewModel.conversationId,
                 )
             findNavController().navigate(action)
         }
@@ -1113,8 +1109,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
 
         val bundle = Bundle()
         bundle.apply {
-            putString("localSipUri", viewModel.localSipUri)
-            putString("remoteSipUri", viewModel.remoteSipUri)
+            putString("conversationId", viewModel.conversationId)
             putString("path", path)
             putBoolean("isEncrypted", fileModel.isEncrypted)
             putLong("timestamp", fileModel.fileCreationTimestamp)
@@ -1199,8 +1194,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             if (findNavController().currentDestination?.id == R.id.conversationFragment) {
                 val action =
                     ConversationFragmentDirections.actionConversationFragmentToConversationMediaListFragment(
-                        localSipUri = viewModel.localSipUri,
-                        remoteSipUri = viewModel.remoteSipUri
+                        viewModel.conversationId
                     )
                 findNavController().navigate(action)
             }
@@ -1211,8 +1205,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             if (findNavController().currentDestination?.id == R.id.conversationFragment) {
                 val action =
                     ConversationFragmentDirections.actionConversationFragmentToConversationDocumentsListFragment(
-                        localSipUri = viewModel.localSipUri,
-                        remoteSipUri = viewModel.remoteSipUri
+                        viewModel.conversationId
                     )
                 findNavController().navigate(action)
             }

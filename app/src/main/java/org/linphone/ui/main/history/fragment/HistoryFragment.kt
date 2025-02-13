@@ -148,23 +148,20 @@ class HistoryFragment : SlidingPaneChildFragment() {
         }
 
         viewModel.goToConversationEvent.observe(viewLifecycleOwner) {
-            it.consume { pair ->
-                Log.i("$TAG Going to conversation [${pair.first}][${pair.second}]")
-                sharedViewModel.showConversationEvent.value = Event(pair)
+            it.consume { conversationId ->
+                Log.i("$TAG Going to conversation [$conversationId]")
+                sharedViewModel.showConversationEvent.value = Event(conversationId)
                 sharedViewModel.navigateToConversationsEvent.value = Event(true)
             }
         }
 
         viewModel.goToMeetingConversationEvent.observe(viewLifecycleOwner) {
-            it.consume { pair ->
-                val localAddress = pair.first
-                val remoteAddress = pair.second
+            it.consume { conversationId ->
                 if (findNavController().currentDestination?.id == R.id.historyFragment) {
-                    Log.i("$TAG Going to meeting conversation [$localAddress][$remoteAddress]")
+                    Log.i("$TAG Going to meeting conversation [$conversationId]")
                     val action =
                         HistoryFragmentDirections.actionHistoryFragmentToConferenceConversationFragment(
-                            localAddress,
-                            remoteAddress
+                            conversationId
                         )
                     findNavController().navigate(action)
                 }

@@ -118,8 +118,9 @@ class SharedMainViewModel
     }
 
     var displayedChatRoom: ChatRoom? = null // Prevents the need to go look for the chat room
-    val showConversationEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
-        MutableLiveData<Event<Pair<String, String>>>()
+
+    val showConversationEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
     }
 
     val hideConversationEvent: MutableLiveData<Event<Boolean>> by lazy {

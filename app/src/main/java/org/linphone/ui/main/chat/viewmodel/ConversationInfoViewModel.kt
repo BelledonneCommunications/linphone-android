@@ -151,7 +151,7 @@ class ConversationInfoViewModel
         @WorkerThread
         override fun onSubjectChanged(chatRoom: ChatRoom, eventLog: EventLog) {
             Log.i(
-                "$TAG Conversation [${LinphoneUtils.getChatRoomId(chatRoom)}] has a new subject [${chatRoom.subject}]"
+                "$TAG Conversation [${LinphoneUtils.getConversationId(chatRoom)}] has a new subject [${chatRoom.subject}]"
             )
             showGreenToast(R.string.conversation_subject_changed_toast, R.drawable.check)
 
@@ -218,7 +218,7 @@ class ConversationInfoViewModel
     fun leaveGroup() {
         coreContext.postOnCoreThread {
             if (isChatRoomInitialized()) {
-                Log.i("$TAG Leaving conversation [${LinphoneUtils.getChatRoomId(chatRoom)}]")
+                Log.i("$TAG Leaving conversation [${LinphoneUtils.getConversationId(chatRoom)}]")
                 chatRoom.leave()
             }
             groupLeftEvent.postValue(Event(true))
@@ -230,7 +230,7 @@ class ConversationInfoViewModel
         coreContext.postOnCoreThread {
             if (isChatRoomInitialized()) {
                 Log.i(
-                    "$TAG Cleaning conversation [${LinphoneUtils.getChatRoomId(chatRoom)}] history"
+                    "$TAG Cleaning conversation [${LinphoneUtils.getConversationId(chatRoom)}] history"
                 )
                 chatRoom.deleteHistory()
             }
@@ -280,7 +280,7 @@ class ConversationInfoViewModel
         coreContext.postOnCoreThread {
             val address = participantModel.address
             Log.i(
-                "$TAG Removing participant [$address] from the conversation [${LinphoneUtils.getChatRoomId(
+                "$TAG Removing participant [$address] from the conversation [${LinphoneUtils.getConversationId(
                     chatRoom
                 )}]"
             )
@@ -301,7 +301,7 @@ class ConversationInfoViewModel
         coreContext.postOnCoreThread {
             val address = participantModel.address
             Log.i(
-                "$TAG Granting admin rights to participant [$address] from the conversation [${LinphoneUtils.getChatRoomId(
+                "$TAG Granting admin rights to participant [$address] from the conversation [${LinphoneUtils.getConversationId(
                     chatRoom
                 )}]"
             )
@@ -322,7 +322,7 @@ class ConversationInfoViewModel
         coreContext.postOnCoreThread {
             val address = participantModel.address
             Log.i(
-                "$TAG Removing admin rights from participant [$address] from the conversation [${LinphoneUtils.getChatRoomId(
+                "$TAG Removing admin rights from participant [$address] from the conversation [${LinphoneUtils.getConversationId(
                     chatRoom
                 )}]"
             )

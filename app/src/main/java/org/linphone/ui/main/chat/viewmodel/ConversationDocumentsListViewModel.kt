@@ -58,7 +58,7 @@ class ConversationDocumentsListViewModel
 
         val list = arrayListOf<FileModel>()
         Log.i(
-            "$TAG Loading document contents for conversation [${LinphoneUtils.getChatRoomId(
+            "$TAG Loading document contents for conversation [${LinphoneUtils.getConversationId(
                 chatRoom
             )}]"
         )

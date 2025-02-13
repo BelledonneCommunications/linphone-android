@@ -71,6 +71,8 @@ import org.linphone.core.MediaDirection
 import org.linphone.core.tools.Log
 import org.linphone.ui.call.CallActivity
 import org.linphone.ui.main.MainActivity
+import org.linphone.ui.main.MainActivity.Companion.ARGUMENTS_CHAT
+import org.linphone.ui.main.MainActivity.Companion.ARGUMENTS_CONVERSATION_ID
 import org.linphone.utils.AppUtils
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
@@ -262,7 +264,7 @@ class NotificationsManager
             Log.i("$TAG Received ${messages.size} aggregated messages")
             if (corePreferences.disableChat) return
 
-            val id = LinphoneUtils.getChatRoomId(chatRoom)
+            val id = LinphoneUtils.getConversationId(chatRoom)
             if (currentlyDisplayedChatRoomId.isNotEmpty() && id == currentlyDisplayedChatRoomId) {
                 Log.i(
                     "$TAG Do not notify received messages for currently displayed conversation [$id]"
@@ -301,7 +303,7 @@ class NotificationsManager
                 "$TAG Reaction received [${reaction.body}] from [${address.asStringUriOnly()}] for message [$message]"
             )
 
-            val id = LinphoneUtils.getChatRoomId(chatRoom)
+            val id = LinphoneUtils.getConversationId(chatRoom)
             /*if (id == currentlyDisplayedChatRoomId) {
                 Log.i(
                     "$TAG Do not notify received reaction for currently displayed conversation [$id]"
@@ -340,7 +342,7 @@ class NotificationsManager
             if (corePreferences.disableChat) return
 
             if (chatRoom.muted) {
-                val id = LinphoneUtils.getChatRoomId(chatRoom)
+                val id = LinphoneUtils.getConversationId(chatRoom)
                 Log.i("$TAG Conversation $id has been muted")
                 return
             }
@@ -370,7 +372,7 @@ class NotificationsManager
                         val notification = createMessageNotification(
                             notifiable,
                             pendingIntent,
-                            LinphoneUtils.getChatRoomId(chatRoom),
+                            LinphoneUtils.getConversationId(chatRoom),
                             me
                         )
                         notify(notifiable.notificationId, notification, CHAT_TAG)
@@ -389,7 +391,7 @@ class NotificationsManager
         @WorkerThread
         override fun onChatRoomRead(core: Core, chatRoom: ChatRoom) {
             Log.i(
-                "$TAG Conversation [${LinphoneUtils.getChatRoomId(chatRoom)}] has been marked as read, removing notification if any"
+                "$TAG Conversation [${LinphoneUtils.getConversationId(chatRoom)}] has been marked as read, removing notification if any"
             )
             dismissChatNotification(chatRoom)
         }
@@ -786,7 +788,7 @@ class NotificationsManager
         val address = chatRoom.peerAddress.asStringUriOnly()
         var notifiable: Notifiable? = chatNotificationsMap[address]
         if (notifiable == null) {
-            notifiable = Notifiable(LinphoneUtils.getChatRoomId(chatRoom).hashCode())
+            notifiable = Notifiable(LinphoneUtils.getConversationId(chatRoom).hashCode())
             notifiable.myself = LinphoneUtils.getDisplayName(chatRoom.localAddress)
             notifiable.localIdentity = chatRoom.localAddress.asStringUriOnly()
             notifiable.remoteAddress = chatRoom.peerAddress.asStringUriOnly()
@@ -834,7 +836,7 @@ class NotificationsManager
             val notification = createMessageNotification(
                 notifiable,
                 pendingIntent,
-                LinphoneUtils.getChatRoomId(chatRoom),
+                LinphoneUtils.getConversationId(chatRoom),
                 me
             )
             notify(notifiable.notificationId, notification, CHAT_TAG)
@@ -899,7 +901,7 @@ class NotificationsManager
             val notification = createMessageNotification(
                 notifiable,
                 pendingIntent,
-                LinphoneUtils.getChatRoomId(chatRoom),
+                LinphoneUtils.getConversationId(chatRoom),
                 me
             )
             notify(notifiable.notificationId, notification, CHAT_TAG)
@@ -928,7 +930,7 @@ class NotificationsManager
         val notification = createMessageNotification(
             notifiable,
             pendingIntent,
-            LinphoneUtils.getChatRoomId(chatRoom),
+            LinphoneUtils.getConversationId(chatRoom),
             me
         )
         Log.i(
@@ -1295,7 +1297,7 @@ class NotificationsManager
             return true
         } else {
             val previousNotificationId = previousChatNotifications.find { id ->
-                id == LinphoneUtils.getChatRoomId(chatRoom).hashCode()
+                id == LinphoneUtils.getConversationId(chatRoom).hashCode()
             }
             if (previousNotificationId != null) {
                 Log.i(
@@ -1362,7 +1364,7 @@ class NotificationsManager
         val notification = createMessageNotification(
             notifiable,
             pendingIntent,
-            LinphoneUtils.getChatRoomId(chatRoom),
+            LinphoneUtils.getConversationId(chatRoom),
             me
         )
         notify(notifiable.notificationId, notification, CHAT_TAG)
@@ -1585,9 +1587,8 @@ class NotificationsManager
     @WorkerThread
     private fun getChatRoomPendingIntent(chatRoom: ChatRoom, notificationId: Int): PendingIntent {
         val args = Bundle()
-        args.putBoolean("Chat", true)
-        args.putString("RemoteSipUri", chatRoom.peerAddress.asStringUriOnly())
-        args.putString("LocalSipUri", chatRoom.localAddress.asStringUriOnly())
+        args.putBoolean(ARGUMENTS_CHAT, true)
+        args.putString(ARGUMENTS_CONVERSATION_ID, LinphoneUtils.getConversationId(chatRoom))
 
         // Not using NavDeepLinkBuilder to prevent stacking a ConversationsListFragment above another one
         return TaskStackBuilder.create(context).run {

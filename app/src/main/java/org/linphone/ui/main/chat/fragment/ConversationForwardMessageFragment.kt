@@ -120,17 +120,11 @@ class ConversationForwardMessageFragment : SlidingPaneChildFragment() {
         }
 
         viewModel.chatRoomCreatedEvent.observe(viewLifecycleOwner) {
-            it.consume { pair ->
-                Log.i(
-                    "$TAG Navigating to conversation [${pair.second}] with local address [${pair.first}]"
-                )
-
+            it.consume { conversationId ->
+                Log.i("$TAG Navigating to conversation [$conversationId]")
                 if (findNavController().currentDestination?.id == R.id.conversationForwardMessageFragment) {
-                    val localSipUri = pair.first
-                    val remoteSipUri = pair.second
                     val action = ConversationForwardMessageFragmentDirections.actionConversationForwardMessageFragmentToConversationFragment(
-                        localSipUri,
-                        remoteSipUri
+                        conversationId
                     )
                     disableConsumingEventOnPause = true
                     findNavController().navigate(action)

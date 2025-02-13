@@ -54,7 +54,7 @@ class ConversationMediaListViewModel
     private fun loadMediaList() {
         val list = arrayListOf<FileModel>()
         Log.i(
-            "$TAG Loading media contents for conversation [${LinphoneUtils.getChatRoomId(
+            "$TAG Loading media contents for conversation [${LinphoneUtils.getConversationId(
                 chatRoom
             )}]"
         )

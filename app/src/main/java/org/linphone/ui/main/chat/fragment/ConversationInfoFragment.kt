@@ -96,13 +96,10 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
         binding.viewModel = viewModel
         observeToastEvents(viewModel)
 
-        val localSipUri = args.localSipUri
-        val remoteSipUri = args.remoteSipUri
-        Log.i(
-            "$TAG Looking up for conversation with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
-        )
+        val conversationId = args.conversationId
+        Log.i("$TAG Looking up for conversation with conversation ID [$conversationId]")
         val chatRoom = sharedViewModel.displayedChatRoom
-        viewModel.findChatRoom(chatRoom, localSipUri, remoteSipUri)
+        viewModel.findChatRoom(chatRoom, conversationId)
 
         binding.participants.isNestedScrollingEnabled = false
         binding.participants.setHasFixedSize(false)
@@ -116,7 +113,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
             it.consume { found ->
                 if (found) {
                     Log.i(
-                        "$TAG Found matching conversation for local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
+                        "$TAG Found matching conversation with conversation ID [$conversationId]"
                     )
                     startPostponedEnterTransition()
                 } else {
@@ -333,7 +330,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
             if (findNavController().currentDestination?.id == R.id.conversationInfoFragment) {
                 Log.i("$TAG Going to shared media fragment")
                 val action =
-                    ConversationInfoFragmentDirections.actionConversationInfoFragmentToConversationMediaListFragment(localSipUri, remoteSipUri)
+                    ConversationInfoFragmentDirections.actionConversationInfoFragmentToConversationMediaListFragment(conversationId)
                 findNavController().navigate(action)
             }
         }
@@ -342,7 +339,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
             if (findNavController().currentDestination?.id == R.id.conversationInfoFragment) {
                 Log.i("$TAG Going to shared documents fragment")
                 val action =
-                    ConversationInfoFragmentDirections.actionConversationInfoFragmentToConversationDocumentsListFragment(localSipUri, remoteSipUri)
+                    ConversationInfoFragmentDirections.actionConversationInfoFragmentToConversationDocumentsListFragment(conversationId)
                 findNavController().navigate(action)
             }
         }

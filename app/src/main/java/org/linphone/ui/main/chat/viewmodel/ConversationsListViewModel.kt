@@ -54,7 +54,7 @@ class ConversationsListViewModel
             state: ChatRoom.State?
         ) {
             Log.i(
-                "$TAG Conversation [${LinphoneUtils.getChatRoomId(chatRoom)}] state changed [$state]"
+                "$TAG Conversation [${LinphoneUtils.getConversationId(chatRoom)}] state changed [$state]"
             )
 
             when (state) {
@@ -66,7 +66,7 @@ class ConversationsListViewModel
 
         @WorkerThread
         override fun onMessageSent(core: Core, chatRoom: ChatRoom, message: ChatMessage) {
-            val id = LinphoneUtils.getChatRoomId(chatRoom)
+            val id = LinphoneUtils.getConversationId(chatRoom)
             val found = conversations.value.orEmpty().find {
                 it.id == id
             }
@@ -85,7 +85,7 @@ class ConversationsListViewModel
             chatRoom: ChatRoom,
             messages: Array<out ChatMessage>
         ) {
-            val id = LinphoneUtils.getChatRoomId(chatRoom)
+            val id = LinphoneUtils.getConversationId(chatRoom)
             val found = conversations.value.orEmpty().find {
                 it.id == id
             }

@@ -101,12 +101,11 @@ class MediaViewerActivity : GenericActivity() {
         val originalPath = args.getString("originalPath", "")
         viewModel.initTempModel(path, timestamp, isEncrypted, originalPath)
 
-        val localSipUri = args.getString("localSipUri").orEmpty()
-        val remoteSipUri = args.getString("remoteSipUri").orEmpty()
+        val conversationId = args.getString("conversationId").orEmpty()
         Log.i(
-            "$TAG Looking up for conversation with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri] trying to display file [$path]"
+            "$TAG Looking up for conversation with conversation ID [$conversationId] trying to display file [$path]"
         )
-        viewModel.findChatRoom(null, localSipUri, remoteSipUri)
+        viewModel.findChatRoom(null, conversationId)
 
         viewModel.mediaList.observe(this) {
             updateMediaList(path, it)

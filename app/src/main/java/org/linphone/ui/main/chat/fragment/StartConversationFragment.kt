@@ -93,11 +93,11 @@ class StartConversationFragment : GenericAddressPickerFragment() {
         }
 
         viewModel.chatRoomCreatedEvent.observe(viewLifecycleOwner) {
-            it.consume { pair ->
+            it.consume { conversationId ->
                 Log.i(
-                    "$TAG Conversation [${pair.second}] for local address [${pair.first}] has been created, navigating to it"
+                    "$TAG Conversation [$conversationId] has been created, navigating to it"
                 )
-                sharedViewModel.showConversationEvent.value = Event(pair)
+                sharedViewModel.showConversationEvent.value = Event(conversationId)
                 goBack()
             }
         }

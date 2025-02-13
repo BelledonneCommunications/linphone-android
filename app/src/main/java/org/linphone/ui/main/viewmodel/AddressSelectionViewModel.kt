@@ -343,6 +343,7 @@ abstract class AddressSelectionViewModel
             if (chatRoom.isReadOnly || (!isBasic && chatRoom.participants.isEmpty())) continue
 
             val isOneToOne = chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt())
+            val conversationId = LinphoneUtils.getConversationId(chatRoom)
             val remoteAddress = chatRoom.peerAddress
             val matchesFilter: Any? = if (filter.isEmpty()) {
                 null
@@ -383,7 +384,6 @@ abstract class AddressSelectionViewModel
                 }
             }
             if (filter.isEmpty() || matchesFilter != null) {
-                val localAddress = chatRoom.localAddress
                 val friend = if (isBasic) {
                     coreContext.contactsManager.findContactByAddress(remoteAddress)
                 } else {
@@ -410,7 +410,7 @@ abstract class AddressSelectionViewModel
                 }
                 val model = ConversationContactOrSuggestionModel(
                     remoteAddress,
-                    localAddress,
+                    conversationId,
                     subject,
                     friend
                 )

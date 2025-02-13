@@ -117,8 +117,8 @@ class ContactViewModel
         MutableLiveData<Event<String>>()
     }
 
-    val goToConversationEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
-        MutableLiveData<Event<Pair<String, String>>>()
+    val goToConversationEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
     }
 
     val vCardTerminatedEvent: MutableLiveData<Event<Pair<String, File>>> by lazy {
@@ -198,21 +198,14 @@ class ContactViewModel
             val state = chatRoom.state
             if (state == ChatRoom.State.Instantiated) return
 
-            val id = LinphoneUtils.getChatRoomId(chatRoom)
+            val id = LinphoneUtils.getConversationId(chatRoom)
             Log.i("$TAG Conversation [$id] (${chatRoom.subject}) state changed: [$state]")
 
             if (state == ChatRoom.State.Created) {
                 Log.i("$TAG Conversation [$id] successfully created")
                 chatRoom.removeListener(this)
                 operationInProgress.postValue(false)
-                goToConversationEvent.postValue(
-                    Event(
-                        Pair(
-                            chatRoom.localAddress.asStringUriOnly(),
-                            chatRoom.peerAddress.asStringUriOnly()
-                        )
-                    )
-                )
+                goToConversationEvent.postValue(Event(LinphoneUtils.getConversationId(chatRoom)))
             } else if (state == ChatRoom.State.CreationFailed) {
                 Log.e("$TAG Conversation [$id] creation has failed!")
                 chatRoom.removeListener(this)
@@ -543,13 +536,11 @@ class ContactViewModel
             val existingChatRoom = core.searchChatRoom(params, localAddress, null, participants)
             if (existingChatRoom != null) {
                 Log.i(
-                    "$TAG Found existing conversation [${LinphoneUtils.getChatRoomId(
+                    "$TAG Found existing conversation [${LinphoneUtils.getConversationId(
                         existingChatRoom
                     )}], going to it"
                 )
-                goToConversationEvent.postValue(
-                    Event(Pair(localSipUri, existingChatRoom.peerAddress.asStringUriOnly()))
-                )
+                goToConversationEvent.postValue(Event(LinphoneUtils.getConversationId(existingChatRoom)))
             } else {
                 Log.i(
                     "$TAG No existing conversation between [$localSipUri] and [$remoteSipUri] was found, let's create it"
@@ -559,33 +550,19 @@ class ContactViewModel
                 if (chatRoom != null) {
                     if (chatParams.backend == ChatRoom.Backend.FlexisipChat) {
                         if (chatRoom.state == ChatRoom.State.Created) {
-                            val id = LinphoneUtils.getChatRoomId(chatRoom)
+                            val id = LinphoneUtils.getConversationId(chatRoom)
                             Log.i("$TAG 1-1 conversation [$id] has been created")
                             operationInProgress.postValue(false)
-                            goToConversationEvent.postValue(
-                                Event(
-                                    Pair(
-                                        chatRoom.localAddress.asStringUriOnly(),
-                                        chatRoom.peerAddress.asStringUriOnly()
-                                    )
-                                )
-                            )
+                            goToConversationEvent.postValue(Event(LinphoneUtils.getConversationId(chatRoom)))
                         } else {
                             Log.i("$TAG Conversation isn't in Created state yet, wait for it")
                             chatRoom.addListener(chatRoomListener)
                         }
                     } else {
-                        val id = LinphoneUtils.getChatRoomId(chatRoom)
+                        val id = LinphoneUtils.getConversationId(chatRoom)
                         Log.i("$TAG Conversation successfully created [$id]")
                         operationInProgress.postValue(false)
-                        goToConversationEvent.postValue(
-                            Event(
-                                Pair(
-                                    chatRoom.localAddress.asStringUriOnly(),
-                                    chatRoom.peerAddress.asStringUriOnly()
-                                )
-                            )
-                        )
+                        goToConversationEvent.postValue(Event(LinphoneUtils.getConversationId(chatRoom)))
                     }
                 } else {
                     Log.e(

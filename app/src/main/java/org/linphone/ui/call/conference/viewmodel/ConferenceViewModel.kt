@@ -39,6 +39,7 @@ import org.linphone.ui.call.conference.model.ConferenceParticipantModel
 import org.linphone.ui.call.conference.view.GridBoxLayout
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
+import org.linphone.utils.LinphoneUtils
 
 class ConferenceViewModel
     @UiThread
@@ -91,8 +92,8 @@ class ConferenceViewModel
         MutableLiveData<Event<Pair<String, Participant>>>()
     }
 
-    val goToConversationEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
-        MutableLiveData<Event<Pair<String, String>>>()
+    val goToConversationEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
     }
 
     private lateinit var conference: Conference
@@ -369,14 +370,7 @@ class ConferenceViewModel
             Log.i("$TAG Navigating to conference's conversation")
             val chatRoom = conference.chatRoom
             if (chatRoom != null) {
-                goToConversationEvent.postValue(
-                    Event(
-                        Pair(
-                            chatRoom.localAddress.asStringUriOnly(),
-                            chatRoom.peerAddress.asStringUriOnly()
-                        )
-                    )
-                )
+                goToConversationEvent.postValue(Event(LinphoneUtils.getConversationId(chatRoom)))
             } else {
                 Log.e(
                     "$TAG No chat room available for current conference [${conference.conferenceAddress?.asStringUriOnly()}]"

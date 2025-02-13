@@ -159,12 +159,11 @@ class Compatibility {
             return null
         }
 
-        fun setLocusIdInContentCaptureSession(root: View, localSipUri: String, remoteSipUri: String) {
+        fun setLocusIdInContentCaptureSession(root: View, conversationId: String) {
             if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10)) {
                 return Api29Compatibility.setLocusIdInContentCaptureSession(
                     root,
-                    localSipUri,
-                    remoteSipUri
+                    conversationId
                 )
             }
         }

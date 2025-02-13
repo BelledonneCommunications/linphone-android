@@ -48,7 +48,7 @@ class ConversationModel
         private const val TAG = "[Conversation Model]"
     }
 
-    val id = LinphoneUtils.getChatRoomId(chatRoom)
+    val id = LinphoneUtils.getConversationId(chatRoom)
 
     val localSipUri = chatRoom.localAddress.asStringUriOnly()
 

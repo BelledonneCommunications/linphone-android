@@ -470,7 +470,7 @@ class ConversationViewModel
     fun updateCurrentlyDisplayedConversation() {
         coreContext.postOnCoreThread {
             if (isChatRoomInitialized()) {
-                val id = LinphoneUtils.getChatRoomId(chatRoom)
+                val id = LinphoneUtils.getConversationId(chatRoom)
                 Log.i(
                     "$TAG Asking notifications manager not to notify messages for conversation [$id]"
                 )

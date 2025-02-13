@@ -28,8 +28,6 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Address
 import org.linphone.core.ChatRoom
-import org.linphone.core.ConferenceParams
-import org.linphone.core.Factory
 import org.linphone.core.MediaDirection
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
@@ -51,9 +49,7 @@ abstract class AbstractConversationViewModel : GenericViewModel() {
 
     lateinit var chatRoom: ChatRoom
 
-    lateinit var localSipUri: String
-
-    lateinit var remoteSipUri: String
+    lateinit var conversationId: String
 
     fun isChatRoomInitialized(): Boolean {
         return ::chatRoom.isInitialized
@@ -68,17 +64,13 @@ abstract class AbstractConversationViewModel : GenericViewModel() {
     }
 
     @UiThread
-    fun findChatRoom(room: ChatRoom?, localSipUri: String, remoteSipUri: String) {
-        this.localSipUri = localSipUri
-        this.remoteSipUri = remoteSipUri
-
+    fun findChatRoom(room: ChatRoom?, conversationId: String) {
         coreContext.postOnCoreThread { core ->
-            Log.i(
-                "$TAG Looking for conversation with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
-            )
+            Log.i("$TAG Looking for conversation with conversation ID [$conversationId]")
             if (room != null && ::chatRoom.isInitialized && chatRoom == room) {
                 Log.i("$TAG Conversation object already in memory, skipping")
 
+                this@AbstractConversationViewModel.conversationId = conversationId
                 beforeNotifyingChatRoomFound(sameOne = true)
                 chatRoomFoundEvent.postValue(Event(true))
                 afterNotifyingChatRoomFound(sameOne = true)
@@ -86,17 +78,12 @@ abstract class AbstractConversationViewModel : GenericViewModel() {
                 return@postOnCoreThread
             }
 
-            val localAddress = Factory.instance().createAddress(localSipUri)
-            val remoteAddress = Factory.instance().createAddress(remoteSipUri)
-
             if (room != null && (!::chatRoom.isInitialized || chatRoom != room)) {
-                if (localAddress?.weakEqual(room.localAddress) == true && remoteAddress?.weakEqual(
-                        room.peerAddress
-                    ) == true
-                ) {
+                if (conversationId == LinphoneUtils.getConversationId(room)) {
                     Log.i("$TAG Conversation object available in sharedViewModel, using it")
                     chatRoom = room
 
+                    this@AbstractConversationViewModel.conversationId = conversationId
                     beforeNotifyingChatRoomFound(sameOne = false)
                     chatRoomFoundEvent.postValue(Event(true))
                     afterNotifyingChatRoomFound(sameOne = false)
@@ -105,18 +92,11 @@ abstract class AbstractConversationViewModel : GenericViewModel() {
                 }
             }
 
-            if (localAddress != null && remoteAddress != null) {
+            if (conversationId.isNotEmpty()) {
                 Log.i("$TAG Searching for conversation in Core using local & peer SIP addresses")
-                val params: ConferenceParams? = null
-                val found = core.searchChatRoom(
-                    params,
-                    localAddress,
-                    remoteAddress,
-                    arrayOfNulls<Address>(
-                        0
-                    )
-                )
+                val found = core.searchChatRoomByIdentifier(conversationId)
                 if (found != null) {
+                    this@AbstractConversationViewModel.conversationId = conversationId
                     if (::chatRoom.isInitialized && chatRoom == found) {
                         Log.i("$TAG Conversation object already in memory, keeping it")
                         beforeNotifyingChatRoomFound(sameOne = true)

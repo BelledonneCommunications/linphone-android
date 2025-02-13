@@ -439,40 +439,8 @@ class LinphoneUtils {
         }
 
         @WorkerThread
-        fun getChatRoomId(room: ChatRoom): String {
-            return getChatRoomId(room.localAddress, room.peerAddress)
-        }
-
-        @WorkerThread
-        fun getChatRoomId(localAddress: Address, remoteAddress: Address): String {
-            val localSipUri = localAddress.clone()
-            localSipUri.clean()
-            val remoteSipUri = remoteAddress.clone()
-            remoteSipUri.clean()
-            return getChatRoomId(localSipUri.asStringUriOnly(), remoteSipUri.asStringUriOnly())
-        }
-
-        @AnyThread
-        fun getChatRoomId(localSipUri: String, remoteSipUri: String): String {
-            return "$localSipUri$CHAT_ROOM_ID_SEPARATOR$remoteSipUri"
-        }
-
-        @AnyThread
-        fun getLocalAndPeerSipUrisFromChatRoomId(id: String): Pair<String, String>? {
-            val split = id.split(CHAT_ROOM_ID_SEPARATOR)
-            if (split.size == 2) {
-                val localAddress = split[0]
-                val peerAddress = split[1]
-                Log.i(
-                    "$TAG Got local [$localAddress] and peer [$peerAddress] SIP URIs from conversation id [$id]"
-                )
-                return Pair(localAddress, peerAddress)
-            } else {
-                Log.e(
-                    "$TAG Failed to parse conversation id [$id] with separator [$CHAT_ROOM_ID_SEPARATOR]"
-                )
-            }
-            return null
+        fun getConversationId(chatRoom: ChatRoom): String {
+            return chatRoom.identifier ?: ""
         }
 
         @WorkerThread

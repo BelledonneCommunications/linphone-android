@@ -371,17 +371,14 @@ class ActiveCallFragment : GenericCallFragment() {
         }
 
         callViewModel.goToConversationEvent.observe(viewLifecycleOwner) {
-            it.consume { pair ->
+            it.consume { conversationId ->
                 if (findNavController().currentDestination?.id == R.id.activeCallFragment) {
-                    val localSipUri = pair.first
-                    val remoteSipUri = pair.second
                     Log.i(
-                        "$TAG Display conversation with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
+                        "$TAG Display conversation with conversation ID [$conversationId]"
                     )
                     val action =
                         ActiveCallFragmentDirections.actionActiveCallFragmentToInCallConversationFragment(
-                            localSipUri,
-                            remoteSipUri
+                            conversationId
                         )
                     findNavController().navigate(action)
                 }

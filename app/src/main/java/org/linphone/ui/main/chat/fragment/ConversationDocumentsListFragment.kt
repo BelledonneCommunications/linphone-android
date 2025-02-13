@@ -91,13 +91,10 @@ class ConversationDocumentsListFragment : SlidingPaneChildFragment() {
         binding.viewModel = viewModel
         observeToastEvents(viewModel)
 
-        val localSipUri = args.localSipUri
-        val remoteSipUri = args.remoteSipUri
-        Log.i(
-            "$TAG Looking up for conversation with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
-        )
+        val conversationId = args.conversationId
+        Log.i("$TAG Looking up for conversation with conversation ID [$conversationId]")
         val chatRoom = sharedViewModel.displayedChatRoom
-        viewModel.findChatRoom(chatRoom, localSipUri, remoteSipUri)
+        viewModel.findChatRoom(chatRoom, conversationId)
 
         val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
         binding.documentsList.addItemDecoration(headerItemDecoration)
@@ -143,8 +140,7 @@ class ConversationDocumentsListFragment : SlidingPaneChildFragment() {
 
         val bundle = Bundle()
         bundle.apply {
-            putString("localSipUri", viewModel.localSipUri)
-            putString("remoteSipUri", viewModel.remoteSipUri)
+            putString("conversationId", viewModel.conversationId)
             putString("path", path)
             putBoolean("isEncrypted", fileModel.isEncrypted)
             putLong("timestamp", fileModel.fileCreationTimestamp)

@@ -68,7 +68,7 @@ class MediaListViewModel
     @WorkerThread
     private fun loadMediaList() {
         val list = arrayListOf<FileModel>()
-        val chatRoomId = LinphoneUtils.getChatRoomId(chatRoom)
+        val chatRoomId = LinphoneUtils.getConversationId(chatRoom)
         Log.i("$TAG Loading media contents for conversation [$chatRoomId]")
 
         val media = chatRoom.mediaContents

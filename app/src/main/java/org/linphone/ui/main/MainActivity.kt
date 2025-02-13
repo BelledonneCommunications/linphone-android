@@ -86,6 +86,9 @@ class MainActivity : GenericActivity() {
         private const val HISTORY_FRAGMENT_ID = 2
         private const val CHAT_FRAGMENT_ID = 3
         private const val MEETINGS_FRAGMENT_ID = 4
+
+        const val ARGUMENTS_CHAT = "Chat"
+        const val ARGUMENTS_CONVERSATION_ID = "ConversationId"
     }
 
     private lateinit var binding: MainActivityBinding
@@ -514,14 +517,9 @@ class MainActivity : GenericActivity() {
 
     private fun handleLocusOrShortcut(id: String) {
         Log.i("$TAG Found locus ID [$id]")
-        val pair = LinphoneUtils.getLocalAndPeerSipUrisFromChatRoomId(id)
-        if (pair != null) {
-            val localSipUri = pair.first
-            val remoteSipUri = pair.second
-            Log.i(
-                "$TAG Navigating to conversation with local [$localSipUri] and peer [$remoteSipUri] addresses, computed from shortcut ID"
-            )
-            sharedViewModel.showConversationEvent.value = Event(pair)
+        if (id.isNotEmpty()) {
+            Log.i("$TAG Navigating to conversation with ID [$id], computed from shortcut ID")
+            sharedViewModel.showConversationEvent.value = Event(id)
         }
     }
 
@@ -547,22 +545,18 @@ class MainActivity : GenericActivity() {
                     }
                 }
             } else {
-                if (intent.hasExtra("Chat")) {
+                if (intent.hasExtra(ARGUMENTS_CHAT)) {
                     Log.i("$TAG Intent has [Chat] extra")
                     coreContext.postOnMainThread {
                         try {
                             Log.i("$TAG Trying to go to Conversations fragment")
                             val args = intent.extras
-                            val localSipUri = args?.getString("LocalSipUri", "")
-                            val remoteSipUri = args?.getString("RemoteSipUri", "")
-                            if (remoteSipUri.isNullOrEmpty() || localSipUri.isNullOrEmpty()) {
-                                Log.w("$TAG Found [Chat] extra but no local and/or remote SIP URI!")
+                            val conversationId = args?.getString(ARGUMENTS_CONVERSATION_ID, "")
+                            if (conversationId.isNullOrEmpty()) {
+                                Log.w("$TAG Found [Chat] extra but no conversation ID!")
                             } else {
-                                Log.i(
-                                    "$TAG Found [Chat] extra with local [$localSipUri] and peer [$remoteSipUri] addresses"
-                                )
-                                val pair = Pair(localSipUri, remoteSipUri)
-                                sharedViewModel.showConversationEvent.value = Event(pair)
+                                Log.i("$TAG Found [Chat] extra with conversation ID [$conversationId]")
+                                sharedViewModel.showConversationEvent.value = Event(conversationId)
                             }
                             args?.clear()
 
@@ -665,25 +659,23 @@ class MainActivity : GenericActivity() {
                 Log.i(
                     "$TAG App is already started and in debug fragment, navigating to conversations list"
                 )
-                val pair = parseShortcutIfAny(intent)
-                if (pair != null) {
+                val conversationId = parseShortcutIfAny(intent)
+                if (conversationId != null) {
                     Log.i(
-                        "$TAG Navigating from debug to conversation with local [${pair.first}] and peer [${pair.second}] addresses, computed from shortcut ID"
+                        "$TAG Navigating from debug to conversation with ID [$conversationId], computed from shortcut ID"
                     )
-                    sharedViewModel.showConversationEvent.value = Event(pair)
+                    sharedViewModel.showConversationEvent.value = Event(conversationId)
                 }
 
                 val action = DebugFragmentDirections.actionDebugFragmentToConversationsListFragment()
                 findNavController().navigate(action)
             } else {
-                val pair = parseShortcutIfAny(intent)
-                if (pair != null) {
-                    val localSipUri = pair.first
-                    val remoteSipUri = pair.second
+                val conversationId = parseShortcutIfAny(intent)
+                if (conversationId != null) {
                     Log.i(
-                        "$TAG Navigating to conversation with local [$localSipUri] and peer [$remoteSipUri] addresses, computed from shortcut ID"
+                        "$TAG Navigating to conversation with conversation ID [$conversationId] addresses, computed from shortcut ID"
                     )
-                    sharedViewModel.showConversationEvent.value = Event(pair)
+                    sharedViewModel.showConversationEvent.value = Event(conversationId)
                 }
 
                 if (findNavController().currentDestination?.id == R.id.conversationsListFragment) {
@@ -698,11 +690,11 @@ class MainActivity : GenericActivity() {
         }
     }
 
-    private fun parseShortcutIfAny(intent: Intent): Pair<String, String>? {
+    private fun parseShortcutIfAny(intent: Intent): String? {
         val shortcutId = intent.getStringExtra("android.intent.extra.shortcut.ID") // Intent.EXTRA_SHORTCUT_ID
         if (shortcutId != null) {
             Log.i("$TAG Found shortcut ID [$shortcutId]")
-            return LinphoneUtils.getLocalAndPeerSipUrisFromChatRoomId(shortcutId)
+            return shortcutId
         } else {
             Log.i("$TAG No shortcut ID was found")
         }
