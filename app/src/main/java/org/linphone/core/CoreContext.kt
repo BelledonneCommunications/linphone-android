@@ -163,6 +163,8 @@ class CoreContext
                 // Wait for GlobalState.ON as some settings modification won't be saved
                 // in RC file if Core isn't ON
                 onCoreStarted()
+            } else if (state == GlobalState.Shutdown) {
+                onCoreStopped()
             }
         }
 
@@ -501,6 +503,14 @@ class CoreContext
     }
 
     @WorkerThread
+    private fun onCoreStopped() {
+        Log.w("$TAG Core is being shut down, notifying managers so they can remove their listeners and do some cleanup if needed")
+        contactsManager.onCoreStopped(core)
+        telecomManager.onCoreStopped(core)
+        notificationsManager.onCoreStopped(core)
+    }
+
+    @WorkerThread
     private fun destroyCore() {
         if (!::core.isInitialized) {
             return
@@ -521,10 +531,6 @@ class CoreContext
         audioManager.unregisterAudioDeviceCallback(audioDeviceCallback)
 
         core.stop()
-
-        contactsManager.onCoreStopped(core)
-        telecomManager.onCoreStopped(core)
-        notificationsManager.onCoreStopped(core)
 
         // It's very unlikely the process will survive until the Core reaches GlobalStateOff sadly
         Log.w("$TAG Core has been shut down")
