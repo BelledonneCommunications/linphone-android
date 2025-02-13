@@ -26,9 +26,9 @@ import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.Account
-import org.linphone.core.ConfiguringState
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
+import org.linphone.core.GlobalState
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
 import org.linphone.ui.main.model.AccountModel
@@ -109,11 +109,11 @@ class DrawerMenuViewModel
         }
 
         @WorkerThread
-        override fun onConfiguringStatus(core: Core, status: ConfiguringState?, message: String?) {
-            if (status != ConfiguringState.Skipped) {
+        override fun onGlobalStateChanged(core: Core, state: GlobalState?, message: String) {
+            if (core.globalState == GlobalState.On) {
                 accounts.value.orEmpty().forEach(AccountModel::destroy)
 
-                Log.i("$TAG Configuring status is [$status], reload accounts & shortcuts")
+                Log.i("$TAG Global state is [${core.globalState}], reload accounts & shortcuts")
                 computeAccountsList()
                 computeShortcuts()
             }
@@ -180,6 +180,12 @@ class DrawerMenuViewModel
                 showAccountPopupMenuEvent.postValue(Event(Pair(view, account)))
             }
             list.add(model)
+
+            if (account == coreContext.core.defaultAccount) {
+                defaultAccountChangedEvent.postValue(
+                    Event(account.params.identityAddress?.asStringUriOnly() ?: "")
+                )
+            }
         }
         accounts.postValue(list)
 

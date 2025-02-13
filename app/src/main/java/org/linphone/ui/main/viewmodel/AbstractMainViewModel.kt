@@ -28,9 +28,9 @@ import org.linphone.core.Account
 import org.linphone.core.Call
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatRoom
-import org.linphone.core.ConfiguringState
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
+import org.linphone.core.GlobalState
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
 import org.linphone.ui.main.model.AccountModel
@@ -139,18 +139,10 @@ open class AbstractMainViewModel
         }
 
         @WorkerThread
-        override fun onConfiguringStatus(core: Core, status: ConfiguringState?, message: String?) {
-            if (status != ConfiguringState.Skipped) {
-                account.value?.destroy()
-
-                val defaultAccount = core.defaultAccount
-                if (defaultAccount != null) {
-                    Log.i("$TAG Configuring status is [$status], reload default account")
-                    account.postValue(AccountModel(defaultAccount))
-                    defaultAccountChangedEvent.postValue(Event(true))
-                } else {
-                    Log.w("$TAG Configuring status is [$status] but no default account was found!")
-                }
+        override fun onGlobalStateChanged(core: Core, state: GlobalState?, message: String) {
+            if (core.globalState == GlobalState.On) {
+                Log.i("$TAG Global state is [${core.globalState}], reload account info")
+                configure()
             }
         }
 
