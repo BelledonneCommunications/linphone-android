@@ -105,7 +105,7 @@ steps:
   displayName: "Build App"
   inputs:
     gradleWrapperFile: 'gradlew'
-    tasks: 'bundleVoyager'
+    tasks: 'bundleEcx'
     publishJUnitResults: false
     javaHomeOption: 'JDKVersion'
     sonarQubeRunAnalysis: false
