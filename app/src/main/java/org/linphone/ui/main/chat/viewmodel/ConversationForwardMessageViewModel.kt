@@ -149,7 +149,7 @@ class ConversationForwardMessageViewModel
 
             val friend = model.friend
             if (friend == null) {
-                Log.i("$TAG Friend is null, using address [${model.address}]")
+                Log.i("$TAG Friend is null, using address [${model.address.asStringUriOnly()}]")
                 onAddressSelected(model.address)
                 return@postOnCoreThread
             }

@@ -240,7 +240,8 @@ class StartConversationViewModel
             val chatRoom = core.createChatRoom(params, localAddress, participants)
             if (chatRoom != null) {
                 if (chatParams.backend == ChatRoom.Backend.FlexisipChat) {
-                    if (chatRoom.state == ChatRoom.State.Created) {
+                    val state = chatRoom.state
+                    if (state == ChatRoom.State.Created) {
                         val id = LinphoneUtils.getChatRoomId(chatRoom)
                         Log.i("$TAG 1-1 conversation [$id] has been created")
                         operationInProgress.postValue(false)
@@ -253,7 +254,7 @@ class StartConversationViewModel
                             )
                         )
                     } else {
-                        Log.i("$TAG Conversation isn't in Created state yet, wait for it")
+                        Log.i("$TAG Conversation isn't in Created state yet (state is [$state]), wait for it")
                         chatRoom.addListener(chatRoomListener)
                     }
                 } else {

@@ -167,7 +167,7 @@ abstract class GenericAddressPickerFragment : GenericMainFragment() {
         coreContext.postOnCoreThread { core ->
             val friend = model.friend
             if (friend == null) {
-                Log.i("$TAG Friend is null, using address [${model.address}]")
+                Log.i("$TAG Friend is null, using address [${model.address.asStringUriOnly()}]")
                 val fakeFriend = core.createFriend()
                 fakeFriend.addAddress(model.address)
                 onAddressSelected(model.address, fakeFriend)
