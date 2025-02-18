@@ -29,7 +29,7 @@ import androidx.annotation.UiThread
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import org.linphone.databinding.ChatLongPressMenuBinding
+import org.linphone.databinding.ChatConversationLongPressMenuBinding
 
 @UiThread
 class ConversationDialogFragment(
@@ -71,7 +71,7 @@ class ConversationDialogFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = ChatLongPressMenuBinding.inflate(layoutInflater)
+        val view = ChatConversationLongPressMenuBinding.inflate(layoutInflater)
         view.isMuted = isMuted
         view.isGroup = isGroup
         view.isReadOnly = isReadOnly

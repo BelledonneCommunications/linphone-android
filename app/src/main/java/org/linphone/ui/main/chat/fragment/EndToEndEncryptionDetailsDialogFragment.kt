@@ -29,7 +29,7 @@ import androidx.annotation.UiThread
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import org.linphone.databinding.ChatConversationE2eDetailsBottomSheetBinding
+import org.linphone.databinding.ChatConversationE2eEncryptedDetailsBottomSheetBinding
 
 @UiThread
 class EndToEndEncryptionDetailsDialogFragment(
@@ -62,7 +62,7 @@ class EndToEndEncryptionDetailsDialogFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = ChatConversationE2eDetailsBottomSheetBinding.inflate(layoutInflater)
+        val view = ChatConversationE2eEncryptedDetailsBottomSheetBinding.inflate(layoutInflater)
         return view.root
     }
 }

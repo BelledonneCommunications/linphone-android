@@ -35,7 +35,7 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatBubbleIncomingBinding
 import org.linphone.databinding.ChatBubbleOutgoingBinding
 import org.linphone.databinding.ChatConversationEventBinding
-import org.linphone.databinding.ChatConversationSecuredFirstEventBinding
+import org.linphone.databinding.ChatConversationE2eEncryptedFirstEventBinding
 import org.linphone.ui.main.chat.model.EventLogModel
 import org.linphone.ui.main.chat.model.EventModel
 import org.linphone.ui.main.chat.model.MessageModel
@@ -70,13 +70,19 @@ class ConversationEventAdapter :
         MutableLiveData<Event<MessageModel>>()
     }
 
+    private var isConversationSecured: Boolean = false
+
+    fun setIsConversationSecured(secured: Boolean) {
+        isConversationSecured = secured
+    }
+
     override fun displayHeaderForPosition(position: Int): Boolean {
         // We only want to display it at top
         return position == 0
     }
 
     override fun getHeaderViewForPosition(context: Context, position: Int): View {
-        val binding = ChatConversationSecuredFirstEventBinding.inflate(LayoutInflater.from(context))
+        val binding = ChatConversationE2eEncryptedFirstEventBinding.inflate(LayoutInflater.from(context))
         return binding.root
     }
 

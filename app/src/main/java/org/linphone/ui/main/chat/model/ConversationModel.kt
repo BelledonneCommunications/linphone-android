@@ -60,6 +60,8 @@ class ConversationModel
 
     val isEncrypted = chatRoom.hasCapability(Capabilities.Encrypted.toInt())
 
+    val isEncryptionAvailable = LinphoneUtils.isEndToEndEncryptedChatAvailable(chatRoom.core)
+
     val isReadOnly = MutableLiveData<Boolean>()
 
     val subject = MutableLiveData<String>()

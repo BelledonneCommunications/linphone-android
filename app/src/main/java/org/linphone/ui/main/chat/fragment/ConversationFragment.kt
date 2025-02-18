@@ -314,7 +314,9 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                 if (e.action == MotionEvent.ACTION_UP) {
                     if ((rv.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition() == 0) {
                         if (e.y >= 0 && e.y <= headerItemDecoration.getDecorationHeight(0)) {
-                            showEndToEndEncryptionDetailsBottomSheet()
+                            if (viewModel.isEndToEndEncrypted.value == true) {
+                                showEndToEndEncryptionDetailsBottomSheet()
+                            }
                             return true
                         }
                     }
@@ -504,6 +506,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                     }
                 } else {
                     sendMessageViewModel.configureChatRoom(viewModel.chatRoom)
+                    adapter.setIsConversationSecured(viewModel.isEndToEndEncrypted.value == true)
 
                     // Wait for chat room to be ready before trying to forward a message in it
                     sharedViewModel.messageToForwardEvent.observe(viewLifecycleOwner) { event ->
@@ -585,6 +588,8 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         }
 
         viewModel.isEndToEndEncrypted.observe(viewLifecycleOwner) { encrypted ->
+            adapter.setIsConversationSecured(encrypted)
+
             if (encrypted) {
                 binding.eventsList.addItemDecoration(headerItemDecoration)
                 binding.eventsList.addOnItemTouchListener(listItemTouchListener)
@@ -700,7 +705,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         }
 
         binding.setWarningConversationDisabledClickListener {
-            showUnsafeConversationDetailsBottomSheet()
+            showUnsafeConversationDisabledDetailsBottomSheet()
         }
 
         binding.searchField.setOnEditorActionListener { view, actionId, _ ->
@@ -1415,13 +1420,13 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         bottomSheetDialog = e2eEncryptionDetailsBottomSheet
     }
 
-    private fun showUnsafeConversationDetailsBottomSheet() {
-        val unsafeConversationDetailsBottomSheet = UnsafeConversationDetailsDialogFragment()
-        unsafeConversationDetailsBottomSheet.show(
+    private fun showUnsafeConversationDisabledDetailsBottomSheet() {
+        val unsafeConversationDisabledDetailsBottomSheet = UnsafeConversationDisabledDetailsDialogFragment()
+        unsafeConversationDisabledDetailsBottomSheet.show(
             requireActivity().supportFragmentManager,
-            UnsafeConversationDetailsDialogFragment.TAG
+            UnsafeConversationDisabledDetailsDialogFragment.TAG
         )
-        bottomSheetDialog = unsafeConversationDetailsBottomSheet
+        bottomSheetDialog = unsafeConversationDisabledDetailsBottomSheet
     }
 
     private fun showOpenOrExportFileDialog(path: String, mime: String, bundle: Bundle) {

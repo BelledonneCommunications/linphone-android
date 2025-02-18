@@ -289,7 +289,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:visibility="@{viewModel.isEmpty &amp;&amp; viewModel.isEndToEndEncrypted ? View.VISIBLE : View.GONE}"
-                    layout="@layout/chat_conversation_secured_first_event"
+                    layout="@layout/chat_conversation_e2e_encrypted_first_event"
                     app:layout_constraintTop_toTopOf="@id/events_list"
                     app:layout_constraintStart_toStartOf="@id/events_list"
                     app:layout_constraintEnd_toEndOf="@id/events_list" />

@@ -72,6 +72,8 @@ class ConversationViewModel
 
     val isEndToEndEncrypted = MutableLiveData<Boolean>()
 
+    val isEndToEndEncryptionAvailable = MutableLiveData<Boolean>()
+
     val isGroup = MutableLiveData<Boolean>()
 
     val subject = MutableLiveData<String>()
@@ -313,7 +315,8 @@ class ConversationViewModel
     }
 
     init {
-        coreContext.postOnCoreThread {
+        coreContext.postOnCoreThread { core ->
+            isEndToEndEncryptionAvailable.postValue(LinphoneUtils.isEndToEndEncryptedChatAvailable(core))
             coreContext.contactsManager.addListener(contactsListener)
         }
 
