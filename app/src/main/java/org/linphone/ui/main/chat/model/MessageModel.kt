@@ -100,7 +100,7 @@ class MessageModel
 
     val isOutgoing = chatMessage.isOutgoing
 
-    val isInError = chatMessage.state == ChatMessage.State.NotDelivered
+    val isInError = MutableLiveData<Boolean>()
 
     val timestamp = chatMessage.time
 
@@ -224,6 +224,7 @@ class MessageModel
                     }
                 }
             }
+            isInError.postValue(messageState == ChatMessage.State.NotDelivered)
         }
 
         @WorkerThread
@@ -296,6 +297,8 @@ class MessageModel
 
     init {
         updateAvatarModel()
+
+        isInError.postValue(chatMessage.state == ChatMessage.State.NotDelivered)
 
         groupedWithNextMessage.postValue(isGroupedWithNextOne)
         groupedWithPreviousMessage.postValue(isGroupedWithPreviousOne)
