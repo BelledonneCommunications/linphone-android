@@ -129,6 +129,7 @@
     <string name="media_playback_low_volume_warning_toast">Media volume is low, you may not hear anything!</string>
     <string name="remote_provisioning_config_applied_toast">Configuration successfully applied</string>
     <string name="remote_provisioning_config_failed_toast">Error while trying to download and apply remote configuration</string>
+    <string name="media_player_generic_error_toast">Error trying to create media player</string>
 
     <!-- Assistant related string (account register / login / etc...) -->
     <string name="assistant_dialog_general_terms_and_privacy_policy_title">General terms &amp; privacy policy</string>
