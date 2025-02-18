@@ -181,13 +181,13 @@ class StartConversationViewModel
 
         val sameDomain = remote.domain == corePreferences.defaultDomain && remote.domain == account.params.domain
         if (account.params.instantMessagingEncryptionMandatory && sameDomain) {
-            Log.i("$TAG Account is in secure mode & domain matches, creating a E2E conversation")
+            Log.i("$TAG Account is in secure mode & domain matches, creating an E2E encrypted conversation")
             chatParams.backend = ChatRoom.Backend.FlexisipChat
             params.securityLevel = Conference.SecurityLevel.EndToEnd
         } else if (!account.params.instantMessagingEncryptionMandatory) {
             if (LinphoneUtils.isEndToEndEncryptedChatAvailable(core)) {
                 Log.i(
-                    "$TAG Account is in interop mode but LIME is available, creating a E2E conversation"
+                    "$TAG Account is in interop mode but LIME is available, creating an E2E encrypted conversation"
                 )
                 chatParams.backend = ChatRoom.Backend.FlexisipChat
                 params.securityLevel = Conference.SecurityLevel.EndToEnd
