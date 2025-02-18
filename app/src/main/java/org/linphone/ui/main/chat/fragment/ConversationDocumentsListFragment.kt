@@ -145,6 +145,7 @@ class ConversationDocumentsListFragment : SlidingPaneChildFragment() {
             putBoolean("isEncrypted", fileModel.isEncrypted)
             putLong("timestamp", fileModel.fileCreationTimestamp)
             putString("originalPath", fileModel.originalPath)
+            putBoolean("isFromEphemeralMessage", fileModel.isFromEphemeralMessage)
             putBoolean("isMedia", false)
         }
         when (FileUtils.getMimeType(mime)) {

@@ -37,6 +37,7 @@ Group changes to describe their impact on the project, as follows:
 - If next message is also a voice recording, playback will automatically start after the currently playing one ends.
 - Chat while in call: a shortcut to a conversation screen with the remote.
 - Chat while in a conference: if the conference has a text stream enabled, you can chat with the other participants of the conference while it lasts. At the end, you'll find the messages history in the call history (and not in the list of conversations).
+- Auto export of media to native gallery even when auto download is enabled (but still not if VFS is enabled nor for ephemeral messages).
 - Notification showing upload/download of files shared through chat will let user know the progress and keep the app alive during that process.
 - Screen sharing in conference: only desktop app starting with 6.0 version is able to start it, but on mobiles you'll be able to see it.
 - You can choose whatever ringtone you'd like for incoming calls (in Android notification channel settings).

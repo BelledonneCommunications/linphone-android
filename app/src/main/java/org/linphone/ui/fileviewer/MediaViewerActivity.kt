@@ -99,7 +99,8 @@ class MediaViewerActivity : GenericActivity() {
         val timestamp = args.getLong("timestamp", -1)
         val isEncrypted = args.getBoolean("isEncrypted", false)
         val originalPath = args.getString("originalPath", "")
-        viewModel.initTempModel(path, timestamp, isEncrypted, originalPath)
+        val isFromEphemeralMessage = args.getBoolean("isFromEphemeralMessage", false)
+        viewModel.initTempModel(path, timestamp, isEncrypted, originalPath, isFromEphemeralMessage)
 
         val conversationId = args.getString("conversationId").orEmpty()
         Log.i(
@@ -183,6 +184,12 @@ class MediaViewerActivity : GenericActivity() {
         val currentItem = binding.mediaViewPager.currentItem
         val model = if (currentItem >= 0 && currentItem < list.size) list[currentItem] else null
         if (model != null) {
+            // Never do auto media export for ephemeral messages!
+            if (model.isFromEphemeralMessage) {
+                Log.e("$TAG Do not export media from ephemeral message!")
+                return
+            }
+
             val filePath = model.path
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {

@@ -149,6 +149,13 @@ class CorePreferences
             config.setBool("app", "mark_as_read_notif_dismissal", value)
         }
 
+    var makePublicMediaFilesDownloaded: Boolean
+        // Keep old name for backward compatibility
+        get() = config.getBool("app", "make_downloaded_images_public_in_gallery", false)
+        set(value) {
+            config.setBool("app", "make_downloaded_images_public_in_gallery", value)
+        }
+
     // Conference related
 
     @get:WorkerThread @set:WorkerThread

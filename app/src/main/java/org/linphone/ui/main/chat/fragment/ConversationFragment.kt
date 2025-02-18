@@ -1114,6 +1114,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             putBoolean("isEncrypted", fileModel.isEncrypted)
             putLong("timestamp", fileModel.fileCreationTimestamp)
             putString("originalPath", fileModel.originalPath)
+            putBoolean("isFromEphemeralMessage", fileModel.isFromEphemeralMessage)
         }
         when (mimeType) {
             FileUtils.MimeType.Image, FileUtils.MimeType.Video, FileUtils.MimeType.Audio -> {

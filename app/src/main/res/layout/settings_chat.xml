@@ -40,9 +40,38 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="16dp"
+            android:enabled="@{!viewModel.isVfsEnabled}"
             android:checked="@{viewModel.autoDownloadEnabled}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/settings_title_style"
+            android:onClick="@{() -> viewModel.toggleAutoExportMediaFilesToNativeGallery()}"
+            android:id="@+id/auto_export_media_to_native_gallery_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/settings_conversations_auto_export_media_to_native_gallery_title"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintTop_toTopOf="@id/auto_export_media_to_native_gallery_switch"
+            app:layout_constraintBottom_toBottomOf="@id/auto_export_media_to_native_gallery_switch"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/auto_export_media_to_native_gallery_switch"/>
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            style="@style/material_switch_style"
+            android:id="@+id/auto_export_media_to_native_gallery_switch"
+            android:onClick="@{() -> viewModel.toggleAutoExportMediaFilesToNativeGallery()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:checked="@{viewModel.autoExportMediaToNativeGallery}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/auto_download_switch" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/settings_title_style"
@@ -70,7 +99,7 @@
             android:layout_marginEnd="16dp"
             android:checked="@{viewModel.markAsReadWhenDismissingNotification}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/auto_download_switch" />
+            app:layout_constraintTop_toBottomOf="@id/auto_export_media_to_native_gallery_switch" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -57,9 +57,9 @@ class MediaListViewModel
     }
 
     @UiThread
-    fun initTempModel(path: String, timestamp: Long, isEncrypted: Boolean, originalPath: String) {
+    fun initTempModel(path: String, timestamp: Long, isEncrypted: Boolean, originalPath: String, isFromEphemeralMessage: Boolean) {
         val name = FileUtils.getNameFromFilePath(path)
-        val model = FileModel(path, name, 0, timestamp, isEncrypted, originalPath)
+        val model = FileModel(path, name, 0, timestamp, isEncrypted, originalPath, isFromEphemeralMessage)
         temporaryModel = model
         Log.i("$TAG Temporary model for file [$name] created, use it while other media for conversation are being loaded")
         mediaList.postValue(arrayListOf(model))
@@ -98,7 +98,10 @@ class MediaListViewModel
             val size = mediaContent.size.toLong()
             val timestamp = mediaContent.creationTimestamp
             if (path.isNotEmpty() && name.isNotEmpty()) {
-                val model = FileModel(path, name, size, timestamp, isEncrypted, originalPath)
+                // TODO FIXME: we don't have the ephemeral info at Content level, using the chatRoom info even if content ephemeral status may or may not be different...
+                val ephemeral = chatRoom.isEphemeralEnabled
+
+                val model = FileModel(path, name, size, timestamp, isEncrypted, originalPath, ephemeral)
                 list.add(model)
             }
 

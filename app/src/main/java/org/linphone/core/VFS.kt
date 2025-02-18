@@ -27,6 +27,7 @@ import android.util.Base64
 import android.util.Pair
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import java.math.BigInteger
 import java.nio.charset.StandardCharsets
 import java.security.KeyStore
@@ -73,6 +74,12 @@ class VFS {
             }
 
             preferences.edit().putBoolean("vfs_enabled", true).apply()
+
+            if (corePreferences.makePublicMediaFilesDownloaded) {
+                Log.w("$TAG VFS is now enabled, disabling auto export of media files to native gallery")
+                corePreferences.makePublicMediaFilesDownloaded = false
+            }
+
             return true
         }
 

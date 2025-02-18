@@ -240,6 +240,7 @@
     <string name="settings_calls_change_ringtone_title">Change ringtone</string>
     <string name="settings_conversations_title">Conversations</string>
     <string name="settings_conversations_auto_download_title">Auto-download files</string>
+    <string name="settings_conversations_auto_export_media_to_native_gallery_title">Make downloaded media public</string>
     <string name="settings_conversations_mark_as_read_when_dismissing_notif_title">Mark conversation as read when dismissing message notification</string>
     <string name="settings_contacts_title">Contacts</string>
     <string name="settings_contacts_add_ldap_server_title">Add LDAP server</string>

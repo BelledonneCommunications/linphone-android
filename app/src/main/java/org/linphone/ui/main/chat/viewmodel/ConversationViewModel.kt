@@ -761,6 +761,19 @@ class ConversationViewModel
                 },
                 { id ->
                     voiceRecordPlaybackEndedEvent.postValue(Event(id))
+                },
+                { filePath ->
+                    viewModelScope.launch {
+                        withContext(Dispatchers.IO) {
+                            Log.i("$TAG Export file [$filePath] to Android's MediaStore")
+                            val mediaStorePath = FileUtils.addContentToMediaStore(filePath)
+                            if (mediaStorePath.isNotEmpty()) {
+                                Log.i("$TAG File [$filePath] has been successfully exported to MediaStore")
+                            } else {
+                                Log.e("$TAG Failed to export file [$filePath] to MediaStore!")
+                            }
+                        }
+                    }
                 }
             )
             eventsList.add(model)

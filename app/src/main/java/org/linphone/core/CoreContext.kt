@@ -46,6 +46,7 @@ import org.linphone.ui.call.CallActivity
 import org.linphone.utils.ActivityMonitor
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
+import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
 
 class CoreContext
@@ -112,6 +113,11 @@ class CoreContext
         MutableLiveData<Event<Boolean>>()
     }
 
+    private var filesToExportToNativeMediaGallery = arrayListOf<String>()
+    val filesToExportToNativeMediaGalleryEvent: MutableLiveData<Event<List<String>>> by lazy {
+        MutableLiveData<Event<List<String>>>()
+    }
+
     @SuppressLint("HandlerLeak")
     private lateinit var coreThread: Handler
 
@@ -155,6 +161,42 @@ class CoreContext
     private var previousCallState = Call.State.Idle
 
     private val coreListener = object : CoreListenerStub() {
+        @WorkerThread
+        override fun onMessagesReceived(
+            core: Core,
+            chatRoom: ChatRoom,
+            messages: Array<out ChatMessage?>
+        ) {
+            if (corePreferences.makePublicMediaFilesDownloaded && core.maxSizeForAutoDownloadIncomingFiles >= 0) {
+                for (message in messages) {
+                    // Never do auto media export for ephemeral messages!
+                    if (message?.isEphemeral == true) continue
+
+                    for (content in message?.contents.orEmpty()) {
+                        if (content.isFile) {
+                            val path = content.filePath
+                            if (path.isNullOrEmpty()) continue
+
+                            val mime = "${content.type}/${content.subtype}"
+                            val mimeType = FileUtils.getMimeType(mime)
+                            when (mimeType) {
+                                FileUtils.MimeType.Image, FileUtils.MimeType.Video, FileUtils.MimeType.Audio -> {
+                                    Log.i("$TAG Added file path [$path] to the list of media to export to native media gallery")
+                                    filesToExportToNativeMediaGallery.add(path)
+                                }
+                                else -> {}
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (filesToExportToNativeMediaGallery.isNotEmpty()) {
+                Log.i("$TAG Creating event with [${filesToExportToNativeMediaGallery.size}] files to export to native media gallery")
+                filesToExportToNativeMediaGalleryEvent.postValue(Event(filesToExportToNativeMediaGallery))
+            }
+        }
+
         @WorkerThread
         override fun onGlobalStateChanged(core: Core, state: GlobalState, message: String) {
             Log.i("$TAG Global state changed [$state]")
@@ -626,6 +668,11 @@ class CoreContext
             it.params.identityAddress?.weakEqual(address) == true
         }
         return found != null
+    }
+
+    @WorkerThread
+    fun clearFilesToExportToNativeGallery() {
+        filesToExportToNativeMediaGallery.clear()
     }
 
     @WorkerThread

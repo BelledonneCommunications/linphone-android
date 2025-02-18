@@ -42,6 +42,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.Address
 import org.linphone.core.ChatMessage
@@ -82,7 +83,8 @@ class MessageModel
     private val onWebUrlClicked: ((url: String) -> Unit)? = null,
     private val onContactClicked: ((friendRefKey: String) -> Unit)? = null,
     private val onRedToastToShow: ((pair: Pair<Int, Int>) -> Unit)? = null,
-    private val onVoiceRecordingPlaybackEnded: ((id: String) -> Unit)? = null
+    private val onVoiceRecordingPlaybackEnded: ((id: String) -> Unit)? = null,
+    private val onFileToExportToNativeGallery: ((path: String) -> Unit)? = null
 ) {
     companion object {
         private const val TAG = "[Message Model]"
@@ -220,6 +222,27 @@ class MessageModel
                         computeVoiceRecordContent(content)
                         break
                     }
+                }
+            }
+        }
+
+        @WorkerThread
+        override fun onFileTransferTerminated(message: ChatMessage, content: Content) {
+            Log.i("$TAG File [${content.name}] from message [${message.messageId}] transfer terminated")
+
+            // Never do auto media export for ephemeral messages!
+            if (corePreferences.makePublicMediaFilesDownloaded && !message.isEphemeral) {
+                val path = content.filePath
+                if (path.isNullOrEmpty()) return
+
+                val mime = "${content.type}/${content.subtype}"
+                val mimeType = FileUtils.getMimeType(mime)
+                when (mimeType) {
+                    FileUtils.MimeType.Image, FileUtils.MimeType.Video, FileUtils.MimeType.Audio -> {
+                        Log.i("$TAG Exporting file path [$path] to the native media gallery")
+                        onFileToExportToNativeGallery?.invoke(path)
+                    }
+                    else -> {}
                 }
             }
         }
@@ -443,6 +466,7 @@ class MessageModel
                             timestamp,
                             isFileEncrypted,
                             originalPath,
+                            chatMessage.isEphemeral,
                             flexboxLayoutWrapBefore = wrapBefore
                         ) { model ->
                             onContentClicked?.invoke(model)
@@ -470,7 +494,8 @@ class MessageModel
                                 content.fileSize.toLong(),
                                 timestamp,
                                 isFileEncrypted,
-                                path
+                                path,
+                                chatMessage.isEphemeral
                             ) { model ->
                                 onContentClicked?.invoke(model)
                             }
@@ -482,6 +507,7 @@ class MessageModel
                                 timestamp,
                                 isFileEncrypted,
                                 name,
+                                chatMessage.isEphemeral,
                                 isWaitingToBeDownloaded = true
                             ) { model ->
                                 downloadContent(model, content)

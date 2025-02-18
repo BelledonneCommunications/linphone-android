@@ -52,9 +52,11 @@ import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import kotlin.math.max
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -310,6 +312,19 @@ class MainActivity : GenericActivity() {
             it.consume {
                 Log.i("$TAG Remote provisioning was applied, checking if theme has changed")
                 checkMainColorTheme()
+            }
+        }
+
+        coreContext.filesToExportToNativeMediaGalleryEvent.observe(this) {
+            it.consume { files ->
+                Log.i("$TAG Found [${files.size}] files to export to native media gallery")
+                for (file in files) {
+                    exportFileToNativeMediaGallery(file)
+                }
+
+                coreContext.postOnCoreThread {
+                    coreContext.clearFilesToExportToNativeGallery()
+                }
             }
         }
 
@@ -776,5 +791,19 @@ class MainActivity : GenericActivity() {
 
         dialog.show()
         currentlyDisplayedAuthDialog = dialog
+    }
+
+    private fun exportFileToNativeMediaGallery(filePath: String) {
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                Log.i("$TAG Export file [$filePath] to Android's MediaStore")
+                val mediaStorePath = FileUtils.addContentToMediaStore(filePath)
+                if (mediaStorePath.isNotEmpty()) {
+                    Log.i("$TAG File [$filePath] has been successfully exported to MediaStore")
+                } else {
+                    Log.e("$TAG Failed to export file [$filePath] to MediaStore!")
+                }
+            }
+        }
     }
 }

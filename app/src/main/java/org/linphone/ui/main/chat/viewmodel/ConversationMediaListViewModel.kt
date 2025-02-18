@@ -78,7 +78,8 @@ class ConversationMediaListViewModel
             val size = mediaContent.size.toLong()
             val timestamp = mediaContent.creationTimestamp
             if (path.isNotEmpty() && name.isNotEmpty()) {
-                val model = FileModel(path, name, size, timestamp, isEncrypted, originalPath) {
+                val model =
+                    FileModel(path, name, size, timestamp, isEncrypted, originalPath, chatRoom.isEphemeralEnabled) {
                     openMediaEvent.postValue(Event(it))
                 }
                 list.add(model)

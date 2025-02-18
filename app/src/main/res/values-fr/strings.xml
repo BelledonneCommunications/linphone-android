@@ -201,6 +201,7 @@
     <string name="settings_calls_change_ringtone_title">Changer de sonnerie</string>
     <string name="settings_conversations_title">Conversations</string>
     <string name="settings_conversations_auto_download_title">Télécharger automatiquement les fichiers</string>
+    <string name="settings_conversations_auto_export_media_to_native_gallery_title">Rendre visible dans la galerie les médias téléchargés</string>
     <string name="settings_conversations_mark_as_read_when_dismissing_notif_title">Marquer la conversation comme lue lorsqu\'une notification de message est supprimée</string>
     <string name="settings_contacts_title">Contacts</string>
     <string name="settings_contacts_add_ldap_server_title">Ajouter un serveur LDAP</string>

@@ -79,7 +79,11 @@ class ConversationDocumentsListViewModel
             val size = documentContent.size.toLong()
             val timestamp = documentContent.creationTimestamp
             if (path.isNotEmpty() && name.isNotEmpty()) {
-                val model = FileModel(path, name, size, timestamp, isEncrypted, originalPath) {
+                // TODO FIXME: we don't have the ephemeral info at Content level, using the chatRoom info even if content ephemeral status may or may not be different...
+                val ephemeral = chatRoom.isEphemeralEnabled
+
+                val model =
+                    FileModel(path, name, size, timestamp, isEncrypted, originalPath, ephemeral) {
                     openDocumentEvent.postValue(Event(it))
                 }
                 list.add(model)

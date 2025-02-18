@@ -90,6 +90,8 @@ class SettingsViewModel
 
     val autoDownloadEnabled = MutableLiveData<Boolean>()
 
+    val autoExportMediaToNativeGallery = MutableLiveData<Boolean>()
+
     val markAsReadWhenDismissingNotification = MutableLiveData<Boolean>()
 
     // Contacts settings
@@ -246,7 +248,8 @@ class SettingsViewModel
         expandAudioCodecs.value = false
         expandVideoCodecs.value = false
 
-        isVfsEnabled.value = VFS.isEnabled(coreContext.context)
+        val vfsEnabled = VFS.isEnabled(coreContext.context)
+        isVfsEnabled.value = vfsEnabled
 
         val vibrator = coreContext.context.getSystemService(Vibrator::class.java)
         isVibrationAvailable.value = vibrator.hasVibrator()
@@ -285,6 +288,7 @@ class SettingsViewModel
             allowIpv6.postValue(core.isIpv6Enabled)
 
             autoDownloadEnabled.postValue(core.maxSizeForAutoDownloadIncomingFiles == 0)
+            autoExportMediaToNativeGallery.postValue(corePreferences.makePublicMediaFilesDownloaded && !vfsEnabled)
             markAsReadWhenDismissingNotification.postValue(
                 corePreferences.markConversationAsReadWhenDismissingMessageNotification
             )
@@ -436,6 +440,15 @@ class SettingsViewModel
         coreContext.postOnCoreThread { core ->
             core.maxSizeForAutoDownloadIncomingFiles = if (newValue) 0 else -1
             autoDownloadEnabled.postValue(newValue)
+        }
+    }
+
+    @UiThread
+    fun toggleAutoExportMediaFilesToNativeGallery() {
+        val newValue = autoExportMediaToNativeGallery.value == false
+        coreContext.postOnCoreThread { core ->
+            corePreferences.makePublicMediaFilesDownloaded = newValue
+            autoExportMediaToNativeGallery.postValue(newValue)
         }
     }
 
