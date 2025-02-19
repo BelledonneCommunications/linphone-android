@@ -22,19 +22,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/mountains"
-                android:contentDescription="@null"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="?attr/color_main1_500"/>
-
             <androidx.appcompat.widget.AppCompatTextView
                 android:onClick="@{skipClickListener}"
                 style="@style/default_text_style_600"
@@ -48,9 +35,8 @@
                 android:paddingEnd="20dp"
                 android:text="@string/welcome_carousel_skip"
                 android:textSize="13sp"
-                android:textColor="?attr/color_on_main"
+                android:textColor="?attr/color_text"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="@id/header"
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -60,10 +46,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="65dp"
                 android:text="@string/welcome_page_title"
-                android:textColor="?attr/color_on_main"
+                android:textColor="?attr/color_text"
                 android:textSize="36sp"
-                app:layout_constraintTop_toTopOf="@id/header"
-                app:layout_constraintBottom_toBottomOf="@id/header"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -73,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:text="@string/welcome_page_subtitle"
-                android:textColor="?attr/color_on_main"
+                android:textColor="?attr/color_text"
                 android:textSize="26sp"
                 app:layout_constraintBottom_toBottomOf="@id/title_first_line"
                 app:layout_constraintStart_toEndOf="@id/title_first_line"/>
@@ -83,7 +68,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginBottom="20dp"
-                app:layout_constraintTop_toBottomOf="@id/header"
+                app:layout_constraintTop_toBottomOf="@id/title_second_line"
                 app:layout_constraintBottom_toTopOf="@id/dots_indicator"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>

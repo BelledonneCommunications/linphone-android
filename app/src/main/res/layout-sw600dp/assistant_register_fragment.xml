@@ -47,7 +47,7 @@
                     android:src="@drawable/assistant_logo"
                     app:layout_constraintStart_toEndOf="@id/title"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/header"
+                    app:layout_constraintBottom_toTopOf="@id/mountains"
                     app:layout_constraintTop_toBottomOf="@id/login" />
 
                 <ImageView
@@ -332,7 +332,7 @@
                     android:background="@drawable/secondary_button_background"
                     app:layout_constraintStart_toEndOf="@id/create_email_account_label"
                     app:layout_constraintTop_toBottomOf="@id/create"
-                    app:layout_constraintBottom_toTopOf="@id/header" />
+                    app:layout_constraintBottom_toTopOf="@id/mountains" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/default_text_style"
@@ -365,7 +365,7 @@
                     app:layout_constraintBottom_toBottomOf="@id/title"/>
 
                 <ImageView
-                    android:id="@+id/header"
+                    android:id="@+id/mountains"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:src="@drawable/mountains"

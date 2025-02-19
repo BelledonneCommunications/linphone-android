@@ -123,18 +123,6 @@
         </activity>
 
         <activity
-            android:name=".ui.fileviewer.MediaViewerActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true" />
-
-        <activity
-            android:name=".ui.fileviewer.FileViewerActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true" />
-
-        <activity
             android:name=".ui.welcome.WelcomeActivity"
             android:windowSoftInputMode="adjustResize"
             android:launchMode="singleTask"
@@ -142,6 +130,18 @@
 
         <activity
             android:name=".ui.assistant.AssistantActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true" />
+
+        <activity
+            android:name=".ui.fileviewer.MediaViewerActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true" />
+
+        <activity
+            android:name=".ui.fileviewer.FileViewerActivity"
             android:windowSoftInputMode="adjustResize"
             android:launchMode="singleTask"
             android:resizeableActivity="true" />

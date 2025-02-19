@@ -191,10 +191,10 @@
                 app:layout_constraintStart_toStartOf="@id/title"
                 app:layout_constraintEnd_toEndOf="@id/title"
                 app:layout_constraintTop_toBottomOf="@id/code_first_digit"
-                app:layout_constraintBottom_toTopOf="@id/header"/>
+                app:layout_constraintBottom_toTopOf="@id/mountains"/>
 
             <ImageView
-                android:id="@+id/header"
+                android:id="@+id/mountains"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/mountains"

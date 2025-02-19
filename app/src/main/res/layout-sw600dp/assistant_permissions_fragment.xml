@@ -237,12 +237,12 @@
                 android:text="@string/assistant_permissions_grant_all_of_them"
                 app:layout_constraintWidth_max="@dimen/button_max_width"
                 app:layout_constraintTop_toBottomOf="@id/skip"
-                app:layout_constraintBottom_toTopOf="@id/header"
+                app:layout_constraintBottom_toTopOf="@id/mountains"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <ImageView
-                android:id="@+id/header"
+                android:id="@+id/mountains"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/mountains"
