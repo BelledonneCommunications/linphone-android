@@ -63,8 +63,6 @@ class LinphoneUtils {
         const val RECORDING_FILE_NAME_URI_TIMESTAMP_SEPARATOR = "_on_"
         const val RECORDING_FILE_EXTENSION = ".smff"
 
-        private const val CHAT_ROOM_ID_SEPARATOR = "#~#"
-
         @WorkerThread
         fun getDefaultAccount(): Account? {
             return coreContext.core.defaultAccount ?: coreContext.core.accountList.firstOrNull()

@@ -172,7 +172,7 @@
                 android:textColor="?attr/color_main2_600"
                 android:background="@drawable/edit_text_background"
                 android:hint="@string/password"
-                android:inputType="@{viewModel.showPassword ? InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD : InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD, default=textPassword}"
+                passwordInputType="@{viewModel.showPassword ? InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD : InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD, default=textPassword}"
                 app:layout_constraintWidth_max="@dimen/text_input_max_width"
                 app:layout_constraintStart_toStartOf="@id/title"
                 app:layout_constraintEnd_toEndOf="@id/title"

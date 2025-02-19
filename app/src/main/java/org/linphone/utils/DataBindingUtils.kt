@@ -575,6 +575,13 @@ fun RoundCornersTextureView.setRoundCornersRadius(radius: Float) {
     setRadius(radius)
 }
 
+@BindingAdapter("passwordInputType")
+fun setInputTypeAndFont(editText: EditText, type: Int) {
+    editText.inputType = type
+    // Typeface must be set again...
+    editText.typeface = ResourcesCompat.getFont(editText.context, R.font.noto_sans)
+}
+
 @BindingAdapter("focusNextOnInput")
 fun focusNextOnInput(editText: EditText, enabled: Boolean) {
     if (!enabled) return
