@@ -36,6 +36,19 @@
             android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:contentDescription="@null"
+                android:src="@drawable/assistant_logo"
+                app:layout_constraintStart_toEndOf="@id/title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/header"
+                app:layout_constraintTop_toBottomOf="@id/register" />
+
+            <ImageView
                 android:id="@+id/back"
                 android:onClick="@{backClickListener}"
                 android:layout_width="@dimen/top_bar_height"
@@ -254,19 +267,6 @@
                 app:layout_constraintEnd_toEndOf="@id/title"
                 app:layout_constraintTop_toBottomOf="@id/scan_qr_code"
                 app:layout_constraintBottom_toTopOf="@id/header"/>
-
-            <ImageView
-                android:id="@+id/logo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                android:contentDescription="@null"
-                android:src="@drawable/assistant_logo"
-                app:layout_constraintStart_toEndOf="@id/title"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/header"
-                app:layout_constraintTop_toBottomOf="@id/register" />
 
             <ImageView
                 android:id="@+id/header"

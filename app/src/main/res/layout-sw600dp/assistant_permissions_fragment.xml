@@ -89,6 +89,7 @@
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_marginTop="32dp"
+                android:layout_marginStart="16dp"
                 android:background="@drawable/circle_light_blue_button_background"
                 android:padding="12dp"
                 android:src="@drawable/bell_ringing"
@@ -101,7 +102,7 @@
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style"
                 android:id="@+id/post_notifications_title"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
@@ -110,6 +111,7 @@
                 android:ellipsize="end"
                 app:layout_constraintTop_toTopOf="@id/post_notifications_icon"
                 app:layout_constraintStart_toEndOf="@id/post_notifications_icon"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="@id/post_notifications_icon"/>
 
             <ImageView
@@ -117,6 +119,7 @@
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
                 android:background="@drawable/circle_light_blue_button_background"
                 android:padding="12dp"
                 android:src="@drawable/address_book"
@@ -129,7 +132,7 @@
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style"
                 android:id="@+id/read_contacts_title"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
@@ -138,6 +141,7 @@
                 android:ellipsize="end"
                 app:layout_constraintTop_toTopOf="@id/read_contacts_icon"
                 app:layout_constraintStart_toEndOf="@id/read_contacts_icon"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="@id/read_contacts_icon"/>
 
             <ImageView
@@ -145,6 +149,7 @@
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
                 android:background="@drawable/circle_light_blue_button_background"
                 android:padding="12dp"
                 android:src="@drawable/microphone"
@@ -157,7 +162,7 @@
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style"
                 android:id="@+id/record_audio_title"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
@@ -166,6 +171,7 @@
                 android:ellipsize="end"
                 app:layout_constraintTop_toTopOf="@id/record_audio_icon"
                 app:layout_constraintStart_toEndOf="@id/record_audio_icon"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="@id/record_audio_icon"/>
 
             <ImageView
@@ -173,6 +179,7 @@
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
                 android:background="@drawable/circle_light_blue_button_background"
                 android:padding="12dp"
                 android:src="@drawable/video_camera"
@@ -185,7 +192,7 @@
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style"
                 android:id="@+id/access_camera_title"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
@@ -194,6 +201,7 @@
                 android:ellipsize="end"
                 app:layout_constraintTop_toTopOf="@id/access_camera_icon"
                 app:layout_constraintStart_toEndOf="@id/access_camera_icon"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="@id/access_camera_icon"/>
 
             <androidx.appcompat.widget.AppCompatTextView
