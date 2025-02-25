@@ -31,6 +31,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.media.AudioAttributes
 import android.media.AudioManager
+import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Bundle
@@ -123,6 +124,8 @@ class NotificationsManager
 
     private var currentlyDisplayedChatRoomId: String = ""
     private var currentlyDisplayedIncomingCallFragment: Boolean = false
+
+    private val mediaPlayer: MediaPlayer
 
     private val contactsListener = object : ContactsListener {
         @WorkerThread
@@ -267,8 +270,9 @@ class NotificationsManager
             val id = LinphoneUtils.getConversationId(chatRoom)
             if (currentlyDisplayedChatRoomId.isNotEmpty() && id == currentlyDisplayedChatRoomId) {
                 Log.i(
-                    "$TAG Do not notify received messages for currently displayed conversation [$id]"
+                    "$TAG Do not notify received messages for currently displayed conversation [$id] but play sound"
                 )
+                playMessageReceivedSound()
                 return
             }
 
@@ -440,6 +444,21 @@ class NotificationsManager
                     "[Notifications Manager] Found existing chat notification [${notification.id}]"
                 )
                 previousChatNotifications.add(notification.id)
+            }
+        }
+
+        val soundPath = corePreferences.messageReceivedInVisibleConversationNotificationSound
+        mediaPlayer = MediaPlayer().apply {
+            setAudioAttributes(
+                AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                    .build()
+            )
+            setDataSource(soundPath)
+            try {
+                prepare()
+            } catch (e: Exception) {
+                Log.e("$TAG Failed to prepare message received sound file [$soundPath]: $e")
             }
         }
     }
@@ -1603,6 +1622,15 @@ class NotificationsManager
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
                 args // Need to pass args here too for Remote & Local SIP URIs
             )!!
+        }
+    }
+
+    @WorkerThread
+    private fun playMessageReceivedSound() {
+        try {
+            mediaPlayer.start()
+        } catch (e: Exception) {
+            Log.e("$TAG Failed to play message received sound file: $e")
         }
     }
 

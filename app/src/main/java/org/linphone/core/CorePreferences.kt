@@ -345,6 +345,10 @@ class CorePreferences
     val ssoCacheFile: String
         get() = context.filesDir.absolutePath + "/auth_state.json"
 
+    @get:AnyThread
+    val messageReceivedInVisibleConversationNotificationSound: String
+        get() = context.filesDir.absolutePath + "/share/sounds/linphone/incoming_chat.wav"
+
     @UiThread
     fun copyAssetsFromPackage() {
         copy("linphonerc_default", configPath)
