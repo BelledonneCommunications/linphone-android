@@ -209,7 +209,7 @@ class ThirdPartySipAccountLoginViewModel
                 password.value.orEmpty().trim(),
                 null,
                 null,
-                null
+                domainValue
             )
             core.addAuthInfo(newlyCreatedAuthInfo)
 
