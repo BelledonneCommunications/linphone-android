@@ -111,10 +111,12 @@ class MeetingWaitingRoomViewModel
                 when (state) {
                     Call.State.End -> {
                         Log.i("$TAG Call has ended, leaving waiting room fragment")
+                        joining.postValue(false)
                         leaveWaitingRoomEvent.postValue(Event(true))
                     }
                     Call.State.Error -> {
                         Log.w("$TAG Call has failed, leaving waiting room fragment")
+                        joining.postValue(false)
                         leaveWaitingRoomEvent.postValue(Event(true))
                     }
                     else -> {}
