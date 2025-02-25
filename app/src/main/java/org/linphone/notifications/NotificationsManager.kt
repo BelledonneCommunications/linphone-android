@@ -125,7 +125,7 @@ class NotificationsManager
     private var currentlyDisplayedChatRoomId: String = ""
     private var currentlyDisplayedIncomingCallFragment: Boolean = false
 
-    private val mediaPlayer: MediaPlayer
+    private lateinit var mediaPlayer: MediaPlayer
 
     private val contactsListener = object : ContactsListener {
         @WorkerThread
@@ -446,21 +446,6 @@ class NotificationsManager
                 previousChatNotifications.add(notification.id)
             }
         }
-
-        val soundPath = corePreferences.messageReceivedInVisibleConversationNotificationSound
-        mediaPlayer = MediaPlayer().apply {
-            setAudioAttributes(
-                AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .setUsage(AudioAttributes.USAGE_NOTIFICATION)
-                    .build()
-            )
-            setDataSource(soundPath)
-            try {
-                prepare()
-            } catch (e: Exception) {
-                Log.e("$TAG Failed to prepare message received sound file [$soundPath]: $e")
-            }
-        }
     }
 
     @AnyThread
@@ -554,6 +539,21 @@ class NotificationsManager
         core.addListener(coreListener)
 
         coreContext.contactsManager.addListener(contactsListener)
+
+        val soundPath = corePreferences.messageReceivedInVisibleConversationNotificationSound
+        mediaPlayer = MediaPlayer().apply {
+            try {
+                setAudioAttributes(
+                    AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                        .build()
+                )
+                setDataSource(soundPath)
+                prepare()
+            } catch (e: Exception) {
+                Log.e("$TAG Failed to prepare message received sound file [$soundPath]: $e")
+            }
+        }
     }
 
     @WorkerThread
@@ -1627,10 +1627,12 @@ class NotificationsManager
 
     @WorkerThread
     private fun playMessageReceivedSound() {
-        try {
-            mediaPlayer.start()
-        } catch (e: Exception) {
-            Log.e("$TAG Failed to play message received sound file: $e")
+        if (::mediaPlayer.isInitialized) {
+            try {
+                mediaPlayer.start()
+            } catch (e: Exception) {
+                Log.e("$TAG Failed to play message received sound file: $e")
+            }
         }
     }
 
