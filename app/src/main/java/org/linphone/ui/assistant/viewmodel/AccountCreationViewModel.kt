@@ -442,9 +442,9 @@ class AccountCreationViewModel
             operationInProgress.postValue(true)
             createEnabled.postValue(false)
 
-            val usernameValue = username.value
-            val passwordValue = password.value
-            if (usernameValue.isNullOrEmpty() || passwordValue.isNullOrEmpty()) {
+            val usernameValue = username.value.orEmpty().trim()
+            val passwordValue = password.value.orEmpty().trim()
+            if (usernameValue.isEmpty() || passwordValue.isEmpty()) {
                 Log.e("$TAG Either username [$usernameValue] or password is null or empty!")
                 return
             }

@@ -158,7 +158,6 @@
     <string name="assistant_third_party_sip_account_warning_explanation">Some features require a &appName; account, such as group messaging, video conferences…\n\nThese features are hidden when you register with a third party SIP account.\n\nTo enable it in a commercial project, please contact us.</string>
     <string name="assistant_third_party_sip_account_create_linphone_account">I prefer to create an account</string>
     <string name="assistant_third_party_sip_account_warning_ok">I understand</string>
-    <string name="assistant_third_party_sip_account_username_or_identity">Username or SIP identity*</string>
     <string name="assistant_account_register_unavailable_no_push_toast">Push notifications not available, account creation disabled</string>
     <string name="assistant_account_register_push_notification_not_received_error">Push notification with auth token not received in 5 seconds, please try again later</string>
     <string name="assistant_account_register_unexpected_error">Unexpected error occurred, please try again later</string>

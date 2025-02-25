@@ -172,6 +172,8 @@ open class AccountLoginViewModel
                     "sip:$userInput@$defaultDomain"
                 }
             }
+            Log.i("$TAG Computed identity is [$identity] from user input [$userInput]")
+
             val identityAddress = Factory.instance().createAddress(identity)
             if (identityAddress == null) {
                 Log.e("$TAG Can't parse [$identity] as Address!")
