@@ -284,6 +284,12 @@ class MainActivity : GenericActivity() {
             }
         }
 
+        coreContext.clearAuthenticationRequestDialogEvent.observe(this) {
+            it.consume {
+                currentlyDisplayedAuthDialog?.dismiss()
+            }
+        }
+
         coreContext.showGreenToastEvent.observe(this) {
             it.consume { pair ->
                 val message = getString(pair.first)

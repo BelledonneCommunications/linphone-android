@@ -93,6 +93,10 @@ class CoreContext
         MutableLiveData<Event<String>>()
     }
 
+    val clearAuthenticationRequestDialogEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     val refreshMicrophoneMuteStateEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -391,6 +395,7 @@ class CoreContext
             }
         }
 
+        @WorkerThread
         override fun onAccountAdded(core: Core, account: Account) {
             // Prevent this trigger when core is stopped/start in remote prov
             if (core.globalState == GlobalState.Off) return
@@ -410,6 +415,15 @@ class CoreContext
                         "$TAG Newly added account (or the whole Core) doesn't support push notifications but keep-alive foreground service is already enabled, nothing to do"
                     )
                 }
+            }
+        }
+
+        @WorkerThread
+        override fun onAccountRemoved(core: Core, account: Account) {
+            Log.i("$TAG Account [${account.params.identityAddress?.asStringUriOnly()}] removed, clearing auth request dialog if needed")
+            if (account.findAuthInfo() == digestAuthInfoPendingPasswordUpdate) {
+                Log.i("$TAG Removed account matches auth info pending password update, removing dialog")
+                clearAuthenticationRequestDialogEvent.postValue(Event(true))
             }
         }
     }
