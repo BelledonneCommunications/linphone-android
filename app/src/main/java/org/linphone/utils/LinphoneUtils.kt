@@ -231,7 +231,7 @@ class LinphoneUtils {
             val isIncoming = isCallIncoming(call.state)
             return if (isConference || getConferenceInfoIfAny(call) != null) {
                 true
-            } else if (isIncoming) {
+            } else if (isIncoming || call.state == Call.State.Connected) { // In connected state call.currentParams.isVideoEnabled will return false...
                 call.remoteParams?.isVideoEnabled == true && call.remoteParams?.videoDirection != MediaDirection.Inactive
             } else {
                 call.currentParams.isVideoEnabled && call.currentParams.videoDirection != MediaDirection.Inactive

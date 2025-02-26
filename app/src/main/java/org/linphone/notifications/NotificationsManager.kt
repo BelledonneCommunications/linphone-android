@@ -1124,7 +1124,7 @@ class NotificationsManager
         }
 
         Log.i(
-            "Creating notification for [${if (isIncoming) "incoming" else "outgoing"}] [${if (isConference) "conference" else "call"}] with video [${if (isVideo) "enabled" else "disabled"}] on channel [$channel]"
+            "Creating notification for ${if (isIncoming) "[incoming] " else ""}[${if (isConference) "conference" else "call"}] with video [${if (isVideo) "enabled" else "disabled"}] on channel [$channel]"
         )
 
         val builder = NotificationCompat.Builder(
