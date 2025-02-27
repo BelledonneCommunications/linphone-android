@@ -120,7 +120,11 @@ class StartCallFragment : GenericAddressPickerFragment() {
 
         viewModel.leaveFragmentEvent.observe(viewLifecycleOwner) {
             it.consume {
-                goBack()
+                // Post on main thread to allow for main activity to be resumed
+                coreContext.postOnMainThread {
+                    Log.i("$TAG Going back")
+                    goBack()
+                }
             }
         }
 

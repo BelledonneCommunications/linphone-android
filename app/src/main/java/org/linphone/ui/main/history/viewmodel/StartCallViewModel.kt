@@ -84,8 +84,14 @@ class StartCallViewModel
         @WorkerThread
         override fun onStateChanged(conference: Conference, newState: Conference.State?) {
             Log.i("$TAG Conference state changed [$newState]")
-            if (newState == Conference.State.Created || newState == Conference.State.CreationFailed) {
-                operationInProgress.postValue(false)
+            when (newState) {
+                Conference.State.Created, Conference.State.CreationFailed, Conference.State.TerminationPending -> {
+                    operationInProgress.postValue(false)
+                }
+                Conference.State.Terminated -> {
+                     leaveFragmentEvent.postValue(Event(true))
+                }
+                else -> {}
             }
         }
     }
