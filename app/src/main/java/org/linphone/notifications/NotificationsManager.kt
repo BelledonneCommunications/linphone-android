@@ -270,9 +270,19 @@ class NotificationsManager
             val id = LinphoneUtils.getConversationId(chatRoom)
             if (currentlyDisplayedChatRoomId.isNotEmpty() && id == currentlyDisplayedChatRoomId) {
                 Log.i(
-                    "$TAG Do not notify received messages for currently displayed conversation [$id] but play sound"
+                    "$TAG Do not notify received messages for currently displayed conversation [$id], but play sound if at least one message is incoming and not read"
                 )
-                playMessageReceivedSound()
+
+                var playSound = false
+                for (message in messages) {
+                    if (!message.isOutgoing && !message.isRead) {
+                        playSound = true
+                        break
+                    }
+                }
+                if (playSound) {
+                    playMessageReceivedSound()
+                }
                 return
             }
 
