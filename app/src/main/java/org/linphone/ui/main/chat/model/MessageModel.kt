@@ -106,6 +106,8 @@ class MessageModel
 
     val time = TimestampUtils.toString(timestamp)
 
+    val hideDeliveryStatus = !isOutgoing && coreContext.core.imdnToEverybodyThreshold == 1
+
     val chatRoomIsReadOnly = chatMessage.chatRoom.isReadOnly ||
         (
             !chatMessage.chatRoom.hasCapability(ChatRoom.Capabilities.Encrypted.toInt()) && LinphoneUtils.getAccountForAddress(

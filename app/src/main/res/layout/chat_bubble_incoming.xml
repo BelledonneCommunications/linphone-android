@@ -252,7 +252,7 @@
                     android:paddingTop="2dp"
                     android:contentDescription="@string/content_description_chat_bubble_delivery_status"
                     android:src="@{model.statusIcon, default=@drawable/checks}"
-                    android:visibility="@{model.isFromGroup ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{model.isFromGroup &amp;&amp; !model.hideDeliveryStatus ? View.VISIBLE : View.GONE}"
                     app:tint="?attr/color_main1_500" />
 
                 <ImageView
