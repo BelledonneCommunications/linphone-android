@@ -179,9 +179,9 @@ fun AppCompatEditText.removeCharacterAtPosition() {
 
 @UiThread
 fun AppCompatEditText.addCharacterAtPosition(character: String) {
-    val newValue = "${text}$character"
-    setText(newValue)
-    setSelection(newValue.length)
+    val start = selectionStart
+    text?.insert(start, character)
+    setSelection(start + character.length)
 }
 
 @UiThread
