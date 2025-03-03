@@ -127,6 +127,7 @@ class LinphoneApplication : Application(), SingletonImageLoader.Factory {
             .crossfade(false)
             .components {
                 add(VideoFrameDecoder.Factory())
+                // add(GifDecoder.Factory) // Do not add it, GIFs are properly rendered without it and adding it breaks resizing...
                 add(SvgDecoder.Factory())
             }
             .memoryCache {
