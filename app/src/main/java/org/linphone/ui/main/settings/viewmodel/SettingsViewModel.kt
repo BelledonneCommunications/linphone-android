@@ -335,11 +335,12 @@ class SettingsViewModel
             isVfsEnabled.postValue(enabled)
             if (enabled) {
                 Log.i("$TAG VFS has been enabled")
+                showGreenToast(R.string.settings_security_enable_vfs_success_toast, R.drawable.lock_key)
             }
         } else {
-            showRedToast(R.string.settings_security_enable_vfs_failure_toast, R.drawable.warning_circle)
-            isVfsEnabled.postValue(false)
             Log.e("$TAG Failed to enable VFS!")
+            isVfsEnabled.postValue(false)
+            showRedToast(R.string.settings_security_enable_vfs_failure_toast, R.drawable.warning_circle)
         }
     }
 

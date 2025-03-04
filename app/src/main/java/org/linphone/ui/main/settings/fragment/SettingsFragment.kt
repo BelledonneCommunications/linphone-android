@@ -307,7 +307,6 @@ class SettingsFragment : GenericMainFragment() {
                 viewModel.enableVfs()
 
                 dialog.dismiss()
-                findNavController().popBackStack()
             }
         }
 
