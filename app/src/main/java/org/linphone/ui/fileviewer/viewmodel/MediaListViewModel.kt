@@ -90,10 +90,13 @@ class MediaListViewModel
                 Log.d(
                     "$TAG [VFS] Content is encrypted, requesting plain file path for file [${mediaContent.filePath}]"
                 )
-                mediaContent.exportPlainFile()
+                val exportedPath = mediaContent.exportPlainFile()
+                Log.i("$TAG Media original path is [$originalPath], newly exported plain file path is [$exportedPath]")
+                exportedPath
             } else {
                 originalPath
             }
+
             val name = mediaContent.name.orEmpty()
             val size = mediaContent.size.toLong()
             val timestamp = mediaContent.creationTimestamp
@@ -103,10 +106,12 @@ class MediaListViewModel
 
                 val model = FileModel(path, name, size, timestamp, isEncrypted, originalPath, ephemeral)
                 list.add(model)
+            } else {
+                Log.w("$TAG Skipping content because either name [$name] or path [$path] is empty")
             }
 
             if (tempFilePath.isNotEmpty() && !tempFileModelFound) {
-                if (path == tempFilePath) {
+                if (path == tempFilePath || (isEncrypted && originalPath == temporaryModel.originalPath)) {
                     tempFileModelFound = true
                 }
             }
