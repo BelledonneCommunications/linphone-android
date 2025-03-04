@@ -1351,14 +1351,13 @@ class CurrentCallViewModel
 
     @WorkerThread
     private fun createCurrentCallConversation(call: Call) {
-        val localAddress = call.callLog.localAddress
         val remoteAddress = call.remoteAddress
         val participants = arrayOf(remoteAddress)
         val core = call.core
         operationInProgress.postValue(true)
 
         val params = getChatRoomParams(call) ?: return // TODO: show error to user
-        val chatRoom = core.createChatRoom(params, localAddress, participants)
+        val chatRoom = core.createChatRoom(params, participants)
         if (chatRoom != null) {
             if (params.chatParams?.backend == ChatRoom.Backend.FlexisipChat) {
                 if (chatRoom.state == ChatRoom.State.Created) {
@@ -1398,6 +1397,8 @@ class CurrentCallViewModel
         params.isChatEnabled = true
         params.isGroupEnabled = false
         params.subject = AppUtils.getString(R.string.conversation_one_to_one_hidden_subject)
+        params.account = account
+
         val chatParams = params.chatParams ?: return null
         chatParams.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
 
