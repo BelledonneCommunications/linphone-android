@@ -235,7 +235,7 @@ open class GenericActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun enableWindowSecureMode(enable: Boolean) {
+    protected fun enableWindowSecureMode(enable: Boolean) {
         val flags: Int = window.attributes.flags
         if ((enable && flags and WindowManager.LayoutParams.FLAG_SECURE != 0) ||
             (!enable && flags and WindowManager.LayoutParams.FLAG_SECURE == 0)

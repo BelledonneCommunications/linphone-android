@@ -73,11 +73,19 @@ class FileViewerActivity : GenericActivity() {
             return
         }
 
+        val isFromEphemeralMessage = args.getBoolean("isFromEphemeralMessage", false)
+        if (isFromEphemeralMessage) {
+            Log.i("$TAG Displayed content is from an ephemeral chat message, force secure mode to prevent screenshots")
+            // Force preventing screenshots for ephemeral messages contents
+            enableWindowSecureMode(true)
+        }
+
         val timestamp = args.getLong("timestamp", -1)
         val preLoadedContent = args.getString("content")
         Log.i(
             "$TAG Path argument is [$path], pre loaded text content is ${if (preLoadedContent.isNullOrEmpty()) "not available" else "available, using it"}"
         )
+        viewModel.isFromEphemeralMessage.value = isFromEphemeralMessage
         viewModel.loadFile(path, timestamp, preLoadedContent)
 
         binding.setBackClickListener {

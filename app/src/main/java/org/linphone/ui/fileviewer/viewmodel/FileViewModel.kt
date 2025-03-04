@@ -69,6 +69,8 @@ class FileViewModel
 
     val dateTime = MutableLiveData<String>()
 
+    val isFromEphemeralMessage = MutableLiveData<Boolean>()
+
     val exportPlainTextFileEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
     }

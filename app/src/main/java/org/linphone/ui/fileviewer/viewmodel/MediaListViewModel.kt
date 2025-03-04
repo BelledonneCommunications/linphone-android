@@ -41,6 +41,8 @@ class MediaListViewModel
 
     val currentlyDisplayedFileDateTime = MutableLiveData<String>()
 
+    val isCurrentlyDisplayedFileFromEphemeralMessage = MutableLiveData<Boolean>()
+
     private lateinit var temporaryModel: FileModel
 
     override fun beforeNotifyingChatRoomFound(sameOne: Boolean) {
@@ -101,8 +103,17 @@ class MediaListViewModel
             val size = mediaContent.size.toLong()
             val timestamp = mediaContent.creationTimestamp
             if (path.isNotEmpty() && name.isNotEmpty()) {
-                // TODO FIXME: we don't have the ephemeral info at Content level, using the chatRoom info even if content ephemeral status may or may not be different...
-                val ephemeral = chatRoom.isEphemeralEnabled
+                val messageId = mediaContent.relatedChatMessageId
+                val ephemeral = if (messageId != null) {
+                    val chatMessage = chatRoom.findMessage(messageId)
+                    if (chatMessage == null) {
+                        Log.w("$TAG Failed to find message using ID [$messageId] related to this content, can't get real info about being related to ephemeral message")
+                    }
+                    chatMessage?.isEphemeral ?: chatRoom.isEphemeralEnabled
+                } else {
+                    Log.e("$TAG No chat message ID related to this content, can't get real info about being related to ephemeral message")
+                    chatRoom.isEphemeralEnabled
+                }
 
                 val model = FileModel(path, name, size, timestamp, isEncrypted, originalPath, ephemeral)
                 list.add(model)

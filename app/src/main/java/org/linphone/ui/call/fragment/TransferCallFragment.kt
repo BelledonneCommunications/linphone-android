@@ -41,8 +41,6 @@ import org.linphone.ui.call.model.CallModel
 import org.linphone.ui.call.viewmodel.CallsViewModel
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
 import org.linphone.ui.main.adapter.ConversationsContactsAndSuggestionsListAdapter
-import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
-import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
 import org.linphone.ui.main.history.viewmodel.StartCallViewModel
 import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.ui.main.model.ConversationContactOrSuggestionModel
@@ -74,22 +72,6 @@ class TransferCallFragment : GenericCallFragment() {
     private lateinit var contactsAdapter: ConversationsContactsAndSuggestionsListAdapter
 
     private var numberOrAddressPickerDialog: Dialog? = null
-
-    private val listener = object : ContactNumberOrAddressClickListener {
-        @UiThread
-        override fun onClicked(model: ContactNumberOrAddressModel) {
-            val address = model.address
-            if (address != null) {
-                coreContext.postOnCoreThread {
-                    // TODO FIXME: transfer call (blind)
-                }
-            }
-        }
-
-        @UiThread
-        override fun onLongPress(model: ContactNumberOrAddressModel) {
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

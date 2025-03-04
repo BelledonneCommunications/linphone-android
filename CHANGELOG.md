@@ -11,7 +11,7 @@ Group changes to describe their impact on the project, as follows:
     Security to invite users to upgrade in case of vulnerabilities.
 
 
-## [6.0.0] - 2025-02-??
+## [6.0.0] - 2025-03-??
 
 6.0.0 release is a complete rework of Linphone Android, with a fully redesigned UI, so it is impossible to list everything here.
 
@@ -21,6 +21,7 @@ Group changes to describe their impact on the project, as follows:
 - Improved multi account: you'll only see history, conversations, meetings etc... related to currently selected account, and you can switch the default account in two clicks.
 - Call transfer: Blind & Attended call transfer have been merged into one: during a call, if you initiate a transfer action, either pick another call to do the attended transfer or select a contact from the list (you can input a SIP URI not already in the suggestions list) to start a blind transfer.
 - User can only send up to 12 files in a single chat message.
+- IMDNs are now only sent to the message sender, preventing huge traffic in large groups, and thus the delivery status icon for received messages is now hidden in groups (as it was in 1-1 conversations).
 - Settings: a lot of them are gone, the one that are still there have been reworked to increase user friendliness.
 - Default screen (between contacts, call history, conversations & meetings list) will change depending on where you were when the app was paused or killed, and you will return to that last visited screen on the next startup.
 - Gradle files have been migrated from Groovy to Kotlin DSL, and dependencies are now in a separated file (libs.versions.toml).
@@ -38,6 +39,7 @@ Group changes to describe their impact on the project, as follows:
 - Chat while in call: a shortcut to a conversation screen with the remote.
 - Chat while in a conference: if the conference has a text stream enabled, you can chat with the other participants of the conference while it lasts. At the end, you'll find the messages history in the call history (and not in the list of conversations).
 - Auto export of media to native gallery even when auto download is enabled (but still not if VFS is enabled nor for ephemeral messages).
+- Save / export document & media from ephemeral messages will be disabled, and secure policy that prevents screenshots will be enforced in file viewer even if the setting is disabled.
 - Notification showing upload/download of files shared through chat will let user know the progress and keep the app alive during that process.
 - Screen sharing in conference: only desktop app starting with 6.0 version is able to start it, but on mobiles you'll be able to see it.
 - You can choose whatever ringtone you'd like for incoming calls (in Android notification channel settings).

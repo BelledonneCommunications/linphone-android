@@ -17,6 +17,7 @@ import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.FileMediaViewerActivityBinding
@@ -51,6 +52,13 @@ class MediaViewerActivity : GenericActivity() {
                 val model = list[position]
                 viewModel.currentlyDisplayedFileName.value = model.fileName
                 viewModel.currentlyDisplayedFileDateTime.value = model.dateTime
+
+                val isFromEphemeral = model.isFromEphemeralMessage
+                viewModel.isCurrentlyDisplayedFileFromEphemeralMessage.value = isFromEphemeral
+                if (!corePreferences.enableSecureMode) {
+                    // Force preventing screenshots for ephemeral messages contents, but allow it for others
+                    enableWindowSecureMode(isFromEphemeral)
+                }
             }
         }
     }
@@ -96,10 +104,17 @@ class MediaViewerActivity : GenericActivity() {
             return
         }
 
+        val isFromEphemeralMessage = args.getBoolean("isFromEphemeralMessage", false)
+        if (isFromEphemeralMessage) {
+            Log.i("$TAG Displayed content is from an ephemeral chat message, force secure mode to prevent screenshots")
+            // Force preventing screenshots for ephemeral messages contents
+            enableWindowSecureMode(true)
+        }
+
         val timestamp = args.getLong("timestamp", -1)
         val isEncrypted = args.getBoolean("isEncrypted", false)
         val originalPath = args.getString("originalPath", "")
-        val isFromEphemeralMessage = args.getBoolean("isFromEphemeralMessage", false)
+        Log.i("$TAG Path argument is [$path], timestamp [$timestamp], encrypted [$isEncrypted] and original path [$originalPath]")
         viewModel.initTempModel(path, timestamp, isEncrypted, originalPath, isFromEphemeralMessage)
 
         val conversationId = args.getString("conversationId").orEmpty()
@@ -184,12 +199,6 @@ class MediaViewerActivity : GenericActivity() {
         val currentItem = binding.mediaViewPager.currentItem
         val model = if (currentItem >= 0 && currentItem < list.size) list[currentItem] else null
         if (model != null) {
-            // Never do auto media export for ephemeral messages!
-            if (model.isFromEphemeralMessage) {
-                Log.e("$TAG Do not export media from ephemeral message!")
-                return
-            }
-
             val filePath = model.path
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
