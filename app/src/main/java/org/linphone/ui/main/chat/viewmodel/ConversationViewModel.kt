@@ -48,6 +48,7 @@ import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
+import androidx.core.net.toUri
 
 class ConversationViewModel
     @UiThread
@@ -974,7 +975,7 @@ class ConversationViewModel
 
     @UiThread
     fun copyFileToUri(filePath: String, dest: Uri) {
-        val source = Uri.parse(FileUtils.getProperFilePath(filePath))
+        val source = FileUtils.getProperFilePath(filePath).toUri()
         Log.i("$TAG Copying file URI [$source] to [$dest]")
         viewModelScope.launch {
             withContext(Dispatchers.IO) {

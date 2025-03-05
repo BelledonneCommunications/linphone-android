@@ -20,7 +20,6 @@
 package org.linphone.ui.main.help.fragment
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -36,6 +35,7 @@ import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.help.viewmodel.HelpViewModel
 import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.utils.DialogUtils
+import androidx.core.net.toUri
 
 @UiThread
 class HelpFragment : GenericMainFragment() {
@@ -78,7 +78,7 @@ class HelpFragment : GenericMainFragment() {
         binding.setPrivacyPolicyClickListener {
             val url = getString(R.string.website_privacy_policy_url)
             try {
-                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                val browserIntent = Intent(Intent.ACTION_VIEW, url.toUri())
                 startActivity(browserIntent)
             } catch (ise: IllegalStateException) {
                 Log.e(
@@ -90,7 +90,7 @@ class HelpFragment : GenericMainFragment() {
         binding.setLicensesClickListener {
             val url = getString(R.string.website_open_source_licences_usage_url)
             try {
-                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                val browserIntent = Intent(Intent.ACTION_VIEW, url.toUri())
                 startActivity(browserIntent)
             } catch (ise: IllegalStateException) {
                 Log.e(
@@ -102,7 +102,7 @@ class HelpFragment : GenericMainFragment() {
         binding.setTranslateClickListener {
             val url = getString(R.string.website_translate_weblate_url)
             try {
-                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                val browserIntent = Intent(Intent.ACTION_VIEW, url.toUri())
                 startActivity(browserIntent)
             } catch (ise: IllegalStateException) {
                 Log.e(
@@ -157,7 +157,7 @@ class HelpFragment : GenericMainFragment() {
         model.confirmEvent.observe(viewLifecycleOwner) {
             it.consume {
                 try {
-                    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                    val browserIntent = Intent(Intent.ACTION_VIEW, url.toUri())
                     startActivity(browserIntent)
                 } catch (ise: IllegalStateException) {
                     Log.e(

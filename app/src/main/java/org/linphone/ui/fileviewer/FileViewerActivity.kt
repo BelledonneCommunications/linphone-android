@@ -1,7 +1,6 @@
 package org.linphone.ui.fileviewer
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.DisplayMetrics
 import androidx.activity.enableEdgeToEdge
@@ -23,6 +22,7 @@ import org.linphone.ui.GenericActivity
 import org.linphone.ui.fileviewer.adapter.PdfPagesListAdapter
 import org.linphone.ui.fileviewer.viewmodel.FileViewModel
 import org.linphone.utils.FileUtils
+import androidx.core.net.toUri
 
 @UiThread
 class FileViewerActivity : GenericActivity() {
@@ -186,7 +186,7 @@ class FileViewerActivity : GenericActivity() {
             val filePath = FileUtils.getProperFilePath(viewModel.getFilePath())
             val copy = FileUtils.getFilePath(
                 baseContext,
-                Uri.parse(filePath),
+                filePath.toUri(),
                 overrideExisting = false,
                 copyToCache = true
             )

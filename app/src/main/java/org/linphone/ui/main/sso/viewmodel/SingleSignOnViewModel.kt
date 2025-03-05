@@ -20,7 +20,6 @@
 package org.linphone.ui.main.sso.viewmodel
 
 import android.content.Intent
-import android.net.Uri
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -42,6 +41,7 @@ import org.linphone.ui.GenericViewModel
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.TimestampUtils
+import androidx.core.net.toUri
 
 class SingleSignOnViewModel : GenericViewModel() {
     companion object {
@@ -102,7 +102,7 @@ class SingleSignOnViewModel : GenericViewModel() {
     private fun singleSignOn() {
         Log.i("$TAG Fetch from issuer [$singleSignOnUrl]")
         AuthorizationServiceConfiguration.fetchFromIssuer(
-            Uri.parse(singleSignOnUrl),
+            singleSignOnUrl.toUri(),
             AuthorizationServiceConfiguration.RetrieveConfigurationCallback { serviceConfiguration, ex ->
                 if (ex != null) {
                     Log.e(
@@ -130,7 +130,7 @@ class SingleSignOnViewModel : GenericViewModel() {
                     serviceConfiguration, // the authorization service configuration
                     CLIENT_ID, // the client ID, typically pre-registered and static
                     ResponseTypeValues.CODE, // the response_type value: we want a code
-                    Uri.parse(REDIRECT_URI) // the redirect URI to which the auth response is sent
+                    REDIRECT_URI.toUri() // the redirect URI to which the auth response is sent
                 )
 
                 // Needed for SDK to be able to refresh the token, otherwise it will return

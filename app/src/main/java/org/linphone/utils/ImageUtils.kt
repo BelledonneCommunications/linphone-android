@@ -28,12 +28,12 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.Rect
 import android.graphics.drawable.BitmapDrawable
-import android.net.Uri
 import androidx.annotation.AnyThread
 import androidx.annotation.WorkerThread
 import java.io.FileNotFoundException
 import org.linphone.contacts.AvatarGenerator
 import org.linphone.core.tools.Log
+import androidx.core.net.toUri
 
 class ImageUtils {
     companion object {
@@ -63,7 +63,7 @@ class ImageUtils {
             Log.d("$TAG Trying to create Bitmap from path [$path]")
             if (path != null) {
                 try {
-                    val fromPictureUri = Uri.parse(path)
+                    val fromPictureUri = path.toUri()
                     if (fromPictureUri == null) {
                         Log.e("$TAG Failed to parse path [$path] as URI")
                         return null

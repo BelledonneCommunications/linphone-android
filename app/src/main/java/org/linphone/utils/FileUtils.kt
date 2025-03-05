@@ -48,6 +48,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
+import androidx.core.net.toUri
 
 class FileUtils {
     enum class MimeType {
@@ -193,7 +194,7 @@ class FileUtils {
                     )
                 }
                 path.startsWith("content://") -> {
-                    contentUri = Uri.parse(path)
+                    contentUri = path.toUri()
                 }
                 else -> {
                     val file = File(path)
@@ -209,7 +210,7 @@ class FileUtils {
                                 R.string.file_provider
                             )}: $e"
                         )
-                        Uri.parse(path)
+                        path.toUri()
                     }
                 }
             }

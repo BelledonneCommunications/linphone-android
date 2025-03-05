@@ -1,7 +1,6 @@
 package org.linphone.ui.fileviewer
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.UiThread
@@ -28,6 +27,7 @@ import org.linphone.ui.main.chat.model.FileModel
 import org.linphone.ui.main.viewmodel.SharedMainViewModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.FileUtils
+import androidx.core.net.toUri
 
 @UiThread
 class MediaViewerActivity : GenericActivity() {
@@ -247,7 +247,7 @@ class MediaViewerActivity : GenericActivity() {
                 val filePath = FileUtils.getProperFilePath(model.path)
                 val copy = FileUtils.getFilePath(
                     baseContext,
-                    Uri.parse(filePath),
+                    filePath.toUri(),
                     overrideExisting = true,
                     copyToCache = true
                 )

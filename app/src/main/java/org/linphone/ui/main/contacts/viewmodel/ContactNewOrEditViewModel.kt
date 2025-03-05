@@ -19,7 +19,6 @@
  */
 package org.linphone.ui.main.contacts.viewmodel
 
-import android.net.Uri
 import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
@@ -42,6 +41,7 @@ import org.linphone.ui.GenericViewModel
 import org.linphone.ui.main.contacts.model.NewOrEditNumberOrAddressModel
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
+import androidx.core.net.toUri
 
 class ContactNewOrEditViewModel
     @UiThread
@@ -183,7 +183,7 @@ class ContactNewOrEditViewModel
                             isImage = true,
                             overrideExisting = true
                         )
-                        val oldFile = Uri.parse(FileUtils.getProperFilePath(picture))
+                        val oldFile = FileUtils.getProperFilePath(picture).toUri()
                         viewModelScope.launch {
                             FileUtils.copyFile(oldFile, newFile)
                         }

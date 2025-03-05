@@ -21,7 +21,6 @@ package org.linphone.ui.assistant.fragment
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.telephony.TelephonyManager
 import android.text.Editable
@@ -49,6 +48,7 @@ import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.PhoneNumberUtils
+import androidx.core.net.toUri
 
 @UiThread
 class RegisterFragment : GenericFragment() {
@@ -102,7 +102,7 @@ class RegisterFragment : GenericFragment() {
         binding.setOpenSubscribeWebPageClickListener {
             val url = getString(R.string.web_platform_register_email_url)
             try {
-                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                val browserIntent = Intent(Intent.ACTION_VIEW, url.toUri())
                 startActivity(browserIntent)
             } catch (ise: IllegalStateException) {
                 Log.e(

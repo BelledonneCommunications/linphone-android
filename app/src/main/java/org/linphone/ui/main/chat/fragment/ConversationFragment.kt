@@ -93,6 +93,7 @@ import org.linphone.utils.addCharacterAtPosition
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.setKeyboardInsetListener
 import org.linphone.utils.showKeyboard
+import androidx.core.net.toUri
 
 @UiThread
 open class ConversationFragment : SlidingPaneChildFragment() {
@@ -782,7 +783,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                 if (messageLongPressViewModel.visible.value == true) return@consume
                 Log.i("$TAG Requesting to open web browser on page [$url]")
                 try {
-                    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                    val browserIntent = Intent(Intent.ACTION_VIEW, url.toUri())
                     startActivity(browserIntent)
                 } catch (e: Exception) {
                     Log.e(

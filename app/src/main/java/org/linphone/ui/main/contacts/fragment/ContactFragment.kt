@@ -24,7 +24,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.view.LayoutInflater
@@ -52,6 +51,7 @@ import org.linphone.utils.AppUtils
 import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
+import androidx.core.net.toUri
 
 @UiThread
 class ContactFragment : SlidingPaneChildFragment() {
@@ -171,7 +171,7 @@ class ContactFragment : SlidingPaneChildFragment() {
         viewModel.openNativeContactEditor.observe(viewLifecycleOwner) {
             it.consume { uri ->
                 val editIntent = Intent(Intent.ACTION_EDIT).apply {
-                    setDataAndType(Uri.parse(uri), ContactsContract.Contacts.CONTENT_ITEM_TYPE)
+                    setDataAndType(uri.toUri(), ContactsContract.Contacts.CONTENT_ITEM_TYPE)
                     putExtra("finishActivityOnSaveCompleted", true)
                 }
                 startActivity(editIntent)
@@ -287,7 +287,7 @@ class ContactFragment : SlidingPaneChildFragment() {
         )
         val smsIntent: Intent = Intent().apply {
             action = Intent.ACTION_SENDTO
-            data = Uri.parse("smsto:$number")
+            data = "smsto:$number".toUri()
             putExtra("address", number)
             putExtra("sms_body", smsBody)
         }

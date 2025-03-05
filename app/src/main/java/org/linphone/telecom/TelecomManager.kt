@@ -20,7 +20,6 @@
 package org.linphone.telecom
 
 import android.content.Context
-import android.net.Uri
 import androidx.annotation.WorkerThread
 import androidx.core.telecom.CallAttributesCompat
 import androidx.core.telecom.CallException
@@ -36,6 +35,7 @@ import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
+import androidx.core.net.toUri
 
 class TelecomManager
     @WorkerThread
@@ -99,7 +99,7 @@ class TelecomManager
         Log.i("$TAG Call to [${call.remoteAddress.asStringUriOnly()}] created in state [${call.state}]")
 
         val address = call.callLog.remoteAddress
-        val uri = Uri.parse(address.asStringUriOnly())
+        val uri = address.asStringUriOnly().toUri()
 
         val direction = if (call.dir == Call.Dir.Outgoing) {
             CallAttributesCompat.DIRECTION_OUTGOING
