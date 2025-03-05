@@ -797,7 +797,9 @@ class CoreContext
 
     @WorkerThread
     fun answerCall(call: Call) {
-        Log.i("$TAG Answering call $call")
+        Log.i(
+            "$TAG Answering call with remote address [${call.remoteAddress.asStringUriOnly()}] and to address [${call.toAddress.asStringUriOnly()}]"
+        )
         val params = core.createCallParams(call)
         if (params == null) {
             Log.w("$TAG Answering call without params!")
