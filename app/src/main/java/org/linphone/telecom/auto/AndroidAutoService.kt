@@ -26,7 +26,7 @@ import androidx.car.app.validation.HostValidator
 import org.linphone.R
 import org.linphone.core.tools.Log
 
-class AAService : CarAppService() {
+class AndroidAutoService : CarAppService() {
     companion object {
         private const val TAG = "[Android Auto Service]"
     }
@@ -55,6 +55,6 @@ class AAService : CarAppService() {
 
     override fun onCreateSession(): Session {
         Log.i("$TAG Creating Session object")
-        return AASession()
+        return AndroidAutoSession()
     }
 }

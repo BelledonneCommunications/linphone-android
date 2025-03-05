@@ -24,13 +24,13 @@ import androidx.car.app.Screen
 import androidx.car.app.Session
 import org.linphone.core.tools.Log
 
-class AASession : Session() {
+class AndroidAutoSession : Session() {
     companion object {
         private const val TAG = "[Android Auto Session]"
     }
 
     override fun onCreateScreen(intent: Intent): Screen {
         Log.i("$TAG Creating Screen object for host with API level [${carContext.carAppApiLevel}]")
-        return AAScreen(carContext)
+        return AndroidAutoScreen(carContext)
     }
 }
