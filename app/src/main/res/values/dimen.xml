@@ -14,7 +14,7 @@
     <dimen name="video_preview_pip_max_size">45dp</dimen>
     <dimen name="main_activity_tabs_fragment_size">60dp</dimen>
     <dimen name="main_activity_top_bar_size">60dp</dimen>
-    <dimen name="status_fragment_size">40dp</dimen>
+    <dimen name="status_fragment_size">50dp</dimen>
     <dimen name="tabs_fragment_selector_size">5dp</dimen>
     <dimen name="tabs_fragment_unread_count_bounce_offset">5dp</dimen>
     <dimen name="contact_avatar_size">35dp</dimen>
@@ -85,6 +85,7 @@
     <dimen name="chat_message_sending_icons_size">35dp</dimen>
     <dimen name="chat_message_sending_icons_margin">5dp</dimen>
     <dimen name="contact_presence_badge_size">12dp</dimen>
+    <dimen name="contact_presence_medium_size">18dp</dimen>
     <dimen name="contact_presence_big_badge_size">25dp</dimen>
     <dimen name="contact_presence_badge_padding">1dp</dimen>
     <dimen name="contact_presence_big_badge_padding">2dp</dimen>

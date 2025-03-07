@@ -73,6 +73,12 @@ class StatusFragment : GenericFragment<VoipStatusFragmentBinding>() {
                 controlsViewModel.showCallStats(skipAnimation = true)
             }
         }
+
+        sharedViewModel.publishPresenceToggled.observe(
+            viewLifecycleOwner
+        ) {
+            viewModel.refreshConsolidatedPresence()
+        }
     }
 
     override fun onDestroy() {

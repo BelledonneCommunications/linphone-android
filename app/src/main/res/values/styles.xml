@@ -520,6 +520,12 @@
         <item name="android:textSize">15sp</item>
     </style>
 
+    <style name="standard_small_text_italic_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/primarySubtextDarkColor</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">italic</item>
+    </style>
+
     <style name="unread_count_font" parent="@android:style/TextAppearance.Small">
         <item name="android:textColor">@color/white_color</item>
         <item name="android:textSize">10sp</item>

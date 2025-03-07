@@ -7,6 +7,8 @@ import org.linphone.models.UserInfo
 import org.linphone.models.contact.ContactDirectoryModel
 import org.linphone.models.contact.ContactGroupItem
 import org.linphone.models.contact.ContactItemModel
+import org.linphone.models.realtime.PresenceProfile
+import org.linphone.models.realtime.SetPresenceModel
 import org.linphone.models.usergroup.UserGroupModel
 import retrofit2.Call
 import retrofit2.Response
@@ -77,5 +79,16 @@ interface CTGatewayService {
     fun doRemoveContactFromDirectory(
         @Path("id") directoryId: String,
         @Path("contactId") contactId: String
+    ): Call<Void>
+
+    @GET("api/v1.0/users/{userId}/presenceprofiles")
+    fun doGetPresenceProfiles(
+        @Path("userId") userId: String
+    ): Call<List<PresenceProfile>>
+
+    @PUT("api/v1.0/users/{userId}/currentpresence")
+    fun doSetPresence(
+        @Path("userId") userId: String,
+        @Body setPresenceModel: SetPresenceModel
     ): Call<Void>
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.annotation.AnyThread
 import com.google.gson.Gson
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.lang.ref.WeakReference
 import java.util.Locale
 import java.util.concurrent.atomic.AtomicReference
@@ -41,9 +42,11 @@ class DimensionsEnvironmentService(context: Context) {
     )
     private var mResources = context.resources
     private var mPrefsLock: ReentrantLock = ReentrantLock()
-    private var mCurrentEnvironment: AtomicReference<DimensionsEnvironment> = AtomicReference<DimensionsEnvironment>()
     private var isListInitialised: Boolean = false
     private var isDevModeEnabled: Boolean = false
+
+    private val currentEnvironmentSubject = BehaviorSubject.create<DimensionsEnvironment>()
+    val currentEnvironmentObservable = currentEnvironmentSubject.map { x -> x }
 
     init {
         isDevModeEnabled = mPrefs.getBoolean(KEY_DEV_MODE, false)
@@ -51,23 +54,23 @@ class DimensionsEnvironmentService(context: Context) {
 
     @AnyThread
     fun getCurrentEnvironment(): DimensionsEnvironment? {
-        if (mCurrentEnvironment.get() != null) {
-            return mCurrentEnvironment.get()
+        if (currentEnvironmentSubject.value != null) {
+            return currentEnvironmentSubject.value
         }
 
         val dimensionsEnvironment: DimensionsEnvironment? = readEnvironment()
-
-        return if (mCurrentEnvironment.compareAndSet(null, dimensionsEnvironment)) {
-            dimensionsEnvironment
-        } else {
-            mCurrentEnvironment.get()
+        if (dimensionsEnvironment != null) {
+            currentEnvironmentSubject.onNext(dimensionsEnvironment)
+            return dimensionsEnvironment
         }
+
+        return currentEnvironmentSubject.value
     }
 
     @AnyThread
     fun setCurrentEnvironment(dimensionsEnvironment: DimensionsEnvironment): DimensionsEnvironment {
         writeEnvironment(dimensionsEnvironment)
-        mCurrentEnvironment.set(dimensionsEnvironment)
+        currentEnvironmentSubject.onNext(dimensionsEnvironment)
         return dimensionsEnvironment
     }
 
@@ -131,17 +134,6 @@ class DimensionsEnvironmentService(context: Context) {
         }
     }
 
-    fun getDefaultEnvironment(): DimensionsEnvironment? {
-        // Get the first environment that matches the current UI culture.
-        val localeCode = Locale.getDefault().toLanguageTag()
-        val cultureMatch = environments.firstOrNull { x -> x.locales.contains(localeCode) }
-        if (cultureMatch != null) {
-            return cultureMatch
-        }
-        // If not found, return the overall default environment.
-        return environments.firstOrNull { x -> x.isDefault }
-    }
-
     @AnyThread
     private fun writeEnvironment(newEnvironment: DimensionsEnvironment?) {
         mPrefsLock.lock()
@@ -157,6 +149,17 @@ class DimensionsEnvironmentService(context: Context) {
         } finally {
             mPrefsLock.unlock()
         }
+    }
+
+    private fun getDefaultEnvironment(): DimensionsEnvironment? {
+        // Get the first environment that matches the current UI culture.
+        val localeCode = Locale.getDefault().toLanguageTag()
+        val cultureMatch = environments.firstOrNull { x -> x.locales.contains(localeCode) }
+        if (cultureMatch != null) {
+            return cultureMatch
+        }
+        // If not found, return the overall default environment.
+        return environments.firstOrNull { x -> x.isDefault }
     }
 
     fun toggleDevMode() {

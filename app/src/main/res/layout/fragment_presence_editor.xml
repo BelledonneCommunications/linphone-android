@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <data>
+        <import type="android.view.View" />
+        <import type="org.linphone.core.ConsolidatedPresence"/>
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.main.presence.viewmodels.PresenceEditorViewModel" />
+
+        <variable
+            name="applyProfileClickListener"
+            type="android.view.View.OnClickListener"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/backgroundColor"
+        android:orientation="vertical"
+        android:padding="10dp"
+
+        >
+        <RelativeLayout
+            android:id="@+id/currentPresenceState"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="?attr/lightToolbarBackgroundColor">
+            <ImageView
+                android:id="@+id/avatar"
+                android:visibility="@{viewModel.userImageUrl == null ? View.GONE : View.VISIBLE, default=gone}"
+                coilRounded="@{viewModel.userImageUrl}"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/generated_avatar_bg"
+                android:src="@drawable/icon_single_contact_avatar"
+                tools:ignore="ContentDescription"
+                />
+
+            <ImageView
+                android:id="@+id/avatar_border"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="@null"
+                android:src="@drawable/avatar_border"
+                android:visibility="@{viewModel.userImageUrl == null ? View.GONE : View.VISIBLE, default=gone}" />
+
+            <ImageView
+                android:layout_width="@dimen/contact_presence_medium_size"
+                android:layout_height="@dimen/contact_presence_medium_size"
+                android:layout_alignBottom="@id/avatar"
+                android:layout_marginStart="45dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/led_background"
+                android:padding="@dimen/contact_presence_badge_padding"
+                app:presenceIcon="@{viewModel.presenceStatus}"
+                android:visibility="@{viewModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE, default=gone}"
+                tools:ignore="ContentDescription" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@id/avatar_border"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:visibility="@{viewModel.user == null ? View.VISIBLE : View.GONE, default=visible}"
+                    android:text="@string/no_account_configured"
+                    android:textColor="?attr/lightToolbarTextColor"
+                    android:textSize="18sp"
+                    android:padding="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:visibility="@{viewModel.user == null ? View.GONE : View.VISIBLE, default=gone}"
+                    android:text="@{viewModel.user.displayName}"
+                    android:textColor="?attr/lightToolbarTextColor"
+                    android:textSize="18sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:visibility="@{viewModel.user == null ? View.GONE : View.VISIBLE, default=gone}"
+                    android:text="@{viewModel.user.presenceId}"
+                    style="@style/sip_uri_small_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:background="?attr/dividerColor" />
+
+        </RelativeLayout>
+
+        <Spinner
+            android:id="@+id/presenceProfileSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:padding="10dp"
+            style="@style/conference_scheduling_font"
+            android:background="@drawable/icon_spinner_background"
+            />
+
+        <TextView
+            android:id="@+id/statusMessageLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/presence_editor_status_message"
+            style="@style/standard_text_font"
+            android:paddingStart="5dp"
+            android:paddingEnd="16dp"
+            android:labelFor="@id/statusMessageEdit"
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <EditText
+                android:id="@+id/statusMessageEdit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@+id/buttonApply"
+                android:inputType="text"
+                tools:ignore="Autofill"
+                android:text="@={viewModel.statusMessage}"
+                />
+
+            <ImageView
+                android:id="@+id/buttonApply"
+                android:contentDescription="@string/presence_apply"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:background="?attr/accentColor"
+                android:src="@drawable/icon_tick"
+                android:onClick="@{applyProfileClickListener}"
+                />
+
+        </RelativeLayout>
+
+<!--        set to gone till we add this functionality-->
+        <RelativeLayout
+            android:id="@+id/callWaitingRelativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:visibility="gone"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentStart="true">
+
+                <TextView
+                    android:id="@+id/callWaitingLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/presence_editor_call_waiting"
+                    style="@style/standard_text_font"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="16dp"
+                    />
+
+                <TextView
+                    android:id="@+id/callWaitingDescriptionLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/presence_editor_call_waiting_description"
+                    style="@style/standard_small_text_italic_font"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="16dp"
+                    />
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp"
+                />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</layout>

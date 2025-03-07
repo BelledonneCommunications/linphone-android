@@ -10,6 +10,7 @@ import java.util.Locale
 import java.util.concurrent.atomic.AtomicReference
 import org.linphone.authentication.AuthStateManager
 import org.linphone.models.UserInfo
+import org.linphone.utils.Log
 
 class PhoneFormatterService(val context: Context) : DefaultLifecycleObserver {
     private val authStateManager = AuthStateManager.getInstance(context)
@@ -45,7 +46,13 @@ class PhoneFormatterService(val context: Context) : DefaultLifecycleObserver {
 
     init {
         userSubscription = UserService.getInstance(context).user
-            .subscribe { u -> currentUser = u }
+            .subscribe { u ->
+                try {
+                    currentUser = u
+                } catch (e: Exception) {
+                    Log.e("userSubscription", e)
+                }
+            }
     }
 
     fun getSearchNumber(input: String): String {

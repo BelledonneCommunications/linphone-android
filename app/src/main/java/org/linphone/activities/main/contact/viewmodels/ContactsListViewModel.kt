@@ -140,14 +140,22 @@ class ContactsListViewModel : ViewModel() {
 
         searchSubscription =
             DirectoriesService.getInstance(coreContext.context).searchResults.subscribe { r ->
-                processContactSearchResults(
-                    r
-                )
+                try {
+                    processContactSearchResults(
+                        r
+                    )
+                } catch (e: Exception) {
+                    Log.e("searchSubscription", e)
+                }
             }
 
         combinedSearchSubscription = combinedSearch.subscribe { r ->
-            contactsList.value.orEmpty().forEach(ContactViewModel::destroy)
-            contactsList.postValue(r)
+            try {
+                contactsList.value.orEmpty().forEach(ContactViewModel::destroy)
+                contactsList.postValue(r)
+            } catch (e: Exception) {
+                Log.e("combinedSearchSubscription", e)
+            }
         }
     }
 

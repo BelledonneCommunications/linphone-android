@@ -292,6 +292,9 @@ dependencies {
     //https://github.com/google/libphonenumber/blob/master/LICENSE
     implementation 'com.googlecode.libphonenumber:libphonenumber:8.13.54'
 
+    //SignalR
+    implementation 'com.microsoft.signalr:signalr:9.0.2'
+    implementation 'org.slf4j:slf4j-jdk14:1.7.25'
 }
 
 task generateContactsXml(type: Copy) {

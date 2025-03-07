@@ -172,7 +172,6 @@
     <string name="contacts_phoneType_work">Work</string>
 
 
-
     <!-- Dialer -->
     <string name="dialer_address_bar_hint">Enter a number or an address</string>
     <string name="debug_popup_title">Debug</string>
@@ -1031,4 +1030,16 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="logo">Logo</string>
+    <string name="presence_editor_status_message">Status message</string>
+    <string name="presence_editor_call_waiting">Call waiting</string>
+    <string name="presence_editor_call_waiting_description">Allow calls to ring whilst already on a call</string>
+    <string name="statustext_busy_acdcall">Queue call</string>
+    <string name="statustext_busy_nonacdcall">On a call</string>
+    <string name="statustext_wrapup_acd">Wrap</string>
+    <string name="statustext_available_acd">Waiting</string>
+    <string name="statustext_unavailable_acd">Not taking calls</string>
+    <string name="statustext_busy_call">On a call</string>
+    <string name="presence_apply">Apply</string>
+    <string name="presenceservice_presence_updated">Presence updated</string>
+    <string name="presenceservice_presence_update_failed">There was a problem updating your presence, please try again</string>
 </resources>

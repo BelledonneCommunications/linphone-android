@@ -12,6 +12,7 @@ import org.linphone.environment.DimensionsEnvironmentService
 import org.linphone.models.AuthenticatedUser
 import org.linphone.models.TenantBrandingDefinition
 import org.linphone.utils.Log
+import org.linphone.utils.Optional
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -39,7 +40,7 @@ class BrandingService(val context: Context) : DefaultLifecycleObserver {
                     Log.d("Brand user: " + user.name)
                     if ((user.id == null || user.id == AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER) && brandSubject.value != null) {
                         brandSubject.onNext(
-                            Optional(null)
+                            Optional.empty()
                         )
                     } else {
                         fetchBranding()
@@ -90,11 +91,8 @@ class BrandingService(val context: Context) : DefaultLifecycleObserver {
                     response: Response<TenantBrandingDefinition>
                 ) {
                     Timber.d("Got brand from API")
-                    brandSubject.onNext(Optional(response.body()))
+                    brandSubject.onNext(Optional.ofNullable(response.body()))
                 }
             })
     }
 }
-
-data class Optional<T>(val value: T?)
-fun <T> T?.asOptional() = Optional(this)

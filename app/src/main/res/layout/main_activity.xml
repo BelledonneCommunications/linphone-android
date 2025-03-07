@@ -56,6 +56,22 @@
 
                 </RelativeLayout>
 
+                <!-- PresenceEditor -->
+                <RelativeLayout
+                    android:id="@+id/presence_editor_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right">
+
+                    <androidx.fragment.app.FragmentContainerView
+                        android:id="@+id/presence_editor_fragment"
+                        android:name="org.linphone.activities.main.presence.fragments.PresenceEditorFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:layout="@layout/fragment_presence_editor" />
+
+                </RelativeLayout>
+
             </androidx.drawerlayout.widget.DrawerLayout>
 
             <include

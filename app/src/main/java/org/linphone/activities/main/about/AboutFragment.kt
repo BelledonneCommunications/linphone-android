@@ -115,7 +115,13 @@ class AboutFragment : SecureFragment<AboutFragmentBinding>() {
         }
 
         userSubscription = UserService.getInstance(requireContext()).user
-            .subscribe { u -> viewModel.user = u }
+            .subscribe { u ->
+                try {
+                    viewModel.user = u
+                } catch (e: Exception) {
+                    Log.e("userSubscription", e)
+                }
+            }
 
         viewModel.region = DimensionsEnvironmentService.getInstance(requireContext()).getCurrentEnvironment()?.name
     }

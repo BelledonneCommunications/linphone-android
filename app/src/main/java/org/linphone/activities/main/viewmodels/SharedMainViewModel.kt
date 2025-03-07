@@ -29,6 +29,7 @@ import org.linphone.utils.Event
 
 class SharedMainViewModel : ViewModel() {
     val toggleDrawerEvent = MutableLiveData<Event<Boolean>>()
+    val togglePresenceDrawerEvent = MutableLiveData<Event<Boolean>>()
 
     val layoutChangedEvent = MutableLiveData<Event<Boolean>>()
     var isSlidingPaneSlideable = MutableLiveData<Boolean>()

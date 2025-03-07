@@ -194,10 +194,30 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             this
         ) {
             it.consume {
+                if (binding.sideMenu.isDrawerOpen(GravityCompat.END)) {
+                    binding.sideMenu.closeDrawer(binding.presenceEditorContent, true)
+                }
+
                 if (binding.sideMenu.isDrawerOpen(GravityCompat.START)) {
                     binding.sideMenu.closeDrawer(binding.sideMenuContent, true)
                 } else {
                     binding.sideMenu.openDrawer(binding.sideMenuContent, true)
+                }
+            }
+        }
+
+        sharedViewModel.togglePresenceDrawerEvent.observe(
+            this
+        ) {
+            it.consume {
+                if (binding.sideMenu.isDrawerOpen(GravityCompat.START)) {
+                    binding.sideMenu.closeDrawer(binding.sideMenuContent, true)
+                }
+
+                if (binding.sideMenu.isDrawerOpen(GravityCompat.END)) {
+                    binding.sideMenu.closeDrawer(binding.presenceEditorContent, true)
+                } else {
+                    binding.sideMenu.openDrawer(binding.presenceEditorContent, true)
                 }
             }
         }

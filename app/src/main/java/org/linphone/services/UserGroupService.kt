@@ -75,8 +75,9 @@ class UserGroupService(val context: Context) : DefaultLifecycleObserver {
         contactDirectoriesSubscription = DirectoriesService.getInstance(context).contactDirectories
             .takeUntil(destroy)
             .subscribe {
-                val user = authStateManager.getUser()
                 try {
+                    val user = authStateManager.getUser()
+
                     Log.d("ContactDirectory user: " + user.name)
                     if ((user.id == null || user.id == AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER) && tenantUserGroupsSubject.value != null) {
                         tenantUserGroupsSubject.onNext(

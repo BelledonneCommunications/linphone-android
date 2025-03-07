@@ -19,13 +19,21 @@
  */
 package org.linphone.activities.main.viewmodels
 
+import PresenceEventData
+import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.gson.GsonBuilder
+import io.reactivex.rxjava3.disposables.Disposable
 import java.util.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.*
+import org.linphone.models.realtime.PresenceIconState
+import org.linphone.services.PresenceService
+import org.linphone.services.UserService
 import org.linphone.utils.Log
+import org.linphone.utils.Optional
 
 open class StatusViewModel : ViewModel() {
     val registrationStatusText = MutableLiveData<Int>()
@@ -33,6 +41,17 @@ open class StatusViewModel : ViewModel() {
     val registrationStatusDrawable = MutableLiveData<Int>()
 
     val voiceMailCount = MutableLiveData<Int>()
+
+    val defaultAccountFound = MutableLiveData<Boolean>()
+
+    val presenceStatus = MutableLiveData<ConsolidatedPresence>()
+
+    val dimensionsPresenceStatus = MutableLiveData<ConsolidatedPresence>()
+
+    val userImageUrl = ObservableField<String>()
+
+    private var userSubscription: Disposable? = null
+    private var presenceSubscription: Disposable? = null
 
     private val listener: CoreListenerStub = object : CoreListenerStub() {
         override fun onAccountRegistrationStateChanged(
@@ -84,6 +103,51 @@ open class StatusViewModel : ViewModel() {
         }
 
         updateDefaultAccountRegistrationStatus(state)
+
+        val userSvc = UserService.getInstance(coreContext.context)
+        userSubscription = userSvc.user
+            .subscribe(
+                { u ->
+                    Log.i("Userinfo: " + GsonBuilder().create().toJson(u))
+                    // viewModel.user.set(u)
+                    userImageUrl.set(u.profileImageUrl.replace("_36.png", "_128.png"))
+                },
+                { error -> Log.e("userSubscription", error) }
+            )
+
+        refreshConsolidatedPresence()
+
+        presenceSubscription = PresenceService.getInstance(coreContext.context).currentUserPresence.subscribe(
+            { p: Any ->
+                Log.i("presenceInfo: " + GsonBuilder().create().toJson(p))
+
+                if (p is Optional<*>) {
+                    if (p.isPresent()) {
+                        val eventData = p.get()
+                        if (eventData is PresenceEventData) {
+                            dimensionsPresenceStatus.postValue(
+                                PresenceIconState.toConsolidatedPresence(
+                                    PresenceIconState.fromString(eventData.iconState)
+                                )
+                            )
+                        }
+                    } else {
+                        dimensionsPresenceStatus.postValue(
+                            PresenceIconState.toConsolidatedPresence(
+                                null
+                            )
+                        )
+                    }
+                }
+            },
+            { error ->
+                Log.e("presenceSubscription", error)
+            }
+        )
+    }
+
+    fun refreshConsolidatedPresence() {
+        presenceStatus.value = coreContext.core.consolidatedPresence
     }
 
     override fun onCleared() {
@@ -102,6 +166,7 @@ open class StatusViewModel : ViewModel() {
     fun updateDefaultAccountRegistrationStatus(state: RegistrationState) {
         registrationStatusText.value = getStatusIconText(state)
         registrationStatusDrawable.value = getStatusIconResource(state)
+        defaultAccountFound.value = true
     }
 
     private fun getStatusIconText(state: RegistrationState): Int {

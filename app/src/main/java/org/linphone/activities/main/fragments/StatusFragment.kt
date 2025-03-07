@@ -59,6 +59,10 @@ class StatusFragment : GenericFragment<StatusFragmentBinding>() {
             sharedViewModel.toggleDrawerEvent.value = Event(true)
         }
 
+        binding.setPresenceClickListener {
+            sharedViewModel.togglePresenceDrawerEvent.value = Event(true)
+        }
+
         binding.setRefreshClickListener {
             viewModel.refreshRegister()
         }
