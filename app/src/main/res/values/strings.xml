@@ -159,7 +159,6 @@
     <string name="contacts_favoritesGroup">Favorites</string>
     <string name="contacts_androidContactsGroup">Android Contacts</string>
     <string name="contacts_searchResultsGroup">Search Results</string>
-    <string name="contacts_user">User</string>
     <string name="content_description_is_favourite">This is one of your favorite contacts</string>
     <string name="contacts_failedToAddContactToFavorites">Failed to add contact to favourites</string>
     <string name="contacts_successfullyAddedContactToFavorites">Successfully added contact to favourites</string>
@@ -1040,6 +1039,5 @@
     <string name="statustext_unavailable_acd">Not taking calls</string>
     <string name="statustext_busy_call">On a call</string>
     <string name="presence_apply">Apply</string>
-    <string name="presenceservice_presence_updated">Presence updated</string>
     <string name="presenceservice_presence_update_failed">There was a problem updating your presence, please try again</string>
 </resources>

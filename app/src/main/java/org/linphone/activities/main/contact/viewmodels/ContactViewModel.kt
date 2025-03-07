@@ -25,6 +25,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.coroutines.CoroutineScope
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -37,6 +38,7 @@ import org.linphone.contact.ContactDataInterface
 import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.contact.hasLongTermPresence
 import org.linphone.core.*
+import org.linphone.models.realtime.PresenceIconState
 import org.linphone.models.search.UserDataModel
 import org.linphone.services.DirectoriesService
 import org.linphone.services.PhoneFormatterService
@@ -59,8 +61,12 @@ class ContactViewModel(friend: Friend) : MessageNotifierViewModel(), ContactData
     override val displayName: MutableLiveData<String> = MutableLiveData<String>()
     override val securityLevel: MutableLiveData<ChatRoom.SecurityLevel> =
         MutableLiveData<ChatRoom.SecurityLevel>()
+
+    var presenceSubscription: Disposable? = null
     override val presenceStatus: MutableLiveData<ConsolidatedPresence> =
         MutableLiveData<ConsolidatedPresence>()
+    val statusMessage = MutableLiveData("")
+
     override val coroutineScope: CoroutineScope = viewModelScope
 
     var fullName = ""
@@ -71,6 +77,7 @@ class ContactViewModel(friend: Friend) : MessageNotifierViewModel(), ContactData
     val additionalData = MutableLiveData<ArrayList<ContactAdditionalData>>()
     val isFavourite = MutableLiveData<Boolean>()
     val canBeFavourite = MutableLiveData<Boolean>()
+    val subTitle = MutableLiveData("")
 
     val sendSmsToEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
@@ -158,10 +165,25 @@ class ContactViewModel(friend: Friend) : MessageNotifierViewModel(), ContactData
         presenceStatus.value = friend.consolidatedPresence
         readOnlyNativeAddressBook.value = corePreferences.readOnlyNativeContacts
         hasLongTermPresence.value = friend.hasLongTermPresence()
+        subTitle.value = friend.organization
 
-        friend.addListener {
-            presenceStatus.value = it.consolidatedPresence
-            hasLongTermPresence.value = it.hasLongTermPresence()
+        val userData = friend.userData
+        if (userData is UserDataModel && userData.presenceObservable != null) {
+            presenceSubscription = userData.presenceObservable.subscribe { data ->
+                val cp = PresenceIconState.toConsolidatedPresence(
+                    PresenceIconState.fromString(data.iconState)
+                )
+                presenceStatus.postValue(cp)
+                statusMessage.postValue(data.message)
+                subTitle.postValue(data.stateName)
+            }
+
+            hasLongTermPresence.postValue(false)
+        } else {
+            friend.addListener {
+                presenceStatus.value = it.consolidatedPresence
+                hasLongTermPresence.value = it.hasLongTermPresence()
+            }
         }
 
         updateAdditionalData()

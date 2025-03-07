@@ -104,4 +104,10 @@ class PresenceProfileService(val context: Context) : DefaultLifecycleObserver {
                 })
         }
     }
+
+    fun getPresenceProfileById(stateId: String): PresenceProfile? {
+        val profiles = presenceProfilesSubject.value ?: return null
+
+        return profiles.firstOrNull { x -> x.id == stateId }
+    }
 }

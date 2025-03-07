@@ -72,17 +72,13 @@ class PresenceEditorFragment : GenericFragment<FragmentPresenceEditorBinding>() 
 
     private fun updateSpinnerAdapter(presenceProfiles: List<PresenceProfile>) {
         val spinner: Spinner = requireView().findViewById(R.id.presenceProfileSpinner)
-
-        ArrayAdapter(
-            coreContext.context,
+        val adapter = ArrayAdapter(
+            requireContext(),
             android.R.layout.simple_spinner_item,
             presenceProfiles
-        ).also { adapter ->
-            // Specify the layout to use when the list of choices appears
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            // Apply the adapter to the spinner
-            spinner.adapter = adapter
-        }
+        )
+
+        spinner.adapter = adapter
 
         // Observe the selectedItem LiveData
         viewModel.presenceProfile.observe(viewLifecycleOwner) { selectedItem ->

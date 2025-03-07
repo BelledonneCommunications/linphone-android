@@ -40,7 +40,7 @@
             android:layout_width="@dimen/contact_avatar_size"
             android:layout_height="@dimen/contact_avatar_size"
             coilContact="@{viewModel}"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_centerVertical="true"
             android:background="@drawable/generated_avatar_bg"
             android:src="@drawable/voip_single_contact_avatar"
@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_centerVertical="true"
-            android:layout_alignParentRight="true">
+            android:layout_alignParentEnd="true">
 
             <ImageView
                 android:layout_width="20dp"
@@ -72,7 +72,7 @@
                 android:adjustViewBounds="true"
                 android:scaleType="centerInside"
                 android:src="@drawable/linphone_logo_tinted"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:contentDescription="@string/content_description_linphone_user"
                 android:visibility="@{viewModel.hasLongTermPresence ? View.VISIBLE : View.GONE, default=gone}" />
 
@@ -91,8 +91,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/right"
-            android:layout_toRightOf="@id/avatar">
+            android:layout_toStartOf="@id/right"
+            android:layout_toEndOf="@id/avatar">
 
             <org.linphone.views.MarqueeTextView
                 android:id="@+id/name"
@@ -105,8 +105,7 @@
 
             <org.linphone.views.MarqueeTextView
                 android:id="@+id/contactOrganization"
-                android:text="@{viewModel.contact.organization}"
-                android:visibility="@{viewModel.displayOrganization &amp;&amp; viewModel.contact.organization.length() > 0 ? View.VISIBLE : View.GONE}"
+                android:text="@{viewModel.subTitle}"
                 style="@style/contact_organization_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

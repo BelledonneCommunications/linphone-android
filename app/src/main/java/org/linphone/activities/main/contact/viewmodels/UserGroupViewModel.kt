@@ -11,6 +11,7 @@ import org.linphone.models.search.UserDataModel
 import org.linphone.models.usergroup.GroupUserSummaryModel
 import org.linphone.models.usergroup.UserGroupModel
 import org.linphone.services.DirectoriesService
+import org.linphone.services.PresenceService
 
 class UserGroupViewModel(
     userGroupModel: UserGroupModel
@@ -33,9 +34,6 @@ class UserGroupViewModel(
 
             friend.refKey = user.id
             friend.name = user.name
-            friend.organization = coreContext.context.resources.getString(
-                R.string.contacts_user
-            )
 
             val phoneNumberWithLabel = Factory.instance()
                 .createFriendPhoneNumber(
@@ -53,7 +51,17 @@ class UserGroupViewModel(
             friend.isSubscribesEnabled = false
             friend.incSubscribePolicy = SubscribePolicy.SPDeny
 
-            friend.userData = UserDataModel(null, user, arrayListOf(), user.isInFavourites)
+            val presenceObservable = PresenceService.getInstance(coreContext.context).getUserPresenceStream(
+                user.id
+            )
+
+            friend.userData = UserDataModel(
+                null,
+                user,
+                arrayListOf(),
+                user.isInFavourites,
+                presenceObservable
+            )
 
             return friend
         }
@@ -167,7 +175,7 @@ class UserGroupViewModel(
                 additionalData = ArrayList(additionalData.sortedWith(comparator))
             }
 
-            friend.userData = UserDataModel(contactItemModel, null, additionalData, false)
+            friend.userData = UserDataModel(contactItemModel, null, additionalData, false, null)
 
             return friend
         }

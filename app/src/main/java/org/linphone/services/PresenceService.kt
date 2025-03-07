@@ -103,11 +103,6 @@ class PresenceService(val context: Context) : DefaultLifecycleObserver {
                     try {
                         if (response.isSuccessful) {
                             Log.i("Presence update succeeded")
-                            Toast.makeText(
-                                coreContext.context,
-                                context.getString(R.string.presenceservice_presence_updated),
-                                Toast.LENGTH_LONG
-                            ).show()
                         } else {
                             Log.i("Presence update failed with ${response.code()}")
                             Toast.makeText(
@@ -123,7 +118,7 @@ class PresenceService(val context: Context) : DefaultLifecycleObserver {
             })
     }
 
-    private fun getUserPresenceStream(userId: String): Observable<PresenceEventData> {
+    fun getUserPresenceStream(userId: String): Observable<PresenceEventData> {
         val existingObservable = presenceObservables[userId]
         return if (existingObservable != null) {
             existingObservable.data
