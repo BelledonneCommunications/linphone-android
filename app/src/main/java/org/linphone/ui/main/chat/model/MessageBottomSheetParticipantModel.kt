@@ -21,7 +21,9 @@ package org.linphone.ui.main.chat.model
 
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
+import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.Address
 
 class MessageBottomSheetParticipantModel
@@ -35,7 +37,22 @@ class MessageBottomSheetParticipantModel
 ) {
     val sipUri = address.asStringUriOnly()
 
+    val showSipUri = MutableLiveData<Boolean>()
+
     val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(address)
+
+    init {
+        showSipUri.postValue(false)
+    }
+
+    @UiThread
+    fun toggleShowSipUri() {
+        if (!isOurOwnReaction && !corePreferences.onlyDisplaySipUriUsername) {
+            showSipUri.postValue(showSipUri.value == false)
+        } else {
+            clicked()
+        }
+    }
 
     @UiThread
     fun clicked() {

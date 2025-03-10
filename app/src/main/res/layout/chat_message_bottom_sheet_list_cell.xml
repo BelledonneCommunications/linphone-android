@@ -32,6 +32,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
+            android:onClick="@{() -> model.toggleShowSipUri()}"
             android:id="@+id/name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -42,6 +43,21 @@
             app:layout_constraintStart_toEndOf="@id/avatar"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/date_time"
+            app:layout_constraintBottom_toTopOf="@id/sip_address"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_300"
+            android:onClick="@{() -> model.toggleShowSipUri()}"
+            android:id="@+id/sip_address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{model.sipUri, default=`sip:johndoe@sip.linphone.org`}"
+            android:visibility="@{model.showSipUri ? View.VISIBLE : View.GONE, default=gone}"
+            android:textSize="12sp"
+            android:textColor="?attr/color_main2_500"
+            app:layout_constraintStart_toStartOf="@id/name"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            app:layout_constraintEnd_toEndOf="@id/name"
             app:layout_constraintBottom_toTopOf="@id/remove_reaction"/>
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -53,7 +69,7 @@
             android:textSize="12sp"
             android:textColor="?attr/color_main2_400"
             android:visibility="@{model.ourOwnReaction ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintTop_toBottomOf="@id/name"
+            app:layout_constraintTop_toBottomOf="@id/sip_address"
             app:layout_constraintStart_toStartOf="@id/name"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
