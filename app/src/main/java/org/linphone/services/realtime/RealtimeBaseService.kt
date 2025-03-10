@@ -48,7 +48,7 @@ open class RealtimeBaseService(context: Context, private val hubSuffix: String) 
             try {
                 createHubConnection(environment)
             } catch (e: Exception) {
-                Log.e("currentEnvironmentSubscription", e)
+                Log.e("RealtimeBaseService.currentEnvironmentSubscription", e)
             }
         }
 
@@ -61,7 +61,6 @@ open class RealtimeBaseService(context: Context, private val hubSuffix: String) 
 
     var ready = isReadySubject.map { x -> x }
 
-    private var isEnabled: Boolean = false
     private var reconnectContext: ReconnectContext? = null
 
     override fun onDestroy(owner: LifecycleOwner) {
@@ -94,7 +93,7 @@ open class RealtimeBaseService(context: Context, private val hubSuffix: String) 
         hubConnection = connection
 
         connection.on(RealtimeEventType.ConnectEvent.eventName, { message: Any ->
-            Log.d(RealtimeEventType.ConnectEvent.eventName, message)
+            Log.d("RealtimeBaseService." + RealtimeEventType.ConnectEvent.eventName, message)
 
             try {
                 runBlocking {
@@ -105,20 +104,21 @@ open class RealtimeBaseService(context: Context, private val hubSuffix: String) 
                 isReadySubject.onNext(true)
                 onConnected()
             } catch (e: Exception) {
-                Log.e(RealtimeEventType.ConnectEvent.eventName, e)
+                Log.e("RealtimeBaseService." + RealtimeEventType.ConnectEvent.eventName, e)
             }
         }, Any::class.java)
 
         connection.on(RealtimeEventType.SubscribeResponse.eventName, { message: Any ->
-            Log.d(RealtimeEventType.SubscribeResponse.eventName, message)
+            Log.d("RealtimeBaseService." + RealtimeEventType.SubscribeResponse.eventName, message)
         }, Any::class.java)
 
         connection.on(RealtimeEventType.UnSubscribeResponse.eventName, { message: Any ->
-            Log.d(RealtimeEventType.UnSubscribeResponse.eventName, message)
+            Log.d("RealtimeBaseService." + RealtimeEventType.UnSubscribeResponse.eventName, message)
         }, Any::class.java)
 
         connection.onClosed {
-            Log.w("Realtime connection closed")
+            Log.w("RealtimeBaseService.connection closed")
+
             try {
                 onDisconnected()
 
@@ -128,7 +128,7 @@ open class RealtimeBaseService(context: Context, private val hubSuffix: String) 
                     tryReconnect()
                 }
             } catch (e: Exception) {
-                Log.e("onClosed", e)
+                Log.e("RealtimeBaseService.onClosed", e)
             }
         }
 
@@ -138,39 +138,40 @@ open class RealtimeBaseService(context: Context, private val hubSuffix: String) 
             .subscribe { u ->
                 try {
                     if (u.id != AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER) {
-                        isEnabled = true
                         ensureConnected()
                     } else {
+                        Log.d("RealtimeBaseService.userSubscription stopping connection")
                         connection.stop()
                     }
                 } catch (e: Exception) {
-                    Log.e("userSubscription", e)
+                    Log.e("RealtimeBaseService.userSubscription", e)
                 }
             }
     }
 
     private fun onConnected() {
         try {
-            Log.d("OnConnected")
+            Log.d("RealtimeBaseService.OnConnected")
             // TODO Remove error notification
         } catch (e: Exception) {
-            Log.e("OnConnected", e)
+            Log.e("RealtimeBaseService.OnConnected", e)
         }
     }
 
     private fun onDisconnected() {
         try {
-            Log.d("OnDisconnected")
+            Log.d("RealtimeService.OnDisconnected")
 
             isReadySubject.onNext(false)
             // TODO Remove error notification
         } catch (e: Exception) {
-            Log.e("OnConnected", e)
+            Log.e("RealtimeBaseService.OnConnected", e)
         }
     }
 
     private fun connect() {
-        Log.d("Hub Connecting")
+        Log.d("RealtimeBaseService.connect")
+
         val connection = hubConnection
 
         if (connection != null) {
@@ -191,7 +192,7 @@ open class RealtimeBaseService(context: Context, private val hubSuffix: String) 
                     }
                 )
         } else {
-            Log.w("realtime connect called with no hubconnection")
+            Log.w("RealtimeBaseService.connect called with no hubconnection")
         }
     }
 
@@ -218,27 +219,33 @@ open class RealtimeBaseService(context: Context, private val hubSuffix: String) 
     private fun nextRetryDelayInMilliseconds(reconnectContext: ReconnectContext): Long {
         val seconds = reconnectContext.previousRetryCount.pow(1.5).coerceAtMost(30.0)
         val delay = Math.round(seconds * 1000) + 1000
-        Log.d("Retry SignalR connection in $delay ms.")
+        Log.d("RealtimeBaseService.nextRetryDelayInMilliseconds in $delay ms.")
         return delay
     }
 
     private fun ensureConnected() {
+        Log.d("RealtimeBaseService.ensureConnected")
         val connection = hubConnection
-        if (isEnabled && connection != null && connection.connectionState != HubConnectionState.DISCONNECTED) {
-            connection.stop()
-        }
+        if (connection != null && connection.connectionState != HubConnectionState.CONNECTED) {
+            if (connection.connectionState != HubConnectionState.DISCONNECTED) {
+                Log.d("RealtimeBaseService.ensureConnected stopping connection")
+                connection.stop()
+            }
 
-        connect()
+            connect()
+        }
     }
 
     private val subscriptions = mutableMapOf<String, EventSubscription>()
 
     private suspend fun invokePendingHubRequests() = runBlocking {
-        println("Un/subscribe all pending.")
+        Log.d("RealtimeBaseService.invokePendingHubRequests Un/subscribe all pending.")
 
-        println("State: ${hubConnection?.connectionState}")
+        Log.d(
+            "RealtimeBaseService.invokePendingHubRequests State: ${hubConnection?.connectionState}"
+        )
 
-        println("Subscriptions: $subscriptions")
+        Log.d("RealtimeBaseService.invokePendingHubRequests Subscriptions: $subscriptions")
 
         // When SignalR connects, invoke any pending tasks to subscribe to/unsubscribe from events.
         if (hubConnection?.connectionState == HubConnectionState.CONNECTED) {
