@@ -220,10 +220,6 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                 }
             }
 
-            if (::scrollListener.isInitialized) {
-                binding.eventsList.addOnScrollListener(scrollListener)
-            }
-
             val unreadCount = viewModel.unreadMessagesCount.value ?: 0
             if (unreadCount > 0) {
                 Log.i(
@@ -988,6 +984,10 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         binding.eventsList
             .viewTreeObserver
             .addOnGlobalLayoutListener(globalLayoutObserver)
+
+        if (::scrollListener.isInitialized) {
+            binding.eventsList.addOnScrollListener(scrollListener)
+        }
 
         try {
             adapter.registerAdapterDataObserver(dataObserver)
