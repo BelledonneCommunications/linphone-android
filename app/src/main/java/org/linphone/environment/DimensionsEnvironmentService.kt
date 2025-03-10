@@ -47,6 +47,8 @@ class DimensionsEnvironmentService(context: Context) {
 
     private val currentEnvironmentSubject = BehaviorSubject.create<DimensionsEnvironment>()
     val currentEnvironmentObservable = currentEnvironmentSubject.map { x -> x }
+        .replay(1)
+        .autoConnect()
 
     init {
         isDevModeEnabled = mPrefs.getBoolean(KEY_DEV_MODE, false)

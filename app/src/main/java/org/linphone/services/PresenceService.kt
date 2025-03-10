@@ -73,7 +73,7 @@ class PresenceService(val context: Context) : DefaultLifecycleObserver {
         .autoConnect()
 
     init {
-        realtimeUserService.hubConnection.on(RealtimeEventType.PresenceEvent.eventName, { event: RealtimeEventPresence ->
+        realtimeUserService.hubConnection?.on(RealtimeEventType.PresenceEvent.eventName, { event: RealtimeEventPresence ->
             Log.d(RealtimeEventType.PresenceEvent.eventName, event)
 
             try {

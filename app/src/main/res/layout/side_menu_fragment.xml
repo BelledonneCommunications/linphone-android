@@ -121,18 +121,6 @@
 
             </LinearLayout>
 
-            <ImageView
-                android:background="@drawable/led_background"
-                android:src="@{viewModel.defaultAccountViewModel.iconResource, default=@drawable/led_not_registered}"
-                android:contentDescription="@{viewModel.defaultAccountViewModel.iconContentDescription}"
-                android:layout_width="20dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp"
-                android:padding="@dimen/contact_presence_badge_padding" />
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
