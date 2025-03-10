@@ -27,7 +27,6 @@ import android.content.Intent
 import android.os.Build
 import android.provider.Settings
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import org.linphone.core.tools.Log
 import androidx.core.net.toUri
 
@@ -72,7 +71,7 @@ class Api34Compatibility {
             intent.data = "package:${context.packageName}".toUri()
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
             Log.i("$TAG Starting ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT")
-            ContextCompat.startActivity(context, intent, null)
+            context.startActivity(intent, null)
         }
     }
 }

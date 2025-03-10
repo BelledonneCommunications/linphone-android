@@ -64,11 +64,6 @@ class ImageUtils {
             if (path != null) {
                 try {
                     val fromPictureUri = path.toUri()
-                    if (fromPictureUri == null) {
-                        Log.e("$TAG Failed to parse path [$path] as URI")
-                        return null
-                    }
-
                     // We make a copy to ensure Bitmap will be Software and not Hardware, required for shortcuts
                     val bitmap = ImageDecoder.decodeBitmap(
                         ImageDecoder.createSource(context.contentResolver, fromPictureUri)

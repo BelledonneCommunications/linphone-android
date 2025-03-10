@@ -42,7 +42,8 @@ class ConversationDocumentsListViewModel
         MutableLiveData<Event<FileModel>>()
     }
 
-    override fun beforeNotifyingChatRoomFound(sameOne: Boolean) {
+    @WorkerThread
+    override fun afterNotifyingChatRoomFound(sameOne: Boolean) {
         loadDocumentsList()
     }
 
@@ -98,6 +99,7 @@ class ConversationDocumentsListViewModel
                 list.add(model)
             }
         }
+
         Log.i("$TAG [${documents.size}] documents have been processed")
         documentsList.postValue(list)
         operationInProgress.postValue(false)

@@ -67,7 +67,9 @@ class ShortcutUtils {
 
             var count = 0
             for (chatRoom in defaultAccount.chatRooms) {
-                if (defaultAccount.params.instantMessagingEncryptionMandatory && !chatRoom.currentParams.isEncryptionEnabled) {
+                if (defaultAccount.params.instantMessagingEncryptionMandatory &&
+                    !chatRoom.hasCapability(ChatRoom.Capabilities.Encrypted.toInt())
+                ) {
                     Log.w(
                         "$TAG Account is in secure mode, skipping not encrypted conversation [${LinphoneUtils.getConversationId(
                             chatRoom

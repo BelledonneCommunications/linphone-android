@@ -433,7 +433,7 @@ class SendMessageInConversationViewModel
         attachments.value = list
         maxNumberOfAttachmentsReached.value = list.size >= MAX_FILES_TO_ATTACH
 
-        if (list.isEmpty) {
+        if (list.isEmpty()) {
             isFileAttachmentsListOpen.value = false
         }
     }

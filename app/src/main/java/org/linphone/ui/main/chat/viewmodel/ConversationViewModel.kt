@@ -291,7 +291,7 @@ class ConversationViewModel
                 list.remove(found)
                 eventsList = list
                 updateEvents.postValue(Event(true))
-                isEmpty.postValue(eventsList.isEmpty)
+                isEmpty.postValue(eventsList.isEmpty())
             } else {
                 Log.e("$TAG Failed to find matching message in conversation events list")
             }
@@ -432,7 +432,7 @@ class ConversationViewModel
                 list.remove(found)
                 eventsList = list
                 updateEvents.postValue(Event(true))
-                isEmpty.postValue(eventsList.isEmpty)
+                isEmpty.postValue(eventsList.isEmpty())
             } else {
                 Log.e(
                     "$TAG Failed to find chat message id [${chatMessageModel.id}] in events list!"
@@ -528,7 +528,7 @@ class ConversationViewModel
                 list.addAll(eventsList)
                 eventsList = list
                 updateEvents.postValue(Event(true))
-                isEmpty.postValue(eventsList.isEmpty)
+                isEmpty.postValue(eventsList.isEmpty())
             }
         }
     }
@@ -651,7 +651,7 @@ class ConversationViewModel
         Log.i("$TAG Extracted [${list.size}] events from conversation history in database")
         eventsList = list
         updateEvents.postValue(Event(true))
-        isEmpty.postValue(eventsList.isEmpty)
+        isEmpty.postValue(eventsList.isEmpty())
     }
 
     @WorkerThread
@@ -698,7 +698,7 @@ class ConversationViewModel
         list.addAll(newList)
         eventsList = list
         updateEvents.postValue(Event(true))
-        isEmpty.postValue(eventsList.isEmpty)
+        isEmpty.postValue(eventsList.isEmpty())
     }
 
     @WorkerThread
@@ -730,7 +730,7 @@ class ConversationViewModel
         list.addAll(eventsList)
         eventsList = list
         updateEvents.postValue(Event(true))
-        isEmpty.postValue(eventsList.isEmpty)
+        isEmpty.postValue(eventsList.isEmpty())
     }
 
     @WorkerThread
@@ -801,7 +801,7 @@ class ConversationViewModel
             eventsList.addAll(processGroupedEvents(arrayListOf(event)))
         } else {
             for (event in history) {
-                if (groupedEventLogs.isEmpty) {
+                if (groupedEventLogs.isEmpty()) {
                     groupedEventLogs.add(event)
                     continue
                 }
