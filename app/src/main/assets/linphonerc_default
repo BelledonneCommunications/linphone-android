@@ -13,6 +13,7 @@ media_encryption=none
 update_presence_model_timestamp_before_publish_expires_refresh=1
 use_rfc2833=1
 use_info=1
+rls_uri=sips:rls@sip.linphone.org
 
 [net]
 #Because dynamic bitrate adaption can increase bitrate, we must allow "no limit"
