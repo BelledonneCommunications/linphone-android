@@ -31,8 +31,6 @@ import androidx.annotation.RequiresApi
 @RequiresApi(Build.VERSION_CODES.Q)
 class Api29Compatibility {
     companion object {
-        private const val TAG = "[API 29 Compatibility]"
-
         fun getMediaCollectionUri(isImage: Boolean, isVideo: Boolean, isAudio: Boolean): Uri {
             return when {
                 isImage -> {

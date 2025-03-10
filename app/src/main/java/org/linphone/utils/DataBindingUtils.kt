@@ -228,12 +228,6 @@ fun ImageView.setSourceImageResource(resource: Int) {
 }
 
 @UiThread
-@BindingAdapter("android:textStyle")
-fun AppCompatTextView.setTypeface(typeface: Int) {
-    this.setTypeface(null, typeface)
-}
-
-@UiThread
 @BindingAdapter("android:drawableTint")
 fun AppCompatTextView.setDrawableTint(@ColorInt color: Int) {
     for (drawable in compoundDrawablesRelative) {

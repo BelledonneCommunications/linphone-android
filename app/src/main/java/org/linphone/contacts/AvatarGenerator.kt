@@ -33,6 +33,8 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.IconCompat
 import org.linphone.R
 import org.linphone.utils.AppUtils
+import androidx.core.graphics.createBitmap
+import androidx.core.graphics.drawable.toDrawable
 
 class AvatarGenerator(private val context: Context) {
     private var textSize: Float = AppUtils.getDimension(R.dimen.avatar_initials_text_size)
@@ -74,7 +76,7 @@ class AvatarGenerator(private val context: Context) {
         val textPainter = getTextPainter()
         val painter = if (useTransparentBackground) getTransparentPainter() else getBackgroundPainter()
 
-        val bitmap = Bitmap.createBitmap(avatarSize, avatarSize, Bitmap.Config.ARGB_8888)
+        val bitmap = createBitmap(avatarSize, avatarSize)
         val canvas = Canvas(bitmap)
         val areaRect = Rect(0, 0, avatarSize, avatarSize)
         val bounds = RectF(areaRect)
@@ -91,7 +93,7 @@ class AvatarGenerator(private val context: Context) {
     }
 
     fun buildDrawable(): BitmapDrawable {
-        return BitmapDrawable(context.resources, buildBitmap(true))
+        return buildBitmap(true).toDrawable(context.resources)
     }
 
     fun buildIcon(): IconCompat {

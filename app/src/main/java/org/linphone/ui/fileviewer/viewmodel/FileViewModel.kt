@@ -19,7 +19,6 @@
  */
 package org.linphone.ui.fileviewer.viewmodel
 
-import android.graphics.Bitmap
 import android.graphics.pdf.PdfRenderer
 import android.net.Uri
 import android.os.ParcelFileDescriptor
@@ -31,7 +30,6 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
 import java.lang.IllegalStateException
-import java.lang.StringBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -42,6 +40,7 @@ import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.TimestampUtils
 import androidx.core.net.toUri
+import androidx.core.graphics.createBitmap
 
 class FileViewModel
     @UiThread
@@ -181,11 +180,7 @@ class FileViewModel
                     Log.d(
                         "$TAG Page size is ${page.width}/${page.height}, screen size is $screenWidth/$screenHeight"
                     )
-                    val bm = Bitmap.createBitmap(
-                        page.width,
-                        page.height,
-                        Bitmap.Config.ARGB_8888
-                    )
+                    val bm = createBitmap(page.width, page.height)
                     page.render(bm, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
                     page.close()
 

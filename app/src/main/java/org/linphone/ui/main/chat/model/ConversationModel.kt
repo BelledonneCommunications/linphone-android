@@ -50,10 +50,6 @@ class ConversationModel
 
     val id = LinphoneUtils.getConversationId(chatRoom)
 
-    val localSipUri = chatRoom.localAddress.asStringUriOnly()
-
-    val remoteSipUri = chatRoom.peerAddress.asStringUriOnly()
-
     val isGroup = !chatRoom.hasCapability(Capabilities.OneToOne.toInt()) && chatRoom.hasCapability(
         Capabilities.Conference.toInt()
     )

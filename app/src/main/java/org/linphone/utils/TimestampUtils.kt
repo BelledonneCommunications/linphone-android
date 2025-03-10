@@ -31,8 +31,6 @@ import org.linphone.R
 
 class TimestampUtils {
     companion object {
-        private const val TAG = "[Timestamp Utils]"
-
         @AnyThread
         fun isToday(timestamp: Long, timestampInSecs: Boolean = true): Boolean {
             val cal = getCalendar()

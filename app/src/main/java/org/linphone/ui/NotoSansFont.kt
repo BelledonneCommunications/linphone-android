@@ -23,10 +23,10 @@ import androidx.annotation.FontRes
 import org.linphone.R
 
 enum class NotoSansFont(@FontRes val fontRes: Int) {
-    NotoSansLight(R.font.noto_sans_light), // 300
+    // NotoSansLight(R.font.noto_sans_light), // 300
     NotoSansRegular(R.font.noto_sans_regular), // 400
     NotoSansMedium(R.font.noto_sans_medium), // 500
-    NotoSansSemiBold(R.font.noto_sans_semi_bold), // 600
+    // NotoSansSemiBold(R.font.noto_sans_semi_bold), // 600
     NotoSansBold(R.font.noto_sans_bold), // 700
     NotoSansExtraBold(R.font.noto_sans_extra_bold) // 800
 }

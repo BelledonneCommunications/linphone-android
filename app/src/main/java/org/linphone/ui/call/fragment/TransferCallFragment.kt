@@ -242,7 +242,7 @@ class TransferCallFragment : GenericCallFragment() {
 
     private fun showConfirmAttendedTransferDialog(callModel: CallModel) {
         val label = AppUtils.getFormattedString(
-            org.linphone.R.string.call_transfer_confirm_dialog_message,
+            R.string.call_transfer_confirm_dialog_message,
             callViewModel.displayedName.value.orEmpty(),
             callModel.displayName.value.orEmpty()
         )
@@ -278,7 +278,7 @@ class TransferCallFragment : GenericCallFragment() {
 
     private fun showConfirmBlindTransferDialog(contactModel: ConversationContactOrSuggestionModel) {
         val label = AppUtils.getFormattedString(
-            org.linphone.R.string.call_transfer_confirm_dialog_message,
+            R.string.call_transfer_confirm_dialog_message,
             callViewModel.displayedName.value.orEmpty(),
             contactModel.name
         )

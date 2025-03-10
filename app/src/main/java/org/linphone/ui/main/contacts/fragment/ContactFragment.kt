@@ -319,7 +319,7 @@ class ContactFragment : SlidingPaneChildFragment() {
 
     private fun showConfirmTrustCallDialog(contactName: String, deviceSipUri: String) {
         val label = AppUtils.getFormattedString(
-            org.linphone.R.string.contact_dialog_increase_trust_level_message,
+            R.string.contact_dialog_increase_trust_level_message,
             contactName,
             deviceSipUri
         )

@@ -100,8 +100,6 @@
     <dimen name="chat_bubble_emoji_picker_height">425dp</dimen>
     <dimen name="chat_bubble_max_height_long_press">340dp</dimen>
 
-    <dimen name="recycler_view_min_height">200dp</dimen>
-
     <dimen name="spinner_start_padding">15dp</dimen>
     <dimen name="spinner_end_padding">30dp</dimen>
     <dimen name="spinner_caret_end_margin">15dp</dimen>

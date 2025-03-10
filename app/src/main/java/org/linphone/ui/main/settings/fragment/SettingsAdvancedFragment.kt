@@ -35,10 +35,6 @@ import org.linphone.ui.main.settings.viewmodel.SettingsViewModel
 
 @UiThread
 class SettingsAdvancedFragment : GenericMainFragment() {
-    companion object {
-        private const val TAG = "[Advanced Settings Fragment]"
-    }
-
     private lateinit var binding: SettingsAdvancedFragmentBinding
 
     private lateinit var viewModel: SettingsViewModel

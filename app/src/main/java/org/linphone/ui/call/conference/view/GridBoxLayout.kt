@@ -26,6 +26,7 @@ import android.widget.GridLayout
 import androidx.annotation.UiThread
 import androidx.core.view.children
 import org.linphone.core.tools.Log
+import androidx.core.view.isEmpty
 
 @UiThread
 class GridBoxLayout : GridLayout {
@@ -58,7 +59,7 @@ class GridBoxLayout : GridLayout {
 
     @SuppressLint("DrawAllocation")
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        if (childCount == 0 || (!changed && previousChildCount == childCount)) {
+        if (isEmpty() || (!changed && previousChildCount == childCount)) {
             super.onLayout(changed, left, top, right, bottom)
             // To prevent display issue the first time conference is locally paused
             children.forEach { child ->

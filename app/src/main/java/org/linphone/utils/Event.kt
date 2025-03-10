@@ -39,9 +39,4 @@ open class Event<out T>
             handleContent(content)
         }
     }
-
-    @UiThread
-    fun consumed(): Boolean {
-        return handled.get()
-    }
 }

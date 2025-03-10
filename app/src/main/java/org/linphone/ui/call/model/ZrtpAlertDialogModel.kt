@@ -27,10 +27,6 @@ import org.linphone.utils.Event
 class ZrtpAlertDialogModel
     @UiThread
     constructor(val allowTryAgain: Boolean) : GenericViewModel() {
-    companion object {
-        private const val TAG = "[ZRTP Alert Dialog]"
-    }
-
     val tryAgainEvent = MutableLiveData<Event<Boolean>>()
 
     val hangUpEvent = MutableLiveData<Event<Boolean>>()

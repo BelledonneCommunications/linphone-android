@@ -44,7 +44,6 @@
     <!-- Common words -->
     <string name="sip_address">SIP address</string>
     <string name="device_id">Device ID</string>
-    <string name="sip_address_hint">username@domain</string>
     <string name="sip_address_display_name">Display name</string>
     <string name="sip_address_domain">Domain</string>
     <string name="username">Username</string>
@@ -922,6 +921,7 @@
     <string name="content_description_go_to_conversation">Go to conversation</string>
     <string name="content_description_copy_text_to_clipboard">Copy text to clipboard</string>
     <string name="content_description_voicemail_available">Voice message are available</string>
+    <string name="content_description_call_voicemail">Long press to dial voicemail</string>
 
     <!-- Copy of private hosts_allowlist_sample in androidx.car.app:app:1.7.0-beta01, as they recommend it -->
     <string-array name="hosts_allowlist_sample_copy" translatable="false">

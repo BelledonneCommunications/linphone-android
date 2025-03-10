@@ -24,10 +24,6 @@ import android.util.AttributeSet
 import android.view.TextureView
 
 class RatioTextureView : TextureView {
-    companion object {
-        private const val TAG = "[Ratio TextureView]"
-    }
-
     constructor(context: Context) : super(context)
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
@@ -36,13 +32,6 @@ class RatioTextureView : TextureView {
         context,
         attrs,
         defStyleAttr
-    )
-
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
-        context,
-        attrs,
-        defStyleAttr,
-        defStyleRes
     )
 
     private var ratioWidth = 0

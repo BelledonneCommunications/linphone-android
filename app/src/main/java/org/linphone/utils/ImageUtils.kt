@@ -34,6 +34,7 @@ import java.io.FileNotFoundException
 import org.linphone.contacts.AvatarGenerator
 import org.linphone.core.tools.Log
 import androidx.core.net.toUri
+import androidx.core.graphics.createBitmap
 
 class ImageUtils {
     companion object {
@@ -91,8 +92,7 @@ class ImageUtils {
 
         @AnyThread
         private fun getRoundBitmap(bitmap: Bitmap): Bitmap {
-            val output =
-                Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
+            val output = createBitmap(bitmap.width, bitmap.height)
             val canvas = Canvas(output)
             val color = -0xbdbdbe
             val paint = Paint()

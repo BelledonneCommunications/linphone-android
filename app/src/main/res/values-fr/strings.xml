@@ -98,7 +98,7 @@
     <string name="assistant_dialog_privacy_policy_label">politique de confidentialité</string>
     <string name="assistant_dialog_general_terms_and_privacy_policy_message">En continuant, vous acceptez nos %1$s et %2$s.</string>
     <string name="assistant_dialog_confirm_phone_number_title">Confirmez votre numéro de téléphone</string>
-    <string name="assistant_dialog_confirm_phone_number_message">Êtes-vous sûr de vouloir utiliser ce numéro de téléphone ?</string>
+    <string name="assistant_dialog_confirm_phone_number_message">Êtes-vous sûr que le %s est votre numéro de téléphone ?</string>
     <string name="assistant_account_login">Connexion</string>
     <string name="assistant_scan_qr_code">Scanner un QR code</string>
     <string name="assistant_qr_code_invalid_toast">Ce QR code est invalide !</string>
