@@ -29,7 +29,7 @@ coil = "3.1.0"
 dotsIndicator = "5.1.0"
 photoview = "2.3.0"
 openidAppauth = "0.11.1"
-linphone = "5.4.+"
+linphone = "5.5.+"
 
 [libraries]
 androidx-annotations = { group = "androidx.annotation", name = "annotation", version.ref = "annotations" }
