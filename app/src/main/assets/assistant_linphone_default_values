@@ -29,7 +29,7 @@
     <entry name="protocols" overwrite="true">stun,ice</entry>
   </section>
   <section name="sip">
-    <entry name="media_encryption" overwrite="true">zrtp</entry>
+    <entry name="media_encryption" overwrite="true">srtp</entry>
     <entry name="media_encryption_mandatory">1</entry>
   </section>
 </config>

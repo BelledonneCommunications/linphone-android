@@ -1582,7 +1582,7 @@ class NotificationsManager
         val id = context.getString(R.string.notification_channel_call_id)
         val name = context.getString(R.string.notification_channel_call_name)
 
-        val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_DEFAULT).apply {
+        val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_LOW).apply {
             description = name
             lockscreenVisibility = Notification.VISIBILITY_PUBLIC
         }
