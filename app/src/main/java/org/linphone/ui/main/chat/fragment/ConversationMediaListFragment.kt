@@ -94,13 +94,10 @@ class ConversationMediaListFragment : SlidingPaneChildFragment() {
         binding.viewModel = viewModel
         observeToastEvents(viewModel)
 
-        val localSipUri = args.localSipUri
-        val remoteSipUri = args.remoteSipUri
-        Log.i(
-            "$TAG Looking up for conversation with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
-        )
+        val conversationId = args.conversationId
+        Log.i("$TAG Looking up for conversation with conversation ID [$conversationId]")
         val chatRoom = sharedViewModel.displayedChatRoom
-        viewModel.findChatRoom(chatRoom, localSipUri, remoteSipUri)
+        viewModel.findChatRoom(chatRoom, conversationId)
 
         val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
         binding.mediaList.addItemDecoration(headerItemDecoration)
@@ -172,12 +169,12 @@ class ConversationMediaListFragment : SlidingPaneChildFragment() {
 
         val bundle = Bundle()
         bundle.apply {
-            putString("localSipUri", viewModel.localSipUri)
-            putString("remoteSipUri", viewModel.remoteSipUri)
+            putString("conversationId", viewModel.conversationId)
             putString("path", path)
             putBoolean("isEncrypted", fileModel.isEncrypted)
             putLong("timestamp", fileModel.fileCreationTimestamp)
             putString("originalPath", fileModel.originalPath)
+            putBoolean("isFromEphemeralMessage", fileModel.isFromEphemeralMessage)
             putBoolean("isMedia", true)
         }
         when (FileUtils.getMimeType(mime)) {

@@ -39,10 +39,6 @@ import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.help.viewmodel.HelpViewModel
 
 class DebugFragment : GenericMainFragment() {
-    companion object {
-        private const val TAG = "[Debug Fragment]"
-    }
-
     private lateinit var binding: HelpDebugFragmentBinding
 
     val viewModel: HelpViewModel by navGraphViewModels(

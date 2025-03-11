@@ -52,9 +52,11 @@ import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import kotlin.math.max
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -86,6 +88,9 @@ class MainActivity : GenericActivity() {
         private const val HISTORY_FRAGMENT_ID = 2
         private const val CHAT_FRAGMENT_ID = 3
         private const val MEETINGS_FRAGMENT_ID = 4
+
+        const val ARGUMENTS_CHAT = "Chat"
+        const val ARGUMENTS_CONVERSATION_ID = "ConversationId"
     }
 
     private lateinit var binding: MainActivityBinding
@@ -279,6 +284,12 @@ class MainActivity : GenericActivity() {
             }
         }
 
+        coreContext.clearAuthenticationRequestDialogEvent.observe(this) {
+            it.consume {
+                currentlyDisplayedAuthDialog?.dismiss()
+            }
+        }
+
         coreContext.showGreenToastEvent.observe(this) {
             it.consume { pair ->
                 val message = getString(pair.first)
@@ -307,6 +318,19 @@ class MainActivity : GenericActivity() {
             it.consume {
                 Log.i("$TAG Remote provisioning was applied, checking if theme has changed")
                 checkMainColorTheme()
+            }
+        }
+
+        coreContext.filesToExportToNativeMediaGalleryEvent.observe(this) {
+            it.consume { files ->
+                Log.i("$TAG Found [${files.size}] files to export to native media gallery")
+                for (file in files) {
+                    exportFileToNativeMediaGallery(file)
+                }
+
+                coreContext.postOnCoreThread {
+                    coreContext.clearFilesToExportToNativeGallery()
+                }
             }
         }
 
@@ -514,14 +538,9 @@ class MainActivity : GenericActivity() {
 
     private fun handleLocusOrShortcut(id: String) {
         Log.i("$TAG Found locus ID [$id]")
-        val pair = LinphoneUtils.getLocalAndPeerSipUrisFromChatRoomId(id)
-        if (pair != null) {
-            val localSipUri = pair.first
-            val remoteSipUri = pair.second
-            Log.i(
-                "$TAG Navigating to conversation with local [$localSipUri] and peer [$remoteSipUri] addresses, computed from shortcut ID"
-            )
-            sharedViewModel.showConversationEvent.value = Event(pair)
+        if (id.isNotEmpty()) {
+            Log.i("$TAG Navigating to conversation with ID [$id], computed from shortcut ID")
+            sharedViewModel.showConversationEvent.value = Event(id)
         }
     }
 
@@ -547,22 +566,18 @@ class MainActivity : GenericActivity() {
                     }
                 }
             } else {
-                if (intent.hasExtra("Chat")) {
+                if (intent.hasExtra(ARGUMENTS_CHAT)) {
                     Log.i("$TAG Intent has [Chat] extra")
                     coreContext.postOnMainThread {
                         try {
                             Log.i("$TAG Trying to go to Conversations fragment")
                             val args = intent.extras
-                            val localSipUri = args?.getString("LocalSipUri", "")
-                            val remoteSipUri = args?.getString("RemoteSipUri", "")
-                            if (remoteSipUri.isNullOrEmpty() || localSipUri.isNullOrEmpty()) {
-                                Log.w("$TAG Found [Chat] extra but no local and/or remote SIP URI!")
+                            val conversationId = args?.getString(ARGUMENTS_CONVERSATION_ID, "")
+                            if (conversationId.isNullOrEmpty()) {
+                                Log.w("$TAG Found [Chat] extra but no conversation ID!")
                             } else {
-                                Log.i(
-                                    "$TAG Found [Chat] extra with local [$localSipUri] and peer [$remoteSipUri] addresses"
-                                )
-                                val pair = Pair(localSipUri, remoteSipUri)
-                                sharedViewModel.showConversationEvent.value = Event(pair)
+                                Log.i("$TAG Found [Chat] extra with conversation ID [$conversationId]")
+                                sharedViewModel.showConversationEvent.value = Event(conversationId)
                             }
                             args?.clear()
 
@@ -665,25 +680,23 @@ class MainActivity : GenericActivity() {
                 Log.i(
                     "$TAG App is already started and in debug fragment, navigating to conversations list"
                 )
-                val pair = parseShortcutIfAny(intent)
-                if (pair != null) {
+                val conversationId = parseShortcutIfAny(intent)
+                if (conversationId != null) {
                     Log.i(
-                        "$TAG Navigating from debug to conversation with local [${pair.first}] and peer [${pair.second}] addresses, computed from shortcut ID"
+                        "$TAG Navigating from debug to conversation with ID [$conversationId], computed from shortcut ID"
                     )
-                    sharedViewModel.showConversationEvent.value = Event(pair)
+                    sharedViewModel.showConversationEvent.value = Event(conversationId)
                 }
 
                 val action = DebugFragmentDirections.actionDebugFragmentToConversationsListFragment()
                 findNavController().navigate(action)
             } else {
-                val pair = parseShortcutIfAny(intent)
-                if (pair != null) {
-                    val localSipUri = pair.first
-                    val remoteSipUri = pair.second
+                val conversationId = parseShortcutIfAny(intent)
+                if (conversationId != null) {
                     Log.i(
-                        "$TAG Navigating to conversation with local [$localSipUri] and peer [$remoteSipUri] addresses, computed from shortcut ID"
+                        "$TAG Navigating to conversation with conversation ID [$conversationId] addresses, computed from shortcut ID"
                     )
-                    sharedViewModel.showConversationEvent.value = Event(pair)
+                    sharedViewModel.showConversationEvent.value = Event(conversationId)
                 }
 
                 if (findNavController().currentDestination?.id == R.id.conversationsListFragment) {
@@ -698,11 +711,11 @@ class MainActivity : GenericActivity() {
         }
     }
 
-    private fun parseShortcutIfAny(intent: Intent): Pair<String, String>? {
+    private fun parseShortcutIfAny(intent: Intent): String? {
         val shortcutId = intent.getStringExtra("android.intent.extra.shortcut.ID") // Intent.EXTRA_SHORTCUT_ID
         if (shortcutId != null) {
             Log.i("$TAG Found shortcut ID [$shortcutId]")
-            return LinphoneUtils.getLocalAndPeerSipUrisFromChatRoomId(shortcutId)
+            return shortcutId
         } else {
             Log.i("$TAG No shortcut ID was found")
         }
@@ -784,5 +797,19 @@ class MainActivity : GenericActivity() {
 
         dialog.show()
         currentlyDisplayedAuthDialog = dialog
+    }
+
+    private fun exportFileToNativeMediaGallery(filePath: String) {
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                Log.i("$TAG Export file [$filePath] to Android's MediaStore")
+                val mediaStorePath = FileUtils.addContentToMediaStore(filePath)
+                if (mediaStorePath.isNotEmpty()) {
+                    Log.i("$TAG File [$filePath] has been successfully exported to MediaStore")
+                } else {
+                    Log.e("$TAG Failed to export file [$filePath] to MediaStore!")
+                }
+            }
+        }
     }
 }

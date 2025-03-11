@@ -7,6 +7,9 @@
         <variable
             name="deleteClickListener"
             type="View.OnClickListener" />
+        <variable
+            name="cancelInsteadOfDelete"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,7 +22,7 @@
             android:onClick="@{deleteClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/menu_delete_selected_item"
+            android:text="@{cancelInsteadOfDelete ? @string/meeting_cancel_action_label : @string/meeting_delete_action_label, default=@string/meeting_delete_action_label}"
             style="@style/context_menu_danger_action_label_style"
             android:background="@drawable/menu_item_background"
             android:layout_marginBottom="1dp"

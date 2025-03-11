@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="android.text.InputType" />
+        <variable
+            name="backClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="createAccountClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="openSubscribeWebPageClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="loginClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.assistant.viewmodel.AccountCreationViewModel" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/color_main2_000">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@null"
+                    android:src="@drawable/assistant_logo"
+                    app:layout_constraintStart_toEndOf="@id/title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/mountains"
+                    app:layout_constraintTop_toBottomOf="@id/login" />
+
+                <ImageView
+                    android:id="@+id/back"
+                    android:onClick="@{backClickListener}"
+                    android:layout_width="@dimen/top_bar_height"
+                    android:layout_height="@dimen/top_bar_height"
+                    android:layout_marginStart="40dp"
+                    android:padding="15dp"
+                    android:src="@drawable/caret_left"
+                    android:contentDescription="@string/content_description_go_back_icon"
+                    app:tint="?attr/color_main2_500"
+                    app:layout_constraintTop_toTopOf="@id/title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/title"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/assistant_page_title_style"
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/top_bar_height"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="@dimen/assistant_title_top_margin"
+                    android:text="@string/assistant_account_register"
+                    android:textColor="?attr/color_text"
+                    android:textSize="28sp"
+                    android:drawableStart="@drawable/user_circle"
+                    android:drawablePadding="10dp"
+                    app:layout_constraintWidth_min="@dimen/button_max_width"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/back"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/header_style"
+                    android:id="@+id/username_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@{@string/username + `*`}"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    app:layout_constraintTop_toBottomOf="@id/title"
+                    app:layout_constraintBottom_toTopOf="@id/username"
+                    app:layout_constraintStart_toStartOf="@id/username"/>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    style="@style/default_text_style"
+                    android:id="@+id/username"
+                    android:enabled="@{viewModel.pushNotificationsAvailable &amp;&amp; !viewModel.lockUsernameAndPassword}"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:text="@={viewModel.username, default=`johndoe`}"
+                    android:textSize="14sp"
+                    android:textColor="?attr/color_main2_600"
+                    android:background="@{viewModel.usernameError.length() > 0 ? @drawable/shape_edit_text_error_background : @drawable/edit_text_background, default=@drawable/edit_text_background}"
+                    android:inputType="text"
+                    android:hint="@string/username"
+                    app:layout_constraintWidth_max="@dimen/text_input_max_width"
+                    app:layout_constraintTop_toBottomOf="@id/username_label"
+                    app:layout_constraintBottom_toTopOf="@id/username_error"
+                    app:layout_constraintStart_toStartOf="@id/title"
+                    app:layout_constraintEnd_toEndOf="@id/title"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style_600"
+                    android:visibility="@{viewModel.usernameError.length() == 0 ? View.GONE : View.VISIBLE, default=gone}"
+                    android:id="@+id/username_error"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.usernameError, default=`Error`}"
+                    android:textSize="13sp"
+                    android:textColor="?attr/color_danger_500"
+                    app:layout_constraintTop_toBottomOf="@id/username"
+                    app:layout_constraintBottom_toTopOf="@id/phone_number_label"
+                    app:layout_constraintStart_toStartOf="@id/username"
+                    app:layout_constraintEnd_toEndOf="@id/username"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/header_style"
+                    android:id="@+id/phone_number_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@{@string/phone_number + `*`}"
+                    app:layout_constraintTop_toBottomOf="@id/username_error"
+                    app:layout_constraintBottom_toTopOf="@id/phone_number"
+                    app:layout_constraintStart_toStartOf="@id/prefix"/>
+
+                <ImageView
+                    android:id="@+id/phone_number_background"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:src="@{viewModel.phoneNumberError.length() > 0 ? @drawable/shape_edit_text_error_background : @drawable/edit_text_background, default=@drawable/edit_text_background}"
+                    android:contentDescription="@null"
+                    app:layout_constraintStart_toStartOf="@id/prefix"
+                    app:layout_constraintEnd_toEndOf="@id/phone_number"
+                    app:layout_constraintTop_toTopOf="@id/prefix"
+                    app:layout_constraintBottom_toBottomOf="@id/prefix" />
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    style="@style/default_text_style"
+                    android:id="@+id/prefix"
+                    android:enabled="@{viewModel.pushNotificationsAvailable}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="25dp"
+                    android:textSize="14sp"
+                    android:textColor="?attr/color_main2_600"
+                    android:gravity="center_vertical"
+                    android:overlapAnchor="false"
+                    android:dropDownVerticalOffset="25dp"
+                    android:spinnerMode="dropdown"
+                    android:popupBackground="@drawable/shape_squircle_white_background"
+                    android:background="@color/transparent_color"
+                    app:layout_constraintTop_toTopOf="@id/phone_number"
+                    app:layout_constraintBottom_toBottomOf="@id/phone_number"
+                    app:layout_constraintStart_toStartOf="@id/username" />
+
+                <ImageView
+                    android:id="@+id/prefix_caret"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/caret_down"
+                    android:contentDescription="@null"
+                    app:tint="?attr/color_main2_600"
+                    app:layout_constraintTop_toTopOf="@id/prefix"
+                    app:layout_constraintBottom_toBottomOf="@id/prefix"
+                    app:layout_constraintEnd_toEndOf="@id/prefix"/>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    style="@style/default_text_style"
+                    android:id="@+id/phone_number"
+                    android:enabled="@{viewModel.pushNotificationsAvailable}"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="5dp"
+                    android:paddingEnd="20dp"
+                    android:text="@={viewModel.phoneNumber, default=`6 01 02 03 04 05`}"
+                    android:textSize="14sp"
+                    android:textColor="?attr/color_main2_600"
+                    android:inputType="phone"
+                    android:drawableStart="@drawable/separator"
+                    android:drawablePadding="10dp"
+                    android:hint="@string/phone_number"
+                    android:background="@color/transparent_color"
+                    app:layout_constraintWidth_max="@dimen/text_input_max_width"
+                    app:layout_constraintTop_toBottomOf="@id/phone_number_label"
+                    app:layout_constraintBottom_toTopOf="@id/phone_number_error"
+                    app:layout_constraintStart_toEndOf="@id/prefix_caret"
+                    app:layout_constraintEnd_toEndOf="@id/username"
+                    bind:ignore="RtlSymmetry" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style_600"
+                    android:visibility="@{viewModel.phoneNumberError.length() == 0 ? View.GONE : View.VISIBLE, default=gone}"
+                    android:id="@+id/phone_number_error"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.phoneNumberError, default=`Error`}"
+                    android:textSize="13sp"
+                    android:textColor="?attr/color_danger_500"
+                    app:layout_constraintTop_toBottomOf="@id/phone_number"
+                    app:layout_constraintBottom_toTopOf="@id/password_label"
+                    app:layout_constraintStart_toStartOf="@id/prefix"
+                    app:layout_constraintEnd_toEndOf="@id/phone_number"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/header_style"
+                    android:id="@+id/password_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@{@string/password + `*`}"
+                    app:layout_constraintTop_toBottomOf="@id/phone_number_error"
+                    app:layout_constraintBottom_toTopOf="@id/password"
+                    app:layout_constraintStart_toStartOf="@id/password"/>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    style="@style/default_text_style"
+                    android:id="@+id/password"
+                    android:enabled="@{viewModel.pushNotificationsAvailable &amp;&amp; !viewModel.lockUsernameAndPassword}"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:text="@={viewModel.password, default=`johndoe`}"
+                    android:textSize="14sp"
+                    android:textColor="?attr/color_main2_600"
+                    android:background="@drawable/edit_text_background"
+                    android:hint="@string/password"
+                    passwordInputType="@{viewModel.showPassword ? InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD : InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD, default=textPassword}"
+                    app:layout_constraintWidth_max="@dimen/text_input_max_width"
+                    app:layout_constraintTop_toBottomOf="@id/password_label"
+                    app:layout_constraintBottom_toTopOf="@id/password_error"
+                    app:layout_constraintStart_toStartOf="@id/title"
+                    app:layout_constraintEnd_toEndOf="@id/title"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style_600"
+                    android:visibility="@{viewModel.passwordError.length() == 0 ? View.GONE : View.VISIBLE, default=gone}"
+                    android:id="@+id/password_error"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.passwordError, default=`Error`}"
+                    android:textSize="13sp"
+                    android:textColor="?attr/color_danger_500"
+                    app:layout_constraintTop_toBottomOf="@id/password"
+                    app:layout_constraintBottom_toTopOf="@id/create"
+                    app:layout_constraintStart_toStartOf="@id/password"
+                    app:layout_constraintEnd_toEndOf="@id/password"/>
+
+                <ImageView
+                    android:onClick="@{() -> viewModel.toggleShowPassword()}"
+                    android:id="@+id/eye"
+                    android:layout_width="@dimen/icon_size"
+                    android:layout_height="0dp"
+                    android:padding="4dp"
+                    android:layout_marginEnd="20dp"
+                    android:contentDescription="@string/content_description_toggle_password_visibility"
+                    android:src="@{viewModel.showPassword ? @drawable/eye_slash : @drawable/eye, default=@drawable/eye}"
+                    app:tint="?attr/color_main2_500"
+                    app:layout_constraintEnd_toEndOf="@id/password"
+                    app:layout_constraintTop_toTopOf="@id/password"
+                    app:layout_constraintBottom_toBottomOf="@id/password" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:onClick="@{() -> viewModel.phoneNumberConfirmedByUser()}"
+                    android:enabled="@{viewModel.createEnabled &amp;&amp; viewModel.pushNotificationsAvailable &amp;&amp; !viewModel.operationInProgress, default=false}"
+                    style="@style/primary_button_label_style"
+                    android:id="@+id/create"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="@string/assistant_account_create"
+                    app:layout_constraintWidth_max="@dimen/button_max_width"
+                    app:layout_constraintTop_toBottomOf="@id/password_error"
+                    app:layout_constraintBottom_toTopOf="@id/create_email_account"
+                    app:layout_constraintStart_toStartOf="@id/title"
+                    app:layout_constraintEnd_toEndOf="@id/title" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style"
+                    android:id="@+id/create_email_account_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/assistant_create_account_using_email_on_our_web_platform"
+                    android:textSize="14sp"
+                    android:textColor="?attr/color_main2_700"
+                    app:layout_constraintTop_toTopOf="@id/create_email_account"
+                    app:layout_constraintBottom_toBottomOf="@id/create_email_account"
+                    app:layout_constraintStart_toStartOf="@id/title"
+                    app:layout_constraintEnd_toStartOf="@id/create_email_account"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:onClick="@{openSubscribeWebPageClickListener}"
+                    style="@style/default_text_style_600"
+                    android:id="@+id/create_email_account"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="32dp"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:text="@string/assistant_web_platform_link"
+                    android:textSize="13sp"
+                    android:textColor="@color/secondary_button_label_color"
+                    android:gravity="center"
+                    android:background="@drawable/secondary_button_background"
+                    app:layout_constraintStart_toEndOf="@id/create_email_account_label"
+                    app:layout_constraintTop_toBottomOf="@id/create"
+                    app:layout_constraintBottom_toTopOf="@id/mountains" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style"
+                    android:id="@+id/already_an_account"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:text="@string/assistant_already_have_an_account"
+                    android:textSize="14sp"
+                    android:textColor="?attr/color_main2_700"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintEnd_toStartOf="@id/login"
+                    app:layout_constraintTop_toTopOf="@id/login"
+                    app:layout_constraintBottom_toBottomOf="@id/login"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:onClick="@{loginClickListener}"
+                    style="@style/primary_button_label_style"
+                    android:id="@+id/login"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="40dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:text="@string/assistant_account_login"
+                    app:layout_constraintVertical_bias="1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/title"
+                    app:layout_constraintBottom_toBottomOf="@id/title"/>
+
+                <ImageView
+                    android:id="@+id/mountains"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/mountains"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@null"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:tint="?attr/color_main1_500" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+        <include
+            layout="@layout/operation_in_progress"
+            bind:visibility="@{viewModel.operationInProgress}" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</layout>

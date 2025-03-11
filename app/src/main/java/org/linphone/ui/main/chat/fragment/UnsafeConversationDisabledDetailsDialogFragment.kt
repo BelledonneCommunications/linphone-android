@@ -29,14 +29,14 @@ import androidx.annotation.UiThread
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import org.linphone.databinding.ChatConversationUnsafeDetailsBottomSheetBinding
+import org.linphone.databinding.ChatConversationUnsafeDisabledDetailsBottomSheetBinding
 
 @UiThread
-class UnsafeConversationDetailsDialogFragment(
+class UnsafeConversationDisabledDetailsDialogFragment(
     private val onDismiss: (() -> Unit)? = null
 ) : BottomSheetDialogFragment() {
     companion object {
-        const val TAG = "UnsafeConversationDetailsDialogFragment"
+        const val TAG = "UnsafeConversationDisabledDetailsDialogFragment"
     }
 
     override fun onCancel(dialog: DialogInterface) {
@@ -62,7 +62,7 @@ class UnsafeConversationDetailsDialogFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = ChatConversationUnsafeDetailsBottomSheetBinding.inflate(layoutInflater)
+        val view = ChatConversationUnsafeDisabledDetailsBottomSheetBinding.inflate(layoutInflater)
         return view.root
     }
 }

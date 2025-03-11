@@ -24,10 +24,6 @@ import androidx.fragment.app.Fragment
 
 @UiThread
 abstract class GenericFragment : Fragment() {
-    companion object {
-        private const val TAG = "[Generic Fragment]"
-    }
-
     protected fun observeToastEvents(viewModel: GenericViewModel) {
         viewModel.showRedToastEvent.observe(viewLifecycleOwner) {
             it.consume { pair ->

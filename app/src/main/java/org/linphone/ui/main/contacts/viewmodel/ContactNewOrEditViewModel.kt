@@ -19,7 +19,6 @@
  */
 package org.linphone.ui.main.contacts.viewmodel
 
-import android.net.Uri
 import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
@@ -42,6 +41,7 @@ import org.linphone.ui.GenericViewModel
 import org.linphone.ui.main.contacts.model.NewOrEditNumberOrAddressModel
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
+import androidx.core.net.toUri
 
 class ContactNewOrEditViewModel
     @UiThread
@@ -145,14 +145,7 @@ class ContactNewOrEditViewModel
         val organization = company.value.orEmpty().trim()
         if (fn.isEmpty() && ln.isEmpty() && organization.isEmpty()) {
             Log.e("$TAG At least a mandatory field wasn't filled, aborting save")
-            showRedToastEvent.postValue(
-                Event(
-                    Pair(
-                        R.string.contact_editor_mandatory_field_not_filled_toast,
-                        R.drawable.warning_circle
-                    )
-                )
-            )
+            showRedToast(R.string.contact_editor_mandatory_field_not_filled_toast, R.drawable.warning_circle)
             return
         }
 
@@ -190,7 +183,7 @@ class ContactNewOrEditViewModel
                             isImage = true,
                             overrideExisting = true
                         )
-                        val oldFile = Uri.parse(FileUtils.getProperFilePath(picture))
+                        val oldFile = FileUtils.getProperFilePath(picture).toUri()
                         viewModelScope.launch {
                             FileUtils.copyFile(oldFile, newFile)
                         }

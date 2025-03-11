@@ -134,6 +134,8 @@ adb logcat -d | ndk-stack -sym ./libs-debug/`adb shell getprop ro.product.cpu.ab
 ```
 Warning: This command won't print anything until you reproduce the crash!
 
+Starting [NDK r29](https://github.com/android/ndk/wiki/Changelog-r29) you will be able to directly use the ```libs-debug.zip``` file in ```ndk-stack -sym``` argument.
+
 ## Create an APK with a different package name
 
 Simply edit the ```app/build.gradle.kts``` file and change the value of the ```packageName``` variable.

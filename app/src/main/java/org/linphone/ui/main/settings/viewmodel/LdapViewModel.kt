@@ -139,14 +139,7 @@ class LdapViewModel : GenericViewModel() {
                 val server = serverUrl.value.orEmpty().trim()
                 if (server.isEmpty()) {
                     Log.e("$TAG Server field can't be empty!")
-                    showRedToastEvent.postValue(
-                        Event(
-                            Pair(
-                                R.string.settings_contacts_ldap_empty_server_error_toast,
-                                R.drawable.warning_circle
-                            )
-                        )
-                    )
+                    showRedToast(R.string.settings_contacts_ldap_empty_server_error_toast, R.drawable.warning_circle)
                     return@postOnCoreThread
                 }
 
@@ -181,11 +174,7 @@ class LdapViewModel : GenericViewModel() {
                 ldapServerOperationSuccessfulEvent.postValue(Event(true))
             } catch (e: Exception) {
                 Log.e("$TAG Exception while creating LDAP: $e")
-                showRedToastEvent.postValue(
-                    Event(
-                        Pair(R.string.settings_contacts_ldap_error_toast, R.drawable.warning_circle)
-                    )
-                )
+                showRedToast(R.string.settings_contacts_ldap_error_toast, R.drawable.warning_circle)
             }
         }
     }

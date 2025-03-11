@@ -41,6 +41,8 @@ class MediaListViewModel
 
     val currentlyDisplayedFileDateTime = MutableLiveData<String>()
 
+    val isCurrentlyDisplayedFileFromEphemeralMessage = MutableLiveData<Boolean>()
+
     private lateinit var temporaryModel: FileModel
 
     override fun beforeNotifyingChatRoomFound(sameOne: Boolean) {
@@ -57,9 +59,9 @@ class MediaListViewModel
     }
 
     @UiThread
-    fun initTempModel(path: String, timestamp: Long, isEncrypted: Boolean, originalPath: String) {
+    fun initTempModel(path: String, timestamp: Long, isEncrypted: Boolean, originalPath: String, isFromEphemeralMessage: Boolean) {
         val name = FileUtils.getNameFromFilePath(path)
-        val model = FileModel(path, name, 0, timestamp, isEncrypted, originalPath)
+        val model = FileModel(path, name, 0, timestamp, isEncrypted, originalPath, isFromEphemeralMessage)
         temporaryModel = model
         Log.i("$TAG Temporary model for file [$name] created, use it while other media for conversation are being loaded")
         mediaList.postValue(arrayListOf(model))
@@ -68,7 +70,7 @@ class MediaListViewModel
     @WorkerThread
     private fun loadMediaList() {
         val list = arrayListOf<FileModel>()
-        val chatRoomId = LinphoneUtils.getChatRoomId(chatRoom)
+        val chatRoomId = LinphoneUtils.getConversationId(chatRoom)
         Log.i("$TAG Loading media contents for conversation [$chatRoomId]")
 
         val media = chatRoom.mediaContents
@@ -90,20 +92,37 @@ class MediaListViewModel
                 Log.d(
                     "$TAG [VFS] Content is encrypted, requesting plain file path for file [${mediaContent.filePath}]"
                 )
-                mediaContent.exportPlainFile()
+                val exportedPath = mediaContent.exportPlainFile()
+                Log.i("$TAG Media original path is [$originalPath], newly exported plain file path is [$exportedPath]")
+                exportedPath
             } else {
                 originalPath
             }
+
             val name = mediaContent.name.orEmpty()
             val size = mediaContent.size.toLong()
             val timestamp = mediaContent.creationTimestamp
             if (path.isNotEmpty() && name.isNotEmpty()) {
-                val model = FileModel(path, name, size, timestamp, isEncrypted, originalPath)
+                val messageId = mediaContent.relatedChatMessageId
+                val ephemeral = if (messageId != null) {
+                    val chatMessage = chatRoom.findMessage(messageId)
+                    if (chatMessage == null) {
+                        Log.w("$TAG Failed to find message using ID [$messageId] related to this content, can't get real info about being related to ephemeral message")
+                    }
+                    chatMessage?.isEphemeral ?: chatRoom.isEphemeralEnabled
+                } else {
+                    Log.e("$TAG No chat message ID related to this content, can't get real info about being related to ephemeral message")
+                    chatRoom.isEphemeralEnabled
+                }
+
+                val model = FileModel(path, name, size, timestamp, isEncrypted, originalPath, ephemeral)
                 list.add(model)
+            } else {
+                Log.w("$TAG Skipping content because either name [$name] or path [$path] is empty")
             }
 
             if (tempFilePath.isNotEmpty() && !tempFileModelFound) {
-                if (path == tempFilePath) {
+                if (path == tempFilePath || (isEncrypted && originalPath == temporaryModel.originalPath)) {
                     tempFileModelFound = true
                 }
             }

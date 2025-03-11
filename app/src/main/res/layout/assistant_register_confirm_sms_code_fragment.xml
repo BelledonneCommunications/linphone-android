@@ -34,29 +34,15 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
 
-            <ImageView
-                android:id="@+id/image"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:src="@drawable/mountains"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                android:contentDescription="@null"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/back"
-                app:layout_constraintBottom_toBottomOf="@id/title"
-                app:tint="?attr/color_main1_500"/>
-
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/assistant_page_title_style"
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="100dp"
-                android:paddingBottom="30dp"
-                android:text="@string/assistant_account_register"
-                app:layout_constraintTop_toTopOf="parent"
+                android:text="@string/assistant_account_creation_sms_confirmation_title"
+                android:textColor="?attr/color_text"
+                app:layout_constraintTop_toTopOf="@id/back"
+                app:layout_constraintBottom_toBottomOf="@id/back"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -194,6 +180,19 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/code_first_digit" />
+
+            <ImageView
+                android:id="@+id/mountains"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/mountains"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:contentDescription="@null"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:tint="?attr/color_main1_500" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -20,7 +20,6 @@
 package org.linphone.ui.main.sso.viewmodel
 
 import android.content.Intent
-import android.net.Uri
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -36,22 +35,26 @@ import net.openid.appauth.ResponseTypeValues
 import org.json.JSONObject
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.R
 import org.linphone.core.Factory
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.TimestampUtils
+import androidx.core.net.toUri
 
-class SingleSignOnViewModel : GenericViewModel() {
+class SingleSignOnViewModel
+    @UiThread
+    constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Single Sign On ViewModel]"
-
-        private const val CLIENT_ID = "linphone"
-        private const val REDIRECT_URI = "org.linphone:/openidcallback"
     }
 
     val singleSignOnProcessCompletedEvent = MutableLiveData<Event<Boolean>>()
+
+    private var clientId: String
+    private val redirectUri: String
 
     private var singleSignOnUrl = ""
 
@@ -68,14 +71,37 @@ class SingleSignOnViewModel : GenericViewModel() {
     private lateinit var authState: AuthState
     private lateinit var authService: AuthorizationService
 
+    init {
+        clientId = corePreferences.singleSignOnClientId
+
+        val openIdCallbackScheme = coreContext.context.getString(R.string.linphone_openid_callback_scheme)
+        redirectUri = "$openIdCallbackScheme:/openidcallback"
+
+        Log.i("$TAG Using client ID [$clientId] and redirect URI [$redirectUri]")
+    }
+
     @UiThread
     fun setUp(ssoUrl: String, user: String = "") {
         viewModelScope.launch {
             singleSignOnUrl = ssoUrl
             username = user
 
+            try {
+                val parsedUrl = ssoUrl.toUri()
+                val urlClientId = parsedUrl.getQueryParameter("client_id")
+                if (urlClientId.isNullOrEmpty()) {
+                    Log.i("$TAG No client_id query parameter in URL, using value from config [$clientId]")
+                } else {
+                    Log.w("$TAG client_id query parameter found in URL, overriding value from config [$clientId] to [$urlClientId]")
+                    clientId = urlClientId
+                }
+
+            } catch (e: Exception) {
+                Log.e("$TAG Failed to parse SSO URL [$singleSignOnUrl]: $e")
+            }
+
             Log.i(
-                "$TAG Setting up SSO environment for username [$username] and URL [$singleSignOnUrl], redirect URI is [$REDIRECT_URI]"
+                "$TAG Setting up SSO environment for username [$username] and URL [$singleSignOnUrl]"
             )
             authState = getAuthState()
             updateTokenInfo()
@@ -102,7 +128,7 @@ class SingleSignOnViewModel : GenericViewModel() {
     private fun singleSignOn() {
         Log.i("$TAG Fetch from issuer [$singleSignOnUrl]")
         AuthorizationServiceConfiguration.fetchFromIssuer(
-            Uri.parse(singleSignOnUrl),
+            singleSignOnUrl.toUri(),
             AuthorizationServiceConfiguration.RetrieveConfigurationCallback { serviceConfiguration, ex ->
                 if (ex != null) {
                     Log.e(
@@ -128,9 +154,9 @@ class SingleSignOnViewModel : GenericViewModel() {
 
                 val authRequestBuilder = AuthorizationRequest.Builder(
                     serviceConfiguration, // the authorization service configuration
-                    CLIENT_ID, // the client ID, typically pre-registered and static
+                    clientId, // the client ID, typically pre-registered and static
                     ResponseTypeValues.CODE, // the response_type value: we want a code
-                    Uri.parse(REDIRECT_URI) // the redirect URI to which the auth response is sent
+                    redirectUri.toUri() // the redirect URI to which the auth response is sent
                 )
 
                 // Needed for SDK to be able to refresh the token, otherwise it will return
@@ -346,7 +372,7 @@ class SingleSignOnViewModel : GenericViewModel() {
                     )
                 }
 
-                authInfo.clientId = CLIENT_ID
+                authInfo.clientId = clientId
                 core.addAuthInfo(authInfo)
 
                 Log.i(

@@ -38,7 +38,7 @@ import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils
 
-class AAScreen(context: CarContext) : Screen(context) {
+class AndroidAutoScreen(context: CarContext) : Screen(context) {
     companion object {
         private const val TAG = "[Android Auto Screen]"
     }

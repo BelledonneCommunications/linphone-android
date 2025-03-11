@@ -81,6 +81,19 @@
             app:layout_constraintTop_toBottomOf="@id/title"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
+        <org.linphone.ui.call.view.RoundCornersTextureView
+            android:id="@+id/local_preview_video_surface"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            app:alignTopRight="true"
+            app:displayMode="black_bars"
+            roundCornersRadius="@dimen/call_round_corners_texture_view_radius"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_max="@dimen/call_video_preview_max_size"
+            app:layout_constraintWidth_max="@dimen/call_video_preview_max_size" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

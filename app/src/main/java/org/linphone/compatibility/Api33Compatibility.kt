@@ -26,8 +26,6 @@ import androidx.annotation.RequiresApi
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 class Api33Compatibility {
     companion object {
-        private const val TAG = "[API 33 Compatibility]"
-
         fun getAllRequiredPermissionsArray(): Array<String> {
             return arrayOf(
                 Manifest.permission.POST_NOTIFICATIONS,

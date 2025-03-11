@@ -34,6 +34,7 @@ import org.linphone.ui.GenericViewModel
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.TimestampUtils
+import org.linphone.R
 
 class MediaViewModel
     @UiThread
@@ -163,33 +164,40 @@ class MediaViewModel
     private fun initMediaPlayer() {
         isMediaPlaying.value = false
 
-        mediaPlayer = MediaPlayer().apply {
-            setAudioAttributes(
-                AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).setUsage(
-                    AudioAttributes.USAGE_MEDIA
-                ).build()
-            )
-            setDataSource(filePath)
-            setOnCompletionListener {
-                Log.i("$TAG Media player reached the end of file")
-                isMediaPlaying.postValue(false)
-                position.postValue(0)
-                stopUpdatePlaybackPosition()
+        try {
+            mediaPlayer = MediaPlayer().apply {
+                setAudioAttributes(
+                    AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .setUsage(
+                            AudioAttributes.USAGE_MEDIA
+                        ).build()
+                )
+                setDataSource(filePath)
+                setOnCompletionListener {
+                    Log.i("$TAG Media player reached the end of file")
+                    isMediaPlaying.postValue(false)
+                    position.postValue(0)
+                    stopUpdatePlaybackPosition()
 
-                // Leave full screen when playback is done
-                fullScreenMode.postValue(false)
-                changeFullScreenModeEvent.postValue(Event(false))
+                    // Leave full screen when playback is done
+                    fullScreenMode.postValue(false)
+                    changeFullScreenModeEvent.postValue(Event(false))
+                }
+                setOnVideoSizeChangedListener { mediaPlayer, width, height ->
+                    videoSizeChangedEvent.postValue(Event(Pair(width, height)))
+                }
+                try {
+                    prepare()
+                } catch (e: Exception) {
+                    fullScreenMode.postValue(false)
+                    changeFullScreenModeEvent.postValue(Event(false))
+                    Log.e("$TAG Failed to prepare video file: $e")
+                }
             }
-            setOnVideoSizeChangedListener { mediaPlayer, width, height ->
-                videoSizeChangedEvent.postValue(Event(Pair(width, height)))
-            }
-            try {
-                prepare()
-            } catch (e: Exception) {
-                fullScreenMode.postValue(false)
-                changeFullScreenModeEvent.postValue(Event(false))
-                Log.e("$TAG Failed to prepare video file: $e")
-            }
+        } catch (e: Exception) {
+            Log.e("$TAG Failed to initialize media player for file [$filePath]: $e")
+            showRedToast(R.string.media_player_generic_error_toast, R.drawable.warning_circle)
+            return
         }
 
         val durationInMillis = mediaPlayer.duration

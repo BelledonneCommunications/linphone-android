@@ -24,12 +24,11 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import org.linphone.core.tools.Log
+import androidx.core.net.toUri
 
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 class Api34Compatibility {
@@ -69,10 +68,10 @@ class Api34Compatibility {
             val intent = Intent()
             // See https://developer.android.com/reference/android/provider/Settings#ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT
             intent.action = Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT
-            intent.data = Uri.parse("package:${context.packageName}")
+            intent.data = "package:${context.packageName}".toUri()
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
             Log.i("$TAG Starting ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT")
-            ContextCompat.startActivity(context, intent, null)
+            context.startActivity(intent, null)
         }
     }
 }

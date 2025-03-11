@@ -24,7 +24,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.view.LayoutInflater
@@ -52,6 +51,7 @@ import org.linphone.utils.AppUtils
 import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
+import androidx.core.net.toUri
 
 @UiThread
 class ContactFragment : SlidingPaneChildFragment() {
@@ -171,7 +171,7 @@ class ContactFragment : SlidingPaneChildFragment() {
         viewModel.openNativeContactEditor.observe(viewLifecycleOwner) {
             it.consume { uri ->
                 val editIntent = Intent(Intent.ACTION_EDIT).apply {
-                    setDataAndType(Uri.parse(uri), ContactsContract.Contacts.CONTENT_ITEM_TYPE)
+                    setDataAndType(uri.toUri(), ContactsContract.Contacts.CONTENT_ITEM_TYPE)
                     putExtra("finishActivityOnSaveCompleted", true)
                 }
                 startActivity(editIntent)
@@ -188,9 +188,9 @@ class ContactFragment : SlidingPaneChildFragment() {
         }
 
         viewModel.goToConversationEvent.observe(viewLifecycleOwner) {
-            it.consume { pair ->
-                Log.i("$TAG Going to conversation [${pair.first}][${pair.second}]")
-                sharedViewModel.showConversationEvent.value = Event(pair)
+            it.consume { conversationId ->
+                Log.i("$TAG Going to conversation [$conversationId]")
+                sharedViewModel.showConversationEvent.value = Event(conversationId)
                 sharedViewModel.navigateToConversationsEvent.value = Event(true)
             }
         }
@@ -287,7 +287,7 @@ class ContactFragment : SlidingPaneChildFragment() {
         )
         val smsIntent: Intent = Intent().apply {
             action = Intent.ACTION_SENDTO
-            data = Uri.parse("smsto:$number")
+            data = "smsto:$number".toUri()
             putExtra("address", number)
             putExtra("sms_body", smsBody)
         }
@@ -319,7 +319,7 @@ class ContactFragment : SlidingPaneChildFragment() {
 
     private fun showConfirmTrustCallDialog(contactName: String, deviceSipUri: String) {
         val label = AppUtils.getFormattedString(
-            org.linphone.R.string.contact_dialog_increase_trust_level_message,
+            R.string.contact_dialog_increase_trust_level_message,
             contactName,
             deviceSipUri
         )

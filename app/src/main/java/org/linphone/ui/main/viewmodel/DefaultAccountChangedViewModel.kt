@@ -25,10 +25,16 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Account
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
+import org.linphone.core.GlobalState
+import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
 import org.linphone.utils.Event
 
 open class DefaultAccountChangedViewModel : GenericViewModel() {
+    companion object {
+        private const val TAG = "[Default Account Changed ViewModel]"
+    }
+
     val defaultAccountChangedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -37,6 +43,14 @@ open class DefaultAccountChangedViewModel : GenericViewModel() {
         @WorkerThread
         override fun onDefaultAccountChanged(core: Core, account: Account?) {
             defaultAccountChangedEvent.postValue(Event(true))
+        }
+
+        @WorkerThread
+        override fun onGlobalStateChanged(core: Core, state: GlobalState?, message: String) {
+            if (core.globalState == GlobalState.On) {
+                Log.i("$TAG Global state is [${core.globalState}], reload default account")
+                defaultAccountChangedEvent.postValue(Event(true))
+            }
         }
     }
 

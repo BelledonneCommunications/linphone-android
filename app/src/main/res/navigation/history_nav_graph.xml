@@ -48,10 +48,7 @@
         android:label="ConferenceConversationFragment"
         tools:layout="@layout/chat_conversation_fragment">
         <argument
-            android:name="localSipUri"
-            app:argType="string" />
-        <argument
-            android:name="remoteSipUri"
+            android:name="conversationId"
             app:argType="string" />
     </fragment>
 

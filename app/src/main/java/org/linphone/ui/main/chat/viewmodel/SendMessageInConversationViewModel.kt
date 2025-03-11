@@ -154,8 +154,10 @@ class SendMessageInConversationViewModel
             isFileTransferServerAvailable.postValue(!core.fileTransferServer.isNullOrEmpty())
         }
 
+        isKeyboardOpen.value = false
         isEmojiPickerOpen.value = false
         areFilePickersOpen.value = false
+        isVoiceRecording.value = false
         isPlayingVoiceRecord.value = false
         isCallConversation.value = false
         maxNumberOfAttachmentsReached.value = false
@@ -191,6 +193,7 @@ class SendMessageInConversationViewModel
 
     @UiThread
     fun configureChatRoom(room: ChatRoom) {
+        Log.i("$TAG Chat room configured")
         chatRoom = room
         coreContext.postOnCoreThread {
             chatRoom.addListener(chatRoomListener)
@@ -247,6 +250,8 @@ class SendMessageInConversationViewModel
     @UiThread
     fun sendMessage() {
         coreContext.postOnCoreThread {
+            val isBasicChatRoom: Boolean = chatRoom.hasCapability(ChatRoom.Capabilities.Basic.toInt())
+
             val messageToReplyTo = chatMessageToReplyTo
             val message = if (messageToReplyTo != null) {
                 Log.i("$TAG Sending message as reply to [${messageToReplyTo.messageId}]")
@@ -254,10 +259,12 @@ class SendMessageInConversationViewModel
             } else {
                 chatRoom.createEmptyMessage()
             }
+            var contentAdded = false
 
             val toSend = textToSend.value.orEmpty().trim()
             if (toSend.isNotEmpty()) {
                 message.addUtf8TextContent(toSend)
+                contentAdded = true
             }
 
             if (isVoiceRecording.value == true && voiceMessageRecorder.file != null) {
@@ -267,7 +274,14 @@ class SendMessageInConversationViewModel
                     Log.i(
                         "$TAG Voice recording content created, file name is ${content.name} and duration is ${content.fileDuration}"
                     )
-                    message.addContent(content)
+                    if (isBasicChatRoom && contentAdded) {
+                        val voiceMessage = chatRoom.createEmptyMessage()
+                        voiceMessage.addContent(content)
+                        voiceMessage.send()
+                    } else {
+                        message.addContent(content)
+                        contentAdded = true
+                    }
                 } else {
                     Log.e("$TAG Voice recording content couldn't be created!")
                 }
@@ -292,7 +306,14 @@ class SendMessageInConversationViewModel
                     // Let the file body handler take care of the upload
                     content.filePath = attachment.path
 
-                    message.addFileContent(content)
+                    if (isBasicChatRoom && contentAdded) {
+                        val fileMessage = chatRoom.createEmptyMessage()
+                        fileMessage.addFileContent(content)
+                        fileMessage.send()
+                    } else {
+                        message.addFileContent(content)
+                        contentAdded = true
+                    }
                 }
             }
 
@@ -318,6 +339,16 @@ class SendMessageInConversationViewModel
             attachments.postValue(attachmentsList)
 
             chatMessageToReplyTo = null
+            maxNumberOfAttachmentsReached.postValue(false)
+        }
+    }
+
+    @UiThread
+    fun notifyChatMessageIsBeingComposed() {
+        coreContext.postOnCoreThread {
+            if (::chatRoom.isInitialized) {
+                chatRoom.compose()
+            }
         }
     }
 
@@ -353,14 +384,7 @@ class SendMessageInConversationViewModel
             Log.w(
                 "$TAG Max number of attachments [$MAX_FILES_TO_ATTACH] reached, file [$file] won't be attached"
             )
-            showRedToastEvent.postValue(
-                Event(
-                    Pair(
-                        R.string.conversation_maximum_number_of_attachments_reached,
-                        R.drawable.warning_circle
-                    )
-                )
-            )
+            showRedToast(R.string.conversation_maximum_number_of_attachments_reached, R.drawable.warning_circle)
             viewModelScope.launch {
                 Log.i("$TAG Deleting temporary file [$file]")
                 FileUtils.deleteFile(file)
@@ -373,7 +397,7 @@ class SendMessageInConversationViewModel
 
         val fileName = FileUtils.getNameFromFilePath(file)
         val timestamp = System.currentTimeMillis() / 1000
-        val model = FileModel(file, fileName, 0, timestamp, false, file) { model ->
+        val model = FileModel(file, fileName, 0, timestamp, false, file, false) { model ->
             removeAttachment(model.path)
         }
 
@@ -409,7 +433,7 @@ class SendMessageInConversationViewModel
         attachments.value = list
         maxNumberOfAttachmentsReached.value = list.size >= MAX_FILES_TO_ATTACH
 
-        if (list.isEmpty) {
+        if (list.isEmpty()) {
             isFileAttachmentsListOpen.value = false
         }
     }
@@ -423,9 +447,7 @@ class SendMessageInConversationViewModel
                 Log.i("$TAG Sending forwarded message")
                 forwardedMessage.send()
 
-                showGreenToastEvent.postValue(
-                    Event(Pair(R.string.conversation_message_forwarded_toast, R.drawable.forward))
-                )
+                showGreenToast(R.string.conversation_message_forwarded_toast, R.drawable.forward)
             }
         }
     }
@@ -580,14 +602,7 @@ class SendMessageInConversationViewModel
                         "$TAG Max duration for voice recording exceeded (${maxVoiceRecordDuration}ms), stopping."
                     )
                     stopVoiceRecorder()
-                    showRedToastEvent.postValue(
-                        Event(
-                            Pair(
-                                R.string.conversation_voice_recording_max_duration_reached_toast,
-                                R.drawable.warning_circle
-                            )
-                        )
-                    )
+                    showRedToast(R.string.conversation_voice_recording_max_duration_reached_toast, R.drawable.warning_circle)
                 }
             }
         }.launchIn(viewModelScope)
@@ -652,11 +667,7 @@ class SendMessageInConversationViewModel
         val lowMediaVolume = AudioUtils.isMediaVolumeLow(context)
         if (lowMediaVolume) {
             Log.w("$TAG Media volume is low, notifying user as they may not hear voice message")
-            showRedToastEvent.postValue(
-                Event(
-                    Pair(R.string.media_playback_low_volume_warning_toast, R.drawable.speaker_slash)
-                )
-            )
+            showRedToast(R.string.media_playback_low_volume_warning_toast, R.drawable.speaker_slash)
         }
 
         if (voiceRecordAudioFocusRequest == null) {

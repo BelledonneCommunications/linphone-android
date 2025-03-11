@@ -31,10 +31,6 @@ class SelectedAddressModel
     val avatarModel: ContactAvatarModel?,
     private val onRemovedFromSelection: ((model: SelectedAddressModel) -> Unit)? = null
 ) {
-    companion object {
-        private const val TAG = "[Selected Address Model]"
-    }
-
     @UiThread
     fun removeFromSelection() {
         onRemovedFromSelection?.invoke(this)

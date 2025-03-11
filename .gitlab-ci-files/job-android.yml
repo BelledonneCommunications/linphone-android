@@ -24,10 +24,9 @@ job-android:
 
   artifacts:
     paths:
-      - ./app/build/outputs/apk/debug/linphone-android-debug-*.apk
       - ./app/build/outputs/apk/release/linphone-android-release-*.apk
     when: always
-    expire_in: 1 week
+    expire_in: 1 day
 
 
 .scheduled-job-android:

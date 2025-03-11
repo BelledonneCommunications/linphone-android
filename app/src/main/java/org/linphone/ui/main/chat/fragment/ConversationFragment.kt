@@ -93,6 +93,7 @@ import org.linphone.utils.addCharacterAtPosition
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.setKeyboardInsetListener
 import org.linphone.utils.showKeyboard
+import androidx.core.net.toUri
 
 @UiThread
 open class ConversationFragment : SlidingPaneChildFragment() {
@@ -212,8 +213,11 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                 .viewTreeObserver
                 .removeOnGlobalLayoutListener(this)
 
-            if (::scrollListener.isInitialized) {
-                binding.eventsList.addOnScrollListener(scrollListener)
+            binding.root.setKeyboardInsetListener { keyboardVisible ->
+                sendMessageViewModel.isKeyboardOpen.value = keyboardVisible
+                if (keyboardVisible) {
+                    sendMessageViewModel.isEmojiPickerOpen.value = false
+                }
             }
 
             val unreadCount = viewModel.unreadMessagesCount.value ?: 0
@@ -275,14 +279,20 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         }
 
         override fun afterTextChanged(p0: Editable?) {
-            sendMessageViewModel.closeParticipantsList()
+            if (viewModel.isGroup.value == true) {
+                sendMessageViewModel.closeParticipantsList()
 
-            val split = p0.toString().split(" ")
-            for (part in split) {
-                if (part == "@") {
-                    Log.i("$TAG '@' found, opening participants list")
-                    sendMessageViewModel.openParticipantsList()
+                val split = p0.toString().split(" ")
+                for (part in split) {
+                    if (part == "@") {
+                        Log.i("$TAG '@' found, opening participants list")
+                        sendMessageViewModel.openParticipantsList()
+                    }
                 }
+            }
+
+            if (p0.toString().isNotEmpty()) {
+                sendMessageViewModel.notifyChatMessageIsBeingComposed()
             }
         }
     }
@@ -301,7 +311,9 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                 if (e.action == MotionEvent.ACTION_UP) {
                     if ((rv.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition() == 0) {
                         if (e.y >= 0 && e.y <= headerItemDecoration.getDecorationHeight(0)) {
-                            showEndToEndEncryptionDetailsBottomSheet()
+                            if (viewModel.isEndToEndEncrypted.value == true) {
+                                showEndToEndEncryptionDetailsBottomSheet()
+                            }
                             return true
                         }
                     }
@@ -471,14 +483,11 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         }
         RecyclerViewSwipeUtils(callbacks).attachToRecyclerView(binding.eventsList)
 
-        val localSipUri = args.localSipUri
-        val remoteSipUri = args.remoteSipUri
-        Log.i(
-            "$TAG Looking up for conversation with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
-        )
+        val conversationId = args.conversationId
+        Log.i("$TAG Looking up for conversation with conversation ID [$conversationId]")
         val chatRoom = sharedViewModel.displayedChatRoom
-        viewModel.findChatRoom(chatRoom, localSipUri, remoteSipUri)
-        Compatibility.setLocusIdInContentCaptureSession(binding.root, localSipUri, remoteSipUri)
+        viewModel.findChatRoom(chatRoom, conversationId)
+        Compatibility.setLocusIdInContentCaptureSession(binding.root, conversationId)
 
         viewModel.chatRoomFoundEvent.observe(viewLifecycleOwner) {
             it.consume { found ->
@@ -494,6 +503,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                     }
                 } else {
                     sendMessageViewModel.configureChatRoom(viewModel.chatRoom)
+                    adapter.setIsConversationSecured(viewModel.isEndToEndEncrypted.value == true)
 
                     // Wait for chat room to be ready before trying to forward a message in it
                     sharedViewModel.messageToForwardEvent.observe(viewLifecycleOwner) { event ->
@@ -575,6 +585,8 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         }
 
         viewModel.isEndToEndEncrypted.observe(viewLifecycleOwner) { encrypted ->
+            adapter.setIsConversationSecured(encrypted)
+
             if (encrypted) {
                 binding.eventsList.addItemDecoration(headerItemDecoration)
                 binding.eventsList.addOnItemTouchListener(listItemTouchListener)
@@ -690,7 +702,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         }
 
         binding.setWarningConversationDisabledClickListener {
-            showUnsafeConversationDetailsBottomSheet()
+            showUnsafeConversationDisabledDetailsBottomSheet()
         }
 
         binding.searchField.setOnEditorActionListener { view, actionId, _ ->
@@ -767,7 +779,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                 if (messageLongPressViewModel.visible.value == true) return@consume
                 Log.i("$TAG Requesting to open web browser on page [$url]")
                 try {
-                    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                    val browserIntent = Intent(Intent.ACTION_VIEW, url.toUri())
                     startActivity(browserIntent)
                 } catch (e: Exception) {
                     Log.e(
@@ -783,13 +795,6 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                 Log.i("$TAG Navigating to contact with ref key [$friendRefKey]")
                 sharedViewModel.navigateToContactsEvent.value = Event(true)
                 sharedViewModel.showContactEvent.value = Event(friendRefKey)
-            }
-        }
-
-        viewModel.isGroup.observe(viewLifecycleOwner) { group ->
-            if (group) {
-                Log.i("$TAG Adding text observer to message sending area")
-                binding.sendArea.messageToSend.addTextChangedListener(textObserver)
             }
         }
 
@@ -939,12 +944,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                 }
             })
 
-        binding.root.setKeyboardInsetListener { keyboardVisible ->
-            sendMessageViewModel.isKeyboardOpen.value = keyboardVisible
-            if (keyboardVisible) {
-                sendMessageViewModel.isEmojiPickerOpen.value = false
-            }
-        }
+        binding.sendArea.messageToSend.addTextChangedListener(textObserver)
 
         scrollListener = object : ConversationScrollListener(layoutManager) {
             @UiThread
@@ -984,6 +984,10 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         binding.eventsList
             .viewTreeObserver
             .addOnGlobalLayoutListener(globalLayoutObserver)
+
+        if (::scrollListener.isInitialized) {
+            binding.eventsList.addOnScrollListener(scrollListener)
+        }
 
         try {
             adapter.registerAdapterDataObserver(dataObserver)
@@ -1091,8 +1095,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         if (findNavController().currentDestination?.id == R.id.conversationFragment) {
             val action =
                 ConversationFragmentDirections.actionConversationFragmentToConversationInfoFragment(
-                    viewModel.localSipUri,
-                    viewModel.remoteSipUri
+                    viewModel.conversationId,
                 )
             findNavController().navigate(action)
         }
@@ -1112,12 +1115,12 @@ open class ConversationFragment : SlidingPaneChildFragment() {
 
         val bundle = Bundle()
         bundle.apply {
-            putString("localSipUri", viewModel.localSipUri)
-            putString("remoteSipUri", viewModel.remoteSipUri)
+            putString("conversationId", viewModel.conversationId)
             putString("path", path)
             putBoolean("isEncrypted", fileModel.isEncrypted)
             putLong("timestamp", fileModel.fileCreationTimestamp)
             putString("originalPath", fileModel.originalPath)
+            putBoolean("isFromEphemeralMessage", fileModel.isFromEphemeralMessage)
         }
         when (mimeType) {
             FileUtils.MimeType.Image, FileUtils.MimeType.Video, FileUtils.MimeType.Audio -> {
@@ -1198,8 +1201,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             if (findNavController().currentDestination?.id == R.id.conversationFragment) {
                 val action =
                     ConversationFragmentDirections.actionConversationFragmentToConversationMediaListFragment(
-                        localSipUri = viewModel.localSipUri,
-                        remoteSipUri = viewModel.remoteSipUri
+                        viewModel.conversationId
                     )
                 findNavController().navigate(action)
             }
@@ -1210,8 +1212,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             if (findNavController().currentDestination?.id == R.id.conversationFragment) {
                 val action =
                     ConversationFragmentDirections.actionConversationFragmentToConversationDocumentsListFragment(
-                        localSipUri = viewModel.localSipUri,
-                        remoteSipUri = viewModel.remoteSipUri
+                        viewModel.conversationId
                     )
                 findNavController().navigate(action)
             }
@@ -1420,13 +1421,13 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         bottomSheetDialog = e2eEncryptionDetailsBottomSheet
     }
 
-    private fun showUnsafeConversationDetailsBottomSheet() {
-        val unsafeConversationDetailsBottomSheet = UnsafeConversationDetailsDialogFragment()
-        unsafeConversationDetailsBottomSheet.show(
+    private fun showUnsafeConversationDisabledDetailsBottomSheet() {
+        val unsafeConversationDisabledDetailsBottomSheet = UnsafeConversationDisabledDetailsDialogFragment()
+        unsafeConversationDisabledDetailsBottomSheet.show(
             requireActivity().supportFragmentManager,
-            UnsafeConversationDetailsDialogFragment.TAG
+            UnsafeConversationDisabledDetailsDialogFragment.TAG
         )
-        bottomSheetDialog = unsafeConversationDetailsBottomSheet
+        bottomSheetDialog = unsafeConversationDisabledDetailsBottomSheet
     }
 
     private fun showOpenOrExportFileDialog(path: String, mime: String, bundle: Bundle) {

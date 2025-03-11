@@ -87,7 +87,7 @@ class ConversationsContactsAndSuggestionsListAdapter :
 
     override fun getItemViewType(position: Int): Int {
         val model = getItem(position)
-        return if (model.localAddress != null) {
+        return if (model.conversationId.isNotEmpty()) {
             CONVERSATION_TYPE
         } else if (model.friend != null) {
             if (model.starred) {

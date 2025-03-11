@@ -90,6 +90,8 @@ class SettingsViewModel
 
     val autoDownloadEnabled = MutableLiveData<Boolean>()
 
+    val autoExportMediaToNativeGallery = MutableLiveData<Boolean>()
+
     val markAsReadWhenDismissingNotification = MutableLiveData<Boolean>()
 
     // Contacts settings
@@ -187,6 +189,7 @@ class SettingsViewModel
     val mediaEncryptionLabels = arrayListOf<String>()
     private val mediaEncryptionValues = arrayListOf<MediaEncryption>()
     val mediaEncryptionMandatory = MutableLiveData<Boolean>()
+    val createEndToEndEncryptedConferences = MutableLiveData<Boolean>()
     val acceptEarlyMedia = MutableLiveData<Boolean>()
     val allowOutgoingEarlyMedia = MutableLiveData<Boolean>()
 
@@ -245,7 +248,8 @@ class SettingsViewModel
         expandAudioCodecs.value = false
         expandVideoCodecs.value = false
 
-        isVfsEnabled.value = VFS.isEnabled(coreContext.context)
+        val vfsEnabled = VFS.isEnabled(coreContext.context)
+        isVfsEnabled.value = vfsEnabled
 
         val vibrator = coreContext.context.getSystemService(Vibrator::class.java)
         isVibrationAvailable.value = vibrator.hasVibrator()
@@ -284,6 +288,7 @@ class SettingsViewModel
             allowIpv6.postValue(core.isIpv6Enabled)
 
             autoDownloadEnabled.postValue(core.maxSizeForAutoDownloadIncomingFiles == 0)
+            autoExportMediaToNativeGallery.postValue(corePreferences.makePublicMediaFilesDownloaded && !vfsEnabled)
             markAsReadWhenDismissingNotification.postValue(
                 corePreferences.markConversationAsReadWhenDismissingMessageNotification
             )
@@ -330,11 +335,12 @@ class SettingsViewModel
             isVfsEnabled.postValue(enabled)
             if (enabled) {
                 Log.i("$TAG VFS has been enabled")
+                showGreenToast(R.string.settings_security_enable_vfs_success_toast, R.drawable.lock_key)
             }
         } else {
-            showRedToastEvent.postValue(Event(Pair(R.string.settings_security_enable_vfs_failure_toast, R.drawable.warning_circle)))
-            isVfsEnabled.postValue(false)
             Log.e("$TAG Failed to enable VFS!")
+            isVfsEnabled.postValue(false)
+            showRedToast(R.string.settings_security_enable_vfs_failure_toast, R.drawable.warning_circle)
         }
     }
 
@@ -435,6 +441,15 @@ class SettingsViewModel
         coreContext.postOnCoreThread { core ->
             core.maxSizeForAutoDownloadIncomingFiles = if (newValue) 0 else -1
             autoDownloadEnabled.postValue(newValue)
+        }
+    }
+
+    @UiThread
+    fun toggleAutoExportMediaFilesToNativeGallery() {
+        val newValue = autoExportMediaToNativeGallery.value == false
+        coreContext.postOnCoreThread { core ->
+            corePreferences.makePublicMediaFilesDownloaded = newValue
+            autoExportMediaToNativeGallery.postValue(newValue)
         }
     }
 
@@ -675,6 +690,7 @@ class SettingsViewModel
         }
 
         mediaEncryptionMandatory.postValue(core.isMediaEncryptionMandatory)
+        createEndToEndEncryptedConferences.postValue(corePreferences.createEndToEndEncryptedMeetingsAndGroupCalls)
         acceptEarlyMedia.postValue(corePreferences.acceptEarlyMedia)
         allowOutgoingEarlyMedia.postValue(corePreferences.allowOutgoingEarlyMedia)
     }
@@ -699,6 +715,16 @@ class SettingsViewModel
         coreContext.postOnCoreThread { core ->
             core.isMediaEncryptionMandatory = newValue
             mediaEncryptionMandatory.postValue(newValue)
+        }
+    }
+
+    @UiThread
+    fun toggleConferencesEndToEndEncryption() {
+        val newValue = createEndToEndEncryptedConferences.value == false
+
+        coreContext.postOnCoreThread { core ->
+            corePreferences.createEndToEndEncryptedMeetingsAndGroupCalls = newValue
+            createEndToEndEncryptedConferences.postValue(newValue)
         }
     }
 

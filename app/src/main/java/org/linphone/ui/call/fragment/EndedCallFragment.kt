@@ -20,7 +20,6 @@
 package org.linphone.ui.call.fragment
 
 import android.os.Bundle
-import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -67,16 +66,12 @@ class EndedCallFragment : GenericCallFragment() {
         callViewModel = requireActivity().run {
             ViewModelProvider(this)[CurrentCallViewModel::class.java]
         }
+        observeToastEvents(callViewModel)
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = callViewModel
 
         Log.i("$TAG Showing ended call fragment")
-
-        callViewModel.callDuration.observe(viewLifecycleOwner) { duration ->
-            binding.chronometer.base = SystemClock.elapsedRealtime() - (1000 * duration)
-            binding.chronometer.stop() // Do not start it and make sure it is stopped
-        }
     }
 
     override fun onResume() {
@@ -84,7 +79,7 @@ class EndedCallFragment : GenericCallFragment() {
 
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                if (callViewModel.terminatedByUsed) {
+                if (callViewModel.terminatedByUser) {
                     Log.i(
                         "$TAG Call terminated by user, waiting 1 second before finishing activity"
                     )

@@ -48,6 +48,7 @@ import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
+import androidx.core.net.toUri
 
 class ConversationViewModel
     @UiThread
@@ -71,6 +72,8 @@ class ConversationViewModel
     val isMuted = MutableLiveData<Boolean>()
 
     val isEndToEndEncrypted = MutableLiveData<Boolean>()
+
+    val isEndToEndEncryptionAvailable = MutableLiveData<Boolean>()
 
     val isGroup = MutableLiveData<Boolean>()
 
@@ -288,7 +291,7 @@ class ConversationViewModel
                 list.remove(found)
                 eventsList = list
                 updateEvents.postValue(Event(true))
-                isEmpty.postValue(eventsList.isEmpty)
+                isEmpty.postValue(eventsList.isEmpty())
             } else {
                 Log.e("$TAG Failed to find matching message in conversation events list")
             }
@@ -313,7 +316,8 @@ class ConversationViewModel
     }
 
     init {
-        coreContext.postOnCoreThread {
+        coreContext.postOnCoreThread { core ->
+            isEndToEndEncryptionAvailable.postValue(LinphoneUtils.isEndToEndEncryptedChatAvailable(core))
             coreContext.contactsManager.addListener(contactsListener)
         }
 
@@ -428,7 +432,7 @@ class ConversationViewModel
                 list.remove(found)
                 eventsList = list
                 updateEvents.postValue(Event(true))
-                isEmpty.postValue(eventsList.isEmpty)
+                isEmpty.postValue(eventsList.isEmpty())
             } else {
                 Log.e(
                     "$TAG Failed to find chat message id [${chatMessageModel.id}] in events list!"
@@ -470,7 +474,7 @@ class ConversationViewModel
     fun updateCurrentlyDisplayedConversation() {
         coreContext.postOnCoreThread {
             if (isChatRoomInitialized()) {
-                val id = LinphoneUtils.getChatRoomId(chatRoom)
+                val id = LinphoneUtils.getConversationId(chatRoom)
                 Log.i(
                     "$TAG Asking notifications manager not to notify messages for conversation [$id]"
                 )
@@ -524,7 +528,7 @@ class ConversationViewModel
                 list.addAll(eventsList)
                 eventsList = list
                 updateEvents.postValue(Event(true))
-                isEmpty.postValue(eventsList.isEmpty)
+                isEmpty.postValue(eventsList.isEmpty())
             }
         }
     }
@@ -647,7 +651,7 @@ class ConversationViewModel
         Log.i("$TAG Extracted [${list.size}] events from conversation history in database")
         eventsList = list
         updateEvents.postValue(Event(true))
-        isEmpty.postValue(eventsList.isEmpty)
+        isEmpty.postValue(eventsList.isEmpty())
     }
 
     @WorkerThread
@@ -694,7 +698,7 @@ class ConversationViewModel
         list.addAll(newList)
         eventsList = list
         updateEvents.postValue(Event(true))
-        isEmpty.postValue(eventsList.isEmpty)
+        isEmpty.postValue(eventsList.isEmpty())
     }
 
     @WorkerThread
@@ -726,7 +730,7 @@ class ConversationViewModel
         list.addAll(eventsList)
         eventsList = list
         updateEvents.postValue(Event(true))
-        isEmpty.postValue(eventsList.isEmpty)
+        isEmpty.postValue(eventsList.isEmpty())
     }
 
     @WorkerThread
@@ -761,6 +765,19 @@ class ConversationViewModel
                 },
                 { id ->
                     voiceRecordPlaybackEndedEvent.postValue(Event(id))
+                },
+                { filePath ->
+                    viewModelScope.launch {
+                        withContext(Dispatchers.IO) {
+                            Log.i("$TAG Export file [$filePath] to Android's MediaStore")
+                            val mediaStorePath = FileUtils.addContentToMediaStore(filePath)
+                            if (mediaStorePath.isNotEmpty()) {
+                                Log.i("$TAG File [$filePath] has been successfully exported to MediaStore")
+                            } else {
+                                Log.e("$TAG Failed to export file [$filePath] to MediaStore!")
+                            }
+                        }
+                    }
                 }
             )
             eventsList.add(model)
@@ -784,7 +801,7 @@ class ConversationViewModel
             eventsList.addAll(processGroupedEvents(arrayListOf(event)))
         } else {
             for (event in history) {
-                if (groupedEventLogs.isEmpty) {
+                if (groupedEventLogs.isEmpty()) {
                     groupedEventLogs.add(event)
                     continue
                 }
@@ -925,11 +942,7 @@ class ConversationViewModel
             } else {
                 R.string.conversation_search_no_more_match
             }
-            showRedToastEvent.postValue(
-                Event(
-                    Pair(message, R.drawable.magnifying_glass)
-                )
-            )
+            showRedToast(message, R.drawable.magnifying_glass)
         } else {
             Log.i(
                 "$TAG Found result [${match.chatMessage?.messageId}] while looking up for message with text [$textToSearch] in direction [$direction] starting from message [${latestMatch?.chatMessage?.messageId}]"
@@ -962,7 +975,7 @@ class ConversationViewModel
 
     @UiThread
     fun copyFileToUri(filePath: String, dest: Uri) {
-        val source = Uri.parse(FileUtils.getProperFilePath(filePath))
+        val source = FileUtils.getProperFilePath(filePath).toUri()
         Log.i("$TAG Copying file URI [$source] to [$dest]")
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -971,24 +984,10 @@ class ConversationViewModel
                     Log.i(
                         "$TAG File [$filePath] has been successfully exported to documents"
                     )
-                    showGreenToastEvent.postValue(
-                        Event(
-                            Pair(
-                                R.string.file_successfully_exported_to_documents_toast,
-                                R.drawable.check
-                            )
-                        )
-                    )
+                    showGreenToast(R.string.file_successfully_exported_to_documents_toast, R.drawable.check)
                 } else {
                     Log.e("$TAG Failed to export file [$filePath] to documents!")
-                    showRedToastEvent.postValue(
-                        Event(
-                            Pair(
-                                R.string.export_file_to_documents_error_toast,
-                                R.drawable.warning_circle
-                            )
-                        )
-                    )
+                    showRedToast(R.string.export_file_to_documents_error_toast, R.drawable.warning_circle)
                 }
             }
         }

@@ -6,7 +6,6 @@
     <!-- Common words -->
     <string name="sip_address">Adresse SIP</string>
     <string name="device_id">ID du téléphone</string>
-    <string name="sip_address_hint">utilisateur@domaine</string>
     <string name="sip_address_display_name">Nom d\'affichage</string>
     <string name="sip_address_domain">Domaine</string>
     <string name="username">Nom d\'utilisateur</string>
@@ -14,7 +13,7 @@
     <string name="password">Mot de passe</string>
     <string name="phone_number">Numéro de téléphone</string>
     <string name="or">ou</string>
-    <string name="next">suivant</string>
+    <string name="next">Suivant</string>
     <string name="start">Commencer</string>
     <string name="today">Aujourd\'hui</string>
     <string name="yesterday">Hier</string>
@@ -90,6 +89,7 @@
     <string name="media_playback_low_volume_warning_toast">Volume faible : vous risquez de ne pas entendre</string>
     <string name="remote_provisioning_config_applied_toast">Configuration appliquée</string>
     <string name="remote_provisioning_config_failed_toast">Erreur lors du chargement ou de l\'application de la configuration</string>
+    <string name="media_player_generic_error_toast">Erreur lors de la création du lecteur média</string>
 
     <!-- Assistant related string (account register / login / etc...) -->
     <string name="assistant_dialog_general_terms_and_privacy_policy_title">Conditions de service &amp; politique de confidentialité</string>
@@ -97,16 +97,18 @@
     <string name="assistant_dialog_privacy_policy_label">politique de confidentialité</string>
     <string name="assistant_dialog_general_terms_and_privacy_policy_message">En continuant, vous acceptez nos %1$s et %2$s.</string>
     <string name="assistant_dialog_confirm_phone_number_title">Confirmez votre numéro de téléphone</string>
-    <string name="assistant_dialog_confirm_phone_number_message">Êtes-vous sûr de vouloir utiliser ce numéro de téléphone ?</string>
+    <string name="assistant_dialog_confirm_phone_number_message">Êtes-vous sûr que le %s est votre numéro de téléphone ?</string>
     <string name="assistant_account_login">Connexion</string>
     <string name="assistant_scan_qr_code">Scanner un QR code</string>
     <string name="assistant_qr_code_invalid_toast">Ce QR code est invalide !</string>
     <string name="assistant_login_third_party_sip_account">J\'ai un compte SIP tiers</string>
+    <string name="assistant_login_third_party_sip_account_title">Compte SIP tiers</string>
     <string name="assistant_login_using_single_sign_on">Single sign on</string>
     <string name="assistant_login_cant_parse_address_toast">Adresse SIP invalide</string>
     <string name="assistant_login_address_without_username_toast">L\'adresse SIP ne contient pas de nom d\'utilisateur !</string>
     <string name="assistant_no_account_yet">Pas encore de compte ?</string>
     <string name="assistant_account_register">Créer un compte</string>
+    <string name="assistant_account_creation_sms_confirmation_title">Confirmez votre numéro</string>
     <string name="assistant_account_creation_sms_confirmation_explanation">On vous a envoyé un code de vérification par SMS au numéro %1$s.\n\nMerci de le saisir ci-dessous :</string>
     <string name="assistant_account_creation_wrong_phone_number">Numéro incorrect ?</string>
     <string name="assistant_account_create">Créer</string>
@@ -116,7 +118,6 @@
     <string name="assistant_third_party_sip_account_warning_explanation">Certaines fonctionnalités telles que les conversations de groupe, les vidéo-conférences, etc… nécessitent un compte &appName;.\n\nCes fonctionnalités seront masquées si vous utilisez un compte SIP tiers.\n\nPour les activer dans un projet commercial, merci de nous contacter.</string>
     <string name="assistant_third_party_sip_account_create_linphone_account">Je préfère créer un compte</string>
     <string name="assistant_third_party_sip_account_warning_ok">J\'ai compris</string>
-    <string name="assistant_third_party_sip_account_username_or_identity">Nom d\'utilisateur ou identité SIP*</string>
     <string name="assistant_account_register_unavailable_no_push_toast">Notifications push indisponible, la création de compte est donc désactivée.</string>
     <string name="assistant_account_register_push_notification_not_received_error">Notification push non reçue, merci de réessayer plus tard</string>
     <string name="assistant_account_register_unexpected_error">Un erreur inattendue est survenue, merci de réessayer plus tard</string>
@@ -180,6 +181,7 @@
     <string name="settings_security_enable_vfs_title">Chiffrer tous les fichiers</string>
     <string name="settings_security_enable_vfs_subtitle">Attention, vous ne pourrez pas revenir en arrière !</string>
     <string name="settings_security_enable_vfs_failure_toast">Échec à l\'activation du module d\'encryption</string>
+    <string name="settings_security_enable_vfs_success_toast">Module d\'encryption activé</string>
     <string name="settings_security_enable_vfs_dialog_confirmation_title">Confirmer l\'activation du chiffrement</string>
     <string name="settings_security_enable_vfs_dialog_confirmation_message">Une fois la fonctionnalité activée, toutes les données de l\'application seront chiffrées et accessibles uniquement via celle-ci.\n\nCe changement est irréversible.</string>
     <string name="settings_security_prevent_screenshots_title">Empêcher l\'interface d\'être enregistrée</string>
@@ -199,6 +201,7 @@
     <string name="settings_calls_change_ringtone_title">Changer de sonnerie</string>
     <string name="settings_conversations_title">Conversations</string>
     <string name="settings_conversations_auto_download_title">Télécharger automatiquement les fichiers</string>
+    <string name="settings_conversations_auto_export_media_to_native_gallery_title">Rendre visible dans la galerie les médias téléchargés</string>
     <string name="settings_conversations_mark_as_read_when_dismissing_notif_title">Marquer la conversation comme lue lorsqu\'une notification de message est supprimée</string>
     <string name="settings_contacts_title">Contacts</string>
     <string name="settings_contacts_add_ldap_server_title">Ajouter un serveur LDAP</string>
@@ -261,6 +264,7 @@
     <string name="settings_advanced_upload_server_url">URL du serveur de partage de fichier</string>
     <string name="settings_advanced_media_encryption_title">Chiffrement du média</string>
     <string name="settings_advanced_media_encryption_mandatory_title">Rendre le chiffrement du média obligatoire</string>
+    <string name="settings_advanced_create_e2e_encrypted_conferences_title">Créer en mode chiffré de bout en bout les réunions et les appels de groupe</string>
     <string name="settings_advanced_accept_early_media_title">Accepter l\'early media</string>
     <string name="settings_advanced_allow_outgoing_early_media_title">Autoriser l\'early media pour les appels sortants</string>
     <string name="settings_advanced_remote_provisioning_url">URL de configuration distante</string>
@@ -572,13 +576,17 @@
     <string name="meeting_schedule_send_invitations_title">Envoyer l\'invitation par message aux participants</string>
     <string name="meeting_info_join_title">Rejoindre la réunion</string>
     <string name="meeting_info_organizer_label">Organisateur</string>
-    <string name="meeting_info_delete">Supprimer la réunion</string>
     <string name="meeting_info_export_as_calendar_event">Ajouter dans le calendrier</string>
     <string name="meeting_info_deleted_toast">Réunion supprimée</string>
+    <string name="meeting_info_not_found_toast">Réunion introuvable !</string>
     <string name="meeting_schedule_description_title">Description</string>
     <string name="meeting_schedule_edit_title">Modifier la réunion</string>
     <string name="meeting_schedule_cancel_dialog_title">Annuler la réunion?</string>
     <string name="meeting_schedule_cancel_dialog_message">Voulez-vous annuler la réunion et envoyer une notification aux participants ?</string>
+    <string name="meeting_cancel_action_label">Annuler la réunion</string>
+    <string name="meeting_schedule_delete_dialog_title">Supprimer la réunion ?</string>
+    <string name="meeting_schedule_delete_dialog_message">Voulez-vous supprimer la réunion ?</string>
+    <string name="meeting_delete_action_label">Supprimer la réunion</string>
     <string name="meeting_info_created_toast">Réunion créée</string>
     <string name="meeting_info_updated_toast">Réunion mise à jour</string>
     <string name="meeting_info_cancelled_toast">Réunion annulée</string>
@@ -599,7 +607,8 @@
     <string name="call_outgoing">Appel sortant</string>
     <string name="call_audio_incoming">Appel entrant</string>
     <string name="call_video_incoming">Appel vidéo entrant</string>
-    <string name="call_ended">Appel terminé</string>
+    <string name="call_locally_ended">Vous avez terminé l\'appel</string>
+    <string name="call_remotely_ended">Votre correspondant a terminé l\'appel</string>
     <string name="call_audio_incoming_for_account">Appel entrant pour %s</string>
     <string name="call_video_incoming_for_account">Appel vidéo entrant pour %s</string>
     <string name="call_transfer_current_call_title">Transférer %s à…</string>
@@ -633,6 +642,7 @@
     <string name="call_srtp_point_to_point_encrypted">Appel chiffré de point à point</string>
     <string name="call_not_encrypted">Appel non chiffré</string>
     <string name="calls_list_title">Liste des appels</string>
+    <string name="call_is_being_recorded">L\'appel est enregistré</string>
     <string name="call_remote_is_recording">%s enregistre l\'appel</string>
     <string name="calls_count_label">%s appels</string>
     <string name="calls_paused_count_label">%s appels en pause</string>

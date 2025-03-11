@@ -36,11 +36,14 @@ class ConversationMediaListViewModel
 
     val mediaList = MutableLiveData<List<FileModel>>()
 
+    val operationInProgress = MutableLiveData<Boolean>()
+
     val openMediaEvent: MutableLiveData<Event<FileModel>> by lazy {
         MutableLiveData<Event<FileModel>>()
     }
 
-    override fun beforeNotifyingChatRoomFound(sameOne: Boolean) {
+    @WorkerThread
+    override fun afterNotifyingChatRoomFound(sameOne: Boolean) {
         loadMediaList()
     }
 
@@ -52,9 +55,11 @@ class ConversationMediaListViewModel
 
     @WorkerThread
     private fun loadMediaList() {
+        operationInProgress.postValue(true)
+
         val list = arrayListOf<FileModel>()
         Log.i(
-            "$TAG Loading media contents for conversation [${LinphoneUtils.getChatRoomId(
+            "$TAG Loading media contents for conversation [${LinphoneUtils.getConversationId(
                 chatRoom
             )}]"
         )
@@ -78,13 +83,16 @@ class ConversationMediaListViewModel
             val size = mediaContent.size.toLong()
             val timestamp = mediaContent.creationTimestamp
             if (path.isNotEmpty() && name.isNotEmpty()) {
-                val model = FileModel(path, name, size, timestamp, isEncrypted, originalPath) {
+                val model =
+                    FileModel(path, name, size, timestamp, isEncrypted, originalPath, chatRoom.isEphemeralEnabled) {
                     openMediaEvent.postValue(Event(it))
                 }
                 list.add(model)
             }
         }
+
         Log.i("$TAG [${media.size}] media have been processed")
         mediaList.postValue(list)
+        operationInProgress.postValue(false)
     }
 }

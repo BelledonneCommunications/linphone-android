@@ -17,10 +17,7 @@
         android:label="ConversationFragment"
         tools:layout="@layout/chat_conversation_fragment">
         <argument
-            android:name="localSipUri"
-            app:argType="string" />
-        <argument
-            android:name="remoteSipUri"
+            android:name="conversationId"
             app:argType="string" />
         <action
             android:id="@+id/action_conversationFragment_to_conversationInfoFragment"
@@ -80,10 +77,7 @@
         android:label="ConversationInfoFragment"
         tools:layout="@layout/chat_info_fragment">
         <argument
-            android:name="localSipUri"
-            app:argType="string" />
-        <argument
-            android:name="remoteSipUri"
+            android:name="conversationId"
             app:argType="string" />
         <action
             android:id="@+id/action_conversationInfoFragment_to_addParticipantsFragment"
@@ -147,10 +141,7 @@
         android:label="ConversationMediaListFragment"
         tools:layout="@layout/chat_media_fragment">
         <argument
-            android:name="localSipUri"
-            app:argType="string" />
-        <argument
-            android:name="remoteSipUri"
+            android:name="conversationId"
             app:argType="string" />
     </fragment>
 
@@ -160,10 +151,7 @@
         android:label="ConversationDocumentsListFragment"
         tools:layout="@layout/chat_documents_fragment">
         <argument
-            android:name="localSipUri"
-            app:argType="string" />
-        <argument
-            android:name="remoteSipUri"
+            android:name="conversationId"
             app:argType="string" />
     </fragment>
 

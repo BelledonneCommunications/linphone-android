@@ -144,8 +144,8 @@ class HistoryListViewModel
         val account = LinphoneUtils.getDefaultAccount()
         val logs = account?.callLogs ?: coreContext.core.callLogs
         for (callLog in logs) {
-            if (callLog.remoteAddress.asStringUriOnly().contains(filter)) {
-                val model = CallLogModel(callLog)
+            val model = CallLogModel(callLog)
+            if (isCallLogMatchingFilter(model, filter)) {
                 list.add(model)
                 count += 1
             }
@@ -157,5 +157,13 @@ class HistoryListViewModel
 
         Log.i("$TAG Fetched [${list.size}] call log(s)")
         callLogs.postValue(list)
+    }
+
+    @WorkerThread
+    private fun isCallLogMatchingFilter(model: CallLogModel, filter: String): Boolean {
+        if (filter.isEmpty()) return true
+
+        val friendName = model.avatarModel.friend.name ?: LinphoneUtils.getDisplayName(model.address)
+        return friendName.contains(filter, ignoreCase = true) || model.address.asStringUriOnly().contains(filter, ignoreCase = true)
     }
 }

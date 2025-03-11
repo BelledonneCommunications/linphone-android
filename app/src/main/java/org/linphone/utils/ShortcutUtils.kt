@@ -37,6 +37,8 @@ import org.linphone.core.ChatRoom
 import org.linphone.core.tools.Log
 import org.linphone.mediastream.Version
 import org.linphone.ui.main.MainActivity
+import org.linphone.ui.main.MainActivity.Companion.ARGUMENTS_CHAT
+import org.linphone.ui.main.MainActivity.Companion.ARGUMENTS_CONVERSATION_ID
 
 class ShortcutUtils {
     companion object {
@@ -44,7 +46,7 @@ class ShortcutUtils {
 
         @WorkerThread
         fun removeShortcutToChatRoom(chatRoom: ChatRoom) {
-            val id = LinphoneUtils.getChatRoomId(chatRoom)
+            val id = LinphoneUtils.getConversationId(chatRoom)
             Log.i("$TAG Removing shortcut to conversation [$id]")
             ShortcutManagerCompat.removeLongLivedShortcuts(coreContext.context, arrayListOf(id))
         }
@@ -65,9 +67,11 @@ class ShortcutUtils {
 
             var count = 0
             for (chatRoom in defaultAccount.chatRooms) {
-                if (defaultAccount.params.instantMessagingEncryptionMandatory && !chatRoom.currentParams.isEncryptionEnabled) {
+                if (defaultAccount.params.instantMessagingEncryptionMandatory &&
+                    !chatRoom.hasCapability(ChatRoom.Capabilities.Encrypted.toInt())
+                ) {
                     Log.w(
-                        "$TAG Account is in secure mode, skipping not encrypted conversation [${LinphoneUtils.getChatRoomId(
+                        "$TAG Account is in secure mode, skipping not encrypted conversation [${LinphoneUtils.getConversationId(
                             chatRoom
                         )}]"
                     )
@@ -99,9 +103,8 @@ class ShortcutUtils {
 
         @WorkerThread
         private fun createChatRoomShortcut(context: Context, chatRoom: ChatRoom): ShortcutInfoCompat? {
-            val localAddress = chatRoom.localAddress
             val peerAddress = chatRoom.peerAddress
-            val id = LinphoneUtils.getChatRoomId(localAddress, peerAddress)
+            val id = LinphoneUtils.getConversationId(chatRoom)
 
             try {
                 val categories: ArraySet<String> = ArraySet()
@@ -145,19 +148,14 @@ class ShortcutUtils {
                 val persons = arrayOfNulls<Person>(personsList.size)
                 personsList.toArray(persons)
 
-                val localSipUri = localAddress.asStringUriOnly()
-                val peerSipUri = peerAddress.asStringUriOnly()
-
                 val args = Bundle()
-                args.putString("RemoteSipUri", peerSipUri)
-                args.putString("LocalSipUri", localSipUri)
+                args.putString(ARGUMENTS_CONVERSATION_ID, id)
 
                 val intent = Intent(Intent.ACTION_MAIN)
                 intent.setClass(context, MainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                intent.putExtra("Chat", true)
-                intent.putExtra("RemoteSipUri", peerSipUri)
-                intent.putExtra("LocalSipUri", localSipUri)
+                intent.putExtra(ARGUMENTS_CHAT, true)
+                intent.putExtra(ARGUMENTS_CONVERSATION_ID, id)
 
                 return ShortcutInfoCompat.Builder(context, id)
                     .setShortLabel(subject)
@@ -177,7 +175,7 @@ class ShortcutUtils {
 
         @WorkerThread
         fun isShortcutToChatRoomAlreadyCreated(context: Context, chatRoom: ChatRoom): Boolean {
-            val id = LinphoneUtils.getChatRoomId(chatRoom)
+            val id = LinphoneUtils.getConversationId(chatRoom)
             val found = ShortcutManagerCompat.getDynamicShortcuts(context).find {
                 it.id == id
             }

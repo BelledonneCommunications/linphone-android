@@ -1,7 +1,6 @@
 package org.linphone.ui.fileviewer
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.UiThread
@@ -17,6 +16,7 @@ import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.FileMediaViewerActivityBinding
@@ -27,6 +27,7 @@ import org.linphone.ui.main.chat.model.FileModel
 import org.linphone.ui.main.viewmodel.SharedMainViewModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.FileUtils
+import androidx.core.net.toUri
 
 @UiThread
 class MediaViewerActivity : GenericActivity() {
@@ -51,6 +52,13 @@ class MediaViewerActivity : GenericActivity() {
                 val model = list[position]
                 viewModel.currentlyDisplayedFileName.value = model.fileName
                 viewModel.currentlyDisplayedFileDateTime.value = model.dateTime
+
+                val isFromEphemeral = model.isFromEphemeralMessage
+                viewModel.isCurrentlyDisplayedFileFromEphemeralMessage.value = isFromEphemeral
+                if (!corePreferences.enableSecureMode) {
+                    // Force preventing screenshots for ephemeral messages contents, but allow it for others
+                    enableWindowSecureMode(isFromEphemeral)
+                }
             }
         }
     }
@@ -96,17 +104,24 @@ class MediaViewerActivity : GenericActivity() {
             return
         }
 
+        val isFromEphemeralMessage = args.getBoolean("isFromEphemeralMessage", false)
+        if (isFromEphemeralMessage) {
+            Log.i("$TAG Displayed content is from an ephemeral chat message, force secure mode to prevent screenshots")
+            // Force preventing screenshots for ephemeral messages contents
+            enableWindowSecureMode(true)
+        }
+
         val timestamp = args.getLong("timestamp", -1)
         val isEncrypted = args.getBoolean("isEncrypted", false)
         val originalPath = args.getString("originalPath", "")
-        viewModel.initTempModel(path, timestamp, isEncrypted, originalPath)
+        Log.i("$TAG Path argument is [$path], timestamp [$timestamp], encrypted [$isEncrypted] and original path [$originalPath]")
+        viewModel.initTempModel(path, timestamp, isEncrypted, originalPath, isFromEphemeralMessage)
 
-        val localSipUri = args.getString("localSipUri").orEmpty()
-        val remoteSipUri = args.getString("remoteSipUri").orEmpty()
+        val conversationId = args.getString("conversationId").orEmpty()
         Log.i(
-            "$TAG Looking up for conversation with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri] trying to display file [$path]"
+            "$TAG Looking up for conversation with conversation ID [$conversationId] trying to display file [$path]"
         )
-        viewModel.findChatRoom(null, localSipUri, remoteSipUri)
+        viewModel.findChatRoom(null, conversationId)
 
         viewModel.mediaList.observe(this) {
             updateMediaList(path, it)
@@ -232,7 +247,7 @@ class MediaViewerActivity : GenericActivity() {
                 val filePath = FileUtils.getProperFilePath(model.path)
                 val copy = FileUtils.getFilePath(
                     baseContext,
-                    Uri.parse(filePath),
+                    filePath.toUri(),
                     overrideExisting = true,
                     copyToCache = true
                 )

@@ -22,7 +22,6 @@ package org.linphone.ui.main.chat.model
 import android.media.MediaMetadataRetriever
 import android.media.MediaMetadataRetriever.METADATA_KEY_DURATION
 import android.media.ThumbnailUtils
-import android.net.Uri
 import android.provider.MediaStore
 import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
@@ -35,6 +34,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.tools.Log
 import org.linphone.utils.FileUtils
 import org.linphone.utils.TimestampUtils
+import androidx.core.net.toUri
 
 class FileModel
     @AnyThread
@@ -45,6 +45,7 @@ class FileModel
     val fileCreationTimestamp: Long,
     val isEncrypted: Boolean,
     val originalPath: String,
+    val isFromEphemeralMessage: Boolean,
     val isWaitingToBeDownloaded: Boolean = false,
     val flexboxLayoutWrapBefore: Boolean = false,
     private val onClicked: ((model: FileModel) -> Unit)? = null
@@ -185,7 +186,7 @@ class FileModel
     private fun getDuration() {
         try {
             val retriever = MediaMetadataRetriever()
-            retriever.setDataSource(coreContext.context, Uri.parse(path))
+            retriever.setDataSource(coreContext.context, path.toUri())
             val durationInMs = retriever.extractMetadata(METADATA_KEY_DURATION)?.toInt() ?: 0
             val seconds = durationInMs / 1000
             val duration = TimestampUtils.durationToString(seconds)

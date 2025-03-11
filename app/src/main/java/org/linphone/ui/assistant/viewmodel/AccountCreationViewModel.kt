@@ -33,6 +33,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONException
 import org.json.JSONObject
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.Account
 import org.linphone.core.AccountManagerServices
@@ -81,6 +82,8 @@ class AccountCreationViewModel
     val selectedDialPlan = MutableLiveData<DialPlan>()
 
     val showPassword = MutableLiveData<Boolean>()
+
+    val lockUsernameAndPassword = MutableLiveData<Boolean>()
 
     val createEnabled = MediatorLiveData<Boolean>()
 
@@ -165,14 +168,7 @@ class AccountCreationViewModel
             operationInProgress.postValue(false)
 
             if (!errorMessage.isNullOrEmpty()) {
-                showFormattedRedToastEvent.postValue(
-                    Event(
-                        Pair(
-                            errorMessage,
-                            R.drawable.warning_circle
-                        )
-                    )
-                )
+                showFormattedRedToast(errorMessage, R.drawable.warning_circle)
             }
 
             for (parameter in parameterErrors?.keys.orEmpty()) {
@@ -199,12 +195,11 @@ class AccountCreationViewModel
                     if (account != null) {
                         coreContext.core.removeAccount(account)
                     }
-                    createEnabled.postValue(true)
                 }
                 else -> {
-                    createEnabled.postValue(true)
                 }
             }
+            createEnabled.postValue(true)
         }
     }
 
@@ -258,6 +253,7 @@ class AccountCreationViewModel
 
     init {
         operationInProgress.value = false
+        lockUsernameAndPassword.value = false
 
         coreContext.postOnCoreThread { core ->
             pushNotificationsAvailable.postValue(LinphoneUtils.arePushNotificationsAvailable(core))
@@ -446,9 +442,9 @@ class AccountCreationViewModel
             operationInProgress.postValue(true)
             createEnabled.postValue(false)
 
-            val usernameValue = username.value
-            val passwordValue = password.value
-            if (usernameValue.isNullOrEmpty() || passwordValue.isNullOrEmpty()) {
+            val usernameValue = username.value.orEmpty().trim()
+            val passwordValue = password.value.orEmpty().trim()
+            if (usernameValue.isEmpty() || passwordValue.isEmpty()) {
                 Log.e("$TAG Either username [$usernameValue] or password is null or empty!")
                 return
             }
@@ -469,15 +465,16 @@ class AccountCreationViewModel
 
     @WorkerThread
     private fun storeAccountInCore(identity: String) {
-        val passwordValue = password.value
-
         val core = coreContext.core
+        core.loadConfigFromXml(corePreferences.linphoneDefaultValuesPath)
+
         val sipIdentity = Factory.instance().createAddress(identity)
         if (sipIdentity == null) {
             Log.e("$TAG Failed to create address from SIP Identity [$identity]!")
             return
         }
 
+        val passwordValue = password.value
         // We need to have an AuthInfo for newly created account to authorize phone number linking request
         val authInfo = Factory.instance().createAuthInfo(
             sipIdentity.username.orEmpty(),
@@ -506,6 +503,8 @@ class AccountCreationViewModel
 
         accountCreatedAuthInfo = authInfo
         accountCreated = account
+
+        lockUsernameAndPassword.postValue(true)
     }
 
     @WorkerThread

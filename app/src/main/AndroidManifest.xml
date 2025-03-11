@@ -60,6 +60,7 @@
         <meta-data
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc"/>
+
         <!--<meta-data
             android:name="androidx.car.app.minCarApiLevel"
             android:value="1"/>-->
@@ -123,18 +124,6 @@
         </activity>
 
         <activity
-            android:name=".ui.fileviewer.MediaViewerActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true" />
-
-        <activity
-            android:name=".ui.fileviewer.FileViewerActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true" />
-
-        <activity
             android:name=".ui.welcome.WelcomeActivity"
             android:windowSoftInputMode="adjustResize"
             android:launchMode="singleTask"
@@ -142,6 +131,18 @@
 
         <activity
             android:name=".ui.assistant.AssistantActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true" />
+
+        <activity
+            android:name=".ui.fileviewer.MediaViewerActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true" />
+
+        <activity
+            android:name=".ui.fileviewer.FileViewerActivity"
             android:windowSoftInputMode="adjustResize"
             android:launchMode="singleTask"
             android:resizeableActivity="true" />
@@ -199,7 +200,7 @@
         </service>
 
         <!--<service
-            android:name=".telecom.auto.AAService"
+            android:name=".telecom.auto.AndroidAutoService"
             android:exported="true">
             <intent-filter>
                 <action android:name="androidx.car.app.CarAppService"/>

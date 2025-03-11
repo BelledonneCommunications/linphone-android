@@ -30,6 +30,7 @@ import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
 import org.linphone.utils.Event
+import org.linphone.R
 
 class QrCodeViewModel
     @UiThread
@@ -40,12 +41,18 @@ class QrCodeViewModel
 
     val qrCodeFoundEvent = MutableLiveData<Event<Boolean>>()
 
+    val onErrorEvent = MutableLiveData<Event<Boolean>>()
+
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
         override fun onConfiguringStatus(core: Core, status: ConfiguringState, message: String?) {
             Log.i("$TAG Configuring state is [$status]")
             if (status == ConfiguringState.Successful) {
                 qrCodeFoundEvent.postValue(Event(true))
+            } else if (status == ConfiguringState.Failed) {
+                Log.e("$TAG Failure applying remote provisioning: $message")
+                showRedToast(R.string.remote_provisioning_config_failed_toast, R.drawable.warning_circle)
+                onErrorEvent.postValue(Event(true))
             }
         }
 
@@ -53,16 +60,20 @@ class QrCodeViewModel
         override fun onQrcodeFound(core: Core, result: String?) {
             Log.i("$TAG QR Code found: [$result]")
             if (result == null) {
-                qrCodeFoundEvent.postValue(Event(false))
+                showRedToast(R.string.assistant_qr_code_invalid_toast, R.drawable.warning_circle)
             } else {
                 val isValidUrl = Patterns.WEB_URL.matcher(result).matches()
                 if (!isValidUrl) {
                     Log.e("$TAG The content of the QR Code doesn't seem to be a valid web URL")
-                    qrCodeFoundEvent.postValue(Event(false))
+                    showRedToast(R.string.assistant_qr_code_invalid_toast, R.drawable.warning_circle)
                 } else {
                     Log.i(
                         "$TAG QR code URL set, restarting the Core to apply configuration changes"
                     )
+                    core.nativePreviewWindowId = null
+                    core.isVideoPreviewEnabled = false
+                    core.isQrcodeVideoPreviewEnabled = false
+
                     core.provisioningUri = result
                     coreContext.core.stop()
                     Log.i("$TAG Core has been stopped, restarting it")

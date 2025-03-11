@@ -46,6 +46,7 @@ import org.linphone.ui.call.CallActivity
 import org.linphone.utils.ActivityMonitor
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
+import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
 
 class CoreContext
@@ -92,6 +93,10 @@ class CoreContext
         MutableLiveData<Event<String>>()
     }
 
+    val clearAuthenticationRequestDialogEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     val refreshMicrophoneMuteStateEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -110,6 +115,11 @@ class CoreContext
 
     val provisioningAppliedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
+    }
+
+    private var filesToExportToNativeMediaGallery = arrayListOf<String>()
+    val filesToExportToNativeMediaGalleryEvent: MutableLiveData<Event<List<String>>> by lazy {
+        MutableLiveData<Event<List<String>>>()
     }
 
     @SuppressLint("HandlerLeak")
@@ -156,6 +166,42 @@ class CoreContext
 
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
+        override fun onMessagesReceived(
+            core: Core,
+            chatRoom: ChatRoom,
+            messages: Array<out ChatMessage?>
+        ) {
+            if (corePreferences.makePublicMediaFilesDownloaded && core.maxSizeForAutoDownloadIncomingFiles >= 0) {
+                for (message in messages) {
+                    // Never do auto media export for ephemeral messages!
+                    if (message?.isEphemeral == true) continue
+
+                    for (content in message?.contents.orEmpty()) {
+                        if (content.isFile) {
+                            val path = content.filePath
+                            if (path.isNullOrEmpty()) continue
+
+                            val mime = "${content.type}/${content.subtype}"
+                            val mimeType = FileUtils.getMimeType(mime)
+                            when (mimeType) {
+                                FileUtils.MimeType.Image, FileUtils.MimeType.Video, FileUtils.MimeType.Audio -> {
+                                    Log.i("$TAG Added file path [$path] to the list of media to export to native media gallery")
+                                    filesToExportToNativeMediaGallery.add(path)
+                                }
+                                else -> {}
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (filesToExportToNativeMediaGallery.isNotEmpty()) {
+                Log.i("$TAG Creating event with [${filesToExportToNativeMediaGallery.size}] files to export to native media gallery")
+                filesToExportToNativeMediaGalleryEvent.postValue(Event(filesToExportToNativeMediaGallery))
+            }
+        }
+
+        @WorkerThread
         override fun onGlobalStateChanged(core: Core, state: GlobalState, message: String) {
             Log.i("$TAG Global state changed [$state]")
 
@@ -163,6 +209,8 @@ class CoreContext
                 // Wait for GlobalState.ON as some settings modification won't be saved
                 // in RC file if Core isn't ON
                 onCoreStarted()
+            } else if (state == GlobalState.Shutdown) {
+                onCoreStopped()
             }
         }
 
@@ -347,6 +395,7 @@ class CoreContext
             }
         }
 
+        @WorkerThread
         override fun onAccountAdded(core: Core, account: Account) {
             // Prevent this trigger when core is stopped/start in remote prov
             if (core.globalState == GlobalState.Off) return
@@ -366,6 +415,15 @@ class CoreContext
                         "$TAG Newly added account (or the whole Core) doesn't support push notifications but keep-alive foreground service is already enabled, nothing to do"
                     )
                 }
+            }
+        }
+
+        @WorkerThread
+        override fun onAccountRemoved(core: Core, account: Account) {
+            Log.i("$TAG Account [${account.params.identityAddress?.asStringUriOnly()}] removed, clearing auth request dialog if needed")
+            if (account.findAuthInfo() == digestAuthInfoPendingPasswordUpdate) {
+                Log.i("$TAG Removed account matches auth info pending password update, removing dialog")
+                clearAuthenticationRequestDialogEvent.postValue(Event(true))
             }
         }
     }
@@ -415,7 +473,9 @@ class CoreContext
         }
         Log.i("=========================================")
         Log.i("==== Linphone-android information dump ====")
-        Log.i("VERSION=${BuildConfig.VERSION_NAME} / ${BuildConfig.VERSION_CODE}")
+        val gitVersion = AppUtils.getString(org.linphone.R.string.linphone_app_version)
+        val gitBranch = AppUtils.getString(org.linphone.R.string.linphone_app_branch)
+        Log.i("VERSION=${BuildConfig.VERSION_NAME} / ${BuildConfig.VERSION_CODE} ($gitVersion from $gitBranch branch)")
         Log.i("PACKAGE=${BuildConfig.APPLICATION_ID}")
         Log.i("BUILD TYPE=${BuildConfig.BUILD_TYPE}")
         Log.i("=========================================")
@@ -499,6 +559,14 @@ class CoreContext
     }
 
     @WorkerThread
+    private fun onCoreStopped() {
+        Log.w("$TAG Core is being shut down, notifying managers so they can remove their listeners and do some cleanup if needed")
+        contactsManager.onCoreStopped(core)
+        telecomManager.onCoreStopped(core)
+        notificationsManager.onCoreStopped(core)
+    }
+
+    @WorkerThread
     private fun destroyCore() {
         if (!::core.isInitialized) {
             return
@@ -519,10 +587,6 @@ class CoreContext
         audioManager.unregisterAudioDeviceCallback(audioDeviceCallback)
 
         core.stop()
-
-        contactsManager.onCoreStopped(core)
-        telecomManager.onCoreStopped(core)
-        notificationsManager.onCoreStopped(core)
 
         // It's very unlikely the process will survive until the Core reaches GlobalStateOff sadly
         Log.w("$TAG Core has been shut down")
@@ -618,6 +682,11 @@ class CoreContext
             it.params.identityAddress?.weakEqual(address) == true
         }
         return found != null
+    }
+
+    @WorkerThread
+    fun clearFilesToExportToNativeGallery() {
+        filesToExportToNativeMediaGallery.clear()
     }
 
     @WorkerThread
@@ -728,7 +797,9 @@ class CoreContext
 
     @WorkerThread
     fun answerCall(call: Call) {
-        Log.i("$TAG Answering call $call")
+        Log.i(
+            "$TAG Answering call with remote address [${call.remoteAddress.asStringUriOnly()}] and to address [${call.toAddress.asStringUriOnly()}]"
+        )
         val params = core.createCallParams(call)
         if (params == null) {
             Log.w("$TAG Answering call without params!")

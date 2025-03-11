@@ -39,6 +39,7 @@ import org.linphone.databinding.ChatListFragmentBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.fileviewer.FileViewerActivity
 import org.linphone.ui.fileviewer.MediaViewerActivity
+import org.linphone.ui.main.MainActivity.Companion.ARGUMENTS_CONVERSATION_ID
 import org.linphone.ui.main.chat.adapter.ConversationsListAdapter
 import org.linphone.ui.main.chat.viewmodel.ConversationsListViewModel
 import org.linphone.ui.main.fragment.AbstractMainFragment
@@ -162,9 +163,7 @@ class ConversationsListFragment : AbstractMainFragment() {
             it.consume { model ->
                 Log.i("$TAG Show conversation with ID [${model.id}]")
                 sharedViewModel.displayedChatRoom = model.chatRoom
-                sharedViewModel.showConversationEvent.value = Event(
-                    Pair(model.localSipUri, model.remoteSipUri)
-                )
+                sharedViewModel.showConversationEvent.value = Event(model.id)
             }
         }
 
@@ -191,16 +190,9 @@ class ConversationsListFragment : AbstractMainFragment() {
         }
 
         sharedViewModel.showConversationEvent.observe(viewLifecycleOwner) {
-            it.consume { pair ->
-                val localSipUri = pair.first
-                val remoteSipUri = pair.second
-                Log.i(
-                    "$TAG Navigating to conversation fragment with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
-                )
-                val action = ConversationFragmentDirections.actionGlobalConversationFragment(
-                    localSipUri,
-                    remoteSipUri
-                )
+            it.consume { conversationId ->
+                Log.i("$TAG Navigating to conversation fragment with ID [$conversationId]")
+                val action = ConversationFragmentDirections.actionGlobalConversationFragment(conversationId)
                 binding.chatNavContainer.findNavController().navigate(action)
             }
         }
@@ -214,6 +206,8 @@ class ConversationsListFragment : AbstractMainFragment() {
                             uri
                         )
                     findNavController().navigate(action)
+                } else {
+                    Log.e("$TAG Failed to navigate to meeting waiting room, wrong current destination (expected conversationsListFragment but was something else)")
                 }
             }
         }
@@ -328,12 +322,10 @@ class ConversationsListFragment : AbstractMainFragment() {
 
         val args = arguments
         if (args != null) {
-            val localSipUri = args.getString("LocalSipUri")
-            val remoteSipUri = args.getString("RemoteSipUri")
-            if (localSipUri != null && remoteSipUri != null) {
-                Log.i("$TAG Found local [$localSipUri] & remote [$remoteSipUri] URIs in arguments")
-                val pair = Pair(localSipUri, remoteSipUri)
-                sharedViewModel.showConversationEvent.value = Event(pair)
+            val conversationId = args.getString(ARGUMENTS_CONVERSATION_ID)
+            if (!conversationId.isNullOrEmpty()) {
+                Log.i("$TAG Found conversation ID [$conversationId] in arguments")
+                sharedViewModel.showConversationEvent.value = Event(conversationId)
                 args.clear()
             }
         }

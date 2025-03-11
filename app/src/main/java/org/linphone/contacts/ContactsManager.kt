@@ -144,6 +144,14 @@ class ContactsManager
 
     private val friendListListener: FriendListListenerStub = object : FriendListListenerStub() {
         @WorkerThread
+        override fun onPresenceReceived(friendList: FriendList, friends: Array<out Friend?>) {
+            if (friendList.isSubscriptionBodyless) {
+                Log.i("$TAG Bodyless friendlist [${friendList.displayName}] presence received")
+                notifyContactsListChanged()
+            }
+        }
+
+        @WorkerThread
         override fun onNewSipAddressDiscovered(
             friendList: FriendList,
             friend: Friend,
@@ -575,10 +583,12 @@ class ContactsManager
 
     @WorkerThread
     fun onCoreStarted(core: Core) {
+        Log.i("$TAG Core has been started")
         loadContactsOnlyFromDefaultDirectory = corePreferences.fetchContactsFromDefaultDirectory
 
         core.addListener(coreListener)
         for (list in core.friendsLists) {
+            Log.i("$TAG Found existing friend list [${list.displayName}]")
             list.addListener(friendListListener)
         }
 
@@ -604,6 +614,7 @@ class ContactsManager
 
     @WorkerThread
     fun onCoreStopped(core: Core) {
+        Log.w("$TAG Core has been stopped")
         coroutineScope.cancel()
 
         core.removeListener(coreListener)

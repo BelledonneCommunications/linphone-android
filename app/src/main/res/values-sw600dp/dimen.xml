@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="welcome_icon_size">150dp</dimen>
+    <dimen name="text_input_max_width">600dp</dimen>
+</resources>

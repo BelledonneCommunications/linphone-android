@@ -20,9 +20,9 @@
 package org.linphone.telecom
 
 import android.content.Context
-import android.net.Uri
 import androidx.annotation.WorkerThread
 import androidx.core.telecom.CallAttributesCompat
+import androidx.core.telecom.CallException
 import androidx.core.telecom.CallsManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -35,6 +35,7 @@ import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
+import androidx.core.net.toUri
 
 class TelecomManager
     @WorkerThread
@@ -51,8 +52,15 @@ class TelecomManager
 
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
-        override fun onCallCreated(core: Core, call: Call) {
-            onCallCreated(call)
+        override fun onCallStateChanged(
+            core: Core,
+            call: Call,
+            state: Call.State?,
+            message: String
+        ) {
+            if (state == Call.State.IncomingReceived || state == Call.State.OutgoingProgress) {
+                onCallCreated(call)
+            }
         }
 
         @WorkerThread
@@ -88,10 +96,10 @@ class TelecomManager
 
     @WorkerThread
     fun onCallCreated(call: Call) {
-        Log.i("$TAG Call to [${call.remoteAddress.asStringUriOnly()}] created")
+        Log.i("$TAG Call to [${call.remoteAddress.asStringUriOnly()}] created in state [${call.state}]")
 
         val address = call.callLog.remoteAddress
-        val uri = Uri.parse(address.asStringUriOnly())
+        val uri = address.asStringUriOnly().toUri()
 
         val direction = if (call.dir == Call.Dir.Outgoing) {
             CallAttributesCompat.DIRECTION_OUTGOING
@@ -99,9 +107,9 @@ class TelecomManager
             CallAttributesCompat.DIRECTION_INCOMING
         }
 
-        val conferenceInfo = LinphoneUtils.getConferenceInfoIfAny(call)
         val capabilities = CallAttributesCompat.SUPPORTS_SET_INACTIVE or CallAttributesCompat.SUPPORTS_TRANSFER
 
+        val conferenceInfo = LinphoneUtils.getConferenceInfoIfAny(call)
         val displayName = if (call.conference != null || conferenceInfo != null) {
             conferenceInfo?.subject ?: call.conference?.subject ?: LinphoneUtils.getDisplayName(address)
         } else {
@@ -109,20 +117,24 @@ class TelecomManager
             friend?.name ?: LinphoneUtils.getDisplayName(address)
         }
 
-        // When call is created, it is ringing (incoming or outgoing, do not set video)
-        val type = CallAttributesCompat.Companion.CALL_TYPE_AUDIO_CALL
-
-        val callAttributes = CallAttributesCompat(
-            displayName,
-            uri,
-            direction,
-            type,
-            capabilities
-        )
-        Log.i("$TAG Adding call to Telecom's CallsManager with attributes [$callAttributes]")
+        val isVideo = LinphoneUtils.isVideoEnabled(call)
+        val type = if (isVideo) {
+            CallAttributesCompat.Companion.CALL_TYPE_VIDEO_CALL
+        } else {
+            CallAttributesCompat.Companion.CALL_TYPE_AUDIO_CALL
+        }
 
         scope.launch {
             try {
+                val callAttributes = CallAttributesCompat(
+                    displayName,
+                    uri,
+                    direction,
+                    type,
+                    capabilities
+                )
+                Log.i("$TAG Adding call to Telecom's CallsManager with attributes [$callAttributes]")
+
                 callsManager.addCall(
                     callAttributes,
                     { callType -> // onAnswer
@@ -160,6 +172,11 @@ class TelecomManager
                 ) {
                     val callbacks = TelecomCallControlCallback(call, this, scope)
 
+                    // We must first call setCallback on callControlScope before using it
+                    callbacks.onCallControlCallbackSet()
+                    currentlyFollowedCalls += 1
+                    Log.i("$TAG Call added to Telecom's CallsManager")
+
                     coreContext.postOnCoreThread {
                         val callId = call.callLog.callId.orEmpty()
                         if (callId.isNotEmpty()) {
@@ -167,13 +184,8 @@ class TelecomManager
                             map[callId] = callbacks
                         }
                     }
-
-                    // We must first call setCallback on callControlScope before using it
-                    callbacks.onCallControlCallbackSet()
-                    currentlyFollowedCalls += 1
-                    Log.i("$TAG Call added to Telecom's CallsManager")
                 }
-            } catch (e: Exception) {
+            } catch (e: CallException) {
                 Log.e("$TAG Failed to add call to Telecom's CallsManager: $e")
             }
         }

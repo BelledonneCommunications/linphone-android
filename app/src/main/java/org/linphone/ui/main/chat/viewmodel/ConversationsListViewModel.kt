@@ -33,7 +33,6 @@ import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.chat.model.ConversationModel
 import org.linphone.ui.main.viewmodel.AbstractMainViewModel
-import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
 class ConversationsListViewModel
@@ -55,7 +54,7 @@ class ConversationsListViewModel
             state: ChatRoom.State?
         ) {
             Log.i(
-                "$TAG Conversation [${LinphoneUtils.getChatRoomId(chatRoom)}] state changed [$state]"
+                "$TAG Conversation [${LinphoneUtils.getConversationId(chatRoom)}] state changed [$state]"
             )
 
             when (state) {
@@ -67,7 +66,17 @@ class ConversationsListViewModel
 
         @WorkerThread
         override fun onMessageSent(core: Core, chatRoom: ChatRoom, message: ChatMessage) {
-            reorderChatRooms()
+            val id = LinphoneUtils.getConversationId(chatRoom)
+            val found = conversations.value.orEmpty().find {
+                it.id == id
+            }
+            if (found == null) {
+                Log.i("$TAG Message sent for a conversation not yet in the list (probably was empty), adding it")
+                addChatRoom(chatRoom)
+            } else {
+                Log.i("$TAG Message sent for an existing conversation, re-order them")
+                reorderChatRooms()
+            }
         }
 
         @WorkerThread
@@ -76,7 +85,17 @@ class ConversationsListViewModel
             chatRoom: ChatRoom,
             messages: Array<out ChatMessage>
         ) {
-            reorderChatRooms()
+            val id = LinphoneUtils.getConversationId(chatRoom)
+            val found = conversations.value.orEmpty().find {
+                it.id == id
+            }
+            if (found == null) {
+                Log.i("$TAG Message(s) received for a conversation not yet in the list (probably was empty), adding it")
+                addChatRoom(chatRoom)
+            } else {
+                Log.i("$TAG Message(s) received for an existing conversation, re-order them")
+                reorderChatRooms()
+            }
         }
     }
 
@@ -170,7 +189,8 @@ class ConversationsListViewModel
         }
 
         val hideEmptyChatRooms = coreContext.core.config.getBool("misc", "hide_empty_chat_rooms", true)
-        if (hideEmptyChatRooms && chatRoom.lastMessageInHistory == null) {
+        // Hide empty chat rooms only applies to 1-1 conversations
+        if (hideEmptyChatRooms && !LinphoneUtils.isChatRoomAGroup(chatRoom) && chatRoom.lastMessageInHistory == null) {
             Log.w("$TAG Chat room with local address [${localAddress.asStringUriOnly()}] and peer address [${peerAddress.asStringUriOnly()}] is empty, not adding it to match Core setting")
             return
         }
@@ -220,11 +240,7 @@ class ConversationsListViewModel
             )
         }
 
-        showGreenToastEvent.postValue(
-            Event(
-                Pair(R.string.conversation_deleted_toast, R.drawable.chat_teardrop_text)
-            )
-        )
+        showGreenToast(R.string.conversation_deleted_toast, R.drawable.chat_teardrop_text)
     }
 
     @WorkerThread

@@ -48,17 +48,15 @@ class ConversationModel
         private const val TAG = "[Conversation Model]"
     }
 
-    val id = LinphoneUtils.getChatRoomId(chatRoom)
-
-    val localSipUri = chatRoom.localAddress.asStringUriOnly()
-
-    val remoteSipUri = chatRoom.peerAddress.asStringUriOnly()
+    val id = LinphoneUtils.getConversationId(chatRoom)
 
     val isGroup = !chatRoom.hasCapability(Capabilities.OneToOne.toInt()) && chatRoom.hasCapability(
         Capabilities.Conference.toInt()
     )
 
     val isEncrypted = chatRoom.hasCapability(Capabilities.Encrypted.toInt())
+
+    val isEncryptionAvailable = LinphoneUtils.isEndToEndEncryptedChatAvailable(chatRoom.core)
 
     val isReadOnly = MutableLiveData<Boolean>()
 

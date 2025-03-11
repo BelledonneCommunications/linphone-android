@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="android.text.InputType" />
+        <variable
+            name="backClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="grantReadContactsClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="grantPostNotificationsClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="grantRecordAudioClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="grantAccessCameraClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="skipClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="grantAllClickListener"
+            type="View.OnClickListener" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:background="?attr/color_main2_000">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/back"
+                android:onClick="@{backClickListener}"
+                android:layout_width="@dimen/top_bar_height"
+                android:layout_height="@dimen/top_bar_height"
+                android:layout_marginStart="40dp"
+                android:padding="15dp"
+                android:src="@drawable/caret_left"
+                android:contentDescription="@string/content_description_go_back_icon"
+                app:tint="?attr/color_main2_500"
+                app:layout_constraintTop_toTopOf="@id/title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/title"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/assistant_page_title_style"
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/top_bar_height"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="@dimen/assistant_title_top_margin"
+                android:text="@string/assistant_permissions_title"
+                android:textColor="?attr/color_text"
+                android:textSize="28sp"
+                android:drawableStart="@drawable/user_circle"
+                android:drawablePadding="10dp"
+                app:layout_constraintWidth_min="@dimen/button_max_width"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toEndOf="@id/back"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:id="@+id/subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/assistant_permissions_subtitle"
+                android:gravity="center"
+                app:layout_constraintVertical_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title"
+                app:layout_constraintBottom_toTopOf="@id/post_notifications_icon"/>
+
+            <ImageView
+                android:id="@+id/post_notifications_icon"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/circle_light_blue_button_background"
+                android:padding="12dp"
+                android:src="@drawable/bell_ringing"
+                android:contentDescription="@null"
+                app:tint="?attr/color_main2_500"
+                app:layout_constraintTop_toBottomOf="@id/subtitle"
+                app:layout_constraintBottom_toTopOf="@id/read_contacts_icon"
+                app:layout_constraintStart_toStartOf="@id/subtitle"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:id="@+id/post_notifications_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/assistant_permissions_post_notifications_title"
+                android:maxLines="2"
+                android:ellipsize="end"
+                app:layout_constraintTop_toTopOf="@id/post_notifications_icon"
+                app:layout_constraintStart_toEndOf="@id/post_notifications_icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/post_notifications_icon"/>
+
+            <ImageView
+                android:id="@+id/read_contacts_icon"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/circle_light_blue_button_background"
+                android:padding="12dp"
+                android:src="@drawable/address_book"
+                android:contentDescription="@null"
+                app:tint="?attr/color_main2_500"
+                app:layout_constraintTop_toBottomOf="@id/post_notifications_icon"
+                app:layout_constraintBottom_toTopOf="@id/record_audio_icon"
+                app:layout_constraintStart_toStartOf="@id/subtitle"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:id="@+id/read_contacts_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/assistant_permissions_read_contacts_title"
+                android:maxLines="2"
+                android:ellipsize="end"
+                app:layout_constraintTop_toTopOf="@id/read_contacts_icon"
+                app:layout_constraintStart_toEndOf="@id/read_contacts_icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/read_contacts_icon"/>
+
+            <ImageView
+                android:id="@+id/record_audio_icon"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/circle_light_blue_button_background"
+                android:padding="12dp"
+                android:src="@drawable/microphone"
+                android:contentDescription="@null"
+                app:tint="?attr/color_main2_500"
+                app:layout_constraintTop_toBottomOf="@id/read_contacts_icon"
+                app:layout_constraintBottom_toTopOf="@id/access_camera_icon"
+                app:layout_constraintStart_toStartOf="@id/subtitle"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:id="@+id/record_audio_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/assistant_permissions_record_audio_title"
+                android:maxLines="2"
+                android:ellipsize="end"
+                app:layout_constraintTop_toTopOf="@id/record_audio_icon"
+                app:layout_constraintStart_toEndOf="@id/record_audio_icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/record_audio_icon"/>
+
+            <ImageView
+                android:id="@+id/access_camera_icon"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/circle_light_blue_button_background"
+                android:padding="12dp"
+                android:src="@drawable/video_camera"
+                android:contentDescription="@null"
+                app:tint="?attr/color_main2_500"
+                app:layout_constraintTop_toBottomOf="@id/record_audio_icon"
+                app:layout_constraintBottom_toTopOf="@id/skip"
+                app:layout_constraintStart_toStartOf="@id/subtitle"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:id="@+id/access_camera_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/assistant_permissions_access_camera_title"
+                android:maxLines="2"
+                android:ellipsize="end"
+                app:layout_constraintTop_toTopOf="@id/access_camera_icon"
+                app:layout_constraintStart_toEndOf="@id/access_camera_icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/access_camera_icon"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:onClick="@{skipClickListener}"
+                style="@style/secondary_button_label_style"
+                android:id="@+id/skip"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="32dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@string/assistant_permissions_skip_permissions"
+                app:layout_constraintWidth_max="@dimen/button_max_width"
+                app:layout_constraintVertical_bias="1"
+                app:layout_constraintTop_toBottomOf="@id/access_camera_icon"
+                app:layout_constraintBottom_toTopOf="@id/grant_all_permissions"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:onClick="@{grantAllClickListener}"
+                style="@style/primary_button_label_style"
+                android:id="@+id/grant_all_permissions"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@string/assistant_permissions_grant_all_of_them"
+                app:layout_constraintWidth_max="@dimen/button_max_width"
+                app:layout_constraintTop_toBottomOf="@id/skip"
+                app:layout_constraintBottom_toTopOf="@id/mountains"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <ImageView
+                android:id="@+id/mountains"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/mountains"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:contentDescription="@null"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:tint="?attr/color_main1_500" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</layout>

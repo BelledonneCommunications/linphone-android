@@ -14,6 +14,7 @@
     <dimen name="icon_size">24dp</dimen>
     <dimen name="big_icon_size">48dp</dimen>
     <dimen name="welcome_icon_size">100dp</dimen>
+    <dimen name="assistant_title_top_margin">30dp</dimen>
 
     <dimen name="avatar_bubble_size">30dp</dimen>
     <dimen name="avatar_list_cell_size">45dp</dimen>
@@ -98,8 +99,6 @@
     <dimen name="chat_room_participants_list_max_height">300dp</dimen>
     <dimen name="chat_bubble_emoji_picker_height">425dp</dimen>
     <dimen name="chat_bubble_max_height_long_press">340dp</dimen>
-
-    <dimen name="recycler_view_min_height">200dp</dimen>
 
     <dimen name="spinner_start_padding">15dp</dimen>
     <dimen name="spinner_end_padding">30dp</dimen>

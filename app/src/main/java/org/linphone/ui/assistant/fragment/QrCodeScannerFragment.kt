@@ -38,6 +38,7 @@ import org.linphone.databinding.AssistantQrCodeScannerFragmentBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.GenericFragment
 import org.linphone.ui.assistant.viewmodel.QrCodeViewModel
+import org.linphone.ui.main.sso.fragment.SingleSignOnFragmentDirections
 
 @UiThread
 class QrCodeScannerFragment : GenericFragment() {
@@ -85,13 +86,33 @@ class QrCodeScannerFragment : GenericFragment() {
 
         viewModel.qrCodeFoundEvent.observe(viewLifecycleOwner) {
             it.consume { isValid ->
-                if (!isValid) {
-                    (requireActivity() as GenericActivity).showRedToast(
-                        getString(R.string.assistant_qr_code_invalid_toast),
-                        R.drawable.warning_circle
-                    )
-                } else {
+                if (isValid) {
                     requireActivity().finish()
+                }
+            }
+        }
+
+        viewModel.onErrorEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                // Core has restarted but something went wrong, restart video capture
+                enableQrCodeVideoScanner()
+            }
+        }
+
+        coreContext.bearerAuthenticationRequestedEvent.observe(viewLifecycleOwner) {
+            it.consume { pair ->
+                val serverUrl = pair.first
+                val username = pair.second
+
+                Log.i(
+                    "$TAG Navigating to Single Sign On Fragment with server URL [$serverUrl] and username [$username]"
+                )
+                if (findNavController().currentDestination?.id == R.id.qrCodeScannerFragment) {
+                    val action = SingleSignOnFragmentDirections.actionGlobalSingleSignOnFragment(
+                        serverUrl,
+                        username
+                    )
+                    findNavController().navigate(action)
                 }
             }
         }

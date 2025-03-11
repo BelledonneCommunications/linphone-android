@@ -27,6 +27,7 @@ import android.util.Base64
 import android.util.Pair
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import java.math.BigInteger
 import java.nio.charset.StandardCharsets
 import java.security.KeyStore
@@ -38,6 +39,7 @@ import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 import org.linphone.core.tools.Log
+import androidx.core.content.edit
 
 class VFS {
     companion object {
@@ -72,7 +74,13 @@ class VFS {
                 return false
             }
 
-            preferences.edit().putBoolean("vfs_enabled", true).apply()
+            preferences.edit { putBoolean("vfs_enabled", true) }
+
+            if (corePreferences.makePublicMediaFilesDownloaded) {
+                Log.w("$TAG VFS is now enabled, disabling auto export of media files to native gallery")
+                corePreferences.makePublicMediaFilesDownloaded = false
+            }
+
             return true
         }
 
@@ -91,10 +99,10 @@ class VFS {
                     generateSecretKey()
                     encryptToken(generateToken()).let { data ->
                         preferences
-                            .edit()
-                            .putString(VFS_IV, data.first)
-                            .putString(VFS_KEY, data.second)
-                            .commit()
+                            .edit(commit = true) {
+                                putString(VFS_IV, data.first)
+                                    .putString(VFS_KEY, data.second)
+                            }
                     }
                 }
 

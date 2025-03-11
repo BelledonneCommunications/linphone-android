@@ -63,8 +63,6 @@ class LinphoneUtils {
         const val RECORDING_FILE_NAME_URI_TIMESTAMP_SEPARATOR = "_on_"
         const val RECORDING_FILE_EXTENSION = ".smff"
 
-        private const val CHAT_ROOM_ID_SEPARATOR = "#~#"
-
         @WorkerThread
         fun getDefaultAccount(): Account? {
             return coreContext.core.defaultAccount ?: coreContext.core.accountList.firstOrNull()
@@ -96,7 +94,9 @@ class LinphoneUtils {
         @WorkerThread
         fun getDisplayName(address: Address?): String {
             if (address == null) return "[null]"
-            if (address.displayName == null) {
+
+            val displayName = address.displayName
+            if (displayName.isNullOrEmpty()) {
                 val account = coreContext.core.accountList.find { account ->
                     account.params.identityAddress?.asStringUriOnly() == address.asStringUriOnly()
                 }
@@ -106,8 +106,13 @@ class LinphoneUtils {
                     return localDisplayName
                 }
             }
+
             // Do not return an empty display name
-            return address.displayName ?: address.username ?: address.asString()
+            return if (displayName.isNullOrEmpty()) {
+                address.username ?: address.asString()
+            } else {
+                displayName
+            }
         }
 
         @WorkerThread
@@ -226,7 +231,7 @@ class LinphoneUtils {
             val isIncoming = isCallIncoming(call.state)
             return if (isConference || getConferenceInfoIfAny(call) != null) {
                 true
-            } else if (isIncoming) {
+            } else if (isIncoming || call.state == Call.State.Connected) { // In connected state call.currentParams.isVideoEnabled will return false...
                 call.remoteParams?.isVideoEnabled == true && call.remoteParams?.videoDirection != MediaDirection.Inactive
             } else {
                 call.currentParams.isVideoEnabled && call.currentParams.videoDirection != MediaDirection.Inactive
@@ -272,7 +277,7 @@ class LinphoneUtils {
             conferenceParams.subject = subject
 
             // Enable end-to-end encryption if client supports it
-            conferenceParams.securityLevel = if (isEndToEndEncryptedChatAvailable(core)) {
+            conferenceParams.securityLevel = if (corePreferences.createEndToEndEncryptedMeetingsAndGroupCalls) {
                 Log.i("$TAG Requesting EndToEnd security level for conference")
                 Conference.SecurityLevel.EndToEnd
             } else {
@@ -397,6 +402,9 @@ class LinphoneUtils {
                 ChatMessage.State.InProgress, ChatMessage.State.FileTransferInProgress -> {
                     R.drawable.animated_in_progress
                 }
+                ChatMessage.State.PendingDelivery -> {
+                    R.drawable.hourglass
+                }
                 else -> {
                     R.drawable.animated_in_progress
                 }
@@ -429,40 +437,8 @@ class LinphoneUtils {
         }
 
         @WorkerThread
-        fun getChatRoomId(room: ChatRoom): String {
-            return getChatRoomId(room.localAddress, room.peerAddress)
-        }
-
-        @WorkerThread
-        fun getChatRoomId(localAddress: Address, remoteAddress: Address): String {
-            val localSipUri = localAddress.clone()
-            localSipUri.clean()
-            val remoteSipUri = remoteAddress.clone()
-            remoteSipUri.clean()
-            return getChatRoomId(localSipUri.asStringUriOnly(), remoteSipUri.asStringUriOnly())
-        }
-
-        @AnyThread
-        fun getChatRoomId(localSipUri: String, remoteSipUri: String): String {
-            return "$localSipUri$CHAT_ROOM_ID_SEPARATOR$remoteSipUri"
-        }
-
-        @AnyThread
-        fun getLocalAndPeerSipUrisFromChatRoomId(id: String): Pair<String, String>? {
-            val split = id.split(CHAT_ROOM_ID_SEPARATOR)
-            if (split.size == 2) {
-                val localAddress = split[0]
-                val peerAddress = split[1]
-                Log.i(
-                    "$TAG Got local [$localAddress] and peer [$peerAddress] SIP URIs from conversation id [$id]"
-                )
-                return Pair(localAddress, peerAddress)
-            } else {
-                Log.e(
-                    "$TAG Failed to parse conversation id [$id] with separator [$CHAT_ROOM_ID_SEPARATOR]"
-                )
-            }
-            return null
+        fun getConversationId(chatRoom: ChatRoom): String {
+            return chatRoom.identifier ?: ""
         }
 
         @WorkerThread

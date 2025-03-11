@@ -20,7 +20,6 @@
 package org.linphone.ui.main.fragment
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -46,6 +45,7 @@ import org.linphone.ui.assistant.AssistantActivity
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.settings.fragment.AccountProfileFragmentDirections
 import org.linphone.ui.main.viewmodel.DrawerMenuViewModel
+import androidx.core.net.toUri
 
 @UiThread
 class DrawerMenuFragment : GenericMainFragment() {
@@ -146,7 +146,7 @@ class DrawerMenuFragment : GenericMainFragment() {
         viewModel.openLinkInBrowserEvent.observe(viewLifecycleOwner) {
             it.consume { link ->
                 try {
-                    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
+                    val browserIntent = Intent(Intent.ACTION_VIEW, link.toUri())
                     startActivity(browserIntent)
                 } catch (ise: IllegalStateException) {
                     Log.e(

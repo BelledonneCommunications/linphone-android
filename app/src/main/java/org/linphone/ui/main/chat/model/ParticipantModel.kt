@@ -22,7 +22,9 @@ package org.linphone.ui.main.chat.model
 import android.view.View
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
+import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.Address
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 
@@ -39,6 +41,8 @@ class ParticipantModel
 ) {
     val sipUri = address.asStringUriOnly()
 
+    val showSipUri = MutableLiveData<Boolean>()
+
     val avatarModel: ContactAvatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
         address
     )
@@ -48,6 +52,19 @@ class ParticipantModel
     val friendAvailable: Boolean = coreContext.contactsManager.isContactAvailable(
         avatarModel.friend
     )
+
+    init {
+        showSipUri.postValue(false)
+    }
+
+    @UiThread
+    fun toggleShowSipUri() {
+        if (!corePreferences.onlyDisplaySipUriUsername) {
+            showSipUri.postValue(showSipUri.value == false)
+        } else {
+            onClicked()
+        }
+    }
 
     @UiThread
     fun onClicked() {

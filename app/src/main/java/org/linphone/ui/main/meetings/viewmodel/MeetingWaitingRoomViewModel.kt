@@ -111,10 +111,12 @@ class MeetingWaitingRoomViewModel
                 when (state) {
                     Call.State.End -> {
                         Log.i("$TAG Call has ended, leaving waiting room fragment")
+                        joining.postValue(false)
                         leaveWaitingRoomEvent.postValue(Event(true))
                     }
                     Call.State.Error -> {
                         Log.w("$TAG Call has failed, leaving waiting room fragment")
+                        joining.postValue(false)
                         leaveWaitingRoomEvent.postValue(Event(true))
                     }
                     else -> {}
@@ -190,6 +192,14 @@ class MeetingWaitingRoomViewModel
                     conferenceInfoFoundEvent.postValue(Event(true))
                 } else {
                     Log.e("$TAG Conference info with SIP URI [$uri] couldn't be found!")
+                    showRedToastEvent.postValue(
+                        Event(
+                            Pair(
+                                R.string.meeting_info_not_found_toast,
+                                R.drawable.warning_circle
+                            )
+                        )
+                    )
                     conferenceInfoFoundEvent.postValue(Event(false))
                 }
             } else {

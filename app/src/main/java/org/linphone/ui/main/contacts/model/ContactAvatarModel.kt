@@ -35,6 +35,7 @@ import org.linphone.core.SecurityLevel
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.TimestampUtils
+import androidx.core.net.toUri
 
 class ContactAvatarModel
     @WorkerThread
@@ -151,7 +152,7 @@ class ContactAvatarModel
     private fun getAvatarUri(friend: Friend): Uri? {
         val picturePath = friend.photo
         if (!picturePath.isNullOrEmpty()) {
-            return Uri.parse(picturePath)
+            return picturePath.toUri()
         }
 
         val refKey = friend.refKey

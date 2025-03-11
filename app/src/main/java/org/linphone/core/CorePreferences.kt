@@ -142,10 +142,27 @@ class CorePreferences
 
     // Conversation related
 
+    @get:WorkerThread @set:WorkerThread
     var markConversationAsReadWhenDismissingMessageNotification: Boolean
         get() = config.getBool("app", "mark_as_read_notif_dismissal", false)
         set(value) {
             config.setBool("app", "mark_as_read_notif_dismissal", value)
+        }
+
+    var makePublicMediaFilesDownloaded: Boolean
+        // Keep old name for backward compatibility
+        get() = config.getBool("app", "make_downloaded_images_public_in_gallery", false)
+        set(value) {
+            config.setBool("app", "make_downloaded_images_public_in_gallery", value)
+        }
+
+    // Conference related
+
+    @get:WorkerThread @set:WorkerThread
+    var createEndToEndEncryptedMeetingsAndGroupCalls: Boolean
+        get() = config.getBool("app", "create_e2e_encrypted_conferences", false)
+        set(value) {
+            config.setBool("app", "create_e2e_encrypted_conferences", value)
         }
 
     // Contacts related
@@ -267,6 +284,10 @@ class CorePreferences
         get() = config.getBool("ui", "assistant_hide_third_party_account", false)
 
     @get:WorkerThread
+    val singleSignOnClientId: String
+        get() = config.getString("app", "oidc_client_id", "linphone")!!
+
+    @get:WorkerThread
     val useUsernameAsSingleSignOnLoginHint: Boolean
         get() = config.getBool("ui", "use_username_as_sso_login_hint", false)
 
@@ -327,6 +348,10 @@ class CorePreferences
     @get:AnyThread
     val ssoCacheFile: String
         get() = context.filesDir.absolutePath + "/auth_state.json"
+
+    @get:AnyThread
+    val messageReceivedInVisibleConversationNotificationSound: String
+        get() = context.filesDir.absolutePath + "/share/sounds/linphone/incoming_chat.wav"
 
     @UiThread
     fun copyAssetsFromPackage() {

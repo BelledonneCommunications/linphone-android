@@ -69,12 +69,12 @@ class HistoryViewModel
         MutableLiveData<Event<Int>>()
     }
 
-    val goToMeetingConversationEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
-        MutableLiveData<Event<Pair<String, String>>>()
+    val goToMeetingConversationEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
     }
 
-    val goToConversationEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
-        MutableLiveData<Event<Pair<String, String>>>()
+    val goToConversationEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
     }
 
     val conferenceToJoinEvent: MutableLiveData<Event<String>> by lazy {
@@ -111,21 +111,14 @@ class HistoryViewModel
             val state = chatRoom.state
             if (state == ChatRoom.State.Instantiated) return
 
-            val id = LinphoneUtils.getChatRoomId(chatRoom)
+            val id = LinphoneUtils.getConversationId(chatRoom)
             Log.i("$TAG Conversation [$id] (${chatRoom.subject}) state changed: [$state]")
 
             if (state == ChatRoom.State.Created) {
                 Log.i("$TAG Conversation [$id] successfully created")
                 chatRoom.removeListener(this)
                 operationInProgress.postValue(false)
-                goToConversationEvent.postValue(
-                    Event(
-                        Pair(
-                            chatRoom.localAddress.asStringUriOnly(),
-                            chatRoom.peerAddress.asStringUriOnly()
-                        )
-                    )
-                )
+                goToConversationEvent.postValue(Event(LinphoneUtils.getConversationId(chatRoom)))
             } else if (state == ChatRoom.State.CreationFailed) {
                 Log.e("$TAG Conversation [$id] creation has failed!")
                 chatRoom.removeListener(this)
@@ -212,14 +205,7 @@ class HistoryViewModel
         coreContext.postOnCoreThread {
             val chatRoom = meetingChatRoom
             if (chatRoom != null) {
-                goToMeetingConversationEvent.postValue(
-                    Event(
-                        Pair(
-                            chatRoom.localAddress.asStringUriOnly(),
-                            chatRoom.peerAddress.asStringUriOnly()
-                        )
-                    )
-                )
+                goToMeetingConversationEvent.postValue(Event(LinphoneUtils.getConversationId(chatRoom)))
             } else {
                 Log.e("$TAG Failed to find chat room for current call log!")
             }
@@ -242,20 +228,22 @@ class HistoryViewModel
                 params.isChatEnabled = true
                 params.isGroupEnabled = false
                 params.subject = AppUtils.getString(R.string.conversation_one_to_one_hidden_subject)
+                params.account = account
+
                 val chatParams = params.chatParams ?: return@postOnCoreThread
                 chatParams.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
 
                 val sameDomain = remote.domain == corePreferences.defaultDomain && remote.domain == account.params.domain
                 if (account.params.instantMessagingEncryptionMandatory && sameDomain) {
                     Log.i(
-                        "$TAG Account is in secure mode & domain matches, creating a E2E conversation"
+                        "$TAG Account is in secure mode & domain matches, creating an E2E encrypted conversation"
                     )
                     chatParams.backend = ChatRoom.Backend.FlexisipChat
                     params.securityLevel = Conference.SecurityLevel.EndToEnd
                 } else if (!account.params.instantMessagingEncryptionMandatory) {
                     if (LinphoneUtils.isEndToEndEncryptedChatAvailable(core)) {
                         Log.i(
-                            "$TAG Account is in interop mode but LIME is available, creating a E2E conversation"
+                            "$TAG Account is in interop mode but LIME is available, creating an E2E encrypted conversation"
                         )
                         chatParams.backend = ChatRoom.Backend.FlexisipChat
                         params.securityLevel = Conference.SecurityLevel.EndToEnd
@@ -279,49 +267,33 @@ class HistoryViewModel
                 val existingChatRoom = core.searchChatRoom(params, localAddress, null, participants)
                 if (existingChatRoom != null) {
                     Log.i(
-                        "$TAG Found existing conversation [${LinphoneUtils.getChatRoomId(
+                        "$TAG Found existing conversation [${LinphoneUtils.getConversationId(
                             existingChatRoom
                         )}], going to it"
                     )
-                    goToConversationEvent.postValue(
-                        Event(Pair(localSipUri, existingChatRoom.peerAddress.asStringUriOnly()))
-                    )
+                    goToConversationEvent.postValue(Event(LinphoneUtils.getConversationId(existingChatRoom)))
                 } else {
                     Log.i(
                         "$TAG No existing conversation between [$localSipUri] and [$remoteSipUri] was found, let's create it"
                     )
                     operationInProgress.postValue(true)
-                    val chatRoom = core.createChatRoom(params, localAddress, participants)
+                    val chatRoom = core.createChatRoom(params, participants)
                     if (chatRoom != null) {
                         if (chatParams.backend == ChatRoom.Backend.FlexisipChat) {
                             if (chatRoom.state == ChatRoom.State.Created) {
-                                val id = LinphoneUtils.getChatRoomId(chatRoom)
+                                val id = LinphoneUtils.getConversationId(chatRoom)
                                 Log.i("$TAG 1-1 conversation [$id] has been created")
                                 operationInProgress.postValue(false)
-                                goToConversationEvent.postValue(
-                                    Event(
-                                        Pair(
-                                            chatRoom.localAddress.asStringUriOnly(),
-                                            chatRoom.peerAddress.asStringUriOnly()
-                                        )
-                                    )
-                                )
+                                goToConversationEvent.postValue(Event(LinphoneUtils.getConversationId(chatRoom)))
                             } else {
                                 Log.i("$TAG Conversation isn't in Created state yet, wait for it")
                                 chatRoom.addListener(chatRoomListener)
                             }
                         } else {
-                            val id = LinphoneUtils.getChatRoomId(chatRoom)
+                            val id = LinphoneUtils.getConversationId(chatRoom)
                             Log.i("$TAG Conversation successfully created [$id]")
                             operationInProgress.postValue(false)
-                            goToConversationEvent.postValue(
-                                Event(
-                                    Pair(
-                                        chatRoom.localAddress.asStringUriOnly(),
-                                        chatRoom.peerAddress.asStringUriOnly()
-                                    )
-                                )
-                            )
+                            goToConversationEvent.postValue(Event(LinphoneUtils.getConversationId(chatRoom)))
                         }
                     } else {
                         Log.e(

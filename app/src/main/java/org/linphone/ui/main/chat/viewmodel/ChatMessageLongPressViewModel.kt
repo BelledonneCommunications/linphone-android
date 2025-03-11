@@ -72,7 +72,6 @@ class ChatMessageLongPressViewModel : GenericViewModel() {
 
     val onDismissedEvent = MutableLiveData<Event<Boolean>>()
 
-    private lateinit var emojiBottomSheet: ChatBubbleEmojiPickerBottomSheetBinding
     private lateinit var emojiBottomSheetBehavior: BottomSheetBehavior<View>
 
     init {
@@ -91,7 +90,7 @@ class ChatMessageLongPressViewModel : GenericViewModel() {
         hideCopyTextToClipboard.value = model.text.value.isNullOrEmpty()
         isChatRoomReadOnly.value = model.chatRoomIsReadOnly
         isMessageOutgoing.value = model.isOutgoing
-        isMessageInError.value = model.isInError
+        isMessageInError.value = model.isInError.value == true
         horizontalBias.value = if (model.isOutgoing) 1f else 0f
         messageModel.value = model
 

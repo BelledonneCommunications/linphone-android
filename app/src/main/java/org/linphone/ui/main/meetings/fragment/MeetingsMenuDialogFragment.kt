@@ -33,6 +33,7 @@ import org.linphone.databinding.MeetingsListLongPressMenuBinding
 
 @UiThread
 class MeetingsMenuDialogFragment(
+    private val isUserOrganizer: Boolean,
     private val onDismiss: (() -> Unit)? = null,
     private val onDeleteMeeting: (() -> Unit)? = null
 ) : BottomSheetDialogFragment() {
@@ -64,6 +65,7 @@ class MeetingsMenuDialogFragment(
         savedInstanceState: Bundle?
     ): View {
         val view = MeetingsListLongPressMenuBinding.inflate(layoutInflater)
+        view.cancelInsteadOfDelete = isUserOrganizer
 
         view.setDeleteClickListener {
             onDeleteMeeting?.invoke()

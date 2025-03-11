@@ -42,7 +42,8 @@ class ConversationDocumentsListViewModel
         MutableLiveData<Event<FileModel>>()
     }
 
-    override fun beforeNotifyingChatRoomFound(sameOne: Boolean) {
+    @WorkerThread
+    override fun afterNotifyingChatRoomFound(sameOne: Boolean) {
         loadDocumentsList()
     }
 
@@ -58,7 +59,7 @@ class ConversationDocumentsListViewModel
 
         val list = arrayListOf<FileModel>()
         Log.i(
-            "$TAG Loading document contents for conversation [${LinphoneUtils.getChatRoomId(
+            "$TAG Loading document contents for conversation [${LinphoneUtils.getConversationId(
                 chatRoom
             )}]"
         )
@@ -79,12 +80,26 @@ class ConversationDocumentsListViewModel
             val size = documentContent.size.toLong()
             val timestamp = documentContent.creationTimestamp
             if (path.isNotEmpty() && name.isNotEmpty()) {
-                val model = FileModel(path, name, size, timestamp, isEncrypted, originalPath) {
+                val messageId = documentContent.relatedChatMessageId
+                val ephemeral = if (messageId != null) {
+                    val chatMessage = chatRoom.findMessage(messageId)
+                    if (chatMessage == null) {
+                        Log.w("$TAG Failed to find message using ID [$messageId] related to this content, can't get real info about being related to ephemeral message")
+                    }
+                    chatMessage?.isEphemeral ?: chatRoom.isEphemeralEnabled
+                } else {
+                    Log.e("$TAG No chat message ID related to this content, can't get real info about being related to ephemeral message")
+                    chatRoom.isEphemeralEnabled
+                }
+
+                val model =
+                    FileModel(path, name, size, timestamp, isEncrypted, originalPath, ephemeral) {
                     openDocumentEvent.postValue(Event(it))
                 }
                 list.add(model)
             }
         }
+
         Log.i("$TAG [${documents.size}] documents have been processed")
         documentsList.postValue(list)
         operationInProgress.postValue(false)

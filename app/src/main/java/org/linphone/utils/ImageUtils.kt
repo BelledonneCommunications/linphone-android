@@ -28,12 +28,13 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.Rect
 import android.graphics.drawable.BitmapDrawable
-import android.net.Uri
 import androidx.annotation.AnyThread
 import androidx.annotation.WorkerThread
 import java.io.FileNotFoundException
 import org.linphone.contacts.AvatarGenerator
 import org.linphone.core.tools.Log
+import androidx.core.net.toUri
+import androidx.core.graphics.createBitmap
 
 class ImageUtils {
     companion object {
@@ -63,12 +64,7 @@ class ImageUtils {
             Log.d("$TAG Trying to create Bitmap from path [$path]")
             if (path != null) {
                 try {
-                    val fromPictureUri = Uri.parse(path)
-                    if (fromPictureUri == null) {
-                        Log.e("$TAG Failed to parse path [$path] as URI")
-                        return null
-                    }
-
+                    val fromPictureUri = path.toUri()
                     // We make a copy to ensure Bitmap will be Software and not Hardware, required for shortcuts
                     val bitmap = ImageDecoder.decodeBitmap(
                         ImageDecoder.createSource(context.contentResolver, fromPictureUri)
@@ -96,8 +92,7 @@ class ImageUtils {
 
         @AnyThread
         private fun getRoundBitmap(bitmap: Bitmap): Bitmap {
-            val output =
-                Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
+            val output = createBitmap(bitmap.width, bitmap.height)
             val canvas = Canvas(output)
             val color = -0xbdbdbe
             val paint = Paint()

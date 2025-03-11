@@ -143,7 +143,7 @@ class CurrentCallViewModel
 
     val qualityIcon = MutableLiveData<Int>()
 
-    var terminatedByUsed = false
+    var terminatedByUser = false
 
     val isRemoteRecordingEvent: MutableLiveData<Event<Pair<Boolean, String>>> by lazy {
         MutableLiveData<Event<Pair<Boolean, String>>>()
@@ -199,8 +199,8 @@ class CurrentCallViewModel
 
     val operationInProgress = MutableLiveData<Boolean>()
 
-    val goToConversationEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
-        MutableLiveData<Event<Pair<String, String>>>()
+    val goToConversationEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
     }
 
     val chatRoomCreationErrorEvent: MutableLiveData<Event<Int>> by lazy {
@@ -358,7 +358,11 @@ class CurrentCallViewModel
                     videoUpdateInProgress.postValue(false)
                     updateCallDuration()
                     if (corePreferences.automaticallyStartCallRecording) {
-                        isRecording.postValue(call.params.isRecording)
+                        val recording = call.params.isRecording
+                        isRecording.postValue(recording)
+                        if (recording) {
+                            showRecordingToast()
+                        }
                     }
 
                     // MediaEncryption None & SRTP won't be notified through onEncryptionChanged callback,
@@ -390,21 +394,14 @@ class CurrentCallViewModel
             val state = chatRoom.state
             if (state == ChatRoom.State.Instantiated) return
 
-            val id = LinphoneUtils.getChatRoomId(chatRoom)
+            val id = LinphoneUtils.getConversationId(chatRoom)
             Log.i("$TAG Conversation [$id] (${chatRoom.subject}) state changed: [$state]")
 
             if (state == ChatRoom.State.Created) {
                 Log.i("$TAG Conversation [$id] successfully created")
                 chatRoom.removeListener(this)
                 operationInProgress.postValue(false)
-                goToConversationEvent.postValue(
-                    Event(
-                        Pair(
-                            chatRoom.localAddress.asStringUriOnly(),
-                            chatRoom.peerAddress.asStringUriOnly()
-                        )
-                    )
-                )
+                goToConversationEvent.postValue(Event(LinphoneUtils.getConversationId(chatRoom)))
             } else if (state == ChatRoom.State.CreationFailed) {
                 Log.e("$TAG Conversation [$id] creation has failed!")
                 chatRoom.removeListener(this)
@@ -612,7 +609,7 @@ class CurrentCallViewModel
         coreContext.postOnCoreThread {
             if (::currentCall.isInitialized) {
                 Log.i("$TAG Terminating call [${currentCall.remoteAddress.asStringUriOnly()}]")
-                terminatedByUsed = true
+                terminatedByUser = true
                 coreContext.terminateCall(currentCall)
             }
         }
@@ -706,7 +703,12 @@ class CurrentCallViewModel
         val routeAudioToSpeaker = isSpeakerEnabled.value != true
 
         coreContext.postOnCoreThread { core ->
+            var earpieceFound = false
+            var speakerFound = false
             val audioDevices = core.audioDevices
+            val currentDevice = currentCall.outputAudioDevice
+            Log.i("$TAG Currently used output audio device is [${currentDevice?.deviceName} (${currentDevice?.type}])")
+
             val list = arrayListOf<AudioDeviceModel>()
             for (device in audioDevices) {
                 // Only list output audio devices
@@ -714,9 +716,11 @@ class CurrentCallViewModel
 
                 val name = when (device.type) {
                     AudioDevice.Type.Earpiece -> {
+                        earpieceFound = true
                         AppUtils.getString(R.string.call_audio_device_type_earpiece)
                     }
                     AudioDevice.Type.Speaker -> {
+                        speakerFound = true
                         AppUtils.getString(R.string.call_audio_device_type_speaker)
                     }
                     AudioDevice.Type.Headset -> {
@@ -739,7 +743,6 @@ class CurrentCallViewModel
                     }
                     else -> device.deviceName
                 }
-                val currentDevice = currentCall.outputAudioDevice
                 val isCurrentlyInUse = device.type == currentDevice?.type && device.deviceName == currentDevice.deviceName
                 val model = AudioDeviceModel(device, name, device.type, isCurrentlyInUse, true) {
                     // onSelected
@@ -765,8 +768,8 @@ class CurrentCallViewModel
                 Log.i("$TAG Found audio device [${device.id}]")
             }
 
-            if (list.size > 2) {
-                Log.i("$TAG Found more than two devices, showing list to let user choose")
+            if (list.size > 2 || (list.size > 1 && (!earpieceFound || !speakerFound))) {
+                Log.i("$TAG Found more than two devices (or more than 1 but no earpiece or speaker), showing list to let user choose")
                 showAudioDevicesListEvent.postValue(Event(list))
             } else {
                 Log.i(
@@ -855,8 +858,12 @@ class CurrentCallViewModel
                     Log.i("$TAG Starting call recording")
                     currentCall.startRecording()
                 }
+
                 val recording = currentCall.params.isRecording
                 isRecording.postValue(recording)
+                if (recording) {
+                    showRecordingToast()
+                }
             }
         }
     }
@@ -921,17 +928,10 @@ class CurrentCallViewModel
                 if (existingConversation != null) {
                     Log.i(
                         "$TAG Found existing conversation [${
-                        LinphoneUtils.getChatRoomId(existingConversation)
+                        LinphoneUtils.getConversationId(existingConversation)
                         }], going to it"
                     )
-                    goToConversationEvent.postValue(
-                        Event(
-                            Pair(
-                                existingConversation.localAddress.asStringUriOnly(),
-                                existingConversation.peerAddress.asStringUriOnly()
-                            )
-                        )
-                    )
+                    goToConversationEvent.postValue(Event(LinphoneUtils.getConversationId(existingConversation)))
                 } else {
                     Log.i("$TAG No existing conversation was found, let's create it")
                     createCurrentCallConversation(currentCall)
@@ -1052,7 +1052,7 @@ class CurrentCallViewModel
         )
         contact.value?.destroy()
 
-        terminatedByUsed = false
+        terminatedByUser = false
         currentCall = call
         callStatsModel.update(call, call.audioStats)
         callMediaEncryptionModel.update(call)
@@ -1172,7 +1172,11 @@ class CurrentCallViewModel
         contact.postValue(model)
         displayedName.postValue(model.friend.name)
 
-        isRecording.postValue(call.params.isRecording)
+        val recording = call.params.isRecording
+        isRecording.postValue(recording)
+        if (recording) {
+            showRecordingToast()
+        }
 
         val isRemoteRecording = call.remoteParams?.isRecording == true
         if (isRemoteRecording) {
@@ -1204,6 +1208,7 @@ class CurrentCallViewModel
 
     @WorkerThread
     private fun updateOutputAudioDevice(audioDevice: AudioDevice?) {
+        Log.i("$TAG Output audio device updated to [${audioDevice?.deviceName} (${audioDevice?.type})]")
         isSpeakerEnabled.postValue(audioDevice?.type == AudioDevice.Type.Speaker)
         isHeadsetEnabled.postValue(
             audioDevice?.type == AudioDevice.Type.Headphones || audioDevice?.type == AudioDevice.Type.Headset
@@ -1346,44 +1351,29 @@ class CurrentCallViewModel
 
     @WorkerThread
     private fun createCurrentCallConversation(call: Call) {
-        val localAddress = call.callLog.localAddress
         val remoteAddress = call.remoteAddress
         val participants = arrayOf(remoteAddress)
         val core = call.core
         operationInProgress.postValue(true)
 
         val params = getChatRoomParams(call) ?: return // TODO: show error to user
-        val conversation = core.createChatRoom(params, localAddress, participants)
-        if (conversation != null) {
+        val chatRoom = core.createChatRoom(params, participants)
+        if (chatRoom != null) {
             if (params.chatParams?.backend == ChatRoom.Backend.FlexisipChat) {
-                if (conversation.state == ChatRoom.State.Created) {
-                    val id = LinphoneUtils.getChatRoomId(conversation)
+                if (chatRoom.state == ChatRoom.State.Created) {
+                    val id = LinphoneUtils.getConversationId(chatRoom)
                     Log.i("$TAG 1-1 conversation [$id] has been created")
                     operationInProgress.postValue(false)
-                    goToConversationEvent.postValue(
-                        Event(
-                            Pair(
-                                conversation.localAddress.asStringUriOnly(),
-                                conversation.peerAddress.asStringUriOnly()
-                            )
-                        )
-                    )
+                    goToConversationEvent.postValue(Event(LinphoneUtils.getConversationId(chatRoom)))
                 } else {
                     Log.i("$TAG Conversation isn't in Created state yet, wait for it")
-                    conversation.addListener(chatRoomListener)
+                    chatRoom.addListener(chatRoomListener)
                 }
             } else {
-                val id = LinphoneUtils.getChatRoomId(conversation)
+                val id = LinphoneUtils.getConversationId(chatRoom)
                 Log.i("$TAG Conversation successfully created [$id]")
                 operationInProgress.postValue(false)
-                goToConversationEvent.postValue(
-                    Event(
-                        Pair(
-                            conversation.localAddress.asStringUriOnly(),
-                            conversation.peerAddress.asStringUriOnly()
-                        )
-                    )
-                )
+                goToConversationEvent.postValue(Event(LinphoneUtils.getConversationId(chatRoom)))
             }
         } else {
             Log.e(
@@ -1407,6 +1397,8 @@ class CurrentCallViewModel
         params.isChatEnabled = true
         params.isGroupEnabled = false
         params.subject = AppUtils.getString(R.string.conversation_one_to_one_hidden_subject)
+        params.account = account
+
         val chatParams = params.chatParams ?: return null
         chatParams.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
 
@@ -1470,5 +1462,10 @@ class CurrentCallViewModel
                 goToEndedCallEvent.postValue(Event(text))
             }
         }
+    }
+
+    @AnyThread
+    private fun showRecordingToast() {
+        showGreenToast(R.string.call_is_being_recorded, R.drawable.record_fill)
     }
 }

@@ -30,30 +30,15 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
 
-            <ImageView
-                android:id="@+id/header"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginTop="19dp"
-                android:src="@drawable/mountains"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                android:contentDescription="@null"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/back"
-                app:layout_constraintBottom_toBottomOf="@id/title"
-                app:tint="?attr/color_main1_500"/>
-
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/assistant_page_title_style"
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="100dp"
-                android:paddingBottom="27dp"
                 android:text="@string/assistant_login_using_single_sign_on"
-                app:layout_constraintTop_toTopOf="parent"
+                android:textColor="?attr/color_text"
+                app:layout_constraintTop_toTopOf="@id/back"
+                app:layout_constraintBottom_toBottomOf="@id/back"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -65,7 +50,7 @@
                 app:indicatorColor="?attr/color_main1_500"
                 android:indeterminate="true"
                 app:layout_constraintVertical_chainStyle="packed"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/message"/>
@@ -84,7 +69,21 @@
                 app:layout_constraintTop_toBottomOf="@id/progress"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintBottom_toTopOf="@id/mountains"/>
+
+            <ImageView
+                android:id="@+id/mountains"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="19dp"
+                android:src="@drawable/mountains"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:contentDescription="@null"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:tint="?attr/color_main1_500"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

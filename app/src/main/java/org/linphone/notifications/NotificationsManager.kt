@@ -31,6 +31,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.media.AudioAttributes
 import android.media.AudioManager
+import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Bundle
@@ -71,6 +72,8 @@ import org.linphone.core.MediaDirection
 import org.linphone.core.tools.Log
 import org.linphone.ui.call.CallActivity
 import org.linphone.ui.main.MainActivity
+import org.linphone.ui.main.MainActivity.Companion.ARGUMENTS_CHAT
+import org.linphone.ui.main.MainActivity.Companion.ARGUMENTS_CONVERSATION_ID
 import org.linphone.utils.AppUtils
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
@@ -121,6 +124,8 @@ class NotificationsManager
 
     private var currentlyDisplayedChatRoomId: String = ""
     private var currentlyDisplayedIncomingCallFragment: Boolean = false
+
+    private lateinit var mediaPlayer: MediaPlayer
 
     private val contactsListener = object : ContactsListener {
         @WorkerThread
@@ -262,11 +267,22 @@ class NotificationsManager
             Log.i("$TAG Received ${messages.size} aggregated messages")
             if (corePreferences.disableChat) return
 
-            val id = LinphoneUtils.getChatRoomId(chatRoom)
+            val id = LinphoneUtils.getConversationId(chatRoom)
             if (currentlyDisplayedChatRoomId.isNotEmpty() && id == currentlyDisplayedChatRoomId) {
                 Log.i(
-                    "$TAG Do not notify received messages for currently displayed conversation [$id]"
+                    "$TAG Do not notify received messages for currently displayed conversation [$id], but play sound if at least one message is incoming and not read"
                 )
+
+                var playSound = false
+                for (message in messages) {
+                    if (!message.isOutgoing && !message.isRead) {
+                        playSound = true
+                        break
+                    }
+                }
+                if (playSound) {
+                    playMessageReceivedSound()
+                }
                 return
             }
 
@@ -301,7 +317,7 @@ class NotificationsManager
                 "$TAG Reaction received [${reaction.body}] from [${address.asStringUriOnly()}] for message [$message]"
             )
 
-            val id = LinphoneUtils.getChatRoomId(chatRoom)
+            val id = LinphoneUtils.getConversationId(chatRoom)
             /*if (id == currentlyDisplayedChatRoomId) {
                 Log.i(
                     "$TAG Do not notify received reaction for currently displayed conversation [$id]"
@@ -340,7 +356,7 @@ class NotificationsManager
             if (corePreferences.disableChat) return
 
             if (chatRoom.muted) {
-                val id = LinphoneUtils.getChatRoomId(chatRoom)
+                val id = LinphoneUtils.getConversationId(chatRoom)
                 Log.i("$TAG Conversation $id has been muted")
                 return
             }
@@ -370,7 +386,7 @@ class NotificationsManager
                         val notification = createMessageNotification(
                             notifiable,
                             pendingIntent,
-                            LinphoneUtils.getChatRoomId(chatRoom),
+                            LinphoneUtils.getConversationId(chatRoom),
                             me
                         )
                         notify(notifiable.notificationId, notification, CHAT_TAG)
@@ -389,7 +405,7 @@ class NotificationsManager
         @WorkerThread
         override fun onChatRoomRead(core: Core, chatRoom: ChatRoom) {
             Log.i(
-                "$TAG Conversation [${LinphoneUtils.getChatRoomId(chatRoom)}] has been marked as read, removing notification if any"
+                "$TAG Conversation [${LinphoneUtils.getConversationId(chatRoom)}] has been marked as read, removing notification if any"
             )
             dismissChatNotification(chatRoom)
         }
@@ -533,6 +549,21 @@ class NotificationsManager
         core.addListener(coreListener)
 
         coreContext.contactsManager.addListener(contactsListener)
+
+        val soundPath = corePreferences.messageReceivedInVisibleConversationNotificationSound
+        mediaPlayer = MediaPlayer().apply {
+            try {
+                setAudioAttributes(
+                    AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                        .build()
+                )
+                setDataSource(soundPath)
+                prepare()
+            } catch (e: Exception) {
+                Log.e("$TAG Failed to prepare message received sound file [$soundPath]: $e")
+            }
+        }
     }
 
     @WorkerThread
@@ -786,7 +817,7 @@ class NotificationsManager
         val address = chatRoom.peerAddress.asStringUriOnly()
         var notifiable: Notifiable? = chatNotificationsMap[address]
         if (notifiable == null) {
-            notifiable = Notifiable(LinphoneUtils.getChatRoomId(chatRoom).hashCode())
+            notifiable = Notifiable(LinphoneUtils.getConversationId(chatRoom).hashCode())
             notifiable.myself = LinphoneUtils.getDisplayName(chatRoom.localAddress)
             notifiable.localIdentity = chatRoom.localAddress.asStringUriOnly()
             notifiable.remoteAddress = chatRoom.peerAddress.asStringUriOnly()
@@ -834,7 +865,7 @@ class NotificationsManager
             val notification = createMessageNotification(
                 notifiable,
                 pendingIntent,
-                LinphoneUtils.getChatRoomId(chatRoom),
+                LinphoneUtils.getConversationId(chatRoom),
                 me
             )
             notify(notifiable.notificationId, notification, CHAT_TAG)
@@ -899,7 +930,7 @@ class NotificationsManager
             val notification = createMessageNotification(
                 notifiable,
                 pendingIntent,
-                LinphoneUtils.getChatRoomId(chatRoom),
+                LinphoneUtils.getConversationId(chatRoom),
                 me
             )
             notify(notifiable.notificationId, notification, CHAT_TAG)
@@ -928,7 +959,7 @@ class NotificationsManager
         val notification = createMessageNotification(
             notifiable,
             pendingIntent,
-            LinphoneUtils.getChatRoomId(chatRoom),
+            LinphoneUtils.getConversationId(chatRoom),
             me
         )
         Log.i(
@@ -1103,7 +1134,7 @@ class NotificationsManager
         }
 
         Log.i(
-            "Creating notification for [${if (isIncoming) "incoming" else "outgoing"}] [${if (isConference) "conference" else "call"}] with video [${if (isVideo) "enabled" else "disabled"}] on channel [$channel]"
+            "Creating notification for ${if (isIncoming) "[incoming] " else ""}[${if (isConference) "conference" else "call"}] with video [${if (isVideo) "enabled" else "disabled"}] on channel [$channel]"
         )
 
         val builder = NotificationCompat.Builder(
@@ -1295,7 +1326,7 @@ class NotificationsManager
             return true
         } else {
             val previousNotificationId = previousChatNotifications.find { id ->
-                id == LinphoneUtils.getChatRoomId(chatRoom).hashCode()
+                id == LinphoneUtils.getConversationId(chatRoom).hashCode()
             }
             if (previousNotificationId != null) {
                 Log.i(
@@ -1362,7 +1393,7 @@ class NotificationsManager
         val notification = createMessageNotification(
             notifiable,
             pendingIntent,
-            LinphoneUtils.getChatRoomId(chatRoom),
+            LinphoneUtils.getConversationId(chatRoom),
             me
         )
         notify(notifiable.notificationId, notification, CHAT_TAG)
@@ -1551,7 +1582,7 @@ class NotificationsManager
         val id = context.getString(R.string.notification_channel_call_id)
         val name = context.getString(R.string.notification_channel_call_name)
 
-        val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_DEFAULT).apply {
+        val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_LOW).apply {
             description = name
             lockscreenVisibility = Notification.VISIBILITY_PUBLIC
         }
@@ -1585,9 +1616,8 @@ class NotificationsManager
     @WorkerThread
     private fun getChatRoomPendingIntent(chatRoom: ChatRoom, notificationId: Int): PendingIntent {
         val args = Bundle()
-        args.putBoolean("Chat", true)
-        args.putString("RemoteSipUri", chatRoom.peerAddress.asStringUriOnly())
-        args.putString("LocalSipUri", chatRoom.localAddress.asStringUriOnly())
+        args.putBoolean(ARGUMENTS_CHAT, true)
+        args.putString(ARGUMENTS_CONVERSATION_ID, LinphoneUtils.getConversationId(chatRoom))
 
         // Not using NavDeepLinkBuilder to prevent stacking a ConversationsListFragment above another one
         return TaskStackBuilder.create(context).run {
@@ -1602,6 +1632,17 @@ class NotificationsManager
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
                 args // Need to pass args here too for Remote & Local SIP URIs
             )!!
+        }
+    }
+
+    @WorkerThread
+    private fun playMessageReceivedSound() {
+        if (::mediaPlayer.isInitialized) {
+            try {
+                mediaPlayer.start()
+            } catch (e: Exception) {
+                Log.e("$TAG Failed to play message received sound file: $e")
+            }
         }
     }
 

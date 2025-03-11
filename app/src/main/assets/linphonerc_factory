@@ -22,7 +22,6 @@ zrtp_key_agreements_suites=MS_ZRTP_KEY_AGREEMENT_K255_MLK512,MS_ZRTP_KEY_AGREEME
 chat_messages_aggregation_delay=1000
 chat_messages_aggregation=1
 update_presence_model_timestamp_before_publish_expires_refresh=1
-rls_uri=sips:rls@sip.linphone.org
 
 [sound]
 #remove this property for any application that is not Linphone public version itself

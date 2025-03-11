@@ -47,31 +47,16 @@
                 app:tint="?attr/color_main2_500"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
-
-            <ImageView
-                android:id="@+id/header"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginTop="19dp"
-                android:src="@drawable/mountains"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                android:contentDescription="@null"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/back"
-                app:layout_constraintBottom_toBottomOf="@id/title"
-                app:tint="?attr/color_main1_500" />
     
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/assistant_page_title_style"
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="100dp"
-                android:paddingBottom="27dp"
                 android:text="@string/assistant_account_login"
-                app:layout_constraintTop_toTopOf="parent"
+                android:textColor="?attr/color_text"
+                app:layout_constraintTop_toTopOf="@id/back"
+                app:layout_constraintBottom_toBottomOf="@id/back"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -82,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
                 android:layout_marginEnd="16dp"
-                android:text="@{@string/sip_address + `*`, default=`SIP Address*`}"
+                android:text="@{@string/username + `*`, default=`Username*`}"
                 app:layout_constraintTop_toBottomOf="@id/title"
                 app:layout_constraintStart_toStartOf="@id/sip_identity"/>
 
@@ -95,12 +80,12 @@
                 android:layout_marginEnd="16dp"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
-                android:text="@={viewModel.sipIdentity, default=`sip:johndoe@sip.linphone.org`}"
+                android:text="@={viewModel.sipIdentity, default=`johndoe`}"
                 android:textSize="14sp"
                 android:textColor="?attr/color_main2_600"
                 android:background="@drawable/edit_text_background"
                 android:inputType="text|textNoSuggestions"
-                android:hint="@string/sip_address_hint"
+                android:hint="@string/username"
                 app:layout_constraintWidth_max="@dimen/text_input_max_width"
                 app:layout_constraintTop_toBottomOf="@id/sip_identity_label"
                 app:layout_constraintStart_toStartOf="parent"
@@ -132,7 +117,7 @@
                 android:textColor="?attr/color_main2_600"
                 android:background="@drawable/edit_text_background"
                 android:hint="@string/password"
-                android:inputType="@{viewModel.showPassword ? InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD : InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD, default=textPassword}"
+                passwordInputType="@{viewModel.showPassword ? InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD : InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD, default=textPassword}"
                 app:layout_constraintWidth_max="@dimen/text_input_max_width"
                 app:layout_constraintTop_toBottomOf="@id/password_label"
                 app:layout_constraintStart_toStartOf="parent"
@@ -296,7 +281,20 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/no_account_yet"
                 app:layout_constraintTop_toBottomOf="@id/third_party_sip_account"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintBottom_toTopOf="@id/mountains"/>
+
+            <ImageView
+                android:id="@+id/mountains"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/mountains"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:contentDescription="@null"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:tint="?attr/color_main1_500" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

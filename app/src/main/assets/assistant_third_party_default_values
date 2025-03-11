@@ -22,6 +22,7 @@
     <entry name="rtp_bundle" overwrite="true">0</entry>
     <entry name="lime_server_url" overwrite="true"></entry>
     <entry name="lime_algo" overwrite="true"></entry>
+    <entry name="supported" overwrite="true">outbound</entry>
   </section>
   <section name="nat_policy_default_values">
     <entry name="stun_server" overwrite="true">stun.linphone.org</entry>

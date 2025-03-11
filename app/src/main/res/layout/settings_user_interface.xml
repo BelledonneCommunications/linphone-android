@@ -56,6 +56,8 @@
             android:overlapAnchor="false"
             android:spinnerMode="dropdown"
             android:popupBackground="@drawable/shape_squircle_white_background"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintWidth_max="@dimen/text_input_max_width"
             app:layout_constraintTop_toBottomOf="@id/theme_title"
             app:layout_constraintStart_toStartOf="@id/theme_title"
             app:layout_constraintEnd_toEndOf="@id/theme_title" />
@@ -100,6 +102,8 @@
             android:overlapAnchor="false"
             android:spinnerMode="dropdown"
             android:popupBackground="@drawable/shape_squircle_white_background"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintWidth_max="@dimen/text_input_max_width"
             app:layout_constraintTop_toBottomOf="@id/color_title"
             app:layout_constraintStart_toStartOf="@id/color_title"
             app:layout_constraintEnd_toEndOf="@id/color_title" />

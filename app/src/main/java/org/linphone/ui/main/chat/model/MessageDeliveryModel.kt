@@ -63,6 +63,7 @@ class MessageDeliveryModel
             message: ChatMessage,
             state: ParticipantImdnState
         ) {
+            Log.i("$TAG Participant IMDN state changed [${state.state}], updating delivery status")
             computeDeliveryStatus()
         }
     }

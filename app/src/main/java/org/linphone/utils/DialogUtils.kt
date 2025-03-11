@@ -21,7 +21,6 @@ package org.linphone.utils
 
 import android.app.Dialog
 import android.content.Context
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
@@ -43,6 +42,7 @@ import org.linphone.databinding.DialogConfirmTurningOnVfsBinding
 import org.linphone.databinding.DialogContactConfirmTrustCallBinding
 import org.linphone.databinding.DialogContactTrustProcessBinding
 import org.linphone.databinding.DialogDeleteContactBinding
+import org.linphone.databinding.DialogDeleteMeetingBinding
 import org.linphone.databinding.DialogKickFromConferenceBinding
 import org.linphone.databinding.DialogManageAccountInternationalPrefixHelpBinding
 import org.linphone.databinding.DialogMergeCallsIntoConferenceBinding
@@ -66,6 +66,7 @@ import org.linphone.ui.call.model.ZrtpSasConfirmationDialogModel
 import org.linphone.ui.main.contacts.model.ContactTrustDialogModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.model.GroupSetOrEditSubjectDialogModel
+import androidx.core.graphics.drawable.toDrawable
 
 class DialogUtils {
     companion object {
@@ -514,6 +515,22 @@ class DialogUtils {
         }
 
         @UiThread
+        fun getDeleteMeetingDialog(
+            context: Context,
+            viewModel: ConfirmationDialogModel
+        ): Dialog {
+            val binding: DialogDeleteMeetingBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_delete_meeting,
+                null,
+                false
+            )
+            binding.viewModel = viewModel
+
+            return getDialog(context, binding)
+        }
+
+        @UiThread
         private fun getDialog(context: Context, binding: ViewDataBinding): Dialog {
             val dialog = Dialog(context, R.style.Theme_LinphoneDialog)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -526,9 +543,7 @@ class DialogUtils {
                 )
                 setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
-                val d: Drawable = ColorDrawable(
-                    context.getColor(R.color.bc_black)
-                )
+                val d: Drawable = context.getColor(R.color.bc_black).toDrawable()
                 d.alpha = 153 // 60% opacity
                 setBackgroundDrawable(d)
             }

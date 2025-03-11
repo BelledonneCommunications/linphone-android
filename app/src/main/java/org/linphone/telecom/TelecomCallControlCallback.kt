@@ -31,9 +31,11 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.AudioDevice
 import org.linphone.core.Call
 import org.linphone.core.CallListenerStub
+import org.linphone.core.Reason
 import org.linphone.core.tools.Log
 import org.linphone.utils.AudioUtils
 import org.linphone.utils.Event
@@ -50,6 +52,7 @@ class TelecomCallControlCallback(
 
     private var availableEndpoints: List<CallEndpointCompat> = arrayListOf()
     private var currentEndpoint = CallEndpointCompat.TYPE_UNKNOWN
+    private var endpointUpdateRequestFromLinphone: Boolean = false
 
     private val callListener = object : CallListenerStub() {
         @WorkerThread
@@ -64,8 +67,13 @@ class TelecomCallControlCallback(
                         CallAttributesCompat.Companion.CALL_TYPE_AUDIO_CALL
                     }
                     scope.launch {
-                        Log.i("$TAG Answering ${if (isVideo) "video" else "audio"} call")
+                        Log.i("$TAG Answering [${if (isVideo) "video" else "audio"}] call")
                         callControl.answer(type)
+                    }
+
+                    if (isVideo && corePreferences.routeAudioToSpeakerWhenVideoIsEnabled) {
+                        Log.i("$TAG Answering video call, routing audio to speaker")
+                        AudioUtils.routeAudioToSpeaker(call)
                     }
                 } else {
                     scope.launch {
@@ -74,18 +82,39 @@ class TelecomCallControlCallback(
                     }
                 }
             } else if (state == Call.State.End) {
+                val reason = call.reason
+                val direction = call.dir
                 scope.launch {
-                    Log.i("$TAG Disconnecting call because it has ended")
-                    callControl.disconnect(DisconnectCause(DisconnectCause.LOCAL))
+                    val disconnectCause = when (reason) {
+                        Reason.NotAnswered -> DisconnectCause.REMOTE
+                        Reason.Declined -> DisconnectCause.REJECTED
+                        Reason.Busy -> {
+                            if (direction == Call.Dir.Incoming) {
+                                DisconnectCause.MISSED
+                            } else {
+                                DisconnectCause.BUSY
+                            }
+                        }
+                        else -> DisconnectCause.LOCAL
+                    }
+                    Log.i("$TAG Disconnecting [${if (direction == Call.Dir.Incoming)"incoming" else "outgoing"}] call with cause [${disconnectCauseToString(disconnectCause)}] because it has ended with reason [$reason]")
+                    try {
+                        callControl.disconnect(DisconnectCause(disconnectCause))
+                    } catch (ise: IllegalArgumentException) {
+                        Log.e("$TAG Couldn't disconnect call control with cause [${disconnectCauseToString(disconnectCause)}]: $ise")
+                    }
                 }
             } else if (state == Call.State.Error) {
+                val reason = call.reason
                 scope.launch {
-                    Log.w("$TAG Disconnecting call due to error [$message]")
+                    // For some reason DisconnectCause.ERROR or DisconnectCause.BUSY triggers an IllegalArgumentException with following message
+                    // Valid DisconnectCause codes are limited to [DisconnectCause.LOCAL, DisconnectCause.REMOTE, DisconnectCause.MISSED, or DisconnectCause.REJECTED]
+                    val disconnectCause = DisconnectCause.REJECTED
+                    Log.w("$TAG Disconnecting call with cause [${disconnectCauseToString(disconnectCause)}] due to error [$message] and reason [$reason]")
                     try {
-                        // For some reason DisconnectCause.ERROR triggers an IllegalArgumentException
-                        callControl.disconnect(DisconnectCause(DisconnectCause.REJECTED))
+                        callControl.disconnect(DisconnectCause(disconnectCause))
                     } catch (ise: IllegalArgumentException) {
-                        Log.e("$TAG Couldn't terminate call control with REJECTED cause: $ise")
+                        Log.e("$TAG Couldn't disconnect call control with cause [${disconnectCauseToString(disconnectCause)}]: $ise")
                     }
                 }
             } else if (state == Call.State.Pausing) {
@@ -134,11 +163,23 @@ class TelecomCallControlCallback(
         }.launchIn(scope)
 
         callControl.currentCallEndpoint.onEach { endpoint ->
-            Log.i("$TAG We're asked to use [${endpoint.name}] audio endpoint")
+            val type = endpoint.type
+            currentEndpoint = type
+            if (endpointUpdateRequestFromLinphone) {
+                Log.i("$TAG Linphone requests to use [${endpoint.name}] audio endpoint with type [$type]")
+            } else {
+                Log.i("$TAG Android requests us to use [${endpoint.name}] audio endpoint with type [$type]")
+            }
+
+            if (!endpointUpdateRequestFromLinphone && !coreContext.isConnectedToAndroidAuto && (type == CallEndpointCompat.Companion.TYPE_EARPIECE || type == CallEndpointCompat.Companion.TYPE_SPEAKER)) {
+                Log.w("$TAG Device isn't connected to Android Auto, do not follow system request to change audio endpoint to either earpiece or speaker")
+                return@onEach
+            }
+
             // Change audio route in SDK, this way the usual listener will trigger
             // and we'll be able to update the UI accordingly
             val route = arrayListOf<AudioDevice.Type>()
-            when (endpoint.type) {
+            when (type) {
                 CallEndpointCompat.Companion.TYPE_EARPIECE -> {
                     route.add(AudioDevice.Type.Earpiece)
                 }
@@ -154,7 +195,6 @@ class TelecomCallControlCallback(
                 }
             }
             if (route.isNotEmpty()) {
-                currentEndpoint = endpoint.type
                 coreContext.postOnCoreThread {
                     if (!AudioUtils.applyAudioRouteChangeInLinphone(call, route)) {
                         Log.w("$TAG Failed to apply audio route change, trying again in 200ms")
@@ -164,6 +204,7 @@ class TelecomCallControlCallback(
                     }
                 }
             }
+            endpointUpdateRequestFromLinphone = false
         }.launchIn(scope)
 
         callControl.isMuted.onEach { muted ->
@@ -193,6 +234,7 @@ class TelecomCallControlCallback(
     }
 
     fun applyAudioRouteToCallWithId(routes: List<AudioDevice.Type>): Boolean {
+        endpointUpdateRequestFromLinphone = true
         Log.i("$TAG Looking for audio endpoint with type [${routes.first()}]")
 
         var wiredHeadsetFound = false
@@ -259,5 +301,24 @@ class TelecomCallControlCallback(
             Log.e("$TAG No matching endpoint found")
         }
         return false
+    }
+
+    private fun disconnectCauseToString(cause: Int): String {
+        return when (cause) {
+            DisconnectCause.UNKNOWN -> "UNKNOWN"
+            DisconnectCause.ERROR -> "ERROR"
+            DisconnectCause.LOCAL -> "LOCAL"
+            DisconnectCause.REMOTE -> "REMOTE"
+            DisconnectCause.CANCELED -> "CANCELED"
+            DisconnectCause.MISSED -> "MISSED"
+            DisconnectCause.REJECTED -> "REJECTED"
+            DisconnectCause.BUSY -> "BUSY"
+            DisconnectCause.RESTRICTED -> "RESTRICTED"
+            DisconnectCause.OTHER -> "OTHER"
+            DisconnectCause.CONNECTION_MANAGER_NOT_SUPPORTED -> "CONNECTION_MANAGER_NOT_SUPPORTED"
+            DisconnectCause.ANSWERED_ELSEWHERE -> "ANSWERED_ELSEWHERE"
+            DisconnectCause.CALL_PULLED -> "CALL_PULLED"
+            else -> "UNEXPECTED: $cause"
+        }
     }
 }

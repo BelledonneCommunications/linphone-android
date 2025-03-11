@@ -44,7 +44,6 @@
     <!-- Common words -->
     <string name="sip_address">SIP address</string>
     <string name="device_id">Device ID</string>
-    <string name="sip_address_hint">username@domain</string>
     <string name="sip_address_display_name">Display name</string>
     <string name="sip_address_domain">Domain</string>
     <string name="username">Username</string>
@@ -52,7 +51,7 @@
     <string name="password">Password</string>
     <string name="phone_number">Phone number</string>
     <string name="or">or</string>
-    <string name="next">next</string>
+    <string name="next">Next</string>
     <string name="start">Start</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
@@ -129,6 +128,7 @@
     <string name="media_playback_low_volume_warning_toast">Media volume is low, you may not hear anything!</string>
     <string name="remote_provisioning_config_applied_toast">Configuration successfully applied</string>
     <string name="remote_provisioning_config_failed_toast">Error while trying to download and apply remote configuration</string>
+    <string name="media_player_generic_error_toast">Error trying to create media player</string>
 
     <!-- Assistant related string (account register / login / etc...) -->
     <string name="assistant_dialog_general_terms_and_privacy_policy_title">General terms &amp; privacy policy</string>
@@ -141,11 +141,13 @@
     <string name="assistant_scan_qr_code">Scan QR code</string>
     <string name="assistant_qr_code_invalid_toast">Invalid QR code!</string>
     <string name="assistant_login_third_party_sip_account">Use a third party SIP account</string>
+    <string name="assistant_login_third_party_sip_account_title">Third party SIP account</string>
     <string name="assistant_login_using_single_sign_on">Single sign on</string>
     <string name="assistant_login_cant_parse_address_toast">SIP address is invalid!</string>
     <string name="assistant_login_address_without_username_toast">SIP address doesn\'t contains a username!</string>
     <string name="assistant_no_account_yet">No account yet?</string>
     <string name="assistant_account_register">Register</string>
+    <string name="assistant_account_creation_sms_confirmation_title">Confirm your phone number</string>
     <string name="assistant_account_creation_sms_confirmation_explanation">We have sent a verification code on your phone number %1$s.\n\nPlease enter the verification code below:</string>
     <string name="assistant_account_creation_wrong_phone_number">Wrong number?</string>
     <string name="assistant_account_create">Create</string>
@@ -155,7 +157,6 @@
     <string name="assistant_third_party_sip_account_warning_explanation">Some features require a &appName; account, such as group messaging, video conferences…\n\nThese features are hidden when you register with a third party SIP account.\n\nTo enable it in a commercial project, please contact us.</string>
     <string name="assistant_third_party_sip_account_create_linphone_account">I prefer to create an account</string>
     <string name="assistant_third_party_sip_account_warning_ok">I understand</string>
-    <string name="assistant_third_party_sip_account_username_or_identity">Username or SIP identity*</string>
     <string name="assistant_account_register_unavailable_no_push_toast">Push notifications not available, account creation disabled</string>
     <string name="assistant_account_register_push_notification_not_received_error">Push notification with auth token not received in 5 seconds, please try again later</string>
     <string name="assistant_account_register_unexpected_error">Unexpected error occurred, please try again later</string>
@@ -219,6 +220,7 @@
     <string name="settings_security_enable_vfs_title">Encrypt everything</string>
     <string name="settings_security_enable_vfs_subtitle">Warning: once enabled it can\'t be disabled!</string>
     <string name="settings_security_enable_vfs_failure_toast">Failed to enable encryption module!</string>
+    <string name="settings_security_enable_vfs_success_toast">Encryption module enabled</string>
     <string name="settings_security_enable_vfs_dialog_confirmation_title">Do you really want to encrypt everything?</string>
     <string name="settings_security_enable_vfs_dialog_confirmation_message">Be careful, it can\'t be undone!</string>
     <string name="settings_security_prevent_screenshots_title">Prevent interface from being recorded</string>
@@ -238,6 +240,7 @@
     <string name="settings_calls_change_ringtone_title">Change ringtone</string>
     <string name="settings_conversations_title">Conversations</string>
     <string name="settings_conversations_auto_download_title">Auto-download files</string>
+    <string name="settings_conversations_auto_export_media_to_native_gallery_title">Make downloaded media public</string>
     <string name="settings_conversations_mark_as_read_when_dismissing_notif_title">Mark conversation as read when dismissing message notification</string>
     <string name="settings_contacts_title">Contacts</string>
     <string name="settings_contacts_add_ldap_server_title">Add LDAP server</string>
@@ -300,6 +303,7 @@
     <string name="settings_advanced_upload_server_url">File sharing server URL</string>
     <string name="settings_advanced_media_encryption_title">Media encryption</string>
     <string name="settings_advanced_media_encryption_mandatory_title">Media encryption mandatory</string>
+    <string name="settings_advanced_create_e2e_encrypted_conferences_title">Create end-to-end encrypted meetings &amp; group calls</string>
     <string name="settings_advanced_accept_early_media_title">Accept early media</string>
     <string name="settings_advanced_allow_outgoing_early_media_title">Allow outgoing early media</string>
     <string name="settings_advanced_remote_provisioning_url">Remote provisioning URL</string>
@@ -612,13 +616,17 @@
     <string name="meeting_schedule_send_invitations_title">Send invitation to participants</string>
     <string name="meeting_info_join_title">Join the meeting now</string>
     <string name="meeting_info_organizer_label">Organizer</string>
-    <string name="meeting_info_delete">Delete meeting</string>
     <string name="meeting_info_export_as_calendar_event">Create calendar event</string>
     <string name="meeting_info_deleted_toast">Meeting has been deleted</string>
+    <string name="meeting_info_not_found_toast">Meeting cannot be found!</string>
     <string name="meeting_schedule_description_title">Description</string>
     <string name="meeting_schedule_edit_title">Edit meeting</string>
     <string name="meeting_schedule_cancel_dialog_title">Cancel the meeting?</string>
     <string name="meeting_schedule_cancel_dialog_message">Do you want to cancel the meeting and send a notification to all participants?</string>
+    <string name="meeting_cancel_action_label">Cancel meeting</string>
+    <string name="meeting_schedule_delete_dialog_title">Delete the meeting?</string>
+    <string name="meeting_schedule_delete_dialog_message">Do you want to delete the meeting?</string>
+    <string name="meeting_delete_action_label">Delete meeting</string>
     <string name="meeting_info_created_toast">Meeting has been created</string>
     <string name="meeting_info_updated_toast">Meeting has been updated</string>
     <string name="meeting_info_cancelled_toast">Meeting has been cancelled</string>
@@ -639,7 +647,8 @@
     <string name="call_outgoing">Outgoing call</string>
     <string name="call_audio_incoming">Incoming call</string>
     <string name="call_video_incoming">Incoming video call</string>
-    <string name="call_ended">Call ended</string>
+    <string name="call_locally_ended">You have ended the call</string>
+    <string name="call_remotely_ended">Correspondent has ended the call</string>
     <string name="call_audio_incoming_for_account">Incoming call for %s</string>
     <string name="call_video_incoming_for_account">Incoming video call for %s</string>
     <string name="call_transfer_current_call_title">Transfer %s to…</string>
@@ -673,6 +682,7 @@
     <string name="call_srtp_point_to_point_encrypted">Point-to-point encrypted by SRTP</string>
     <string name="call_not_encrypted">Call is not encrypted</string>
     <string name="calls_list_title">Calls list</string>
+    <string name="call_is_being_recorded">Call is being recorded</string>
     <string name="call_remote_is_recording">%s is recording</string>
     <string name="calls_count_label">%s calls</string>
     <string name="calls_paused_count_label">%s paused calls</string>
@@ -911,6 +921,7 @@
     <string name="content_description_go_to_conversation">Go to conversation</string>
     <string name="content_description_copy_text_to_clipboard">Copy text to clipboard</string>
     <string name="content_description_voicemail_available">Voice message are available</string>
+    <string name="content_description_call_voicemail">Long press to dial voicemail</string>
 
     <!-- Copy of private hosts_allowlist_sample in androidx.car.app:app:1.7.0-beta01, as they recommend it -->
     <string-array name="hosts_allowlist_sample_copy" translatable="false">

@@ -84,8 +84,14 @@ class StartCallViewModel
         @WorkerThread
         override fun onStateChanged(conference: Conference, newState: Conference.State?) {
             Log.i("$TAG Conference state changed [$newState]")
-            if (newState == Conference.State.Created || newState == Conference.State.CreationFailed) {
-                operationInProgress.postValue(false)
+            when (newState) {
+                Conference.State.Created, Conference.State.CreationFailed, Conference.State.TerminationPending -> {
+                    operationInProgress.postValue(false)
+                }
+                Conference.State.Terminated -> {
+                     leaveFragmentEvent.postValue(Event(true))
+                }
+                else -> {}
             }
         }
     }
@@ -149,9 +155,9 @@ class StartCallViewModel
     @UiThread
     fun updateGroupCallButtonVisibility() {
         coreContext.postOnCoreThread { core ->
-            val hideGroupCall = corePreferences.disableMeetings || !LinphoneUtils.isRemoteConferencingAvailable(
-                core
-            )
+            val hideGroupCall = corePreferences.disableMeetings ||
+                !LinphoneUtils.isRemoteConferencingAvailable(core) ||
+                core.callsNb > 0
             hideGroupCallButton.postValue(hideGroupCall)
         }
     }
@@ -187,14 +193,7 @@ class StartCallViewModel
             val conference = LinphoneUtils.createGroupCall(account, subject.value.orEmpty())
             if (conference == null) {
                 Log.e("$TAG Failed to create group call!")
-                showRedToastEvent.postValue(
-                    Event(
-                        Pair(
-                            R.string.conference_failed_to_create_group_call_toast,
-                            R.drawable.warning_circle
-                        )
-                    )
-                )
+                showRedToast(R.string.conference_failed_to_create_group_call_toast, R.drawable.warning_circle)
                 operationInProgress.postValue(false)
                 return@postOnCoreThread
             }
@@ -215,14 +214,7 @@ class StartCallViewModel
             conference.addListener(conferenceListener)
             if (conference.inviteParticipants(participants, callParams) != 0) {
                 Log.e("$TAG Failed to invite participants into group call!")
-                showRedToastEvent.postValue(
-                    Event(
-                        Pair(
-                            R.string.conference_failed_to_create_group_call_toast,
-                            R.drawable.warning_circle
-                        )
-                    )
-                )
+                showRedToast(R.string.conference_failed_to_create_group_call_toast, R.drawable.warning_circle)
                 operationInProgress.postValue(false)
             }
         }

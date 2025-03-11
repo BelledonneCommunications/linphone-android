@@ -51,7 +51,7 @@
 
         <include
             android:id="@+id/digit_1"
-            android:layout_width="@dimen/call_dtmf_button_size"
+            android:layout_width="0dp"
             android:layout_height="@dimen/call_dtmf_button_size"
             layout="@layout/call_numpad_digit_with_voicemail"
             bind:digit="@{`1`}"
@@ -61,7 +61,7 @@
 
         <include
             android:id="@+id/digit_2"
-            android:layout_width="@dimen/call_dtmf_button_size"
+            android:layout_width="0dp"
             android:layout_height="@dimen/call_dtmf_button_size"
             layout="@layout/call_numpad_digit_with_letters"
             bind:digit="@{`2`}"
@@ -72,7 +72,7 @@
 
         <include
             android:id="@+id/digit_3"
-            android:layout_width="@dimen/call_dtmf_button_size"
+            android:layout_width="0dp"
             android:layout_height="@dimen/call_dtmf_button_size"
             layout="@layout/call_numpad_digit_with_letters"
             bind:digit="@{`3`}"
@@ -83,7 +83,7 @@
 
         <include
             android:id="@+id/digit_4"
-            android:layout_width="@dimen/call_dtmf_button_size"
+            android:layout_width="0dp"
             android:layout_height="@dimen/call_dtmf_button_size"
             layout="@layout/call_numpad_digit_with_letters"
             bind:digit="@{`4`}"
@@ -94,7 +94,7 @@
 
         <include
             android:id="@+id/digit_5"
-            android:layout_width="@dimen/call_dtmf_button_size"
+            android:layout_width="0dp"
             android:layout_height="@dimen/call_dtmf_button_size"
             layout="@layout/call_numpad_digit_with_letters"
             bind:digit="@{`5`}"
@@ -105,7 +105,7 @@
 
         <include
             android:id="@+id/digit_6"
-            android:layout_width="@dimen/call_dtmf_button_size"
+            android:layout_width="0dp"
             android:layout_height="@dimen/call_dtmf_button_size"
             layout="@layout/call_numpad_digit_with_letters"
             bind:digit="@{`6`}"
@@ -116,7 +116,7 @@
 
         <include
             android:id="@+id/digit_7"
-            android:layout_width="@dimen/call_dtmf_button_size"
+            android:layout_width="0dp"
             android:layout_height="@dimen/call_dtmf_button_size"
             layout="@layout/call_numpad_digit_with_letters"
             bind:digit="@{`7`}"
@@ -127,7 +127,7 @@
 
         <include
             android:id="@+id/digit_8"
-            android:layout_width="@dimen/call_dtmf_button_size"
+            android:layout_width="0dp"
             android:layout_height="@dimen/call_dtmf_button_size"
             layout="@layout/call_numpad_digit_with_letters"
             bind:digit="@{`8`}"
@@ -138,7 +138,7 @@
 
         <include
             android:id="@+id/digit_9"
-            android:layout_width="@dimen/call_dtmf_button_size"
+            android:layout_width="0dp"
             android:layout_height="@dimen/call_dtmf_button_size"
             layout="@layout/call_numpad_digit_with_letters"
             bind:digit="@{`9`}"
@@ -149,7 +149,7 @@
 
         <include
             android:id="@+id/digit_star"
-            android:layout_width="@dimen/call_dtmf_button_size"
+            android:layout_width="0dp"
             android:layout_height="@dimen/call_dtmf_button_size"
             layout="@layout/call_numpad_digit"
             bind:digit="@{`*`}"
@@ -159,7 +159,7 @@
 
         <include
             android:id="@+id/digit_0"
-            android:layout_width="@dimen/call_dtmf_button_size"
+            android:layout_width="0dp"
             android:layout_height="@dimen/call_dtmf_button_size"
             layout="@layout/call_numpad_digit_with_plus"
             bind:digit="@{`0`}"
@@ -169,7 +169,7 @@
 
         <include
             android:id="@+id/digit_sharp"
-            android:layout_width="@dimen/call_dtmf_button_size"
+            android:layout_width="0dp"
             android:layout_height="@dimen/call_dtmf_button_size"
             layout="@layout/call_numpad_digit"
             bind:digit="@{`#`}"
@@ -200,7 +200,7 @@
             android:id="@+id/backspace"
             android:onClick="@{() -> model.onBackspaceClicked()}"
             android:onLongClick="@{() -> model.onBackspaceLongClicked()}"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="@dimen/call_button_size"
             android:src="@drawable/backspace_fill"
             android:contentDescription="@string/content_description_erase_last_input"
