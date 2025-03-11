@@ -11,7 +11,7 @@ Group changes to describe their impact on the project, as follows:
     Security to invite users to upgrade in case of vulnerabilities.
 
 
-## [6.0.0] - 2025-03-??
+## [6.0.0] - 2025-03-11
 
 6.0.0 release is a complete rework of Linphone Android, with a fully redesigned UI, so it is impossible to list everything here.
 
