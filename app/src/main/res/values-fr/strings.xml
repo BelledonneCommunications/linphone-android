@@ -6,7 +6,6 @@
     <!-- Common words -->
     <string name="sip_address">Adresse SIP</string>
     <string name="device_id">ID du téléphone</string>
-    <string name="sip_address_hint">utilisateur@domaine</string>
     <string name="sip_address_display_name">Nom d\'affichage</string>
     <string name="sip_address_domain">Domaine</string>
     <string name="username">Nom d\'utilisateur</string>
@@ -14,7 +13,7 @@
     <string name="password">Mot de passe</string>
     <string name="phone_number">Numéro de téléphone</string>
     <string name="or">ou</string>
-    <string name="next">suivant</string>
+    <string name="next">Suivant</string>
     <string name="start">Commencer</string>
     <string name="today">Aujourd\'hui</string>
     <string name="yesterday">Hier</string>

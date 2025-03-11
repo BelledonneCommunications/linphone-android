@@ -103,7 +103,7 @@ android {
         versionCode = 600000 // 6.00.000
         versionName = "6.0.0"
 
-        manifestPlaceholders["appAuthRedirectScheme"] = "org.linphone"
+        manifestPlaceholders["appAuthRedirectScheme"] = packageName
 
         ndk {
             //noinspection ChromeOsAbiSupport
@@ -155,6 +155,7 @@ android {
             }
             resValue("string", "linphone_app_version", gitVersion.trim())
             resValue("string", "linphone_app_branch", gitBranch.toString().trim())
+            resValue("string", "linphone_openid_callback_scheme", packageName)
 
             if (crashlyticsAvailable) {
                 val path = File("$sdkPath/libs-debug/").toString()
@@ -177,6 +178,7 @@ android {
             resValue("string", "file_provider", "$packageName.fileprovider")
             resValue("string", "linphone_app_version", gitVersion.trim())
             resValue("string", "linphone_app_branch", gitBranch.toString().trim())
+            resValue("string", "linphone_openid_callback_scheme", packageName)
 
             if (crashlyticsAvailable) {
                 val path = File("$sdkPath/libs-debug/").toString()

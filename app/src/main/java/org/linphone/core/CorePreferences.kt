@@ -284,6 +284,10 @@ class CorePreferences
         get() = config.getBool("ui", "assistant_hide_third_party_account", false)
 
     @get:WorkerThread
+    val singleSignOnClientId: String
+        get() = config.getString("app", "oidc_client_id", "linphone")!!
+
+    @get:WorkerThread
     val useUsernameAsSingleSignOnLoginHint: Boolean
         get() = config.getBool("ui", "use_username_as_sso_login_hint", false)
 
