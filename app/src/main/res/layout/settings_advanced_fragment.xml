@@ -148,6 +148,8 @@
                     android:spinnerMode="dropdown"
                     android:popupBackground="@drawable/shape_squircle_white_background"
                     android:background="@drawable/edit_text_background"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintWidth_max="@dimen/text_input_max_width"
                     app:layout_constraintTop_toBottomOf="@id/media_encryption_label"
                     app:layout_constraintStart_toStartOf="@id/media_encryption_label"
                     app:layout_constraintEnd_toEndOf="parent" />
@@ -461,6 +463,8 @@
                         android:popupBackground="@drawable/shape_squircle_white_background"
                         android:background="@drawable/edit_text_background"
                         android:visibility="@{viewModel.expandAudioDevices ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintWidth_max="@dimen/text_input_max_width"
                         app:layout_constraintTop_toBottomOf="@id/input_audio_device_label"
                         app:layout_constraintStart_toStartOf="@id/input_audio_device_label"
                         app:layout_constraintEnd_toEndOf="parent" />
@@ -510,6 +514,8 @@
                         android:popupBackground="@drawable/shape_squircle_white_background"
                         android:background="@drawable/edit_text_background"
                         android:visibility="@{viewModel.expandAudioDevices ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintWidth_max="@dimen/text_input_max_width"
                         app:layout_constraintTop_toBottomOf="@id/output_audio_device_label"
                         app:layout_constraintStart_toStartOf="@id/output_audio_device_label"
                         app:layout_constraintEnd_toEndOf="parent" />
