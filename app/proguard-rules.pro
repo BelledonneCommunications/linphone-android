@@ -30,14 +30,9 @@
 }
 
 # Keep SignalR classes
--keep class com.microsoft.signalr.** { *; }
-
-# Keep RxJava classes
--keep class io.reactivex.rxjava3.** { *; }
-
-# Keep OkHttp classes (if you are using OkHttp)
--keep class okhttp3.** { *; }
--keep class okio.** { *; }
+ -keep class com.microsoft.signalr.** { *; }
+ -keep interface com.microsoft.signalr.** { *; }
+ -keep class org.linphone.models.realtime.** { *; }
 
 -dontwarn com.google.api.client.http.**
 -dontwarn org.joda.time.Instant
