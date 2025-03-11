@@ -28,6 +28,17 @@
 -keep class * {
   @com.google.gson.annotations.SerializedName <fields>;
 }
+
+# Keep SignalR classes
+-keep class com.microsoft.signalr.** { *; }
+
+# Keep RxJava classes
+-keep class io.reactivex.rxjava3.** { *; }
+
+# Keep OkHttp classes (if you are using OkHttp)
+-keep class okhttp3.** { *; }
+-keep class okio.** { *; }
+
 -dontwarn com.google.api.client.http.**
 -dontwarn org.joda.time.Instant
 

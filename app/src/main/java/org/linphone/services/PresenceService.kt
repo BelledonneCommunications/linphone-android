@@ -74,9 +74,9 @@ class PresenceService(val context: Context) : DefaultLifecycleObserver {
 
     init {
         realtimeUserService.hubConnection?.on(RealtimeEventType.PresenceEvent.eventName, { event: RealtimeEventPresence ->
-            Log.d(RealtimeEventType.PresenceEvent.eventName, event)
-
             try {
+                Log.d(RealtimeEventType.PresenceEvent.eventName, event)
+
                 val observable = presenceObservables[event.userId]
                 observable?.subject?.onNext(event.data)
             } catch (e: Exception) {

@@ -93,9 +93,9 @@ open class RealtimeBaseService(context: Context, private val hubSuffix: String) 
         hubConnection = connection
 
         connection.on(RealtimeEventType.ConnectEvent.eventName, { message: Any ->
-            Log.d("RealtimeBaseService." + RealtimeEventType.ConnectEvent.eventName, message)
-
             try {
+                Log.d("RealtimeBaseService." + RealtimeEventType.ConnectEvent.eventName, message)
+
                 runBlocking {
                     delay(1)
                     invokePendingHubRequests()
@@ -109,11 +109,25 @@ open class RealtimeBaseService(context: Context, private val hubSuffix: String) 
         }, Any::class.java)
 
         connection.on(RealtimeEventType.SubscribeResponse.eventName, { message: Any ->
-            Log.d("RealtimeBaseService." + RealtimeEventType.SubscribeResponse.eventName, message)
+            try {
+                Log.d(
+                    "RealtimeBaseService." + RealtimeEventType.SubscribeResponse.eventName,
+                    message
+                )
+            } catch (e: Exception) {
+                Log.e("RealtimeBaseService." + RealtimeEventType.SubscribeResponse.eventName, e)
+            }
         }, Any::class.java)
 
         connection.on(RealtimeEventType.UnSubscribeResponse.eventName, { message: Any ->
-            Log.d("RealtimeBaseService." + RealtimeEventType.UnSubscribeResponse.eventName, message)
+            try {
+                Log.d(
+                    "RealtimeBaseService." + RealtimeEventType.UnSubscribeResponse.eventName,
+                    message
+                )
+            } catch (e: Exception) {
+                Log.e("RealtimeBaseService." + RealtimeEventType.UnSubscribeResponse.eventName, e)
+            }
         }, Any::class.java)
 
         connection.onClosed {
@@ -177,6 +191,13 @@ open class RealtimeBaseService(context: Context, private val hubSuffix: String) 
         if (connection != null) {
             hubConnectionCompletable?.dispose()
             hubConnectionCompletable = connection.start()
+                .doOnComplete { Log.d("SignalR", "Connection started") }
+                .doOnError { error ->
+                    Log.e(
+                        "SignalR",
+                        "Error starting connection: ${error.message}"
+                    )
+                }
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .subscribe(
