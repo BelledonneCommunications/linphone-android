@@ -175,9 +175,19 @@ open class RealtimeBaseService(context: Context, private val hubSuffix: String) 
     private fun onDisconnected() {
         try {
             Log.d("RealtimeService.OnDisconnected")
+            // TODO Add error notification
 
             isReadySubject.onNext(false)
-            // TODO Remove error notification
+
+            this.subscriptions.forEach { s ->
+                try {
+                    if (s.value.subscriptionState == SubscriptionState.Subscribed) {
+                        s.value.subscriptionState = SubscriptionState.FlaggedForSubscription
+                    }
+                } catch (e: Exception) {
+                    Log.e("RealtimeBaseService.onDisconnected", e)
+                }
+            }
         } catch (e: Exception) {
             Log.e("RealtimeBaseService.OnConnected", e)
         }

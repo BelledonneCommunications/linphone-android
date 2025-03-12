@@ -4,5 +4,5 @@ import org.linphone.models.realtime.interfaces.IRealtimeRequest
 
 data class EventSubscription(
     val requestInfo: IRealtimeRequest,
-    val subscriptionState: SubscriptionState
+    var subscriptionState: SubscriptionState
 )
