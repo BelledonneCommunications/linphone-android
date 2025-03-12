@@ -106,6 +106,7 @@
     <string name="assistant_login_using_single_sign_on">Single sign on</string>
     <string name="assistant_login_cant_parse_address_toast">Adresse SIP invalide</string>
     <string name="assistant_login_address_without_username_toast">L\'adresse SIP ne contient pas de nom d\'utilisateur !</string>
+    <string name="assistant_account_login_already_connected_error">Le compte est déjà connecté</string>
     <string name="assistant_no_account_yet">Pas encore de compte ?</string>
     <string name="assistant_account_register">Créer un compte</string>
     <string name="assistant_account_creation_sms_confirmation_title">Confirmez votre numéro</string>
