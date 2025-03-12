@@ -181,6 +181,16 @@ open class AccountLoginViewModel
                 return@postOnCoreThread
             }
 
+            val accounts = core.accountList
+            val found = accounts.find {
+                it.params.identityAddress?.weakEqual(identityAddress) == true
+            }
+            if (found != null) {
+                Log.w("$TAG An account with the same identity address [${identityAddress.asStringUriOnly()}] already exists, do not add it again!")
+                showRedToast(R.string.assistant_account_login_already_connected_error, R.drawable.warning_circle)
+                return@postOnCoreThread
+            }
+
             val user = identityAddress.username
             if (user == null) {
                 Log.e(

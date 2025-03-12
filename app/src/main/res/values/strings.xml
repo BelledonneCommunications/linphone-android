@@ -145,6 +145,7 @@
     <string name="assistant_login_using_single_sign_on">Single sign on</string>
     <string name="assistant_login_cant_parse_address_toast">SIP address is invalid!</string>
     <string name="assistant_login_address_without_username_toast">SIP address doesn\'t contains a username!</string>
+    <string name="assistant_account_login_already_connected_error">Account already exists</string>
     <string name="assistant_no_account_yet">No account yet?</string>
     <string name="assistant_account_register">Register</string>
     <string name="assistant_account_creation_sms_confirmation_title">Confirm your phone number</string>
