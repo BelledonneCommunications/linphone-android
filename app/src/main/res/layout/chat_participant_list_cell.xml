@@ -33,7 +33,6 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
-            android:onClick="@{() -> model.toggleShowSipUri()}"
             android:id="@+id/name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -49,7 +48,6 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_300"
-            android:onClick="@{() -> model.toggleShowSipUri()}"
             android:id="@+id/sip_address"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

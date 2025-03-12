@@ -58,17 +58,12 @@ class ParticipantModel
     }
 
     @UiThread
-    fun toggleShowSipUri() {
-        if (!corePreferences.onlyDisplaySipUriUsername) {
+    fun onClicked() {
+        if (onClicked == null && !corePreferences.onlyDisplaySipUriUsername) {
             showSipUri.postValue(showSipUri.value == false)
         } else {
-            onClicked()
+            onClicked?.invoke(this)
         }
-    }
-
-    @UiThread
-    fun onClicked() {
-        onClicked?.invoke(this)
     }
 
     @UiThread
