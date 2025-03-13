@@ -100,7 +100,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:text="@{model.audioVideoDuration, default=`00:42`}"
-            android:textColor="@color/main2_600"
+            android:textColor="?attr/color_main2_600"
             android:textSize="12sp"
             android:visibility="@{model.isAudio &amp;&amp; model.audioVideoDuration.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintBottom_toBottomOf="@id/file_name"
