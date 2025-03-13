@@ -201,8 +201,9 @@ class ConferenceViewModel : ViewModel() {
 
         override fun onActiveSpeakerParticipantDevice(
             conference: Conference,
-            participantDevice: ParticipantDevice
+            participantDevice: ParticipantDevice?
         ) {
+            if (participantDevice == null) return
             Log.i(
                 "[Conference] Participant [${participantDevice.address.asStringUriOnly()}] is currently being displayed as active speaker"
             )
