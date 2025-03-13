@@ -160,13 +160,19 @@ class AppUtils {
                 context.contentResolver,
                 Settings.Global.DEVICE_NAME
             )
+
             if (name == null) {
                 Log.w("$TAG Failed to obtain device name, trying to get bluetooth name")
-                name = Settings.Secure.getString(
-                    context.contentResolver,
-                    "bluetooth_name"
-                )
+                try {
+                    name = Settings.Secure.getString(
+                        context.contentResolver,
+                        "bluetooth_name"
+                    )
+                } catch (e: SecurityException) {
+                    Log.e("$TAG Failed to get bluetooth_name: $e")
+                }
             }
+
             if (name == null) {
                 Log.w("$TAG Failed to obtain bluetooth name, using device's manufacturer & model")
                 name = "${Build.MANUFACTURER} ${Build.MODEL}"
