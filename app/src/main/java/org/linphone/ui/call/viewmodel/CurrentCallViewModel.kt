@@ -701,6 +701,10 @@ class CurrentCallViewModel
     @UiThread
     fun changeAudioOutputDevice() {
         val routeAudioToSpeaker = isSpeakerEnabled.value != true
+        if (!::currentCall.isInitialized) {
+            Log.w("$TAG Current call not initialized yet, do not attempt to change output audio device")
+            return
+        }
 
         coreContext.postOnCoreThread { core ->
             var earpieceFound = false
@@ -775,12 +779,10 @@ class CurrentCallViewModel
                 Log.i(
                     "$TAG Found less than two devices, simply switching between earpiece & speaker"
                 )
-                if (::currentCall.isInitialized) {
-                    if (routeAudioToSpeaker) {
-                        AudioUtils.routeAudioToSpeaker(currentCall)
-                    } else {
-                        AudioUtils.routeAudioToEarpiece(currentCall)
-                    }
+                if (routeAudioToSpeaker) {
+                    AudioUtils.routeAudioToSpeaker(currentCall)
+                } else {
+                    AudioUtils.routeAudioToEarpiece(currentCall)
                 }
             }
         }
