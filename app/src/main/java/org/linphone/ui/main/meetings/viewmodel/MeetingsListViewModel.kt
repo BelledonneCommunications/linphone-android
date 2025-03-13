@@ -23,6 +23,8 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.Account
+import org.linphone.core.AccountListenerStub
 import org.linphone.core.Address
 import org.linphone.core.ConferenceInfo
 import org.linphone.core.ConferenceScheduler
@@ -58,7 +60,20 @@ class MeetingsListViewModel
         @WorkerThread
         override fun onConferenceInfoReceived(core: Core, conferenceInfo: ConferenceInfo) {
             Log.i("$TAG Conference info received [${conferenceInfo.uri?.asStringUriOnly()}]")
-            computeMeetingsList(currentFilter)
+            computeMeetingsListFromLocallyStoredInfo()
+        }
+    }
+
+    private val accountListener = object : AccountListenerStub() {
+        @WorkerThread
+        override fun onConferenceInformationUpdated(
+            account: Account,
+            infos: Array<ConferenceInfo>
+        ) {
+            Log.i(
+                "$TAG Conference information updated with [${infos.size}] items for current account, reloading list"
+            )
+            computeMeetingsList(currentFilter, infos)
         }
     }
 
@@ -111,8 +126,9 @@ class MeetingsListViewModel
 
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
+            core.defaultAccount?.addListener(accountListener)
 
-            computeMeetingsList(currentFilter)
+            computeMeetingsListFromLocallyStoredInfo()
         }
     }
 
@@ -121,6 +137,7 @@ class MeetingsListViewModel
         super.onCleared()
 
         coreContext.postOnCoreThread { core ->
+            core.defaultAccount?.removeListener(accountListener)
             core.removeListener(coreListener)
         }
     }
@@ -128,7 +145,7 @@ class MeetingsListViewModel
     @UiThread
     override fun filter() {
         coreContext.postOnCoreThread {
-            computeMeetingsList(currentFilter)
+            computeMeetingsListFromLocallyStoredInfo()
         }
     }
 
@@ -146,13 +163,7 @@ class MeetingsListViewModel
     }
 
     @WorkerThread
-    private fun computeMeetingsList(filter: String) {
-        if (meetings.value.orEmpty().isEmpty()) {
-            fetchInProgress.postValue(true)
-        }
-
-        val list = arrayListOf<MeetingListItemModel>()
-
+    private fun computeMeetingsListFromLocallyStoredInfo() {
         var source = coreContext.core.defaultAccount?.conferenceInformationList
         if (source == null) {
             Log.e(
@@ -160,7 +171,16 @@ class MeetingsListViewModel
             )
             source = coreContext.core.conferenceInformationList
         }
+        computeMeetingsList(currentFilter, source)
+    }
 
+    @WorkerThread
+    private fun computeMeetingsList(filter: String, source: Array<ConferenceInfo>) {
+        if (meetings.value.orEmpty().isEmpty()) {
+            fetchInProgress.postValue(true)
+        }
+
+        val list = arrayListOf<MeetingListItemModel>()
         var previousModel: MeetingModel? = null
         var previousModelWeekLabel = ""
         var meetingForTodayFound = false
