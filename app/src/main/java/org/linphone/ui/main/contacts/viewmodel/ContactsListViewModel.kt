@@ -284,6 +284,7 @@ class ContactsListViewModel
         val list = arrayListOf<ContactAvatarModel>()
         val favouritesList = arrayListOf<ContactAvatarModel>()
         var count = 0
+        val collator = Collator.getInstance(Locale.getDefault())
 
         for (result in results) {
             val friend = result.friend
@@ -308,6 +309,7 @@ class ContactsListViewModel
             } else {
                 coreContext.contactsManager.getContactAvatarModelForAddress(result.address)
             }
+            model.refreshSortingName()
 
             list.add(model)
             count += 1
@@ -319,16 +321,18 @@ class ContactsListViewModel
             }
 
             if (firstLoad && count == 20) {
+                list.sortWith { model1, model2 ->
+                    collator.compare(model1.getNameToUseForSorting(), model2.getNameToUseForSorting())
+                }
                 contactsList.postValue(list)
             }
         }
 
-        val collator = Collator.getInstance(Locale.getDefault())
         favouritesList.sortWith { model1, model2 ->
-            collator.compare(model1.friend.name, model2.friend.name)
+            collator.compare(model1.getNameToUseForSorting(), model2.getNameToUseForSorting())
         }
         list.sortWith { model1, model2 ->
-            collator.compare(model1.friend.name, model2.friend.name)
+            collator.compare(model1.getNameToUseForSorting(), model2.getNameToUseForSorting())
         }
 
         favourites.postValue(favouritesList)

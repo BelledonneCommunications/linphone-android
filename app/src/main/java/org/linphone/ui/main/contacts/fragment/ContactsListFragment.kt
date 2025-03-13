@@ -37,6 +37,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -181,9 +182,7 @@ class ContactsListFragment : AbstractMainFragment() {
             showFilterPopupMenu(binding.topBar.extraAction)
         }
 
-        sharedViewModel.showContactEvent.observe(
-            viewLifecycleOwner
-        ) {
+        sharedViewModel.showContactEvent.observe(viewLifecycleOwner) {
             it.consume { refKey ->
                 Log.i("$TAG Displaying contact with ref key [$refKey]")
                 val navController = binding.contactsNavContainer.findNavController()
@@ -194,9 +193,7 @@ class ContactsListFragment : AbstractMainFragment() {
             }
         }
 
-        sharedViewModel.showNewContactEvent.observe(
-            viewLifecycleOwner
-        ) {
+        sharedViewModel.showNewContactEvent.observe(viewLifecycleOwner) {
             it.consume {
                 if (findNavController().currentDestination?.id == R.id.contactsListFragment) {
                     Log.i("$TAG Opening contact editor for creating new contact")
@@ -204,6 +201,12 @@ class ContactsListFragment : AbstractMainFragment() {
                         ContactsListFragmentDirections.actionContactsListFragmentToNewContactFragment()
                     findNavController().navigate(action)
                 }
+            }
+        }
+
+        sharedViewModel.forceRefreshContactsList.observe(viewLifecycleOwner) {
+            it.consume {
+                listViewModel.filter()
             }
         }
 

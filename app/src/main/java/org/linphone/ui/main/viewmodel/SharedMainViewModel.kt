@@ -95,6 +95,10 @@ class SharedMainViewModel
         MutableLiveData<Event<Boolean>>()
     }
 
+    val forceRefreshContactsList: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     var sipAddressToAddToNewContact: String = ""
 
     // Call logs related

@@ -244,6 +244,7 @@
     <string name="settings_conversations_auto_export_media_to_native_gallery_title">Make downloaded media public</string>
     <string name="settings_conversations_mark_as_read_when_dismissing_notif_title">Mark conversation as read when dismissing message notification</string>
     <string name="settings_contacts_title">Contacts</string>
+    <string name="settings_contacts_sort_by_first_name_title">Sort contacts by</string>
     <string name="settings_contacts_add_ldap_server_title">Add LDAP server</string>
     <string name="settings_contacts_edit_ldap_server_title">Edit LDAP server</string>
     <string name="settings_contacts_add_carddav_server_title">Add CardDAV address book</string>

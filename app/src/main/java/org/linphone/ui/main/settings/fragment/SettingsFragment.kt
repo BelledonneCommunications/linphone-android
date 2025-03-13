@@ -38,6 +38,7 @@ import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.ui.main.settings.viewmodel.SettingsViewModel
 import org.linphone.utils.DialogUtils
+import org.linphone.utils.Event
 
 @UiThread
 class SettingsFragment : GenericMainFragment() {
@@ -48,6 +49,20 @@ class SettingsFragment : GenericMainFragment() {
     private lateinit var binding: SettingsFragmentBinding
 
     private lateinit var viewModel: SettingsViewModel
+
+    private val sortContactsByListener = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            val label = viewModel.sortContactsByNames[position]
+            val value = viewModel.sortContactsByValues[position]
+            Log.i("$TAG Selected contact sorting is now [$label] ($value)")
+            viewModel.setContactSorting(value)
+
+            sharedViewModel.forceRefreshContactsList.postValue(Event(true))
+        }
+
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+        }
+    }
 
     private val layoutListener = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -154,6 +169,22 @@ class SettingsFragment : GenericMainFragment() {
                 startActivity(intent)
             }
         }
+
+        // Setup sort contacts by spinner
+        val sortContactsByAdapter = ArrayAdapter(
+            requireContext(),
+            R.layout.drop_down_item,
+            viewModel.sortContactsByNames
+        )
+        sortContactsByAdapter.setDropDownViewResource(R.layout.generic_dropdown_cell)
+        binding.contactsSettings.sortContactsByFirstNameSpinner.adapter = sortContactsByAdapter
+
+        viewModel.sortContactsBy.observe(viewLifecycleOwner) { sort ->
+            binding.contactsSettings.sortContactsByFirstNameSpinner.setSelection(
+                viewModel.sortContactsByValues.indexOf(sort)
+            )
+        }
+        binding.contactsSettings.sortContactsByFirstNameSpinner.onItemSelectedListener = sortContactsByListener
 
         viewModel.addLdapServerEvent.observe(viewLifecycleOwner) {
             it.consume {

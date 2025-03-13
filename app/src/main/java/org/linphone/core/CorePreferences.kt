@@ -168,6 +168,13 @@ class CorePreferences
     // Contacts related
 
     @get:WorkerThread @set:WorkerThread
+    var sortContactsByFirstName: Boolean
+        get() = config.getBool("ui", "sort_contacts_by_first_name", true) // If disabled, last name will be used
+        set(value) {
+            config.setBool("ui", "sort_contacts_by_first_name", value)
+        }
+
+    @get:WorkerThread @set:WorkerThread
     var contactsFilter: String
         get() = config.getString("ui", "contacts_filter", "")!! // Default value must be empty!
         set(value) {

@@ -125,12 +125,12 @@ class ContactsListAdapter(
 
                 val previousItem = bindingAdapterPosition - 1
                 val previousLetter = if (previousItem >= 0) {
-                    getItem(previousItem).contactName?.get(0).toString()
+                    getItem(previousItem).sortingName?.get(0).toString()
                 } else {
                     ""
                 }
 
-                val currentLetter = contactModel.contactName?.get(0).toString()
+                val currentLetter = contactModel.sortingName?.get(0).toString()
                 val displayLetter = previousLetter.isEmpty() || currentLetter != previousLetter
                 firstContactStartingByThatLetter = displayLetter
 

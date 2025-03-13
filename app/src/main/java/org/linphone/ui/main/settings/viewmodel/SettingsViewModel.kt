@@ -97,6 +97,13 @@ class SettingsViewModel
     // Contacts settings
     val showContactsSettings = MutableLiveData<Boolean>()
 
+    val sortContactsBy = MutableLiveData<Int>()
+    val sortContactsByNames = arrayListOf(
+        AppUtils.getString(R.string.contact_editor_first_name),
+        AppUtils.getString(R.string.contact_editor_last_name),
+    )
+    val sortContactsByValues = arrayListOf(0, 1)
+
     val ldapAvailable = MutableLiveData<Boolean>()
     val ldapServers = MutableLiveData<List<CardDavLdapModel>>()
 
@@ -293,6 +300,8 @@ class SettingsViewModel
                 corePreferences.markConversationAsReadWhenDismissingMessageNotification
             )
 
+            sortContactsBy.postValue(if (corePreferences.sortContactsByFirstName) 0 else 1)
+
             defaultLayout.postValue(core.defaultConferenceLayout.toInt())
 
             theme.postValue(corePreferences.darkMode)
@@ -465,6 +474,13 @@ class SettingsViewModel
     @UiThread
     fun toggleContactsExpand() {
         expandContacts.value = expandContacts.value == false
+    }
+
+    @UiThread
+    fun setContactSorting(sortingValue: Int) {
+        coreContext.postOnCoreThread { core ->
+            corePreferences.sortContactsByFirstName = sortingValue == 0
+        }
     }
 
     @UiThread
