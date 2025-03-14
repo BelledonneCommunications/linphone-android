@@ -8,7 +8,9 @@ import android.database.DataSetObserver
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.ViewTreeObserver
 import android.widget.AdapterView
+import android.widget.Button
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.annotation.AnyThread
@@ -18,7 +20,10 @@ import androidx.annotation.WorkerThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.isVisible
+import androidx.core.widget.NestedScrollView
 import com.google.android.material.snackbar.Snackbar
+import io.reactivex.rxjava3.subjects.PublishSubject
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -76,6 +81,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var environmentAdapter: EnvironmentSelectionAdapter
     private val mUsePendingIntents = true
     private var isEnvironmentSelected = false
+    private val destroy = PublishSubject.create<Unit>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -113,8 +119,55 @@ class LoginActivity : AppCompatActivity() {
             toggleDevMode(nTaps, isComplete)
         }
 
+        val nestedScrollView: NestedScrollView = findViewById(R.id.e911_scrollview)
+        val buttonAcceptE911 = findViewById<Button>(R.id.buttonAcceptE911)
+
+        nestedScrollView.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+            override fun onPreDraw(): Boolean {
+                if (nestedScrollView.isVisible && nestedScrollView.height > 0) {
+                    val canScroll = nestedScrollView.canScrollVertically(1) || nestedScrollView.canScrollVertically(
+                        -1
+                    )
+                    buttonAcceptE911.isEnabled = !canScroll
+
+                    // Remove the listener to prevent multiple calls
+                    nestedScrollView.viewTreeObserver.removeOnPreDrawListener(this)
+                }
+                return true
+            }
+        })
+
+        nestedScrollView.setOnScrollChangeListener(
+            NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
+                if (scrollY > oldScrollY) {
+                    // User is scrolling down
+                    val view = nestedScrollView.getChildAt(nestedScrollView.childCount - 1)
+                    val diff = view.bottom - (nestedScrollView.height + nestedScrollView.scrollY)
+
+                    if (diff == 0) {
+                        // User has scrolled to the end
+                        buttonAcceptE911.isEnabled = true
+                    }
+                }
+            }
+        )
+
+        buttonAcceptE911.setOnClickListener {
+            UserService.getInstance(applicationContext).updateE911Accepted(true)
+
+            continueLogin()
+        }
+
         displayLoading("Initializing")
 
+        if (!UserService.getInstance(applicationContext).e911Accepted) {
+            displayE911()
+        } else {
+            continueLogin()
+        }
+    }
+
+    private fun continueLogin() {
         configureEnvironmentSelector()
 
         val dimensionsEnvironment = getInstance(applicationContext).getCurrentEnvironment()
@@ -162,11 +215,17 @@ class LoginActivity : AppCompatActivity() {
                     displayErrorLater("You do not have permission to use the client.", true)
                 } else {
                     Log.i("User is authenticated, proceeding to main activity")
-                    startActivity(intent)
-                    finish()
+                    redirectToMain()
                 }
             }
         }
+    }
+
+    private fun redirectToMain() {
+        Log.i("User is authenticated, proceeding to main activity")
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     override fun onStart() {
@@ -175,8 +234,6 @@ class LoginActivity : AppCompatActivity() {
         if (mExecutor.isShutdown) {
             mExecutor = Executors.newSingleThreadExecutor()
         }
-
-        // handleAuthIntents()
     }
 
     override fun onStop() {
@@ -535,18 +592,43 @@ class LoginActivity : AppCompatActivity() {
 
     @MainThread
     private fun displayLoading(loadingMessage: String) {
+        findViewById<View>(R.id.login_container).visibility = View.VISIBLE
+        findViewById<View>(R.id.e911_container).visibility = View.GONE
+
         findViewById<View>(R.id.loading_container).visibility = View.VISIBLE
         findViewById<View>(R.id.auth_container).visibility = View.GONE
         findViewById<View>(R.id.error_container).visibility = View.GONE
+        findViewById<View>(R.id.send_logs_container).visibility = View.VISIBLE
 
         (findViewById<View>(R.id.loading_description) as TextView).text = loadingMessage
     }
 
     @MainThread
+    private fun displayE911() {
+        runOnUiThread() {
+            findViewById<View>(R.id.login_container).visibility = View.GONE
+            findViewById<View>(R.id.e911_container).visibility = View.VISIBLE
+
+            findViewById<View>(R.id.loading_container).visibility = View.GONE
+            findViewById<View>(R.id.auth_container).visibility = View.GONE
+            findViewById<View>(R.id.error_container).visibility = View.GONE
+            findViewById<View>(R.id.send_logs_container).visibility = View.GONE
+
+            (findViewById<View>(R.id.loading_description) as TextView).text = ""
+        }
+    }
+
+    @MainThread
     private fun displayError(error: String?, recoverable: Boolean) {
+        findViewById<View>(R.id.login_container).visibility = View.VISIBLE
+        findViewById<View>(R.id.e911_container).visibility = View.GONE
+
         findViewById<View>(R.id.error_container).visibility = View.VISIBLE
         findViewById<View>(R.id.loading_container).visibility = View.GONE
         findViewById<View>(R.id.auth_container).visibility = View.GONE
+        findViewById<View>(R.id.send_logs_container).visibility = View.VISIBLE
+
+        (findViewById<View>(R.id.loading_description) as TextView).text = ""
 
         (findViewById<View>(R.id.error_description) as TextView).text = error
         findViewById<View>(R.id.retry).visibility = if (recoverable) View.VISIBLE else View.GONE
@@ -570,6 +652,9 @@ class LoginActivity : AppCompatActivity() {
         findViewById<View>(R.id.auth_container).visibility = View.VISIBLE
         findViewById<View>(R.id.loading_container).visibility = View.GONE
         findViewById<View>(R.id.error_container).visibility = View.GONE
+        findViewById<View>(R.id.send_logs_container).visibility = View.VISIBLE
+
+        (findViewById<View>(R.id.loading_description) as TextView).text = ""
 
         val state = mAuthStateManager.current
         val config = state.authorizationServiceConfiguration
