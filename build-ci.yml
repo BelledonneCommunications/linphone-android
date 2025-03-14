@@ -3,67 +3,101 @@ pool:
   vmImage: 'ubuntu-latest'
 variables:
   appVersionCode: $(MAJOR)$(MINOR)$(YEAR:yy)$(DAYOFYEAR)$(REV:r)
-steps:
-- checkout: self
+  artifactName: 'apk-release'
 
-- task: DownloadSecureFile@1
-  displayName: "Download keystore"
-  name: "keystore"
-  inputs:
-    secureFile: 'UconnectAndroidAd-Hoc.keystore'
+stages:
+- stage: Build
 
-- task: JavaToolInstaller@0
-  displayName: "Install Java"
-  inputs:
-    versionSpec: '17'
-    jdkArchitectureOption: 'x64'
-    jdkSourceOption: 'PreInstalled'
+  jobs:
+    - job: Build_Android
+      displayName: "Build CI Android Client"
     
-- task: Bash@3
-  displayName: "Generate keystore.properties"
-  inputs:
-    targetType: 'inline'
-    script: |
-      echo storePassword=$(KEYSTORE_PASSWORD) >> keystore.properties
-      echo keyPassword=$(KEYSTORE_PASSWORD) >> keystore.properties
-      echo keyAlias=uconnect android ad-hoc >> keystore.properties
-      echo storeFile=$(KEYSTORE.SECUREFILEPATH) >> keystore.properties
+      steps:
+      - checkout: self
+
+      - task: DownloadSecureFile@1
+        displayName: "Download keystore"
+        name: "keystore"
+        inputs:
+          secureFile: 'UconnectAndroidAd-Hoc.keystore'
+
+      - task: JavaToolInstaller@0
+        displayName: "Install Java"
+        inputs:
+          versionSpec: '17'
+          jdkArchitectureOption: 'x64'
+          jdkSourceOption: 'PreInstalled'
+          
+      - task: Bash@3
+        displayName: "Generate keystore.properties"
+        inputs:
+          targetType: 'inline'
+          script: |
+            echo storePassword=$(KEYSTORE_PASSWORD) >> keystore.properties
+            echo keyPassword=$(KEYSTORE_PASSWORD) >> keystore.properties
+            echo keyAlias=uconnect android ad-hoc >> keystore.properties
+            echo storeFile=$(KEYSTORE.SECUREFILEPATH) >> keystore.properties
+            
+      - task: Bash@3
+        displayName: "Set VersionCode"
+        inputs:
+          targetType: 'inline'
+          script: |
+            current_timestamp=`date +%s`
+            find . -name "build.gradle" | xargs sed -i "s/versionCode appVersionCode/versionCode ${current_timestamp}/g"
+          workingDirectory: '$(Build.SourcesDirectory)/app/'
+      - task: Bash@3
+        displayName: "Set Version Name"
+        inputs:
+          targetType: 'inline'
+          script: "find . -name 'build.gradle' | xargs sed -i 's/versionName \"${project.version}\"/versionName \"$(BUILD.BUILDNUMBER)\"/g'"
+          workingDirectory: '$(Build.SourcesDirectory)/app/'
+
+      - task: CmdLine@2
+        displayName: "View Gradle Content"
+        inputs:
+          script: 'cat build.gradle'
+          workingDirectory: '$(Build.SourcesDirectory)/app/'
+          
+      - task: Gradle@3
+        displayName: "Build App"
+        inputs:
+          gradleWrapperFile: 'gradlew'
+          tasks: 'bundleRelease'
+          publishJUnitResults: false
+          javaHomeOption: 'JDKVersion'
+          sonarQubeRunAnalysis: false
+          spotBugsAnalysis: false
+
+      - task: PublishBuildArtifacts@1
+        condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+        displayName: "Publish App"
+        inputs:
+          PathtoPublish: 'app/build/outputs'
+          ArtifactName: 'apk-release'
+          publishLocation: 'container'
+
+- stage: Release
+
+  jobs:
+    - job: Release_Android
+      displayName: "Relase CI Android Client"
+    
+      steps:
+      - task: DownloadPipelineArtifact@2
+        displayName: 'Download Artifact'
+        inputs:
+          buildType: 'current'
+          artifactName: '$(artifactName)'
+          targetPath: '$(Pipeline.Workspace)'
       
-- task: Bash@3
-  displayName: "Set VersionCode"
-  inputs:
-    targetType: 'inline'
-    script: |
-      current_timestamp=`date +%s`
-      find . -name "build.gradle" | xargs sed -i "s/versionCode appVersionCode/versionCode ${current_timestamp}/g"
-    workingDirectory: '$(Build.SourcesDirectory)/app/'
-- task: Bash@3
-  displayName: "Set Version Name"
-  inputs:
-    targetType: 'inline'
-    script: "find . -name 'build.gradle' | xargs sed -i 's/versionName \"${project.version}\"/versionName \"$(BUILD.BUILDNUMBER)\"/g'"
-    workingDirectory: '$(Build.SourcesDirectory)/app/'
-
-- task: CmdLine@2
-  displayName: "View Gradle Content"
-  inputs:
-    script: 'cat build.gradle'
-    workingDirectory: '$(Build.SourcesDirectory)/app/'
-    
-- task: Gradle@3
-  displayName: "Build App"
-  inputs:
-    gradleWrapperFile: 'gradlew'
-    tasks: 'bundleRelease'
-    publishJUnitResults: false
-    javaHomeOption: 'JDKVersion'
-    sonarQubeRunAnalysis: false
-    spotBugsAnalysis: false
-
-- task: PublishBuildArtifacts@1
-  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
-  displayName: "Publish App"
-  inputs:
-    PathtoPublish: 'app/build/outputs'
-    ArtifactName: 'apk-release'
-    publishLocation: 'container'
+      - task: GooglePlayRelease@4
+        inputs:
+          serviceConnection: 'Dimensions Google Play Store Connection'
+          applicationId: 'cloud.xarios.dimensions'
+          action: 'SingleBundle'
+          bundleFile: '$(Pipeline.Workspace)/bundle/release/app-release.aab'
+          track: 'internal'
+          shouldUploadMappingFile: true
+          mappingFilePath: '$(Pipeline.Workspace)/mapping/release/mapping.txt'
+          releaseName: '$(BUILD.BUILDNUMBER)'
