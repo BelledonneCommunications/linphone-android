@@ -127,16 +127,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
-                            android:text="@{viewModel.subTitle}" />
-
-                        <org.linphone.views.MarqueeTextView
-                            style="@style/contact_organization_font"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="start"
-                            android:text="@{viewModel.statusMessage}"
-                            android:visibility="@{viewModel.statusMessage == &quot;&quot; ? View.GONE : View.VISIBLE, default=gone}"
-                            />
+                            android:text="@{viewModel.subTitle}"/>
 
                     </LinearLayout>
 

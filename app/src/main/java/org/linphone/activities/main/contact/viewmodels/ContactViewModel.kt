@@ -175,7 +175,12 @@ class ContactViewModel(friend: Friend) : MessageNotifierViewModel(), ContactData
                 )
                 presenceStatus.postValue(cp)
                 statusMessage.postValue(data.message)
-                subTitle.postValue(data.stateName)
+
+                if (data.message.isNullOrBlank()) {
+                    subTitle.postValue(data.stateName)
+                } else {
+                    subTitle.postValue("${data.stateName} | ${data.message}")
+                }
             }
 
             hasLongTermPresence.postValue(false)

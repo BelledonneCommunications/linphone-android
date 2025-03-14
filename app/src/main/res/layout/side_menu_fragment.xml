@@ -46,7 +46,7 @@
         <RelativeLayout
             android:id="@+id/main_account"
             android:enabled="@{viewModel.defaultAccountFound}"
-            android:visibility="@{viewModel.showAccounts ? View.VISIBLE : View.GONE}"
+            android:visibility= "@{View.GONE}"
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:background="?attr/lightToolbarBackgroundColor">
