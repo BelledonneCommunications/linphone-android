@@ -49,6 +49,10 @@ data class UserInfo(
     @SerializedName("clientProfileSettings")
     val clientProfileSettings: ClientProfileSettings = ClientProfileSettings()
 ) {
+    companion object {
+        const val STORE_NAME: String = "user"
+        const val E911_STATE: String = "e911"
+    }
 
     fun hasClientPermission(): Boolean {
         return permissions.contains("customer.user.uc.mobile")

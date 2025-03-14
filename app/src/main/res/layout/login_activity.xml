@@ -8,133 +8,234 @@
     android:fitsSystemWindows="true"
     tools:context=".activities.main.LoginActivity">
 
-    <androidx.core.widget.NestedScrollView
+    <LinearLayout
+        android:id="@+id/login_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/backgroundColor"
+            android:id="@+id/login_scrollview"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical"
+                android:paddingLeft="32dp"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingRight="32dp"
+                android:paddingBottom="@dimen/activity_vertical_margin">
+
+                <TextView
+                    style="@style/Base.TextAppearance.AppCompat.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/intro_header"
+                    android:visibility="gone" />
+
+                <!--
+                displayed while the discovery document is loaded, and dynamic client registration is
+                being negotiated
+                -->
+                <LinearLayout
+                    android:id="@+id/loading_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/loading_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <ProgressBar
+                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:indeterminate="true" />
+
+                </LinearLayout>
+
+                <!-- Displayed once the authorization server configuration is resolved -->
+                <LinearLayout
+                    android:id="@+id/auth_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/section_margin"
+                    android:layout_marginBottom="8dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:labelFor="@+id/environment_selector"
+                        android:text="@string/environment_selector_label"
+                        android:textSize="16sp" />
+
+                    <Spinner
+                        android:id="@+id/environment_selector"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <Button
+                        android:id="@+id/start_auth"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="24dp"
+                        android:text="@string/log_in" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/error_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/error_description"
+                        style="@style/Base.TextAppearance.AppCompat.Body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/section_margin"
+                        android:layout_marginBottom="8dp" />
+
+                    <Button
+                        android:id="@+id/retry"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/retry_label" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/send_logs_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    >
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="5" />
+                    <ImageView
+                        android:id="@+id/send_logs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:contentDescription="@string/content_description_upload_logs"
+                        android:src="@drawable/icon_upload_file"
+                        android:padding="5dp"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/e911_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/backgroundColor"
-        android:id="@+id/login_scrollview"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:padding="20dp">
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/e911_scrollview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:orientation="vertical"
-            android:paddingLeft="32dp"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            android:paddingRight="32dp"
-            android:paddingBottom="@dimen/activity_vertical_margin">
+            android:layout_height="match_parent"
+            android:layout_above="@+id/buttonAcceptE911">
 
-            <TextView
-                style="@style/Base.TextAppearance.AppCompat.Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/intro_header"
-                android:visibility="gone" />
-
-            <!--
-            displayed while the discovery document is loaded, and dynamic client registration is
-            being negotiated
-            -->
             <LinearLayout
-                android:id="@+id/loading_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/loading_description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <ProgressBar
-                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:indeterminate="true" />
-
-            </LinearLayout>
-
-            <!-- Displayed once the authorization server configuration is resolved -->
-            <LinearLayout
-                android:id="@+id/auth_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/section_margin"
-                android:layout_marginBottom="8dp"
                 android:orientation="vertical">
+
+                <TextView
+                    style="@style/accent_colored_title_font"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/E911_header"
+                    android:layout_marginBottom="5dp"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:labelFor="@+id/environment_selector"
-                    android:text="@string/environment_selector_label"
-                    android:textSize="16sp" />
-
-                <Spinner
-                    android:id="@+id/environment_selector"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <Button
-                    android:id="@+id/start_auth"
-                    style="@style/Widget.AppCompat.Button.Colored"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="24dp"
-                    android:text="@string/log_in" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/error_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
+                    android:text="@string/E911_p1"
+                    android:layout_marginBottom="5dp" />
 
                 <TextView
-                    android:id="@+id/error_description"
-                    style="@style/Base.TextAppearance.AppCompat.Body1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/section_margin"
-                    android:layout_marginBottom="8dp" />
-
-                <Button
-                    android:id="@+id/retry"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/retry_label" />
+                    android:text="@string/E911_p2"
+                    android:layout_marginBottom="5dp" />
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/send_logs_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                >
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="5" />
-                <ImageView
-                    android:id="@+id/send_logs"
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:contentDescription="@string/content_description_upload_logs"
-                    android:src="@drawable/icon_upload_file"
-                    android:padding="5dp"/>
+                    android:text="@string/E911_p3"
+                    android:layout_marginBottom="5dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/E911_p4"
+                    android:layout_marginBottom="5dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/E911_p6"
+                    android:layout_marginBottom="5dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/E911_p5"
+                    android:layout_marginBottom="5dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/E911_p7"
+                    android:layout_marginBottom="5dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/E911_p8"
+                    android:layout_marginBottom="5dp" />
+
             </LinearLayout>
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <Button
+            android:id="@+id/buttonAcceptE911"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/E911_Accept"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:enabled="false"
+            android:layout_margin="20dp"/>
+
+    </RelativeLayout>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
