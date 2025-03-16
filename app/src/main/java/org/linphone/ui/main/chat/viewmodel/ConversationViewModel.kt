@@ -402,6 +402,7 @@ class ConversationViewModel
 
     @UiThread
     fun updateUnreadMessageCount() {
+        if (!isChatRoomInitialized()) return
         coreContext.postOnCoreThread {
             unreadMessagesCount.postValue(chatRoom.unreadMessagesCount)
         }
@@ -447,6 +448,7 @@ class ConversationViewModel
 
     @UiThread
     fun markAsRead() {
+        if (!isChatRoomInitialized()) return
         coreContext.postOnCoreThread {
             if (chatRoom.unreadMessagesCount == 0) return@postOnCoreThread
             Log.i("$TAG Marking chat room as read")
@@ -456,6 +458,7 @@ class ConversationViewModel
 
     @UiThread
     fun mute() {
+        if (!isChatRoomInitialized()) return
         coreContext.postOnCoreThread {
             chatRoom.muted = true
             isMuted.postValue(chatRoom.muted)
@@ -464,6 +467,7 @@ class ConversationViewModel
 
     @UiThread
     fun unMute() {
+        if (!isChatRoomInitialized()) return
         coreContext.postOnCoreThread {
             chatRoom.muted = false
             isMuted.postValue(chatRoom.muted)
@@ -487,6 +491,7 @@ class ConversationViewModel
 
     @UiThread
     fun updateEphemeralLifetime(lifetime: Long) {
+        if (!isChatRoomInitialized()) return
         coreContext.postOnCoreThread {
             LinphoneUtils.chatRoomConfigureEphemeralMessagesLifetime(chatRoom, lifetime)
             ephemeralLifetime.postValue(
@@ -500,6 +505,7 @@ class ConversationViewModel
 
     @UiThread
     fun loadMoreData(totalItemsCount: Int) {
+        if (!isChatRoomInitialized()) return
         coreContext.postOnCoreThread {
             val maxSize: Int = chatRoom.historyEventsSize
             Log.i("$TAG Loading more data, current total is $totalItemsCount, max size is $maxSize")
@@ -535,6 +541,7 @@ class ConversationViewModel
 
     @WorkerThread
     fun checkIfConversationShouldBeDisabledForSecurityReasons() {
+        if (!isChatRoomInitialized()) return
         if (!chatRoom.hasCapability(ChatRoom.Capabilities.Encrypted.toInt())) {
             if (LinphoneUtils.getAccountForAddress(chatRoom.localAddress)?.params?.instantMessagingEncryptionMandatory == true) {
                 Log.w(
@@ -570,6 +577,8 @@ class ConversationViewModel
 
     @WorkerThread
     private fun configureChatRoom() {
+        if (!isChatRoomInitialized()) return
+
         computeComposingLabel()
 
         isEndToEndEncrypted.postValue(
@@ -585,6 +594,8 @@ class ConversationViewModel
 
     @WorkerThread
     private fun computeConversationInfo() {
+        if (!isChatRoomInitialized()) return
+
         val group = LinphoneUtils.isChatRoomAGroup(chatRoom)
         isGroup.postValue(group)
 
@@ -615,6 +626,8 @@ class ConversationViewModel
 
     @WorkerThread
     private fun computeParticipantsInfo() {
+        if (!isChatRoomInitialized()) return
+
         val friends = arrayListOf<Friend>()
         val address = if (chatRoom.hasCapability(ChatRoom.Capabilities.Basic.toInt())) {
             chatRoom.peerAddress
@@ -644,6 +657,8 @@ class ConversationViewModel
 
     @WorkerThread
     private fun computeEvents() {
+        if (!isChatRoomInitialized()) return
+
         eventsList.forEach(EventLogModel::destroy)
 
         val history = chatRoom.getHistoryEvents(MESSAGES_PER_PAGE)
@@ -879,6 +894,7 @@ class ConversationViewModel
 
     @WorkerThread
     private fun computeComposingLabel() {
+        if (!isChatRoomInitialized()) return
         val composingFriends = arrayListOf<String>()
         var label = ""
         for (address in chatRoom.composingAddresses) {
@@ -928,6 +944,7 @@ class ConversationViewModel
 
     @WorkerThread
     private fun searchChatMessage(direction: SearchDirection) {
+        if (!isChatRoomInitialized()) return
         searchInProgress.postValue(true)
 
         val textToSearch = searchFilter.value.orEmpty().trim()
