@@ -1127,19 +1127,20 @@ class NotificationsManager
             )
         }
 
-        val channel = if (isIncoming) {
+        val channelId = if (isIncoming) {
             context.getString(R.string.notification_channel_incoming_call_id)
         } else {
             context.getString(R.string.notification_channel_call_id)
         }
-
+        val channel = notificationManager.getNotificationChannel(channelId)
+        val importance = channel?.importance ?: NotificationManagerCompat.IMPORTANCE_NONE
         Log.i(
-            "Creating notification for ${if (isIncoming) "[incoming] " else ""}[${if (isConference) "conference" else "call"}] with video [${if (isVideo) "enabled" else "disabled"}] on channel [$channel]"
+            "Creating notification for ${if (isIncoming) "[incoming] " else ""}[${if (isConference) "conference" else "call"}] with video [${if (isVideo) "enabled" else "disabled"}] on channel [$channel] with importance [$importance]"
         )
 
         val builder = NotificationCompat.Builder(
             context,
-            channel
+            channelId
         ).apply {
             try {
                 style.setIsVideo(isVideo)
