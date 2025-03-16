@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.help.fragment
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -84,6 +85,10 @@ class HelpFragment : GenericMainFragment() {
                 Log.e(
                     "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
                 )
+            } catch (anfe: ActivityNotFoundException) {
+                Log.e(
+                    "$TAG Can't start ACTION_VIEW intent for URL [$url], ActivityNotFoundException: $anfe"
+                )
             }
         }
 
@@ -96,6 +101,10 @@ class HelpFragment : GenericMainFragment() {
                 Log.e(
                     "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
                 )
+            } catch (anfe: ActivityNotFoundException) {
+                Log.e(
+                    "$TAG Can't start ACTION_VIEW intent for URL [$url], ActivityNotFoundException: $anfe"
+                )
             }
         }
 
@@ -107,6 +116,10 @@ class HelpFragment : GenericMainFragment() {
             } catch (ise: IllegalStateException) {
                 Log.e(
                     "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
+                )
+            } catch (anfe: ActivityNotFoundException) {
+                Log.e(
+                    "$TAG Can't start ACTION_VIEW intent for URL [$url], ActivityNotFoundException: $anfe"
                 )
             }
         }
@@ -162,6 +175,10 @@ class HelpFragment : GenericMainFragment() {
                 } catch (ise: IllegalStateException) {
                     Log.e(
                         "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
+                    )
+                } catch (anfe: ActivityNotFoundException) {
+                    Log.e(
+                        "$TAG Can't start ACTION_VIEW intent for URL [$url], ActivityNotFoundException: $anfe"
                     )
                 }
                 dialog.dismiss()
