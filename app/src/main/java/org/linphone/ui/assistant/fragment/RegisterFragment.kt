@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.assistant.fragment
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -107,6 +108,10 @@ class RegisterFragment : GenericFragment() {
             } catch (ise: IllegalStateException) {
                 Log.e(
                     "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
+                )
+            } catch (anfe: ActivityNotFoundException) {
+                Log.e(
+                    "$TAG Can't start ACTION_VIEW intent for URL [$url], ActivityNotFoundException: $anfe"
                 )
             }
         }

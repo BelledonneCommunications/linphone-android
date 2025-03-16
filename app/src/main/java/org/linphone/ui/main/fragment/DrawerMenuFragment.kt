@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.fragment
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
@@ -151,6 +152,10 @@ class DrawerMenuFragment : GenericMainFragment() {
                 } catch (ise: IllegalStateException) {
                     Log.e(
                         "$TAG Can't start ACTION_VIEW intent for URL [$link], IllegalStateException: $ise"
+                    )
+                } catch (anfe: ActivityNotFoundException) {
+                    Log.e(
+                        "$TAG Can't start ACTION_VIEW intent for URL [$link], ActivityNotFoundException: $anfe"
                     )
                 }
             }
