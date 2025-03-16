@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.settings.fragment
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
@@ -144,14 +145,18 @@ class SettingsFragment : GenericMainFragment() {
         viewModel.goToIncomingCallNotificationChannelSettingsEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.w("$TAG Going to incoming call channel settings")
-                val intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).apply {
-                    putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
-                    putExtra(
-                        Settings.EXTRA_CHANNEL_ID,
-                        getString(R.string.notification_channel_incoming_call_id)
-                    )
+                try {
+                    val intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).apply {
+                        putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
+                        putExtra(
+                            Settings.EXTRA_CHANNEL_ID,
+                            getString(R.string.notification_channel_incoming_call_id)
+                        )
+                    }
+                    startActivity(intent)
+                } catch (anfe: ActivityNotFoundException) {
+                    Log.e("$TAG Failed to go to notification channel settings: $anfe")
                 }
-                startActivity(intent)
             }
         }
 
