@@ -41,7 +41,6 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
-import org.linphone.ui.main.settings.fragment.SettingsFragment
 import org.linphone.utils.ToastUtils
 import org.linphone.utils.slideInToastFromTop
 import org.linphone.utils.slideInToastFromTopForDuration
