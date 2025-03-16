@@ -185,10 +185,13 @@ class ContactFragment : SlidingPaneChildFragment() {
 
         viewModel.openLinphoneContactEditor.observe(viewLifecycleOwner) {
             it.consume { refKey ->
-                val action = ContactFragmentDirections.actionContactFragmentToEditContactFragment(
-                    refKey
-                )
-                findNavController().navigate(action)
+                if (findNavController().currentDestination?.id == R.id.contactFragment) {
+                    val action =
+                        ContactFragmentDirections.actionContactFragmentToEditContactFragment(
+                            refKey
+                        )
+                    findNavController().navigate(action)
+                }
             }
         }
 
