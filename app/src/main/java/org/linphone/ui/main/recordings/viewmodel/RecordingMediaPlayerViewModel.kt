@@ -102,6 +102,8 @@ class RecordingMediaPlayerViewModel
 
     @WorkerThread
     private fun initPlayer() {
+        if (!::recordingModel.isInitialized) return
+
         Log.i("$TAG Creating player")
         val playbackSoundCard = AudioUtils.getAudioPlaybackDeviceIdForCallRecordingOrVoiceMessage()
         val recordingPlayer = coreContext.core.createLocalPlayer(
@@ -158,6 +160,7 @@ class RecordingMediaPlayerViewModel
     @WorkerThread
     private fun startPlayback() {
         if (!::player.isInitialized) return
+        if (!::recordingModel.isInitialized) return
 
         Log.i("$TAG Starting player")
         if (player.state == Player.State.Closed) {
