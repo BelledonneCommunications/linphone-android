@@ -20,6 +20,7 @@
 package org.linphone.ui.main.contacts.fragment
 
 import android.app.Dialog
+import android.content.ActivityNotFoundException
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -170,11 +171,15 @@ class ContactFragment : SlidingPaneChildFragment() {
 
         viewModel.openNativeContactEditor.observe(viewLifecycleOwner) {
             it.consume { uri ->
-                val editIntent = Intent(Intent.ACTION_EDIT).apply {
-                    setDataAndType(uri.toUri(), ContactsContract.Contacts.CONTENT_ITEM_TYPE)
-                    putExtra("finishActivityOnSaveCompleted", true)
+                try {
+                    val editIntent = Intent(Intent.ACTION_EDIT).apply {
+                        setDataAndType(uri.toUri(), ContactsContract.Contacts.CONTENT_ITEM_TYPE)
+                        putExtra("finishActivityOnSaveCompleted", true)
+                    }
+                    startActivity(editIntent)
+                } catch (anfe: ActivityNotFoundException) {
+                    Log.e("$TAG Failed to open native contact editor with URI [$uri]: $anfe")
                 }
-                startActivity(editIntent)
             }
         }
 
