@@ -19,9 +19,12 @@
  */
 package org.linphone.ui.main.settings.viewmodel
 
+import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Vibrator
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
+import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -87,7 +90,7 @@ class SettingsViewModel
 
     val autoRecordCalls = MutableLiveData<Boolean>()
 
-    val goToIncomingCallNotificationChannelSettingsEvent = MutableLiveData<Event<Boolean>>()
+    val goToIncomingCallNotificationChannelSettingsEvent = MutableLiveData<Event<Uri>>()
 
     // Conversations settings
     val showConversationsSettings = MutableLiveData<Boolean>()
@@ -445,7 +448,21 @@ class SettingsViewModel
 
     @UiThread
     fun changeRingtone() {
-        goToIncomingCallNotificationChannelSettingsEvent.value = Event(true)
+        coreContext.postOnCoreThread { core ->
+            val defaultDeviceRingtone = RingtoneManager.getActualDefaultRingtoneUri(coreContext.context, RingtoneManager.TYPE_RINGTONE)
+            val coreRingtone = core.ring?.toUri()
+            Log.i("$TAG Currently set ringtone in Core is [$coreRingtone], device default ringtone is [$defaultDeviceRingtone]")
+            val currentRingtone = coreRingtone ?: defaultDeviceRingtone
+            goToIncomingCallNotificationChannelSettingsEvent.postValue(Event(currentRingtone))
+        }
+    }
+
+    @UiThread
+    fun setRingtoneUri(ringtone: Uri) {
+        coreContext.postOnCoreThread { core ->
+            core.ring = ringtone.toString()
+            Log.i("$TAG Newly set ringtone is [${core.ring}]")
+        }
     }
 
     @UiThread

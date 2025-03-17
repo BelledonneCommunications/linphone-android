@@ -544,10 +544,21 @@ class NotificationsManager
                     Log.e("$TAG Failed to delete notification channel ID [${channel.id}]: $e")
                 }
             }
+        } else {
+            try {
+                val oldId = context.getString(R.string.notification_channel_without_ringtone_incoming_call_id)
+                val oldChannel = notificationManager.getNotificationChannel(oldId)
+                if (oldChannel != null) {
+                    Log.i("$TAG Deleting notification channel ID [$oldId]")
+                    notificationManager.deleteNotificationChannel(oldId)
+                }
+            } catch (e: Exception) {
+                Log.e("$TAG Failed to check if deprecated incoming call notification channel exists: $e")
+            }
         }
 
         createThirdPartyAccountKeepAliveServiceChannel()
-        createIncomingCallNotificationChannel()
+        createIncomingCallNotificationChannelWithoutRingtone()
         createMissedCallNotificationChannel()
         createActiveCallNotificationChannel()
         createMessageChannel()
@@ -1170,7 +1181,7 @@ class NotificationsManager
         }
 
         val channelId = if (isIncoming) {
-            context.getString(R.string.notification_channel_incoming_call_id)
+            context.getString(R.string.notification_channel_without_ringtone_incoming_call_id)
         } else {
             context.getString(R.string.notification_channel_call_id)
         }
@@ -1603,6 +1614,18 @@ class NotificationsManager
         val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH).apply {
             description = name
             setSound(ringtone, audioAttributes)
+        }
+        notificationManager.createNotificationChannel(channel)
+    }
+
+    @MainThread
+    private fun createIncomingCallNotificationChannelWithoutRingtone() {
+        val id = context.getString(R.string.notification_channel_without_ringtone_incoming_call_id)
+        val name = context.getString(R.string.notification_channel_incoming_call_name)
+
+        val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH).apply {
+            description = name
+            lockscreenVisibility = Notification.VISIBILITY_PUBLIC
         }
         notificationManager.createNotificationChannel(channel)
     }
