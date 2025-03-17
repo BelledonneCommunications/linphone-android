@@ -51,6 +51,11 @@ class AudioUtils {
         }
 
         @WorkerThread
+        fun routeAudioToHearingAid(call: Call? = null) {
+            routeAudioTo(call, arrayListOf(AudioDevice.Type.HearingAid))
+        }
+
+        @WorkerThread
         fun routeAudioToHeadset(call: Call? = null) {
             routeAudioTo(
                 call,

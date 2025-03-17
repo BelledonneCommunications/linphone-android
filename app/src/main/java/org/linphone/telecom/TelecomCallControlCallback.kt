@@ -229,7 +229,7 @@ class TelecomCallControlCallback(
                     routes.find { it == AudioDevice.Type.Speaker }
                 }
                 CallEndpointCompat.Companion.TYPE_BLUETOOTH -> {
-                    routes.find { it == AudioDevice.Type.Bluetooth }
+                    routes.find { it == AudioDevice.Type.Bluetooth || it == AudioDevice.Type.HearingAid }
                 }
                 CallEndpointCompat.Companion.TYPE_WIRED_HEADSET -> {
                     wiredHeadsetFound = true

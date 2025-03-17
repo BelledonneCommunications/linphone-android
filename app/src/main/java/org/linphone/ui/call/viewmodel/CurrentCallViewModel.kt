@@ -757,7 +757,10 @@ class CurrentCallViewModel
                                 AudioDevice.Type.Headset, AudioDevice.Type.Headphones -> AudioUtils.routeAudioToHeadset(
                                     currentCall
                                 )
-                                AudioDevice.Type.Bluetooth, AudioDevice.Type.HearingAid -> AudioUtils.routeAudioToBluetooth(
+                                AudioDevice.Type.Bluetooth -> AudioUtils.routeAudioToBluetooth(
+                                    currentCall
+                                )
+                                AudioDevice.Type.HearingAid -> AudioUtils.routeAudioToHearingAid(
                                     currentCall
                                 )
                                 AudioDevice.Type.Speaker -> AudioUtils.routeAudioToSpeaker(
