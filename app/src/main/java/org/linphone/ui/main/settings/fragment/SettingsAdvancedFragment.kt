@@ -32,6 +32,7 @@ import org.linphone.databinding.SettingsAdvancedFragmentBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.settings.viewmodel.SettingsViewModel
+import org.linphone.utils.Event
 
 @UiThread
 class SettingsAdvancedFragment : GenericMainFragment() {
@@ -103,6 +104,12 @@ class SettingsAdvancedFragment : GenericMainFragment() {
 
         viewModel.outputAudioDeviceIndex.observe(viewLifecycleOwner) {
             setupOutputAudioDevicePicker()
+        }
+
+        viewModel.keepAliveServiceSettingChangedEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                sharedViewModel.refreshDrawerMenuQuitButtonEvent.postValue(Event(true))
+            }
         }
 
         startPostponedEnterTransition()

@@ -64,6 +64,10 @@ class SettingsViewModel
         MutableLiveData<Event<Boolean>>()
     }
 
+    val keepAliveServiceSettingChangedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     // Security settings
     val isVfsEnabled = MutableLiveData<Boolean>()
 
@@ -673,6 +677,7 @@ class SettingsViewModel
             } else {
                 coreContext.stopKeepAliveService()
             }
+            keepAliveServiceSettingChangedEvent.postValue(Event(true))
         }
     }
 
