@@ -945,6 +945,17 @@ class CurrentCallViewModel
     @WorkerThread
     fun attendedTransferCallTo(to: Call) {
         if (::currentCall.isInitialized) {
+            val toCallState = to.state
+            if (LinphoneUtils.isCallEnding(toCallState, considerReleasedAsEnding = true)) {
+                Log.e("$TAG Do not attempt attended transfer to call in state [$toCallState]")
+                return
+            }
+            val currentCallState = currentCall.state
+            if (LinphoneUtils.isCallEnding(currentCallState, considerReleasedAsEnding = true)) {
+                Log.e("$TAG Do not attempt attended transfer of call in state [$currentCallState]")
+                return
+            }
+
             Log.i(
                 "$TAG Doing an attended transfer between currently displayed call [${currentCall.remoteAddress.asStringUriOnly()}] and paused call [${to.remoteAddress.asStringUriOnly()}]"
             )
@@ -959,6 +970,12 @@ class CurrentCallViewModel
     @WorkerThread
     fun blindTransferCallTo(to: Address) {
         if (::currentCall.isInitialized) {
+            val callState = currentCall.state
+            if (LinphoneUtils.isCallEnding(callState, considerReleasedAsEnding = true)) {
+                Log.e("$TAG Do not attempt blind transfer of call in state [$callState]")
+                return
+            }
+
             Log.i(
                 "$TAG Call [${currentCall.remoteAddress.asStringUriOnly()}] is being blindly transferred to [${to.asStringUriOnly()}]"
             )

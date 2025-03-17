@@ -168,9 +168,10 @@ class LinphoneUtils {
         }
 
         @AnyThread
-        fun isCallEnding(callState: Call.State): Boolean {
+        fun isCallEnding(callState: Call.State, considerReleasedAsEnding: Boolean = false): Boolean {
             return when (callState) {
                 Call.State.End, Call.State.Error -> true
+                Call.State.Released -> considerReleasedAsEnding
                 else -> false
             }
         }
