@@ -123,6 +123,8 @@ class CoreContext
         MutableLiveData<Event<List<String>>>()
     }
 
+    private var keepAliveServiceStarted = false
+
     @SuppressLint("HandlerLeak")
     private lateinit var coreThread: Handler
 
@@ -548,15 +550,19 @@ class CoreContext
             Log.i("$TAG No configuration migration required")
         }
 
-        if (corePreferences.keepServiceAlive) {
-            Log.i("$TAG Starting keep alive service")
-            startKeepAliveService()
-        }
-
         contactsManager.onCoreStarted(core)
         telecomManager.onCoreStarted(core)
         notificationsManager.onCoreStarted(core, oldVersion < 600000) // Re-create channels when migrating from a non 6.0 version
         Log.i("$TAG Started contacts, telecom & notifications managers")
+
+        if (corePreferences.keepServiceAlive) {
+            if (activityMonitor.isInForeground() || corePreferences.autoStart) {
+                Log.i("$TAG Keep alive service is enabled and either app is in foreground or auto start is enabled, starting it")
+                startKeepAliveService()
+            } else {
+                Log.w("$TAG Keep alive service is enabled but auto start isn't and app is not in foreground, not starting it")
+            }
+        }
     }
 
     @WorkerThread
@@ -643,6 +649,10 @@ class CoreContext
             if (corePreferences.publishPresence) {
                 Log.i("$TAG App is in foreground, PUBLISHING presence as Online")
                 core.consolidatedPresence = ConsolidatedPresence.Online
+            }
+
+            if (corePreferences.keepServiceAlive && !keepAliveServiceStarted) {
+                startKeepAliveService()
             }
         }
     }
@@ -855,6 +865,10 @@ class CoreContext
 
     @WorkerThread
     fun startKeepAliveService() {
+        if (keepAliveServiceStarted) {
+            Log.w("$TAG Keep alive service already started, skipping")
+        }
+
         val serviceIntent = Intent(Intent.ACTION_MAIN).setClass(
             context,
             CoreKeepAliveThirdPartyAccountsService::class.java
@@ -862,6 +876,7 @@ class CoreContext
         Log.i("$TAG Starting Keep alive for third party accounts Service")
         try {
             context.startService(serviceIntent)
+            keepAliveServiceStarted = true
         } catch (e: Exception) {
             Log.e("$TAG Failed to start keep alive service: $e")
         }
@@ -877,6 +892,7 @@ class CoreContext
             "$TAG Stopping Keep alive for third party accounts Service"
         )
         context.stopService(serviceIntent)
+        keepAliveServiceStarted = false
     }
 
     @WorkerThread

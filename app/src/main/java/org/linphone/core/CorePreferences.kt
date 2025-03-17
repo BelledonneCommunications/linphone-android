@@ -68,6 +68,13 @@ class CorePreferences
         }
 
     @get:WorkerThread @set:WorkerThread
+    var autoStart: Boolean
+        get() = config.getBool("app", "auto_start", true)
+        set(value) {
+            config.setBool("app", "auto_start", value)
+        }
+
+    @get:WorkerThread @set:WorkerThread
     var checkForUpdateServerUrl: String
         get() = config.getString("misc", "version_check_url_root", "").orEmpty()
         set(value) {

@@ -299,6 +299,7 @@
     <string name="settings_tunnel_mode_auto_label">Auto</string>
 
     <string name="settings_advanced_title">Advanced settings</string>
+    <string name="settings_advanced_start_at_boot_title">Start when device boots</string>
     <string name="settings_advanced_keep_alive_service_title">Keep app alive using Service</string>
     <string name="settings_advanced_device_id">Device ID</string>
     <string name="settings_advanced_device_id_hint">Alpha-numerical characters only</string>
