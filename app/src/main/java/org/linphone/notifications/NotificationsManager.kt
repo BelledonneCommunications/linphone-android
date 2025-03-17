@@ -114,6 +114,9 @@ class NotificationsManager
     }
 
     private var inCallService: CoreInCallService? = null
+    private var inCallServiceForegroundNotificationPublished = false
+    private var waitForInCallServiceForegroundToStopIt = false
+
     private var keepAliveService: CoreKeepAliveThirdPartyAccountsService? = null
 
     private val callNotificationsMap: HashMap<String, Notifiable> = HashMap()
@@ -255,7 +258,13 @@ class NotificationsManager
         @WorkerThread
         override fun onLastCallEnded(core: Core) {
             Log.i("$TAG Last call ended, stopping foreground service")
-            stopInCallCallForegroundService()
+            if (inCallServiceForegroundNotificationPublished) {
+                stopInCallCallForegroundService()
+            } else {
+                // Wait for foreground service to have been started before stopping it
+                Log.w("$TAG We would like to stop the foreground service but it wasn't started yet, wait for it")
+                waitForInCallServiceForegroundToStopIt = true
+            }
         }
 
         @WorkerThread
@@ -485,7 +494,13 @@ class NotificationsManager
         coreContext.postOnCoreThread { core ->
             if (core.callsNb == 0) {
                 Log.w("$TAG No call anymore, stopping service")
-                stopInCallCallForegroundService()
+                if (inCallServiceForegroundNotificationPublished) {
+                    stopInCallCallForegroundService()
+                } else {
+                    // Wait for foreground service to have been started before stopping it
+                    Log.w("$TAG We would like to stop the foreground service but it wasn't started yet, wait for it")
+                    waitForInCallServiceForegroundToStopIt = true
+                }
             } else if (currentInCallServiceNotificationId == -1) {
                 Log.i(
                     "$TAG At least a call is still running and no foreground Service notification was found"
@@ -702,6 +717,11 @@ class NotificationsManager
                     Compatibility.FOREGROUND_SERVICE_TYPE_PHONE_CALL
                 )
                 currentInCallServiceNotificationId = INCOMING_CALL_ID
+                inCallServiceForegroundNotificationPublished = true
+                if (waitForInCallServiceForegroundToStopIt) {
+                    Log.i("$TAG We were waiting for foreground service to be started to stop it, doing it")
+                    stopInCallCallForegroundService()
+                }
             } else {
                 Log.e("$TAG POST_NOTIFICATIONS permission isn't granted, don't start foreground service!")
             }
@@ -808,6 +828,11 @@ class NotificationsManager
                 mask
             )
             currentInCallServiceNotificationId = notifiable.notificationId
+            inCallServiceForegroundNotificationPublished = true
+            if (waitForInCallServiceForegroundToStopIt) {
+                Log.i("$TAG We were waiting for foreground service to be started to stop it, doing it")
+                stopInCallCallForegroundService()
+            }
         } else {
             Log.e("$TAG POST_NOTIFICATIONS permission isn't granted, don't start foreground service!")
         }
@@ -822,6 +847,7 @@ class NotificationsManager
             )
             service.stopForeground(STOP_FOREGROUND_REMOVE)
             service.stopSelf()
+            inCallServiceForegroundNotificationPublished = false
         } else {
             Log.w("$TAG Can't stop foreground Service & notif, no Service was found")
         }
