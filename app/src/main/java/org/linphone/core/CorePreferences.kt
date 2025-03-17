@@ -235,6 +235,13 @@ class CorePreferences
         }
 
     @get:WorkerThread @set:WorkerThread
+    var automaticallyShowDialpad: Boolean
+        get() = config.getBool("ui", "automatically_show_dialpad", false)
+        set(value) {
+            config.setBool("ui", "automatically_show_dialpad", value)
+        }
+
+    @get:WorkerThread @set:WorkerThread
     var themeMainColor: String
         get() = config.getString("ui", "theme_main_color", "orange")!!
         set(value) {
@@ -324,10 +331,6 @@ class CorePreferences
     @get:WorkerThread
     val fetchContactsFromDefaultDirectory: Boolean
         get() = config.getBool("app", "fetch_contacts_from_default_directory", true)
-
-    @get:WorkerThread
-    val automaticallyShowDialpad: Boolean
-        get() = config.getBool("ui", "automatically_show_dialpad", false)
 
     @get:WorkerThread
     val showLettersOnDialpad: Boolean

@@ -282,6 +282,7 @@
     <string name="settings_network_use_wifi_only">Use only Wi-Fi networks</string>
     <string name="settings_network_allow_ipv6">Allow IPv6</string>
     <string name="settings_user_interface_title">User interface</string>
+    <string name="settings_user_interface_auto_show_dialpad_title">Automatically open dialpad</string>
     <string name="settings_user_interface_theme_title">Theme</string>
     <string name="settings_user_interface_dark_theme_label">Dark theme</string>
     <string name="settings_user_interface_light_theme_label">Light theme</string>

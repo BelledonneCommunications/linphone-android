@@ -142,6 +142,8 @@ class SettingsViewModel
     val allowIpv6 = MutableLiveData<Boolean>()
 
     // User Interface settings
+    val autoShowDialpad = MutableLiveData<Boolean>()
+
     val showThemeSelector = MutableLiveData<Boolean>()
     val theme = MutableLiveData<Int>()
     val availableThemesNames = arrayListOf(
@@ -305,6 +307,7 @@ class SettingsViewModel
 
             defaultLayout.postValue(core.defaultConferenceLayout.toInt())
 
+            autoShowDialpad.postValue(corePreferences.automaticallyShowDialpad)
             theme.postValue(corePreferences.darkMode)
             color.postValue(corePreferences.themeMainColor)
 
@@ -578,6 +581,15 @@ class SettingsViewModel
     @UiThread
     fun toggleUserInterfaceExpand() {
         expandUserInterface.value = expandUserInterface.value == false
+    }
+
+    @UiThread
+    fun toggleAutoShowDialpad() {
+        val newValue = autoShowDialpad.value == false
+        coreContext.postOnCoreThread { core ->
+            corePreferences.automaticallyShowDialpad = newValue
+            autoShowDialpad.postValue(newValue)
+        }
     }
 
     @UiThread
