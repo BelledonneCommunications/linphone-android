@@ -330,6 +330,7 @@
     <string name="account_settings_cpim_in_basic_conversations_title">Utiliser CPIM dans les conversations \"basiques\"</string>
     <string name="account_settings_voicemail_uri_title">URI de la messagerie vocale</string>
     <string name="account_settings_mwi_uri_title">URI du serveur MWI (Message Waiting Indicator)</string>
+    <string name="account_settings_replace_plus_by_00_title">Remplacer + par 00 lors du formattage des numéros de téléphone</string>
     <string name="account_settings_update_password_title">Mettre à jour le mot de passe</string>
 
     <string name="account_settings_dialog_invalid_password_title">Autentification requise</string>

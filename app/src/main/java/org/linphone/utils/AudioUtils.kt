@@ -230,7 +230,7 @@ class AudioUtils {
                 }
             }
             Log.i(
-                "$TAG Found headset/headphones/hearingAid sound card [$headsetCard], bluetooth sound card [$bluetoothCard] and microphone card [$microphoneCard]"
+                "$TAG Found headset/headphones sound card [$headsetCard], bluetooth/hearingAid sound card [$bluetoothCard] and microphone card [$microphoneCard]"
             )
             return headsetCard ?: bluetoothCard ?: microphoneCard
         }
