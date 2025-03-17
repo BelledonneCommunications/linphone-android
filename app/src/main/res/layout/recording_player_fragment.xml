@@ -162,6 +162,7 @@
             android:padding="15dp"
             android:src="@drawable/share_network"
             android:contentDescription="@string/content_description_share_file"
+            android:visibility="gone"
             app:tint="@color/gray_main2_500"
             app:layout_constraintEnd_toStartOf="@id/save"
             app:layout_constraintTop_toTopOf="parent" />
@@ -175,6 +176,7 @@
             android:padding="15dp"
             android:src="@drawable/download_simple"
             android:contentDescription="@string/content_description_save_file"
+            android:visibility="gone"
             app:tint="@color/gray_main2_500"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
