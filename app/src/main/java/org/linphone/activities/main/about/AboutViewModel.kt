@@ -30,6 +30,8 @@ class AboutViewModel : ViewModel() {
     private val prefs = corePreferences
 
     val appVersion: String = coreContext.appVersion
+        .substringBefore("(")
+        .substringBefore("+")
 
     val sdkVersion: String = coreContext.sdkVersion
 
