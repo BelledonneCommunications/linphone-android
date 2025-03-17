@@ -690,13 +690,21 @@ class NotificationsManager
             Log.i(
                 "$TAG Service found, starting it as foreground using notification ID [$INCOMING_CALL_ID] with type PHONE_CALL"
             )
-            Compatibility.startServiceForeground(
-                service,
-                INCOMING_CALL_ID,
-                notification,
-                Compatibility.FOREGROUND_SERVICE_TYPE_PHONE_CALL
-            )
-            currentInCallServiceNotificationId = INCOMING_CALL_ID
+            if (ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                Compatibility.startServiceForeground(
+                    service,
+                    INCOMING_CALL_ID,
+                    notification,
+                    Compatibility.FOREGROUND_SERVICE_TYPE_PHONE_CALL
+                )
+                currentInCallServiceNotificationId = INCOMING_CALL_ID
+            } else {
+                Log.e("$TAG POST_NOTIFICATIONS permission isn't granted, don't start foreground service!")
+            }
         } else {
             Log.w("$TAG Core Foreground Service hasn't started yet...")
         }
@@ -785,16 +793,24 @@ class NotificationsManager
             }
         }
 
-        Log.i(
-            "$TAG Service found, starting it as foreground using notification ID [${notifiable.notificationId}] with type(s) [$mask]"
-        )
-        Compatibility.startServiceForeground(
-            service,
-            notifiable.notificationId,
-            notification,
-            mask
-        )
-        currentInCallServiceNotificationId = notifiable.notificationId
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            Log.i(
+                "$TAG Service found, starting it as foreground using notification ID [${notifiable.notificationId}] with type(s) [$mask]"
+            )
+            Compatibility.startServiceForeground(
+                service,
+                notifiable.notificationId,
+                notification,
+                mask
+            )
+            currentInCallServiceNotificationId = notifiable.notificationId
+        } else {
+            Log.e("$TAG POST_NOTIFICATIONS permission isn't granted, don't start foreground service!")
+        }
     }
 
     @WorkerThread
