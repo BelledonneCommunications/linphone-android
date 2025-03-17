@@ -90,6 +90,8 @@ class AccountSettingsViewModel
     val mwiUri = MutableLiveData<String>()
     val voicemailUri = MutableLiveData<String>()
 
+    val replacePlusBy00 = MutableLiveData<Boolean>()
+
     val cpimInBasicChatRooms = MutableLiveData<Boolean>()
 
     val accountFoundEvent = MutableLiveData<Event<Boolean>>()
@@ -165,6 +167,7 @@ class AccountSettingsViewModel
 
                 mwiUri.postValue(params.mwiServerAddress?.asStringUriOnly().orEmpty())
                 voicemailUri.postValue(params.voicemailAddress?.asStringUriOnly().orEmpty())
+                replacePlusBy00.postValue(params.isDialEscapePlusEnabled)
 
                 expire.postValue(params.expires.toString())
 
@@ -298,6 +301,7 @@ class AccountSettingsViewModel
 
                 newParams.ccmpServerUrl = ccmpServerUrl.value
                 newParams.limeServerUrl = limeServerUrl.value
+                newParams.isDialEscapePlusEnabled = replacePlusBy00.value == true
 
                 account.params = newParams
                 Log.i("$TAG Changes have been saved")
