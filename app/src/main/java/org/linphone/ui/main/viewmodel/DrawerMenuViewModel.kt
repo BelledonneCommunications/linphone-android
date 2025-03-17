@@ -126,7 +126,8 @@ class DrawerMenuViewModel
 
             hideRecordings.postValue(corePreferences.disableCallRecordings)
             hideSettings.postValue(corePreferences.hideSettings)
-            hideQuitButton.postValue(!corePreferences.keepServiceAlive)
+
+            checkIfKeepAliveServiceIsEnabled()
 
             computeAccountsList()
             computeShortcuts()
@@ -166,6 +167,15 @@ class DrawerMenuViewModel
             for (model in accounts.value.orEmpty()) {
                 model.computeNotificationsCount()
             }
+        }
+    }
+
+    @WorkerThread
+    fun checkIfKeepAliveServiceIsEnabled() {
+        val useKeepAliveService = corePreferences.keepServiceAlive
+        hideQuitButton.postValue(!useKeepAliveService)
+        if (useKeepAliveService) {
+            Log.i("$TAG Keep alive service is enabled, do not hide quit button")
         }
     }
 

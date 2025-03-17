@@ -170,6 +170,14 @@ class DrawerMenuFragment : GenericMainFragment() {
                 }
             }
         }
+
+        sharedViewModel.refreshDrawerMenuQuitButtonEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                coreContext.postOnCoreThread {
+                    viewModel.checkIfKeepAliveServiceIsEnabled()
+                }
+            }
+        }
     }
 
     private fun showAccountPopupMenu(view: View, account: Account) {
