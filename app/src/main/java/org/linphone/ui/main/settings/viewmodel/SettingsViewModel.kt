@@ -179,6 +179,7 @@ class SettingsViewModel
     )
 
     // Advanced settings
+    val startAtBoot = MutableLiveData<Boolean>()
     val keepAliveThirdPartyAccountsService = MutableLiveData<Boolean>()
 
     val deviceName = MutableLiveData<String>()
@@ -302,6 +303,7 @@ class SettingsViewModel
                 setupTunnel()
             }
 
+            startAtBoot.postValue(corePreferences.autoStart)
             keepAliveThirdPartyAccountsService.postValue(corePreferences.keepServiceAlive)
 
             deviceName.postValue(corePreferences.deviceName)
@@ -634,6 +636,16 @@ class SettingsViewModel
                 tunnel?.addServer(config)
                 Log.i("$TAG Tunnel configuration added into Core")
             }
+        }
+    }
+
+    @UiThread
+    fun toggleStartAtBoot() {
+        val newValue = startAtBoot.value == false
+
+        coreContext.postOnCoreThread {
+            corePreferences.autoStart = newValue
+            startAtBoot.postValue(newValue)
         }
     }
 

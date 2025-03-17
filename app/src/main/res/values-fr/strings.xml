@@ -259,6 +259,7 @@
     <string name="settings_tunnel_mode_auto_label">Auto</string>
 
     <string name="settings_advanced_title">Paramètres avancés</string>
+    <string name="settings_advanced_start_at_boot_title">Démarrer au lancement du téléphone</string>
     <string name="settings_advanced_keep_alive_service_title">Garder l\'app en vie via un Service</string>
     <string name="settings_advanced_device_id">Nom de l\'appareil</string>
     <string name="settings_advanced_device_id_hint">Caractères alpha-numériques uniquement</string>

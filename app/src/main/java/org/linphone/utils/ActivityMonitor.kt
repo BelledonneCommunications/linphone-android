@@ -22,6 +22,7 @@ package org.linphone.utils
 import android.app.Activity
 import android.app.Application.ActivityLifecycleCallbacks
 import android.os.Bundle
+import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.tools.Log
@@ -77,6 +78,11 @@ class ActivityMonitor : ActivityLifecycleCallbacks {
     override fun onActivityDestroyed(activity: Activity) {
         Log.d("$TAG onActivityDestroyed [$activity]")
         activities.remove(activity)
+    }
+
+    @AnyThread
+    fun isInForeground(): Boolean {
+        return mActive
     }
 
     private fun startInactivityChecker() {
