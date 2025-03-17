@@ -200,6 +200,7 @@
     <string name="settings_calls_vibrate_while_ringing_title">Vibration lors de l\'appel</string>
     <string name="settings_calls_auto_record_title">Enregistrement automatique des appels</string>
     <string name="settings_calls_change_ringtone_title">Changer de sonnerie</string>
+    <string name="settings_calls_change_ringtone_pick_title">Choisissez la sonnerie</string>
     <string name="settings_conversations_title">Conversations</string>
     <string name="settings_conversations_auto_download_title">Télécharger automatiquement les fichiers</string>
     <string name="settings_conversations_auto_export_media_to_native_gallery_title">Rendre visible dans la galerie les médias téléchargés</string>

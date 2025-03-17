@@ -18,6 +18,7 @@
     <string name="notification_channel_missed_call_id" translatable="false">linphone_6.0_notification_missed_call_id</string>
     <string name="notification_channel_service_id" translatable="false">linphone_6.0_notification_service_id</string>
     <string name="notification_channel_chat_id" translatable="false">linphone_6.0_notification_chat_id</string>
+    <string name="notification_channel_without_ringtone_incoming_call_id" translatable="false">linphone_6.0.1_notification_incoming_call_id</string>
 
     <string name="emoji_love" translatable="false">❤️</string>
     <string name="emoji_thumbs_up" translatable="false">👍</string>
@@ -239,6 +240,7 @@
     <string name="settings_calls_vibrate_while_ringing_title">Vibrate while incoming call is ringing</string>
     <string name="settings_calls_auto_record_title">Automatically start recording calls</string>
     <string name="settings_calls_change_ringtone_title">Change ringtone</string>
+    <string name="settings_calls_change_ringtone_pick_title">Pick ringtone</string>
     <string name="settings_conversations_title">Conversations</string>
     <string name="settings_conversations_auto_download_title">Auto-download files</string>
     <string name="settings_conversations_auto_export_media_to_native_gallery_title">Make downloaded media public</string>

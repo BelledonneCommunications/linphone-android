@@ -19,10 +19,11 @@
  */
 package org.linphone.ui.main.settings.fragment
 
-import android.content.ActivityNotFoundException
+import android.app.Activity
 import android.content.Intent
+import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,12 +39,16 @@ import org.linphone.databinding.SettingsFragmentBinding
 import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.ui.main.settings.viewmodel.SettingsViewModel
+import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
+import java.lang.Exception
 
 @UiThread
 class SettingsFragment : GenericMainFragment() {
     companion object {
         private const val TAG = "[Settings Fragment]"
+
+        private const val RINGTONE_PICKER_INTENT_ID = 89
     }
 
     private lateinit var binding: SettingsFragmentBinding
@@ -143,19 +148,31 @@ class SettingsFragment : GenericMainFragment() {
         }
 
         viewModel.goToIncomingCallNotificationChannelSettingsEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                Log.w("$TAG Going to incoming call channel settings")
+            it.consume { currentRingtone ->
                 try {
+                    /*
+                    Log.w("$TAG Going to incoming call channel settings")
                     val intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).apply {
                         putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
                         putExtra(
                             Settings.EXTRA_CHANNEL_ID,
-                            getString(R.string.notification_channel_incoming_call_id)
+                            getString(R.string.notification_channel_without_ringtone_incoming_call_id)
                         )
                     }
                     startActivity(intent)
-                } catch (anfe: ActivityNotFoundException) {
-                    Log.e("$TAG Failed to go to notification channel settings: $anfe")
+                    */
+                    val intent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER).apply {
+                        putExtra(
+                            RingtoneManager.EXTRA_RINGTONE_TYPE,
+                            RingtoneManager.TYPE_RINGTONE
+                        )
+                        putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, currentRingtone)
+                        putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, AppUtils.getString(R.string.settings_calls_change_ringtone_pick_title))
+                    }
+                    startActivityForResult(intent, RINGTONE_PICKER_INTENT_ID)
+                } catch (e: Exception) {
+                    Log.e("$TAG Failed start ringtone picker: $e")
+                    // TODO: show error to user
                 }
             }
         }
@@ -275,6 +292,20 @@ class SettingsFragment : GenericMainFragment() {
         }
 
         startPostponedEnterTransition()
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK && requestCode == RINGTONE_PICKER_INTENT_ID) {
+            val uri: Uri? = data?.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)
+            if (uri != null) {
+                Log.i("$TAG Ringtone picker result is OK, URI found in intent is [$uri]")
+                viewModel.setRingtoneUri(uri)
+            } else {
+                Log.e("$TAG Ringtone picker result is OK but URI is null!")
+                // TODO: show error to user
+            }
+        }
     }
 
     override fun onResume() {
