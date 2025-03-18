@@ -109,7 +109,8 @@ class ContactsListViewModel
 
             coreContext.contactsManager.addListener(contactsListener)
             magicSearch = core.createMagicSearch()
-            magicSearch.limitedSearch = false
+            magicSearch.limitedSearch = true
+            magicSearch.searchLimit = corePreferences.magicSearchResultsLimit
             magicSearch.addListener(magicSearchListener)
 
             coreContext.postOnMainThread {
@@ -197,7 +198,7 @@ class ContactsListViewModel
     @UiThread
     fun exportContactAsVCard(friend: Friend) {
         coreContext.postOnCoreThread {
-            val vCard = friend.vcard?.asVcard4String()
+            val vCard = friend.dumpVcard()
             if (!vCard.isNullOrEmpty()) {
                 Log.i("$TAG Friend has been successfully dumped as vCard string")
                 val fileName = friend.name.orEmpty().replace(" ", "_").lowercase(

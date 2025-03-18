@@ -369,7 +369,7 @@ class ContactViewModel
     fun exportContactAsVCard() {
         coreContext.postOnCoreThread {
             if (::friend.isInitialized) {
-                val vCard = friend.vcard?.asVcard4String()
+                val vCard = friend.dumpVcard()
                 if (!vCard.isNullOrEmpty()) {
                     Log.i("$TAG Friend has been successfully dumped as vCard string")
                     val fileName = friend.name.orEmpty().replace(" ", "_").lowercase(

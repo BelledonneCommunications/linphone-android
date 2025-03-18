@@ -104,7 +104,8 @@ abstract class AddressSelectionViewModel
 
             coreContext.contactsManager.addListener(contactsListener)
             magicSearch = core.createMagicSearch()
-            magicSearch.limitedSearch = false
+            magicSearch.limitedSearch = true
+            magicSearch.searchLimit = corePreferences.magicSearchResultsLimit
             magicSearch.addListener(magicSearchListener)
         }
 

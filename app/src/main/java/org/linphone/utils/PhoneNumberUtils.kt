@@ -117,18 +117,5 @@ class PhoneNumberUtils {
                 else -> ContactsContract.CommonDataKinds.BaseTypes.TYPE_CUSTOM
             }
         }
-
-        @AnyThread
-        fun arePhoneNumberWeakEqual(number1: String, number2: String): Boolean {
-            return trimPhoneNumber(number1) == trimPhoneNumber(number2)
-        }
-
-        @AnyThread
-        private fun trimPhoneNumber(phoneNumber: String): String {
-            return phoneNumber.replace(" ", "")
-                .replace("-", "")
-                .replace("(", "")
-                .replace(")", "")
-        }
     }
 }
