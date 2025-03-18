@@ -185,8 +185,14 @@ class TelecomManager
                         }
                     }
                 }
-            } catch (e: CallException) {
-                Log.e("$TAG Failed to add call to Telecom's CallsManager: $e")
+            } catch (ce: CallException) {
+                Log.e("$TAG Failed to add call to Telecom's CallsManager: $ce")
+            } catch (se: SecurityException) {
+                Log.e("$TAG Security exception trying to add call to Telecom's CallsManager: $se")
+            } catch (ise: IllegalArgumentException) {
+                Log.e("$TAG Illegal argument exception trying to add call to Telecom's CallsManager: $ise")
+            } catch (e: Exception) {
+                Log.e("$TAG Exception trying to add call to Telecom's CallsManager: $e")
             }
         }
     }
