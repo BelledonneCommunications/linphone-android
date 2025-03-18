@@ -125,6 +125,12 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
             navigateToAbout()
         }
 
+        binding.setHelpClickListener {
+            sharedViewModel.toggleDrawerEvent.value = Event(true)
+
+            UrlHelper.openHelp(requireContext())
+        }
+
         binding.setLogoutClickListener {
             sharedViewModel.toggleDrawerEvent.value = Event(true)
             logout()

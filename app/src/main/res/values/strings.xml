@@ -1050,4 +1050,5 @@
     <string name="E911_p7">Neither Dimensions nor your reseller supports messaging services (including but not limited to SMS and MMS) to any emergency services, including accessibility to emergency services by users with disabilities.</string>
     <string name="E911_p8">By clicking on “Accept”, you acknowledge that you have read and understand this Emergency Call disclaimer and the limitations it describes.</string>
     <string name="E911_Accept">Accept</string>
+    <string name="help">Help</string>
 </resources>

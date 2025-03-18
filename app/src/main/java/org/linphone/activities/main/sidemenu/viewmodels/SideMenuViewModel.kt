@@ -37,6 +37,7 @@ class SideMenuViewModel : ViewModel() {
     val showRecordings: Boolean = corePreferences.showRecordingsInSideMenu
     val showScheduledConferences = MutableLiveData<Boolean>()
     val showAbout: Boolean = corePreferences.showAboutInSideMenu
+    val showHelp: Boolean = corePreferences.showAboutInSideMenu // Show help if we're showing about
     val showLogout: Boolean = true // TODO: tie into AuthState
     val showQuit: Boolean = corePreferences.showQuitInSideMenu
 

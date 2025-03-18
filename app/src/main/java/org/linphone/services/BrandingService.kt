@@ -49,6 +49,10 @@ class BrandingService(val context: Context) : DefaultLifecycleObserver {
             }
     }
 
+    fun TenantBrandingDefinition(): TenantBrandingDefinition? {
+        return brandSubject.value?.getOrNull()
+    }
+
     override fun onDestroy(owner: LifecycleOwner) {
         super.onDestroy(owner)
 

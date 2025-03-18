@@ -23,6 +23,9 @@
             name="aboutClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
+            name="helpClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
             name="logoutClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
@@ -279,10 +282,34 @@
                         android:layout_height="45dp"
                         android:padding="10dp"
                         android:contentDescription="@string/about"
-                        android:src="@drawable/icon_help" />
+                        android:src="@drawable/icon_info" />
 
                     <TextView
                         android:text="@string/about"
+                        style="@style/standard_text_font"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="16dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:onClick="@{helpClickListener}"
+                    android:visibility="@{viewModel.showHelp ? View.VISIBLE : View.GONE}"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp">
+
+                    <ImageView
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:padding="10dp"
+                        android:contentDescription="@string/help"
+                        android:src="@drawable/icon_help" />
+
+                    <TextView
+                        android:text="@string/help"
                         style="@style/standard_text_font"
                         android:layout_width="match_parent"
                         android:layout_height="45dp"
@@ -297,6 +324,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="?dividerColor" />
+
 
                 <LinearLayout
                     android:layout_width="match_parent"

@@ -10,6 +10,7 @@ class TenantBrandingDefinition {
     var enterprisePortal: PortalBrandingDefinition? = null
     var accountPortal: PortalBrandingDefinition? = null
     var customerPortal: PortalBrandingDefinition? = null
+    var documentationRootUrl: String = ""
 
     var cssVariables: Hashtable<String, String> = Hashtable<String, String>()
     var emailTemplatePlainText: String? = null
