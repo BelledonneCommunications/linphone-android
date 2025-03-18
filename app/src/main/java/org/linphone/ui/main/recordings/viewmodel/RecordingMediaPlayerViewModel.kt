@@ -38,6 +38,7 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
 import org.linphone.ui.main.recordings.model.RecordingModel
 import org.linphone.utils.AudioUtils
+import org.linphone.utils.LinphoneUtils
 
 class RecordingMediaPlayerViewModel
     @UiThread
@@ -55,6 +56,8 @@ class RecordingMediaPlayerViewModel
     val isPlaying = MutableLiveData<Boolean>()
 
     val position = MutableLiveData<Int>()
+
+    val isUsingSmffFileFormat = MutableLiveData<Boolean>()
 
     private var audioFocusRequest: AudioFocusRequestCompat? = null
 
@@ -88,6 +91,7 @@ class RecordingMediaPlayerViewModel
         recordingModel = model
 
         coreContext.postOnCoreThread { core ->
+            isUsingSmffFileFormat.postValue(model.filePath.endsWith(LinphoneUtils.RECORDING_SMFF_FILE_EXTENSION))
             initPlayer()
         }
     }

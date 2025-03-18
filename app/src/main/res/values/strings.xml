@@ -306,6 +306,8 @@
     <string name="settings_advanced_device_id">Device ID</string>
     <string name="settings_advanced_device_id_hint">Alpha-numerical characters only</string>
     <string name="settings_advanced_upload_server_url">File sharing server URL</string>
+    <string name="settings_advanced_use_smff_format_for_call_recordings_title">Record video calls using H265/AV1</string>
+    <string name="settings_advanced_use_smff_format_for_call_recordings_subtitle">Will use a proprietary file format</string>
     <string name="settings_advanced_media_encryption_title">Media encryption</string>
     <string name="settings_advanced_media_encryption_mandatory_title">Media encryption mandatory</string>
     <string name="settings_advanced_create_e2e_encrypted_conferences_title">Create end-to-end encrypted meetings &amp; group calls</string>

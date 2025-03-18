@@ -61,7 +61,8 @@ class LinphoneUtils {
 
         const val RECORDING_FILE_NAME_HEADER = "call_recording_"
         const val RECORDING_FILE_NAME_URI_TIMESTAMP_SEPARATOR = "_on_"
-        const val RECORDING_FILE_EXTENSION = ".smff"
+        const val RECORDING_MKV_FILE_EXTENSION = ".mkv"
+        const val RECORDING_SMFF_FILE_EXTENSION = ".smff"
 
         @WorkerThread
         fun getDefaultAccount(): Account? {
@@ -451,7 +452,13 @@ class LinphoneUtils {
 
         @WorkerThread
         fun getRecordingFilePathForAddress(address: Address): String {
-            val fileName = "${RECORDING_FILE_NAME_HEADER}${address.asStringUriOnly()}${RECORDING_FILE_NAME_URI_TIMESTAMP_SEPARATOR}${System.currentTimeMillis()}$RECORDING_FILE_EXTENSION"
+            val extension = if (corePreferences.callRecordingUseSmffFormat) {
+                RECORDING_SMFF_FILE_EXTENSION
+            } else {
+                RECORDING_MKV_FILE_EXTENSION
+            }
+            Log.i("$TAG Using [$extension] file format for call recording")
+            val fileName = "${RECORDING_FILE_NAME_HEADER}${address.asStringUriOnly()}${RECORDING_FILE_NAME_URI_TIMESTAMP_SEPARATOR}${System.currentTimeMillis()}$extension"
             return FileUtils.getFileStoragePath(fileName, isRecording = true).absolutePath
         }
 
