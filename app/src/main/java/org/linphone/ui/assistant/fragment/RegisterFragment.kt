@@ -186,8 +186,10 @@ class RegisterFragment : GenericFragment() {
         val telephonyManager = requireContext().getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         val countryIso = telephonyManager.networkCountryIso
         coreContext.postOnCoreThread {
+            val fragmentContext = context ?: return@postOnCoreThread
+
             val adapter = object : ArrayAdapter<String>(
-                requireContext(),
+                fragmentContext,
                 R.layout.drop_down_item,
                 viewModel.dialPlansLabelList
             ) {
