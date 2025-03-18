@@ -127,12 +127,12 @@ class TelecomCallControlCallback(
             Log.i("$TAG New available audio endpoints list")
             if (availableEndpoints != list) {
                 Log.i(
-                    "$TAG List size of available audio endpoints has changed, reload sound devices in SDK"
+                    "$TAG List size of available audio endpoints has changed, reload sound devices in SDK in 500ms"
                 )
-                coreContext.postOnCoreThread { core ->
+                coreContext.postOnCoreThreadDelayed({ core ->
                     core.reloadSoundDevices()
                     Log.i("$TAG Sound devices reloaded")
-                }
+                }, 500)
             }
 
             availableEndpoints = list
@@ -167,6 +167,7 @@ class TelecomCallControlCallback(
                 }
                 CallEndpointCompat.Companion.TYPE_BLUETOOTH -> {
                     route.add(AudioDevice.Type.Bluetooth)
+                    route.add(AudioDevice.Type.HearingAid)
                 }
                 CallEndpointCompat.Companion.TYPE_WIRED_HEADSET -> {
                     route.add(AudioDevice.Type.Headphones)
