@@ -147,6 +147,50 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/settings_title_style"
+                    android:onClick="@{() -> viewModel.toggleUseSmffForCallRecording()}"
+                    android:id="@+id/use_smff_call_recording_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/settings_advanced_use_smff_format_for_call_recordings_title"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    app:layout_constraintTop_toTopOf="@id/use_smff_call_recording_switch"
+                    app:layout_constraintBottom_toTopOf="@id/use_smff_call_recording_subtitle"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/use_smff_call_recording_switch"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/settings_subtitle_style"
+                    android:onClick="@{() -> viewModel.toggleUseSmffForCallRecording()}"
+                    android:id="@+id/use_smff_call_recording_subtitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/settings_advanced_use_smff_format_for_call_recordings_subtitle"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    app:layout_constraintTop_toBottomOf="@id/use_smff_call_recording_title"
+                    app:layout_constraintBottom_toBottomOf="@id/use_smff_call_recording_switch"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/use_smff_call_recording_switch"/>
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    style="@style/material_switch_style"
+                    android:id="@+id/use_smff_call_recording_switch"
+                    android:onClick="@{() -> viewModel.toggleUseSmffForCallRecording()}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="16dp"
+                    android:checked="@{viewModel.useSmffForCallRecording}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/enable_fec_switch" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/settings_title_style"
                     android:id="@+id/media_encryption_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -156,7 +200,7 @@
                     android:paddingBottom="8dp"
                     android:text="@string/settings_advanced_media_encryption_title"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/enable_fec_switch"/>
+                    app:layout_constraintTop_toBottomOf="@id/use_smff_call_recording_switch"/>
 
                 <androidx.appcompat.widget.AppCompatSpinner
                     style="@style/default_text_style"

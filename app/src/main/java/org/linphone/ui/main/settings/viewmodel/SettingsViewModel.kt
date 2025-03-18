@@ -197,6 +197,7 @@ class SettingsViewModel
     // Advanced settings
     val startAtBoot = MutableLiveData<Boolean>()
     val keepAliveThirdPartyAccountsService = MutableLiveData<Boolean>()
+    val useSmffForCallRecording = MutableLiveData<Boolean>()
 
     val deviceName = MutableLiveData<String>()
     val fileSharingServerUrl = MutableLiveData<String>()
@@ -300,6 +301,7 @@ class SettingsViewModel
             videoFecEnabled.postValue(core.isFecEnabled)
             vibrateDuringIncomingCall.postValue(core.isVibrationOnIncomingCallEnabled)
             autoRecordCalls.postValue(corePreferences.automaticallyStartCallRecording)
+            useSmffForCallRecording.postValue(corePreferences.callRecordingUseSmffFormat)
 
             useWifiOnly.postValue(core.isWifiOnlyEnabled)
             allowIpv6.postValue(core.isIpv6Enabled)
@@ -425,6 +427,15 @@ class SettingsViewModel
         coreContext.postOnCoreThread { core ->
             core.isFecEnabled = newValue
             videoFecEnabled.postValue(core.isFecEnabled)
+        }
+    }
+
+    @UiThread
+    fun toggleUseSmffForCallRecording() {
+        val newValue = useSmffForCallRecording.value == false
+        coreContext.postOnCoreThread { core ->
+            corePreferences.callRecordingUseSmffFormat = newValue
+            useSmffForCallRecording.postValue(newValue)
         }
     }
 

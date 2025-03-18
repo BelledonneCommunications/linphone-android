@@ -120,6 +120,13 @@ class CorePreferences
         }
 
     @get:WorkerThread @set:WorkerThread
+    var callRecordingUseSmffFormat: Boolean
+        get() = config.getBool("app", "use_smff_for_call_recording", false)
+        set(value) {
+            config.setBool("app", "use_smff_for_call_recording", value)
+        }
+
+    @get:WorkerThread @set:WorkerThread
     var automaticallyStartCallRecording: Boolean
         get() = config.getBool("app", "auto_start_call_record", false)
         set(value) {
