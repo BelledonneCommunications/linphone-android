@@ -546,7 +546,7 @@ class NotificationsManager
             }
         } else {
             try {
-                val oldId = context.getString(R.string.notification_channel_without_ringtone_incoming_call_id)
+                val oldId = context.getString(R.string.notification_channel_incoming_call_id)
                 val oldChannel = notificationManager.getNotificationChannel(oldId)
                 if (oldChannel != null) {
                     Log.i("$TAG Deleting notification channel ID [$oldId]")
