@@ -57,6 +57,9 @@ class AuthAuthenticator(
                 future.complete(null) // Give up, we've already failed to authenticate.
             }
 
+            Log.d(
+                "performActionWithFreshTokens::Url(${response.request.url})::Token($accessToken)"
+            )
             val responseWithAuth = response.request.newBuilder()
                 .header("Authorization", "Bearer $accessToken")
                 .build()

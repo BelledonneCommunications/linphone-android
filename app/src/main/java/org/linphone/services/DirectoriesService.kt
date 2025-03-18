@@ -15,8 +15,6 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.main.contact.viewmodels.UserGroupViewModel
 import org.linphone.authentication.AuthStateManager
-import org.linphone.authentication.AuthorizationServiceManager
-import org.linphone.environment.DimensionsEnvironmentService
 import org.linphone.models.AuthenticatedUser
 import org.linphone.models.UserInfo
 import org.linphone.models.contact.ContactDirectoryModel
@@ -31,9 +29,7 @@ import retrofit2.Response
 import timber.log.Timber
 
 class DirectoriesService(val context: Context) : DefaultLifecycleObserver {
-    private val apiClient = APIClientService()
-    private val dimensionsEnvironment =
-        DimensionsEnvironmentService.getInstance(context).getCurrentEnvironment()
+    private val apiClient = APIClientService(context)
     private val authStateManager = AuthStateManager.getInstance(context)
     private val destroy = PublishSubject.create<Unit>()
 
@@ -81,6 +77,7 @@ class DirectoriesService(val context: Context) : DefaultLifecycleObserver {
         Log.d("Created DirectoriesService")
 
         contactDirectoriesSubscription = authStateManager.user
+            .filter { u -> u.id != null && u.id != AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER }
             .distinctUntilChanged { user -> user.id ?: "" }
             .takeUntil(destroy)
             .subscribe { user ->
@@ -99,6 +96,7 @@ class DirectoriesService(val context: Context) : DefaultLifecycleObserver {
             }
 
         allUsersSubscription = authStateManager.user
+            .filter { u -> u.id != null && u.id != AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER }
             .distinctUntilChanged { user -> user.id ?: "" }
             .takeUntil(destroy)
             .subscribe { user ->
@@ -136,11 +134,7 @@ class DirectoriesService(val context: Context) : DefaultLifecycleObserver {
     private fun fetchContactDirectories() {
         Log.d("Fetch contact directories...")
 
-        apiClient.getUCGatewayService(
-            dimensionsEnvironment!!.gatewayApiUri,
-            AuthorizationServiceManager.getInstance(context).authorizationServiceInstance,
-            AuthStateManager.getInstance(context)
-        ).doGetContactDirectories()
+        apiClient.getUCGatewayService().doGetContactDirectories()
             .enqueue(object : Callback<List<ContactDirectoryModel>> {
                 override fun onFailure(call: Call<List<ContactDirectoryModel>>, t: Throwable) {
                     Log.e("Failed to fetch contact directories", t)
@@ -159,11 +153,7 @@ class DirectoriesService(val context: Context) : DefaultLifecycleObserver {
     private fun fetchAllUsers() {
         Log.d("Fetch all users...")
 
-        apiClient.getUCGatewayService(
-            dimensionsEnvironment!!.gatewayApiUri,
-            AuthorizationServiceManager.getInstance(context).authorizationServiceInstance,
-            AuthStateManager.getInstance(context)
-        ).doGetAllUsers()
+        apiClient.getUCGatewayService().doGetAllUsers()
             .enqueue(object : Callback<List<UserInfo>> {
                 override fun onFailure(call: Call<List<UserInfo>>, t: Throwable) {
                     Log.e("Failed to fetch all users", t)
@@ -233,12 +223,7 @@ class DirectoriesService(val context: Context) : DefaultLifecycleObserver {
     }
 
     private fun searchDirectory(id: String, searchText: String): List<ContactItemModel> {
-        val response = apiClient.getUCGatewayService(
-            dimensionsEnvironment!!.gatewayApiUri,
-            AuthorizationServiceManager.getInstance(context).authorizationServiceInstance,
-            AuthStateManager.getInstance(context)
-        )
-            .searchDirectory(id, searchText).execute()
+        val response = apiClient.getUCGatewayService().searchDirectory(id, searchText).execute()
 
         return if (response.isSuccessful && response.body() != null) {
             response.body()!!
@@ -294,11 +279,7 @@ class DirectoriesService(val context: Context) : DefaultLifecycleObserver {
         val userGroupService = UserGroupService.getInstance(context)
         val favorites = userGroupService.favouritesGroup
         if (favorites != null) {
-            apiClient.getUCGatewayService(
-                dimensionsEnvironment!!.gatewayApiUri,
-                AuthorizationServiceManager.getInstance(context).authorizationServiceInstance,
-                AuthStateManager.getInstance(context)
-            ).doRemoveUserFromDirectory(favorites.id, id)
+            apiClient.getUCGatewayService().doRemoveUserFromDirectory(favorites.id, id)
                 .enqueue(object : Callback<Void> {
                     override fun onFailure(call: Call<Void>, t: Throwable) {
                         Log.e("Failed to remove user $id from favourites", t)
@@ -351,11 +332,7 @@ class DirectoriesService(val context: Context) : DefaultLifecycleObserver {
         val favorites = userGroupService.favouritesGroup
 
         if (favorites != null) {
-            apiClient.getUCGatewayService(
-                dimensionsEnvironment!!.gatewayApiUri,
-                AuthorizationServiceManager.getInstance(context).authorizationServiceInstance,
-                AuthStateManager.getInstance(context)
-            ).doAddUserToUserDirectory(favorites.id, arrayOf(id))
+            apiClient.getUCGatewayService().doAddUserToUserDirectory(favorites.id, arrayOf(id))
                 .enqueue(object : Callback<Void> {
                     override fun onFailure(call: Call<Void>, t: Throwable) {
                         Log.e("Failed to add user $id to favourites", t)
@@ -410,11 +387,7 @@ class DirectoriesService(val context: Context) : DefaultLifecycleObserver {
         val favorites = userGroupService.favouritesGroup
 
         if (favorites != null) {
-            apiClient.getUCGatewayService(
-                dimensionsEnvironment!!.gatewayApiUri,
-                AuthorizationServiceManager.getInstance(context).authorizationServiceInstance,
-                AuthStateManager.getInstance(context)
-            ).doRemoveContactFromDirectory(favorites.id, id)
+            apiClient.getUCGatewayService().doRemoveContactFromDirectory(favorites.id, id)
                 .enqueue(object : Callback<Void> {
                     override fun onFailure(call: Call<Void>, t: Throwable) {
                         Log.e("Failed to remove contact $id from favourites", t)
@@ -472,11 +445,7 @@ class DirectoriesService(val context: Context) : DefaultLifecycleObserver {
         if (favorites != null) {
             val contactGroupItem = ContactGroupItem(contact.directoryId, contact.id)
 
-            apiClient.getUCGatewayService(
-                dimensionsEnvironment!!.gatewayApiUri,
-                AuthorizationServiceManager.getInstance(context).authorizationServiceInstance,
-                AuthStateManager.getInstance(context)
-            ).doAddContactToDirectory(favorites.id, contactGroupItem)
+            apiClient.getUCGatewayService().doAddContactToDirectory(favorites.id, contactGroupItem)
                 .enqueue(object : Callback<Void> {
                     override fun onFailure(call: Call<Void>, t: Throwable) {
                         Log.e("Failed to add contact to favourites", t)

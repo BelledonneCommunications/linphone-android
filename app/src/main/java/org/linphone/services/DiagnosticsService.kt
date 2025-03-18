@@ -17,9 +17,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.linphone.BuildConfig
 import org.linphone.authentication.AuthStateManager
-import org.linphone.authentication.AuthorizationServiceManager
 import org.linphone.environment.DimensionsEnvironmentService
-import org.linphone.interfaces.CTGatewayService
 import org.linphone.middleware.FileTree
 import org.linphone.utils.Log
 import timber.log.Timber
@@ -28,18 +26,6 @@ class DiagnosticsService {
 
     companion object {
         private val LOG_FILE_TIME_FORMAT = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.US)
-
-        private fun getGateway(context: Context): CTGatewayService {
-            val env = DimensionsEnvironmentService.getInstance(context).getCurrentEnvironment()
-                ?: throw NullPointerException("No environment selected.")
-
-            return APIClientService()
-                .getUCGatewayService(
-                    env.gatewayApiUri,
-                    AuthorizationServiceManager.getInstance(context).authorizationServiceInstance,
-                    AuthStateManager.getInstance(context)
-                )
-        }
 
         private fun getUploadName(context: Context): String {
             val userId = AuthStateManager.getInstance(context).getUser().id
@@ -102,7 +88,10 @@ class DiagnosticsService {
 
             val uploadName = getUploadName(context)
 
-            val response = getGateway(context).postClientDiagnostics(uploadName, body)
+            val response = APIClientService(context).getUCGatewayService().postClientDiagnostics(
+                uploadName,
+                body
+            )
             val code = response.code()
             if (code < 200 || code > 299) {
                 val msg = response.errorBody()

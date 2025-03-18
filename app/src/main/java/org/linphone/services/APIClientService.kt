@@ -1,25 +1,30 @@
 package org.linphone.services
 
+import android.content.Context
 import net.openid.appauth.AuthorizationService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.linphone.authentication.AuthStateManager
+import org.linphone.authentication.AuthorizationServiceManager
+import org.linphone.environment.DimensionsEnvironmentService
 import org.linphone.interfaces.CTGatewayService
 import org.linphone.middleware.AuthAuthenticator
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
-class APIClientService {
-    private lateinit var ctGatewayService: CTGatewayService
+class APIClientService(val context: Context) {
 
-    fun getUCGatewayService(
-        baseUrl: String,
-        authService: AuthorizationService,
-        asm: AuthStateManager
-    ): CTGatewayService {
-        if (!::ctGatewayService.isInitialized) {
-            ctGatewayService = getRetrofit(baseUrl, authService, asm).create(
+    private lateinit var ctGatewayService: CTGatewayService
+    private lateinit var baseUrl: String
+
+    fun getUCGatewayService(): CTGatewayService {
+        val dimensionsEnvironment = DimensionsEnvironmentService.getInstance(context).getCurrentEnvironment()
+        val asm = AuthStateManager.getInstance(context)
+        val auth = AuthorizationServiceManager.getInstance(context).getAuthorizationServiceInstance()
+
+        if (!::ctGatewayService.isInitialized || dimensionsEnvironment!!.gatewayApiUri != this.baseUrl) {
+            ctGatewayService = getRetrofit(dimensionsEnvironment!!.gatewayApiUri, auth, asm).create(
                 CTGatewayService::class.java
             )
         }

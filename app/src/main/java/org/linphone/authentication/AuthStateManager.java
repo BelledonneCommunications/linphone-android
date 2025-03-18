@@ -236,8 +236,6 @@ public class AuthStateManager {
     }
 
     private void updateObservable(@Nullable AuthState state, String caller) {
-        Log.Log.d("AuthStateManager.updateObservable: " + caller);
-
         var accessToken = state == null ? AuthenticatedUser.UNINTIALIZED_ACCESS_TOKEN : state.getAccessToken();
         Log.Log.d("AuthStateManager.updateObservable:Access token: " + accessToken);
 

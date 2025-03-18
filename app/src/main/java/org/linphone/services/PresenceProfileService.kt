@@ -8,8 +8,6 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.util.concurrent.atomic.AtomicReference
 import org.linphone.authentication.AuthStateManager
-import org.linphone.authentication.AuthorizationServiceManager
-import org.linphone.environment.DimensionsEnvironmentService
 import org.linphone.models.AuthenticatedUser
 import org.linphone.models.realtime.PresenceProfile
 import org.linphone.utils.Log
@@ -19,9 +17,7 @@ import retrofit2.Response
 import timber.log.Timber
 
 class PresenceProfileService(val context: Context) : DefaultLifecycleObserver {
-    private val apiClient = APIClientService()
-    private val dimensionsEnvironment =
-        DimensionsEnvironmentService.getInstance(context).getCurrentEnvironment()
+    private val apiClient = APIClientService(context)
     private val authStateManager = AuthStateManager.getInstance(context)
     private val destroy = PublishSubject.create<Unit>()
 
@@ -45,6 +41,7 @@ class PresenceProfileService(val context: Context) : DefaultLifecycleObserver {
         Log.d("Created PresenceProfileService")
 
         val userSubscription = authStateManager.user
+            .filter { u -> u.id != null && u.id != AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER }
             .distinctUntilChanged { user -> user.id ?: "" }
             .takeUntil(destroy)
             .subscribe { user ->
@@ -84,11 +81,7 @@ class PresenceProfileService(val context: Context) : DefaultLifecycleObserver {
 
         val userId = authStateManager.getUser().id
         if (!userId.isNullOrBlank()) {
-            apiClient.getUCGatewayService(
-                dimensionsEnvironment!!.gatewayApiUri,
-                AuthorizationServiceManager.getInstance(context).authorizationServiceInstance,
-                AuthStateManager.getInstance(context)
-            ).doGetPresenceProfiles(userId)
+            apiClient.getUCGatewayService().doGetPresenceProfiles(userId)
                 .enqueue(object : Callback<List<PresenceProfile>> {
                     override fun onFailure(call: Call<List<PresenceProfile>>, t: Throwable) {
                         Log.e("Failed to fetch presence profiles", t)

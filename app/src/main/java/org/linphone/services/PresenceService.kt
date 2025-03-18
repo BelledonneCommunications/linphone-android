@@ -13,7 +13,6 @@ import kotlinx.coroutines.runBlocking
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.authentication.AuthStateManager
-import org.linphone.authentication.AuthorizationServiceManager
 import org.linphone.environment.DimensionsEnvironmentService
 import org.linphone.models.AuthenticatedUser
 import org.linphone.models.realtime.RealtimeEventPresence
@@ -29,7 +28,7 @@ import retrofit2.Response
 class PresenceService(val context: Context) : DefaultLifecycleObserver {
     private val destroy = PublishSubject.create<Unit>()
     private val authStateManager = AuthStateManager.getInstance(context)
-    private val apiClient = APIClientService()
+    private val apiClient = APIClientService(context)
     private val dimensionsEnvironment = DimensionsEnvironmentService.getInstance(context).getCurrentEnvironment()
     private val realtimeUserService = RealtimeUserService.getInstance(context)
 
@@ -59,15 +58,20 @@ class PresenceService(val context: Context) : DefaultLifecycleObserver {
     private val presenceObservables = mutableMapOf<String, PresenceObservable>()
 
     val currentUserPresence: Observable<Optional<PresenceEventData>> = authStateManager.user
+        .filter { u -> u.id != null && u.id != AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER }
         .switchMap { user ->
+            val result: Observable<Optional<PresenceEventData>>
+
             if (user.id.toString() != AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER) {
-                getUserPresenceStream(user.id.toString())
+                result = getUserPresenceStream(user.id.toString())
                     .map {
                         Optional.of(it)
                     }
             } else {
-                Observable.just(Optional.empty())
+                result = Observable.just(Optional.empty())
             }
+
+            result
         }
         .replay(1)
         .autoConnect()
@@ -86,11 +90,7 @@ class PresenceService(val context: Context) : DefaultLifecycleObserver {
     }
 
     fun setPresenceState(userId: String, presence: SetPresenceModel) {
-        apiClient.getUCGatewayService(
-            dimensionsEnvironment!!.gatewayApiUri,
-            AuthorizationServiceManager.getInstance(coreContext.context).authorizationServiceInstance,
-            AuthStateManager.getInstance(coreContext.context)
-        ).doSetPresence(userId, presence)
+        apiClient.getUCGatewayService().doSetPresence(userId, presence)
             .enqueue(object : Callback<Void> {
                 override fun onFailure(call: Call<Void>, t: Throwable) {
                     Log.e("applyPresence", t)

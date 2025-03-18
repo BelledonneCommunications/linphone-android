@@ -20,7 +20,6 @@
 package org.linphone.activities.main.viewmodels
 
 import PresenceEventData
-import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.GsonBuilder
@@ -48,7 +47,7 @@ open class StatusViewModel : ViewModel() {
 
     val dimensionsPresenceStatus = MutableLiveData<ConsolidatedPresence>()
 
-    val userImageUrl = ObservableField<String>()
+    val userImageUrl = MutableLiveData<String>()
 
     private var userSubscription: Disposable? = null
     private var presenceSubscription: Disposable? = null
@@ -110,7 +109,7 @@ open class StatusViewModel : ViewModel() {
                 { u ->
                     Log.i("Userinfo: " + GsonBuilder().create().toJson(u))
                     // viewModel.user.set(u)
-                    userImageUrl.set(u.profileImageUrl.replace("_36.png", "_128.png"))
+                    userImageUrl.postValue(u.profileImageUrl.replace("_36.png", "_128.png"))
                 },
                 { error -> Log.e("userSubscription", error) }
             )

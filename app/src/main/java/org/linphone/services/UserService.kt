@@ -9,9 +9,6 @@ import io.reactivex.rxjava3.disposables.Disposable
 import java.util.concurrent.atomic.AtomicReference
 import kotlinx.coroutines.rx3.rxSingle
 import org.linphone.authentication.AuthStateManager
-import org.linphone.authentication.AuthorizationServiceManager
-import org.linphone.environment.DimensionsEnvironmentService
-import org.linphone.interfaces.CTGatewayService
 import org.linphone.models.AuthenticatedUser
 import org.linphone.models.UserInfo
 import org.linphone.utils.Log
@@ -34,22 +31,12 @@ class UserService(val context: Context) : DefaultLifecycleObserver {
     val user: Observable<UserInfo>
     var e911Accepted: Boolean = false
 
-    private val ucGatewayService: CTGatewayService
     var userSubscription: Disposable? = null
 
     init {
         Log.i("Created UserService")
 
         val asm = AuthStateManager.getInstance(context)
-        val apiClientService = APIClientService()
-        val dimensionsEnvironment = DimensionsEnvironmentService.getInstance(context).getCurrentEnvironment()
-
-        ucGatewayService = apiClientService.getUCGatewayService(
-            dimensionsEnvironment!!.gatewayApiUri,
-            AuthorizationServiceManager.getInstance(context).getAuthorizationServiceInstance(),
-            asm
-        )
-
         val state: SharedPreferences = context.getSharedPreferences(
             UserInfo.STORE_NAME,
             Context.MODE_PRIVATE
@@ -61,7 +48,9 @@ class UserService(val context: Context) : DefaultLifecycleObserver {
             .filter { u -> u.id != null && u.id != AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER }
             .distinctUntilChanged { u -> u.id ?: "" }
             .switchMapSingle {
-                rxSingle { getUserInfo() }
+                rxSingle {
+                    getUserInfo()
+                }
             }
             .onErrorReturn { e ->
                 Log.e(e.localizedMessage)
@@ -74,7 +63,7 @@ class UserService(val context: Context) : DefaultLifecycleObserver {
     private suspend fun getUserInfo(): UserInfo {
         Log.i("Fetching user info....")
 
-        val response = ucGatewayService.getUserInfo()
+        val response = APIClientService(context).getUCGatewayService().getUserInfo()
 
         if (response.code() < 200 || response.code() > 299) {
             throw Exception("Error fetching user info: " + response.message())

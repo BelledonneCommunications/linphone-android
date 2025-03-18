@@ -147,6 +147,7 @@ open class RealtimeBaseService(context: Context, private val hubSuffix: String) 
         }
 
         userSubscription = authStateManager.user
+            .filter { u -> u.id != null && u.id != AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER }
             .distinctUntilChanged { user -> user.id ?: "" }
             .takeUntil(destroy)
             .subscribe { u ->

@@ -13,9 +13,7 @@ import org.linphone.R
 import org.linphone.activities.main.contact.viewmodels.UserGroupViewModel
 import org.linphone.activities.main.contact.viewmodels.UserGroupViewModelSubjectWrapper
 import org.linphone.authentication.AuthStateManager
-import org.linphone.authentication.AuthorizationServiceManager
 import org.linphone.core.Friend
-import org.linphone.environment.DimensionsEnvironmentService
 import org.linphone.models.AuthenticatedUser
 import org.linphone.models.contact.ContactItemModel
 import org.linphone.models.search.UserDataModel
@@ -28,9 +26,7 @@ import retrofit2.Response
 import timber.log.Timber
 
 class UserGroupService(val context: Context) : DefaultLifecycleObserver {
-    private val apiClient = APIClientService()
-    private val dimensionsEnvironment =
-        DimensionsEnvironmentService.getInstance(context).getCurrentEnvironment()
+    private val apiClient = APIClientService(context)
     private val authStateManager = AuthStateManager.getInstance(context)
     private val destroy = PublishSubject.create<Unit>()
 
@@ -120,11 +116,7 @@ class UserGroupService(val context: Context) : DefaultLifecycleObserver {
     private fun fetchTenantUserGroups() {
         Log.d("Fetch tenant user groups...")
 
-        apiClient.getUCGatewayService(
-            dimensionsEnvironment!!.gatewayApiUri,
-            AuthorizationServiceManager.getInstance(context).authorizationServiceInstance,
-            AuthStateManager.getInstance(context)
-        ).doGetTenantUserGroups()
+        apiClient.getUCGatewayService().doGetTenantUserGroups()
             .enqueue(object : Callback<List<UserGroupModel>> {
                 override fun onFailure(call: Call<List<UserGroupModel>>, t: Throwable) {
                     Log.e("Failed to fetch tenant user groups", t)
@@ -150,11 +142,7 @@ class UserGroupService(val context: Context) : DefaultLifecycleObserver {
     private fun fetchPersonalUserGroups() {
         Log.d("Fetch personal user groups...")
 
-        apiClient.getUCGatewayService(
-            dimensionsEnvironment!!.gatewayApiUri,
-            AuthorizationServiceManager.getInstance(context).authorizationServiceInstance,
-            AuthStateManager.getInstance(context)
-        ).doGetPersonalUserGroups()
+        apiClient.getUCGatewayService().doGetPersonalUserGroups()
             .enqueue(object : Callback<List<UserGroupModel>> {
                 override fun onFailure(call: Call<List<UserGroupModel>>, t: Throwable) {
                     Log.e("Failed to fetch personal user groups", t)

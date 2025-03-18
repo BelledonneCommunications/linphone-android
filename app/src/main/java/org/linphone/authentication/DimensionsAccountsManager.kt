@@ -5,7 +5,6 @@ import androidx.annotation.AnyThread
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicReference
-import org.linphone.environment.DimensionsEnvironmentService
 import org.linphone.models.AuthenticatedUser
 import org.linphone.models.SubscribableUserDeviceList
 import org.linphone.models.UserDevice
@@ -42,6 +41,7 @@ class DimensionsAccountsManager(context: Context) {
     init {
         val asm = AuthStateManager.getInstance(context)
         val sub = asm.user
+            .filter { u -> u.id != null && u.id != AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER }
             .map { it.id ?: "" }
             .distinctUntilChanged()
             .subscribe(
@@ -66,19 +66,14 @@ class DimensionsAccountsManager(context: Context) {
     private fun load(userId: String) {
         Log.i("CoreContext.loadDimensionsAccounts")
 
-        val dimensionsEnvironment = DimensionsEnvironmentService.getInstance(mContext).getCurrentEnvironment()
         val asm = AuthStateManager.getInstance(mContext)
+        val apiClientService = APIClientService(mContext)
 
-        val apiClientService = APIClientService()
-        val ucGatewayService = apiClientService.getUCGatewayService(
-            dimensionsEnvironment!!.gatewayApiUri,
-            AuthorizationServiceManager.getInstance(mContext).getAuthorizationServiceInstance(),
-            asm
-        )
+        val requestUserId = asm.getUser().id
 
-        val userId = asm.getUser().id
-        ucGatewayService.doGetUserDevices(userId).enqueue(object :
+        apiClientService.getUCGatewayService().doGetUserDevices(requestUserId).enqueue(object :
                 Callback<List<UserDevice>> {
+
                 override fun onFailure(call: Call<List<UserDevice>>, t: Throwable) {
                     Log.e(
                         "CoreContext.loadDimensionsAccounts.doGetUserDevices.onFailure::${t.message}"

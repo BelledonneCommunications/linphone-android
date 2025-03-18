@@ -15,7 +15,11 @@ class AuthenticatedUser(
         const val UNINTIALIZED_ACCESS_TOKEN: String = "<null>"
 
         fun fromToken(jwtToken: String?): AuthenticatedUser {
-            if (jwtToken == null || jwtToken == UNINTIALIZED_ACCESS_TOKEN) return AuthenticatedUser()
+            if (jwtToken == null || jwtToken == UNINTIALIZED_ACCESS_TOKEN) {
+                return AuthenticatedUser(
+                    UNINTIALIZED_AUTHENTICATEDUSER
+                )
+            }
 
             val jwt = JWT(jwtToken)
 
