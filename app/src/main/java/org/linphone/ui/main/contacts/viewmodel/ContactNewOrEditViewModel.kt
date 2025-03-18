@@ -97,13 +97,8 @@ class ContactNewOrEditViewModel
 
             if (exists) {
                 Log.i("$TAG Found friend [${friend.name}] using ref key [$refKey]")
-                val vCard = friend.vcard
-                if (vCard != null) {
-                    firstName.postValue(vCard.givenName)
-                    lastName.postValue(vCard.familyName)
-                } else {
-                    // TODO: What to do if vCard is null?
-                }
+                firstName.postValue(friend.firstName.orEmpty())
+                lastName.postValue(friend.lastName.orEmpty())
 
                 id.postValue(friend.refKey ?: friend.vcard?.uid)
 
@@ -169,33 +164,29 @@ class ContactNewOrEditViewModel
 
             friend.edit()
             friend.name = name
+            friend.firstName = fn
+            friend.lastName = ln
 
-            val vCard = friend.vcard
-            if (vCard != null) {
-                vCard.givenName = fn
-                vCard.familyName = ln
-
-                val picture = picturePath.value.orEmpty()
-                if (picture.isNotEmpty()) {
-                    if (picture.contains(TEMP_PICTURE_NAME)) {
-                        val newFile = FileUtils.getFileStoragePath(
-                            getPictureFileName(),
-                            isImage = true,
-                            overrideExisting = true
-                        )
-                        val oldFile = FileUtils.getProperFilePath(picture).toUri()
-                        viewModelScope.launch {
-                            FileUtils.copyFile(oldFile, newFile)
-                        }
-                        val newPicture = FileUtils.getProperFilePath(newFile.absolutePath)
-                        Log.i("$TAG Temporary picture [$picture] copied to [$newPicture]")
-                        friend.photo = newPicture
-                    } else {
-                        friend.photo = FileUtils.getProperFilePath(picture)
+            val picture = picturePath.value.orEmpty()
+            if (picture.isNotEmpty()) {
+                if (picture.contains(TEMP_PICTURE_NAME)) {
+                    val newFile = FileUtils.getFileStoragePath(
+                        getPictureFileName(),
+                        isImage = true,
+                        overrideExisting = true
+                    )
+                    val oldFile = FileUtils.getProperFilePath(picture).toUri()
+                    viewModelScope.launch {
+                        FileUtils.copyFile(oldFile, newFile)
                     }
+                    val newPicture = FileUtils.getProperFilePath(newFile.absolutePath)
+                    Log.i("$TAG Temporary picture [$picture] copied to [$newPicture]")
+                    friend.photo = newPicture
                 } else {
-                    friend.photo = null
+                    friend.photo = FileUtils.getProperFilePath(picture)
                 }
+            } else {
+                friend.photo = null
             }
 
             friend.organization = organization
@@ -327,8 +318,8 @@ class ContactNewOrEditViewModel
     @UiThread
     fun isPendingChanges(): Boolean {
         if (isEdit.value == true) {
-            if (firstName.value.orEmpty() != friend.vcard?.givenName.orEmpty()) return true
-            if (lastName.value.orEmpty() != friend.vcard?.familyName.orEmpty()) return true
+            if (firstName.value.orEmpty() != friend.firstName.orEmpty()) return true
+            if (lastName.value.orEmpty() != friend.lastName.orEmpty()) return true
             if (picturePath.value.orEmpty() != friend.photo.orEmpty()) return true
             if (company.value.orEmpty() != friend.organization.orEmpty()) return true
             if (jobTitle.value.orEmpty() != friend.jobTitle.orEmpty()) return true

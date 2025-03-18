@@ -219,14 +219,9 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                                 }
 
                             if (!number.isNullOrEmpty()) {
-                                if (friend.phoneNumbersWithLabel.find {
-                                    PhoneNumberUtils.arePhoneNumberWeakEqual(it.phoneNumber, number)
-                                } == null
-                                ) {
-                                    val phoneNumber = Factory.instance()
-                                        .createFriendPhoneNumber(number, label)
-                                    friend.addPhoneNumberWithLabel(phoneNumber)
-                                }
+                                val phoneNumber = Factory.instance()
+                                    .createFriendPhoneNumber(number, label)
+                                friend.addPhoneNumberWithLabel(phoneNumber)
                             }
                         }
                         ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE -> {
@@ -250,17 +245,14 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                             }
                         }
                         ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE -> {
-                            val vCard = friend.vcard
-                            if (vCard != null) {
-                                val givenName: String? = cursor.getString(givenNameColumn)
-                                if (!givenName.isNullOrEmpty()) {
-                                    vCard.givenName = givenName
-                                }
+                            val givenName: String? = cursor.getString(givenNameColumn)
+                            if (!givenName.isNullOrEmpty()) {
+                                friend.firstName = givenName
+                            }
 
-                                val familyName: String? = cursor.getString(familyNameColumn)
-                                if (!familyName.isNullOrEmpty()) {
-                                    vCard.familyName = familyName
-                                }
+                            val familyName: String? = cursor.getString(familyNameColumn)
+                            if (!familyName.isNullOrEmpty()) {
+                                friend.lastName = familyName
                             }
                         }
                     }
@@ -291,7 +283,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
 
         if (core.globalState == GlobalState.Shutdown || core.globalState == GlobalState.Off) {
             Log.w("$TAG Core is being stopped or already destroyed, abort")
-        } else if (friends.isEmpty) {
+        } else if (friends.isEmpty()) {
             Log.w("$TAG No friend created!")
         } else {
             Log.i("$TAG ${friends.size} friends fetched")
@@ -322,7 +314,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                         friends.remove(localFriend.refKey)
                         localFriend.nativeUri =
                             newlyFetchedFriend.nativeUri // Native URI isn't stored in linphone database, needs to be updated
-                        if (newlyFetchedFriend.vcard?.asVcard4String() == localFriend.vcard?.asVcard4String()) continue
+                        if (newlyFetchedFriend.dumpVcard() == localFriend.dumpVcard()) continue
 
                         localFriend.edit()
                         // Update basic fields that may have changed

@@ -312,6 +312,10 @@ class CorePreferences
         get() = config.getBool("ui", "assistant_hide_third_party_account", false)
 
     @get:WorkerThread
+    val magicSearchResultsLimit: Int
+        get() = config.getInt("ui", "max_number_of_magic_search_results", 1000)
+
+    @get:WorkerThread
     val singleSignOnClientId: String
         get() = config.getString("app", "oidc_client_id", "linphone")!!
 
