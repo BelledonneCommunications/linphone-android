@@ -89,6 +89,10 @@ class HelpFragment : GenericMainFragment() {
                 Log.e(
                     "$TAG Can't start ACTION_VIEW intent for URL [$url], ActivityNotFoundException: $anfe"
                 )
+            } catch (e: Exception) {
+                Log.e(
+                    "$TAG Can't start ACTION_VIEW intent for URL [$url]: $e"
+                )
             }
         }
 
@@ -105,6 +109,10 @@ class HelpFragment : GenericMainFragment() {
                 Log.e(
                     "$TAG Can't start ACTION_VIEW intent for URL [$url], ActivityNotFoundException: $anfe"
                 )
+            } catch (e: Exception) {
+                Log.e(
+                    "$TAG Can't start ACTION_VIEW intent for URL [$url]: $e"
+                )
             }
         }
 
@@ -120,6 +128,10 @@ class HelpFragment : GenericMainFragment() {
             } catch (anfe: ActivityNotFoundException) {
                 Log.e(
                     "$TAG Can't start ACTION_VIEW intent for URL [$url], ActivityNotFoundException: $anfe"
+                )
+            } catch (e: Exception) {
+                Log.e(
+                    "$TAG Can't start ACTION_VIEW intent for URL [$url]: $e"
                 )
             }
         }
@@ -179,6 +191,10 @@ class HelpFragment : GenericMainFragment() {
                 } catch (anfe: ActivityNotFoundException) {
                     Log.e(
                         "$TAG Can't start ACTION_VIEW intent for URL [$url], ActivityNotFoundException: $anfe"
+                    )
+                } catch (e: Exception) {
+                    Log.e(
+                        "$TAG Can't start ACTION_VIEW intent for URL [$url]: $e"
                     )
                 }
                 dialog.dismiss()

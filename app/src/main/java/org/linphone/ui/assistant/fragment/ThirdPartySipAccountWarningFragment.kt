@@ -72,6 +72,10 @@ class ThirdPartySipAccountWarningFragment : GenericFragment() {
                 Log.e(
                     "$TAG Can't start ACTION_VIEW intent for URL [$url], ActivityNotFoundException: $anfe"
                 )
+            } catch (e: Exception) {
+                Log.e(
+                    "$TAG Can't start ACTION_VIEW intent for URL [$url]: $e"
+                )
             }
         }
 

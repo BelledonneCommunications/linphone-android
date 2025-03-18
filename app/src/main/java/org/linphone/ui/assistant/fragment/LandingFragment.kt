@@ -115,6 +115,10 @@ class LandingFragment : GenericFragment() {
                 Log.e(
                     "$TAG Can't start ACTION_VIEW intent for URL [$url], ActivityNotFoundException: $anfe"
                 )
+            } catch (e: Exception) {
+                Log.e(
+                    "$TAG Can't start ACTION_VIEW intent for URL [$url]: $e"
+                )
             }
         }
 
@@ -222,6 +226,10 @@ class LandingFragment : GenericFragment() {
                     Log.e(
                         "$TAG Can't start ACTION_VIEW intent for URL [$url], ActivityNotFoundException: $anfe"
                     )
+                } catch (e: Exception) {
+                    Log.e(
+                        "$TAG Can't start ACTION_VIEW intent for URL [$url]: $e"
+                    )
                 }
             }
         }
@@ -239,6 +247,10 @@ class LandingFragment : GenericFragment() {
                 } catch (anfe: ActivityNotFoundException) {
                     Log.e(
                         "$TAG Can't start ACTION_VIEW intent for URL [$url], ActivityNotFoundException: $anfe"
+                    )
+                } catch (e: Exception) {
+                    Log.e(
+                        "$TAG Can't start ACTION_VIEW intent for URL [$url]: $e"
                     )
                 }
             }
