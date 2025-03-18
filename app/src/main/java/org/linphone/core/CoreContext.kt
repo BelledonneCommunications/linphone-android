@@ -139,8 +139,14 @@ class CoreContext
                     )
                 }
 
-                Log.i("$TAG Reloading sound devices in 500ms")
-                postOnCoreThreadDelayed({ core.reloadSoundDevices() }, 500)
+                if (telecomManager.getCurrentlyFollowedCalls() <= 0) {
+                    Log.i("$TAG No call found in Telecom's CallsManager, reloading sound devices in 500ms")
+                    postOnCoreThreadDelayed({ core.reloadSoundDevices() }, 500)
+                }  else {
+                    Log.i(
+                        "$TAG At least one active call in Telecom's CallsManager, let it handle the added device(s)"
+                    )
+                }
             }
         }
 
@@ -158,7 +164,7 @@ class CoreContext
                     postOnCoreThreadDelayed({ core.reloadSoundDevices() }, 500)
                 } else {
                     Log.i(
-                        "$TAG At least one active call in Telecom's CallsManager, let it handle the removed device"
+                        "$TAG At least one active call in Telecom's CallsManager, let it handle the removed device(s)"
                     )
                 }
             }

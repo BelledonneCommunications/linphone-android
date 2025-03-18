@@ -111,6 +111,8 @@ class CurrentCallViewModel
 
     val isHeadsetEnabled = MutableLiveData<Boolean>()
 
+    val isHearingAidEnabled = MutableLiveData<Boolean>()
+
     val isBluetoothEnabled = MutableLiveData<Boolean>()
 
     val fullScreenMode = MutableLiveData<Boolean>()
@@ -278,6 +280,7 @@ class CurrentCallViewModel
             updateEncryption()
         }
 
+        @WorkerThread
         override fun onAuthenticationTokenVerified(call: Call, verified: Boolean) {
             Log.w(
                 "$TAG Notified that authentication token is [${if (verified) "verified" else "not verified!"}]"
@@ -291,11 +294,13 @@ class CurrentCallViewModel
             updateAvatarModelSecurityLevel(verified)
         }
 
+        @WorkerThread
         override fun onRemoteRecording(call: Call, recording: Boolean) {
             Log.i("$TAG Remote recording changed: $recording")
             isRemoteRecordingEvent.postValue(Event(Pair(recording, displayedName.value.orEmpty())))
         }
 
+        @WorkerThread
         override fun onStatsUpdated(call: Call, stats: CallStats) {
             callStatsModel.update(call, stats)
         }
@@ -414,6 +419,7 @@ class CurrentCallViewModel
     }
 
     private val coreListener = object : CoreListenerStub() {
+        @WorkerThread
         override fun onCallStateChanged(
             core: Core,
             call: Call,
@@ -494,6 +500,11 @@ class CurrentCallViewModel
                 Log.i("$TAG Current call conversation was marked as read")
                 unreadMessagesCount.postValue(0)
             }
+        }
+
+        @WorkerThread
+        override fun onAudioDevicesListUpdated(core: Core) {
+            Log.i("$TAG Audio devices list has been updated")
         }
     }
 
@@ -1235,6 +1246,7 @@ class CurrentCallViewModel
         isHeadsetEnabled.postValue(
             audioDevice?.type == AudioDevice.Type.Headphones || audioDevice?.type == AudioDevice.Type.Headset
         )
+        isHearingAidEnabled.postValue(audioDevice?.type == AudioDevice.Type.HearingAid)
         isBluetoothEnabled.postValue(audioDevice?.type == AudioDevice.Type.Bluetooth)
 
         updateProximitySensor()

@@ -22,7 +22,7 @@
         android:textColor="@color/in_call_label_color"
         android:gravity="center_vertical"
         android:layout_marginBottom="1dp"
-        android:drawableEnd="@{model.type == Type.Speaker ? @drawable/speaker_high : model.type == Type.Bluetooth || model.type == Type.HearingAid ? @drawable/bluetooth : model.type == Type.Headphones || model.type == Type.Headset ? @drawable/headset : @drawable/ear, default=@drawable/speaker_high}"
+        android:drawableEnd="@{model.type == Type.HearingAid ? @drawable/ear : model.type == Type.Speaker ? @drawable/speaker_high : model.type == Type.Bluetooth ? @drawable/bluetooth : model.type == Type.Headphones || model.type == Type.Headset ? @drawable/headset : @drawable/speaker_slash, default=@drawable/speaker_high}"
         android:drawableTint="@color/in_call_label_color"
         android:checked="@{model.isCurrentlySelected}"
         app:useMaterialThemeColors="false"
