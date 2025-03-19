@@ -24,6 +24,8 @@ class APIClientService(val context: Context) {
         val auth = AuthorizationServiceManager.getInstance(context).getAuthorizationServiceInstance()
 
         if (!::ctGatewayService.isInitialized || dimensionsEnvironment!!.gatewayApiUri != this.baseUrl) {
+            baseUrl = dimensionsEnvironment!!.gatewayApiUri
+
             ctGatewayService = getRetrofit(dimensionsEnvironment!!.gatewayApiUri, auth, asm).create(
                 CTGatewayService::class.java
             )
