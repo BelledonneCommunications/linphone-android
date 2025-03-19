@@ -1,5 +1,6 @@
 package org.linphone.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import androidx.core.net.toUri
@@ -10,29 +11,33 @@ import org.linphone.services.BrandingService
 
 class UrlHelper {
     companion object {
+
+        @SuppressLint("CheckResult")
         fun openHelp(context: Context, path: String? = null) {
-            val deployment = DimensionsEnvironmentService.getInstance(context).getCurrentEnvironment()
-            val user = AuthStateManager.getInstance(context).getUser()
-            val lang = Locale.getDefault().toString()
+            BrandingService.getInstance(context).brand.subscribe { brand ->
+                val deployment = DimensionsEnvironmentService.getInstance(context).getCurrentEnvironment()
+                val user = AuthStateManager.getInstance(context).getUser()
+                var lang = Locale.getDefault().toString().lowercase()
 
-            val tenantBrandingDefinition = BrandingService.getInstance(context).TenantBrandingDefinition()
-            val brandingDocumentUri = tenantBrandingDefinition?.documentationRootUrl ?: deployment?.documentationUri
+                // val validLocales : ArrayList<String> = arrayListOf("en-us", "en-gb")  //put this back in when we have localization on mobile docs
+                val validLocales: ArrayList<String> = arrayListOf("en-us")
+                if (!validLocales.contains(lang)) {
+                    lang = "en-us"
+                }
 
-            val basePath = formatString(brandingDocumentUri ?: "", lang)
-            val subPath = if (path == null) "" else "/$path"
-            val tenantId = if (user == null) "" else "?tenantId=${user.tenantId}"
+                val tenantBrandingDefinition = if (brand.isPresent()) brand.get() else null
+                val brandingDocumentUri = if (tenantBrandingDefinition?.documentationRootUrl.isNullOrBlank()) deployment?.documentationUri else tenantBrandingDefinition?.documentationRootUrl
 
-            if (basePath.isNotBlank()) {
-                openBrowser(context, "${basePath}${subPath}$tenantId}")
+                val subPath = if (path == null) "" else "$path/"
+                val tenantId = if (user == null) "" else "?tenantId=${user.tenantId}"
+
+                if (!brandingDocumentUri.isNullOrBlank()) {
+                    openBrowser(
+                        context,
+                        "$brandingDocumentUri/mobile/$lang/${subPath}$tenantId".lowercase()
+                    )
+                }
             }
-        }
-
-        private fun formatString(template: String, vararg args: Any): String {
-            var formattedString = template
-            args.forEachIndexed { index, arg ->
-                formattedString = formattedString.replace("{$index}", arg.toString())
-            }
-            return formattedString
         }
 
         fun openBrowser(context: Context, uri: String) {

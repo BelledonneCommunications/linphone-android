@@ -25,6 +25,8 @@ class BrandingService(val context: Context) : DefaultLifecycleObserver {
     private val destroy = PublishSubject.create<Unit>()
 
     val brand = brandSubject.map { x -> x }
+        .replay(1)
+        .autoConnect()
 
     init {
         Log.d("Created BrandingService")
