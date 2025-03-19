@@ -373,11 +373,13 @@ class ScheduleMeetingViewModel
 
     @UiThread
     fun schedule() {
+        operationInProgress.value = true
         if (subject.value.orEmpty().isEmpty() || participants.value.orEmpty().isEmpty()) {
             Log.e(
                 "$TAG Either no subject was set or no participant was selected, can't schedule meeting."
             )
             showRedToast(R.string.meeting_schedule_mandatory_field_not_filled_toast, R.drawable.warning_circle)
+            operationInProgress.value = false
             return
         }
 
@@ -385,7 +387,6 @@ class ScheduleMeetingViewModel
             Log.i(
                 "$TAG Scheduling ${if (isBroadcastSelected.value == true) "broadcast" else "meeting"}"
             )
-            operationInProgress.postValue(true)
 
             val localAccount = core.defaultAccount
             val localAddress = localAccount?.params?.identityAddress
@@ -452,16 +453,17 @@ class ScheduleMeetingViewModel
 
     @UiThread
     fun update() {
+        operationInProgress.value = true
+
         coreContext.postOnCoreThread { core ->
             Log.i(
                 "$TAG Updating ${if (isBroadcastSelected.value == true) "broadcast" else "meeting"}"
             )
             if (!::conferenceInfo.isInitialized) {
                 Log.e("No conference info to edit found!")
+                operationInProgress.postValue(false)
                 return@postOnCoreThread
             }
-
-            operationInProgress.postValue(true)
 
             conferenceInfo.subject = subject.value
             conferenceInfo.description = description.value
