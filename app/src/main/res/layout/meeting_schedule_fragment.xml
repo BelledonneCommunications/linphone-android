@@ -543,6 +543,7 @@
             android:layout_gravity="end|bottom"
             android:layout_margin="16dp"
             android:src="@drawable/check"
+            android:enabled="@{!viewModel.operationInProgress}"
             android:contentDescription="@string/content_description_meeting_schedule"
             app:tint="?attr/color_on_main"
             app:backgroundTint="?attr/color_main1_500"
