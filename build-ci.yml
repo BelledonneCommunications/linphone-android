@@ -4,6 +4,7 @@ pool:
 variables:
   appVersionCode: $(MAJOR)$(MINOR)$(YEAR:yy)$(DAYOFYEAR)$(REV:r)
   artifactName: 'apk-release'
+  resellerName: 'Dimensions Technologies'
 
 stages:
 - stage: Build
@@ -58,7 +59,18 @@ stages:
         inputs:
           script: 'cat build.gradle'
           workingDirectory: '$(Build.SourcesDirectory)/app/'
-          
+
+      - task: qetza.replacetokens.replacetokens-task.replacetokens@5
+        displayName: 'Replace tokens in Strings.xml'
+        inputs:
+          rootDirectory: '$(Build.SourcesDirectory)/app/'
+          targetFiles: '**/strings.xml'
+          tokenPattern: custom
+          tokenPrefix: '@~#'
+          tokenSuffix: '#~@'
+          escapeType: custom
+          actionOnNoFiles: fail     
+             
       - task: Gradle@3
         displayName: "Build App"
         inputs:

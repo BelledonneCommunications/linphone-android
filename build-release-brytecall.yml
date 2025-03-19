@@ -4,6 +4,7 @@ pool:
 variables:
   appVersionCode: $(MAJOR)$(MINOR)$(YEAR:yy)$(DAYOFYEAR)$(REV:r)
   baseFolder: '$(Build.SourcesDirectory)/app/src/bryteCall'
+  resellerName: 'BryteCall'
 steps:
 - checkout: self
 
@@ -93,6 +94,17 @@ steps:
     script: 'cat build.gradle'
     workingDirectory: '$(Build.SourcesDirectory)/app/'
 
+- task: qetza.replacetokens.replacetokens-task.replacetokens@5
+  displayName: 'Replace tokens in Strings.xml'
+  inputs:
+    rootDirectory: '$(Build.SourcesDirectory)/app/'
+    targetFiles: '**/strings.xml'
+    tokenPattern: custom
+    tokenPrefix: '@~#'
+    tokenSuffix: '#~@'
+    escapeType: custom
+    actionOnNoFiles: fail 
+    
 - task: CopyFiles@2
   displayName: "Override google-services.json"
   inputs:
