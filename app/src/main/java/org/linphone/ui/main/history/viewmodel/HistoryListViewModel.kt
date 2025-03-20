@@ -142,7 +142,13 @@ class HistoryListViewModel
         var count = 0
 
         val account = LinphoneUtils.getDefaultAccount()
-        val logs = account?.callLogs ?: coreContext.core.callLogs
+        // Fetch all call logs if only one account to workaround no history issue
+        val logs = if (coreContext.core.accountList.size > 1) {
+            account?.callLogs ?: coreContext.core.callLogs
+        } else {
+            coreContext.core.callLogs
+        }
+
         for (callLog in logs) {
             val model = CallLogModel(callLog)
             if (isCallLogMatchingFilter(model, filter)) {
