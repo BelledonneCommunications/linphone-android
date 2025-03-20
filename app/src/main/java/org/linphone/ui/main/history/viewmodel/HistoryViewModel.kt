@@ -330,6 +330,16 @@ class HistoryViewModel
             history.add(historyModel)
         }
 
+        // Required when "unique account displays all call logs from Core" workaround
+        if (list.isEmpty()) {
+            for (log in coreContext.core.callLogs) {
+                if (log.remoteAddress.weakEqual(address)) {
+                    val historyModel = CallLogHistoryModel(log)
+                    history.add(historyModel)
+                }
+            }
+        }
+
         Log.i("$TAG Found [${history.size}] call logs")
         historyCallLogs.postValue(history)
     }
