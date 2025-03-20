@@ -374,6 +374,7 @@
     <string name="account_settings_cpim_in_basic_conversations_title">Use CPIM in \"basic\" conversations</string>
     <string name="account_settings_voicemail_uri_title">Voicemail URI</string>
     <string name="account_settings_mwi_uri_title"> MWI server URI (Message Waiting Indicator)</string>
+    <string name="account_settings_apply_international_prefix_title">Format phone numbers using international prefix</string>
     <string name="account_settings_replace_plus_by_00_title">Replace + by 00 when formatting phone numbers</string>
     <string name="account_settings_update_password_title">Update password</string>
 

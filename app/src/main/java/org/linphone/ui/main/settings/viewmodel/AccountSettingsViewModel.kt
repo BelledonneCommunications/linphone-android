@@ -90,6 +90,7 @@ class AccountSettingsViewModel
     val mwiUri = MutableLiveData<String>()
     val voicemailUri = MutableLiveData<String>()
 
+    val applyPrefix = MutableLiveData<Boolean>()
     val replacePlusBy00 = MutableLiveData<Boolean>()
 
     val cpimInBasicChatRooms = MutableLiveData<Boolean>()
@@ -167,6 +168,8 @@ class AccountSettingsViewModel
 
                 mwiUri.postValue(params.mwiServerAddress?.asStringUriOnly().orEmpty())
                 voicemailUri.postValue(params.voicemailAddress?.asStringUriOnly().orEmpty())
+
+                applyPrefix.postValue(params.useInternationalPrefixForCallsAndChats)
                 replacePlusBy00.postValue(params.isDialEscapePlusEnabled)
 
                 expire.postValue(params.expires.toString())
@@ -301,6 +304,8 @@ class AccountSettingsViewModel
 
                 newParams.ccmpServerUrl = ccmpServerUrl.value
                 newParams.limeServerUrl = limeServerUrl.value
+
+                newParams.useInternationalPrefixForCallsAndChats = applyPrefix.value == true
                 newParams.isDialEscapePlusEnabled = replacePlusBy00.value == true
 
                 account.params = newParams

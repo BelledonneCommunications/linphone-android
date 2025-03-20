@@ -193,6 +193,33 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/mwi_uri_title"
+                            app:layout_constraintBottom_toTopOf="@id/apply_international_switch"/>
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            style="@style/settings_title_style"
+                            android:id="@+id/apply_international_prefix_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="10dp"
+                            android:text="@string/account_settings_apply_international_prefix_title"
+                            android:maxLines="2"
+                            android:ellipsize="end"
+                            app:layout_constraintTop_toTopOf="@id/apply_international_switch"
+                            app:layout_constraintBottom_toBottomOf="@id/apply_international_switch"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/apply_international_switch"/>
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            style="@style/material_switch_style"
+                            android:id="@+id/apply_international_switch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:checked="@={viewModel.applyPrefix}"
+                            app:layout_constraintTop_toBottomOf="@id/mwi_uri"
+                            app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintBottom_toTopOf="@id/replace_plus_by_00_switch"/>
 
                         <androidx.appcompat.widget.AppCompatTextView
@@ -219,7 +246,7 @@
                             android:layout_marginEnd="16dp"
                             android:layout_marginBottom="20dp"
                             android:checked="@={viewModel.replacePlusBy00}"
-                            app:layout_constraintTop_toBottomOf="@id/mwi_uri"
+                            app:layout_constraintTop_toBottomOf="@id/apply_international_switch"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"/>
 
