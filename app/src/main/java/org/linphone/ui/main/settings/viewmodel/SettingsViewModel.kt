@@ -203,6 +203,8 @@ class SettingsViewModel
     val fileSharingServerUrl = MutableLiveData<String>()
     val remoteProvisioningUrl = MutableLiveData<String>()
 
+    val expandAdvancedCalls = MutableLiveData<Boolean>()
+
     val mediaEncryptionIndex = MutableLiveData<Int>()
     val mediaEncryptionLabels = arrayListOf<String>()
     private val mediaEncryptionValues = arrayListOf<MediaEncryption>()
@@ -210,6 +212,8 @@ class SettingsViewModel
     val createEndToEndEncryptedConferences = MutableLiveData<Boolean>()
     val acceptEarlyMedia = MutableLiveData<Boolean>()
     val allowOutgoingEarlyMedia = MutableLiveData<Boolean>()
+    val autoAnswerIncomingCalls = MutableLiveData<Boolean>()
+    val autoAnswerIncomingCallsDelay = MutableLiveData<Int>()
 
     val expandAudioDevices = MutableLiveData<Boolean>()
     val inputAudioDeviceIndex = MutableLiveData<Int>()
@@ -262,6 +266,7 @@ class SettingsViewModel
         expandNetwork.value = false
         expandUserInterface.value = false
         expandTunnel.value = false
+        expandAdvancedCalls.value = false
         expandAudioDevices.value = false
         expandAudioCodecs.value = false
         expandVideoCodecs.value = false
@@ -330,6 +335,12 @@ class SettingsViewModel
             deviceName.postValue(corePreferences.deviceName)
             fileSharingServerUrl.postValue(core.fileTransferServer)
             remoteProvisioningUrl.postValue(core.provisioningUri)
+
+            createEndToEndEncryptedConferences.postValue(corePreferences.createEndToEndEncryptedMeetingsAndGroupCalls)
+            acceptEarlyMedia.postValue(corePreferences.acceptEarlyMedia)
+            allowOutgoingEarlyMedia.postValue(corePreferences.allowOutgoingEarlyMedia)
+            autoAnswerIncomingCalls.postValue(corePreferences.autoAnswerEnabled)
+            autoAnswerIncomingCallsDelay.postValue(corePreferences.autoAnswerDelay)
 
             setupMediaEncryption()
             setupAudioDevices()
@@ -763,9 +774,6 @@ class SettingsViewModel
         }
 
         mediaEncryptionMandatory.postValue(core.isMediaEncryptionMandatory)
-        createEndToEndEncryptedConferences.postValue(corePreferences.createEndToEndEncryptedMeetingsAndGroupCalls)
-        acceptEarlyMedia.postValue(corePreferences.acceptEarlyMedia)
-        allowOutgoingEarlyMedia.postValue(corePreferences.allowOutgoingEarlyMedia)
     }
 
     @UiThread
@@ -822,6 +830,28 @@ class SettingsViewModel
     }
 
     @UiThread
+    fun toggleEnableAutoAnswerIncomingCalls() {
+        val newValue = autoAnswerIncomingCalls.value == false
+
+        coreContext.postOnCoreThread { core ->
+            corePreferences.autoAnswerEnabled = newValue
+            autoAnswerIncomingCalls.postValue(newValue)
+        }
+    }
+
+    @UiThread
+    fun updateAutoAnswerIncomingCallsDelay(newValue: String) {
+        if (newValue.isNotEmpty()) {
+            try {
+                val delay = newValue.toInt()
+                corePreferences.autoAnswerDelay = delay
+            } catch (nfe: NumberFormatException) {
+                Log.e("$TAG Ignoring new auto answer incoming calls delay as it can't be converted to int: $nfe")
+            }
+        }
+    }
+
+    @UiThread
     fun updateDeviceName() {
         coreContext.postOnCoreThread {
             val newDeviceName = deviceName.value.orEmpty().trim()
@@ -872,6 +902,11 @@ class SettingsViewModel
             coreContext.core.start()
             Log.i("$TAG Core has been restarted")
         }
+    }
+
+    @UiThread
+    fun toggleAdvancedCallsExpand() {
+        expandAdvancedCalls.value = expandAdvancedCalls.value == false
     }
 
     @UiThread

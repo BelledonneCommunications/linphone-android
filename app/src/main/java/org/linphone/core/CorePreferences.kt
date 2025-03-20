@@ -154,6 +154,20 @@ class CorePreferences
             config.setBool("misc", "real_early_media", value)
         }
 
+    @get:WorkerThread @set:WorkerThread
+    var autoAnswerEnabled: Boolean
+        get() = config.getBool("app", "auto_answer", false)
+        set(value) {
+            config.setBool("app", "auto_answer", value)
+        }
+
+    @get:WorkerThread @set:WorkerThread
+    var autoAnswerDelay: Int
+        get() = config.getInt("app", "auto_answer_delay", 0)
+        set(value) {
+            config.setInt("app", "auto_answer_delay", value)
+        }
+
     // Conversation related
 
     @get:WorkerThread @set:WorkerThread

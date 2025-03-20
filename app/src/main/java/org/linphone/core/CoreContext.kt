@@ -265,6 +265,21 @@ class CoreContext
                 "$TAG Call [${call.remoteAddress.asStringUriOnly()}] state changed [$currentState]"
             )
             when (currentState) {
+                Call.State.IncomingReceived -> {
+                    if (corePreferences.autoAnswerEnabled) {
+                        val autoAnswerDelay = corePreferences.autoAnswerDelay
+                        if (autoAnswerDelay == 0) {
+                            Log.w("$TAG Auto answering call immediately")
+                            answerCall(call)
+                        } else {
+                            Log.i("$TAG Scheduling auto answering in $autoAnswerDelay milliseconds")
+                            postOnCoreThreadDelayed({
+                                Log.w("$TAG Auto answering call")
+                                answerCall(call)
+                            }, autoAnswerDelay.toLong())
+                        }
+                    }
+                }
                 Call.State.OutgoingInit -> {
                     val conferenceInfo = core.findConferenceInformationFromUri(call.remoteAddress)
                     // Do not show outgoing call view for conference calls, wait for connected state
