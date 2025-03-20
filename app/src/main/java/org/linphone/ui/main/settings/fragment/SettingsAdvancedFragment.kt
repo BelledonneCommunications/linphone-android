@@ -131,9 +131,9 @@ class SettingsAdvancedFragment : GenericMainFragment() {
             viewModel.mediaEncryptionLabels
         )
         adapter.setDropDownViewResource(R.layout.generic_dropdown_cell)
-        binding.mediaEncryption.adapter = adapter
-        binding.mediaEncryption.onItemSelectedListener = mediaEncryptionDropdownListener
-        binding.mediaEncryption.setSelection(index)
+        binding.advancedCallsSettings.mediaEncryption.adapter = adapter
+        binding.advancedCallsSettings.mediaEncryption.onItemSelectedListener = mediaEncryptionDropdownListener
+        binding.advancedCallsSettings.mediaEncryption.setSelection(index)
     }
 
     private fun setupInputAudioDevicePicker() {

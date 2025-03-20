@@ -60,21 +60,7 @@ class TelecomCallControlCallback(
             Log.i("$TAG Call [${call.remoteAddress.asStringUriOnly()}] state changed [$state]")
             if (state == Call.State.Connected) {
                 if (call.dir == Call.Dir.Incoming) {
-                    val isVideo = LinphoneUtils.isVideoEnabled(call)
-                    val type = if (isVideo) {
-                        CallAttributesCompat.Companion.CALL_TYPE_VIDEO_CALL
-                    } else {
-                        CallAttributesCompat.Companion.CALL_TYPE_AUDIO_CALL
-                    }
-                    scope.launch {
-                        Log.i("$TAG Answering [${if (isVideo) "video" else "audio"}] call")
-                        callControl.answer(type)
-                    }
-
-                    if (isVideo && corePreferences.routeAudioToSpeakerWhenVideoIsEnabled) {
-                        Log.i("$TAG Answering video call, routing audio to speaker")
-                        AudioUtils.routeAudioToSpeaker(call)
-                    }
+                    answerCall()
                 } else {
                     scope.launch {
                         Log.i("$TAG Setting call active")
@@ -116,6 +102,7 @@ class TelecomCallControlCallback(
             val state = call.state
             Log.i("$TAG Call state currently is [$state]")
             when (state) {
+                Call.State.Connected, Call.State.StreamsRunning -> answerCall()
                 Call.State.End -> callEnded()
                 Call.State.Error -> callError("")
                 Call.State.Released -> callEnded()
@@ -281,6 +268,24 @@ class TelecomCallControlCallback(
             Log.e("$TAG No matching endpoint found")
         }
         return false
+    }
+
+    private fun answerCall() {
+        val isVideo = LinphoneUtils.isVideoEnabled(call)
+        val type = if (isVideo) {
+            CallAttributesCompat.Companion.CALL_TYPE_VIDEO_CALL
+        } else {
+            CallAttributesCompat.Companion.CALL_TYPE_AUDIO_CALL
+        }
+        scope.launch {
+            Log.i("$TAG Answering [${if (isVideo) "video" else "audio"}] call")
+            callControl.answer(type)
+        }
+
+        if (isVideo && corePreferences.routeAudioToSpeakerWhenVideoIsEnabled) {
+            Log.i("$TAG Answering video call, routing audio to speaker")
+            AudioUtils.routeAudioToSpeaker(call)
+        }
     }
 
     private fun callEnded() {

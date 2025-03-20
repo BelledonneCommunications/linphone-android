@@ -189,8 +189,9 @@ class NotificationsManager
             state: Call.State?,
             message: String
         ) {
-            Log.i("$TAG Call state changed: [$state]")
-            when (state) {
+            val currentState = call.state
+            Log.i("$TAG Call state changed: [$currentState]")
+            when (currentState) {
                 Call.State.IncomingReceived, Call.State.IncomingEarlyMedia -> {
                     Log.i(
                         "$TAG Showing incoming call notification for [${call.remoteAddress.asStringUriOnly()}]"
@@ -205,14 +206,14 @@ class NotificationsManager
                 }
                 Call.State.Connected,
                 Call.State.StreamsRunning -> {
-                    if (call.state == Call.State.Connected && call.dir == Call.Dir.Incoming) {
+                    if (currentState == Call.State.Connected && call.dir == Call.Dir.Incoming) {
                         Log.i(
                             "$TAG Connected call was incoming (so it was answered), removing incoming call notification"
                         )
                         removeIncomingCallNotification()
                     }
 
-                    if (call.state == Call.State.Connected || call.dir == Call.Dir.Incoming) {
+                    if (currentState == Call.State.Connected || call.dir == Call.Dir.Incoming) {
                         Log.i(
                             "$TAG Showing connected call notification for [${call.remoteAddress.asStringUriOnly()}]"
                         )

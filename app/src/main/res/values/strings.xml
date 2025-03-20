@@ -313,6 +313,9 @@
     <string name="settings_advanced_create_e2e_encrypted_conferences_title">Create end-to-end encrypted meetings &amp; group calls</string>
     <string name="settings_advanced_accept_early_media_title">Accept early media</string>
     <string name="settings_advanced_allow_outgoing_early_media_title">Allow outgoing early media</string>
+    <string name="settings_advanced_enable_auto_answer_incoming_calls_title">Auto answer incoming calls</string>
+    <string name="settings_advanced_enable_auto_answer_incoming_calls_after_delay_title">Delay before auto answering call</string>
+    <string name="settings_advanced_enable_auto_answer_incoming_calls_after_delay_hint">Delay in milliseconds</string>
     <string name="settings_advanced_remote_provisioning_url">Remote provisioning URL</string>
     <string name="settings_advanced_download_apply_remote_provisioning">Download &amp; apply</string>
     <string name="settings_advanced_audio_devices_title">Audio devices</string>

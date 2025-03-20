@@ -273,6 +273,9 @@
     <string name="settings_advanced_create_e2e_encrypted_conferences_title">Créer en mode chiffré de bout en bout les réunions et les appels de groupe</string>
     <string name="settings_advanced_accept_early_media_title">Accepter l\'early media</string>
     <string name="settings_advanced_allow_outgoing_early_media_title">Autoriser l\'early media pour les appels sortants</string>
+    <string name="settings_advanced_enable_auto_answer_incoming_calls_title">Décrocher automatiquement les appels entrants</string>
+    <string name="settings_advanced_enable_auto_answer_incoming_calls_after_delay_title">Délai avant le décrochage automatique</string>
+    <string name="settings_advanced_enable_auto_answer_incoming_calls_after_delay_hint">Délai en millisecondes</string>
     <string name="settings_advanced_remote_provisioning_url">URL de configuration distante</string>
     <string name="settings_advanced_download_apply_remote_provisioning">Télécharger &amp; appliquer</string>
     <string name="settings_advanced_audio_devices_title">Périphériques audio</string>
