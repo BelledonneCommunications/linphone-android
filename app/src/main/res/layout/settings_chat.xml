@@ -40,7 +40,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="16dp"
-            android:enabled="@{!viewModel.isVfsEnabled}"
             android:checked="@{viewModel.autoDownloadEnabled}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -69,6 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="16dp"
+            android:enabled="@{!viewModel.isVfsEnabled}"
             android:checked="@{viewModel.autoExportMediaToNativeGallery}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/auto_download_switch" />
