@@ -295,29 +295,30 @@
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:onClick="@{helpClickListener}"
-                    android:visibility="@{viewModel.showHelp ? View.VISIBLE : View.GONE}"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp">
+<!--Disabled until we can figure out what the issues are with branding-->
+<!--                <LinearLayout-->
+<!--                    android:onClick="@{helpClickListener}"-->
+<!--                    android:visibility="@{viewModel.showHelp ? View.VISIBLE : View.GONE}"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="45dp">-->
 
-                    <ImageView
-                        android:layout_width="45dp"
-                        android:layout_height="45dp"
-                        android:padding="10dp"
-                        android:contentDescription="@string/help"
-                        android:src="@drawable/icon_help" />
+<!--                    <ImageView-->
+<!--                        android:layout_width="45dp"-->
+<!--                        android:layout_height="45dp"-->
+<!--                        android:padding="10dp"-->
+<!--                        android:contentDescription="@string/help"-->
+<!--                        android:src="@drawable/icon_help" />-->
 
-                    <TextView
-                        android:text="@string/help"
-                        style="@style/standard_text_font"
-                        android:layout_width="match_parent"
-                        android:layout_height="45dp"
-                        android:gravity="center_vertical"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="16dp" />
+<!--                    <TextView-->
+<!--                        android:text="@string/help"-->
+<!--                        style="@style/standard_text_font"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="45dp"-->
+<!--                        android:gravity="center_vertical"-->
+<!--                        android:paddingLeft="5dp"-->
+<!--                        android:paddingRight="16dp" />-->
 
-                </LinearLayout>
+<!--                </LinearLayout>-->
 
                 <View
                     android:visibility="@{viewModel.showAbout ? View.VISIBLE : View.GONE}"
