@@ -118,7 +118,7 @@ class RecordingsListViewModel
             }
         }
 
-        list.sortBy {
+        list.sortByDescending {
             it.timestamp
         }
         recordings.postValue(list)
