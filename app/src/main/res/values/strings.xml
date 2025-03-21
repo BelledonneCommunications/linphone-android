@@ -823,6 +823,7 @@
         <item quantity="other">%s notifications for other account(s)</item>
     </plurals>
     <string name="network_not_reachable">You aren\'t connected to internet</string>
+    <string name="network_is_not_wifi">Wi-Fi only mode enabled</string>
     <string name="operation_in_progress_overlay">Operation in progress, please wait</string>
     <string name="generic_address_picker_conversations_list_title">Conversations</string>
     <string name="generic_address_picker_contacts_list_title">Contacts</string>

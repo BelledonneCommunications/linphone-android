@@ -782,6 +782,7 @@
         <item quantity="other">%s notifications en attente</item>
     </plurals>
     <string name="network_not_reachable">Vous n\'êtes pas connecté à internet</string>
+    <string name="network_is_not_wifi">Mode Wi-Fi uniquement activé</string>
     <string name="operation_in_progress_overlay">Opération en cours, merci de patienter…</string>
     <string name="generic_address_picker_conversations_list_title">Conversations</string>
     <string name="generic_address_picker_contacts_list_title">Contacts</string>
