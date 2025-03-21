@@ -1,12 +1,20 @@
 job-android-upload:
 
   stage: deploy
-  tags: [ "deploy" ]
+  tags: [ "docker-deploy" ]
 
   only:
     - schedules
   dependencies:
     - job-android
 
+  before_script:
+    - if ! [ -z ${SCP_PRIVATE_KEY+x} ] && ! [ -z ${DEPLOY_SERVER_HOST_KEYS+x} ]; then eval $(ssh-agent -s); fi
+    - if ! [ -z ${SCP_PRIVATE_KEY+x} ]; then echo "$SCP_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null; fi
+    - if ! [ -z ${DEPLOY_SERVER_HOST_KEYS+x} ]; then mkdir -p ~/.ssh && chmod 700 ~/.ssh; fi
+    - if ! [ -z ${DEPLOY_SERVER_HOST_KEYS+x} ]; then echo "$DEPLOY_SERVER_HOST_KEYS" >> ~/.ssh/known_hosts; fi
+
   script:
-    - cd app/build/outputs/apk/ && rsync ./release/*.apk $DEPLOY_SERVER:$ANDROID_DEPLOY_DIRECTORY
+    # Launches rsync in partial mode, which means that we are using a temp_dir in case of a transfer issue
+    # Upon a job relaunch, the files in temp_dir would then be re-used, and deleted if the transfer succeeds
+    - cd app/build/outputs/apk/ && rsync --partial --partial-dir=$CI_PIPELINE_ID_$CI_JOB_NAME ./release/*.apk $DEPLOY_SERVER:$ANDROID_DEPLOY_DIRECTORY
