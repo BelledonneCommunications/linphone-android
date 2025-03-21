@@ -43,6 +43,7 @@ import org.linphone.core.GlobalState
 import org.linphone.core.MessageWaitingIndication
 import org.linphone.core.RegistrationState
 import org.linphone.core.VFS
+import org.linphone.core.tools.AndroidPlatformHelper
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
@@ -582,7 +583,15 @@ class MainViewModel
         val reachable = coreContext.core.isNetworkReachable
         Log.i("$TAG Network is ${if (reachable) "reachable" else "not reachable"}")
         if (!reachable && coreContext.core.globalState == GlobalState.On) {
-            val label = AppUtils.getString(R.string.network_not_reachable)
+            val label = if (coreContext.core.isWifiOnlyEnabled) {
+                if (AndroidPlatformHelper.isReady() && AndroidPlatformHelper.instance().isActiveNetworkWifiOnlyCompliant) {
+                    AppUtils.getString(R.string.network_not_reachable)
+                } else {
+                    AppUtils.getString(R.string.network_is_not_wifi)
+                }
+            } else {
+                AppUtils.getString(R.string.network_not_reachable)
+            }
             addAlert(NETWORK_NOT_REACHABLE, label)
         } else {
             removeAlert(NETWORK_NOT_REACHABLE)
