@@ -33,6 +33,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlin.getValue
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallTransferFragmentBinding
@@ -62,6 +63,16 @@ class TransferCallFragment : GenericCallFragment() {
     private val viewModel: StartCallViewModel by navGraphViewModels(
         R.id.call_nav_graph
     )
+
+    private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            if (newState == BottomSheetBehavior.STATE_COLLAPSED || newState == BottomSheetBehavior.STATE_HIDDEN) {
+                viewModel.isNumpadVisible.value = false
+            }
+        }
+
+        override fun onSlide(bottomSheet: View, slideOffset: Float) { }
+    }
 
     private lateinit var callViewModel: CurrentCallViewModel
 
@@ -208,12 +219,15 @@ class TransferCallFragment : GenericCallFragment() {
             }
         }
 
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.numpadLayout.root)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
+
         viewModel.isNumpadVisible.observe(viewLifecycleOwner) { visible ->
-            val standardBottomSheetBehavior = BottomSheetBehavior.from(binding.numpadLayout.root)
             if (visible) {
-                standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             } else {
-                standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
         }
 
@@ -238,6 +252,12 @@ class TransferCallFragment : GenericCallFragment() {
             R.string.call_transfer_current_call_title,
             callViewModel.displayedName.value ?: callViewModel.displayedAddress.value
         )
+
+        coreContext.postOnCoreThread {
+            if (corePreferences.automaticallyShowDialpad) {
+                viewModel.isNumpadVisible.postValue(true)
+            }
+        }
     }
 
     private fun showConfirmAttendedTransferDialog(callModel: CallModel) {

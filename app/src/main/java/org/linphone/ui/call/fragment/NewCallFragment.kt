@@ -32,6 +32,7 @@ import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.contacts.getListOfSipAddressesAndPhoneNumbers
 import org.linphone.core.Address
@@ -60,6 +61,16 @@ class NewCallFragment : GenericCallFragment() {
     private val viewModel: StartCallViewModel by navGraphViewModels(
         R.id.call_nav_graph
     )
+
+    private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            if (newState == BottomSheetBehavior.STATE_COLLAPSED || newState == BottomSheetBehavior.STATE_HIDDEN) {
+                viewModel.isNumpadVisible.value = false
+            }
+        }
+
+        override fun onSlide(bottomSheet: View, slideOffset: Float) { }
+    }
 
     private lateinit var adapter: ConversationsContactsAndSuggestionsListAdapter
 
@@ -185,18 +196,31 @@ class NewCallFragment : GenericCallFragment() {
             }
         }
 
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.numpadLayout.root)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
+
         viewModel.isNumpadVisible.observe(viewLifecycleOwner) { visible ->
-            val standardBottomSheetBehavior = BottomSheetBehavior.from(binding.numpadLayout.root)
             if (visible) {
-                standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             } else {
-                standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
         }
 
         binding.root.setKeyboardInsetListener { keyboardVisible ->
             if (keyboardVisible) {
                 viewModel.isNumpadVisible.value = false
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        coreContext.postOnCoreThread {
+            if (corePreferences.automaticallyShowDialpad) {
+                viewModel.isNumpadVisible.postValue(true)
             }
         }
     }
