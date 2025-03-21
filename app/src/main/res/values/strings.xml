@@ -1051,4 +1051,9 @@
     <string name="E911_p8">By clicking on “Accept”, you acknowledge that you have read and understand this Emergency Call disclaimer and the limitations it describes.</string>
     <string name="E911_Accept">Accept</string>
     <string name="help">Help</string>
+    <string name="presence_state_waiting">Waiting</string>
+    <string name="presence_state_queue_call">Queue call</string>
+    <string name="presence_state_on_a_call">On a call</string>
+    <string name="presence_state_not_taking_calls">Not taking calls</string>
+    <string name="presence_state_wrap">Wrap</string>
 </resources>

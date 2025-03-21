@@ -174,12 +174,15 @@ class ContactViewModel(friend: Friend) : MessageNotifierViewModel(), ContactData
                     PresenceIconState.fromString(data.iconState)
                 )
                 presenceStatus.postValue(cp)
+
                 statusMessage.postValue(data.message)
 
                 if (data.message.isNullOrBlank()) {
                     subTitle.postValue(data.stateName)
                 } else {
-                    subTitle.postValue("${data.stateName} | ${data.message}")
+                    subTitle.postValue(
+                        "${data.stateName} | ${data.getMessageText(coreContext.context)}"
+                    )
                 }
             }
 
