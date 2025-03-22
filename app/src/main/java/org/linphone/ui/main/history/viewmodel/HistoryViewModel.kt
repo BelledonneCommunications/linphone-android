@@ -331,6 +331,7 @@ class HistoryViewModel
         }
 
         // Required when "unique account displays all call logs from Core" workaround
+        // TODO FIXME: remove workaround later
         if (list.isEmpty()) {
             for (log in coreContext.core.callLogs) {
                 if (log.remoteAddress.weakEqual(address)) {
