@@ -98,9 +98,9 @@ class CallLogModel
             friendExists = coreContext.contactsManager.isContactAvailable(friend)
         }
         displayedAddress = if (corePreferences.onlyDisplaySipUriUsername) {
-            avatarModel.friend.address?.username ?: address.username ?: ""
+            address.username ?: ""
         } else {
-            avatarModel.friend.address?.asStringUriOnly() ?: address.asStringUriOnly()
+            sipUri
         }
 
         iconResId = LinphoneUtils.getCallIconResId(callLog.status, callLog.dir)
