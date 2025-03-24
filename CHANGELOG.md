@@ -10,6 +10,27 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [6.0.1] - 2025-03-21
+
+### Added
+- Start at boot & auto answer settings added back
+- Interface setting to have dialpad automatically opened in start call view
+- Replace "+" by "00" and do not apply prefix for calls & chat account settings
+- Setting to let user choose whether to record calls using MKV or SMFF format (the later allows to record H265/AV1 video but is a proprietary file format that can't be read outside of Linphone)
+
+### Changed
+- Reverted the way of playing incoming call ringone (you may have to configure your own ringtone again), was causing various issues depending on devices/firmwares
+- Show all call history entries if only one account is configured (workaround for missing history for now until a proper fix will be done in SDK)
+
+### Fixed
+- Issue preventing bluetooth Hearing Aids from working properly (and fixed earpiece/hearing aids icon)
+- Prevent Qr Code scanner to use static picture camera
+- Prevent user from connecting the same account multiple times
+- Quit menu visibility not updated when changing Keep Alive setting
+- Participant selection in group when typing "@"
+- Recordings order has been reversed to have newest ones at top
+- Improved message when network is not reachable due to "Wifi only mode" being enabled
+- Various crash & bug fixes
 
 ## [6.0.0] - 2025-03-11
 
