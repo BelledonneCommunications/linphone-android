@@ -80,6 +80,8 @@ class ScheduleMeetingViewModel
 
     val hideBroadcast = MutableLiveData<Boolean>()
 
+    val chatDisabled = MutableLiveData<Boolean>()
+
     val conferenceCreatedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -125,7 +127,7 @@ class ScheduleMeetingViewModel
                         )
                     }
 
-                    if (sendInvitations.value == true) {
+                    if (sendInvitations.value == true && !corePreferences.disableChat) {
                         Log.i("$TAG User asked for invitations to be sent, let's do it")
 
                         val chatRoomParams = coreContext.core.createConferenceParams(null)
@@ -178,10 +180,11 @@ class ScheduleMeetingViewModel
     init {
         coreContext.postOnCoreThread {
             hideBroadcast.postValue(corePreferences.disableBroadcasts)
+            chatDisabled.postValue(corePreferences.disableChat)
+            sendInvitations.postValue(!corePreferences.disableChat)
         }
         isBroadcastSelected.value = false
         showBroadcastHelp.value = false
-        sendInvitations.value = true
 
         selectedTimeZone.value = availableTimeZones.find {
             it.id == TimeZone.getDefault().id

@@ -514,6 +514,8 @@
                         android:layout_marginEnd="16dp"
                         android:textColor="@color/gray_main2_600"
                         android:textSize="14sp"
+                        android:visibility="@{viewModel.chatDisabled ? View.GONE : View.VISIBLE}"
+                        android:enabled="@{!viewModel.chatDisabled}"
                         android:checked="@={viewModel.sendInvitations}"
                         app:layout_constraintTop_toBottomOf="@id/separator_5"
                         app:layout_constraintStart_toStartOf="parent" />
@@ -524,6 +526,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
+                        android:visibility="@{viewModel.chatDisabled ? View.GONE : View.VISIBLE}"
                         android:text="@string/meeting_schedule_send_invitations_title"
                         app:layout_constraintStart_toEndOf="@id/send_invitations"
                         app:layout_constraintTop_toTopOf="@id/send_invitations"

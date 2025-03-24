@@ -24,6 +24,7 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import java.util.TimeZone
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.Address
 import org.linphone.core.ConferenceInfo
 import org.linphone.core.ConferenceScheduler
@@ -93,7 +94,7 @@ class MeetingViewModel
                     "$TAG Conference ${conferenceScheduler.info?.subject} cancelled"
                 )
                 val params = LinphoneUtils.getChatRoomParamsToCancelMeeting()
-                if (params != null) {
+                if (params != null && !corePreferences.disableChat) {
                     conferenceScheduler.sendInvitations(params)
                 } else {
                     operationInProgress.postValue(false)
