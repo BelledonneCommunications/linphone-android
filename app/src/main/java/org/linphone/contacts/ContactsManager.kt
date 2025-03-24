@@ -32,6 +32,7 @@ import androidx.annotation.WorkerThread
 import androidx.core.app.ActivityCompat
 import androidx.core.app.Person
 import androidx.core.graphics.drawable.IconCompat
+import androidx.core.text.isDigitsOnly
 import androidx.loader.app.LoaderManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -454,7 +455,7 @@ class ContactsManager
             sipUri
         }
 
-        return if (!username.isNullOrEmpty() && username.startsWith("+")) {
+        return if (!username.isNullOrEmpty() && (username.startsWith("+") || username.isDigitsOnly())) {
             Log.d("$TAG Looking for friend with phone number [$username]")
             val foundUsingPhoneNumber = coreContext.core.findFriendByPhoneNumber(username)
             if (foundUsingPhoneNumber != null) {
@@ -516,7 +517,7 @@ class ContactsManager
             model
         } else {
             Log.d("$TAG Looking for friend matching SIP URI [$key]")
-            val friend = coreContext.contactsManager.findContactByAddress(clone)
+            val friend = findContactByAddress(clone)
             if (friend != null) {
                 Log.d("$TAG Matching friend [${friend.name}] found for SIP URI [$key]")
                 val model = ContactAvatarModel(friend, address)
