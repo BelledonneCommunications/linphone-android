@@ -1154,7 +1154,7 @@ class NotificationsManager
         val isVideo = LinphoneUtils.isVideoEnabled(call)
 
         val smallIcon = if (isConference) {
-            R.drawable.video_conference
+            R.drawable.video_conference_notification
         } else if (isVideo) {
             R.drawable.video_camera
         } else {
