@@ -20,6 +20,8 @@
 package org.linphone.compatibility
 
 import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Build
 import androidx.annotation.RequiresApi
 
@@ -33,6 +35,12 @@ class Api33Compatibility {
                 Manifest.permission.RECORD_AUDIO,
                 Manifest.permission.CAMERA
             )
+        }
+
+        fun isPostNotificationsPermissionGranted(context: Context): Boolean {
+            return context.checkSelfPermission(
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
         }
     }
 }

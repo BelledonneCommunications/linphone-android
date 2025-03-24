@@ -111,6 +111,13 @@ class Compatibility {
             return false
         }
 
+        fun isPostNotificationsPermissionGranted(context: Context): Boolean {
+            if (Version.sdkAboveOrEqual(Version.API33_ANDROID_13_TIRAMISU)) {
+                return Api33Compatibility.isPostNotificationsPermissionGranted(context)
+            }
+            return true
+        }
+
         fun enterPipMode(activity: Activity): Boolean {
             if (Version.sdkStrictlyBelow(Version.API31_ANDROID_12)) {
                 return Api28Compatibility.enterPipMode(activity)

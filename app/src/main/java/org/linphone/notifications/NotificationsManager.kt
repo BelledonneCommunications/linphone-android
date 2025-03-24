@@ -20,6 +20,7 @@
 package org.linphone.notifications
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -1022,13 +1023,10 @@ class NotificationsManager
         notify(notifiable.notificationId, notification, CHAT_TAG)
     }
 
+    @SuppressLint("MissingPermission")
     @WorkerThread
     private fun notify(id: Int, notification: Notification, tag: String? = null) {
-        if (ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.POST_NOTIFICATIONS
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
+        if (Compatibility.isPostNotificationsPermissionGranted(context)) {
             Log.i(
                 "$TAG Notifying using ID [$id] and ${if (tag == null) "without tag" else "with tag [$tag]"}"
             )
