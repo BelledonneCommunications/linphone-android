@@ -90,7 +90,7 @@ class SettingsViewModel
 
     val autoRecordCalls = MutableLiveData<Boolean>()
 
-    val goToIncomingCallNotificationChannelSettingsEvent = MutableLiveData<Event<Uri>>()
+    val goToIncomingCallNotificationChannelSettingsEvent = MutableLiveData<Event<Uri?>>()
 
     // Conversations settings
     val showConversationsSettings = MutableLiveData<Boolean>()
@@ -471,11 +471,18 @@ class SettingsViewModel
     @UiThread
     fun changeRingtone() {
         coreContext.postOnCoreThread { core ->
-            val defaultDeviceRingtone = RingtoneManager.getActualDefaultRingtoneUri(coreContext.context, RingtoneManager.TYPE_RINGTONE)
-            val coreRingtone = core.ring?.toUri()
-            Log.i("$TAG Currently set ringtone in Core is [$coreRingtone], device default ringtone is [$defaultDeviceRingtone]")
-            val currentRingtone = coreRingtone ?: defaultDeviceRingtone
-            goToIncomingCallNotificationChannelSettingsEvent.postValue(Event(currentRingtone))
+            try {
+                val defaultDeviceRingtone = RingtoneManager.getActualDefaultRingtoneUri(
+                    coreContext.context,
+                    RingtoneManager.TYPE_RINGTONE
+                )
+                val coreRingtone = core.ring?.toUri()
+                Log.i("$TAG Currently set ringtone in Core is [$coreRingtone], device default ringtone is [$defaultDeviceRingtone]")
+                val currentRingtone = coreRingtone ?: defaultDeviceRingtone
+                goToIncomingCallNotificationChannelSettingsEvent.postValue(Event(currentRingtone))
+            } catch (e: Exception) {
+                Log.e("$TAG Failed to get current ringtone: $e")
+            }
         }
     }
 
