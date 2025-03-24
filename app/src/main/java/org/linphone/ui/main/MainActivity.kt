@@ -120,9 +120,20 @@ class MainActivity : GenericActivity() {
     ) { isGranted ->
         if (isGranted) {
             Log.i("$TAG POST_NOTIFICATIONS permission has been granted")
-            viewModel.updatePostNotificationsPermission()
+            viewModel.updateMissingPermissionAlert()
         } else {
             Log.w("$TAG POST_NOTIFICATIONS permission has been denied!")
+        }
+    }
+
+    private val fullScreenIntentPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            Log.i("$TAG USE_FULL_SCREEN_INTENT permission has been granted")
+            viewModel.updateMissingPermissionAlert()
+        } else {
+            Log.w("$TAG USE_FULL_SCREEN_INTENT permission has been denied!")
         }
     }
 
@@ -200,6 +211,18 @@ class MainActivity : GenericActivity() {
                 } else {
                     Log.i("$TAG Permission request for POST_NOTIFICATIONS will be automatically denied, go to android app settings instead")
                     goToAndroidPermissionSettings()
+                }
+            }
+        }
+
+        viewModel.askFullScreenIntentPermissionEvent.observe(this) {
+            it.consume {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.USE_FULL_SCREEN_INTENT)) {
+                    Log.w("$TAG Asking for USE_FULL_SCREEN_INTENT permission")
+                    fullScreenIntentPermissionLauncher.launch(Manifest.permission.USE_FULL_SCREEN_INTENT)
+                } else {
+                    Log.i("$TAG Permission request for USE_FULL_SCREEN_INTENT will be automatically denied, go to manage app full screen intent android settings instead")
+                    Compatibility.requestFullScreenIntentPermission(this)
                 }
             }
         }
@@ -397,7 +420,7 @@ class MainActivity : GenericActivity() {
         viewModel.enableAccountMonitoring(true)
         viewModel.checkForNewAccount()
         viewModel.updateNetworkReachability()
-        viewModel.updatePostNotificationsPermission()
+        viewModel.updateMissingPermissionAlert()
     }
 
     override fun onNewIntent(intent: Intent) {

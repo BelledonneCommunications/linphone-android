@@ -19,13 +19,10 @@
  */
 package org.linphone.ui.main.viewmodel
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -33,6 +30,7 @@ import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.compatibility.Compatibility
 import org.linphone.core.Account
 import org.linphone.core.Call
 import org.linphone.core.ChatMessage
@@ -60,6 +58,7 @@ class MainViewModel
         const val MWI_MESSAGES_WAITING = 4
         const val NON_DEFAULT_ACCOUNT_NOTIFICATIONS = 5
         const val NON_DEFAULT_ACCOUNT_NOT_CONNECTED = 10
+        const val FULL_SCREEN_INTENTS_PERMISSION_NOT_GRANTED = 16
         const val SEND_NOTIFICATIONS_PERMISSION_NOT_GRANTED = 17
         const val NETWORK_NOT_REACHABLE = 19
         const val SINGLE_CALL = 20
@@ -91,6 +90,10 @@ class MainViewModel
     }
 
     val askPostNotificationsPermissionEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    val askFullScreenIntentPermissionEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
 
@@ -350,7 +353,7 @@ class MainViewModel
             }
         }
 
-        updatePostNotificationsPermission()
+        updateMissingPermissionAlert()
 
         if (VFS.isEnabled(coreContext.context)) {
             val cache = corePreferences.vfsCachePath
@@ -383,8 +386,13 @@ class MainViewModel
     }
 
     @UiThread
-    fun updatePostNotificationsPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+    fun updateMissingPermissionAlert() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            coreContext.postOnCoreThread {
+                checkFullScreenIntentNotificationPermission()
+                checkPostNotificationsPermission()
+            }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             coreContext.postOnCoreThread {
                 checkPostNotificationsPermission()
             }
@@ -418,7 +426,9 @@ class MainViewModel
     fun onTopBarClicked() {
         if (atLeastOneCall.value == true) {
             goBackToCallEvent.value = Event(true)
-        } else if (!isPostNotificationsPermissionGranted()) {
+        } else if (!Compatibility.hasFullScreenIntentPermission(coreContext.context)) {
+            askFullScreenIntentPermissionEvent.value = Event(true)
+        } else if (!Compatibility.isPostNotificationsPermissionGranted(coreContext.context)) {
             askPostNotificationsPermissionEvent.value = Event(true)
         } else {
             openDrawerEvent.value = Event(true)
@@ -554,7 +564,7 @@ class MainViewModel
                 NETWORK_NOT_REACHABLE -> {
                     alertIcon.postValue(R.drawable.wifi_slash)
                 }
-                SEND_NOTIFICATIONS_PERMISSION_NOT_GRANTED -> {
+                SEND_NOTIFICATIONS_PERMISSION_NOT_GRANTED, FULL_SCREEN_INTENTS_PERMISSION_NOT_GRANTED -> {
                     alertIcon.postValue(R.drawable.bell_simple_slash)
                 }
                 SINGLE_CALL, MULTIPLE_CALLS -> {
@@ -598,21 +608,24 @@ class MainViewModel
         }
     }
 
-    private fun isPostNotificationsPermissionGranted(): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            ContextCompat.checkSelfPermission(
-                coreContext.context,
-                Manifest.permission.POST_NOTIFICATIONS
-            ) == PackageManager.PERMISSION_GRANTED
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    @WorkerThread
+    private fun checkFullScreenIntentNotificationPermission() {
+        if (!Compatibility.hasFullScreenIntentPermission(coreContext.context)) {
+            Log.w("$TAG USE_FULL_SCREEN_INTENT seems to be not granted!")
+            val label = AppUtils.getString(R.string.full_screen_intent_permission_not_granted)
+            coreContext.postOnCoreThread {
+                addAlert(FULL_SCREEN_INTENTS_PERMISSION_NOT_GRANTED, label)
+            }
         } else {
-            true
+            removeAlert(FULL_SCREEN_INTENTS_PERMISSION_NOT_GRANTED)
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     @WorkerThread
     private fun checkPostNotificationsPermission() {
-        if (!isPostNotificationsPermissionGranted()) {
+        if (!Compatibility.isPostNotificationsPermissionGranted(coreContext.context)) {
             Log.w("$TAG POST_NOTIFICATIONS seems to be not granted!")
             val label = AppUtils.getString(R.string.post_notifications_permission_not_granted)
             coreContext.postOnCoreThread {
