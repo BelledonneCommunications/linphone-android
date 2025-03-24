@@ -19,19 +19,18 @@
  */
 package org.linphone.core
 
-import android.Manifest
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.IBinder
 import androidx.annotation.AnyThread
 import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
-import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 import org.linphone.core.tools.service.FileTransferService
 import org.linphone.ui.main.MainActivity
@@ -171,14 +170,11 @@ class CoreFileTransferService : FileTransferService() {
         postNotification()
     }
 
+    @SuppressLint("MissingPermission")
     @AnyThread
     private fun postNotification() {
         val notificationsManager = NotificationManagerCompat.from(this)
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.POST_NOTIFICATIONS
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
+        if (Compatibility.isPostNotificationsPermissionGranted(this)) {
             if (mServiceNotification != null) {
                 Log.i("$TAG Sending notification to manager")
                 notificationsManager.notify(SERVICE_NOTIF_ID, mServiceNotification)
