@@ -366,15 +366,17 @@ class ConferenceViewModel
 
     @UiThread
     fun goToConversation() {
-        coreContext.postOnCoreThread { core ->
-            Log.i("$TAG Navigating to conference's conversation")
-            val chatRoom = conference.chatRoom
-            if (chatRoom != null) {
-                goToConversationEvent.postValue(Event(LinphoneUtils.getConversationId(chatRoom)))
-            } else {
-                Log.e(
-                    "$TAG No chat room available for current conference [${conference.conferenceAddress?.asStringUriOnly()}]"
-                )
+        if (::conference.isInitialized) {
+            coreContext.postOnCoreThread { core ->
+                Log.i("$TAG Navigating to conference's conversation")
+                val chatRoom = conference.chatRoom
+                if (chatRoom != null) {
+                    goToConversationEvent.postValue(Event(LinphoneUtils.getConversationId(chatRoom)))
+                } else {
+                    Log.e(
+                        "$TAG No chat room available for current conference [${conference.conferenceAddress?.asStringUriOnly()}]"
+                    )
+                }
             }
         }
     }
@@ -393,82 +395,93 @@ class ConferenceViewModel
 
     @UiThread
     fun inviteSipUrisIntoConference(uris: List<String>) {
-        coreContext.postOnCoreThread { core ->
-            val addresses = arrayListOf<Address>()
-            for (uri in uris) {
-                val address = core.interpretUrl(uri, false)
-                if (address != null) {
-                    addresses.add(address)
-                    Log.i("$TAG Address [${address.asStringUriOnly()}] will be added to conference")
-                } else {
-                    Log.e(
-                        "$TAG Failed to parse SIP URI [$uri] into address, can't add it to the conference!"
-                    )
-                    showRedToast(R.string.conference_failed_to_add_participant_invalid_address_toast, R.drawable.warning_circle)
+        if (::conference.isInitialized) {
+            coreContext.postOnCoreThread { core ->
+                val addresses = arrayListOf<Address>()
+                for (uri in uris) {
+                    val address = core.interpretUrl(uri, false)
+                    if (address != null) {
+                        addresses.add(address)
+                        Log.i("$TAG Address [${address.asStringUriOnly()}] will be added to conference")
+                    } else {
+                        Log.e(
+                            "$TAG Failed to parse SIP URI [$uri] into address, can't add it to the conference!"
+                        )
+                        showRedToast(
+                            R.string.conference_failed_to_add_participant_invalid_address_toast,
+                            R.drawable.warning_circle
+                        )
+                    }
                 }
+                val addressesArray = arrayOfNulls<Address>(addresses.size)
+                addresses.toArray(addressesArray)
+                Log.i("$TAG Trying to add [${addressesArray.size}] new participant(s) into conference")
+                conference.addParticipants(addressesArray)
             }
-            val addressesArray = arrayOfNulls<Address>(addresses.size)
-            addresses.toArray(addressesArray)
-            Log.i("$TAG Trying to add [${addressesArray.size}] new participant(s) into conference")
-            conference.addParticipants(addressesArray)
         }
     }
 
     @WorkerThread
     fun kickParticipant(participant: Participant) {
-        coreContext.postOnCoreThread {
-            Log.i(
-                "$TAG Kicking participant [${participant.address.asStringUriOnly()}] out of conference"
-            )
-            conference.removeParticipant(participant)
+        if (::conference.isInitialized) {
+            coreContext.postOnCoreThread {
+                Log.i(
+                    "$TAG Kicking participant [${participant.address.asStringUriOnly()}] out of conference"
+                )
+                conference.removeParticipant(participant)
+            }
         }
     }
 
     @WorkerThread
     fun setNewLayout(newLayout: Int) {
-        val call = conference.call
-        if (call != null) {
-            val params = call.core.createCallParams(call)
-            if (params != null) {
-                val currentLayout = getCurrentLayout(call)
-                if (currentLayout != newLayout) {
-                    when (newLayout) {
-                        AUDIO_ONLY_LAYOUT -> {
-                            Log.i("$TAG Changing conference layout to [Audio Only]")
-                            params.isVideoEnabled = false
-                        }
-                        ACTIVE_SPEAKER_LAYOUT -> {
-                            Log.i("$TAG Changing conference layout to [Active Speaker]")
-                            params.conferenceVideoLayout = Conference.Layout.ActiveSpeaker
-                        }
-                        GRID_LAYOUT -> {
-                            Log.i("$TAG Changing conference layout to [Grid]")
-                            params.conferenceVideoLayout = Conference.Layout.Grid
-                        }
-                    }
+        if (::conference.isInitialized) {
+            val call = conference.call
+            if (call != null) {
+                val params = call.core.createCallParams(call)
+                if (params != null) {
+                    val currentLayout = getCurrentLayout(call)
+                    if (currentLayout != newLayout) {
+                        when (newLayout) {
+                            AUDIO_ONLY_LAYOUT -> {
+                                Log.i("$TAG Changing conference layout to [Audio Only]")
+                                params.isVideoEnabled = false
+                            }
 
-                    if (currentLayout == AUDIO_ONLY_LAYOUT) {
-                        // Previous layout was audio only, make sure video isn't sent without user consent when switching layout
-                        Log.i(
-                            "$TAG Previous layout was [Audio Only], enabling video but in receive only direction"
+                            ACTIVE_SPEAKER_LAYOUT -> {
+                                Log.i("$TAG Changing conference layout to [Active Speaker]")
+                                params.conferenceVideoLayout = Conference.Layout.ActiveSpeaker
+                            }
+
+                            GRID_LAYOUT -> {
+                                Log.i("$TAG Changing conference layout to [Grid]")
+                                params.conferenceVideoLayout = Conference.Layout.Grid
+                            }
+                        }
+
+                        if (currentLayout == AUDIO_ONLY_LAYOUT) {
+                            // Previous layout was audio only, make sure video isn't sent without user consent when switching layout
+                            Log.i(
+                                "$TAG Previous layout was [Audio Only], enabling video but in receive only direction"
+                            )
+                            params.isVideoEnabled = true
+                            params.videoDirection = MediaDirection.RecvOnly
+                        }
+
+                        Log.i("$TAG Updating conference's call params")
+                        call.update(params)
+                        conferenceLayout.postValue(newLayout)
+                    } else {
+                        Log.w(
+                            "$TAG The conference is already using selected layout, aborting layout change"
                         )
-                        params.isVideoEnabled = true
-                        params.videoDirection = MediaDirection.RecvOnly
                     }
-
-                    Log.i("$TAG Updating conference's call params")
-                    call.update(params)
-                    conferenceLayout.postValue(newLayout)
                 } else {
-                    Log.w(
-                        "$TAG The conference is already using selected layout, aborting layout change"
-                    )
+                    Log.e("$TAG Failed to create call params, aborting layout change")
                 }
             } else {
-                Log.e("$TAG Failed to create call params, aborting layout change")
+                Log.e("$TAG Failed to get call from conference, aborting layout change")
             }
-        } else {
-            Log.e("$TAG Failed to get call from conference, aborting layout change")
         }
     }
 
@@ -691,36 +704,38 @@ class ConferenceViewModel
 
     @WorkerThread
     private fun addParticipant(participant: Participant) {
-        val list = arrayListOf<ConferenceParticipantModel>()
-        list.addAll(participants.value.orEmpty())
+        if (::conference.isInitialized) {
+            val list = arrayListOf<ConferenceParticipantModel>()
+            list.addAll(participants.value.orEmpty())
 
-        val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
-            participant.address
-        )
-        val newModel = ConferenceParticipantModel(
-            participant,
-            avatarModel,
-            isMeAdmin.value == true,
-            false,
-            { participant -> // Remove from conference
-                removeParticipantEvent.postValue(
-                    Event(Pair(avatarModel.name.value.orEmpty(), participant))
-                )
-            },
-            { participant, setAdmin -> // Change admin status
-                conference.setParticipantAdminStatus(participant, setAdmin)
-            }
-        )
-        list.add(newModel)
-
-        participants.postValue(sortParticipantList(list))
-        participantsLabel.postValue(
-            AppUtils.getStringWithPlural(
-                R.plurals.conference_participants_list_title,
-                list.size,
-                "${list.size}"
+            val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
+                participant.address
             )
-        )
+            val newModel = ConferenceParticipantModel(
+                participant,
+                avatarModel,
+                isMeAdmin.value == true,
+                false,
+                { participant -> // Remove from conference
+                    removeParticipantEvent.postValue(
+                        Event(Pair(avatarModel.name.value.orEmpty(), participant))
+                    )
+                },
+                { participant, setAdmin -> // Change admin status
+                    conference.setParticipantAdminStatus(participant, setAdmin)
+                }
+            )
+            list.add(newModel)
+
+            participants.postValue(sortParticipantList(list))
+            participantsLabel.postValue(
+                AppUtils.getStringWithPlural(
+                    R.plurals.conference_participants_list_title,
+                    list.size,
+                    "${list.size}"
+                )
+            )
+        }
     }
 
     @WorkerThread
