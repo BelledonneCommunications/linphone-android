@@ -64,7 +64,10 @@ class TelecomCallControlCallback(
                 } else {
                     scope.launch {
                         Log.i("$TAG Setting call active")
-                        callControl.setActive()
+                        val result = callControl.setActive()
+                        if (result is CallControlResult.Error) {
+                            Log.e("$TAG Failed to set call control active: $result")
+                        }
                     }
                 }
             } else if (state == Call.State.End) {
@@ -74,12 +77,18 @@ class TelecomCallControlCallback(
             } else if (state == Call.State.Pausing) {
                 scope.launch {
                     Log.i("$TAG Pausing call")
-                    callControl.setInactive()
+                    val result = callControl.setInactive()
+                    if (result is CallControlResult.Error) {
+                        Log.e("$TAG Failed to set call control inactive: $result")
+                    }
                 }
             } else if (state == Call.State.Resuming) {
                 scope.launch {
                     Log.i("$TAG Resuming call")
-                    callControl.setActive()
+                    val result = callControl.setActive()
+                    if (result is CallControlResult.Error) {
+                        Log.e("$TAG Failed to set call control active: $result")
+                    }
                 }
             }
         }
@@ -279,7 +288,10 @@ class TelecomCallControlCallback(
         }
         scope.launch {
             Log.i("$TAG Answering [${if (isVideo) "video" else "audio"}] call")
-            callControl.answer(type)
+            val result = callControl.answer(type)
+            if (result is CallControlResult.Error) {
+                Log.e("$TAG Failed to answer call control: $result")
+            }
         }
 
         if (isVideo && corePreferences.routeAudioToSpeakerWhenVideoIsEnabled) {
@@ -306,7 +318,10 @@ class TelecomCallControlCallback(
             }
             Log.i("$TAG Disconnecting [${if (direction == Call.Dir.Incoming)"incoming" else "outgoing"}] call with cause [${disconnectCauseToString(disconnectCause)}] because it has ended with reason [$reason]")
             try {
-                callControl.disconnect(DisconnectCause(disconnectCause))
+                val result = callControl.disconnect(DisconnectCause(disconnectCause))
+                if (result is CallControlResult.Error) {
+                    Log.e("$TAG Failed to disconnect call control: $result")
+                }
             } catch (ise: IllegalArgumentException) {
                 Log.e("$TAG Couldn't disconnect call control with cause [${disconnectCauseToString(disconnectCause)}]: $ise")
             }
@@ -321,7 +336,10 @@ class TelecomCallControlCallback(
             val disconnectCause = DisconnectCause.REJECTED
             Log.w("$TAG Disconnecting call with cause [${disconnectCauseToString(disconnectCause)}] due to error [$message] and reason [$reason]")
             try {
-                callControl.disconnect(DisconnectCause(disconnectCause))
+                val result = callControl.disconnect(DisconnectCause(disconnectCause))
+                if (result is CallControlResult.Error) {
+                    Log.e("$TAG Failed to disconnect call control: $result")
+                }
             } catch (ise: IllegalArgumentException) {
                 Log.e("$TAG Couldn't disconnect call control with cause [${disconnectCauseToString(disconnectCause)}]: $ise")
             }
