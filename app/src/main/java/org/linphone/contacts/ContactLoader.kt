@@ -107,9 +107,9 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
         }
         Log.i("$TAG Load finished, found ${cursor.count} entries in cursor")
 
-        coreContext.postOnCoreThread {
+        coreContext.postOnCoreThreadWhenAvailableForHeavyTask({
             parseFriends(cursor)
-        }
+        }, "parse friends")
     }
 
     @MainThread
@@ -265,9 +265,9 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
 
             Log.i("$TAG Contacts parsed, posting another task to handle adding them (or not)")
             // Re-post another task to allow other tasks on Core thread
-            coreContext.postOnCoreThread {
+            coreContext.postOnCoreThreadWhenAvailableForHeavyTask({
                 addFriendsIfNeeded()
-            }
+            }, "add friends to Core")
         } catch (sde: StaleDataException) {
             Log.e("$TAG State Data Exception: $sde")
         } catch (ise: IllegalStateException) {

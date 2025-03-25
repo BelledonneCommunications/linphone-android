@@ -38,6 +38,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import kotlin.system.exitProcess
 import org.linphone.BuildConfig
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.contacts.ContactsManager
 import org.linphone.core.tools.Log
@@ -650,6 +651,21 @@ class CoreContext
             }, delay)
         } else {
             Log.e("$TAG Core's thread not initialized yet!")
+        }
+    }
+
+    @AnyThread
+    fun postOnCoreThreadWhenAvailableForHeavyTask(@WorkerThread lambda: (core: Core) -> Unit, name: String) {
+        postOnCoreThread {
+            if (core.callsNb >= 1) {
+                Log.i("$TAG At least one call is active, wait until there is no more call before executing lambda [$name] (checking again in 1 sec)")
+                coreContext.postOnCoreThreadDelayed({
+                    postOnCoreThreadWhenAvailableForHeavyTask(lambda, name)
+                }, 1000)
+            } else {
+                Log.i("$TAG No active call at the moment, executing lambda [$name] right now")
+                lambda.invoke(core)
+            }
         }
     }
 
