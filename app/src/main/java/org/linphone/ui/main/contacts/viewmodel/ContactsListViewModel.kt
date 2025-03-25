@@ -38,7 +38,6 @@ import org.linphone.core.MagicSearchListenerStub
 import org.linphone.core.SearchResult
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
-import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.ui.main.viewmodel.AbstractMainViewModel
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
@@ -143,9 +142,11 @@ class ContactsListViewModel
     fun applyCurrentDefaultAccountFilter() {
         coreContext.postOnCoreThread {
             updateDomainFilter()
-        }
 
-        applyFilter(currentFilter)
+            coreContext.postOnMainThread {
+                applyFilter(currentFilter)
+            }
+        }
     }
 
     @UiThread
@@ -181,17 +182,22 @@ class ContactsListViewModel
     @WorkerThread
     private fun updateDomainFilter() {
         val defaultAccount = coreContext.core.defaultAccount
-        val defaultDomain = defaultAccount?.params?.domain == corePreferences.defaultDomain
-        isDefaultAccountLinphone.postValue(defaultDomain)
+        val defaultDomain = corePreferences.defaultDomain
+        val isAccountOnDefaultDomain = defaultAccount?.params?.domain == defaultDomain
+        isDefaultAccountLinphone.postValue(isAccountOnDefaultDomain)
 
-        Log.i("$TAG Currently selected filter is [${corePreferences.contactsFilter}]")
         domainFilter = corePreferences.contactsFilter
-        if (isEndToEndEncryptionMandatory() && (domainFilter.isEmpty() || domainFilter == "*")) {
-            domainFilter = corePreferences.defaultDomain
+        Log.i("$TAG Currently selected filter is [$domainFilter]")
+        if (!isAccountOnDefaultDomain && domainFilter == defaultDomain) {
+            domainFilter = "*"
             corePreferences.contactsFilter = domainFilter
             Log.i(
-                "$TAG Filter updated to [${corePreferences.contactsFilter}] to match mandatory IM encryption"
+                "$TAG New default account isn't on default domain, changing filter to all SIP contacts instead"
             )
+        } else if (isAccountOnDefaultDomain && domainFilter != "") {
+            domainFilter = defaultDomain
+            corePreferences.contactsFilter = domainFilter
+            Log.i("$TAG New default account is on default domain, using that as filter instead")
         }
     }
 
