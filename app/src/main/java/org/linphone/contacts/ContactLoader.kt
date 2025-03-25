@@ -29,8 +29,14 @@ import androidx.annotation.WorkerThread
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.CursorLoader
 import androidx.loader.content.Loader
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import java.lang.Exception
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.Core
 import org.linphone.core.Factory
 import org.linphone.core.Friend
 import org.linphone.core.FriendList
@@ -62,6 +68,8 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
     }
 
     private val friends = HashMap<String, Friend>()
+
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     @MainThread
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
@@ -107,26 +115,27 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
         }
         Log.i("$TAG Load finished, found ${cursor.count} entries in cursor")
 
-        coreContext.postOnCoreThreadWhenAvailableForHeavyTask({
-            parseFriends(cursor)
-        }, "parse friends")
+        coreContext.postOnCoreThread {
+            val core = coreContext.core
+            val state = core.globalState
+            if (state == GlobalState.Shutdown || state == GlobalState.Off) {
+                Log.w("$TAG Core is being stopped or already destroyed, abort")
+            } else {
+                scope.launch {
+                    parseFriends(core, cursor)
+                }
+            }
+        }
     }
 
     @MainThread
     override fun onLoaderReset(loader: Loader<Cursor>) {
         Log.i("$TAG Loader reset")
+        scope.cancel()
     }
 
     @WorkerThread
-    private fun parseFriends(cursor: Cursor) {
-        val core = coreContext.core
-
-        val state = core.globalState
-        if (state == GlobalState.Shutdown || state == GlobalState.Off) {
-            Log.w("$TAG Core is being stopped or already destroyed, abort")
-            return
-        }
-
+    private fun parseFriends(core: Core, cursor: Cursor) {
         try {
             val contactIdColumn = cursor.getColumnIndexOrThrow(ContactsContract.Data.CONTACT_ID)
             val mimetypeColumn = cursor.getColumnIndexOrThrow(ContactsContract.Data.MIMETYPE)
