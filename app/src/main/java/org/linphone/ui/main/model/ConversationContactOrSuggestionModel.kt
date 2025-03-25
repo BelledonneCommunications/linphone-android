@@ -22,6 +22,7 @@ package org.linphone.ui.main.model
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.Address
 import org.linphone.core.Friend
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
@@ -48,7 +49,11 @@ class ConversationContactOrSuggestionModel
             address.username.orEmpty()
         }
 
-    val sipUri = address.asStringUriOnly()
+    val sipUri = if (!corePreferences.hideSipAddresses) {
+        address.asStringUriOnly()
+    } else {
+        address.username
+    }
 
     val initials = AppUtils.getInitials(conversationSubject ?: name)
 

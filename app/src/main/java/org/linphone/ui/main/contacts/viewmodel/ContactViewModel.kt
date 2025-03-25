@@ -129,8 +129,8 @@ class ContactViewModel
         MutableLiveData<Event<Boolean>>()
     }
 
-    val startCallToDeviceToIncreaseTrustEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
-        MutableLiveData<Event<Pair<String, String>>>()
+    val startCallToDeviceToIncreaseTrustEvent: MutableLiveData<Event<Triple<String, String, String>>> by lazy {
+        MutableLiveData<Event<Triple<String, String, String>>>()
     }
 
     val contactRemovedEvent: MutableLiveData<Event<Boolean>> by lazy {
@@ -601,7 +601,7 @@ class ContactViewModel
                     ) {
                         if (::friend.isInitialized) {
                             startCallToDeviceToIncreaseTrustEvent.value =
-                                Event(Pair(friend.name.orEmpty(), it.address.asStringUriOnly()))
+                                Event(Triple(friend.name.orEmpty(), it.name, it.address.asStringUriOnly()))
                         }
                     }
                 )

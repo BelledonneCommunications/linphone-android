@@ -59,7 +59,7 @@
                 android:text="@{viewModel.displayedAddress, default=`sip:johndoe@sip.linphone.org`}"
                 android:textColor="@color/bc_white"
                 android:textSize="14sp"
-                android:visibility="@{viewModel.conferenceModel.isCurrentCallInConference ? View.GONE : View.VISIBLE}" />
+                android:visibility="@{viewModel.hideSipAddresses || viewModel.conferenceModel.isCurrentCallInConference ? View.GONE : View.VISIBLE}" />
 
         </LinearLayout>
 

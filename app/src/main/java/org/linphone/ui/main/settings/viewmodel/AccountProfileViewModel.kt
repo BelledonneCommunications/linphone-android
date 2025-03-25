@@ -86,6 +86,8 @@ class AccountProfileViewModel
 
     val hideAccountSettings = MutableLiveData<Boolean>()
 
+    val hideSipAddresses = MutableLiveData<Boolean>()
+
     val deviceId = MutableLiveData<String>()
 
     val showDeviceId = MutableLiveData<Boolean>()
@@ -179,6 +181,7 @@ class AccountProfileViewModel
 
         coreContext.postOnCoreThread {
             hideAccountSettings.postValue(corePreferences.hideAccountSettings)
+            hideSipAddresses.postValue(corePreferences.hideSipAddresses)
             dialPlansLabelList.add("") // To allow removing selected dial plan
 
             val dialPlans = Factory.instance().dialPlans.toList()

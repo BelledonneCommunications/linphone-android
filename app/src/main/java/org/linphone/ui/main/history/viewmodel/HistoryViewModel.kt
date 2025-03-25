@@ -63,6 +63,8 @@ class HistoryViewModel
 
     val isChatRoomAvailable = MutableLiveData<Boolean>()
 
+    val hideSipAddresses = MutableLiveData<Boolean>()
+
     val callLogFoundEvent = MutableLiveData<Event<Boolean>>()
 
     val chatRoomCreationErrorEvent: MutableLiveData<Event<Int>> by lazy {
@@ -135,6 +137,7 @@ class HistoryViewModel
             core.addListener(coreListener)
             chatDisabled.postValue(corePreferences.disableChat)
             videoCallDisabled.postValue(!core.isVideoEnabled)
+            hideSipAddresses.postValue(corePreferences.hideSipAddresses)
         }
     }
 

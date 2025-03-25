@@ -145,6 +145,8 @@ class CurrentCallViewModel
 
     val qualityIcon = MutableLiveData<Int>()
 
+    val hideSipAddresses = MutableLiveData<Boolean>()
+
     var terminatedByUser = false
 
     val isRemoteRecordingEvent: MutableLiveData<Event<Pair<Boolean, String>>> by lazy {
@@ -541,6 +543,7 @@ class CurrentCallViewModel
         videoUpdateInProgress.value = false
 
         coreContext.postOnCoreThread { core ->
+            hideSipAddresses.postValue(corePreferences.hideSipAddresses)
             coreContext.contactsManager.addListener(contactsListener)
 
             core.addListener(coreListener)

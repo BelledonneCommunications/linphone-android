@@ -221,8 +221,8 @@ class ContactFragment : SlidingPaneChildFragment() {
         }
 
         viewModel.startCallToDeviceToIncreaseTrustEvent.observe(viewLifecycleOwner) {
-            it.consume { pair ->
-                callDirectlyOrShowConfirmTrustCallDialog(pair.first, pair.second)
+            it.consume { triple ->
+                callDirectlyOrShowConfirmTrustCallDialog(triple.first, triple.second, triple.third)
             }
         }
 
@@ -303,18 +303,18 @@ class ContactFragment : SlidingPaneChildFragment() {
     }
 
     private fun showTrustProcessDialog() {
-        val initials = viewModel.contact.value?.initials?.value ?: "JD"
+        val initials = viewModel.contact.value?.initials?.value.orEmpty()
         val picture = viewModel.contact.value?.picturePath?.value.orEmpty()
         val model = ContactTrustDialogModel(initials, picture)
         val dialog = DialogUtils.getContactTrustProcessExplanationDialog(requireActivity(), model)
         dialog.show()
     }
 
-    private fun callDirectlyOrShowConfirmTrustCallDialog(contactName: String, deviceSipUri: String) {
+    private fun callDirectlyOrShowConfirmTrustCallDialog(contactName: String, deviceName: String, deviceSipUri: String) {
         coreContext.postOnCoreThread {
             if (corePreferences.showDialogWhenCallingDeviceUuidDirectly) {
                 coreContext.postOnMainThread {
-                    showConfirmTrustCallDialog(contactName, deviceSipUri)
+                    showConfirmTrustCallDialog(contactName, deviceName, deviceSipUri)
                 }
             } else {
                 val address = Factory.instance().createAddress(deviceSipUri)
@@ -325,11 +325,11 @@ class ContactFragment : SlidingPaneChildFragment() {
         }
     }
 
-    private fun showConfirmTrustCallDialog(contactName: String, deviceSipUri: String) {
+    private fun showConfirmTrustCallDialog(contactName: String, deviceName: String, deviceSipUri: String) {
         val label = AppUtils.getFormattedString(
             R.string.contact_dialog_increase_trust_level_message,
             contactName,
-            deviceSipUri
+            deviceName
         )
         val model = ConfirmationDialogModel(label)
         val dialog = DialogUtils.getContactTrustCallConfirmationDialog(requireActivity(), model)

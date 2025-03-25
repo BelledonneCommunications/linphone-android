@@ -59,7 +59,7 @@ class ParticipantModel
 
     @UiThread
     fun onClicked() {
-        if (onClicked == null && !corePreferences.onlyDisplaySipUriUsername) {
+        if (onClicked == null && !corePreferences.onlyDisplaySipUriUsername && !corePreferences.hideSipAddresses) {
             showSipUri.postValue(showSipUri.value == false)
         } else {
             onClicked?.invoke(this)

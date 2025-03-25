@@ -47,7 +47,7 @@ class MessageBottomSheetParticipantModel
 
     @UiThread
     fun clicked() {
-        if (!isOurOwnReaction && !corePreferences.onlyDisplaySipUriUsername) {
+        if (!isOurOwnReaction && !corePreferences.onlyDisplaySipUriUsername && !corePreferences.hideSipAddresses) {
             showSipUri.postValue(showSipUri.value == false)
         } else {
             onClick?.invoke()

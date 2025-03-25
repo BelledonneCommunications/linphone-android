@@ -56,6 +56,8 @@ class ConversationInfoViewModel
 
     val isGroup = MutableLiveData<Boolean>()
 
+    val hideSipAddresses = MutableLiveData<Boolean>()
+
     val isEndToEndEncrypted = MutableLiveData<Boolean>()
 
     val subject = MutableLiveData<String>()
@@ -192,6 +194,7 @@ class ConversationInfoViewModel
         showPeerSipUri.value = false
 
         coreContext.postOnCoreThread {
+            hideSipAddresses.postValue(corePreferences.hideSipAddresses)
             coreContext.contactsManager.addListener(contactsListener)
         }
     }

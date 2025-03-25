@@ -102,7 +102,7 @@ class ContactsListViewModel
     init {
         fetchInProgress.value = true
         showFavourites.value = corePreferences.showFavoriteContacts
-        showFilter.value = !corePreferences.hidePhoneNumbers
+        showFilter.value = !corePreferences.hidePhoneNumbers && !corePreferences.hideSipAddresses
 
         coreContext.postOnCoreThread { core ->
             updateDomainFilter()

@@ -80,7 +80,8 @@
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.displayedAddress, default=`sip:johndoe@sip.linphone.org`}"
                 android:textColor="@color/bc_white"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:visibility="@{viewModel.hideSipAddresses ? View.GONE : View.VISIBLE}" />
 
         </LinearLayout>
 

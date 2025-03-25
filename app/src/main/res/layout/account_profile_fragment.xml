@@ -213,6 +213,7 @@
                         android:paddingTop="8dp"
                         android:paddingBottom="8dp"
                         android:text="@string/sip_address"
+                        android:visibility="@{!viewModel.hideSipAddresses || viewModel.showDeviceId ? View.VISIBLE : View.GONE, default=gone}"
                         app:layout_constraintStart_toStartOf="@id/details_background"
                         app:layout_constraintTop_toTopOf="@id/details_background"/>
 
@@ -233,6 +234,7 @@
                         android:drawableEnd="@drawable/copy"
                         android:drawablePadding="5dp"
                         app:drawableTint="?attr/color_main2_600"
+                        android:visibility="@{!viewModel.hideSipAddresses || viewModel.showDeviceId ? View.VISIBLE : View.GONE, default=gone}"
                         app:layout_constraintStart_toEndOf="@id/sip_address_label"
                         app:layout_constraintEnd_toEndOf="@id/details_background"
                         app:layout_constraintTop_toTopOf="@id/sip_address_label"

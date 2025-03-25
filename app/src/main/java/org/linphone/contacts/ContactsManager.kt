@@ -795,16 +795,18 @@ fun Friend.getListOfSipAddresses(): ArrayList<Address> {
 fun Friend.getListOfSipAddressesAndPhoneNumbers(listener: ContactNumberOrAddressClickListener): ArrayList<ContactNumberOrAddressModel> {
     val addressesAndNumbers = arrayListOf<ContactNumberOrAddressModel>()
 
-    for (address in getListOfSipAddresses()) {
-        val data = ContactNumberOrAddressModel(
-            this,
-            address,
-            address.asStringUriOnly(),
-            true, // SIP addresses are always enabled
-            listener,
-            true
-        )
-        addressesAndNumbers.add(data)
+    if (!corePreferences.hideSipAddresses) {
+        for (address in getListOfSipAddresses()) {
+            val data = ContactNumberOrAddressModel(
+                this,
+                address,
+                address.asStringUriOnly(),
+                true, // SIP addresses are always enabled
+                listener,
+                true
+            )
+            addressesAndNumbers.add(data)
+        }
     }
     if (corePreferences.hidePhoneNumbers) {
         return addressesAndNumbers
@@ -825,7 +827,7 @@ fun Friend.getListOfSipAddressesAndPhoneNumbers(listener: ContactNumberOrAddress
                 if (address != null) {
                     address.clean() // To remove ;user=phone
                     presenceAddress = address
-                    if (addressesAndNumbers.find { it.address?.weakEqual(address) == true } == null) {
+                    if (!corePreferences.hideSipAddresses && addressesAndNumbers.find { it.address?.weakEqual(address) == true } == null) {
                         val data = ContactNumberOrAddressModel(
                             this,
                             address,

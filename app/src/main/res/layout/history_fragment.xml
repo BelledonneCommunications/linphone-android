@@ -129,7 +129,7 @@
                         android:textSize="14sp"
                         android:maxLines="1"
                         android:ellipsize="end"
-                        android:visibility="@{viewModel.isConferenceCallLog ? View.GONE : View.VISIBLE}"
+                        android:visibility="@{viewModel.isConferenceCallLog || viewModel.hideSipAddresses ? View.GONE : View.VISIBLE}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/name" />
