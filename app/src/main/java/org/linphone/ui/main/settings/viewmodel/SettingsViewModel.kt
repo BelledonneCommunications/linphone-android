@@ -211,6 +211,7 @@ class SettingsViewModel
     val mediaEncryptionMandatory = MutableLiveData<Boolean>()
     val createEndToEndEncryptedConferences = MutableLiveData<Boolean>()
     val acceptEarlyMedia = MutableLiveData<Boolean>()
+    val ringDuringEarlyMedia = MutableLiveData<Boolean>()
     val allowOutgoingEarlyMedia = MutableLiveData<Boolean>()
     val autoAnswerIncomingCalls = MutableLiveData<Boolean>()
     val autoAnswerIncomingCallsDelay = MutableLiveData<Int>()
@@ -338,6 +339,7 @@ class SettingsViewModel
 
             createEndToEndEncryptedConferences.postValue(corePreferences.createEndToEndEncryptedMeetingsAndGroupCalls)
             acceptEarlyMedia.postValue(corePreferences.acceptEarlyMedia)
+            ringDuringEarlyMedia.postValue(core.ringDuringIncomingEarlyMedia)
             allowOutgoingEarlyMedia.postValue(corePreferences.allowOutgoingEarlyMedia)
             autoAnswerIncomingCalls.postValue(corePreferences.autoAnswerEnabled)
             autoAnswerIncomingCallsDelay.postValue(corePreferences.autoAnswerDelay)
@@ -823,6 +825,16 @@ class SettingsViewModel
         coreContext.postOnCoreThread { core ->
             corePreferences.acceptEarlyMedia = newValue
             acceptEarlyMedia.postValue(newValue)
+        }
+    }
+
+    @UiThread
+    fun toggleRingDuringEarlyMedia() {
+        val newValue = ringDuringEarlyMedia.value == false
+
+        coreContext.postOnCoreThread { core ->
+            core.ringDuringIncomingEarlyMedia = newValue
+            ringDuringEarlyMedia.postValue(newValue)
         }
     }
 
