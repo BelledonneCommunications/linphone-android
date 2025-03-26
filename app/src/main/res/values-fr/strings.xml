@@ -68,6 +68,7 @@
         <item quantity="one">%s fichier en cours de réception</item>
         <item quantity="other">%s fichiers en cours de réception</item>
     </plurals>
+    <string name="notification_keep_app_alive_message">Cliquez pour ouvrir</string>
 
     <!-- First screens user see when app is installed and started -->
     <string name="welcome_page_title">Bienvenue</string>
