@@ -312,6 +312,7 @@
     <string name="settings_advanced_media_encryption_mandatory_title">Media encryption mandatory</string>
     <string name="settings_advanced_create_e2e_encrypted_conferences_title">Create end-to-end encrypted meetings &amp; group calls</string>
     <string name="settings_advanced_accept_early_media_title">Accept early media</string>
+    <string name="settings_advanced_ring_during_early_media_title">Ring during incoming early media call</string>
     <string name="settings_advanced_allow_outgoing_early_media_title">Allow outgoing early media</string>
     <string name="settings_advanced_enable_auto_answer_incoming_calls_title">Auto answer incoming calls</string>
     <string name="settings_advanced_enable_auto_answer_incoming_calls_after_delay_title">Delay before auto answering call</string>
