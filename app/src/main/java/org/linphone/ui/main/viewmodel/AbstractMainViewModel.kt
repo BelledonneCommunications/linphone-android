@@ -148,6 +148,10 @@ open class AbstractMainViewModel
 
         @WorkerThread
         override fun onDefaultAccountChanged(core: Core, defaultAccount: Account?) {
+            updateAvailableMenus()
+            computeUnreadMessagesCount()
+            updateMissedCallsCount()
+
             account.value?.destroy()
 
             if (defaultAccount == null) {
@@ -162,15 +166,14 @@ open class AbstractMainViewModel
                 account.postValue(AccountModel(defaultAccount))
             }
 
-            computeUnreadMessagesCount()
-            updateMissedCallsCount()
-            updateAvailableMenus()
-
             defaultAccountChangedEvent.postValue(Event(true))
         }
     }
 
     init {
+        // Pre-compute this value to prevent the menu being briefly visible
+        hideMeetings.value = !coreContext.defaultAccountHasVideoConferenceFactoryUri
+
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
             configure()
@@ -301,8 +304,7 @@ open class AbstractMainViewModel
         val conferencingAvailable = LinphoneUtils.isRemoteConferencingAvailable(
             coreContext.core
         )
-        val hideGroupCall =
-            coreContext.core.accountList.isEmpty() || corePreferences.disableMeetings || !conferencingAvailable
+        val hideGroupCall = corePreferences.disableMeetings || !conferencingAvailable
         hideMeetings.postValue(hideGroupCall)
     }
 

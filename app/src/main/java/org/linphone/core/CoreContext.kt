@@ -82,6 +82,8 @@ class CoreContext
 
     private val mainThread = Handler(Looper.getMainLooper())
 
+    var defaultAccountHasVideoConferenceFactoryUri: Boolean = false
+
     var bearerAuthInfoPendingPasswordUpdate: AuthInfo? = null
     var digestAuthInfoPendingPasswordUpdate: AuthInfo? = null
 
@@ -175,6 +177,11 @@ class CoreContext
     private var previousCallState = Call.State.Idle
 
     private val coreListener = object : CoreListenerStub() {
+        @WorkerThread
+        override fun onDefaultAccountChanged(core: Core, account: Account?) {
+            defaultAccountHasVideoConferenceFactoryUri = account?.params?.audioVideoConferenceFactoryAddress != null
+        }
+
         @WorkerThread
         override fun onMessagesReceived(
             core: Core,
@@ -511,6 +518,8 @@ class CoreContext
         core = Factory.instance().createCoreWithConfig(corePreferences.config, context)
         core.isAutoIterateEnabled = true
         core.addListener(coreListener)
+
+        defaultAccountHasVideoConferenceFactoryUri = core.defaultAccount?.params?.audioVideoConferenceFactoryAddress != null
 
         coreThread.postDelayed({ startCore() }, 50)
 
