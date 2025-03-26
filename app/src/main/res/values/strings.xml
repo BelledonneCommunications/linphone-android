@@ -108,6 +108,7 @@
         <item quantity="other">%s files being downloaded</item>
     </plurals>
     <string name="notification_file_transfer_upload_download_message" translatable="false">%s, %s</string>
+    <string name="notification_keep_app_alive_message">Click to open</string>
 
     <!-- First screens user see when app is installed and started -->
     <string name="welcome_page_title">Welcome</string>
