@@ -265,9 +265,20 @@ class AccountProfileViewModel
     fun deleteAccount() {
         coreContext.postOnCoreThread { core ->
             if (::account.isInitialized) {
+                Log.i("$TAG Removing call logs, conversations & meetings related to account being removed")
+                account.clearCallLogs()
+
+                for (conversation in account.chatRooms) {
+                    core.deleteChatRoom(conversation)
+                }
+                for (meeting in account.conferenceInformationList) {
+                    core.deleteConferenceInformation(meeting)
+                }
+
+                val identity = account.params.identityAddress?.asStringUriOnly()
                 val authInfo = account.findAuthInfo()
                 if (authInfo != null) {
-                    Log.i("$TAG Found auth info for account, removing it")
+                    Log.i("$TAG Found auth info for account [$identity], removing it")
                     if (authInfo.password.isNullOrEmpty() && authInfo.ha1.isNullOrEmpty() && authInfo.accessToken != null) {
                         Log.i("$TAG Auth info was using bearer token instead of password")
                         val ssoCache = File(corePreferences.ssoCacheFile)
@@ -280,11 +291,11 @@ class AccountProfileViewModel
                     }
                     core.removeAuthInfo(authInfo)
                 } else {
-                    Log.w("$TAG Failed to find matching auth info for account")
+                    Log.w("$TAG Failed to find matching auth info for account [$identity]")
                 }
 
                 core.removeAccount(account)
-                Log.i("$TAG Account has been removed")
+                Log.i("$TAG Account [$identity] has been removed")
                 accountRemovedEvent.postValue(Event(true))
             }
         }
