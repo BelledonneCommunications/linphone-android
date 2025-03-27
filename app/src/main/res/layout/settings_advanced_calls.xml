@@ -234,6 +234,7 @@
             android:text="@string/settings_advanced_ring_during_early_media_title"
             android:maxLines="2"
             android:ellipsize="end"
+            android:enabled="@{viewModel.acceptEarlyMedia}"
             app:layout_constraintTop_toTopOf="@id/ring_during_early_media_switch"
             app:layout_constraintBottom_toBottomOf="@id/ring_during_early_media_switch"
             app:layout_constraintStart_toStartOf="parent"
@@ -247,6 +248,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="16dp"
+            android:enabled="@{viewModel.acceptEarlyMedia}"
             android:checked="@{viewModel.ringDuringEarlyMedia}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/accept_early_media_switch" />
