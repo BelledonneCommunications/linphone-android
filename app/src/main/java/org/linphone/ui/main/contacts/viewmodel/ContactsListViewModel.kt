@@ -295,7 +295,13 @@ class ContactsListViewModel
         for (result in results) {
             val friend = result.friend
             if (friend != null) {
-                if (coreContext.contactsManager.isContactTemporary(friend, allowNullFriendList = true)) continue
+                val isFromRemoteDirectory = result.hasSourceFlag(MagicSearch.Source.LdapServers) || result.hasSourceFlag(MagicSearch.Source.RemoteCardDAV)
+                // Only display friends from temporary friend lists if their source flag show they
+                // were fetched from a remote contact directory (and not the local friend list)
+                if (!isFromRemoteDirectory && coreContext.contactsManager.isContactTemporary(friend, allowNullFriendList = true)) {
+                    Log.i("$TAG Do not show friend [${friend.name}] which is in a temporary friend list")
+                    continue
+                }
 
                 if (friend.refKey.orEmpty().isEmpty()) {
                     if (friend.vcard != null) {

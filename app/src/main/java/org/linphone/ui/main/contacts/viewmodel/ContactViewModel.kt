@@ -309,7 +309,9 @@ class ContactViewModel
     @WorkerThread
     fun refreshContactInfo() {
         isFavourite.postValue(friend.starred)
-        isStored.postValue(friend.inList())
+        // Do not show edit contact button for contacts not stored in a FriendList or
+        // if they are in a temporary one (for example if they are from a remote directory such as LDAP or CardDAV)
+        isStored.postValue(!coreContext.contactsManager.isContactTemporary(friend))
 
         contact.value?.destroy()
         contact.postValue(ContactAvatarModel(friend))
