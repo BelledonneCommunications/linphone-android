@@ -23,7 +23,7 @@
             android:src="@drawable/animated_caret_to_handle"
             android:enabled="false"
             android:contentDescription="@string/content_description_toggle_bottom_sheet"
-            app:tint="@color/in_call_button_tint_color"
+            app:tint="@color/gray_400"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
