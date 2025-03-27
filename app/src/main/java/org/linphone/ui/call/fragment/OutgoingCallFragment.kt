@@ -26,6 +26,7 @@ import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.core.view.doOnLayout
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallOutgoingFragmentBinding
@@ -60,6 +61,7 @@ class OutgoingCallFragment : GenericCallFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = callViewModel
+        binding.numpadModel = callViewModel.numpadModel
 
         callViewModel.isOutgoingEarlyMedia.observe(viewLifecycleOwner) { earlyMedia ->
             if (earlyMedia) {
@@ -67,6 +69,16 @@ class OutgoingCallFragment : GenericCallFragment() {
                     Log.i("$TAG Outgoing early-media call with video, setting preview surface")
                     core.nativePreviewWindowId = binding.localPreviewVideoSurface
                 }
+            }
+        }
+
+        val numpadBottomSheetBehavior = BottomSheetBehavior.from(binding.callNumpad.root)
+        numpadBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        numpadBottomSheetBehavior.skipCollapsed = true
+
+        callViewModel.showNumpadBottomSheetEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                numpadBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
         }
     }
