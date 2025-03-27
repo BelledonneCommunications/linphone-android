@@ -59,10 +59,9 @@
                     android:id="@+id/meetings_list"
                     android:layout_width="match_parent"
                     android:background="@drawable/shape_squircle_white_r20_top_background"
-                    android:layout_height="0dp"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/top_bar_height"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar" />
+                    android:layout_marginBottom="@dimen/portrait_nav_bar_height" />
 
                 <com.google.android.material.progressindicator.CircularProgressIndicator
                     android:id="@+id/fetch_in_progress"

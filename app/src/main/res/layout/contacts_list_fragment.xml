@@ -61,14 +61,13 @@
                 <LinearLayout
                     android:id="@+id/lists"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/top_bar_height"
+                    android:layout_marginBottom="@dimen/portrait_nav_bar_height"
                     android:orientation="vertical"
                     android:background="@drawable/shape_squircle_white_r20_top_background"
-                    app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintStart_toStartOf="parent">
 
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/section_header_style"
