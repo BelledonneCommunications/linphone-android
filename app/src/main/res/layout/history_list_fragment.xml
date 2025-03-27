@@ -68,10 +68,9 @@
                     android:id="@+id/history_list"
                     android:background="@drawable/shape_squircle_white_r20_top_background"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/top_bar_height"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar" />
+                    android:layout_marginBottom="@dimen/portrait_nav_bar_height" />
 
                 <ImageView
                     android:id="@+id/no_calls_image"
