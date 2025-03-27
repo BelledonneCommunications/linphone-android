@@ -110,7 +110,7 @@
             android:text="@{viewModel.displayedName, default=`John Doe`}"
             android:textColor="@color/bc_white"
             android:textSize="22sp"
-            android:visibility="@{viewModel.isIncomingEarlyMedia ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{viewModel.isIncomingEarlyMedia &amp;&amp; viewModel.isVideoEnabled ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintBottom_toTopOf="@id/early_media_address"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -124,7 +124,7 @@
             android:text="@{viewModel.displayedAddress, default=`sip:johndoe@sip.linphone.org`}"
             android:textColor="@color/bc_white"
             android:textSize="14sp"
-            android:visibility="@{viewModel.isIncomingEarlyMedia ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{viewModel.isIncomingEarlyMedia &amp;&amp; viewModel.isVideoEnabled ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintBottom_toTopOf="@id/bottom_bar"
             app:layout_constraintStart_toStartOf="parent" />
 

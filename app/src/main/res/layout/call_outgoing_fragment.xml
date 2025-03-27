@@ -8,127 +8,157 @@
         <variable
             name="viewModel"
             type="org.linphone.ui.call.viewmodel.CurrentCallViewModel" />
+        <variable
+            name="numpadModel"
+            type="org.linphone.ui.main.history.model.NumpadModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/gray_900">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/call_direction_icon"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:layout_marginStart="10dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/outgoing_call"
-            android:contentDescription="@null"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/call_direction_label"
-            app:layout_constraintBottom_toBottomOf="@id/call_direction_label"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/gray_900">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/call_header_style"
-            android:id="@+id/call_direction_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:text="@string/call_outgoing"
-            app:layout_constraintStart_toEndOf="@id/call_direction_icon"
-            app:layout_constraintTop_toTopOf="parent"/>
+            <ImageView
+                android:id="@+id/call_direction_icon"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginStart="10dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/outgoing_call"
+                android:contentDescription="@null"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/call_direction_label"
+                app:layout_constraintBottom_toBottomOf="@id/call_direction_label"/>
 
-        <ImageView
-            android:onClick="@{() -> viewModel.switchCamera()}"
-            android:id="@+id/switch_camera"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/top_bar_height"
-            android:padding="10dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            android:src="@drawable/camera_rotate"
-            android:contentDescription="@string/content_description_change_camera"
-            android:visibility="gone"
-            app:tint="@color/bc_white"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/call_header_style"
+                android:id="@+id/call_direction_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/call_outgoing"
+                app:layout_constraintStart_toEndOf="@id/call_direction_icon"
+                app:layout_constraintTop_toTopOf="parent"/>
 
-        <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:id="@+id/in_progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:indeterminate="true"
-            app:indicatorColor="@color/bc_white"
-            app:indicatorSize="28dp"
-            app:layout_constraintStart_toStartOf="@id/avatar"
-            app:layout_constraintEnd_toEndOf="@id/avatar"
-            app:layout_constraintTop_toBottomOf="@id/call_direction_label"
-            app:layout_constraintBottom_toTopOf="@id/avatar" />
+            <ImageView
+                android:onClick="@{() -> viewModel.switchCamera()}"
+                android:id="@+id/switch_camera"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/top_bar_height"
+                android:padding="10dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:src="@drawable/camera_rotate"
+                android:contentDescription="@string/content_description_change_camera"
+                android:visibility="gone"
+                app:tint="@color/bc_white"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/in_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:indeterminate="true"
+                app:indicatorColor="@color/bc_white"
+                app:indicatorSize="28dp"
+                app:layout_constraintStart_toStartOf="@id/avatar"
+                app:layout_constraintEnd_toEndOf="@id/avatar"
+                app:layout_constraintTop_toBottomOf="@id/call_direction_label"
+                app:layout_constraintBottom_toTopOf="@id/avatar" />
+
+            <include
+                android:id="@+id/avatar"
+                android:layout_width="@dimen/avatar_in_call_size"
+                android:layout_height="@dimen/avatar_in_call_size"
+                layout="@layout/contact_avatar_huge"
+                bind:model="@{viewModel.contact}"
+                app:layout_constraintVertical_chainStyle="packed"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/call_direction_label"
+                app:layout_constraintBottom_toTopOf="@id/name" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_300"
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@{viewModel.displayedName, default=`John Doe`}"
+                android:textColor="@color/bc_white"
+                android:textSize="22sp"
+                app:layout_constraintTop_toBottomOf="@id/avatar"
+                app:layout_constraintBottom_toTopOf="@id/address"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:id="@+id/address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.displayedAddress, default=`sip:johndoe@sip.linphone.org`}"
+                android:textColor="@color/bc_white"
+                android:textSize="14sp"
+                app:layout_constraintTop_toBottomOf="@id/name"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <org.linphone.ui.call.view.RoundCornersTextureView
+                android:id="@+id/local_preview_video_surface"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                app:alignTopRight="true"
+                app:displayMode="black_bars"
+                roundCornersRadius="@dimen/call_round_corners_texture_view_radius"
+                app:layout_constraintBottom_toTopOf="@id/bottom_bar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_max="@dimen/call_video_preview_max_size"
+                app:layout_constraintWidth_max="@dimen/call_video_preview_max_size" />
+
+            <include
+                bind:viewModel="@{viewModel}"
+                android:id="@+id/bottom_bar"
+                layout="@layout/call_outgoing_actions"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/call_main_actions_menu_height"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/new_contact"
+                android:onClick="@{() -> viewModel.showNumpad()}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
+                android:layout_margin="16dp"
+                android:src="@drawable/numpad"
+                android:contentDescription="@string/content_description_show_numpad"
+                android:visibility="@{viewModel.isOutgoingEarlyMedia ? View.VISIBLE : View.GONE, default=gone}"
+                app:tint="@color/in_call_button_tint_color"
+                app:backgroundTint="@color/in_call_button_background_tint_color"
+                app:shapeAppearanceOverlay="@style/rounded"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/bottom_bar" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <include
-            android:id="@+id/avatar"
-            android:layout_width="@dimen/avatar_in_call_size"
-            android:layout_height="@dimen/avatar_in_call_size"
-            layout="@layout/contact_avatar_huge"
-            bind:model="@{viewModel.contact}"
-            app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/call_direction_label"
-            app:layout_constraintBottom_toTopOf="@id/name" />
+            android:id="@+id/call_numpad"
+            layout="@layout/call_numpad_bottom_sheet"
+            bind:model="@{numpadModel}"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_300"
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="@{viewModel.displayedName, default=`John Doe`}"
-            android:textColor="@color/bc_white"
-            android:textSize="22sp"
-            app:layout_constraintTop_toBottomOf="@id/avatar"
-            app:layout_constraintBottom_toTopOf="@id/address"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style"
-            android:id="@+id/address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{viewModel.displayedAddress, default=`sip:johndoe@sip.linphone.org`}"
-            android:textColor="@color/bc_white"
-            android:textSize="14sp"
-            app:layout_constraintTop_toBottomOf="@id/name"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <org.linphone.ui.call.view.RoundCornersTextureView
-            android:id="@+id/local_preview_video_surface"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            app:alignTopRight="true"
-            app:displayMode="black_bars"
-            roundCornersRadius="@dimen/call_round_corners_texture_view_radius"
-            app:layout_constraintBottom_toTopOf="@id/bottom_bar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_max="@dimen/call_video_preview_max_size"
-            app:layout_constraintWidth_max="@dimen/call_video_preview_max_size" />
-
-        <include
-            bind:viewModel="@{viewModel}"
-            android:id="@+id/bottom_bar"
-            layout="@layout/call_outgoing_actions"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/call_main_actions_menu_height"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>
