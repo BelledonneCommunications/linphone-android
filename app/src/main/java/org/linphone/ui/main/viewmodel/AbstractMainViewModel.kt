@@ -269,7 +269,13 @@ open class AbstractMainViewModel
     @WorkerThread
     fun updateMissedCallsCount() {
         val account = LinphoneUtils.getDefaultAccount()
-        val count = account?.missedCallsCount ?: coreContext.core.missedCallsCount
+        // Fetch all call logs if only one account to workaround no history issue
+        // TODO FIXME: remove workaround later
+        val count = if (coreContext.core.accountList.size > 1) {
+            account?.missedCallsCount ?: coreContext.core.missedCallsCount
+        } else {
+            coreContext.core.missedCallsCount
+        }
         val moreThanOne = count > 1
         Log.i(
             "$TAG There ${if (moreThanOne) "are" else "is"} [$count] missed ${if (moreThanOne) "calls" else "call"}"
@@ -292,7 +298,13 @@ open class AbstractMainViewModel
     fun resetMissedCallsCount() {
         coreContext.postOnCoreThread { core ->
             val account = LinphoneUtils.getDefaultAccount()
-            account?.resetMissedCallsCount() ?: core.resetMissedCallsCount()
+            // Fetch all call logs if only one account to workaround no history issue
+            // TODO FIXME: remove workaround later
+            if (coreContext.core.accountList.size > 1) {
+                account?.resetMissedCallsCount() ?: core.resetMissedCallsCount()
+            } else {
+                core.resetMissedCallsCount()
+            }
             updateMissedCallsCount()
         }
     }
