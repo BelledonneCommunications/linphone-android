@@ -10,6 +10,33 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [6.0.2] - 2025-03-28
+
+### Added
+- Show on top bar if FULL_SCREEN_INTENT permission isn't granted, clicking on it sends to the matching settings so user can fix it easily, without it incoming call screen won't be displayed if screen is off
+- Ring during incoming early media call setting added back
+- Added a floating action button to open dialpad during outgoing early media call
+
+### Changed
+- Delete all related call history / conversations / meetings when removing an account
+- Delay / use a separated thread for heavy contacts related tasks to ensure call is correctly handled and foreground service is started quickly enough
+- Newly created account in app will be kept disabled until SMS code validation is done
+- Keep app alive foreground service notification no shows a content message to ease clicking on it to open the app & workaround a crash on some devices
+- Automatically show dialpad setting will now also work on new / transfer call while in call as well
+
+### Fixed
+- Improved POST_NOTIFICATIONS permission check on Android 13 and newer, should prevent crashes
+- Fixed contact lookup if phone number starts by "00" instead of "+"
+- Fixed "delete all call history" sometimes not removing all call logs
+- Fixed LDAP / remote CardDAV contacts sometimes not displayed in contacts list when doing a search
+- Fixed issue where contact filter could be set to only show sip.linphone.org contacts even when third party account was being selected
+- Fixed sometimes wrong displayed SIP URI in detailed call history
+- Fixed invisible meeting icon in status bar
+- Fixed missed call count indicator behavior with some third party providers
+- Prevent today indicator & meeting icon in bottom nav bar from blinking / briefly appearing
+- Fixed bottom nav bar sometimes being hidden
+- Fixed missing share logs server URL when migrating from 5.2 if that value was removed back then
+- Other crashes fixed
 
 ## [6.0.1] - 2025-03-21
 
