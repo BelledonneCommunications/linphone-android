@@ -39,7 +39,7 @@ If you are using a SDK that isn't the latest release, please update first as it'
 
 5. **SDK logs** (mandatory)
 
-Enable debug logs in advanced section of the settings, restart the app, reproduce the issue and then go back to advanced settings, click on "Send logs" and copy/paste the link here.
+Click on "Share logs" in Help -> Troubleshooting view and copy/paste the link here.
 
 It's also explained [in the README](https://github.com/BelledonneCommunications/linphone-android#behavior-issue).
 
