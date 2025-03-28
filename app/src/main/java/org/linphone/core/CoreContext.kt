@@ -573,6 +573,11 @@ class CoreContext
                 configurationMigration5To6()
             }
 
+            if (core.logCollectionUploadServerUrl.isNullOrEmpty()) {
+                Log.w("$TAG Logs sharing server URL not set, fixing that")
+                core.logCollectionUploadServerUrl = "https://files.linphone.org/http-file-transfer-server/hft.php"
+            }
+
             corePreferences.linphoneConfigurationVersion = currentVersion
             Log.w(
                 "$TAG Core configuration updated to version [${corePreferences.linphoneConfigurationVersion}]"
