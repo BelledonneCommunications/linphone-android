@@ -67,8 +67,6 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
         private const val MIN_INTERVAL_TO_WAIT_BEFORE_REFRESH = 300000L // 5 minutes
     }
 
-    private val friends = HashMap<String, Friend>()
-
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     @MainThread
@@ -173,6 +171,8 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
             val familyNameColumn = cursor.getColumnIndexOrThrow(
                 ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME
             )
+
+            val friends = HashMap<String, Friend>()
             while (!cursor.isClosed && cursor.moveToNext()) {
                 try {
                     val id: String = cursor.getString(contactIdColumn)
@@ -275,7 +275,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
             Log.i("$TAG Contacts parsed, posting another task to handle adding them (or not)")
             // Re-post another task to allow other tasks on Core thread
             coreContext.postOnCoreThreadWhenAvailableForHeavyTask({
-                addFriendsIfNeeded()
+                addFriendsIfNeeded(friends)
             }, "add friends to Core")
         } catch (sde: StaleDataException) {
             Log.e("$TAG State Data Exception: $sde")
@@ -287,7 +287,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
     }
 
     @WorkerThread
-    private fun addFriendsIfNeeded() {
+    private fun addFriendsIfNeeded(friends: HashMap<String, Friend>) {
         val core = coreContext.core
 
         if (core.globalState == GlobalState.Shutdown || core.globalState == GlobalState.Off) {
