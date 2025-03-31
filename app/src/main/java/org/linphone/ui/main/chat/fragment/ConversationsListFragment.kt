@@ -346,6 +346,11 @@ class ConversationsListFragment : AbstractMainFragment() {
         } catch (e: IllegalStateException) {
             Log.e("$TAG Failed to unregister data observer to adapter: $e")
         }
+
+        if (shouldRefreshDataInOnResume()) {
+            Log.i("$TAG Keep app alive setting is enabled, refreshing view just in case")
+            listViewModel.filter()
+        }
     }
 
     override fun onPause() {
