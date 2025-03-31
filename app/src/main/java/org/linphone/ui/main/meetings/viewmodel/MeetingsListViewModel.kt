@@ -181,13 +181,17 @@ class MeetingsListViewModel
             fetchInProgress.postValue(true)
         }
 
+        val sortedSource = source.toList().sortedBy {
+            it.dateTime
+        }
+
         val list = arrayListOf<MeetingListItemModel>()
         var previousModel: MeetingModel? = null
         var previousModelWeekLabel = ""
         var meetingForTodayFound = false
-        Log.d("$TAG There are [${source.size}] conference info in DB")
+        Log.d("$TAG There are [${sortedSource.size}] conference info in DB")
 
-        for (info: ConferenceInfo in source) {
+        for (info: ConferenceInfo in sortedSource) {
             if (info.duration == 0) {
                 Log.d(
                     "$TAG Skipping conference info [${info.subject}] with uri [${info.uri?.asStringUriOnly()}] because it has no duration"
