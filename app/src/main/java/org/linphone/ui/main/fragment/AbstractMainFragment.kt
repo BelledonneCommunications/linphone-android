@@ -35,6 +35,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import androidx.slidingpanelayout.widget.SlidingPaneLayout.PanelSlideListener
 import com.google.android.material.textfield.TextInputLayout
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.BottomNavBarBinding
@@ -55,6 +56,8 @@ import org.linphone.utils.showKeyboard
 abstract class AbstractMainFragment : GenericMainFragment() {
     companion object {
         private const val TAG = "[Abstract Main Fragment]"
+
+        private const val TIME_MS_AFTER_WHICH_REFRESH_DATA_ON_RESUME = 3600000 // 1 hour
     }
 
     protected val outlineProvider = object : ViewOutlineProvider() {
@@ -64,6 +67,8 @@ abstract class AbstractMainFragment : GenericMainFragment() {
             outline?.setRoundRect(0, 0, view.width, (view.height + radius).toInt(), radius)
         }
     }
+
+    protected var lastOnPauseTimestamp: Long = -1L
 
     private var currentFragmentId: Int = 0
 
@@ -96,7 +101,19 @@ abstract class AbstractMainFragment : GenericMainFragment() {
             backPressedCallback
         )
 
+        lastOnPauseTimestamp = -1
         super.onViewCreated(view, savedInstanceState)
+    }
+
+    override fun onPause() {
+        lastOnPauseTimestamp = System.currentTimeMillis()
+        super.onPause()
+    }
+
+    fun shouldRefreshDataInOnResume(): Boolean {
+        if (lastOnPauseTimestamp == -1L) return false
+        if (!corePreferences.keepServiceAlive) return false
+        return System.currentTimeMillis() - lastOnPauseTimestamp > TIME_MS_AFTER_WHICH_REFRESH_DATA_ON_RESUME
     }
 
     fun setViewModel(abstractMainViewModel: AbstractMainViewModel) {

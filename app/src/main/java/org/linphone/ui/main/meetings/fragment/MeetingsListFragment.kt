@@ -287,6 +287,11 @@ class MeetingsListFragment : AbstractMainFragment() {
             Log.e("$TAG Failed to register data observer to adapter: $e")
         }
 
+        if (shouldRefreshDataInOnResume()) {
+            Log.i("$TAG Keep app alive setting is enabled, refreshing view just in case")
+            listViewModel.filter()
+        }
+
         goToContactsIfMeetingsAreDisabledForCurrentlyDefaultAccount()
     }
 
