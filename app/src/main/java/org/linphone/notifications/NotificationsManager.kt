@@ -715,14 +715,10 @@ class NotificationsManager
         Log.i("$TAG Trying to start foreground Service using incoming call notification")
         val service = inCallService
         if (service != null) {
-            Log.i(
-                "$TAG Service found, starting it as foreground using notification ID [$INCOMING_CALL_ID] with type PHONE_CALL"
-            )
-            if (ActivityCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.POST_NOTIFICATIONS
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
+            if (Compatibility.isPostNotificationsPermissionGranted(context)) {
+                Log.i(
+                    "$TAG Service found, starting it as foreground using notification ID [$INCOMING_CALL_ID] with type PHONE_CALL"
+                )
                 Compatibility.startServiceForeground(
                     service,
                     INCOMING_CALL_ID,
@@ -826,11 +822,7 @@ class NotificationsManager
             }
         }
 
-        if (ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.POST_NOTIFICATIONS
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
+        if (Compatibility.isPostNotificationsPermissionGranted(context)) {
             Log.i(
                 "$TAG Service found, starting it as foreground using notification ID [${notifiable.notificationId}] with type(s) [$mask]"
             )
