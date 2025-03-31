@@ -227,6 +227,11 @@ class LinphoneUtils {
 
         @WorkerThread
         fun isVideoEnabled(call: Call): Boolean {
+            if (!call.core.isVideoEnabled) {
+                Log.w("$TAG Video is disabled in Core, assume call is audio only")
+                return false
+            }
+
             val conference = call.conference
             val isConference = conference != null
 
