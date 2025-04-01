@@ -48,7 +48,7 @@
 
             <ImageView
                 android:onClick="@{newContactClickListener}"
-                android:visibility="@{viewModel.contact != null || viewModel.readOnlyNativeAddressBook ? View.GONE : View.VISIBLE}"
+                android:visibility="@{View.GONE}"
                 android:contentDescription="@string/content_description_add_contact"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -59,7 +59,7 @@
 
             <ImageView
                 android:onClick="@{contactClickListener}"
-                android:visibility="@{viewModel.contact == null ? View.GONE : View.VISIBLE}"
+                android:visibility="@{View.GONE}"
                 android:contentDescription="@string/content_description_go_to_contact"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"

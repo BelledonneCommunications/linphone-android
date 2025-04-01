@@ -155,13 +155,13 @@ private class CallLogDiffCallback : DiffUtil.ItemCallback<GroupedCallLogData>() 
         oldItem: GroupedCallLogData,
         newItem: GroupedCallLogData
     ): Boolean {
-        return oldItem.lastCallLogId == newItem.lastCallLogId
+        return false // oldItem.lastCallLogId == newItem.lastCallLogId //FixME: The original code prevents the UI redrawing
     }
 
     override fun areContentsTheSame(
         oldItem: GroupedCallLogData,
         newItem: GroupedCallLogData
     ): Boolean {
-        return oldItem.callLogs.size == newItem.callLogs.size
+        return false // oldItem.callLogs.size == newItem.callLogs.size //FixME: The original code prevents the UI redrawing
     }
 }

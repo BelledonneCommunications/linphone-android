@@ -1056,4 +1056,6 @@
     <string name="presence_state_on_a_call">On a call</string>
     <string name="presence_state_not_taking_calls">Not taking calls</string>
     <string name="presence_state_wrap">Wrap</string>
+    <string name="microsoft_teams">Microsoft Teams</string>
+    <string name="unknown_formatted_number">Unknown</string>
 </resources>

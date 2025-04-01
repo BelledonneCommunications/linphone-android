@@ -33,6 +33,7 @@
  -keep class com.microsoft.signalr.** { *; }
  -keep interface com.microsoft.signalr.** { *; }
  -keep class org.linphone.models.realtime.** { *; }
+ -keep class org.linphone.models.callhistory.**  { *; }
 
 -dontwarn com.google.api.client.http.**
 -dontwarn org.joda.time.Instant

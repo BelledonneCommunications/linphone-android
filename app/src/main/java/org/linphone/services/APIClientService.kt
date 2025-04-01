@@ -1,6 +1,10 @@
 package org.linphone.services
 
+import ZonedDateTimeAdapter
 import android.content.Context
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import java.util.Date
 import net.openid.appauth.AuthorizationService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -9,6 +13,9 @@ import org.linphone.authentication.AuthorizationServiceManager
 import org.linphone.environment.DimensionsEnvironmentService
 import org.linphone.interfaces.CTGatewayService
 import org.linphone.middleware.AuthAuthenticator
+import org.linphone.typeadapters.BooleanTypeAdapter
+import org.linphone.typeadapters.DateTypeAdapter
+import org.threeten.bp.ZonedDateTime
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -39,10 +46,16 @@ class APIClientService(val context: Context) {
         authService: AuthorizationService,
         asm: AuthStateManager
     ): Retrofit {
+        val gson: Gson = GsonBuilder()
+            .registerTypeAdapter(Boolean::class.java, BooleanTypeAdapter()) // Register the adapter
+            .registerTypeAdapter(Date::class.java, DateTypeAdapter())
+            .registerTypeAdapter(ZonedDateTime::class.java, ZonedDateTimeAdapter())
+            .create()
+
         return Retrofit.Builder()
             .baseUrl(baseUrl)
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .client(getOkHttpClient(authService, asm))
             .build()
     }

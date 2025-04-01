@@ -350,6 +350,11 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+    <style name="contact_number_list_cell_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/light_grey_color</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
     <style name="big_contact_name_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/accentColor</item>
         <item name="android:textSize">30sp</item>

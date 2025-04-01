@@ -29,11 +29,15 @@ import org.linphone.R
 import org.linphone.activities.main.conference.data.ConferenceSchedulingParticipantData
 import org.linphone.contact.GenericContactViewModel
 import org.linphone.core.*
+import org.linphone.models.callhistory.CallDirections
+import org.linphone.models.callhistory.CallHistoryItemViewModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.Log
 import org.linphone.utils.TimestampUtils
+import org.threeten.bp.ZoneId
+import org.threeten.bp.format.DateTimeFormatter
 
 class CallLogViewModel(val callLog: CallLog, private val isRelated: Boolean = false) : GenericContactViewModel(
     callLog.remoteAddress
@@ -42,15 +46,37 @@ class CallLogViewModel(val callLog: CallLog, private val isRelated: Boolean = fa
         LinphoneUtils.getDisplayableAddress(callLog.remoteAddress)
     }
 
+    val dimensionsContactName = MutableLiveData<String>()
+    val dimensionsContactNumber = MutableLiveData<String>()
+    val dimensionsStartTime = MutableLiveData<String>()
+
     val statusIconResource: Int by lazy {
-        if (callLog.dir == Call.Dir.Incoming) {
-            if (LinphoneUtils.isCallLogMissed(callLog)) {
-                R.drawable.icon_call_missed
+        if (callLog is CallHistoryItemViewModel) {
+            if (callLog.call.isConference) {
+                R.drawable.icon_conference
             } else {
-                R.drawable.icon_call_received
+                if (callLog.call.callDirection == CallDirections.Incoming.value) {
+                    if (callLog.call.missedCall) {
+                        R.drawable.icon_call_missed
+                    } else if (!callLog.call.answered) {
+                        R.drawable.icon_call_notanswered
+                    } else {
+                        R.drawable.icon_call_received
+                    }
+                } else {
+                    R.drawable.icon_call_made
+                }
             }
         } else {
-            R.drawable.icon_call_made
+            if (callLog.dir == Call.Dir.Incoming) {
+                if (LinphoneUtils.isCallLogMissed(callLog)) {
+                    R.drawable.icon_call_missed
+                } else {
+                    R.drawable.icon_call_received
+                }
+            } else {
+                R.drawable.icon_call_made
+            }
         }
     }
 
@@ -195,6 +221,15 @@ class CallLogViewModel(val callLog: CallLog, private val isRelated: Boolean = fa
                 }
                 conferenceParticipantsData.value = list
             }
+        }
+
+        if (callLog is CallHistoryItemViewModel) {
+            dimensionsContactName.value = callLog.contactName
+            dimensionsContactNumber.value = callLog.formattedNumber
+
+            val formatter = DateTimeFormatter.ofPattern("HH:mm")
+            val localDateTime = callLog.call.startTime.withZoneSameInstant(ZoneId.systemDefault())
+            dimensionsStartTime.value = localDateTime.format(formatter)
         }
     }
 

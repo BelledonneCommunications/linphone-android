@@ -39,7 +39,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:background="?attr/backgroundColor"
         android:gravity="center_vertical"
         android:onClick="@{clickListener}"
@@ -51,9 +51,9 @@
             android:id="@+id/right"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="10dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="10dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -62,6 +62,7 @@
                 android:adjustViewBounds="true"
                 android:background="@drawable/history_detail_background"
                 android:contentDescription="@string/content_description_show_call_details"
+                android:visibility="gone"
                 android:enabled="@{!selectionListViewModel.isEditionEnabled}"
                 android:onClick="@{detailsClickListener}"
                 android:src="@drawable/list_detail" />
@@ -80,8 +81,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_toLeftOf="@id/right"
+            android:layout_marginStart="10dp"
+            android:layout_toStartOf="@id/right"
             android:gravity="center_vertical">
 
             <ImageView
@@ -89,11 +90,13 @@
                 coilContact="@{viewModel}"
                 android:layout_width="@dimen/contact_avatar_size"
                 android:layout_height="@dimen/contact_avatar_size"
-                android:layout_alignParentLeft="true"
-                android:layout_marginRight="10dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginEnd="10dp"
                 android:contentDescription="@null"
                 android:background="@drawable/generated_avatar_bg"
-                android:src="@drawable/voip_single_contact_avatar" />
+                android:src="@drawable/voip_single_contact_avatar"
+                android:visibility="gone"
+                />
 
             <ImageView
                 android:layout_width="@dimen/contact_presence_badge_size"
@@ -111,24 +114,53 @@
                 android:id="@+id/icon"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginRight="10dp"
-                android:layout_toRightOf="@id/avatar"
+                android:layout_marginEnd="10dp"
+                android:layout_toEndOf="@id/avatar"
                 android:adjustViewBounds="true"
                 android:contentDescription="@{viewModel.iconContentDescription}"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:src="@{viewModel.statusIconResource, default=@drawable/call_status_outgoing}"
-                android:visibility="@{viewModel.isConferenceCallLog ? View.GONE : View.VISIBLE}" />
+                android:src="@{viewModel.statusIconResource, default=@drawable/call_status_outgoing}" />
 
-            <org.linphone.views.MarqueeTextView
-                android:id="@+id/sip_uri"
-                style="@style/contact_name_list_cell_font"
+            <LinearLayout
+                android:id="@+id/contactDetailContainer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/icon"
+                android:layout_toStartOf="@+id/startTime"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/contact_name"
+                    style="@style/contact_name_list_cell_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@{viewModel.dimensionsContactName}" />
+
+                <TextView
+                    android:id="@+id/contact_number"
+                    style="@style/contact_number_list_cell_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@{viewModel.dimensionsContactNumber}"
+                    />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/startTime"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_toRightOf="@id/icon"
-                android:gravity="center_vertical"
-                android:singleLine="true"
-                android:text="@{(viewModel.isConferenceCallLog ? viewModel.conferenceSubject : viewModel.contact.name ?? viewModel.displayName) + (groupCount > 1 ? ` (` + groupCount + `)` : ``), default=`Frodo Baggins (6)`}" />
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.dimensionsStartTime}"
+                android:layout_alignParentEnd="true"/>
 
         </RelativeLayout>
 

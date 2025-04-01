@@ -13,7 +13,6 @@ import kotlinx.coroutines.runBlocking
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.authentication.AuthStateManager
-import org.linphone.environment.DimensionsEnvironmentService
 import org.linphone.models.AuthenticatedUser
 import org.linphone.models.realtime.RealtimeEventPresence
 import org.linphone.models.realtime.RealtimeEventType
@@ -29,7 +28,6 @@ class PresenceService(val context: Context) : DefaultLifecycleObserver {
     private val destroy = PublishSubject.create<Unit>()
     private val authStateManager = AuthStateManager.getInstance(context)
     private val apiClient = APIClientService(context)
-    private val dimensionsEnvironment = DimensionsEnvironmentService.getInstance(context).getCurrentEnvironment()
     private val realtimeUserService = RealtimeUserService.getInstance(context)
 
     override fun onDestroy(owner: LifecycleOwner) {

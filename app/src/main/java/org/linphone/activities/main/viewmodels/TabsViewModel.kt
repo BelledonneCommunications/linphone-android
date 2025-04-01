@@ -23,15 +23,19 @@ import android.animation.ValueAnimator
 import android.view.animation.LinearInterpolator
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import io.reactivex.rxjava3.disposables.Disposable
 import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.*
+import org.linphone.services.CallHistoryService
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Log
 
 class TabsViewModel : ViewModel() {
+    private val callHistoryService = CallHistoryService.getInstance(coreContext.context)
+
     val unreadMessagesCount = MutableLiveData<Int>()
     val unreadVoicemailsCount = MutableLiveData<Int>()
     val missedCallsCount = MutableLiveData<Int>()
@@ -43,6 +47,14 @@ class TabsViewModel : ViewModel() {
     val historyMissedCountTranslateY = MutableLiveData<Float>()
     val chatUnreadCountTranslateY = MutableLiveData<Float>()
     val voicemailUnreadCountTranslateY = MutableLiveData<Float>()
+
+    private var missedCallCountSubscription: Disposable? = null
+
+    init {
+        missedCallCountSubscription = callHistoryService.missedCallCount.subscribe { c ->
+            missedCallsCount.postValue(c)
+        }
+    }
 
     private val bounceAnimator: ValueAnimator by lazy {
         ValueAnimator.ofFloat(
@@ -133,7 +145,7 @@ class TabsViewModel : ViewModel() {
     }
 
     fun updateMissedCallCount() {
-        missedCallsCount.value = coreContext.core.missedCallsCount
+        // missedCallsCount.value = coreContext.core.missedCallsCount //NOTE - now handled by MissedCallCountSubscription
     }
 
     fun updateUnreadChatCount() {

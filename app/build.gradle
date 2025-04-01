@@ -295,6 +295,9 @@ dependencies {
     //SignalR
     implementation 'com.microsoft.signalr:signalr:9.0.2'
     implementation 'org.slf4j:slf4j-jdk14:1.7.25'
+
+    //Datetime handling
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.4.9'
 }
 
 task generateContactsXml(type: Copy) {
