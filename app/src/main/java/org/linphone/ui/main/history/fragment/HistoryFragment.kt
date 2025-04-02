@@ -182,6 +182,10 @@ class HistoryFragment : SlidingPaneChildFragment() {
         binding.setMenuClickListener {
             showPopupMenu()
         }
+
+        binding.setCopyPeerSipUriClickListener {
+            copyNumberOrAddressToClipboard(viewModel.callLogModel.value?.sipUri.orEmpty())
+        }
     }
 
     private fun copyNumberOrAddressToClipboard(value: String) {
