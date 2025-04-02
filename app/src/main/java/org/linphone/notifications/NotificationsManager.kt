@@ -1618,6 +1618,7 @@ class NotificationsManager
         val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH).apply {
             description = name
             lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            setShowBadge(false)
         }
         notificationManager.createNotificationChannel(channel)
     }
@@ -1630,7 +1631,9 @@ class NotificationsManager
         val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH).apply {
             description = name
             lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            enableLights(true)
             enableVibration(true)
+            setShowBadge(true)
         }
         notificationManager.createNotificationChannel(channel)
     }
@@ -1643,6 +1646,9 @@ class NotificationsManager
         val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_LOW).apply {
             description = name
             lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            enableLights(false)
+            enableVibration(false)
+            setShowBadge(false)
         }
         notificationManager.createNotificationChannel(channel)
     }
@@ -1655,7 +1661,9 @@ class NotificationsManager
         val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH).apply {
             description = name
             lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            enableLights(true)
             enableVibration(true)
+            setShowBadge(true)
         }
         notificationManager.createNotificationChannel(channel)
     }
@@ -1667,6 +1675,9 @@ class NotificationsManager
 
         val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_LOW).apply {
             description = context.getString(R.string.notification_channel_service_desc)
+            enableLights(false)
+            enableVibration(false)
+            setShowBadge(false)
         }
         notificationManager.createNotificationChannel(channel)
     }
