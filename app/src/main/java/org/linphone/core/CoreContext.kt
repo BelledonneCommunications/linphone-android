@@ -180,6 +180,21 @@ class CoreContext
         @WorkerThread
         override fun onDefaultAccountChanged(core: Core, account: Account?) {
             defaultAccountHasVideoConferenceFactoryUri = account?.params?.audioVideoConferenceFactoryAddress != null
+
+            val defaultDomain = corePreferences.defaultDomain
+            val isAccountOnDefaultDomain = account?.params?.domain == defaultDomain
+            val domainFilter = corePreferences.contactsFilter
+            Log.i("$TAG Currently selected filter is [$domainFilter]")
+
+            if (!isAccountOnDefaultDomain && domainFilter == defaultDomain) {
+                corePreferences.contactsFilter = "*"
+                Log.i(
+                    "$TAG New default account isn't on default domain, changing filter to any SIP contacts instead"
+                )
+            } else if (isAccountOnDefaultDomain && domainFilter != "") {
+                corePreferences.contactsFilter = defaultDomain
+                Log.i("$TAG New default account is on default domain, using that domain as filter instead of wildcard")
+            }
         }
 
         @WorkerThread
