@@ -188,6 +188,8 @@ class SettingsViewModel
     )
 
     // Advanced settings
+    val showAdvancedSettings = MutableLiveData<Boolean>()
+
     val startAtBoot = MutableLiveData<Boolean>()
     val keepAliveThirdPartyAccountsService = MutableLiveData<Boolean>()
     val useSmffForCallRecording = MutableLiveData<Boolean>()
@@ -202,7 +204,6 @@ class SettingsViewModel
     val mediaEncryptionLabels = arrayListOf<String>()
     private val mediaEncryptionValues = arrayListOf<MediaEncryption>()
     val mediaEncryptionMandatory = MutableLiveData<Boolean>()
-    val createEndToEndEncryptedConferences = MutableLiveData<Boolean>()
     val acceptEarlyMedia = MutableLiveData<Boolean>()
     val ringDuringEarlyMedia = MutableLiveData<Boolean>()
     val allowOutgoingEarlyMedia = MutableLiveData<Boolean>()
@@ -222,6 +223,11 @@ class SettingsViewModel
 
     val expandVideoCodecs = MutableLiveData<Boolean>()
     val videoCodecs = MutableLiveData<List<CodecModel>>()
+
+    // Developer settings
+    val showDeveloperSettings = MutableLiveData<Boolean>()
+
+    val createEndToEndEncryptedConferences = MutableLiveData<Boolean>()
 
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
@@ -249,6 +255,8 @@ class SettingsViewModel
             ldapAvailable.postValue(core.ldapAvailable())
             showThemeSelector.postValue(corePreferences.darkModeAllowed)
             showColorSelector.postValue(corePreferences.changeMainColorAllowed)
+            showAdvancedSettings.postValue(!corePreferences.hideAdvancedSettings)
+            showDeveloperSettings.postValue(corePreferences.showDeveloperSettings)
         }
         showContactsSettings.value = true
 
@@ -328,7 +336,6 @@ class SettingsViewModel
             fileSharingServerUrl.postValue(core.fileTransferServer)
             remoteProvisioningUrl.postValue(core.provisioningUri)
 
-            createEndToEndEncryptedConferences.postValue(corePreferences.createEndToEndEncryptedMeetingsAndGroupCalls)
             acceptEarlyMedia.postValue(corePreferences.acceptEarlyMedia)
             ringDuringEarlyMedia.postValue(core.ringDuringIncomingEarlyMedia)
             allowOutgoingEarlyMedia.postValue(corePreferences.allowOutgoingEarlyMedia)
@@ -338,6 +345,8 @@ class SettingsViewModel
             setupMediaEncryption()
             setupAudioDevices()
             setupCodecs()
+
+            createEndToEndEncryptedConferences.postValue(corePreferences.createEndToEndEncryptedMeetingsAndGroupCalls)
         }
     }
 
@@ -793,16 +802,6 @@ class SettingsViewModel
     }
 
     @UiThread
-    fun toggleConferencesEndToEndEncryption() {
-        val newValue = createEndToEndEncryptedConferences.value == false
-
-        coreContext.postOnCoreThread { core ->
-            corePreferences.createEndToEndEncryptedMeetingsAndGroupCalls = newValue
-            createEndToEndEncryptedConferences.postValue(newValue)
-        }
-    }
-
-    @UiThread
     fun toggleAcceptEarlyMedia() {
         val newValue = acceptEarlyMedia.value == false
 
@@ -1030,5 +1029,32 @@ class SettingsViewModel
             else -> ""
         }
         calibratedEchoCancellerValue.postValue(value)
+    }
+
+    @UiThread
+    fun toggleDeveloperSettings() {
+        val newValue = showDeveloperSettings.value == false
+
+        coreContext.postOnCoreThread { core ->
+            corePreferences.showDeveloperSettings = newValue
+            showDeveloperSettings.postValue(newValue)
+        }
+    }
+
+    @UiThread
+    fun reloadShowDeveloperSettings() {
+        coreContext.postOnCoreThread {
+            showDeveloperSettings.postValue(corePreferences.showDeveloperSettings)
+        }
+    }
+
+    @UiThread
+    fun toggleConferencesEndToEndEncryption() {
+        val newValue = createEndToEndEncryptedConferences.value == false
+
+        coreContext.postOnCoreThread { core ->
+            corePreferences.createEndToEndEncryptedMeetingsAndGroupCalls = newValue
+            createEndToEndEncryptedConferences.postValue(newValue)
+        }
     }
 }
