@@ -472,6 +472,22 @@ class CoreContext
                 Log.i("$TAG Removed account matches auth info pending password update, removing dialog")
                 clearAuthenticationRequestDialogEvent.postValue(Event(true))
             }
+
+            if (core.defaultAccount == null || core.defaultAccount == account) {
+                Log.w("$TAG Removed account was the default one, choosing another as default if possible")
+                val newDefaultAccount = core.accountList.find {
+                    it.params.isRegisterEnabled == true
+                } ?: core.accountList.firstOrNull()
+                if (newDefaultAccount == null) {
+                    Log.e("$TAG Failed to find a new default account!")
+                } else {
+                    Log.i("$TAG New default account will be [${newDefaultAccount.params.identityAddress?.asStringUriOnly()}]")
+                    // Delay changing default account to allow for other onAccountRemoved listeners to trigger first
+                    postOnCoreThread {
+                        core.defaultAccount = newDefaultAccount
+                    }
+                }
+            }
         }
     }
 
