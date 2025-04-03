@@ -74,7 +74,7 @@ class ContactsManager
         private const val TAG = "[Contacts Manager]"
 
         private const val DELAY_BEFORE_RELOADING_CONTACTS_AFTER_PRESENCE_RECEIVED = 1000L // 1 second
-        private const val FRIEND_LIST_TEMPORARY_STORED_NATIVE = "TempNativeContacts"
+        private const val DELAY_BEFORE_RELOADING_CONTACTS_AFTER_MAGIC_SEARCH_RESULT = 1000L // 1 second
         private const val FRIEND_LIST_TEMPORARY_STORED_REMOTE_DIRECTORY = "TempRemoteDirectoryContacts"
     }
 
@@ -90,13 +90,16 @@ class ContactsManager
     private val unknownRemoteContactDirectoriesContactsMap = arrayListOf<String>()
 
     private val coroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-    private var reloadContactsJob: Job? = null
+    private var reloadPresenceContactsJob: Job? = null
+    private var reloadRemoteContactsJob: Job? = null
 
     private var loadContactsOnlyFromDefaultDirectory = true
 
     private val magicSearchListener = object : MagicSearchListenerStub() {
         @WorkerThread
         override fun onSearchResultsReceived(magicSearch: MagicSearch) {
+            reloadRemoteContactsJob?.cancel()
+
             val results = magicSearch.lastSearch
             Log.i("$TAG [${results.size}] magic search results available")
 
@@ -111,7 +114,7 @@ class ContactsManager
                     found = true
 
                     // Store friend in app's cache to be re-used in call history, conversations, etc...
-                    val temporaryFriendList = getTemporaryFriendList(native = false)
+                    val temporaryFriendList = getRemoteContactDirectoriesCacheFriendList()
                     temporaryFriendList.addFriend(friend)
                     newContactAdded(friend)
                     Log.i(
@@ -120,6 +123,17 @@ class ContactsManager
 
                     for (listener in listeners) {
                         listener.onContactFoundInRemoteDirectory(friend)
+                    }
+
+                    reloadRemoteContactsJob = coroutineScope.launch {
+                        delay(DELAY_BEFORE_RELOADING_CONTACTS_AFTER_MAGIC_SEARCH_RESULT)
+                        coreContext.postOnCoreThread {
+                            Log.i("$TAG At least a new SIP address was discovered, reloading contacts")
+                            conferenceAvatarMap.values.forEach(ContactAvatarModel::destroy)
+                            conferenceAvatarMap.clear()
+
+                            notifyContactsListChanged()
+                        }
                     }
                 }
             }
@@ -158,7 +172,7 @@ class ContactsManager
             friend: Friend,
             sipUri: String
         ) {
-            reloadContactsJob?.cancel()
+            reloadPresenceContactsJob?.cancel()
             Log.d(
                 "$TAG Newly discovered SIP Address [$sipUri] for friend [${friend.name}] in list [${friendList.displayName}]"
             )
@@ -174,7 +188,7 @@ class ContactsManager
                 Log.e("$TAG Failed to parse SIP URI [$sipUri] as Address!")
             }
 
-            reloadContactsJob = coroutineScope.launch {
+            reloadPresenceContactsJob = coroutineScope.launch {
                 delay(DELAY_BEFORE_RELOADING_CONTACTS_AFTER_PRESENCE_RECEIVED)
                 coreContext.postOnCoreThread {
                     Log.i("$TAG At least a new SIP address was discovered, reloading contacts")
@@ -334,10 +348,6 @@ class ContactsManager
         for (sipAddress in friend.addresses) {
             newContactAddedWithSipUri(friend, sipAddress.asStringUriOnly())
         }
-
-        conferenceAvatarMap.values.forEach(ContactAvatarModel::destroy)
-        conferenceAvatarMap.clear()
-        notifyContactsListChanged()
     }
 
     @WorkerThread
@@ -369,14 +379,6 @@ class ContactsManager
     fun onNativeContactsLoaded() {
         nativeContactsLoaded = true
         Log.i("$TAG Native contacts have been loaded, cleaning avatars maps")
-
-        val core = coreContext.core
-        val found = getTemporaryFriendList(native = true)
-        val count = found.friends.size
-        Log.i(
-            "$TAG Found temporary friend list with [$count] friends, removing it as no longer necessary"
-        )
-        core.removeFriendList(found)
 
         knownContactsAvatarsMap.values.forEach(ContactAvatarModel::destroy)
         knownContactsAvatarsMap.clear()
@@ -579,7 +581,7 @@ class ContactsManager
     fun isContactTemporary(friend: Friend, allowNullFriendList: Boolean = false): Boolean {
         val friendList = friend.friendList
         if (friendList == null && !allowNullFriendList) return true
-        return friendList?.displayName == FRIEND_LIST_TEMPORARY_STORED_NATIVE || friendList?.displayName == FRIEND_LIST_TEMPORARY_STORED_REMOTE_DIRECTORY
+        return friendList?.type == FriendList.Type.ApplicationCache
     }
 
     @WorkerThread
@@ -626,13 +628,14 @@ class ContactsManager
     }
 
     @WorkerThread
-    fun getTemporaryFriendList(native: Boolean): FriendList {
+    fun getRemoteContactDirectoriesCacheFriendList(): FriendList {
         val core = coreContext.core
-        val name = if (native) FRIEND_LIST_TEMPORARY_STORED_NATIVE else FRIEND_LIST_TEMPORARY_STORED_REMOTE_DIRECTORY
+        val name = FRIEND_LIST_TEMPORARY_STORED_REMOTE_DIRECTORY
         val temporaryFriendList = core.getFriendListByName(name) ?: core.createFriendList()
         if (temporaryFriendList.displayName.isNullOrEmpty()) {
             temporaryFriendList.isDatabaseStorageEnabled = false
             temporaryFriendList.displayName = name
+            temporaryFriendList.type = FriendList.Type.ApplicationCache
             core.addFriendList(temporaryFriendList)
             Log.i(
                 "$TAG Created temporary friend list with name [$name]"
