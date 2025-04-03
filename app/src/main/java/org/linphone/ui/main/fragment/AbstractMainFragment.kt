@@ -72,6 +72,8 @@ abstract class AbstractMainFragment : GenericMainFragment() {
 
     private var currentFragmentId: Int = 0
 
+    private lateinit var navigationBar: View
+
     private lateinit var viewModel: AbstractMainViewModel
 
     private val backPressedCallback = object : OnBackPressedCallback(false) {
@@ -201,9 +203,10 @@ abstract class AbstractMainFragment : GenericMainFragment() {
         navBar: BottomNavBarBinding,
         @IdRes fragmentId: Int
     ) {
+        navigationBar = navBar.root
+
         initSlidingPane(slidingPane)
         initSearchBar(topBar.search)
-        initBottomNavBar(navBar.root)
         initNavigation(fragmentId)
     }
 
@@ -228,6 +231,7 @@ abstract class AbstractMainFragment : GenericMainFragment() {
             it.consume {
                 if (slidingPane.isSlideable) {
                     Log.d("$TAG Closing sliding pane")
+                    ensureNavigationBarIsVisible()
                     slidingPane.closePane()
                 }
             }
@@ -256,7 +260,9 @@ abstract class AbstractMainFragment : GenericMainFragment() {
                                 slidingPane.removePanelSlideListener(this)
                             }
 
-                            override fun onPanelClosed(panel: View) { }
+                            override fun onPanelClosed(panel: View) {
+                                ensureNavigationBarIsVisible()
+                            }
                         })
                     }
                     slidingPane.openPane()
@@ -285,15 +291,20 @@ abstract class AbstractMainFragment : GenericMainFragment() {
                     searchBar.showKeyboard()
                 } else {
                     searchBar.hideKeyboard()
+                    ensureNavigationBarIsVisible()
                 }
             }
         }
+
+        searchBar.setKeyboardInsetListener { keyboardVisible ->
+            val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
+            navigationBar.visibility = if (!portraitOrientation || !keyboardVisible) View.VISIBLE else View.GONE
+        }
     }
 
-    private fun initBottomNavBar(navBar: View) {
-        view?.setKeyboardInsetListener { keyboardVisible ->
-            val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
-            navBar.visibility = if (!portraitOrientation || !keyboardVisible) View.VISIBLE else View.GONE
+    private fun ensureNavigationBarIsVisible() {
+        if (::navigationBar.isInitialized) {
+            navigationBar.visibility = View.VISIBLE
         }
     }
 
