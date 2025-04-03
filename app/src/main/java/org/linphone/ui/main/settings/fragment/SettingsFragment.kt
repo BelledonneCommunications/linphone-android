@@ -105,7 +105,7 @@ class SettingsFragment : GenericMainFragment() {
             val label = viewModel.availableColorsNames[position]
             val value = viewModel.availableColorsValues[position]
             Log.i("$TAG Selected color is now [$label] ($value)")
-            // Be carefull not to create an infinite loop
+            // Be careful not to create an infinite loop
             if (value != viewModel.color.value.orEmpty()) {
                 viewModel.setColor(value)
                 requireActivity().recreate()
@@ -151,6 +151,13 @@ class SettingsFragment : GenericMainFragment() {
         binding.setAdvancedSettingsClickListener {
             if (findNavController().currentDestination?.id == R.id.settingsFragment) {
                 val action = SettingsFragmentDirections.actionSettingsFragmentToSettingsAdvancedFragment()
+                findNavController().navigate(action)
+            }
+        }
+
+        binding.setDeveloperSettingsClickListener {
+            if (findNavController().currentDestination?.id == R.id.settingsFragment) {
+                val action = SettingsFragmentDirections.actionSettingsFragmentToSettingsDeveloperFragment()
                 findNavController().navigate(action)
             }
         }
@@ -344,6 +351,7 @@ class SettingsFragment : GenericMainFragment() {
 
         viewModel.reloadLdapServers()
         viewModel.reloadConfiguredCardDavServers()
+        viewModel.reloadShowDeveloperSettings()
     }
 
     override fun onPause() {

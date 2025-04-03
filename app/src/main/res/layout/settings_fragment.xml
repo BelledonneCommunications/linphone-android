@@ -15,6 +15,9 @@
             name="advancedSettingsClickListener"
             type="View.OnClickListener" />
         <variable
+            name="developerSettingsClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.main.settings.viewmodel.SettingsViewModel" />
     </data>
@@ -315,10 +318,30 @@
                     android:text="@string/settings_advanced_title"
                     android:drawableEnd="@drawable/caret_right"
                     android:drawableTint="?attr/color_main2_600"
+                    android:visibility="@{viewModel.showAdvancedSettings ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tunnel_settings"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/section_header_style"
+                    android:id="@+id/developer_settings"
+                    android:onClick="@{developerSettingsClickListener}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginEnd="26dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="@dimen/screen_bottom_margin"
+                    android:text="@string/settings_developer_title"
+                    android:drawableEnd="@drawable/caret_right"
+                    android:drawableTint="?attr/color_main2_600"
+                    android:visibility="@{viewModel.showDeveloperSettings ? View.VISIBLE : View.GONE, default=gone}"
                     app:layout_constraintVertical_bias="0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tunnel_settings"
+                    app:layout_constraintTop_toBottomOf="@id/advanced_settings"
                     app:layout_constraintBottom_toBottomOf="parent"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>

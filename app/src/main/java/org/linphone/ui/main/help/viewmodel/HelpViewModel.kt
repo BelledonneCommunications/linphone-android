@@ -63,6 +63,8 @@ class HelpViewModel
 
     val logsUploadInProgress = MutableLiveData<Boolean>()
 
+    val versionClickCount = MutableLiveData<Int>()
+
     val newVersionAvailableEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
         MutableLiveData<Event<Pair<String, String>>>()
     }
@@ -137,6 +139,7 @@ class HelpViewModel
     init {
         val currentVersion = BuildConfig.VERSION_NAME
         version.value = currentVersion
+        versionClickCount.value = 0
 
         val versionCode = BuildConfig.VERSION_CODE
         val appGitDescribe = AppUtils.getString(R.string.linphone_app_version)
@@ -163,6 +166,24 @@ class HelpViewModel
 
         coreContext.postOnCoreThread { core ->
             core.removeListener(coreListener)
+        }
+    }
+
+    @UiThread
+    fun versionClicked() {
+        if (corePreferences.showDeveloperSettings == true) {
+            showRedToast(R.string.settings_developer_already_enabled_toast, R.drawable.warning_circle)
+            return
+        }
+
+        versionClickCount.value = (versionClickCount.value ?: 0) + 1
+        if (versionClickCount.value == 7) {
+            coreContext.postOnCoreThread {
+                Log.w("$TAG Version was clicked seven times, enabling developer settings")
+                corePreferences.showDeveloperSettings = true
+
+                showGreenToast(R.string.settings_developer_enabled_toast, R.drawable.gear)
+            }
         }
     }
 

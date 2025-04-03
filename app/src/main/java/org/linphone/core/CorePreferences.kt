@@ -109,6 +109,13 @@ class CorePreferences
             config.setString("app", "device", value.trim())
         }
 
+    @get:WorkerThread @set:WorkerThread
+    var showDeveloperSettings: Boolean
+        get() = config.getBool("ui", "show_developer_settings", false)
+        set(value) {
+            config.setBool("ui", "show_developer_settings", value)
+        }
+
     // Call settings
 
     // This won't be done if bluetooth or wired headset is used
@@ -316,6 +323,10 @@ class CorePreferences
     @get:WorkerThread
     val hideAccountSettings: Boolean
         get() = config.getBool("ui", "hide_account_settings", false)
+
+    @get:WorkerThread
+    val hideAdvancedSettings: Boolean
+        get() = config.getBool("ui", "hide_advanced_settings", false)
 
     @get:WorkerThread
     val hideAssistantCreateAccount: Boolean

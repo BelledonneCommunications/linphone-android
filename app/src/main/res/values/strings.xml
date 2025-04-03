@@ -330,6 +330,11 @@
     <string name="settings_advanced_video_codecs_title">Video codecs</string>
     <string name="settings_advanced_go_to_android_app_settings_title">&appName; Android settings</string>
 
+    <string name="settings_developer_title">Developer settings</string>
+    <string name="settings_developer_show_title">Show developer settings</string>
+    <string name="settings_developer_enabled_toast">Developer settings enabled</string>
+    <string name="settings_developer_already_enabled_toast">Developer settings already enabled</string>
+
     <!-- Account profile & settings -->
     <string name="manage_account_title">Manage account</string>
     <string name="manage_account_details_title">Details</string>
