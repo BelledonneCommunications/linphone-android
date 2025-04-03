@@ -143,6 +143,40 @@ class LinphoneUtils {
             return null
         }
 
+        @WorkerThread
+        fun getFirstAvailableAddressForFriend(friend: Friend): Address? {
+            // Return any SIP address first
+            val address = friend.address ?: friend.addresses.firstOrNull()
+            if (address != null) return address
+
+            val phoneNumbers = friend.phoneNumbers
+            // If no SIP address stored in Friend, check for SIP address in phone numbers presence
+            for (phoneNumber in phoneNumbers) {
+                val presenceModel = friend.getPresenceModelForUriOrTel(phoneNumber)
+                val hasPresenceInfo = !presenceModel?.contact.isNullOrEmpty()
+                if (presenceModel != null && hasPresenceInfo) {
+                    val contact = presenceModel.contact
+                    if (!contact.isNullOrEmpty()) {
+                        val address = coreContext.core.interpretUrl(contact, false)
+                        if (address != null) {
+                            address.clean() // To remove ;user=phone
+                            return address
+                        }
+                    }
+                }
+            }
+
+            // Finally format any phone number as SIP address
+            for (phoneNumber in phoneNumbers) {
+                val address = coreContext.core.interpretUrl(phoneNumber, false)
+                if (address != null) {
+                    return address
+                }
+            }
+
+            return null
+        }
+
         @AnyThread
         fun isCallIncoming(callState: Call.State): Boolean {
             return when (callState) {

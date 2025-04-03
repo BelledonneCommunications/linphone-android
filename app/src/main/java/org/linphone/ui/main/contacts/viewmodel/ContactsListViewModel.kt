@@ -104,7 +104,8 @@ class ContactsListViewModel
         showFilter.value = !corePreferences.hidePhoneNumbers && !corePreferences.hideSipAddresses
 
         coreContext.postOnCoreThread { core ->
-            updateDomainFilter()
+            domainFilter = corePreferences.contactsFilter
+            checkIfDefaultAccountOnDefaultDomain()
 
             coreContext.contactsManager.addListener(contactsListener)
             magicSearch = core.createMagicSearch()
@@ -141,7 +142,8 @@ class ContactsListViewModel
     @UiThread
     fun applyCurrentDefaultAccountFilter() {
         coreContext.postOnCoreThread {
-            updateDomainFilter()
+            domainFilter = corePreferences.contactsFilter
+            checkIfDefaultAccountOnDefaultDomain()
 
             coreContext.postOnMainThread {
                 applyFilter(currentFilter)
@@ -177,28 +179,6 @@ class ContactsListViewModel
         val show = showFavourites.value == false
         showFavourites.value = show
         corePreferences.showFavoriteContacts = show
-    }
-
-    @WorkerThread
-    private fun updateDomainFilter() {
-        val defaultAccount = coreContext.core.defaultAccount
-        val defaultDomain = corePreferences.defaultDomain
-        val isAccountOnDefaultDomain = defaultAccount?.params?.domain == defaultDomain
-        isDefaultAccountLinphone.postValue(isAccountOnDefaultDomain)
-
-        domainFilter = corePreferences.contactsFilter
-        Log.i("$TAG Currently selected filter is [$domainFilter]")
-        if (!isAccountOnDefaultDomain && domainFilter == defaultDomain) {
-            domainFilter = "*"
-            corePreferences.contactsFilter = domainFilter
-            Log.i(
-                "$TAG New default account isn't on default domain, changing filter to all SIP contacts instead"
-            )
-        } else if (isAccountOnDefaultDomain && domainFilter != "") {
-            domainFilter = defaultDomain
-            corePreferences.contactsFilter = domainFilter
-            Log.i("$TAG New default account is on default domain, using that as filter instead")
-        }
     }
 
     @UiThread
@@ -353,5 +333,13 @@ class ContactsListViewModel
 
         Log.i("$TAG Processed [${results.size}] results into [${list.size} contacts]")
         firstLoad = false
+    }
+
+    @WorkerThread
+    private fun checkIfDefaultAccountOnDefaultDomain() {
+        val defaultAccount = coreContext.core.defaultAccount
+        val defaultDomain = corePreferences.defaultDomain
+        val isAccountOnDefaultDomain = defaultAccount?.params?.domain == defaultDomain
+        isDefaultAccountLinphone.postValue(isAccountOnDefaultDomain)
     }
 }
