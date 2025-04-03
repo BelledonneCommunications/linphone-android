@@ -58,8 +58,9 @@ class MainViewModel
         const val MWI_MESSAGES_WAITING = 4
         const val NON_DEFAULT_ACCOUNT_NOTIFICATIONS = 5
         const val NON_DEFAULT_ACCOUNT_NOT_CONNECTED = 10
-        const val FULL_SCREEN_INTENTS_PERMISSION_NOT_GRANTED = 16
-        const val SEND_NOTIFICATIONS_PERMISSION_NOT_GRANTED = 17
+        const val FULL_SCREEN_INTENTS_PERMISSION_NOT_GRANTED = 14
+        const val SEND_NOTIFICATIONS_PERMISSION_NOT_GRANTED = 15
+        const val DEFAULT_ACCOUNT_DISABLED = 18
         const val NETWORK_NOT_REACHABLE = 19
         const val SINGLE_CALL = 20
         const val MULTIPLE_CALLS = 21
@@ -76,10 +77,6 @@ class MainViewModel
     val atLeastOneCall = MutableLiveData<Boolean>()
 
     val callsStatus = MutableLiveData<String>()
-
-    val defaultAccountRegistrationErrorEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
-    }
 
     val goBackToCallEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
@@ -112,8 +109,6 @@ class MainViewModel
     private var accountsFound = -1
 
     var mainIntentHandled = false
-
-    private var defaultAccountRegistrationFailed = false
 
     private val alertsList = arrayListOf<Pair<Int, String>>()
 
@@ -212,8 +207,10 @@ class MainViewModel
                 RegistrationState.Failed -> {
                     if (account == core.defaultAccount) {
                         Log.e("$TAG Default account registration failed!")
-                        defaultAccountRegistrationFailed = true
-                        defaultAccountRegistrationErrorEvent.postValue(Event(true))
+                        val label = AppUtils.getString(
+                            R.string.connection_error_for_non_default_account
+                        )
+                        addAlert(DEFAULT_ACCOUNT_DISABLED, label)
                     } else if (core.isNetworkReachable) {
                         Log.e("$TAG Non-default account registration failed!")
                         val label = AppUtils.getString(
@@ -230,11 +227,8 @@ class MainViewModel
                     }
 
                     if (account == core.defaultAccount) {
-                        if (defaultAccountRegistrationFailed) {
-                            Log.i("$TAG Default account is now registered")
-                            defaultAccountRegistrationFailed = false
-                            defaultAccountRegistrationErrorEvent.postValue(Event(false))
-                        }
+                        Log.i("$TAG Default account is now registered")
+                        removeAlert(DEFAULT_ACCOUNT_DISABLED)
                     } else {
                         // If no call and no account is in Failed state, hide top bar
                         val found = core.accountList.find {
@@ -246,12 +240,20 @@ class MainViewModel
                     }
                 }
                 RegistrationState.Progress, RegistrationState.Refreshing -> {
-                    if (defaultAccountRegistrationFailed) {
+                    if (account == core.defaultAccount) {
                         Log.i(
-                            "$TAG Default account is registering, removing registration failed toast for now"
+                            "$TAG Default account is registering, removing registration failed alert for now"
                         )
-                        defaultAccountRegistrationFailed = false
-                        defaultAccountRegistrationErrorEvent.postValue(Event(false))
+                        removeAlert(DEFAULT_ACCOUNT_DISABLED)
+                    }
+                }
+                RegistrationState.Cleared -> {
+                    if (account == core.defaultAccount) {
+                        Log.w("$TAG Default account is now disabled")
+                        val label = AppUtils.getString(
+                            R.string.default_account_disabled
+                        )
+                        addAlert(DEFAULT_ACCOUNT_DISABLED, label)
                     }
                 }
                 else -> {}
@@ -271,9 +273,17 @@ class MainViewModel
                 )
                 coreContext.updateFriendListsSubscriptionDependingOnDefaultAccount()
 
+                removeAlert(DEFAULT_ACCOUNT_DISABLED)
                 removeAlert(NON_DEFAULT_ACCOUNT_NOT_CONNECTED)
                 // Refresh REGISTER to re-compute alerts regarding accounts registration state
                 core.refreshRegisters()
+
+                if (!account.params.isRegisterEnabled) {
+                    val label = AppUtils.getString(
+                        R.string.default_account_disabled
+                    )
+                    addAlert(DEFAULT_ACCOUNT_DISABLED, label)
+                }
             }
 
             computeNonDefaultAccountNotificationsCount()
@@ -287,8 +297,11 @@ class MainViewModel
             Log.w(
                 "$TAG Account [${account.params.identityAddress?.asStringUriOnly()}] has been removed!"
             )
+            removeAlert(DEFAULT_ACCOUNT_DISABLED)
             removeAlert(NON_DEFAULT_ACCOUNT_NOT_CONNECTED)
+            // Refresh REGISTER to re-compute alerts regarding accounts registration state
             core.refreshRegisters()
+
             computeNonDefaultAccountNotificationsCount()
 
             if (core.accountList.isEmpty()) {
@@ -325,7 +338,6 @@ class MainViewModel
     }
 
     init {
-        defaultAccountRegistrationFailed = false
         showAlert.value = false
         atLeastOneCall.value = false
         maxAlertLevel.value = NONE
@@ -348,8 +360,18 @@ class MainViewModel
                 atLeastOneCall.postValue(true)
             }
 
-            if (core.defaultAccount?.state == RegistrationState.Ok && !firstAccountRegistered) {
-                triggerNativeAddressBookImport()
+            val defaultAccount = core.defaultAccount
+            if (defaultAccount != null) {
+                if (!defaultAccount.params.isRegisterEnabled) {
+                    val label = AppUtils.getString(
+                        R.string.default_account_disabled
+                    )
+                    addAlert(DEFAULT_ACCOUNT_DISABLED, label)
+                }
+
+                if (defaultAccount.state == RegistrationState.Ok && !firstAccountRegistered) {
+                    triggerNativeAddressBookImport()
+                }
             }
         }
 
@@ -557,20 +579,24 @@ class MainViewModel
             val label = maxedPriorityAlert.second
             Log.i("$TAG Max priority alert right now is [$type]")
             maxAlertLevel.postValue(type)
-            when (type) {
-                NON_DEFAULT_ACCOUNT_NOTIFICATIONS, NON_DEFAULT_ACCOUNT_NOT_CONNECTED -> {
-                    alertIcon.postValue(R.drawable.bell_simple)
+            val icon = when (type) {
+                DEFAULT_ACCOUNT_DISABLED -> {
+                    R.drawable.warning_circle
                 }
                 NETWORK_NOT_REACHABLE -> {
-                    alertIcon.postValue(R.drawable.wifi_slash)
+                    R.drawable.wifi_slash
                 }
                 SEND_NOTIFICATIONS_PERMISSION_NOT_GRANTED, FULL_SCREEN_INTENTS_PERMISSION_NOT_GRANTED -> {
-                    alertIcon.postValue(R.drawable.bell_simple_slash)
+                    R.drawable.bell_simple_slash
                 }
                 SINGLE_CALL, MULTIPLE_CALLS -> {
-                    alertIcon.postValue(R.drawable.phone)
+                    R.drawable.phone
+                }
+                else -> {
+                    R.drawable.bell_simple
                 }
             }
+            alertIcon.postValue(icon)
             alertLabel.postValue(label)
 
             if (type < SINGLE_CALL) {
