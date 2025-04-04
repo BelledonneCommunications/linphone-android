@@ -56,6 +56,8 @@ abstract class AddressSelectionViewModel
 
     val searchFilter = MutableLiveData<String>()
 
+    val searchInProgress = MutableLiveData<Boolean>()
+
     val modelsList = MutableLiveData<ArrayList<ConversationContactOrSuggestionModel>>()
 
     val isEmpty = MutableLiveData<Boolean>()
@@ -238,6 +240,7 @@ abstract class AddressSelectionViewModel
         Log.i(
             "$TAG Asking Magic search for contacts matching filter [$filter], domain [$domain] and in sources [$sources]"
         )
+        searchInProgress.postValue(filter.isNotEmpty())
         magicSearch.getContactsListAsync(
             filter,
             domain,
@@ -322,6 +325,8 @@ abstract class AddressSelectionViewModel
         list.addAll(favoritesList)
         list.addAll(contactsList)
         list.addAll(suggestionsList)
+
+        searchInProgress.postValue(false)
         modelsList.postValue(list)
         isEmpty.postValue(list.isEmpty())
         Log.i(

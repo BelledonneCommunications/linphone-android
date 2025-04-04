@@ -141,7 +141,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:indeterminate="true"
-                    android:visibility="@{viewModel.fetchInProgress ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.fetchInProgress || viewModel.searchInProgress ? View.VISIBLE : View.GONE}"
                     app:indicatorColor="?attr/color_main1_500"
                     app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
                     app:layout_constraintEnd_toEndOf="parent"
