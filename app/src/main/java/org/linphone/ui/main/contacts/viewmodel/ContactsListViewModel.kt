@@ -61,6 +61,8 @@ class ContactsListViewModel
 
     val isListFiltered = MutableLiveData<Boolean>()
 
+    val searchInProgress = MutableLiveData<Boolean>()
+
     val isDefaultAccountLinphone = MutableLiveData<Boolean>()
 
     val vCardTerminatedEvent: MutableLiveData<Event<Pair<String, File>>> by lazy {
@@ -255,6 +257,7 @@ class ContactsListViewModel
         Log.i(
             "$TAG Asking Magic search for contacts matching filter [$filter], domain [$domain] and in sources Friends/LDAP/CardDAV"
         )
+        searchInProgress.postValue(filter.isNotEmpty())
         magicSearch.getContactsListAsync(
             filter,
             domain,
@@ -328,6 +331,7 @@ class ContactsListViewModel
             collator.compare(model1.getNameToUseForSorting(), model2.getNameToUseForSorting())
         }
 
+        searchInProgress.postValue(false)
         favourites.postValue(favouritesList)
         contactsList.postValue(list)
 
