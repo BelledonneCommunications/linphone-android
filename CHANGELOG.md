@@ -10,6 +10,28 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [6.0.3] - 2025-04-04
+
+### Added
+- Show alert when default account is disabled
+- Refesh list details when going back from background after one hour or more (when keep app alive using service is enabled)
+- Click to copy SIP URI in call history shortcut
+- Added developper settings, must click 8 times on version (in Help) to make it appear (E2E encryption for meetings & group calls setting was moved there)
+- Circular indicator while search is in progress in contacts lists
+
+### Changed
+- Force some default values on notifications channels
+- Contacts list filter is now applied to new call / conversation & other contact pickers
+- Attach file icon stays visible while typing message in conversation instead of emoji picker icon
+
+### Fixed
+- No default account being selected if the default one is removed
+- Navigation bar turning orange when opening search bar
+- Incoming call showed as video even if video is disabled locally
+- Concurrent modification crash in Contacts loader
+- Meetings list not properly sorted when CCMP is used
+- POST_NOTIFICATIONS permission check on old Android devices
+
 ## [6.0.2] - 2025-03-28
 
 ### Added
