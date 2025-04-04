@@ -860,6 +860,34 @@ class NotificationsManager(private val context: Context) {
         notify(MISSED_CALLS_NOTIF_ID, notification, MISSED_CALL_TAG)
     }
 
+    fun displayDimensionsMissedCallNotification(missedCallNumber: String) {
+        val pendingIntent = NavDeepLinkBuilder(context)
+            .setComponentName(MainActivity::class.java)
+            .setGraph(R.navigation.main_nav_graph)
+            .setDestination(R.id.masterCallLogsFragment)
+            .createPendingIntent()
+
+        val builder = NotificationCompat.Builder(
+            context,
+            context.getString(R.string.notification_channel_missed_call_id)
+        )
+            .setContentTitle(context.getString(R.string.missed_call_notification_title))
+            .setContentText(missedCallNumber)
+            .setSmallIcon(R.drawable.topbar_missed_call_notification)
+            .setAutoCancel(true)
+            .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
+            .setWhen(System.currentTimeMillis())
+            .setShowWhen(true)
+            .setColor(ContextCompat.getColor(context, R.color.notification_led_color))
+
+        if (!corePreferences.preventInterfaceFromShowingUp) {
+            builder.setContentIntent(pendingIntent)
+        }
+
+        val notification = builder.build()
+        notify(MISSED_CALLS_NOTIF_ID, notification, MISSED_CALL_TAG)
+    }
+
     fun dismissMissedCallNotification() {
         cancel(MISSED_CALLS_NOTIF_ID, MISSED_CALL_TAG)
     }

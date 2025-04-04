@@ -1,18 +1,27 @@
 package org.linphone.services
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Build
 import androidx.core.content.edit
 import androidx.lifecycle.DefaultLifecycleObserver
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import java.util.concurrent.atomic.AtomicReference
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.rx3.rxSingle
 import org.linphone.authentication.AuthStateManager
+import org.linphone.environment.DimensionsEnvironmentService
 import org.linphone.models.AuthenticatedUser
 import org.linphone.models.UserInfo
+import org.linphone.models.UserSession
 import org.linphone.utils.Log
 
+@SuppressLint("CheckResult")
 class UserService(val context: Context) : DefaultLifecycleObserver {
 
     companion object {
@@ -28,7 +37,11 @@ class UserService(val context: Context) : DefaultLifecycleObserver {
         }
     }
 
+    val pushTokenService = PushTokenService.getInstance(context)
+
     val user: Observable<UserInfo>
+    var userSession: UserSession? = null
+
     var e911Accepted: Boolean = false
 
     var userSubscription: Disposable? = null
@@ -58,6 +71,77 @@ class UserService(val context: Context) : DefaultLifecycleObserver {
             }
             .replay(1)
             .autoConnect()
+
+        user.subscribe { u ->
+            CoroutineScope(Dispatchers.IO).launch {
+                createUserSession()
+            }
+        }
+    }
+
+    private suspend fun createUserSession() {
+        if (userSession == null) {
+            try {
+                val dimensionsEnvironment =
+                    DimensionsEnvironmentService.getInstance(context).getCurrentEnvironment()
+                if (dimensionsEnvironment != null) {
+                    val deviceId = pushTokenService.getDeviceId()
+
+                    val newUserSession = UserSession(
+                        deviceId,
+                        "plummobile",
+                        Build.VERSION.RELEASE,
+                        dimensionsEnvironment.name,
+                        deviceId,
+                        "${Build.MANUFACTURER} ${Build.MODEL}",
+                        "Android",
+                        Build.MANUFACTURER,
+                        Build.MODEL,
+                        Build.VERSION.BASE_OS,
+                        pushTokenService.getToken()
+                    )
+
+                    val response = APIClientService(context).getUCGatewayService().postUserSession(
+                        newUserSession
+                    )
+
+                    if (response.isSuccessful) {
+                        userSession = newUserSession
+                    } else {
+                        throw Exception("Unable to create new session: Error(${response.code()})")
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("getUserSession", e)
+                userSession = null
+            }
+        }
+    }
+
+    fun removeUserSession() {
+        runBlocking {
+            try {
+                val userSessionToRemove = userSession
+                if (userSessionToRemove != null) {
+                    val deviceId = pushTokenService.getDeviceId()
+
+                    val response = APIClientService(context).getUCGatewayService().deleteUserSession(
+                        deviceId,
+                        userSessionToRemove
+                    )
+
+                    if (!response.isSuccessful) {
+                        throw Exception(
+                            "Unable to delete session $deviceId: Error(${response.code()})"
+                        )
+                    }
+
+                    userSession = null
+                }
+            } catch (e: Exception) {
+                Log.e("removeUserSession", e)
+            }
+        }
     }
 
     private suspend fun getUserInfo(): UserInfo {

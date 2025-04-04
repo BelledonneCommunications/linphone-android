@@ -205,7 +205,7 @@
             android:stopWithTask="false"
             android:label="@string/app_name" />
 
-        <service android:name="org.linphone.core.tools.firebase.FirebaseMessaging"
+        <service android:name="org.linphone.services.DimensionsFirebaseMessaging"
             android:enabled="${firebaseServiceEnabled}"
             android:exported="true">
             <intent-filter>

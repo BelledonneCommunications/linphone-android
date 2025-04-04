@@ -39,7 +39,6 @@ import android.webkit.MimeTypeMap
 import androidx.lifecycle.*
 import androidx.loader.app.LoaderManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.GsonBuilder
 import io.reactivex.rxjava3.disposables.Disposable
 import java.io.File
@@ -56,7 +55,6 @@ import javax.crypto.spec.GCMParameterSpec
 import kotlin.math.abs
 import kotlinx.coroutines.*
 import kotlinx.coroutines.rx3.await
-import kotlinx.coroutines.tasks.await
 import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -69,6 +67,7 @@ import org.linphone.contact.getContactForPhoneNumberOrAddress
 import org.linphone.mediastream.Version
 import org.linphone.models.UserDevice
 import org.linphone.notifications.NotificationsManager
+import org.linphone.services.PushTokenService
 import org.linphone.services.UserService
 import org.linphone.telecom.TelecomHelper
 import org.linphone.utils.*
@@ -535,16 +534,16 @@ class CoreContext(
             // FIXME: this feels rotten to the core
             runBlocking {
                 val appId = BuildConfig.APPLICATION_ID
-                val pushToken = FirebaseMessaging.getInstance().token.await()
-                if (!pushToken.isNullOrEmpty()) {
+                val pushToken = PushTokenService.getInstance(context).getVoipToken()
+                if (pushToken.isNotEmpty()) {
                     Log.i("RegisterSipAccount: We have a push token, setting contact")
                     accountParams.contactParameters = "app-id=$appId;pn-tok=$pushToken;pn-type=firebase_v1"
                 }
-            }
 
-            val account = core.createAccount(accountParams)
-            Log.i("RegisterSipEndpoints::${account.params.identityAddress?.username}")
-            core.addAccount(account)
+                val account = core.createAccount(accountParams)
+                Log.i("RegisterSipEndpoints::${account.params.identityAddress?.username}")
+                core.addAccount(account)
+            }
         }
     }
 

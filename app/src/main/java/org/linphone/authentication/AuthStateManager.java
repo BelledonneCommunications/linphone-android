@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 
 import org.json.JSONObject;
+import org.linphone.services.UserService;
 import org.linphone.utils.Log;
 import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
@@ -214,6 +215,8 @@ public class AuthStateManager {
             return;
         }
         Log.Log.i("AuthStateManager.logout");
+
+        UserService.Companion.getInstance(context).removeUserSession();
 
         replace(new AuthState(), "logout");
 

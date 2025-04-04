@@ -5,6 +5,7 @@ import okhttp3.RequestBody
 import org.linphone.models.TenantBrandingDefinition
 import org.linphone.models.UserDevice
 import org.linphone.models.UserInfo
+import org.linphone.models.UserSession
 import org.linphone.models.callhistory.ReportRequest
 import org.linphone.models.callhistory.UserCallHistorySummary
 import org.linphone.models.contact.ContactDirectoryModel
@@ -18,6 +19,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -99,13 +101,20 @@ interface CTGatewayService {
     suspend fun doGetMissedCallDate(): Response<UserCallHistorySummary>
 
     @PUT("api/v1.0/usercallhistory/summary")
-    fun doSetMissedCallDate(
-        @Query("dateTime") dateTime: String
-    ): Call<Void>
+    fun doSetMissedCallDate(@Query("dateTime") dateTime: String): Call<Void>
 
     @POST("api/v1.0/usercallhistory/report")
     suspend fun postReportRequest(@Body request: Map<String, String?>): ReportRequest
 
     @GET("api/v1.0/usercallhistory/report")
     suspend fun getReportResult(@Query("requestId") requestId: String): Response<ReportResult>
+
+    @POST("api/v1.0/usersession")
+    suspend fun postUserSession(@Body request: UserSession): Response<Void>
+
+    @HTTP(method = "DELETE", path = "api/v1.0/usersession/{deviceId}", hasBody = true)
+    suspend fun deleteUserSession(
+        @Path("deviceId") deviceId: String,
+        @Body request: UserSession
+    ): Response<Void>
 }
