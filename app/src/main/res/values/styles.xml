@@ -34,6 +34,8 @@
         <item name="accentColorLight30">@color/primary_light_color</item>
         <item name="accentTextColor">@color/white_color</item>
         <item name="primaryTextColor">@color/light_primary_text_color</item>
+        <item name="warningTextColor">@color/red_color</item>
+        <item name="callHistoryIconColor">@color/dark_grey_color</item>
         <item name="secondaryTextColor">@color/white_color</item>
         <item name="primarySubtextDarkColor">@color/grey_color</item>
         <item name="primarySubtextLightColor">@color/light_grey_color</item>
@@ -350,8 +352,18 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+    <style name="contact_name_list_cell_font_missed_call" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/warningTextColor</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
     <style name="contact_number_list_cell_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">@color/light_grey_color</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="contact_number_list_cell_font_missed_call" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/warningTextColor</item>
         <item name="android:textSize">18sp</item>
     </style>
 

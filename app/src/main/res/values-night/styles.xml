@@ -23,6 +23,9 @@
         <item name="accentColorLight30">@color/primary_light_color</item>
         <item name="accentTextColor">@color/white_color</item>
         <item name="primaryTextColor">@color/dark_primary_text_color</item>
+        <item name="warningTextColor">@color/red_color</item>
+        <item name="callHistoryIconColor">@color/dark_grey_color</item>
+
         <item name="secondaryTextColor">@color/voip_dark_gray</item>
         <item name="primarySubtextDarkColor">@color/header_background_color</item>
         <item name="primarySubtextLightColor">@color/toolbar_color</item>

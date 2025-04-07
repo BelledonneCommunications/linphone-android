@@ -47,6 +47,9 @@ class CallLogViewModel(val callLog: CallLog, private val isRelated: Boolean = fa
     val dimensionsContactName = MutableLiveData<String>()
     val dimensionsContactNumber = MutableLiveData<String>()
     val dimensionsStartTime = MutableLiveData<String>()
+    val dimensionsContactNumberForegroundStyle = MutableLiveData<Int>()
+    var dimensionsContactNameForegroundStyle = MutableLiveData<Int>()
+    var dimensionsAttrTintColor = MutableLiveData<Int>()
 
     val statusIconResource: Int by lazy {
         if (callLog is CallHistoryItemViewModel) {
@@ -226,9 +229,25 @@ class CallLogViewModel(val callLog: CallLog, private val isRelated: Boolean = fa
             dimensionsContactNumber.value = callLog.formattedNumber
             dimensionsStartTime.value = if (callLog.date.isBlank()) callLog.time else "${callLog.date} ${callLog.time}"
 
-//            val formatter = DateTimeFormatter.ofPattern("HH:mm")
-//            val localDateTime = callLog.call.startTime.withZoneSameInstant(ZoneId.systemDefault())
-//            dimensionsStartTime.value = localDateTime.format(formatter)
+            dimensionsContactNumberForegroundStyle.value = if (callLog.call.missedCall) {
+                R.style.contact_number_list_cell_font_missed_call
+            } else {
+                R.style.contact_number_list_cell_font
+            }
+
+            dimensionsContactNameForegroundStyle.value = if (callLog.call.missedCall) {
+                R.style.contact_name_list_cell_font_missed_call
+            } else {
+                R.style.contact_name_list_cell_font
+            }
+
+            // @color/menu_icon_color
+
+            dimensionsAttrTintColor.value = if (callLog.call.missedCall) {
+                R.attr.warningTextColor
+            } else {
+                R.attr.callHistoryIconColor
+            }
         }
     }
 

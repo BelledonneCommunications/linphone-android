@@ -120,7 +120,9 @@
                 android:contentDescription="@{viewModel.iconContentDescription}"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:src="@{viewModel.statusIconResource, default=@drawable/call_status_outgoing}" />
+                android:src="@{viewModel.statusIconResource, default=@drawable/call_status_outgoing}"
+                app:attrTint="@{viewModel.dimensionsAttrTintColor}"
+                />
 
             <LinearLayout
                 android:id="@+id/contactDetailContainer"
@@ -132,7 +134,7 @@
 
                 <TextView
                     android:id="@+id/contact_name"
-                    style="@style/contact_name_list_cell_font"
+                    app:textStyle="@{viewModel.dimensionsContactNameForegroundStyle}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
@@ -143,7 +145,7 @@
 
                 <TextView
                     android:id="@+id/contact_number"
-                    style="@style/contact_number_list_cell_font"
+                    app:textStyle="@{viewModel.dimensionsContactNumberForegroundStyle}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
@@ -157,6 +159,7 @@
 
             <TextView
                 android:id="@+id/startTime"
+                app:textStyle="@{viewModel.dimensionsContactNameForegroundStyle}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.dimensionsStartTime}"
