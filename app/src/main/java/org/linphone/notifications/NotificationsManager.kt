@@ -137,9 +137,9 @@ class NotificationsManager(private val context: Context) {
                 }
                 Call.State.End, Call.State.Error -> dismissCallNotification(call)
                 Call.State.Released -> {
-                    if (LinphoneUtils.isCallLogMissed(call.callLog)) {
-                        displayMissedCallNotification(call.remoteAddress)
-                    }
+//                    if (LinphoneUtils.isCallLogMissed(call.callLog)) {
+//                        displayMissedCallNotification(call.remoteAddress)
+//                    } //Note: being handled by push notifications
                 }
                 Call.State.OutgoingInit, Call.State.OutgoingProgress, Call.State.OutgoingRinging -> {
                     displayCallNotification(call, false)

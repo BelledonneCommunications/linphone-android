@@ -12,6 +12,8 @@ import org.linphone.services.PhoneFormatterService
 import org.linphone.utils.DateUtils
 import org.linphone.utils.LinphoneUtils
 import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZoneId
+import org.threeten.bp.format.DateTimeFormatter
 
 class CallHistoryItemViewModel(
     val call: CallHistoryItem,
@@ -21,7 +23,11 @@ class CallHistoryItemViewModel(
     val rowClass: String = if (call.missedCall) "missed" else ""
 
     val date: String = DateUtils.formatFriendlyDate(call.startTime, localDateTime)
-    val time: String = DateUtils.toLocaleHMString(call.startTime)
+
+    val formatter = DateTimeFormatter.ofPattern("HH:mm")
+    val zonedDateTime = call.startTime.withZoneSameInstant(ZoneId.systemDefault())
+    val time: String = zonedDateTime.format(formatter)
+
     var contactName: String = ""
     var contactIcon: String = buildContactMatchIcon()
     var contactLabel: String = buildContactMatchLabel()

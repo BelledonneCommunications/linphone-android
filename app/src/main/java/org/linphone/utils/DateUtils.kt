@@ -4,11 +4,13 @@ import android.annotation.SuppressLint
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.util.Calendar
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.format.FormatStyle
 
 class DateUtils {
     companion object {
@@ -51,12 +53,17 @@ class DateUtils {
                 val aWeekAgo = midnightToday?.minusDays(7)
                 val twoWeeksAgo = midnightToday?.minusDays(14)
 
+                // Create a localized formatter
+                val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).withLocale(
+                    Locale.getDefault()
+                )
+
                 return when {
                     midnightDate == midnightToday -> ""
                     midnightDate == yesterday -> "Yesterday"
                     midnightDate > aWeekAgo -> getDayName(dateTime.dayOfWeek.value)
                     useLastWeek && midnightDate > twoWeeksAgo -> "Last week"
-                    else -> dateTime.format(DateTimeFormatter.ofPattern("HH:mm"))
+                    else -> dateTime.format(formatter)
                 }
             } catch (e: Exception) {
                 Log.e("formatFriendlyDate", e)
