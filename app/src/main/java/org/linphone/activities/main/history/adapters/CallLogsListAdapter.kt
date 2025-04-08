@@ -19,10 +19,13 @@
  */
 package org.linphone.activities.main.history.adapters
 
+import android.app.AlertDialog
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
@@ -34,11 +37,16 @@ import org.linphone.activities.main.history.data.GroupedCallLogData
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 import org.linphone.databinding.GenericListHeaderBinding
 import org.linphone.databinding.HistoryListCellBinding
-import org.linphone.utils.*
+import org.linphone.models.callhistory.CallHistoryItemViewModel
+import org.linphone.utils.Event
+import org.linphone.utils.HeaderAdapter
+import org.linphone.utils.Log
+import org.linphone.utils.TimestampUtils
 
 class CallLogsListAdapter(
     selectionVM: ListTopBarViewModel,
-    private val viewLifecycleOwner: LifecycleOwner
+    private val viewLifecycleOwner: LifecycleOwner,
+    private val context: Context?
 ) : SelectionListAdapter<GroupedCallLogData, RecyclerView.ViewHolder>(
     selectionVM,
     CallLogDiffCallback()
@@ -85,10 +93,14 @@ class CallLogsListAdapter(
                 }
 
                 setClickListener {
-                    if (selectionViewModel.isEditionEnabled.value == true) {
-                        selectionViewModel.onToggleSelect(bindingAdapterPosition)
-                    } else {
-                        startCallToEvent.value = Event(callLogGroup)
+                    try {
+                        if (selectionViewModel.isEditionEnabled.value == true) {
+                            selectionViewModel.onToggleSelect(bindingAdapterPosition)
+                        } else {
+                            showMakeCallDialog(callLogGroup)
+                        }
+                    } catch (e: Exception) {
+                        Log.e("setClickListener", e)
                     }
                 }
 
@@ -110,6 +122,34 @@ class CallLogsListAdapter(
 
                 executePendingBindings()
             }
+        }
+    }
+
+    private fun showMakeCallDialog(callLogGroup: GroupedCallLogData) {
+        val callHistoryItemViewModel = callLogGroup.lastCallLog
+        if (callHistoryItemViewModel is CallHistoryItemViewModel) {
+            val inflater = LayoutInflater.from(context)
+            val dialogView = inflater.inflate(R.layout.call_history_make_call_dialog, null)
+
+            val titleTextView: TextView = dialogView.findViewById(
+                R.id.callHistoryMakeCallDialogTitle
+            )
+            titleTextView.text = callHistoryItemViewModel.contactName
+
+            val dialog = AlertDialog.Builder(context)
+                .setView(dialogView) // Set the custom layout as the dialog's content
+                .create()
+
+            dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_dialog_background)
+
+            val button: Button = dialogView.findViewById(R.id.callHistoryMakeCallDialogButton)
+            button.setOnClickListener {
+                dialog.dismiss()
+
+                startCallToEvent.value = Event(callLogGroup)
+            }
+
+            dialog.show()
         }
     }
 
