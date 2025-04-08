@@ -1,6 +1,6 @@
 package org.linphone.models.callhistory
 
-import io.reactivex.rxjava3.core.Observable
+import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Address
@@ -14,23 +14,22 @@ import org.linphone.utils.LinphoneUtils
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.format.FormatStyle
 
 class CallHistoryItemViewModel(
     val call: CallHistoryItem,
-    val localDateTime: LocalDateTime,
-    val countryCode: String
+    localDateTime: LocalDateTime
 ) : CallLog {
-    val rowClass: String = if (call.missedCall) "missed" else ""
-
     val date: String = DateUtils.formatFriendlyDate(call.startTime, localDateTime)
 
-    val formatter = DateTimeFormatter.ofPattern("HH:mm")
-    val zonedDateTime = call.startTime.withZoneSameInstant(ZoneId.systemDefault())
+    private val formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).withLocale(
+        Locale.getDefault()
+    )
+    private val zonedDateTime = call.startTime.withZoneSameInstant(ZoneId.systemDefault())
     val time: String = zonedDateTime.format(formatter)
 
     var contactName: String = ""
-    var contactIcon: String = buildContactMatchIcon()
-    var contactLabel: String = buildContactMatchLabel()
+    private var contactLabel: String = buildContactMatchLabel()
     var number: String = getOtherPartyNumber()
     var name: String = getOtherPartyName()
     var formattedNumber: String = retrieveFormattedNumber(number)
@@ -38,13 +37,13 @@ class CallHistoryItemViewModel(
     var icon: String = buildIcon()
     var isSelected: Boolean = false
 
-    val canCall: Observable<Boolean> = Observable.defer {
-        if (call.pbxType == PbxType.Teams) {
-            Observable.just(!call.isConference)
-        } else {
-            Observable.just(coreContext.core.callsNb == 0)
-        }
-    }
+//    val canCall: Observable<Boolean> = Observable.defer {
+//        if (call.pbxType == PbxType.Teams) {
+//            Observable.just(!call.isConference)
+//        } else {
+//            Observable.just(coreContext.core.callsNb == 0)
+//        }
+//    }
 
     private fun retrieveFormattedNumber(number: String): String {
         return if (call.isConference && call.pbxType == PbxType.Teams) {
@@ -82,7 +81,7 @@ class CallHistoryItemViewModel(
         }
 
         if (formattedNumber.isNotEmpty() && formattedNumber != name) fields.add(formattedNumber)
-        if (!route.contains(number ?: "")) fields.add("via $route")
+        if (!route.contains(number)) fields.add("via $route")
 
         return fields
     }
@@ -98,20 +97,6 @@ class CallHistoryItemViewModel(
                 }
             }
             else -> CallHistoryIcons.CallOutbound.iconValue
-        }
-    }
-
-    private fun buildContactMatchIcon(): String {
-        if (call.contactMatchType == null) return ""
-
-        return when (call.contactMatchType) {
-            "ClioContactMatch" -> "assets/crm-icons/Clio.png"
-            "Dynamics365ContactMatch" -> "assets/crm-icons/Microsoft.svg"
-            "FreshdeskContactMatch" -> "assets/crm-icons/Freshdesk.svg"
-            "SalesforceLightningContactMatch" -> "assets/crm-icons/Salesforce.svg"
-            "ZendeskContactMatch" -> "assets/crm-icons/Zendesk.svg"
-            "ZohoContactMatch" -> "assets/crm-icons/Zoho.png"
-            else -> ""
         }
     }
 
@@ -156,7 +141,7 @@ class CallHistoryItemViewModel(
         return null
     }
 
-    fun getOtherPartyNumber(): String {
+    private fun getOtherPartyNumber(): String {
         return if (CallDirections.fromValue(call.callDirection) == CallDirections.Outgoing) {
             call.calledUserNumber ?: ""
         } else {
@@ -164,7 +149,7 @@ class CallHistoryItemViewModel(
         }
     }
 
-    fun getOtherPartyName(): String {
+    private fun getOtherPartyName(): String {
         return if (CallDirections.fromValue(call.callDirection) == CallDirections.Outgoing) {
             call.calledUserName ?: ""
         } else {

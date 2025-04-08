@@ -524,7 +524,7 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
         localDateTime: LocalDateTime
     ): List<CallHistoryItemViewModel> {
         return callHistoryData.map { call ->
-            CallHistoryItemViewModel(call, localDateTime, Locale.getDefault().country)
+            CallHistoryItemViewModel(call, localDateTime)
         }
     }
 
