@@ -24,6 +24,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.AVPFMode
 import org.linphone.core.Account
 import org.linphone.core.AuthInfo
@@ -44,6 +45,8 @@ class AccountSettingsViewModel
     val expandAdvancedSettings = MutableLiveData<Boolean>()
 
     val expandNatPolicySettings = MutableLiveData<Boolean>()
+
+    val isOnDefaultDomain = MutableLiveData<Boolean>()
 
     val pushNotificationsAvailable = MutableLiveData<Boolean>()
 
@@ -129,11 +132,16 @@ class AccountSettingsViewModel
                 account = found
 
                 val params = account.params
-
-                pushNotificationsAvailable.postValue(core.isPushNotificationAvailable)
-                pushNotificationsEnabled.postValue(
-                    core.isPushNotificationAvailable && params.pushNotificationAllowed
-                )
+                val defaultDomain = params.identityAddress?.domain == corePreferences.defaultDomain
+                isOnDefaultDomain.postValue(defaultDomain)
+                if (defaultDomain) {
+                    pushNotificationsAvailable.postValue(core.isPushNotificationAvailable)
+                    pushNotificationsEnabled.postValue(
+                        core.isPushNotificationAvailable && params.pushNotificationAllowed
+                    )
+                } else {
+                    Log.w("$TAG Account isn't on default domain [${corePreferences.defaultDomain}], do not show push notification settings")
+                }
 
                 imEncryptionMandatory.postValue(params.instantMessagingEncryptionMandatory)
 
@@ -199,7 +207,8 @@ class AccountSettingsViewModel
 
             if (::account.isInitialized) {
                 val newParams = account.params.clone()
-                newParams.pushNotificationAllowed = pushNotificationsEnabled.value == true
+
+                newParams.pushNotificationAllowed = core.isPushNotificationAvailable && pushNotificationsEnabled.value == true
 
                 newParams.instantMessagingEncryptionMandatory = imEncryptionMandatory.value == true
 
