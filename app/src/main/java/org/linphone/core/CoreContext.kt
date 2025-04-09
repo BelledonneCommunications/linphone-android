@@ -602,6 +602,8 @@ class CoreContext
 
             if (oldVersion < 600000) { // 6.0.0 initial release
                 configurationMigration5To6()
+            } else if (oldVersion < 600004) { // 6.0.4
+                disablePushNotificationsFromThirdPartySipAccounts()
             }
 
             if (core.logCollectionUploadServerUrl.isNullOrEmpty()) {
@@ -1043,6 +1045,21 @@ class CoreContext
         logcatEnabled = enable
     }
 
+    // Migration between versions related
+
+    @WorkerThread
+    private fun disablePushNotificationsFromThirdPartySipAccounts() {
+        for (account in core.accountList) {
+            val params = account.params
+            if (params.identityAddress?.domain != corePreferences.defaultDomain && params.pushNotificationAllowed) {
+                val clone = params.clone()
+                clone.pushNotificationAllowed = false
+                Log.w("$TAG Updating account [${params.identityAddress?.asStringUriOnly()}] params to disable push notifications, they won't work and may cause issues when used with UDP transport protocol")
+                account.params = clone
+            }
+        }
+    }
+
     @WorkerThread
     private fun configurationMigration5To6() {
         val policy = core.videoActivationPolicy.clone()
@@ -1069,7 +1086,7 @@ class CoreContext
 
         for (account in core.accountList) {
             val params = account.params
-            if (params.domain == corePreferences.defaultDomain && params.limeAlgo.isNullOrEmpty()) {
+            if (params.identityAddress?.domain == corePreferences.defaultDomain && params.limeAlgo.isNullOrEmpty()) {
                 val clone = params.clone()
                 clone.limeAlgo = "c25519"
                 Log.i("$TAG Updating account [${params.identityAddress?.asStringUriOnly()}] params to use LIME algo c25519")
