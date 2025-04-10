@@ -149,7 +149,12 @@ class HelpViewModel
         sdkVersion.value = coreContext.sdkVersion
         logsUploadInProgress.value = false
 
-        firebaseProjectId.value = FirebaseApp.getInstance().options.projectId
+        try {
+            firebaseProjectId.value = FirebaseApp.getInstance().options.projectId
+        } catch (e: Exception) {
+            Log.e("$TAG Failed to get FirebaseApp instance: $e")
+            firebaseProjectId.value = "unknown"
+        }
 
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
