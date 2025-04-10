@@ -130,14 +130,17 @@ class TransferCallFragment : GenericCallFragment() {
         binding.callsList.setHasFixedSize(true)
         binding.contactsAndSuggestionsList.setHasFixedSize(true)
 
+        binding.contactsAndSuggestionsList.layoutManager = LinearLayoutManager(requireContext())
+        binding.callsList.layoutManager = LinearLayoutManager(requireContext())
+
+        val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), contactsAdapter)
+        binding.contactsAndSuggestionsList.addItemDecoration(headerItemDecoration)
+
         callsAdapter.callClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
                 showConfirmAttendedTransferDialog(model)
             }
         }
-
-        val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), contactsAdapter)
-        binding.contactsAndSuggestionsList.addItemDecoration(headerItemDecoration)
 
         contactsAdapter.onClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
@@ -155,9 +158,6 @@ class TransferCallFragment : GenericCallFragment() {
                 binding.callsList.adapter = callsAdapter
             }
         }
-
-        binding.contactsAndSuggestionsList.layoutManager = LinearLayoutManager(requireContext())
-        binding.callsList.layoutManager = LinearLayoutManager(requireContext())
 
         viewModel.modelsList.observe(
             viewLifecycleOwner
@@ -261,10 +261,13 @@ class TransferCallFragment : GenericCallFragment() {
     }
 
     private fun showConfirmAttendedTransferDialog(callModel: CallModel) {
+        val from = callViewModel.displayedName.value.orEmpty()
+        val to = callModel.displayName.value.orEmpty()
+        Log.i("$TAG Asking user confirmation before doing attended transfer of call with [$from] to [$to](${callModel.call.remoteAddress.asStringUriOnly()})")
         val label = AppUtils.getFormattedString(
             R.string.call_transfer_confirm_dialog_message,
-            callViewModel.displayedName.value.orEmpty(),
-            callModel.displayName.value.orEmpty()
+            from,
+            to
         )
         val model = ConfirmationDialogModel(label)
         val dialog = DialogUtils.getConfirmCallTransferCallDialog(
@@ -274,6 +277,7 @@ class TransferCallFragment : GenericCallFragment() {
 
         model.cancelEvent.observe(viewLifecycleOwner) {
             it.consume {
+                Log.i("$TAG Attended transfer was cancelled by user")
                 dialog.dismiss()
             }
         }
@@ -297,10 +301,13 @@ class TransferCallFragment : GenericCallFragment() {
     }
 
     private fun showConfirmBlindTransferDialog(contactModel: ConversationContactOrSuggestionModel) {
+        val from = callViewModel.displayedName.value.orEmpty()
+        val to = contactModel.name
+        Log.i("$TAG Asking user confirmation before doing blind transfer of call with [$from] to [$to](${contactModel.address.asStringUriOnly()})")
         val label = AppUtils.getFormattedString(
             R.string.call_transfer_confirm_dialog_message,
-            callViewModel.displayedName.value.orEmpty(),
-            contactModel.name
+            from,
+            to
         )
         val model = ConfirmationDialogModel(label)
         val dialog = DialogUtils.getConfirmCallTransferCallDialog(
@@ -310,6 +317,7 @@ class TransferCallFragment : GenericCallFragment() {
 
         model.cancelEvent.observe(viewLifecycleOwner) {
             it.consume {
+                Log.i("$TAG Blind transfer was cancelled by user")
                 dialog.dismiss()
             }
         }
