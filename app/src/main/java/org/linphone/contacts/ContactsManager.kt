@@ -469,13 +469,13 @@ class ContactsManager
                 Log.d(
                     "$TAG Friend wasn't found using phone number [$username], looking in native address book directly"
                 )
-                findNativeContact(sipAddress, username, true)
+                null
             }
         } else {
             Log.d(
                 "$TAG Friend wasn't found using SIP address [$sipAddress] and username [$username] isn't a phone number, looking in native address book directly"
             )
-            findNativeContact(sipAddress, username.orEmpty(), false)
+            null
         }
     }
 
@@ -642,14 +642,6 @@ class ContactsManager
             )
         }
         return temporaryFriendList
-    }
-
-    @WorkerThread
-    fun findNativeContact(address: String, username: String, searchAsPhoneNumber: Boolean): Friend? {
-        // As long as read contacts permission is granted, friends will be stored in DB,
-        // so if Core didn't find a matching item it in the FriendList, there's no reason the native address book
-        // shall contain a matching contact.
-        return null
     }
 
     @WorkerThread

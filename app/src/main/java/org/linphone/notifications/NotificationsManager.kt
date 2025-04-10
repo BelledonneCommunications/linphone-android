@@ -31,9 +31,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.media.AudioAttributes
-import android.media.AudioManager
 import android.media.MediaPlayer
-import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Bundle
 import androidx.annotation.AnyThread
@@ -1590,24 +1588,6 @@ class NotificationsManager
             )
         }
         currentKeepAliveThirdPartyAccountsForegroundServiceNotificationId = -1
-    }
-
-    @MainThread
-    private fun createIncomingCallNotificationChannel() {
-        val id = context.getString(R.string.notification_channel_incoming_call_id)
-        val name = context.getString(R.string.notification_channel_incoming_call_name)
-
-        val ringtone = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE)
-        val audioAttributes = AudioAttributes.Builder()
-            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-            .setLegacyStreamType(AudioManager.STREAM_RING)
-            .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE).build()
-
-        val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH).apply {
-            description = name
-            setSound(ringtone, audioAttributes)
-        }
-        notificationManager.createNotificationChannel(channel)
     }
 
     @MainThread

@@ -98,9 +98,10 @@ class RecordingMediaPlayerViewModel
 
     @UiThread
     fun setVideoRenderingSurface(textureView: TextureView) {
+        val texture = textureView.surfaceTexture
         coreContext.postOnCoreThread {
             Log.i("$TAG Setting window ID in player")
-            player.setWindowId(textureView.surfaceTexture)
+            player.setWindowId(texture)
         }
     }
 
