@@ -137,9 +137,9 @@ class NotificationsManager(private val context: Context) {
                 }
                 Call.State.End, Call.State.Error -> dismissCallNotification(call)
                 Call.State.Released -> {
-//                    if (LinphoneUtils.isCallLogMissed(call.callLog)) {
-//                        displayMissedCallNotification(call.remoteAddress)
-//                    } //Note: being handled by push notifications
+                    if (LinphoneUtils.isCallLogMissed(call.callLog)) {
+                        displayMissedCallNotification(call.remoteAddress)
+                    }
                 }
                 Call.State.OutgoingInit, Call.State.OutgoingProgress, Call.State.OutgoingRinging -> {
                     displayCallNotification(call, false)
@@ -843,14 +843,14 @@ class NotificationsManager(private val context: Context) {
         )
             .setContentTitle(context.getString(R.string.missed_call_notification_title))
             .setContentText(body)
-            .setSmallIcon(R.drawable.topbar_missed_call_notification)
+            .setSmallIcon(R.drawable.connect_bar_icon)
             .setAutoCancel(true)
             // .setCategory(NotificationCompat.CATEGORY_EVENT) No one really matches "missed call"
             .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
             .setWhen(System.currentTimeMillis())
             .setShowWhen(true)
             .setNumber(missedCallCount)
-            .setColor(ContextCompat.getColor(context, R.color.notification_led_color))
+        // .setColor(ContextCompat.getColor(context, R.color.notification_led_color))
 
         if (!corePreferences.preventInterfaceFromShowingUp) {
             builder.setContentIntent(pendingIntent)
@@ -878,6 +878,7 @@ class NotificationsManager(private val context: Context) {
             .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
             .setWhen(System.currentTimeMillis())
             .setShowWhen(true)
+            .setNumber(1)
             .setColor(ContextCompat.getColor(context, R.color.notification_led_color))
 
         if (!corePreferences.preventInterfaceFromShowingUp) {

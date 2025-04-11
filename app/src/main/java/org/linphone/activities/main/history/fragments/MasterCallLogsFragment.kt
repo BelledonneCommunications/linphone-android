@@ -228,12 +228,8 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
                     callLog.call.pbxType == PbxType.Teams
                 ) {
                     if (!callLog.call.isConference) {
-                        context?.let {
-                            UrlHelper.openBrowser(
-                                it,
-                                "https://teams.microsoft.com/l/call/0/0?users=${callLog.number}"
-                            )
-                        }
+                        // FixMe - This sends the intent and then returns control to this app, this isn't valid behaviour
+                        // context?.let { it -> UrlHelper.startTeamsCall(it, callLog.number) }
                     }
                 } else {
                     val conferenceInfo = callLog.conferenceInfo

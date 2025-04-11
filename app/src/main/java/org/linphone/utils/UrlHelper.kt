@@ -3,6 +3,7 @@ package org.linphone.utils
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.core.net.toUri
 import java.util.Locale
 import org.linphone.authentication.AuthStateManager
@@ -45,6 +46,31 @@ class UrlHelper {
             intent.data = uri.toUri()
             if (intent.resolveActivity(context.packageManager) != null) {
                 context.startActivity(intent)
+            }
+        }
+
+        fun startTeamsCall(context: Context, email: String) {
+            // Create the Teams deep link
+            val teamsUri = Uri.parse("https://teams.microsoft.com/l/call/0/0?users=$email")
+
+            // Create an intent to open the Teams app
+            val intent = Intent(Intent.ACTION_VIEW, teamsUri).apply {
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK) // Start Teams in a new task
+            }
+
+            // Check if the Teams app is installed
+            if (intent.resolveActivity(context.packageManager) != null) {
+                context.startActivity(intent) // Launch the Teams app
+            } else {
+                // Handle the case where Teams is not installed
+                // Optionally redirect the user to the Play Store
+                val playStoreUri = Uri.parse(
+                    "https://play.google.com/store/apps/details?id=com.microsoft.teams"
+                )
+                val playStoreIntent = Intent(Intent.ACTION_VIEW, playStoreUri).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) // Start Play Store in a new task
+                }
+                context.startActivity(playStoreIntent)
             }
         }
     }
