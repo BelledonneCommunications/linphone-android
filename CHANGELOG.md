@@ -10,6 +10,15 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [6.0.4] - 2025-04-11
+
+### Changed
+- Third party SIP accounts push notifications will be disabled and setting will be hidden unless if list of supported domains (to prevent issues, specifically when used with UDP transport protocol causing bigger packets getting lost)
+
+### Fixed
+- Prevent refresh of views due to contacts changes to happen to frequently at startup
+- Prevent crash in Help view if app is built without Firebase
+
 ## [6.0.3] - 2025-04-04
 
 ### Added
