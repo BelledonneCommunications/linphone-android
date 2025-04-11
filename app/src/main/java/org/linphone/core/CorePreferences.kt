@@ -276,6 +276,15 @@ class CorePreferences
             config.setString("ui", "theme_main_color", value)
         }
 
+    // Customization options
+
+    @get:WorkerThread
+    val defaultDomain: String
+        get() = config.getString("app", "default_domain", "sip.linphone.org")!!
+
+    val pushNotificationCompatibleDomains: Array<String>
+        get() = config.getStringList("app", "push_notification_domains", arrayOf("sip.linphone.org"))
+
     @get:WorkerThread
     val darkModeAllowed: Boolean
         get() = config.getBool("ui", "dark_mode_allowed", true)
@@ -377,10 +386,6 @@ class CorePreferences
         get() = config.getBool("ui", "show_letters_on_dialpad", true)
 
     // Paths
-
-    @get:WorkerThread
-    val defaultDomain: String
-        get() = config.getString("app", "default_domain", "sip.linphone.org")!!
 
     @get:AnyThread
     val configPath: String

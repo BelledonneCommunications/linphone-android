@@ -46,7 +46,7 @@ class AccountSettingsViewModel
 
     val expandNatPolicySettings = MutableLiveData<Boolean>()
 
-    val isOnDefaultDomain = MutableLiveData<Boolean>()
+    val isDomainInPushNotificationCompatibleList = MutableLiveData<Boolean>()
 
     val pushNotificationsAvailable = MutableLiveData<Boolean>()
 
@@ -132,9 +132,9 @@ class AccountSettingsViewModel
                 account = found
 
                 val params = account.params
-                val defaultDomain = params.identityAddress?.domain == corePreferences.defaultDomain
-                isOnDefaultDomain.postValue(defaultDomain)
-                if (defaultDomain) {
+                val pushAvailableForDomain = params.identityAddress?.domain in corePreferences.pushNotificationCompatibleDomains
+                isDomainInPushNotificationCompatibleList.postValue(pushAvailableForDomain)
+                if (pushAvailableForDomain) {
                     pushNotificationsAvailable.postValue(core.isPushNotificationAvailable)
                     pushNotificationsEnabled.postValue(
                         core.isPushNotificationAvailable && params.pushNotificationAllowed

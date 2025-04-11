@@ -1051,7 +1051,8 @@ class CoreContext
     private fun disablePushNotificationsFromThirdPartySipAccounts() {
         for (account in core.accountList) {
             val params = account.params
-            if (params.identityAddress?.domain != corePreferences.defaultDomain && params.pushNotificationAllowed) {
+            val pushAvailableForDomain = params.identityAddress?.domain in corePreferences.pushNotificationCompatibleDomains
+            if (!pushAvailableForDomain && params.pushNotificationAllowed) {
                 val clone = params.clone()
                 clone.pushNotificationAllowed = false
                 Log.w("$TAG Updating account [${params.identityAddress?.asStringUriOnly()}] params to disable push notifications, they won't work and may cause issues when used with UDP transport protocol")

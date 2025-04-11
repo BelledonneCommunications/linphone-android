@@ -82,7 +82,7 @@
                             android:layout_marginEnd="16dp"
                             android:enabled="@{viewModel.pushNotificationsAvailable}"
                             android:checked="@={viewModel.pushNotificationsEnabled}"
-                            android:visibility="@{viewModel.isOnDefaultDomain ? View.VISIBLE : View.GONE}"
+                            android:visibility="@{viewModel.isDomainInPushNotificationCompatibleList ? View.VISIBLE : View.GONE}"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent"/>
 
@@ -97,7 +97,7 @@
                             android:text="@{viewModel.pushNotificationsAvailable ? @string/account_settings_push_notification_title : @string/account_settings_push_notification_not_available_title, default=@string/account_settings_push_notification_title}"
                             android:maxLines="2"
                             android:ellipsize="end"
-                            android:visibility="@{viewModel.isOnDefaultDomain ? View.VISIBLE : View.GONE}"
+                            android:visibility="@{viewModel.isDomainInPushNotificationCompatibleList ? View.VISIBLE : View.GONE}"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toBottomOf="@id/push_notifications_switch"
                             app:layout_constraintStart_toStartOf="parent"
