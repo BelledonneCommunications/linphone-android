@@ -38,6 +38,7 @@ import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 import org.linphone.databinding.GenericListHeaderBinding
 import org.linphone.databinding.HistoryListCellBinding
 import org.linphone.models.callhistory.CallHistoryItemViewModel
+import org.linphone.models.callhistory.PbxType
 import org.linphone.utils.Event
 import org.linphone.utils.HeaderAdapter
 import org.linphone.utils.Log
@@ -97,7 +98,12 @@ class CallLogsListAdapter(
                         if (selectionViewModel.isEditionEnabled.value == true) {
                             selectionViewModel.onToggleSelect(bindingAdapterPosition)
                         } else {
-                            showMakeCallDialog(callLogGroup)
+                            val lastCallLog = callLogGroup.lastCallLog
+                            if (lastCallLog is CallHistoryItemViewModel) {
+                                if (lastCallLog.call.pbxType != PbxType.Teams) {
+                                    showMakeCallDialog(callLogGroup)
+                                }
+                            }
                         }
                     } catch (e: Exception) {
                         Log.e("setClickListener", e)
