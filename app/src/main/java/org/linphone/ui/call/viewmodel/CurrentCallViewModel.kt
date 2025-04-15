@@ -1115,7 +1115,19 @@ class CurrentCallViewModel
         if (call.dir == Call.Dir.Incoming) {
             val isVideo = call.remoteParams?.isVideoEnabled == true && call.remoteParams?.videoDirection != MediaDirection.Inactive
             if (call.core.accountList.size > 1) {
-                val displayName = LinphoneUtils.getDisplayName(call.toAddress)
+                val localAddress = call.callLog.toAddress
+                Log.i("$TAG Local address for incoming call is [${localAddress.asStringUriOnly()}]")
+                val localAccount = coreContext.core.accountList.find {
+                    it.params.identityAddress?.weakEqual(localAddress) == true
+                }
+                val displayName = if (localAccount != null) {
+                    LinphoneUtils.getDisplayName(localAccount.params.identityAddress)
+                } else {
+                    Log.w("$TAG Matching local account was not found, using TO address display name or username")
+                    LinphoneUtils.getDisplayName(localAddress)
+                }
+                Log.i("$TAG Showing account being called as [$displayName]")
+
                 if (isVideo) {
                     incomingCallTitle.postValue(
                         AppUtils.getFormattedString(
