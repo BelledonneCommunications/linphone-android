@@ -111,11 +111,12 @@ class CallLogsListAdapter(
                 }
 
                 setLongClickListener {
-                    if (selectionViewModel.isEditionEnabled.value == false) {
-                        selectionViewModel.isEditionEnabled.value = true
-                        // Selection will be handled by click listener
-                        true
-                    }
+                    // SD 20250415 - Removed long click behaviour
+//                    if (selectionViewModel.isEditionEnabled.value == false) {
+//                        selectionViewModel.isEditionEnabled.value = true
+//                        // Selection will be handled by click listener
+//                        true
+//                    }
                     false
                 }
 
