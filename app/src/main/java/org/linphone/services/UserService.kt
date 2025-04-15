@@ -9,6 +9,9 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import java.util.concurrent.atomic.AtomicReference
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.rx3.rxSingle
 import org.linphone.authentication.AuthStateManager
@@ -69,17 +72,18 @@ class UserService(val context: Context) : DefaultLifecycleObserver {
             .replay(1)
             .autoConnect()
 
-        // FixMe 20250411 - Bewarned weary traveller, nothing good will come of re-enabling this code before
-        // we have a fix for for the duplicate message issue.
-
-//        user.subscribe { u ->
-//            CoroutineScope(Dispatchers.IO).launch {
-//                createUserSession()
-//            }
-//        }
+        user.subscribe { u ->
+            createUserSession()
+        }
     }
 
-    private suspend fun createUserSession() {
+    fun createUserSession() {
+        CoroutineScope(Dispatchers.IO).launch {
+            createUserSessionAsync()
+        }
+    }
+
+    private suspend fun createUserSessionAsync() {
         if (userSession == null) {
             try {
                 val dimensionsEnvironment =
