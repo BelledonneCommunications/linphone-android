@@ -120,7 +120,7 @@
     <string name="assistant_third_party_sip_account_warning_explanation">Certaines fonctionnalités telles que les conversations de groupe, les vidéo-conférences, etc… nécessitent un compte &appName;.\n\nCes fonctionnalités seront masquées si vous utilisez un compte SIP tiers.\n\nPour les activer dans un projet commercial, merci de nous contacter.</string>
     <string name="assistant_third_party_sip_account_create_linphone_account">Je préfère créer un compte &appName;</string>
     <string name="assistant_third_party_sip_account_warning_ok">J\'ai compris</string>
-    <string name="assistant_account_register_unavailable_no_push_toast">Notifications push indisponible, la création de compte est donc désactivée.</string>
+    <string name="assistant_account_register_unavailable_no_push_warning">Les notifications push ne semblent pas être disponibles sur votre appareil. Celles-ci sont nécessaires à la création d’un compte sur l’application mobile.\n\nNous vous invitons à créer un compte depuis notre plateforme web :</string>
     <string name="assistant_account_register_push_notification_not_received_error">Notification push non reçue, merci de réessayer plus tard</string>
     <string name="assistant_account_register_unexpected_error">Un erreur inattendue est survenue, merci de réessayer plus tard</string>
     <string name="assistant_account_login_forbidden_error">Mauvais nom d\'utilisateur ou mot de passe</string>
