@@ -35,6 +35,7 @@ import kotlin.getValue
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.core.Address
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallTransferFragmentBinding
 import org.linphone.ui.call.adapter.CallsListAdapter
@@ -44,9 +45,9 @@ import org.linphone.ui.call.viewmodel.CurrentCallViewModel
 import org.linphone.ui.main.adapter.ConversationsContactsAndSuggestionsListAdapter
 import org.linphone.ui.main.history.viewmodel.StartCallViewModel
 import org.linphone.utils.ConfirmationDialogModel
-import org.linphone.ui.main.model.ConversationContactOrSuggestionModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
+import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.RecyclerViewHeaderDecoration
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.setKeyboardInsetListener
@@ -144,7 +145,7 @@ class TransferCallFragment : GenericCallFragment() {
 
         contactsAdapter.onClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
-                showConfirmBlindTransferDialog(model)
+                showConfirmBlindTransferDialog(model.address, model.name)
             }
         }
 
@@ -231,6 +232,12 @@ class TransferCallFragment : GenericCallFragment() {
             }
         }
 
+        viewModel.initiateBlindTransferEvent.observe(viewLifecycleOwner) {
+            it.consume { address ->
+                showConfirmBlindTransferDialog(address, LinphoneUtils.getDisplayName(address))
+            }
+        }
+
         binding.root.setKeyboardInsetListener { keyboardVisible ->
             if (keyboardVisible) {
                 viewModel.isNumpadVisible.value = false
@@ -300,14 +307,13 @@ class TransferCallFragment : GenericCallFragment() {
         dialog.show()
     }
 
-    private fun showConfirmBlindTransferDialog(contactModel: ConversationContactOrSuggestionModel) {
+    private fun showConfirmBlindTransferDialog(toAddress: Address, toDisplayName: String) {
         val from = callViewModel.displayedName.value.orEmpty()
-        val to = contactModel.name
-        Log.i("$TAG Asking user confirmation before doing blind transfer of call with [$from] to [$to](${contactModel.address.asStringUriOnly()})")
+        Log.i("$TAG Asking user confirmation before doing blind transfer of call with [$from] to [$toDisplayName](${toAddress.asStringUriOnly()})")
         val label = AppUtils.getFormattedString(
             R.string.call_transfer_confirm_dialog_message,
             from,
-            to
+            toDisplayName
         )
         val model = ConfirmationDialogModel(label)
         val dialog = DialogUtils.getConfirmCallTransferCallDialog(
@@ -325,7 +331,7 @@ class TransferCallFragment : GenericCallFragment() {
         model.confirmEvent.observe(viewLifecycleOwner) {
             it.consume {
                 coreContext.postOnCoreThread {
-                    val address = contactModel.address
+                    val address = toAddress
                     Log.i("$TAG Transferring (blind) call to [${address.asStringUriOnly()}]")
                     callViewModel.blindTransferCallTo(address)
                 }
