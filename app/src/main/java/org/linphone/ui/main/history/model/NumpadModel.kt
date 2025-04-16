@@ -34,6 +34,7 @@ open class NumpadModel
     private val onVoicemailClicked: () -> (Unit),
     private val onBackspaceClicked: () -> (Unit),
     private val onCallClicked: () -> (Unit),
+    private val onTransferCallClicked: () -> (Unit),
     private val onClearClicked: () -> (Unit)
 ) {
     companion object {
@@ -105,5 +106,11 @@ open class NumpadModel
     fun onCallClicked() {
         Log.i("$TAG Starting call")
         onCallClicked.invoke()
+    }
+
+    @UiThread
+    fun onBlindTransferClicked() {
+        Log.i("$TAG Transferring call")
+        onTransferCallClicked.invoke()
     }
 }

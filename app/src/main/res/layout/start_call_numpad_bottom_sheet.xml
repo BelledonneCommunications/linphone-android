@@ -11,6 +11,9 @@
         <variable
             name="model"
             type="org.linphone.ui.main.history.model.NumpadModel" />
+        <variable
+            name="showCallTransferIcon"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,6 +25,13 @@
         app:behavior_hideable="true"
         app:behavior_peekHeight="0dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/call_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="top"
+            app:constraint_referenced_ids="call, transfer" />
 
         <com.google.android.material.bottomsheet.BottomSheetDragHandleView
             android:id="@+id/handle"
@@ -41,7 +51,7 @@
             android:layout_height="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/handle"
-            app:layout_constraintBottom_toTopOf="@id/call"
+            app:layout_constraintBottom_toTopOf="@id/call_barrier"
             android:layout_marginBottom="20dp"
             app:flow_horizontalStyle="spread"
             app:flow_wrapMode="aligned"
@@ -190,6 +200,27 @@
             android:contentDescription="@string/content_description_call_start"
             android:elevation="3dp"
             android:background="@drawable/squircle_green_button_background"
+            android:visibility="@{showCallTransferIcon ? View.GONE : View.VISIBLE}"
+            app:tint="@color/bc_white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/digit_0"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageView
+            android:id="@+id/transfer"
+            android:onClick="@{() -> model.onBlindTransferClicked()}"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/call_button_size"
+            android:paddingStart="30dp"
+            android:paddingTop="15dp"
+            android:paddingEnd="30dp"
+            android:paddingBottom="15dp"
+            android:src="@drawable/phone_transfer"
+            android:contentDescription="@string/content_description_call_start"
+            android:elevation="3dp"
+            android:background="@drawable/squircle_green_button_background"
+            android:visibility="@{showCallTransferIcon ? View.VISIBLE : View.GONE, default=gone}"
             app:tint="@color/bc_white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -207,8 +238,7 @@
             android:padding="15dp"
             app:layout_constraintStart_toStartOf="@id/digit_sharp"
             app:layout_constraintEnd_toEndOf="@id/digit_sharp"
-            app:layout_constraintTop_toTopOf="@id/call"
-            app:layout_constraintBottom_toBottomOf="@id/call"
+            app:layout_constraintTop_toTopOf="@id/call_barrier"
             app:tint="?attr/color_main2_600" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

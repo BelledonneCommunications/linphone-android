@@ -220,6 +220,7 @@
             android:id="@+id/numpad_layout"
             bind:handleClickedListener="@{hideNumpadClickListener}"
             bind:model="@{viewModel.numpadModel}"
+            bind:showCallTransferIcon="@{true}"
             layout="@layout/start_call_numpad_bottom_sheet" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

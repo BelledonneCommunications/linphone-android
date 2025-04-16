@@ -580,6 +580,8 @@ class CurrentCallViewModel
             },
             { // OnCallClicked
             },
+            { // OnBlindTransferClicked
+            },
             { // OnClearInput
             }
         )
