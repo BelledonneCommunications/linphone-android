@@ -37,6 +37,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <androidx.constraintlayout.widget.Group
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids="username_label, username, phone_number_label, phone_number, prefix, prefix_caret, password_label, password, eye, create, create_email_account_label, create_email_account"
+                    android:visibility="@{viewModel.pushNotificationsAvailable ? View.VISIBLE : View.GONE}"/>
+
+                <androidx.constraintlayout.widget.Group
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids="no_push, no_push_label, create_email_account_no_push"
+                    android:visibility="@{viewModel.pushNotificationsAvailable ? View.GONE : View.VISIBLE, default=gone}"/>
+
                 <ImageView
                     android:id="@+id/logo"
                     android:layout_width="wrap_content"
@@ -80,6 +92,59 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toEndOf="@id/back"/>
 
+                <ImageView
+                    android:id="@+id/no_push"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="68dp"
+                    android:background="@drawable/circle_light_blue_button_background"
+                    android:padding="16dp"
+                    android:src="@drawable/bell_simple_slash"
+                    android:contentDescription="@null"
+                    app:tint="?attr/color_main2_500"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="@id/title"
+                    app:layout_constraintEnd_toEndOf="@id/title"
+                    app:layout_constraintTop_toBottomOf="@id/title"
+                    app:layout_constraintBottom_toTopOf="@id/no_push_label"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/header_style"
+                    android:id="@+id/no_push_label"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginStart="48dp"
+                    android:layout_marginEnd="48dp"
+                    android:textAlignment="center"
+                    android:text="@string/assistant_account_register_unavailable_no_push_warning"
+                    app:layout_constraintTop_toBottomOf="@id/no_push"
+                    app:layout_constraintBottom_toTopOf="@id/create_email_account_no_push"
+                    app:layout_constraintStart_toStartOf="@id/title"
+                    app:layout_constraintEnd_toEndOf="@id/title"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:onClick="@{openSubscribeWebPageClickListener}"
+                    style="@style/default_text_style_600"
+                    android:id="@+id/create_email_account_no_push"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="32dp"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:text="@string/assistant_web_platform_link"
+                    android:textSize="13sp"
+                    android:textColor="@color/secondary_button_label_color"
+                    android:gravity="center"
+                    android:background="@drawable/secondary_button_background"
+                    app:layout_constraintStart_toStartOf="@id/title"
+                    app:layout_constraintEnd_toEndOf="@id/title"
+                    app:layout_constraintTop_toBottomOf="@id/no_push_label"
+                    app:layout_constraintBottom_toTopOf="@id/mountains" />
+
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/header_style"
                     android:id="@+id/username_label"
@@ -96,7 +161,7 @@
                 <androidx.appcompat.widget.AppCompatEditText
                     style="@style/default_text_style"
                     android:id="@+id/username"
-                    android:enabled="@{viewModel.pushNotificationsAvailable &amp;&amp; !viewModel.lockUsernameAndPassword}"
+                    android:enabled="@{!viewModel.lockUsernameAndPassword}"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_marginStart="16dp"
@@ -186,7 +251,6 @@
                 <androidx.appcompat.widget.AppCompatEditText
                     style="@style/default_text_style"
                     android:id="@+id/phone_number"
-                    android:enabled="@{viewModel.pushNotificationsAvailable}"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_marginStart="5dp"
@@ -235,7 +299,7 @@
                 <androidx.appcompat.widget.AppCompatEditText
                     style="@style/default_text_style"
                     android:id="@+id/password"
-                    android:enabled="@{viewModel.pushNotificationsAvailable &amp;&amp; !viewModel.lockUsernameAndPassword}"
+                    android:enabled="@{!viewModel.lockUsernameAndPassword}"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_marginStart="16dp"
@@ -284,7 +348,7 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:onClick="@{() -> viewModel.phoneNumberConfirmedByUser()}"
-                    android:enabled="@{viewModel.createEnabled &amp;&amp; viewModel.pushNotificationsAvailable &amp;&amp; !viewModel.operationInProgress, default=false}"
+                    android:enabled="@{viewModel.createEnabled &amp;&amp; !viewModel.operationInProgress, default=false}"
                     style="@style/primary_button_label_style"
                     android:id="@+id/create"
                     android:layout_width="0dp"
