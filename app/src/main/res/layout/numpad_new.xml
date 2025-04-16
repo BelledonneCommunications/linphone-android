@@ -15,7 +15,7 @@
 
         android:background="?attr/backgroundColor"
         android:weightSum="1"
-        app:alignContent="flex_end"
+        app:alignContent="space_around"
         app:alignItems="center"
         app:flexWrap="wrap"
         app:justifyContent="space_evenly">
