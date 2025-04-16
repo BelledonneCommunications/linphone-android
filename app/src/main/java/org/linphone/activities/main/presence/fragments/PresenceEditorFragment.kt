@@ -74,7 +74,7 @@ class PresenceEditorFragment : GenericFragment<FragmentPresenceEditorBinding>() 
         val spinner: Spinner = requireView().findViewById(R.id.presenceProfileSpinner)
         val adapter = ArrayAdapter(
             requireContext(),
-            android.R.layout.simple_spinner_item,
+            android.R.layout.simple_spinner_dropdown_item,
             presenceProfiles
         )
 
