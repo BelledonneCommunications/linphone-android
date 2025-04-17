@@ -345,9 +345,9 @@ class SingleSignOnViewModel
                 onErrorEvent.postValue(Event("Invalid access token expiration time"))
             } else {
                 val accessToken =
-                    Factory.instance().createBearerToken(authState.accessToken, expire / 1000) // Linphone timestamps are in seconds
+                    Factory.instance().createBearerToken(authState.accessToken.orEmpty(), expire / 1000) // Linphone timestamps are in seconds
                 val refreshToken =
-                    Factory.instance().createBearerToken(authState.refreshToken, expire / 1000) // Linphone timestamps are in seconds
+                    Factory.instance().createBearerToken(authState.refreshToken.orEmpty(), expire / 1000) // Linphone timestamps are in seconds
 
                 val authInfo = coreContext.bearerAuthInfoPendingPasswordUpdate
                 if (authInfo == null) {
