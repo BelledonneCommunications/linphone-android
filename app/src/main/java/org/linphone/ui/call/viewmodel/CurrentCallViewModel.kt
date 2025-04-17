@@ -29,6 +29,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -69,6 +72,8 @@ class CurrentCallViewModel
     constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Current Call ViewModel]"
+        private const val VU_METER_MIN = -20f
+        private const val VU_METER_MAX = 4
     }
 
     val contact = MutableLiveData<ContactAvatarModel>()
@@ -106,6 +111,8 @@ class CurrentCallViewModel
     val isPausedByRemote = MutableLiveData<Boolean>()
 
     val isMicrophoneMuted = MutableLiveData<Boolean>()
+
+    val microphoneRecordingVolume = MutableLiveData<Float>()
 
     val isSpeakerEnabled = MutableLiveData<Boolean>()
 
@@ -541,6 +548,7 @@ class CurrentCallViewModel
         operationInProgress.value = false
         proximitySensorEnabled.value = false
         videoUpdateInProgress.value = false
+        microphoneRecordingVolume.value = 0f
 
         coreContext.postOnCoreThread { core ->
             hideSipAddresses.postValue(corePreferences.hideSipAddresses)
@@ -1247,6 +1255,13 @@ class CurrentCallViewModel
         } else {
             Log.i("$TAG Failed to find an existing 1-1 conversation for current call")
         }
+
+        microphoneVolumeVuMeterTickerFlow().onEach {
+            coreContext.postOnCoreThread {
+                val volumeDbm0 = currentCall.recordVolume
+                microphoneRecordingVolume.postValue(computeVuMeterValue(volumeDbm0))
+            }
+        }.launchIn(viewModelScope)
     }
 
     @WorkerThread
@@ -1518,5 +1533,18 @@ class CurrentCallViewModel
     @AnyThread
     private fun showRecordingToast() {
         showGreenToast(R.string.call_is_being_recorded, R.drawable.record_fill)
+    }
+
+    private fun microphoneVolumeVuMeterTickerFlow() = flow {
+        while (::currentCall.isInitialized) {
+            emit(Unit)
+            delay(50)
+        }
+    }
+
+    private fun computeVuMeterValue(volume: Float): Float {
+        if (volume < VU_METER_MIN) return 0f
+        if (volume > VU_METER_MAX) return 1f
+        return (volume - VU_METER_MIN) / (VU_METER_MAX - VU_METER_MIN)
     }
 }

@@ -78,15 +78,35 @@
             app:layout_constraintEnd_toEndOf="@id/toggle_video"/>
 
         <ImageView
+            android:id="@+id/toggle_mute_mic_background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:selected="@{viewModel.isMicrophoneMuted}"
+            android:background="@drawable/in_call_button_background_red"
+            android:contentDescription="@null"
+            app:layout_constraintTop_toTopOf="@id/toggle_mute_mic"
+            app:layout_constraintBottom_toBottomOf="@id/toggle_mute_mic"
+            app:layout_constraintStart_toStartOf="@id/toggle_mute_mic"
+            app:layout_constraintEnd_toEndOf="@id/toggle_mute_mic" />
+
+        <org.linphone.ui.call.view.VuMeterView
+            android:id="@+id/record_volume_vu_meter"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            vuMeterPercentage="@{viewModel.microphoneRecordingVolume}"
+            app:layout_constraintTop_toTopOf="@id/toggle_mute_mic_background"
+            app:layout_constraintBottom_toBottomOf="@id/toggle_mute_mic_background"
+            app:layout_constraintStart_toStartOf="@id/toggle_mute_mic_background"
+            app:layout_constraintEnd_toEndOf="@id/toggle_mute_mic_background" />
+
+        <ImageView
             android:onClick="@{() -> viewModel.toggleMuteMicrophone()}"
             android:id="@+id/toggle_mute_mic"
             android:layout_width="@dimen/call_button_size"
             android:layout_height="@dimen/call_button_size"
             android:layout_marginEnd="16dp"
             android:padding="@dimen/call_button_icon_padding"
-            android:selected="@{viewModel.isMicrophoneMuted}"
             android:src="@{viewModel.isMicrophoneMuted ? @drawable/microphone_slash : @drawable/microphone, default=@drawable/microphone}"
-            android:background="@drawable/in_call_button_background_red"
             android:contentDescription="@string/content_description_toggle_microphone"
             app:tint="@color/in_call_button_tint_color"
             app:layout_constraintTop_toBottomOf="@id/call_actions_handle"

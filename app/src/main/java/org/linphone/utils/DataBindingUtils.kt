@@ -69,6 +69,7 @@ import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.tools.Log
 import org.linphone.ui.NotoSansFont
 import org.linphone.ui.call.conference.model.ConferenceParticipantDeviceModel
+import org.linphone.ui.call.view.VuMeterView
 import org.linphone.ui.call.view.RoundCornersTextureView
 
 /**
@@ -499,6 +500,12 @@ fun setParticipantTextureView(
     model: ConferenceParticipantDeviceModel
 ) {
     model.setTextureView(textureView)
+}
+
+@UiThread
+@BindingAdapter("vuMeterPercentage")
+fun setVuMeterPercentage(view: VuMeterView, percentage: Float) {
+    view.setVuMeterPercentage(percentage)
 }
 
 @UiThread

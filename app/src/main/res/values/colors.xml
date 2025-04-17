@@ -5,6 +5,7 @@
     <color name="bc_white">#FFFFFF</color>
     <color name="dialog_background">#99000000</color><!-- 60% opacity -->
     <color name="shadow">#10000000</color>
+    <color name="vu_meter">#3CFFFFFF</color>
 
     <color name="background_color_dark_mode">#191919</color>
     <color name="background_color_alt_dark_mode">#303030</color>
