@@ -34,12 +34,14 @@ import android.provider.Settings.SettingNotFoundException
 import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
+import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import kotlin.system.exitProcess
 import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.compatibility.Compatibility
 import org.linphone.contacts.ContactsManager
 import org.linphone.core.tools.Log
 import org.linphone.notifications.NotificationsManager
@@ -837,10 +839,6 @@ class CoreContext
         if (forceZRTP) {
             params.mediaEncryption = MediaEncryption.ZRTP
         }
-        /*if (LinphoneUtils.checkIfNetworkHasLowBandwidth(context)) {
-            Log.w("$TAG Enabling low bandwidth mode!")
-            params.isLowBandwidthEnabled = true
-        }*/
 
         params.recordFile = LinphoneUtils.getRecordingFilePathForAddress(address)
 
@@ -860,8 +858,27 @@ class CoreContext
             }
         }
 
-        val call = core.inviteAddressWithParams(address, params)
-        Log.i("$TAG Starting call $call")
+        val username = address.username.orEmpty()
+        val domain = address.domain.orEmpty()
+        val defaultAccount = params.account ?: core.defaultAccount
+        if (defaultAccount != null && Compatibility.isIpAddress(domain)) {
+            Log.i("$TAG SIP URI [${address.asStringUriOnly()}] seems to have an IP address as domain")
+            if (username.isNotEmpty() && (username.startsWith("+") || username.isDigitsOnly())) {
+                val identityDomain = defaultAccount.params.identityAddress?.domain
+                Log.w("$TAG Username [$username] looks like a phone number, replacing domain [$domain] by the local account one [$identityDomain]")
+                if (identityDomain != null) {
+                    val newAddress = address.clone()
+                    newAddress.domain = identityDomain
+
+                    core.inviteAddressWithParams(newAddress, params)
+                    Log.i("$TAG Starting call to [${newAddress.asStringUriOnly()}]")
+                    return
+                }
+            }
+        }
+
+        core.inviteAddressWithParams(address, params)
+        Log.i("$TAG Starting call to [${address.asStringUriOnly()}]")
     }
 
     @WorkerThread
