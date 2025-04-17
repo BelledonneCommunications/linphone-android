@@ -61,6 +61,10 @@ class CoreInCallService : CoreService() {
         return null
     }
 
+    override fun createServiceNotificationChannel() {
+        // Do nothing, app's Notifications Manager will do the job
+    }
+
     override fun createServiceNotification() {
         // Do nothing, app's Notifications Manager will do the job
     }

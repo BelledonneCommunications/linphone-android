@@ -237,13 +237,21 @@ class NotificationsManager
                         Log.i(
                             "$TAG Incoming call has been declined, cancelling incoming call notification"
                         )
+                        if (waitForInCallServiceForegroundToStopIt) {
+                            Log.w("$TAG We are waiting for service to be started as foreground, starting it now")
+                            showCallNotification(call, false)
+                        }
                         removeIncomingCallNotification()
+                    } else {
+                        Log.i(
+                            "$TAG Removing terminated/declined call notification for [${remoteSipAddress.asStringUriOnly()}]"
+                        )
+                        if (waitForInCallServiceForegroundToStopIt) {
+                            Log.w("$TAG We are waiting for service to be started as foreground, starting it now")
+                            showCallNotification(call, false)
+                        }
+                        dismissCallNotification(call)
                     }
-
-                    Log.i(
-                        "$TAG Removing terminated/declined call notification for [${remoteSipAddress.asStringUriOnly()}]"
-                    )
-                    dismissCallNotification(call)
                 }
                 Call.State.Released -> {
                     if (LinphoneUtils.isCallLogMissed(call.callLog)) {
@@ -257,13 +265,10 @@ class NotificationsManager
 
         @WorkerThread
         override fun onLastCallEnded(core: Core) {
-            Log.i("$TAG Last call ended, stopping foreground service")
+            Log.i("$TAG Last call ended")
             if (inCallServiceForegroundNotificationPublished) {
-                stopInCallCallForegroundService()
-            } else {
-                // Wait for foreground service to have been started before stopping it
-                Log.w("$TAG We would like to stop the foreground service but it wasn't started yet, wait for it")
-                waitForInCallServiceForegroundToStopIt = true
+                Log.i("$TAG Stopping foreground service")
+                stopInCallForegroundService()
             }
         }
 
@@ -495,18 +500,16 @@ class NotificationsManager
             if (core.callsNb == 0) {
                 Log.w("$TAG No call anymore, stopping service")
                 if (inCallServiceForegroundNotificationPublished) {
-                    stopInCallCallForegroundService()
-                } else {
-                    // Wait for foreground service to have been started before stopping it
-                    Log.w("$TAG We would like to stop the foreground service but it wasn't started yet, wait for it")
-                    waitForInCallServiceForegroundToStopIt = true
+                    stopInCallForegroundService()
                 }
             } else if (currentInCallServiceNotificationId == -1) {
-                Log.i(
-                    "$TAG At least a call is still running and no foreground Service notification was found"
-                )
                 val call = core.currentCall ?: core.calls.first()
-                startInCallForegroundService(call)
+                Log.i(
+                    "$TAG At least one call is running and no foreground Service notification was found, starting it using call [${call.remoteAddress.asStringUriOnly()}]"
+                )
+
+                Log.i("$TAG No notification found for this call, creating one now")
+                showCallNotification(call, LinphoneUtils.isCallIncoming(call.state))
             }
         }
     }
@@ -649,14 +652,18 @@ class NotificationsManager
         )
         if (isIncoming) {
             currentlyRingingCallRemoteAddress = call.remoteAddress
-            notify(INCOMING_CALL_ID, notification)
             if (currentInCallServiceNotificationId == -1) {
-                startIncomingCallForegroundService(notification)
+                Log.i("$TAG No current in-call foreground service notification found, using this one")
+                showIncomingCallForegroundServiceNotification(notification)
+            } else {
+                notify(INCOMING_CALL_ID, notification)
             }
         } else {
-            notify(notifiable.notificationId, notification)
             if (currentInCallServiceNotificationId == -1) {
-                startInCallForegroundService(call)
+                Log.i("$TAG No current in-call foreground service notification found, using this one")
+                showInCallForegroundServiceNotification(call, notifiable, notification)
+            } else {
+                notify(notifiable.notificationId, notification)
             }
         }
     }
@@ -709,7 +716,7 @@ class NotificationsManager
     }
 
     @WorkerThread
-    private fun startIncomingCallForegroundService(notification: Notification) {
+    private fun showIncomingCallForegroundServiceNotification(notification: Notification) {
         Log.i("$TAG Trying to start foreground Service using incoming call notification")
         val service = inCallService
         if (service != null) {
@@ -723,11 +730,12 @@ class NotificationsManager
                     notification,
                     Compatibility.FOREGROUND_SERVICE_TYPE_PHONE_CALL
                 )
+                notificationsMap[INCOMING_CALL_ID] = notification
                 currentInCallServiceNotificationId = INCOMING_CALL_ID
                 inCallServiceForegroundNotificationPublished = true
                 if (waitForInCallServiceForegroundToStopIt) {
                     Log.i("$TAG We were waiting for foreground service to be started to stop it, doing it")
-                    stopInCallCallForegroundService()
+                    stopInCallForegroundService()
                 }
             } else {
                 Log.e("$TAG POST_NOTIFICATIONS permission isn't granted, don't start foreground service!")
@@ -742,7 +750,7 @@ class NotificationsManager
         if (LinphoneUtils.isCallIncoming(call.state)) {
             val notification = notificationsMap[INCOMING_CALL_ID]
             if (notification != null) {
-                startIncomingCallForegroundService(notification)
+                showIncomingCallForegroundServiceNotification(notification)
             } else {
                 Log.w(
                     "$TAG Failed to find notification for incoming call with ID [$INCOMING_CALL_ID]"
@@ -763,7 +771,7 @@ class NotificationsManager
         val importance = channel?.importance ?: NotificationManagerCompat.IMPORTANCE_NONE
         if (importance == NotificationManagerCompat.IMPORTANCE_NONE) {
             Log.e("$TAG Calls channel has been disabled, can't start foreground service!")
-            stopInCallCallForegroundService()
+            stopInCallForegroundService()
             return
         }
 
@@ -774,17 +782,28 @@ class NotificationsManager
         } else if (notificationsMap.containsKey(INCOMING_CALL_ID)) {
             notificationsMap[INCOMING_CALL_ID]
         } else {
+            Log.w("$TAG Failed to find a notification for call [${call.remoteAddress.asStringUriOnly()}] in map")
             null
         }
-
         if (notification == null) {
             Log.w(
                 "$TAG No existing notification (ID [$notificationId]) found for current call [${call.remoteAddress.asStringUriOnly()}], aborting"
             )
-            stopInCallCallForegroundService()
+            stopInCallForegroundService()
             return
         }
         Log.i("$TAG Found notification [$notificationId] for current Call")
+
+        showInCallForegroundServiceNotification(call, notifiable, notification)
+    }
+
+    @WorkerThread
+    private fun showInCallForegroundServiceNotification(call: Call, notifiable: Notifiable, notification: Notification) {
+        val service = inCallService
+        if (service == null) {
+            Log.w("$TAG Core Foreground Service hasn't started yet...")
+            return
+        }
 
         var mask = Compatibility.FOREGROUND_SERVICE_TYPE_PHONE_CALL
         val callState = call.state
@@ -830,11 +849,12 @@ class NotificationsManager
                 notification,
                 mask
             )
+            notificationsMap[notifiable.notificationId] = notification
             currentInCallServiceNotificationId = notifiable.notificationId
             inCallServiceForegroundNotificationPublished = true
             if (waitForInCallServiceForegroundToStopIt) {
                 Log.i("$TAG We were waiting for foreground service to be started to stop it, doing it")
-                stopInCallCallForegroundService()
+                stopInCallForegroundService()
             }
         } else {
             Log.e("$TAG POST_NOTIFICATIONS permission isn't granted, don't start foreground service!")
@@ -842,7 +862,7 @@ class NotificationsManager
     }
 
     @WorkerThread
-    private fun stopInCallCallForegroundService() {
+    private fun stopInCallForegroundService() {
         val service = inCallService
         if (service != null) {
             Log.i(
@@ -851,6 +871,7 @@ class NotificationsManager
             service.stopForeground(STOP_FOREGROUND_REMOVE)
             service.stopSelf()
             inCallServiceForegroundNotificationPublished = false
+            waitForInCallServiceForegroundToStopIt = false
         } else {
             Log.w("$TAG Can't stop foreground Service & notif, no Service was found")
         }
