@@ -20,6 +20,7 @@
 package org.linphone.compatibility
 
 import android.content.Intent
+import android.net.InetAddresses.isNumericAddress
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
@@ -61,6 +62,10 @@ class Api29Compatibility {
             if (session != null) {
                 session.contentCaptureContext = ContentCaptureContext.forLocusId(conversationId)
             }
+        }
+
+        fun isIpAddress(string: String): Boolean {
+            return isNumericAddress(string)
         }
     }
 }

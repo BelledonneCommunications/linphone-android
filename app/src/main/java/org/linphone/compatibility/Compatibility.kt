@@ -28,6 +28,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Environment
+import android.util.Patterns
 import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
 import org.linphone.core.tools.Log
@@ -185,6 +186,13 @@ class Compatibility {
             if (Version.sdkAboveOrEqual(Version.API35_ANDROID_15_VANILLA_ICE_CREAM)) {
                 Api35Compatibility.setupAppStartupListener(context)
             }
+        }
+
+        fun isIpAddress(string: String): Boolean {
+            if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10)) {
+                return Api29Compatibility.isIpAddress(string)
+            }
+            return Patterns.IP_ADDRESS.matcher(string).matches()
         }
     }
 }
