@@ -10,6 +10,20 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [6.0.5] - 2025-04-18
+
+### Changed
+- When calling a SIP URI that looks like a phone number in the username and an IP in the domain, replace the domain with the one of the currently selected account to workaround issue with PBXs using IPs instead of domains in From header
+- Improved account creation page UI when push notifications aren't available
+- Improved called account display on incoming call screen when more than one account configured
+- Updated telecom package from beta to release candidate
+
+### Fixed
+- Fixed transfer call view numpad button starting a new call instead of forwarding the current one
+- Fixed incoming call not displayed in call history depending on how the From & To headers are formatted (SDK fix)
+- Fixed crashes related to foreground service not being started
+- Fixed crash due to lateinit property not being initialized before used
+
 ## [6.0.4] - 2025-04-11
 
 ### Changed
