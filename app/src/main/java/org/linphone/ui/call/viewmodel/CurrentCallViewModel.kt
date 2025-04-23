@@ -942,12 +942,10 @@ class CurrentCallViewModel
     fun createConversation() {
         if (::currentCall.isInitialized) {
             coreContext.postOnCoreThread {
-                val existingConversation = lookupCurrentCallConversation(currentCall)
+                val existingConversation = currentCallConversation ?: lookupCurrentCallConversation(currentCall)
                 if (existingConversation != null) {
                     Log.i(
-                        "$TAG Found existing conversation [${
-                        LinphoneUtils.getConversationId(existingConversation)
-                        }], going to it"
+                        "$TAG Found existing conversation [${LinphoneUtils.getConversationId(existingConversation)}], going to it"
                     )
                     goToConversationEvent.postValue(Event(LinphoneUtils.getConversationId(existingConversation)))
                 } else {
@@ -1372,8 +1370,9 @@ class CurrentCallViewModel
         val localAddress = call.callLog.localAddress
         val remoteAddress = call.remoteAddress
 
-        val params: ConferenceParams? = null
         val existingConversation = if (call.conference != null) {
+            Log.i("$TAG Looking for conversation with local address [${localAddress.asStringUriOnly()}] and peer address [${remoteAddress.asStringUriOnly()}]")
+            val params: ConferenceParams? = null // Don't need specific params, remote address should be enough in that scenario
             call.core.searchChatRoom(
                 params,
                 localAddress,
@@ -1381,7 +1380,9 @@ class CurrentCallViewModel
                 arrayOf()
             )
         } else {
+            val params = getChatRoomParams(call)
             val participants = arrayOf(remoteAddress)
+            Log.i("$TAG Looking for conversation with local address [${localAddress.asStringUriOnly()}] and participant [${remoteAddress.asStringUriOnly()}]")
             call.core.searchChatRoom(
                 params,
                 localAddress,
