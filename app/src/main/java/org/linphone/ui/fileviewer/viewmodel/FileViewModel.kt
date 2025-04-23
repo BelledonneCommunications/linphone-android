@@ -278,13 +278,21 @@ class FileViewModel
                     File(filePath),
                     ParcelFileDescriptor.MODE_READ_ONLY
                 )
-                pdfRenderer = PdfRenderer(input)
-                val count = pdfRenderer.pageCount
-                Log.i("$TAG $count pages in file $filePath")
-                pdfPages.postValue(count.toString())
-                pdfCurrentPage.postValue("1")
-                pdfRendererReadyEvent.postValue(Event(true))
-                fileReadyEvent.postValue(Event(true))
+                try {
+                    pdfRenderer = PdfRenderer(input)
+                    val count = pdfRenderer.pageCount
+                    Log.i("$TAG $count pages in file $filePath")
+                    pdfPages.postValue(count.toString())
+                    pdfCurrentPage.postValue("1")
+                    pdfRendererReadyEvent.postValue(Event(true))
+                    fileReadyEvent.postValue(Event(true))
+                } catch (se: SecurityException) {
+                    // TODO FIXME: add support for password protected PDFs
+                    Log.e("$TAG Can't open PDF, probably protected by a password: $se")
+                    pdfCurrentPage.postValue("0")
+                    pdfPages.postValue("0")
+                    showRedToast(R.string.conversation_pdf_file_cant_be_opened_error_toast, R.drawable.warning_circle)
+                }
             }
         }
     }
