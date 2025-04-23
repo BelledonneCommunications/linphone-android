@@ -555,6 +555,7 @@
     <string name="conversation_pick_file_from_gallery_label">Open gallery</string>
     <string name="conversation_pick_any_file_label">Pick file</string>
     <string name="conversation_file_cant_be_opened_error_toast">File can\'t be opened!</string>
+    <string name="conversation_pdf_file_cant_be_opened_error_toast">Can\'t open password protected PDFs yet</string>
 
     <string name="conversation_info_participants_list_title">Group members (%s)</string>
     <string name="conversation_info_add_participants_label">Add participants</string>

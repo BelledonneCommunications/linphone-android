@@ -513,7 +513,8 @@
     <string name="conversation_take_picture_label">Prendre une photo</string>
     <string name="conversation_pick_file_from_gallery_label">Ouvrir la gallerie</string>
     <string name="conversation_pick_any_file_label">Choisir un fichier</string>
-    <string name="conversation_file_cant_be_opened_error_toast">Impossible d\'ouvrir le fichier!</string>
+    <string name="conversation_file_cant_be_opened_error_toast">Impossible d\'ouvrir le fichier !</string>
+    <string name="conversation_pdf_file_cant_be_opened_error_toast">Impossible d\'ouvrir un PDF protégé par mot de passe</string>
 
     <string name="conversation_info_participants_list_title">Participants (%s)</string>
     <string name="conversation_info_add_participants_label">Ajouter des participants</string>
@@ -524,7 +525,7 @@
     <string name="conversation_info_admin_menu_unset_participant_admin">Retirer les droits admin</string>
     <string name="conversation_info_menu_go_to_contact">Voir le contact</string>
     <string name="conversation_info_menu_add_to_contacts">Ajouter aux contacts</string>
-    <string name="conversation_info_dialog_delete_all_call_logs_title">Supprimer l\'historique ? </string>
+    <string name="conversation_info_dialog_delete_all_call_logs_title">Supprimer l\'historique ?</string>
     <string name="conversation_info_dialog_delete_all_message">Tout les messages de cette conversation seront supprimés.</string>
     <string name="conversation_info_history_deleted_toast">Historique supprimé</string>
     <string name="conversation_info_participant_added_to_conversation_toast">%s a rejoint la conversation</string>
