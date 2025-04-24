@@ -225,7 +225,7 @@
     <string name="settings_security_enable_vfs_failure_toast">Failed to enable encryption module!</string>
     <string name="settings_security_enable_vfs_success_toast">Encryption module enabled</string>
     <string name="settings_security_enable_vfs_dialog_confirmation_title">Do you really want to encrypt everything?</string>
-    <string name="settings_security_enable_vfs_dialog_confirmation_message">Be careful, it can\'t be undone!</string>
+    <string name="settings_security_enable_vfs_dialog_confirmation_message">Once activated, you\'ll have to restart the app.\nAfter that all application data will be encrypted and accessible only via the application.\n\nBe careful, it can\'t be undone!</string>
     <string name="settings_security_prevent_screenshots_title">Prevent interface from being recorded</string>
     <string name="settings_calls_title">Calls</string>
     <string name="settings_calls_echo_canceller_title">Use software echo canceller</string>
