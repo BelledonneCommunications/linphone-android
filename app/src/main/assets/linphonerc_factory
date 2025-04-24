@@ -49,6 +49,7 @@ record_aware=1
 
 [account_creator]
 url=https://subscribe.linphone.org/api/
+backend=1
 
 [lime]
 lime_update_threshold=86400

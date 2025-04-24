@@ -144,6 +144,14 @@
             app:launchSingleTop="true"
             app:popUpTo="@id/landingFragment"
             app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_landingFragment_to_recoverAccountFragment"
+            app:destination="@id/recoverAccountFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:launchSingleTop="true"/>
 
     </fragment>
 
@@ -168,5 +176,41 @@
         app:launchSingleTop="true"
         app:enterAnim="@anim/slide_in"
         app:popExitAnim="@anim/slide_out" />
+
+    <fragment
+        android:id="@+id/recoverAccountFragment"
+        android:name="org.linphone.ui.assistant.fragment.RecoverAccountFragment"
+        android:label="RecoverAccountFragment"
+        tools:layout="@layout/assistant_recover_account_fragment">
+        <action
+            android:id="@+id/action_recoverAccountFragment_to_recoverPhoneAccountFragment"
+            app:destination="@id/recoverPhoneAccountFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:launchSingleTop="true"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/recoverPhoneAccountFragment"
+        android:name="org.linphone.ui.assistant.fragment.RecoverPhoneAccountFragment"
+        android:label="RecoverPhoneAccountFragment"
+        tools:layout="@layout/assistant_recover_phone_account_fragment">
+        <action
+            android:id="@+id/action_recoverPhoneAccountFragment_to_recoverPhoneAccountCodeConfirmationFragment"
+            app:destination="@id/recoverPhoneAccountCodeConfirmationFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:launchSingleTop="true"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/recoverPhoneAccountCodeConfirmationFragment"
+        android:name="org.linphone.ui.assistant.fragment.RecoverPhoneAccountCodeConfirmationFragment"
+        android:label="RecoverPhoneAccountCodeConfirmationFragment"
+        tools:layout="@layout/assistant_recover_phone_account_confirm_sms_code_fragment"/>
 
 </navigation>

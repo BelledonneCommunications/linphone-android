@@ -27,7 +27,7 @@
     <string name="emoji_tear" translatable="false">😢</string>
 
     <string name="help_about_open_source_licenses_title" translatable="false">GNU General Public License v3.0</string>
-    <string name="help_about_open_source_licenses_subtitle" translatable="false">© Belledonne Communications 2010-2024</string>
+    <string name="help_about_open_source_licenses_subtitle" translatable="false">© Belledonne Communications 2010-2025</string>
     <string name="help_advanced_send_debug_logs_email_address" translatable="false">linphone-android@belledonne-communications.com</string>
 
     <string name="website_contact_url" translatable="false">https://linphone.org/contact</string>
@@ -173,6 +173,14 @@
     <string name="assistant_permissions_post_notifications_title"><b>Post notifications:</b> To be informed when you receive a message or a call.</string>
     <string name="assistant_permissions_record_audio_title"><b>Record audio:</b> So your correspondent can hear you and to record voice messages.</string>
     <string name="assistant_permissions_access_camera_title"><b>Access camera:</b> To capture video during video calls and conferences.</string>
+    <string name="assistant_forgotten_password_title">Password forgotten</string>
+    <string name="assistant_forgotten_password_subtitle">Choose how to recover your account.</string>
+    <string name="assistant_forgotten_password_message">You created your account using:</string>
+    <string name="assistant_recover_email_account_label">An email</string>
+    <string name="assistant_recover_phone_number_account_label">A phone number</string>
+    <string name="assistant_recover_phone_number_account_subtitle">Enter the phone number linked to your account, we\'ll send you a code.</string>
+    <string name="assistant_recover_phone_number_account_send_code_label">Send the code</string>
+    <string name="assistant_recover_phone_number_account_unavailable_no_push_warning">Push notifications do not seem to be available on your device, but they are mandatory for recovering a phone number account in the mobile app.</string>
 
     <!-- Main navigation items -->
     <string name="bottom_navigation_contacts_label">Contacts</string>

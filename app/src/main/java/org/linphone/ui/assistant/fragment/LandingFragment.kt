@@ -103,22 +103,10 @@ class LandingFragment : GenericFragment() {
         }
 
         binding.setForgottenPasswordClickListener {
-            val url = getString(R.string.web_platform_forgotten_password_url)
-            try {
-                val browserIntent = Intent(Intent.ACTION_VIEW, url.toUri())
-                startActivity(browserIntent)
-            } catch (ise: IllegalStateException) {
-                Log.e(
-                    "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
-                )
-            } catch (anfe: ActivityNotFoundException) {
-                Log.e(
-                    "$TAG Can't start ACTION_VIEW intent for URL [$url], ActivityNotFoundException: $anfe"
-                )
-            } catch (e: Exception) {
-                Log.e(
-                    "$TAG Can't start ACTION_VIEW intent for URL [$url]: $e"
-                )
+            if (findNavController().currentDestination?.id == R.id.landingFragment) {
+                val action =
+                    LandingFragmentDirections.actionLandingFragmentToRecoverAccountFragment()
+                findNavController().navigate(action)
             }
         }
 

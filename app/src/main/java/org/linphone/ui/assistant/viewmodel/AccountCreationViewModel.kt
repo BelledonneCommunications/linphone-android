@@ -365,7 +365,7 @@ class AccountCreationViewModel
         val account = accountCreated
         if (::accountManagerServices.isInitialized && account != null) {
             val code =
-                "${smsCodeFirstDigit.value}${smsCodeSecondDigit.value}${smsCodeThirdDigit.value}${smsCodeLastDigit.value}"
+                "${smsCodeFirstDigit.value.orEmpty().trim()}${smsCodeSecondDigit.value.orEmpty().trim()}${smsCodeThirdDigit.value.orEmpty().trim()}${smsCodeLastDigit.value.orEmpty().trim()}"
             val identity = account.params.identityAddress
             if (identity != null) {
                 Log.i(

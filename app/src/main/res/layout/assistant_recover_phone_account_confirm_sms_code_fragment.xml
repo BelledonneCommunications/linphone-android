@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="android.text.InputType" />
+        <variable
+            name="backClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.assistant.viewmodel.RecoverPhoneAccountViewModel" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:onClick="@{backClickListener}"
+                    android:id="@+id/back"
+                    android:layout_width="@dimen/top_bar_height"
+                    android:layout_height="@dimen/top_bar_height"
+                    android:padding="15dp"
+                    android:src="@drawable/caret_left"
+                    android:contentDescription="@string/content_description_go_back_icon"
+                    app:tint="?attr/color_main2_500"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/assistant_page_title_style"
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/assistant_account_creation_sms_confirmation_title"
+                    android:textColor="?attr/color_text"
+                    app:layout_constraintTop_toTopOf="@id/back"
+                    app:layout_constraintBottom_toBottomOf="@id/back"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style"
+                    android:id="@+id/message"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="100dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="@{viewModel.confirmationMessage, default=@string/assistant_account_creation_sms_confirmation_explanation}"
+                    android:textSize="14sp"
+                    android:textColor="?attr/color_main2_600"
+                    android:gravity="center_horizontal"
+                    app:layout_constraintTop_toBottomOf="@id/title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <ImageView
+                    android:id="@+id/illu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="100dp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/confirm_sms_code_illu"
+                    android:contentDescription="@null"
+                    app:layout_constraintTop_toBottomOf="@id/wrong_number"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    focusNextOnInput="@{true}"
+                    style="@style/default_text_style_300"
+                    android:id="@+id/code_first_digit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="32dp"
+                    android:background="@drawable/shape_assistant_sms_code_confirmation"
+                    android:text="@={viewModel.smsCodeFirstDigit, default=`1`}"
+                    android:maxLength="1"
+                    android:textColor="@color/assistant_sms_confirmation_code_color"
+                    android:textSize="50sp"
+                    android:textCursorDrawable="@color/transparent_color"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:imeOptions="actionNext"
+                    android:nextFocusDown="@id/code_second_digit"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintTop_toBottomOf="@id/message"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/code_second_digit" />
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    focusNextOnInput="@{true}"
+                    style="@style/default_text_style_300"
+                    android:id="@+id/code_second_digit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="32dp"
+                    android:background="@drawable/shape_assistant_sms_code_confirmation"
+                    android:text="@={viewModel.smsCodeSecondDigit, default=`2`}"
+                    android:maxLength="1"
+                    android:textColor="@color/assistant_sms_confirmation_code_color"
+                    android:textSize="50sp"
+                    android:textCursorDrawable="@color/transparent_color"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:imeOptions="actionNext"
+                    android:nextFocusDown="@id/code_third_digit"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintTop_toBottomOf="@id/message"
+                    app:layout_constraintStart_toEndOf="@id/code_first_digit"
+                    app:layout_constraintEnd_toStartOf="@id/code_third_digit" />
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    focusNextOnInput="@{true}"
+                    style="@style/default_text_style_300"
+                    android:id="@+id/code_third_digit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="32dp"
+                    android:background="@drawable/shape_assistant_sms_code_confirmation"
+                    android:text="@={viewModel.smsCodeThirdDigit, default=`3`}"
+                    android:maxLength="1"
+                    android:textColor="@color/assistant_sms_confirmation_code_color"
+                    android:textSize="50sp"
+                    android:textCursorDrawable="@color/transparent_color"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:imeOptions="actionNext"
+                    android:nextFocusDown="@id/code_last_digit"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintTop_toBottomOf="@id/message"
+                    app:layout_constraintStart_toEndOf="@id/code_second_digit"
+                    app:layout_constraintEnd_toStartOf="@id/code_last_digit" />
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    validateOnInput="@{() -> viewModel.validateCode()}"
+                    style="@style/default_text_style_300"
+                    android:id="@+id/code_last_digit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="32dp"
+                    android:background="@drawable/shape_assistant_sms_code_confirmation"
+                    android:text="@={viewModel.smsCodeLastDigit, default=`4`}"
+                    android:maxLength="1"
+                    android:textColor="@color/assistant_sms_confirmation_code_color"
+                    android:textSize="50sp"
+                    android:textCursorDrawable="@color/transparent_color"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:imeOptions="actionDone"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintTop_toBottomOf="@id/message"
+                    app:layout_constraintStart_toEndOf="@id/code_third_digit"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style_600"
+                    android:id="@+id/wrong_number"
+                    android:onClick="@{backClickListener}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="51dp"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:text="@string/assistant_account_creation_wrong_phone_number"
+                    android:textSize="13sp"
+                    android:textColor="@color/secondary_button_label_color"
+                    android:gravity="center"
+                    android:background="@drawable/secondary_button_background"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/code_first_digit" />
+
+                <ImageView
+                    android:id="@+id/mountains"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/mountains"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@null"
+                    app:layout_constraintVertical_bias="1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/wrong_number"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:tint="?attr/color_main1_500" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+    <include
+        layout="@layout/operation_in_progress"
+        bind:visibility="@{viewModel.operationInProgress}" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</layout>
