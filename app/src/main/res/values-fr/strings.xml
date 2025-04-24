@@ -185,7 +185,7 @@
     <string name="settings_security_enable_vfs_failure_toast">Échec à l\'activation du module d\'encryption</string>
     <string name="settings_security_enable_vfs_success_toast">Module d\'encryption activé</string>
     <string name="settings_security_enable_vfs_dialog_confirmation_title">Confirmer l\'activation du chiffrement</string>
-    <string name="settings_security_enable_vfs_dialog_confirmation_message">Une fois la fonctionnalité activée, toutes les données de l\'application seront chiffrées et accessibles uniquement via celle-ci.\n\nCe changement est irréversible.</string>
+    <string name="settings_security_enable_vfs_dialog_confirmation_message">Une fois la fonctionnalité activée, vous devrez redémarrer l\'application.\nAprès ça toutes les données de l\'application seront chiffrées et accessibles uniquement via celle-ci.\n\nAttention, ce changement est irréversible !</string>
     <string name="settings_security_prevent_screenshots_title">Empêcher l\'interface d\'être enregistrée</string>
     <string name="settings_calls_title">Appels</string>
     <string name="settings_calls_echo_canceller_title">Utiliser l\'annulateur d\'écho logiciel</string>
