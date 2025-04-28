@@ -124,14 +124,21 @@ class EventModel
                     R.drawable.pencil_simple
                 }
                 EventLog.Type.ConferenceCreated,
-                EventLog.Type.ConferenceParticipantAdded,
-                EventLog.Type.ConferenceParticipantRemoved,
                 EventLog.Type.ConferenceParticipantDeviceAdded,
                 EventLog.Type.ConferenceParticipantDeviceRemoved -> {
                     R.drawable.door
                 }
+                EventLog.Type.ConferenceParticipantAdded -> {
+                    R.drawable.user_circle_plus
+                }
+                EventLog.Type.ConferenceParticipantRemoved -> {
+                    R.drawable.user_circle_minus
+                }
                 EventLog.Type.ConferenceParticipantSetAdmin -> {
                     R.drawable.user_circle_check
+                }
+                EventLog.Type.ConferenceParticipantUnsetAdmin -> {
+                    R.drawable.user_circle_dashed
                 }
                 else -> R.drawable.user_circle
             },

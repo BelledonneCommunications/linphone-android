@@ -110,7 +110,7 @@ class ConversationInfoViewModel
                 R.string.conversation_info_participant_added_to_conversation_toast,
                 getParticipant(eventLog)
             )
-            showFormattedGreenToast(message, R.drawable.user_circle)
+            showFormattedGreenToast(message, R.drawable.user_circle_plus)
 
             computeParticipantsList()
             infoChangedEvent.postValue(Event(true))
@@ -123,7 +123,7 @@ class ConversationInfoViewModel
                 R.string.conversation_info_participant_removed_from_conversation_toast,
                 getParticipant(eventLog)
             )
-            showFormattedGreenToast(message, R.drawable.user_circle)
+            showFormattedGreenToast(message, R.drawable.user_circle_minus)
 
             computeParticipantsList()
             infoChangedEvent.postValue(Event(true))
@@ -134,18 +134,19 @@ class ConversationInfoViewModel
             Log.i(
                 "$TAG A participant has been given/removed administration rights for group [${chatRoom.subject}]"
             )
-            val message = if (eventLog.type == EventLog.Type.ConferenceParticipantSetAdmin) {
-                AppUtils.getFormattedString(
+            if (eventLog.type == EventLog.Type.ConferenceParticipantSetAdmin) {
+                val message = AppUtils.getFormattedString(
                     R.string.conversation_info_participant_has_been_granted_admin_rights_toast,
                     getParticipant(eventLog)
                 )
+                showFormattedGreenToast(message, R.drawable.user_circle_check)
             } else {
-                AppUtils.getFormattedString(
+                val message = AppUtils.getFormattedString(
                     R.string.conversation_info_participant_no_longer_has_admin_rights_toast,
                     getParticipant(eventLog)
                 )
+                showFormattedGreenToast(message, R.drawable.user_circle_dashed)
             }
-            showFormattedGreenToast(message, R.drawable.user_circle)
 
             computeParticipantsList()
         }
