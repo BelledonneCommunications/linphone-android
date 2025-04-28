@@ -269,6 +269,9 @@ class NotificationsManager
             if (inCallServiceForegroundNotificationPublished) {
                 Log.i("$TAG Stopping foreground service")
                 stopInCallForegroundService()
+            } else {
+                Log.i("$TAG In-Call service was never started as foreground, waiting for it to be started to stop it")
+                waitForInCallServiceForegroundToStopIt = true
             }
         }
 
@@ -517,8 +520,8 @@ class NotificationsManager
     @MainThread
     fun onInCallServiceDestroyed() {
         Log.i("$TAG Service has been destroyed")
+        stopInCallForegroundService()
         inCallService = null
-        currentInCallServiceNotificationId = -1
     }
 
     @MainThread
@@ -733,6 +736,8 @@ class NotificationsManager
                 notificationsMap[INCOMING_CALL_ID] = notification
                 currentInCallServiceNotificationId = INCOMING_CALL_ID
                 inCallServiceForegroundNotificationPublished = true
+                Log.i("$TAG Incoming call notification with ID [$INCOMING_CALL_ID] has been used to start service as foreground")
+
                 if (waitForInCallServiceForegroundToStopIt) {
                     Log.i("$TAG We were waiting for foreground service to be started to stop it, doing it")
                     stopInCallForegroundService()
@@ -852,6 +857,8 @@ class NotificationsManager
             notificationsMap[notifiable.notificationId] = notification
             currentInCallServiceNotificationId = notifiable.notificationId
             inCallServiceForegroundNotificationPublished = true
+            Log.i("$TAG Call notification with ID [${notifiable.notificationId}] has been used to start service as foreground")
+
             if (waitForInCallServiceForegroundToStopIt) {
                 Log.i("$TAG We were waiting for foreground service to be started to stop it, doing it")
                 stopInCallForegroundService()
@@ -861,7 +868,7 @@ class NotificationsManager
         }
     }
 
-    @WorkerThread
+    @AnyThread
     private fun stopInCallForegroundService() {
         val service = inCallService
         if (service != null) {
