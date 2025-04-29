@@ -1565,7 +1565,7 @@ class NotificationsManager
             val pendingIntent = TaskStackBuilder.create(context).run {
                 addNextIntentWithParentStack(
                     Intent(context, MainActivity::class.java).apply {
-                        setAction(Intent.ACTION_MAIN) // Needed as well
+                        action = Intent.ACTION_MAIN // Needed as well
                     }
                 )
                 getPendingIntent(
