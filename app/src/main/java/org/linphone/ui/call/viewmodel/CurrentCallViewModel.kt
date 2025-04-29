@@ -1371,14 +1371,8 @@ class CurrentCallViewModel
         val remoteAddress = call.remoteAddress
 
         val existingConversation = if (call.conference != null) {
-            Log.i("$TAG Looking for conversation with local address [${localAddress.asStringUriOnly()}] and peer address [${remoteAddress.asStringUriOnly()}]")
-            val params: ConferenceParams? = null // Don't need specific params, remote address should be enough in that scenario
-            call.core.searchChatRoom(
-                params,
-                localAddress,
-                remoteAddress,
-                arrayOf()
-            )
+            Log.i("$TAG We're in [${remoteAddress.asStringUriOnly()}] conference, using it as chat room if possible")
+            call.conference?.chatRoom
         } else {
             val params = getChatRoomParams(call)
             val participants = arrayOf(remoteAddress)
