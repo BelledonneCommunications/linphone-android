@@ -47,7 +47,9 @@ class Api31Compatibility {
                         .build()
                 )
                 Log.i("$TAG PiP auto enter has been [${if (enable) "enabled" else "disabled"}]")
-            } catch (ise: IllegalArgumentException) {
+            } catch (iae: IllegalArgumentException) {
+                Log.e("$TAG Can't set PiP params: $iae")
+            } catch (ise: IllegalStateException) {
                 Log.e("$TAG Can't set PiP params: $ise")
             }
         }
