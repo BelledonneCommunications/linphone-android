@@ -495,6 +495,9 @@ class CoreContext
 
     private var logcatEnabled: Boolean = corePreferences.printLogsInLogcat
 
+    private var crashlyticsEnabled: Boolean = corePreferences.sendLogsToCrashlytics
+    private var crashlyticsAvailable = true
+
     private val loggingServiceListener = object : LoggingServiceListenerStub() {
         @WorkerThread
         override fun onLogMessageWritten(
@@ -512,7 +515,9 @@ class CoreContext
                     else -> android.util.Log.d(domain, message)
                 }
             }
-            FirebaseCrashlytics.getInstance().log("[$domain] [${level.name}] $message")
+            if (crashlyticsEnabled) {
+                FirebaseCrashlytics.getInstance().log("[$domain] [${level.name}] $message")
+            }
         }
     }
 
@@ -532,9 +537,12 @@ class CoreContext
                 Factory.instance().loggingService.addListener(loggingServiceListener)
             } catch (e: Exception) {
                 Log.e("$TAG Failed to instantiate Crashlytics: $e")
+                crashlyticsEnabled = false
+                crashlyticsAvailable = false
             }
         } else {
             Log.i("$TAG Crashlytics is disabled")
+            crashlyticsAvailable = false
         }
         Log.i("=========================================")
         Log.i("==== Linphone-android information dump ====")
@@ -1057,11 +1065,6 @@ class CoreContext
         core.setUserAgent(userAgent, sdkUserAgent)
     }
 
-    @WorkerThread
-    fun enableLogcat(enable: Boolean) {
-        logcatEnabled = enable
-    }
-
     // Migration between versions related
 
     @WorkerThread
@@ -1136,5 +1139,20 @@ class CoreContext
 
         Log.i("$TAG Removing previous grammar files (without .belr extension)")
         corePreferences.clearPreviousGrammars()
+    }
+
+    @WorkerThread
+    fun isCrashlyticsAvailable(): Boolean {
+        return crashlyticsAvailable
+    }
+
+    @WorkerThread
+    fun updateLogcatEnabledSetting(enabled: Boolean) {
+        logcatEnabled = enabled
+    }
+
+    @WorkerThread
+    fun updateCrashlyticsEnabledSetting(enabled: Boolean) {
+        crashlyticsEnabled = enabled
     }
 }

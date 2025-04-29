@@ -87,6 +87,100 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/settings_title_style"
+                    android:onClick="@{() -> viewModel.toggleLogcat()}"
+                    android:id="@+id/logcat_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/help_troubleshooting_print_logs_in_logcat"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    app:layout_constraintTop_toTopOf="@id/logcat_switch"
+                    app:layout_constraintBottom_toBottomOf="@id/logcat_switch"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/logcat_switch"/>
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    style="@style/material_switch_style"
+                    android:id="@+id/logcat_switch"
+                    android:onClick="@{() -> viewModel.toggleLogcat()}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="16dp"
+                    android:checked="@{viewModel.logcat}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/settings_developer_switch" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/settings_title_style"
+                    android:id="@+id/upload_server_url_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/settings_advanced_upload_server_url"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/logcat_switch"/>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    style="@style/default_text_style"
+                    android:id="@+id/upload_server_url"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginEnd="16dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:text="@={viewModel.fileSharingServerUrl}"
+                    android:textSize="14sp"
+                    android:maxLines="1"
+                    android:background="@drawable/edit_text_background"
+                    android:inputType="text|textUri"
+                    android:hint="@string/settings_advanced_upload_server_url"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintWidth_max="@dimen/text_input_max_width"
+                    app:layout_constraintTop_toBottomOf="@id/upload_server_url_label"
+                    app:layout_constraintStart_toStartOf="@id/upload_server_url_label"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/settings_title_style"
+                    android:id="@+id/logs_upload_server_url_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/settings_advanced_logs_upload_server_url"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/upload_server_url"/>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    style="@style/default_text_style"
+                    android:id="@+id/logs_upload_server_url"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginEnd="16dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:text="@={viewModel.fileSharingServerUrl}"
+                    android:textSize="14sp"
+                    android:maxLines="1"
+                    android:background="@drawable/edit_text_background"
+                    android:inputType="text|textUri"
+                    android:hint="@string/settings_advanced_logs_upload_server_url"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintWidth_max="@dimen/text_input_max_width"
+                    app:layout_constraintTop_toBottomOf="@id/logs_upload_server_url_label"
+                    app:layout_constraintStart_toStartOf="@id/logs_upload_server_url_label"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/settings_title_style"
                     android:onClick="@{() -> viewModel.toggleConferencesEndToEndEncryption()}"
                     android:id="@+id/e2e_encrypted_conferences_title"
                     android:layout_width="0dp"
@@ -111,7 +205,7 @@
                     android:layout_marginEnd="16dp"
                     android:checked="@{viewModel.createEndToEndEncryptedConferences}"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/settings_developer_switch" />
+                    app:layout_constraintTop_toBottomOf="@id/logs_upload_server_url" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

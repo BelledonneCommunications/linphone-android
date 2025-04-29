@@ -263,11 +263,13 @@
     <string name="settings_tunnel_mode_auto_label">Auto</string>
 
     <string name="settings_advanced_title">Paramètres avancés</string>
+    <string name="settings_advanced_print_logs_crashlytics_title">Aider les développeurs à corriger les problèmes en envoyant les logs à Crashlytics après un crash</string>
     <string name="settings_advanced_start_at_boot_title">Démarrer au lancement du téléphone</string>
     <string name="settings_advanced_keep_alive_service_title">Garder l\'app en vie via un Service</string>
     <string name="settings_advanced_device_id">Nom de l\'appareil</string>
     <string name="settings_advanced_device_id_hint">Caractères alpha-numériques uniquement</string>
     <string name="settings_advanced_upload_server_url">URL du serveur de partage de fichier</string>
+    <string name="settings_advanced_logs_upload_server_url">URL du serveur de partage des logs</string>
     <string name="settings_advanced_use_smff_format_for_call_recordings_title">Enregistrer les appels vidéos utilisant H265/AV1</string>
     <string name="settings_advanced_use_smff_format_for_call_recordings_subtitle">Utilisera un format de fichier propriétaire</string>
     <string name="settings_advanced_media_encryption_title">Chiffrement du média</string>

@@ -60,4 +60,10 @@ class SettingsDeveloperFragment : GenericMainFragment() {
 
         startPostponedEnterTransition()
     }
+
+    override fun onPause() {
+        viewModel.updateSharingServersUrl()
+
+        super.onPause()
+    }
 }
