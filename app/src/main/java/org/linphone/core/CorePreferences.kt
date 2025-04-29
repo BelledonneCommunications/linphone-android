@@ -23,6 +23,7 @@ import android.content.Context
 import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
+import org.linphone.BuildConfig
 import java.io.File
 import java.io.FileOutputStream
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -51,6 +52,13 @@ class CorePreferences
         get() = config.getBool("app", "debug", org.linphone.BuildConfig.DEBUG)
         set(value) {
             config.setBool("app", "debug", value)
+        }
+
+    @get:WorkerThread @set:WorkerThread
+    var sendLogsToCrashlytics: Boolean
+        get() = config.getBool("app", "send_logs_to_crashlytics", BuildConfig.CRASHLYTICS_ENABLED)
+        set(value) {
+            config.setBool("app", "send_logs_to_crashlytics", value)
         }
 
     @get:WorkerThread @set:WorkerThread

@@ -190,12 +190,13 @@ class SettingsViewModel
     // Advanced settings
     val showAdvancedSettings = MutableLiveData<Boolean>()
 
+    val sendLogsToCrashlytics = MutableLiveData<Boolean>()
+    val isCrashlyticsAvailable = MutableLiveData<Boolean>()
     val startAtBoot = MutableLiveData<Boolean>()
     val keepAliveThirdPartyAccountsService = MutableLiveData<Boolean>()
     val useSmffForCallRecording = MutableLiveData<Boolean>()
 
     val deviceName = MutableLiveData<String>()
-    val fileSharingServerUrl = MutableLiveData<String>()
     val remoteProvisioningUrl = MutableLiveData<String>()
 
     val expandAdvancedCalls = MutableLiveData<Boolean>()
@@ -227,6 +228,9 @@ class SettingsViewModel
     // Developer settings
     val showDeveloperSettings = MutableLiveData<Boolean>()
 
+    val logcat = MutableLiveData<Boolean>()
+    val fileSharingServerUrl = MutableLiveData<String>()
+    val logsSharingServerUrl = MutableLiveData<String>()
     val createEndToEndEncryptedConferences = MutableLiveData<Boolean>()
 
     private val coreListener = object : CoreListenerStub() {
@@ -250,6 +254,8 @@ class SettingsViewModel
             core.addListener(coreListener)
 
             isTunnelAvailable.postValue(core.tunnelAvailable())
+            isCrashlyticsAvailable.postValue(coreContext.isCrashlyticsAvailable())
+
             showConversationsSettings.postValue(!corePreferences.disableChat)
             showMeetingsSettings.postValue(!corePreferences.disableMeetings)
             ldapAvailable.postValue(core.ldapAvailable())
@@ -329,11 +335,11 @@ class SettingsViewModel
                 setupTunnel()
             }
 
+            sendLogsToCrashlytics.postValue(corePreferences.sendLogsToCrashlytics)
             startAtBoot.postValue(corePreferences.autoStart)
             keepAliveThirdPartyAccountsService.postValue(corePreferences.keepServiceAlive)
 
             deviceName.postValue(corePreferences.deviceName)
-            fileSharingServerUrl.postValue(core.fileTransferServer)
             remoteProvisioningUrl.postValue(core.provisioningUri)
 
             acceptEarlyMedia.postValue(corePreferences.acceptEarlyMedia)
@@ -346,6 +352,9 @@ class SettingsViewModel
             setupAudioDevices()
             setupCodecs()
 
+            logcat.postValue(corePreferences.printLogsInLogcat)
+            fileSharingServerUrl.postValue(core.fileTransferServer)
+            logsSharingServerUrl.postValue(core.logCollectionUploadServerUrl)
             createEndToEndEncryptedConferences.postValue(corePreferences.createEndToEndEncryptedMeetingsAndGroupCalls)
         }
     }
@@ -713,6 +722,17 @@ class SettingsViewModel
     }
 
     @UiThread
+    fun toggleSendLogsToCrashlytics() {
+        val newValue = sendLogsToCrashlytics.value == false
+
+        coreContext.postOnCoreThread {
+            corePreferences.sendLogsToCrashlytics = newValue
+            sendLogsToCrashlytics.postValue(newValue)
+            coreContext.updateCrashlyticsEnabledSetting(newValue)
+        }
+    }
+
+    @UiThread
     fun toggleStartAtBoot() {
         val newValue = startAtBoot.value == false
 
@@ -868,12 +888,18 @@ class SettingsViewModel
     }
 
     @UiThread
-    fun updateFileSharingServerUrl() {
+    fun updateSharingServersUrl() {
         coreContext.postOnCoreThread { core ->
             val newFileSharingServerUrl = fileSharingServerUrl.value.orEmpty().trim()
             if (newFileSharingServerUrl.isNotEmpty()) {
                 Log.i("$TAG Updated file sharing server URL to [$newFileSharingServerUrl]")
                 core.fileTransferServer = newFileSharingServerUrl
+            }
+
+            val newLogsSharingServerUrl = logsSharingServerUrl.value.orEmpty().trim()
+            if (newLogsSharingServerUrl.isNotEmpty()) {
+                Log.i("$TAG Updated logs upload server URL to [$newLogsSharingServerUrl]")
+                core.logCollectionUploadServerUrl = newLogsSharingServerUrl
             }
         }
     }
@@ -1045,6 +1071,17 @@ class SettingsViewModel
     fun reloadShowDeveloperSettings() {
         coreContext.postOnCoreThread {
             showDeveloperSettings.postValue(corePreferences.showDeveloperSettings)
+        }
+    }
+
+    @UiThread
+    fun toggleLogcat() {
+        val newValue = logcat.value == false
+        coreContext.postOnCoreThread {
+            corePreferences.printLogsInLogcat = newValue
+            coreContext.updateLogcatEnabledSetting(newValue)
+            Factory.instance().enableLogcatLogs(newValue)
+            logcat.postValue(newValue)
         }
     }
 
