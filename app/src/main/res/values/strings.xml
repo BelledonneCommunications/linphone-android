@@ -882,7 +882,7 @@
     <string name="content_description_answer_video_call">Answers the video call</string>
     <string name="content_description_call_start">Starts a call</string>
     <string name="content_description_call_start_video">Starts a video call</string>
-    <string name="content_description_toggle_video">Enables/disables sending  your camera feed</string>
+    <string name="content_description_toggle_video">Enables/disables sending your camera feed</string>
     <string name="content_description_toggle_microphone">Mute/un-mute your microphone</string>
     <string name="content_description_change_output_audio_device">Changes output audio device</string>
     <string name="content_description_change_camera">Changes camera (front/back) being used</string>
