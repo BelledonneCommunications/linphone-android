@@ -298,7 +298,7 @@ class ContactsListFragment : AbstractMainFragment() {
             null,
             false
         )
-        popupView.seeAllSelected = listViewModel.areAllContactsDisplayed()
+        popupView.seeAllSelected = listViewModel.areAllContactsDisplayed.value == true
         popupView.showLinphoneFilter = listViewModel.isDefaultAccountLinphone.value == true
 
         val popupWindow = PopupWindow(
@@ -309,7 +309,7 @@ class ContactsListFragment : AbstractMainFragment() {
         )
 
         popupView.setNoFilterClickListener {
-            if (!listViewModel.areAllContactsDisplayed()) {
+            if (listViewModel.areAllContactsDisplayed.value != true) {
                 listViewModel.changeContactsFilter(
                     onlyLinphoneContacts = false,
                     onlySipContacts = false
@@ -319,7 +319,7 @@ class ContactsListFragment : AbstractMainFragment() {
         }
 
         popupView.setLinphoneOnlyClickListener {
-            if (listViewModel.areAllContactsDisplayed()) {
+            if (listViewModel.areAllContactsDisplayed.value == true) {
                 listViewModel.changeContactsFilter(
                     onlyLinphoneContacts = true,
                     onlySipContacts = false
@@ -329,7 +329,7 @@ class ContactsListFragment : AbstractMainFragment() {
         }
 
         popupView.setSipOnlyClickListener {
-            if (listViewModel.areAllContactsDisplayed()) {
+            if (listViewModel.areAllContactsDisplayed.value == true) {
                 listViewModel.changeContactsFilter(
                     onlyLinphoneContacts = false,
                     onlySipContacts = true

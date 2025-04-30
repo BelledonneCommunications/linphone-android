@@ -413,6 +413,8 @@
 
     <!-- Contacts -->
     <string name="contacts_list_empty">No contact for the moment…</string>
+    <string name="contacts_list_sip_empty">No SIP contact for the moment…</string>
+    <string name="contacts_change_filter_label">Change filter</string>
     <string name="contacts_list_favourites_title">Favourites</string>
     <string name="contacts_list_all_contacts_title">All contacts</string>
     <string name="contacts_list_filter_popup_see_all">See all</string>
