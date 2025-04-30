@@ -61,6 +61,8 @@ class ContactsListViewModel
 
     val isListFiltered = MutableLiveData<Boolean>()
 
+    val areAllContactsDisplayed = MutableLiveData<Boolean>()
+
     val searchInProgress = MutableLiveData<Boolean>()
 
     val isDefaultAccountLinphone = MutableLiveData<Boolean>()
@@ -107,6 +109,7 @@ class ContactsListViewModel
 
         coreContext.postOnCoreThread { core ->
             domainFilter = corePreferences.contactsFilter
+            areAllContactsDisplayed.postValue(domainFilter.isEmpty())
             checkIfDefaultAccountOnDefaultDomain()
 
             coreContext.contactsManager.addListener(contactsListener)
@@ -145,6 +148,7 @@ class ContactsListViewModel
     fun applyCurrentDefaultAccountFilter() {
         coreContext.postOnCoreThread {
             domainFilter = corePreferences.contactsFilter
+            areAllContactsDisplayed.postValue(domainFilter.isEmpty())
             checkIfDefaultAccountOnDefaultDomain()
 
             coreContext.postOnMainThread {
@@ -163,6 +167,7 @@ class ContactsListViewModel
             } else {
                 ""
             }
+            areAllContactsDisplayed.postValue(domainFilter.isEmpty())
             corePreferences.contactsFilter = domainFilter
             Log.i("$TAG Newly set filter is [${corePreferences.contactsFilter}]")
 
@@ -170,10 +175,6 @@ class ContactsListViewModel
                 applyFilter(currentFilter)
             }
         }
-    }
-
-    fun areAllContactsDisplayed(): Boolean {
-        return domainFilter.isEmpty()
     }
 
     @UiThread
