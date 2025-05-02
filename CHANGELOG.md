@@ -10,6 +10,25 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [6.0.6] - 2025-05-02
+
+### Added
+- Added recover phone account when clicking on "Forgotten password" in the assistant
+- Improved message when contacts list is empty depending on the currently selected filter and added a button to open the filter popup menu for users that didn't notice the icon on the top right corner of the screen when contacts list is empty and "SIP contacts only" filter is set.
+- Added "Logs collection sharing server URL" setting in developper area
+- Added "Disable sending logs to Crashlytics" advanced setting.
+
+### Changed
+- Improved VFS message in confirmation dialog
+- Moved "Print logs in logcat" and "File sharing server URL" settings to developper area
+
+### Fixed
+- Fixed crash when opening a password protected PDF
+- Fixed chat room lookup while in 1-1 call, using SDK method for getting chat room from conference
+- Fixed newly created contact not being visible in contacts list without reloading it
+- Fixed missing event icon for group conversations
+- Another attempts at preventing crashes due to In-Call service not being started as foreground before being stopped
+
 ## [6.0.5] - 2025-04-18
 
 ### Changed
@@ -95,7 +114,7 @@ Group changes to describe their impact on the project, as follows:
 - Reverted the way of playing incoming call ringone (you may have to configure your own ringtone again), was causing various issues depending on devices/firmwares
 - Show all call history entries if only one account is configured (workaround for missing history for now until a proper fix will be done in SDK)
 
-### Fixed
+### Fixed
 - Issue preventing bluetooth Hearing Aids from working properly (and fixed earpiece/hearing aids icon)
 - Prevent Qr Code scanner to use static picture camera
 - Prevent user from connecting the same account multiple times
