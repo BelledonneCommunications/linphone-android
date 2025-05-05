@@ -74,22 +74,45 @@
                     android:src="@drawable/illu"
                     android:contentDescription="@null"
                     app:layout_constraintHeight_max="200dp"
-                    app:layout_constraintBottom_toTopOf="@id/no_conversation_label"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
-                    app:layout_constraintTop_toBottomOf="@id/background" />
+                    app:layout_constraintTop_toTopOf="@id/background"
+                    app:layout_constraintBottom_toTopOf="@id/no_conversation_label" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/section_header_style"
                     android:id="@+id/no_conversation_label"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@{viewModel.isFilterEmpty ? @string/conversations_list_empty : @string/list_filter_no_result_found, default=@string/conversations_list_empty}"
-                    app:layout_constraintBottom_toTopOf="@id/background"
+                    android:textAlignment="center"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
-                    app:layout_constraintTop_toBottomOf="@id/no_conversation_image" />
+                    app:layout_constraintTop_toBottomOf="@id/no_conversation_image"
+                    app:layout_constraintBottom_toTopOf="@id/show_accounts_list"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style_600"
+                    android:id="@+id/show_accounts_list"
+                    android:onClick="@{() -> viewModel.openDrawerMenu()}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:text="@string/history_list_change_selected_account_label"
+                    android:textSize="13sp"
+                    android:textColor="@color/secondary_button_label_color"
+                    android:gravity="center"
+                    android:background="@drawable/secondary_button_background"
+                    android:visibility="@{viewModel.conversations.empty &amp;&amp; viewModel.moreThanOneAccount ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintTop_toBottomOf="@id/no_conversation_label"
+                    app:layout_constraintBottom_toBottomOf="@id/background"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/conversations_list"

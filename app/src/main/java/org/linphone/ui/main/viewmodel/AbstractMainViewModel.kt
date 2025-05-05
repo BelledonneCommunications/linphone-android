@@ -70,6 +70,8 @@ open class AbstractMainViewModel
 
     val isFilterEmpty = MutableLiveData<Boolean>()
 
+    val moreThanOneAccount = MutableLiveData<Boolean>()
+
     val focusSearchBarEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -147,6 +149,16 @@ open class AbstractMainViewModel
         }
 
         @WorkerThread
+        override fun onAccountAdded(core: Core, account: Account) {
+            moreThanOneAccount.postValue(core.accountList.size > 1)
+        }
+
+        @WorkerThread
+        override fun onAccountRemoved(core: Core, account: Account) {
+            moreThanOneAccount.postValue(core.accountList.size > 1)
+        }
+
+        @WorkerThread
         override fun onDefaultAccountChanged(core: Core, defaultAccount: Account?) {
             updateAvailableMenus()
             computeUnreadMessagesCount()
@@ -175,6 +187,7 @@ open class AbstractMainViewModel
         hideMeetings.value = !coreContext.defaultAccountHasVideoConferenceFactoryUri
 
         coreContext.postOnCoreThread { core ->
+            moreThanOneAccount.postValue(core.accountList.size > 1)
             core.addListener(coreListener)
             configure()
         }

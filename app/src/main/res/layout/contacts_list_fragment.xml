@@ -129,9 +129,10 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/section_header_style"
                     android:id="@+id/no_contacts_label"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@{viewModel.isFilterEmpty ? (viewModel.areAllContactsDisplayed ? @string/contacts_list_empty : @string/contacts_list_sip_empty) : @string/list_filter_no_result_found, default=@string/contacts_list_sip_empty}"
+                    android:textAlignment="center"
                     app:layout_constraintBottom_toTopOf="@id/lists"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

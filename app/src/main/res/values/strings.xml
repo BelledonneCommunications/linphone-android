@@ -403,7 +403,8 @@
     <string name="history_call_start_no_suggestion_nor_contact">No suggestion and no contact for the moment…</string>
     <string name="history_group_call_start_dialog_set_subject">Set group call subject</string>
     <string name="history_group_call_start_dialog_subject_hint">Group call subject</string>
-    <string name="history_list_empty_history">No call for the moment…</string>
+    <string name="history_list_empty_history">No call from/to this account was found…</string>
+    <string name="history_list_change_selected_account_label">Change account</string>
     <string name="history_group_call_go_to_conversation">Conversation</string>
 
     <string name="history_dialog_delete_all_call_logs_title">Do you really want to delete all calls history?</string>
@@ -472,7 +473,7 @@
     <string name="contact_device_without_name">Unnamed device</string>
 
     <!-- Chat -->
-    <string name="conversations_list_empty">No conversation for the moment…</string>
+    <string name="conversations_list_empty">No conversation related to this account for the moment…</string>
     <string name="conversations_list_is_being_removed_label">Removal in progress…</string>
     <string name="conversations_last_message_format">%s:</string>
     <plurals name="conversations_files_waiting_to_be_shared_toast">

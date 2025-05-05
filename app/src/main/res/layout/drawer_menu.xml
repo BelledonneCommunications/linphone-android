@@ -83,13 +83,7 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/illu"
                     android:layout_margin="10dp"
-                    android:contentDescription="@null"
-                    app:layout_constraintHeight_max="200dp"
-                    app:layout_constraintBottom_toTopOf="@id/no_contacts_label"
-                    app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/background" />
+                    android:contentDescription="@null" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/section_header_style"
@@ -97,11 +91,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/drawer_menu_no_account_configured_yet"
-                    android:gravity="center"
-                    app:layout_constraintBottom_toTopOf="@id/background"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/no_contacts_image" />
+                    android:gravity="center" />
 
             </LinearLayout>
 

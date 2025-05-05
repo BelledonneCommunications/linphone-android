@@ -128,10 +128,11 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/section_header_style"
                     android:id="@+id/no_contacts_label"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@{viewModel.isFilterEmpty ? (viewModel.areAllContactsDisplayed ? @string/contacts_list_empty : @string/contacts_list_sip_empty) : @string/list_filter_no_result_found, default=@string/contacts_list_sip_empty}"
-                    app:layout_constraintBottom_toTopOf="@id/lists"
+                    android:textAlignment="center"
+                    app:layout_constraintBottom_toTopOf="@id/show_contacts_filter"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
                     app:layout_constraintTop_toBottomOf="@id/no_contacts_image" />
@@ -154,6 +155,7 @@
                     android:background="@drawable/secondary_button_background"
                     android:visibility="@{viewModel.contactsList.empty &amp;&amp; !viewModel.areAllContactsDisplayed ? View.VISIBLE : View.GONE}"
                     app:layout_constraintTop_toBottomOf="@id/no_contacts_label"
+                    app:layout_constraintBottom_toTopOf="@id/lists"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"/>
 
