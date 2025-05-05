@@ -250,6 +250,7 @@ class ContactNewOrEditViewModel
             }
 
             coreContext.contactsManager.newContactAdded(friend)
+            coreContext.contactsManager.notifyContactsListChanged()
 
             saveChangesEvent.postValue(
                 Event(if (status == Status.OK) friend.refKey.orEmpty() else "")
