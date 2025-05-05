@@ -1,5 +1,6 @@
 
-[![pipeline status](https://gitlab.linphone.org/BC/public/linphone-android/badges/master/pipeline.svg)](https://gitlab.linphone.org/BC/public/linphone-android/commits/master) [![weblate status](https://weblate.linphone.org/widgets/linphone/-/linphone-android/svg-badge.svg)](https://weblate.linphone.org/engage/linphone/?utm_source=widget)
+[![pipeline status](https://gitlab.linphone.org/BC/public/linphone-android/badges/master/pipeline.svg)](https://gitlab.linphone.org/BC/public/linphone-android/commits/master) 
+[![weblate status](https://weblate.linphone.org/widget/linphone/linphone-android-6-0/status-badge.png)](https://weblate.linphone.org/engage/linphone/)
 
 Linphone is an open source softphone for voice and video over IP calling and instant messaging.
 
@@ -160,6 +161,16 @@ We have archived our own, so you can build your linphone-android application and
 If you delete it, you won't receive any push notification.
 
 If you have your own push server, replace this file by yours.
+
+## Translations
+
+We no longer use transifex for the translation process, instead we have deployed our own instance of [Weblate](https://weblate.linphone.org/).
+
+Due to the full app rewrite we can't re-use previous translations, so we'll be very happy if you want to contribute.
+
+<a href="https://weblate.linphone.org/engage/linphone/">
+<img src="https://weblate.linphone.org/widget/linphone/linphone-android-6-0/multi-auto.svg" alt="Translation status" />
+</a>
 
 # CONTRIBUTIONS
 
