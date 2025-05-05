@@ -348,7 +348,6 @@ class ContactsManager
         for (sipAddress in friend.addresses) {
             newContactAddedWithSipUri(friend, sipAddress.asStringUriOnly())
         }
-        notifyContactsListChanged()
     }
 
     @WorkerThread
