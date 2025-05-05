@@ -149,6 +149,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
         viewModel.historyDeletedEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG History has been deleted, leaving conversation info...")
+                sharedViewModel.forceRefreshConversations.value = Event(true)
                 sharedViewModel.forceRefreshConversationEvents.value = Event(true)
                 goBack()
                 val message = getString(R.string.conversation_info_history_deleted_toast)
