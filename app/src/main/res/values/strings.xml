@@ -515,7 +515,6 @@
         <item quantity="one">%s is composing…</item>
         <item quantity="other">%s are composing…</item>
     </plurals>
-    <string name="conversation_creation_error_toast">Failed to create conversation!</string>
     <string name="conversation_add_participants_title">Add participants</string>
     <string name="conversation_reply_to_message_title">Replying to:</string>
     <string name="conversation_menu_search_in_messages">Search</string>
@@ -664,6 +663,7 @@
     <string name="meeting_info_cancelled_toast">Meeting has been cancelled</string>
     <string name="meeting_info_cancelled">Meeting cancelled</string>
     <string name="meeting_failed_to_schedule_toast">Failed to schedule meeting!</string>
+    <string name="meeting_failed_to_edit_schedule_toast">Failed to edit meeting!</string>
     <string name="meeting_schedule_mandatory_field_not_filled_toast">Please fill the title and select at least one participant</string>
     <string name="meeting_failed_to_send_invites_toast">Failed to send all invites to meeting!</string>
     <string name="meeting_failed_to_send_part_of_invites_toast">Failed to send invites to some participants of the meeting!</string>
