@@ -211,7 +211,7 @@ class ContactViewModel
                 chatRoom.removeListener(this)
                 operationInProgress.postValue(false)
                 chatRoomCreationErrorEvent.postValue(
-                    Event(R.string.conversation_creation_error_toast)
+                    Event(R.string.conversation_failed_to_create_toast)
                 )
             }
         }
@@ -574,7 +574,7 @@ class ContactViewModel
                     )
                     operationInProgress.postValue(false)
                     chatRoomCreationErrorEvent.postValue(
-                        Event(R.string.conversation_creation_error_toast)
+                        Event(R.string.conversation_failed_to_create_toast)
                     )
                 }
             }

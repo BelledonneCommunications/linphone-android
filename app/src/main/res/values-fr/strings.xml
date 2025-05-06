@@ -173,7 +173,7 @@
     <string name="help_troubleshooting_firebase_project_title">ID du projet Firebase</string>
     <string name="help_troubleshooting_share_logs_dialog_title">Partager le lien vers journaux avec…</string>
     <string name="help_troubleshooting_debug_logs_cleaned_toast_message">Les journaux ont été nettoyés</string>
-    <string name="help_troubleshooting_debug_logs_upload_error_toast_message">Echec à l\'envoi des journaux</string>
+    <string name="help_troubleshooting_debug_logs_upload_error_toast_message">Échec à l\'envoi des journaux</string>
     <string name="help_troubleshooting_show_config_file">Afficher la configuration</string>
     <string name="help_troubleshooting_clear_native_friends_in_database">Supprimer les contacts natifs importés</string>
 
@@ -468,7 +468,6 @@
         <item quantity="one">%s est en train d\'écrire…</item>
         <item quantity="other">%s sont en train d\'écrire…</item>
     </plurals>
-    <string name="conversation_creation_error_toast">Échec de la création de la conversation !</string>
     <string name="conversation_add_participants_title">Ajouter des participants</string>
     <string name="conversation_reply_to_message_title">En réponse à :</string>
     <string name="conversation_menu_search_in_messages">Chercher</string>
@@ -617,6 +616,7 @@
     <string name="meeting_info_cancelled_toast">Réunion annulée</string>
     <string name="meeting_info_cancelled">Réunion annulée</string>
     <string name="meeting_failed_to_schedule_toast">Échec de création de la réunion !</string>
+    <string name="meeting_failed_to_edit_schedule_toast">Échec de modification de la réunion !</string>
     <string name="meeting_schedule_mandatory_field_not_filled_toast">Veuillez saisir un titre et sélectionner au moins un participant</string>
     <string name="meeting_failed_to_send_invites_toast">Échec de l\'envoi des invitations à la réunion !</string>
     <string name="meeting_failed_to_send_part_of_invites_toast">Échec de l\'envoi des invitations à certains des participants !</string>
@@ -626,7 +626,7 @@
     <string name="meeting_waiting_room_cancel">Annuler</string>
     <string name="meeting_waiting_room_joining_title">Connexion à la réunion</string>
     <string name="meeting_waiting_room_joining_subtitle">Vous allez rejoindre la réunion dans quelques instants…</string>
-    <string name="meeting_waiting_room_failed_to_join_toast">Echec de connexion à la conférence!</string>
+    <string name="meeting_waiting_room_failed_to_join_toast">Échec de connexion à la conférence!</string>
 
     <!-- Call related -->
     <string name="call_outgoing">Appel sortant</string>
@@ -719,7 +719,7 @@
     <string name="call_can_be_trusted_toast">Appareil authentifié</string>
     <string name="call_transfer_in_progress_toast">Transfert en cours</string>
     <string name="call_transfer_successful_toast">Appel transféré</string>
-    <string name="call_transfer_failed_toast">Echec du transfert</string>
+    <string name="call_transfer_failed_toast">Échec du transfert</string>
     <string name="call_error_user_busy_toast">Utilisateur occupé</string>
     <string name="call_error_user_not_found_toast">Utilisateur introuvable</string>
     <string name="call_error_incompatible_media_params_toast">Paramètres media incompatibles</string>
@@ -732,8 +732,8 @@
     <string name="conference_call_empty">En attente d\'autres participants…</string>
     <string name="conference_action_screen_sharing">Partage d\'écran</string>
     <string name="conference_action_show_participants">Participants</string>
-    <string name="conference_failed_to_create_group_call_toast">Echec de l\'appel de groupe</string>
-    <string name="conference_failed_to_merge_calls_into_conference_toast">Echec de la fusion des appels</string>
+    <string name="conference_failed_to_create_group_call_toast">Échec de l\'appel de groupe</string>
+    <string name="conference_failed_to_merge_calls_into_conference_toast">Échec de la fusion des appels</string>
     <plurals name="conference_participants_list_title" tools:ignore="MissingQuantity">
         <item quantity="one">Participant (%s)</item>
         <item quantity="other">Participants (%s)</item>

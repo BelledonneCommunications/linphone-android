@@ -113,7 +113,17 @@ class ScheduleMeetingViewModel
             when (state) {
                 ConferenceScheduler.State.Error -> {
                     operationInProgress.postValue(false)
-                    showRedToast(R.string.meeting_failed_to_schedule_toast, R.drawable.warning_circle)
+                    if (::conferenceInfo.isInitialized) {
+                        showRedToast(
+                            R.string.meeting_failed_to_edit_schedule_toast,
+                            R.drawable.warning_circle
+                        )
+                    } else {
+                        showRedToast(
+                            R.string.meeting_failed_to_schedule_toast,
+                            R.drawable.warning_circle
+                        )
+                    }
                 }
                 ConferenceScheduler.State.Ready -> {
                     val conferenceAddress = conferenceScheduler.info?.uri
