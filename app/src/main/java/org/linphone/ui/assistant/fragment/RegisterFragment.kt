@@ -42,7 +42,6 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantRegisterFragmentBinding
-import org.linphone.ui.GenericActivity
 import org.linphone.ui.GenericFragment
 import org.linphone.ui.assistant.viewmodel.AccountCreationViewModel
 import org.linphone.utils.ConfirmationDialogModel
@@ -161,15 +160,6 @@ class RegisterFragment : GenericFragment() {
                         RegisterFragmentDirections.actionRegisterFragmentToRegisterCodeConfirmationFragment()
                     findNavController().navigate(action)
                 }
-            }
-        }
-
-        viewModel.errorHappenedEvent.observe(viewLifecycleOwner) {
-            it.consume { error ->
-                (requireActivity() as GenericActivity).showRedToast(
-                    error,
-                    R.drawable.warning_circle
-                )
             }
         }
 

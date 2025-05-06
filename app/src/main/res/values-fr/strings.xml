@@ -141,6 +141,12 @@
     <string name="assistant_permissions_post_notifications_title"><b>Notifications :</b> Pour vous informer quand vous recevez un message ou un appel.</string>
     <string name="assistant_permissions_record_audio_title"><b>Microphone :</b> Pour permettre à vos correspondants de vous entendre.</string>
     <string name="assistant_permissions_access_camera_title"><b>Caméra :</b> Pour capturer votre vidéo lors des appels et des conférences.</string>
+    <string name="assistant_forgotten_password_title">Récupération de compte</string>
+    <string name="assistant_forgotten_password_subtitle">Choisissez comment récupérer votre compte.</string>
+    <string name="assistant_forgotten_password_message">Vous avez créé votre compte avec :</string>
+    <string name="assistant_recover_email_account_label">Un email</string>
+    <string name="assistant_recover_phone_number_account_label">Un numéro de téléphone</string>
+    <string name="assistant_recover_phone_number_account_unavailable_no_push_warning">Les notifications push ne semblent pas être disponibles sur votre appareil. Celles-ci sont nécessaires à la récupération d’un compte sur l’application mobile avec un numéro de téléphone.</string>
 
     <!-- Main navigation items -->
     <string name="bottom_navigation_contacts_label">Contacts</string>
@@ -860,7 +866,7 @@
 
     <!-- Keep <u></u> in the following strings translations! -->
     <string name="welcome_carousel_skip"><u>Passer</u></string>
-    <string name="assistant_forgotten_password"><u>Mot de passe oublié ?</u></string>
+    <string name="assistant_forgotten_password"><u>Mot de passe oublié ou inconnu ?</u></string>
     <string name="call_zrtp_sas_validation_skip"><u>Passer</u></string>
 
     <!-- Keep <b></b> in the following strings translations! -->

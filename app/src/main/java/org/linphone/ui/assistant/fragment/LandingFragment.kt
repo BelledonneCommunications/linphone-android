@@ -111,8 +111,11 @@ class LandingFragment : GenericFragment() {
         }
 
         binding.setForgottenPasswordClickListener {
-            val url = getString(R.string.web_platform_forgotten_password_url)
-            openUrlInBrowser(url)
+            if (findNavController().currentDestination?.id == R.id.landingFragment) {
+                val action =
+                    LandingFragmentDirections.actionLandingFragmentToRecoverAccountFragment()
+                findNavController().navigate(action)
+            }
         }
 
         viewModel.showPassword.observe(viewLifecycleOwner) {

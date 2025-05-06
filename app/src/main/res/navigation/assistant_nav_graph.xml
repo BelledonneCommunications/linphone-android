@@ -134,6 +134,7 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
             app:launchSingleTop="true" />
+
         <action
             android:id="@+id/action_landingFragment_to_thirdPartySipAccountLoginFragment"
             app:destination="@id/thirdPartySipAccountLoginFragment"
@@ -143,7 +144,8 @@
             app:popExitAnim="@anim/slide_out_right"
             app:launchSingleTop="true"
             app:popUpTo="@id/landingFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
+
         <action
             android:id="@+id/action_landingFragment_to_helpFragment"
             app:destination="@id/helpFragment"
@@ -152,7 +154,14 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
             app:launchSingleTop="true" />
-
+        <action
+            android:id="@+id/action_landingFragment_to_recoverAccountFragment"
+            app:destination="@id/recoverAccountFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:launchSingleTop="true" />
     </fragment>
 
     <fragment
@@ -197,5 +206,11 @@
         android:name="org.linphone.ui.main.help.fragment.DebugFragment"
         android:label="DebugFragment"
         tools:layout="@layout/help_debug_fragment"/>
+
+    <fragment
+        android:id="@+id/recoverAccountFragment"
+        android:name="org.linphone.ui.assistant.fragment.RecoverAccountFragment"
+        android:label="RecoverAccountFragment"
+        tools:layout="@layout/assistant_recover_account_fragment" />
 
 </navigation>

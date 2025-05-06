@@ -37,7 +37,7 @@
     <string name="website_privacy_policy_url" translatable="false">https://linphone.org/en/privacy-policy</string>
     <string name="website_terms_and_conditions_url" translatable="false">https://linphone.org/en/terms-of-use</string>
     <string name="web_platform_register_email_url" translatable="false">https://subscribe.linphone.org/register/email</string>
-    <string name="web_platform_forgotten_password_url" translatable="false">https://subscribe.linphone.org/</string>
+    <string name="web_platform_forgotten_password_url" translatable="false">https://subscribe.linphone.org</string>
     <string name="website_translate_weblate_url" translatable="false">https://weblate.linphone.org/</string>
     <string name="website_open_source_licences_usage_url" translatable="false">https://wiki.linphone.org/xwiki/wiki/public/view/Linphone/Third%20party%20components%20/#Hlinphone-android</string>
     <string name="conversation_end_to_end_encrypted_bottom_sheet_link" translatable="false"><u>https://linphone.org/en/features/#security</u></string>
@@ -183,6 +183,12 @@
     <string name="assistant_permissions_post_notifications_title"><b>Post notifications:</b> To be informed when you receive a message or a call.</string>
     <string name="assistant_permissions_record_audio_title"><b>Record audio:</b> So your correspondent can hear you and to record voice messages.</string>
     <string name="assistant_permissions_access_camera_title"><b>Access camera:</b> To capture video during video calls and conferences.</string>
+    <string name="assistant_forgotten_password_title">Account recovery</string>
+    <string name="assistant_forgotten_password_subtitle">Choose how to recover your account.</string>
+    <string name="assistant_forgotten_password_message">You created your account using:</string>
+    <string name="assistant_recover_email_account_label">An email</string>
+    <string name="assistant_recover_phone_number_account_label">A phone number</string>
+    <string name="assistant_recover_phone_number_account_unavailable_no_push_warning">Push notifications do not seem to be available on your device, but they are mandatory for recovering a phone number account in the mobile app.</string>
 
     <!-- Main navigation items -->
     <string name="bottom_navigation_contacts_label">Contacts</string>
@@ -903,7 +909,7 @@
 
     <!-- Keep <u></u> in the following strings translations! -->
     <string name="welcome_carousel_skip"><u>Skip</u></string>
-    <string name="assistant_forgotten_password"><u>Forgotten password?</u></string>
+    <string name="assistant_forgotten_password"><u>Forgotten or unknown password?</u></string>
     <string name="call_zrtp_sas_validation_skip"><u>Skip</u></string>
 
     <!-- Keep <b></b> in the following strings translations! -->
