@@ -236,6 +236,7 @@
                     android:id="@+id/date_time"
                     android:onClick="@{showDeliveryInfoClickListener}"
                     android:onLongClick="@{onLongClickListener}"
+                    android:enabled="@{model.isFromGroup &amp;&amp; !model.hideDeliveryStatus}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@{model.time, default=`13:40`}"
