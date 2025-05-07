@@ -103,6 +103,7 @@ class HistoryListFragment : AbstractMainFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = listViewModel
+        observeToastEvents(listViewModel)
 
         binding.historyList.setHasFixedSize(true)
         binding.historyList.layoutManager = LinearLayoutManager(requireContext())
