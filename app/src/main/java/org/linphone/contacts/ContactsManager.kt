@@ -417,16 +417,13 @@ class ContactsManager
 
     @WorkerThread
     fun findContactByAddress(address: Address): Friend? {
-        val sipUri = LinphoneUtils.getAddressAsCleanStringUriOnly(address)
-        Log.d("$TAG Looking for friend with SIP URI [$sipUri]")
-
-        val username = address.username
         val found = coreContext.core.findFriend(address)
         if (found != null) {
-            Log.d("$TAG Friend [${found.name}] was found using SIP URI [$sipUri]")
             return found
         }
 
+        val username = address.username
+        val sipUri = LinphoneUtils.getAddressAsCleanStringUriOnly(address)
         // Start an async query in Magic Search in case LDAP or remote CardDAV is configured
         val remoteContactDirectories = coreContext.core.remoteContactDirectories
         if (remoteContactDirectories.isNotEmpty() && !magicSearchMap.keys.contains(sipUri) && !unknownRemoteContactDirectoriesContactsMap.contains(
@@ -461,20 +458,11 @@ class ContactsManager
             Log.d("$TAG Looking for friend with phone number [$username]")
             val foundUsingPhoneNumber = coreContext.core.findFriendByPhoneNumber(username)
             if (foundUsingPhoneNumber != null) {
-                Log.d(
-                    "$TAG Friend [${foundUsingPhoneNumber.name}] was found using phone number [$username]"
-                )
                 foundUsingPhoneNumber
             } else {
-                Log.d(
-                    "$TAG Friend wasn't found using phone number [$username], looking in native address book directly"
-                )
                 null
             }
         } else {
-            Log.d(
-                "$TAG Friend wasn't found using SIP address [$sipAddress] and username [$username] isn't a phone number, looking in native address book directly"
-            )
             null
         }
     }

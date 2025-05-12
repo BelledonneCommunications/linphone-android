@@ -86,7 +86,7 @@ class LinphoneUtils {
         fun getAddressAsCleanStringUriOnly(address: Address): String {
             val scheme = address.scheme ?: "sip"
             val username = address.username
-            if (username.orEmpty().isEmpty()) {
+            if (username.isNullOrEmpty()) {
                 return "$scheme:${address.domain}"
             }
             return "$scheme:$username@${address.domain}"
