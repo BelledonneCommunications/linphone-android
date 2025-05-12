@@ -217,6 +217,7 @@ class SettingsViewModel
     val allowOutgoingEarlyMedia = MutableLiveData<Boolean>()
     val autoAnswerIncomingCalls = MutableLiveData<Boolean>()
     val autoAnswerIncomingCallsDelay = MutableLiveData<Int>()
+    val autoAnswerIncomingCallsWithVideoDirectionSendReceive = MutableLiveData<Boolean>()
 
     val expandAudioDevices = MutableLiveData<Boolean>()
     val inputAudioDeviceIndex = MutableLiveData<Int>()
@@ -356,6 +357,7 @@ class SettingsViewModel
             allowOutgoingEarlyMedia.postValue(corePreferences.allowOutgoingEarlyMedia)
             autoAnswerIncomingCalls.postValue(corePreferences.autoAnswerEnabled)
             autoAnswerIncomingCallsDelay.postValue(corePreferences.autoAnswerDelay)
+            autoAnswerIncomingCallsWithVideoDirectionSendReceive.postValue(corePreferences.autoAnswerVideoCallsWithVideoDirectionSendReceive)
 
             setupMediaEncryption()
             setupAudioDevices()
@@ -886,6 +888,16 @@ class SettingsViewModel
             } catch (nfe: NumberFormatException) {
                 Log.e("$TAG Ignoring new auto answer incoming calls delay as it can't be converted to int: $nfe")
             }
+        }
+    }
+
+    @UiThread
+    fun toggleEnableAutoAnswerIncomingCallsWithVideoDirectionSendReceive() {
+        val newValue = autoAnswerIncomingCallsWithVideoDirectionSendReceive.value == false
+
+        coreContext.postOnCoreThread { core ->
+            corePreferences.autoAnswerVideoCallsWithVideoDirectionSendReceive = newValue
+            autoAnswerIncomingCallsWithVideoDirectionSendReceive.postValue(newValue)
         }
     }
 

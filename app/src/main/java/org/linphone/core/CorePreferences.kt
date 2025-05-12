@@ -183,6 +183,13 @@ class CorePreferences
             config.setInt("app", "auto_answer_delay", value)
         }
 
+    @get:WorkerThread @set:WorkerThread
+    var autoAnswerVideoCallsWithVideoDirectionSendReceive: Boolean
+        get() = config.getBool("app", "auto_answer_video_send_receive", false)
+        set(value) {
+            config.setBool("app", "auto_answer_video_send_receive", value)
+        }
+
     // Conversation related
 
     @get:WorkerThread @set:WorkerThread

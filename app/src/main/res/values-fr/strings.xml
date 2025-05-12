@@ -281,6 +281,7 @@
     <string name="settings_advanced_enable_auto_answer_incoming_calls_title">Décrocher automatiquement les appels entrants</string>
     <string name="settings_advanced_enable_auto_answer_incoming_calls_after_delay_title">Délai avant le décrochage automatique</string>
     <string name="settings_advanced_enable_auto_answer_incoming_calls_after_delay_hint">Délai en millisecondes</string>
+    <string name="settings_advanced_enable_auto_answer_video_send_receive">Décrocher automatiquement avec la vidéo activée dans les deux sens</string>
     <string name="settings_advanced_remote_provisioning_url">URL de configuration distante</string>
     <string name="settings_advanced_download_apply_remote_provisioning">Télécharger &amp; appliquer</string>
     <string name="settings_advanced_audio_devices_title">Périphériques audio</string>

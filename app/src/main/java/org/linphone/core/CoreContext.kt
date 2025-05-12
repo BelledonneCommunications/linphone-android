@@ -295,12 +295,12 @@ class CoreContext
                         val autoAnswerDelay = corePreferences.autoAnswerDelay
                         if (autoAnswerDelay == 0) {
                             Log.w("$TAG Auto answering call immediately")
-                            answerCall(call)
+                            answerCall(call, true)
                         } else {
                             Log.i("$TAG Scheduling auto answering in $autoAnswerDelay milliseconds")
                             postOnCoreThreadDelayed({
                                 Log.w("$TAG Auto answering call")
-                                answerCall(call)
+                                answerCall(call, true)
                             }, autoAnswerDelay.toLong())
                         }
                     }
@@ -916,7 +916,7 @@ class CoreContext
     }
 
     @WorkerThread
-    fun answerCall(call: Call) {
+    fun answerCall(call: Call, autoAnswer: Boolean = false) {
         Log.i(
             "$TAG Answering call with remote address [${call.remoteAddress.asStringUriOnly()}] and to address [${call.toAddress.asStringUriOnly()}]"
         )
@@ -942,6 +942,12 @@ class CoreContext
             Log.i(
                 "$TAG Enabling video on call params to prevent audio-only layout when answering"
             )
+        } else if (autoAnswer) {
+            val videoBothWays = corePreferences.autoAnswerVideoCallsWithVideoDirectionSendReceive
+            if (videoBothWays) {
+                Log.i("$TAG Call is being auto-answered, requesting video in both ways according to user setting")
+                params.videoDirection = MediaDirection.SendRecv
+            }
         }
 
         call.acceptWithParams(params)
