@@ -446,22 +446,10 @@ class ContactsManager
             )
         }
 
-        val sipAddress = if (sipUri.startsWith("sip:")) {
-            sipUri.substring("sip:".length)
-        } else if (sipUri.startsWith("sips:")) {
-            sipUri.substring("sips:".length)
-        } else {
-            sipUri
-        }
-
         return if (!username.isNullOrEmpty() && (username.startsWith("+") || username.isDigitsOnly())) {
             Log.d("$TAG Looking for friend with phone number [$username]")
             val foundUsingPhoneNumber = coreContext.core.findFriendByPhoneNumber(username)
-            if (foundUsingPhoneNumber != null) {
-                foundUsingPhoneNumber
-            } else {
-                null
-            }
+            foundUsingPhoneNumber
         } else {
             null
         }
