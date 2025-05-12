@@ -24,7 +24,6 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.core.MediaDirection
 import org.linphone.core.ParticipantDevice
 import org.linphone.core.ParticipantDeviceListenerStub
 import org.linphone.core.StreamType
@@ -57,7 +56,7 @@ class ConferenceParticipantDeviceModel
 
     val isVideoAvailable = MutableLiveData<Boolean>()
 
-    val isSendingVideo = MutableLiveData<Boolean>()
+    val isThumbnailAvailable = MutableLiveData<Boolean>()
 
     val isJoining = MutableLiveData<Boolean>()
 
@@ -109,28 +108,6 @@ class ConferenceParticipantDeviceModel
         }
 
         @WorkerThread
-        override fun onStreamAvailabilityChanged(
-            participantDevice: ParticipantDevice,
-            available: Boolean,
-            streamType: StreamType?
-        ) {
-            Log.d(
-                "$TAG Participant device [${participantDevice.address.asStringUriOnly()}] stream [$streamType] availability changed to ${if (available) "available" else "not available"}"
-            )
-        }
-
-        @WorkerThread
-        override fun onStreamCapabilityChanged(
-            participantDevice: ParticipantDevice,
-            direction: MediaDirection?,
-            streamType: StreamType?
-        ) {
-            Log.d(
-                "$TAG Participant device [${participantDevice.address.asStringUriOnly()}] stream [$streamType] capability changed to [$direction]"
-            )
-        }
-
-        @WorkerThread
         override fun onScreenSharingChanged(
             participantDevice: ParticipantDevice,
             screenSharing: Boolean
@@ -149,19 +126,21 @@ class ConferenceParticipantDeviceModel
             Log.i(
                 "$TAG Participant device [${participantDevice.address.asStringUriOnly()}] thumbnail availability changed to ${if (available) "available" else "not available"}"
             )
-            isVideoAvailable.postValue(available)
+            isThumbnailAvailable.postValue(available)
         }
 
         @WorkerThread
-        override fun onThumbnailStreamCapabilityChanged(
+        override fun onStreamAvailabilityChanged(
             participantDevice: ParticipantDevice,
-            direction: MediaDirection?
+            available: Boolean,
+            streamType: StreamType?
         ) {
-            Log.i(
-                "$TAG Participant device [${participantDevice.address.asStringUriOnly()}] thumbnail capability changed to [$direction]"
-            )
-            val sending = direction == MediaDirection.SendRecv || direction == MediaDirection.SendOnly
-            isSendingVideo.postValue(sending)
+            if (streamType == StreamType.Video) {
+                Log.i(
+                    "$TAG Participant device [${participantDevice.address.asStringUriOnly()}] video stream availability changed to ${if (available) "available" else "not available"}"
+                )
+                isVideoAvailable.postValue(available)
+            }
         }
     }
 
@@ -196,10 +175,18 @@ class ConferenceParticipantDeviceModel
             Log.i("$TAG Participant [${device.address.asStringUriOnly()}] is sharing its screen")
         }
 
-        isVideoAvailable.postValue(device.getStreamAvailability(StreamType.Video))
-        val videoCapability = device.getStreamCapability(StreamType.Video)
-        isSendingVideo.postValue(
-            videoCapability == MediaDirection.SendRecv || videoCapability == MediaDirection.SendOnly
+        val videoAvailability = device.getStreamAvailability(StreamType.Video)
+        isVideoAvailable.postValue(videoAvailability)
+        Log.i(
+            "$TAG Participant device [${device.address.asStringUriOnly()}] video stream availability is ${if (videoAvailability) "available" else "not available"}"
+        )
+
+        // In case of joining conference without bundle mode, thumbnail stream availability will be false,
+        // but we need to display our video preview for video stream to be sent
+        val thumbnailVideoAvailability = if (isMe) videoAvailability else device.thumbnailStreamAvailability
+        isThumbnailAvailable.postValue(thumbnailVideoAvailability)
+        Log.i(
+            "$TAG Participant device [${device.address.asStringUriOnly()}] thumbnail availability is ${if (thumbnailVideoAvailability) "available" else "not available"}"
         )
     }
 
