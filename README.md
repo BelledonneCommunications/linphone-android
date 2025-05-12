@@ -26,7 +26,7 @@ Linphone is dual licensed, and is available either :
 
 ### Documentation
 
-- Supported features and RFCs : https://linphone.org/technical-corner/linphone/features
+- Supported features and RFCs : https://www.linphone.org/linphone-softphone/#linphone-fonctionnalites
 
 - Linphone public wiki : https://wiki.linphone.org/xwiki/wiki/public/view/Linphone/
 
