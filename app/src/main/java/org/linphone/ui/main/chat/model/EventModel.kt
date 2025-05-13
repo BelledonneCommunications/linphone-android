@@ -116,22 +116,24 @@ class EventModel
                 EventLog.Type.ConferenceEphemeralMessageLifetimeChanged -> {
                     R.drawable.clock_countdown
                 }
-                EventLog.Type.ConferenceTerminated,
                 EventLog.Type.ConferenceSecurityEvent -> {
                     R.drawable.warning_circle
                 }
                 EventLog.Type.ConferenceSubjectChanged -> {
                     R.drawable.pencil_simple
                 }
-                EventLog.Type.ConferenceCreated,
-                EventLog.Type.ConferenceParticipantDeviceAdded,
-                EventLog.Type.ConferenceParticipantDeviceRemoved -> {
+                EventLog.Type.ConferenceParticipantAdded,
+                EventLog.Type.ConferenceCreated -> {
+                    R.drawable.door_open
+                }
+                EventLog.Type.ConferenceParticipantRemoved,
+                EventLog.Type.ConferenceTerminated -> {
                     R.drawable.door
                 }
-                EventLog.Type.ConferenceParticipantAdded -> {
+                EventLog.Type.ConferenceParticipantDeviceAdded -> {
                     R.drawable.user_circle_plus
                 }
-                EventLog.Type.ConferenceParticipantRemoved -> {
+                EventLog.Type.ConferenceParticipantDeviceRemoved -> {
                     R.drawable.user_circle_minus
                 }
                 EventLog.Type.ConferenceParticipantSetAdmin -> {
