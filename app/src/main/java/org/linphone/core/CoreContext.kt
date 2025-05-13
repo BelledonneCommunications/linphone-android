@@ -256,6 +256,16 @@ class CoreContext
         ) {
             Log.i("$TAG Configuring state changed [$status], message is [$message]")
             if (status == ConfiguringState.Successful) {
+                val accounts = core.accountList
+                if (core.defaultAccount == null && accounts.isNotEmpty()) {
+                    val firstAccount = accounts.firstOrNull()
+                    if (firstAccount != null) {
+                        Log.w("$TAG Default account is null but account list isn't empty, using account [${firstAccount.
+                        params.identityAddress?.asStringUriOnly()}] as default")
+                        core.defaultAccount = firstAccount
+                    }
+                }
+
                 provisioningAppliedEvent.postValue(Event(true))
                 corePreferences.firstLaunch = false
                 showGreenToastEvent.postValue(
