@@ -144,16 +144,12 @@
             app:layout_constraintBottom_toBottomOf="@id/title" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style"
+            style="@style/unread_count_text_style"
             android:id="@+id/notifications_count"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="@dimen/unread_count_indicator_size"
+            android:layout_height="@dimen/unread_count_indicator_size"
             android:layout_marginEnd="10dp"
-            android:gravity="center"
-            android:background="@drawable/shape_red_round"
             android:text="@{String.valueOf(model.unreadMessageCount), default=`99`}"
-            android:textColor="?attr/color_on_main"
-            android:textSize="11sp"
             android:visibility="@{model.unreadMessageCount > 0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/date_time"

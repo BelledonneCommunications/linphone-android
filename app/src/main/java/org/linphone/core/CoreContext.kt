@@ -260,8 +260,10 @@ class CoreContext
                 if (core.defaultAccount == null && accounts.isNotEmpty()) {
                     val firstAccount = accounts.firstOrNull()
                     if (firstAccount != null) {
-                        Log.w("$TAG Default account is null but account list isn't empty, using account [${firstAccount.
-                        params.identityAddress?.asStringUriOnly()}] as default")
+                        val sipUri = firstAccount.params.identityAddress?.asStringUriOnly()
+                        Log.w(
+                            "$TAG Default account is null but account list isn't empty, using account [$sipUri] as default"
+                        )
                         core.defaultAccount = firstAccount
                     }
                 }
