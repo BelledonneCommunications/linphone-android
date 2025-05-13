@@ -111,6 +111,10 @@ class ConversationViewModel
         MutableLiveData<Event<FileModel>>()
     }
 
+    val sipUriToCallEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
     val conferenceToJoinEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
     }
@@ -763,25 +767,28 @@ class ConversationViewModel
                 index > 0,
                 index != groupedEventLogs.size - 1,
                 searchFilter.value.orEmpty(),
-                { fileModel ->
+                { fileModel -> // onContentClicked
                     fileToDisplayEvent.postValue(Event(fileModel))
                 },
-                { conferenceUri ->
+                { sipUri -> // onSipUriClicked
+                    sipUriToCallEvent.postValue(Event(sipUri))
+                },
+                { conferenceUri -> // onJoinConferenceClicked
                     conferenceToJoinEvent.postValue(Event(conferenceUri))
                 },
-                { url ->
+                { url -> // onWebUrlClicked
                     openWebBrowserEvent.postValue(Event(url))
                 },
-                { friendRefKey ->
+                { friendRefKey -> // onContactClicked
                     contactToDisplayEvent.postValue(Event(friendRefKey))
                 },
-                { redToast ->
+                { redToast -> // onRedToastToShow
                     showRedToastEvent.postValue(Event(redToast))
                 },
-                { id ->
+                { id -> // onVoiceRecordingPlaybackEnded
                     voiceRecordPlaybackEndedEvent.postValue(Event(id))
                 },
-                { filePath ->
+                { filePath -> // onFileToExportToNativeGallery
                     viewModelScope.launch {
                         withContext(Dispatchers.IO) {
                             Log.i("$TAG Export file [$filePath] to Android's MediaStore")

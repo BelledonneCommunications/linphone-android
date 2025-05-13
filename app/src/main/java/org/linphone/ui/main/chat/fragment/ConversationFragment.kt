@@ -94,6 +94,7 @@ import org.linphone.utils.hideKeyboard
 import org.linphone.utils.setKeyboardInsetListener
 import org.linphone.utils.showKeyboard
 import androidx.core.net.toUri
+import androidx.lifecycle.observe
 
 @UiThread
 open class ConversationFragment : SlidingPaneChildFragment() {
@@ -763,6 +764,19 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                 if (messageLongPressViewModel.visible.value == true) return@consume
                 Log.i("$TAG User clicked on file [${model.path}], let's display it in file viewer")
                 goToFileViewer(model)
+            }
+        }
+
+        viewModel.sipUriToCallEvent.observe(viewLifecycleOwner) {
+            it.consume { sipUri ->
+                if (messageLongPressViewModel.visible.value == true) return@consume
+                val address = coreContext.core.interpretUrl(sipUri, false)
+                if (address != null) {
+                    Log.i("$TAG Starting audio call to parsed SIP URI [${address.asStringUriOnly()}]")
+                    coreContext.startAudioCall(address)
+                } else {
+                    Log.w("$TAG Failed to parse [$sipUri] as SIP URI")
+                }
             }
         }
 
