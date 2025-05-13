@@ -305,6 +305,19 @@ class CoreContext
                         }
                     }
                 }
+                Call.State.IncomingEarlyMedia -> {
+                    if (core.ringDuringIncomingEarlyMedia) {
+                        val speaker = core.audioDevices.find {
+                            it.type == AudioDevice.Type.Speaker
+                        }
+                        if (speaker != null) {
+                            Log.i("$TAG Ringing during incoming early media enabled, make sure speaker audio device [${speaker.id}] is used")
+                            call.outputAudioDevice = speaker
+                        } else {
+                            Log.w("$TAG No speaker device found, incoming call early media ringing will be played on default device")
+                        }
+                    }
+                }
                 Call.State.OutgoingInit -> {
                     val conferenceInfo = core.findConferenceInformationFromUri(call.remoteAddress)
                     // Do not show outgoing call view for conference calls, wait for connected state
