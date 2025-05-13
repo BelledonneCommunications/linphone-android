@@ -79,6 +79,7 @@ class MessageModel
     isGroupedWithNextOne: Boolean,
     private val currentFilter: String = "",
     private val onContentClicked: ((fileModel: FileModel) -> Unit)? = null,
+    private val onSipUriClicked: ((uri: String) -> Unit)? = null,
     private val onJoinConferenceClicked: ((uri: String) -> Unit)? = null,
     private val onWebUrlClicked: ((url: String) -> Unit)? = null,
     private val onContactClicked: ((friendRefKey: String) -> Unit)? = null,
@@ -673,8 +674,8 @@ class MessageModel
 
                 spannableBuilder.replace(start, end, "@$displayName")
                 val span = PatternClickableSpan.StyledClickableSpan(
-                    object :
-                        SpannableClickedListener {
+                    object : SpannableClickedListener {
+                        @UiThread
                         override fun onSpanClicked(text: String) {
                             val friendRefKey = friend.refKey ?: ""
                             Log.i(
@@ -707,12 +708,7 @@ class MessageModel
                         override fun onSpanClicked(text: String) {
                             coreContext.postOnCoreThread {
                                 Log.i("$TAG Clicked on SIP URI: $text")
-                                val address = coreContext.core.interpretUrl(text, false)
-                                if (address != null) {
-                                    coreContext.startAudioCall(address)
-                                } else {
-                                    Log.w("$TAG Failed to parse [$text] as SIP URI")
-                                }
+                                onSipUriClicked?.invoke(text)
                             }
                         }
                     }
@@ -722,6 +718,7 @@ class MessageModel
                         HTTP_LINK_REGEXP
                     ),
                     object : SpannableClickedListener {
+                        @UiThread
                         override fun onSpanClicked(text: String) {
                             Log.i("$TAG Clicked on web URL: $text")
                             onWebUrlClicked?.invoke(text)
