@@ -94,6 +94,7 @@
     <dimen name="chat_bubble_start_margin_when_avatar_displayed">10dp</dimen>
     <dimen name="chat_conversation_header_avatar_start_margin_if_back_button">5dp</dimen>
     <dimen name="chat_conversation_header_avatar_start_margin_if_no_back_button">15dp</dimen>
+    <dimen name="unread_count_indicator_size">24dp</dimen>
 
     <dimen name="chat_room_emoji_picker_height">300dp</dimen>
     <dimen name="chat_room_participants_list_max_height">300dp</dimen>

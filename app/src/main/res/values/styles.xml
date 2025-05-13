@@ -187,4 +187,16 @@
         <item name="android:adjustViewBounds">true</item>
         <item name="android:scaleType">centerCrop</item>
     </style>
+    <style name="unread_count_text_style">
+        <item name="android:fontFamily">@font/noto_sans</item>
+        <item name="android:textColor">?attr/color_on_main</item>
+        <item name="android:textColorHint">?attr/color_hint_text</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/shape_red_round</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:autoSizeTextType">uniform</item>
+        <item name="android:autoSizeMinTextSize">8sp</item>
+        <item name="android:autoSizeStepGranularity">1sp</item>
+    </style>
 </resources>

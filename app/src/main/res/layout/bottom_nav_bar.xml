@@ -56,18 +56,13 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style"
+            style="@style/unread_count_text_style"
             android:id="@+id/missed_calls"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/unread_count_indicator_size"
+            android:layout_height="@dimen/unread_count_indicator_size"
             android:layout_marginStart="50dp"
             android:layout_marginTop="5dp"
-            android:gravity="center"
-            android:background="@drawable/shape_red_round"
             android:text="@{String.valueOf(viewModel.missedCallsCount), default=`1`}"
-            android:textColor="?attr/color_on_main"
-            android:textSize="13sp"
-            android:paddingBottom="2dp"
             android:visibility="@{viewModel.missedCallsCount > 0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintTop_toTopOf="@id/calls"
             app:layout_constraintStart_toStartOf="@id/calls"
@@ -94,18 +89,13 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style"
+            style="@style/unread_count_text_style"
             android:id="@+id/unread_messages"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/unread_count_indicator_size"
+            android:layout_height="@dimen/unread_count_indicator_size"
             android:layout_marginStart="50dp"
             android:layout_marginTop="5dp"
-            android:gravity="center"
-            android:background="@drawable/shape_red_round"
             android:text="@{String.valueOf(viewModel.unreadMessages), default=`1`}"
-            android:textColor="?attr/color_on_main"
-            android:textSize="13sp"
-            android:paddingBottom="2dp"
             android:visibility="@{viewModel.unreadMessages > 0 &amp;&amp; !viewModel.hideConversations ? View.VISIBLE : View.GONE}"
             app:layout_constraintTop_toTopOf="@id/conversations"
             app:layout_constraintStart_toStartOf="@id/conversations"

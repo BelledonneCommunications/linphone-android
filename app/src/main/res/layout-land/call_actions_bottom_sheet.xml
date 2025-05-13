@@ -91,18 +91,13 @@
             app:tint="@color/in_call_button_tint_color" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style"
+            style="@style/unread_count_text_style"
             android:id="@+id/calls_count"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/unread_count_indicator_size"
+            android:layout_height="@dimen/unread_count_indicator_size"
             android:layout_marginStart="40dp"
             android:layout_marginTop="25dp"
-            android:gravity="center"
-            android:background="@drawable/shape_red_round"
             android:text="@{String.valueOf(callsViewModel.callsCount), default=`1`}"
-            android:textColor="?attr/color_on_main"
-            android:textSize="13sp"
-            android:paddingBottom="2dp"
             android:visibility="@{callsViewModel.callsCount > 1 ? View.VISIBLE : View.GONE}"
             app:layout_constraintTop_toBottomOf="@id/main_actions"
             app:layout_constraintStart_toStartOf="@id/calls_list"
@@ -156,18 +151,13 @@
             app:layout_constraintBottom_toBottomOf="@id/chat"/>
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style"
+            style="@style/unread_count_text_style"
             android:id="@+id/unread_messages_count"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/unread_count_indicator_size"
+            android:layout_height="@dimen/unread_count_indicator_size"
             android:layout_marginStart="40dp"
             android:layout_marginTop="25dp"
-            android:gravity="center"
-            android:background="@drawable/shape_red_round"
             android:text="@{String.valueOf(viewModel.unreadMessagesCount), default=`1`}"
-            android:textColor="?attr/color_on_main"
-            android:textSize="13sp"
-            android:paddingBottom="2dp"
             android:visibility="@{viewModel.unreadMessagesCount > 0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintTop_toBottomOf="@id/main_actions"
             app:layout_constraintStart_toStartOf="@id/chat"
