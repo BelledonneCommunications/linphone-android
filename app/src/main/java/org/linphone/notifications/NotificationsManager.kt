@@ -99,6 +99,7 @@ class NotificationsManager
         const val CHAT_NOTIFICATIONS_GROUP = "CHAT_NOTIF_GROUP"
 
         private const val INCOMING_CALL_ID = 1
+        private const val DUMMY_NOTIF_ID = 3
         private const val KEEP_ALIVE_FOR_THIRD_PARTY_ACCOUNTS_ID = 5
         private const val MISSED_CALL_ID = 10
     }
@@ -502,8 +503,14 @@ class NotificationsManager
         coreContext.postOnCoreThread { core ->
             if (core.callsNb == 0) {
                 Log.w("$TAG No call anymore, stopping service")
+                if (waitForInCallServiceForegroundToStopIt) {
+                    Log.w("$TAG Service wasn't started as foreground yet, doing it now using a dummy notification")
+                    showDummyNotificationForCallService()
+                }
                 if (inCallServiceForegroundNotificationPublished) {
                     stopInCallForegroundService()
+                } else {
+                    Log.w("$TAG Foreground service notification wasn't published, shouldn't happen")
                 }
             } else if (currentInCallServiceNotificationId == -1) {
                 val call = core.currentCall ?: core.calls.first()
@@ -865,6 +872,55 @@ class NotificationsManager
             }
         } else {
             Log.e("$TAG POST_NOTIFICATIONS permission isn't granted, don't start foreground service!")
+        }
+    }
+
+    @AnyThread
+    private fun showDummyNotificationForCallService() {
+        val service = inCallService
+        if (service != null) {
+            val channelId = context.getString(R.string.notification_channel_call_id)
+            val pendingIntent = TaskStackBuilder.create(context).run {
+                addNextIntentWithParentStack(
+                    Intent(context, MainActivity::class.java).apply {
+                        action = Intent.ACTION_MAIN // Needed as well
+                    }
+                )
+                getPendingIntent(
+                    KEEP_ALIVE_FOR_THIRD_PARTY_ACCOUNTS_ID,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )!!
+            }
+            val builder = NotificationCompat.Builder(context, channelId)
+                .setSmallIcon(R.drawable.linphone_notification)
+                .setAutoCancel(false)
+                .setOngoing(true)
+                .setCategory(NotificationCompat.CATEGORY_SERVICE)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setShowWhen(false)
+                .setContentIntent(pendingIntent)
+            val notification = builder.build()
+
+            if (Compatibility.isPostNotificationsPermissionGranted(context)) {
+                Log.i(
+                    "$TAG Service found, starting it as foreground using dummy notification ID [$DUMMY_NOTIF_ID]"
+                )
+                Compatibility.startServiceForeground(
+                    service,
+                    DUMMY_NOTIF_ID,
+                    notification,
+                    Compatibility.FOREGROUND_SERVICE_TYPE_PHONE_CALL
+                )
+                notificationsMap[INCOMING_CALL_ID] = notification
+                currentInCallServiceNotificationId = DUMMY_NOTIF_ID
+                inCallServiceForegroundNotificationPublished = true
+                Log.i("$TAG Dummy notification with ID [$DUMMY_NOTIF_ID] has been used to start service as foreground")
+            } else {
+                Log.e("$TAG POST_NOTIFICATIONS permission isn't granted, don't start foreground service!")
+            }
+        } else {
+            Log.w("$TAG Core Foreground Service hasn't started yet...")
         }
     }
 
