@@ -114,7 +114,7 @@
                 <include
                     android:id="@+id/bottom_nav_bar"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/portrait_nav_bar_height"
+                    android:layout_height="wrap_content"
                     layout="@layout/bottom_nav_bar"
                     bind:viewModel="@{viewModel}"
                     app:layout_constraintBottom_toBottomOf="parent" />
