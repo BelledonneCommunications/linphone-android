@@ -148,6 +148,13 @@ class SettingsFragment : GenericMainFragment() {
             goBack()
         }
 
+        binding.setAdvancedCallSettingsClickListener {
+            if (findNavController().currentDestination?.id == R.id.settingsFragment) {
+                val action = SettingsFragmentDirections.actionSettingsFragmentToSettingsAdvancedCallFragment()
+                findNavController().navigate(action)
+            }
+        }
+
         binding.setAdvancedSettingsClickListener {
             if (findNavController().currentDestination?.id == R.id.settingsFragment) {
                 val action = SettingsFragmentDirections.actionSettingsFragmentToSettingsAdvancedFragment()

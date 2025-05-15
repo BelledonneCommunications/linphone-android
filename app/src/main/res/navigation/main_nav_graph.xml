@@ -145,6 +145,14 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_settingsFragment_to_settingsAdvancedCallFragment"
+            app:destination="@id/settingsAdvancedCallFragment"
+            app:launchSingleTop="true"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <action
@@ -411,7 +419,8 @@
         android:id="@+id/settingsAdvancedFragment"
         android:name="org.linphone.ui.main.settings.fragment.SettingsAdvancedFragment"
         android:label="SettingsAdvancedFragment"
-        tools:layout="@layout/settings_advanced_fragment"/>
+        tools:layout="@layout/settings_advanced_fragment">
+    </fragment>
 
     <fragment
         android:id="@+id/singleSignOnFragment"
@@ -445,5 +454,11 @@
         android:name="org.linphone.ui.main.settings.fragment.SettingsDeveloperFragment"
         android:label="SettingsDeveloperFragment"
         tools:layout="@layout/settings_developer_fragment"/>
+
+    <fragment
+        android:id="@+id/settingsAdvancedCallFragment"
+        android:name="org.linphone.ui.main.settings.fragment.SettingsAdvancedCallFragment"
+        android:label="SettingsAdvancedCallFragment"
+        tools:layout="@layout/settings_advanced_calls_fragment"/>
 
 </navigation>

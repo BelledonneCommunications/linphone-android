@@ -233,6 +233,9 @@ class SettingsViewModel
     val expandVideoCodecs = MutableLiveData<Boolean>()
     val videoCodecs = MutableLiveData<List<CodecModel>>()
 
+    val expandEarlyMedia = MutableLiveData<Boolean>()
+    val expandAutoAnswer = MutableLiveData<Boolean>()
+
     // Developer settings
     val showDeveloperSettings = MutableLiveData<Boolean>()
 
@@ -286,6 +289,8 @@ class SettingsViewModel
         expandAudioDevices.value = false
         expandAudioCodecs.value = false
         expandVideoCodecs.value = false
+        expandEarlyMedia.value = false
+        expandAutoAnswer.value = false
 
         val vfsEnabled = VFS.isEnabled(coreContext.context)
         isVfsEnabled.value = vfsEnabled
@@ -840,6 +845,11 @@ class SettingsViewModel
     }
 
     @UiThread
+    fun toggleEarlyMediaExpand() {
+        expandEarlyMedia.value = expandEarlyMedia.value == false
+    }
+
+    @UiThread
     fun toggleAcceptEarlyMedia() {
         val newValue = acceptEarlyMedia.value == false
 
@@ -867,6 +877,11 @@ class SettingsViewModel
             corePreferences.allowOutgoingEarlyMedia = newValue
             allowOutgoingEarlyMedia.postValue(newValue)
         }
+    }
+
+    @UiThread
+    fun toggleAutoAnswerExpand() {
+        expandAutoAnswer.value = expandAutoAnswer.value == false
     }
 
     @UiThread

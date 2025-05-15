@@ -12,6 +12,9 @@
             name="turnOnVfsClickListener"
             type="View.OnClickListener" />
         <variable
+            name="advancedCallSettingsClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="advancedSettingsClickListener"
             type="View.OnClickListener" />
         <variable
@@ -124,6 +127,7 @@
                     android:layout_marginEnd="16dp"
                     android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE, default=gone}"
                     app:layout_constraintTop_toBottomOf="@id/calls"
+                    bind:advancedCallSettingsClickListener="@{advancedCallSettingsClickListener}"
                     bind:viewModel="@{viewModel}"/>
 
                 <androidx.appcompat.widget.AppCompatTextView

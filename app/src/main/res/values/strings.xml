@@ -310,14 +310,17 @@
     <string name="settings_advanced_device_id_hint">Alpha-numerical characters only</string>
     <string name="settings_advanced_upload_server_url">File sharing server URL</string>
     <string name="settings_advanced_logs_upload_server_url">Logs sharing server URL</string>
+    <string name="settings_advanced_calls">Advanced calls settings</string>
     <string name="settings_advanced_use_smff_format_for_call_recordings_title">Record video calls using H265/AV1</string>
     <string name="settings_advanced_use_smff_format_for_call_recordings_subtitle">Will use a proprietary file format</string>
     <string name="settings_advanced_media_encryption_title">Media encryption</string>
     <string name="settings_advanced_media_encryption_mandatory_title">Media encryption mandatory</string>
     <string name="settings_advanced_create_e2e_encrypted_conferences_title">Create end-to-end encrypted meetings &amp; group calls</string>
+    <string name="settings_advanced_early_media_title">Early-media</string>
     <string name="settings_advanced_accept_early_media_title">Accept early media</string>
     <string name="settings_advanced_ring_during_early_media_title">Ring during incoming early media call</string>
     <string name="settings_advanced_allow_outgoing_early_media_title">Allow outgoing early media</string>
+    <string name="settings_advanced_auto_answer_title">Auto-answer</string>
     <string name="settings_advanced_enable_auto_answer_incoming_calls_title">Auto answer incoming calls</string>
     <string name="settings_advanced_enable_auto_answer_incoming_calls_after_delay_title">Delay before auto answering call</string>
     <string name="settings_advanced_enable_auto_answer_incoming_calls_after_delay_hint">Delay in milliseconds</string>

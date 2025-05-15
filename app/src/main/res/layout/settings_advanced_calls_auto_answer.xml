@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.main.settings.viewmodel.SettingsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="20dp"
+        android:background="@drawable/shape_squircle_white_background">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/settings_title_style"
+            android:onClick="@{() -> viewModel.toggleEnableAutoAnswerIncomingCalls()}"
+            android:id="@+id/auto_answer_incoming_calls_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/settings_advanced_enable_auto_answer_incoming_calls_title"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintTop_toTopOf="@id/auto_answer_incoming_calls_switch"
+            app:layout_constraintBottom_toBottomOf="@id/auto_answer_incoming_calls_switch"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/auto_answer_incoming_calls_switch"/>
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            style="@style/material_switch_style"
+            android:id="@+id/auto_answer_incoming_calls_switch"
+            android:onClick="@{() -> viewModel.toggleEnableAutoAnswerIncomingCalls()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:checked="@{viewModel.autoAnswerIncomingCalls}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/settings_title_style"
+            android:id="@+id/auto_answer_incoming_calls_delay_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="@string/settings_advanced_enable_auto_answer_incoming_calls_after_delay_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/auto_answer_incoming_calls_switch"/>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            style="@style/default_text_style"
+            android:id="@+id/auto_answer_incoming_calls_delay"
+            onValueChanged="@{() -> viewModel.updateAutoAnswerIncomingCallsDelay(autoAnswerIncomingCallsDelay.getText().toString())}"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="16dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@{viewModel.autoAnswerIncomingCallsDelay.toString()}"
+            android:textSize="14sp"
+            android:maxLines="1"
+            android:background="@drawable/edit_text_background"
+            android:inputType="number"
+            android:hint="@string/settings_advanced_enable_auto_answer_incoming_calls_after_delay_hint"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintWidth_max="@dimen/text_input_max_width"
+            app:layout_constraintTop_toBottomOf="@id/auto_answer_incoming_calls_delay_title"
+            app:layout_constraintStart_toStartOf="@id/auto_answer_incoming_calls_delay_title"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/settings_title_style"
+            android:onClick="@{() -> viewModel.toggleEnableAutoAnswerIncomingCallsWithVideoDirectionSendReceive()}"
+            android:id="@+id/auto_answer_incoming_calls_video_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/settings_advanced_enable_auto_answer_video_send_receive"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintTop_toTopOf="@id/auto_answer_incoming_calls_video_switch"
+            app:layout_constraintBottom_toBottomOf="@id/auto_answer_incoming_calls_video_switch"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/auto_answer_incoming_calls_video_switch"/>
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            style="@style/material_switch_style"
+            android:id="@+id/auto_answer_incoming_calls_video_switch"
+            android:onClick="@{() -> viewModel.toggleEnableAutoAnswerIncomingCallsWithVideoDirectionSendReceive()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:checked="@{viewModel.autoAnswerIncomingCallsWithVideoDirectionSendReceive}"
+            android:enabled="@{viewModel.autoAnswerIncomingCalls}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/auto_answer_incoming_calls_delay" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

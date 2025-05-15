@@ -6,6 +6,9 @@
     <data>
         <import type="android.view.View" />
         <variable
+            name="advancedCallSettingsClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.main.settings.viewmodel.SettingsViewModel" />
     </data>
@@ -224,6 +227,25 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/auto_record_switch"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/settings_title_style"
+            android:id="@+id/advanced_call_settings"
+            android:onClick="@{advancedCallSettingsClickListener}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="@dimen/screen_bottom_margin"
+            android:text="@string/settings_advanced_calls"
+            android:drawableEnd="@drawable/caret_right"
+            android:drawableTint="?attr/color_main2_600"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/change_ringtone"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

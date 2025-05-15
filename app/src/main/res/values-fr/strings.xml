@@ -270,14 +270,17 @@
     <string name="settings_advanced_device_id_hint">Caractères alpha-numériques uniquement</string>
     <string name="settings_advanced_upload_server_url">URL du serveur de partage de fichier</string>
     <string name="settings_advanced_logs_upload_server_url">URL du serveur de partage des logs</string>
+    <string name="settings_advanced_calls">Paramètres d\'appels avancés</string>
     <string name="settings_advanced_use_smff_format_for_call_recordings_title">Enregistrer les appels vidéos utilisant H265/AV1</string>
     <string name="settings_advanced_use_smff_format_for_call_recordings_subtitle">Utilisera un format de fichier propriétaire</string>
     <string name="settings_advanced_media_encryption_title">Chiffrement du média</string>
     <string name="settings_advanced_media_encryption_mandatory_title">Rendre le chiffrement du média obligatoire</string>
     <string name="settings_advanced_create_e2e_encrypted_conferences_title">Créer en mode chiffré de bout en bout les réunions et les appels de groupe</string>
+    <string name="settings_advanced_early_media_title">Early media</string>
     <string name="settings_advanced_accept_early_media_title">Accepter l\'early media</string>
     <string name="settings_advanced_ring_during_early_media_title">Sonner pendant un appel entrant avec early-media</string>
     <string name="settings_advanced_allow_outgoing_early_media_title">Autoriser l\'early media pour les appels sortants</string>
+    <string name="settings_advanced_auto_answer_title">Décrochage automatique</string>
     <string name="settings_advanced_enable_auto_answer_incoming_calls_title">Décrocher automatiquement les appels entrants</string>
     <string name="settings_advanced_enable_auto_answer_incoming_calls_after_delay_title">Délai avant le décrochage automatique</string>
     <string name="settings_advanced_enable_auto_answer_incoming_calls_after_delay_hint">Délai en millisecondes</string>

@@ -40,15 +40,6 @@ class SettingsAdvancedFragment : GenericMainFragment() {
 
     private lateinit var viewModel: SettingsViewModel
 
-    private val mediaEncryptionDropdownListener = object : AdapterView.OnItemSelectedListener {
-        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            viewModel.setMediaEncryption(position)
-        }
-
-        override fun onNothingSelected(parent: AdapterView<*>?) {
-        }
-    }
-
     private val inputAudioDeviceDropdownListener = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             viewModel.setInputAudioDevice(position)
@@ -94,10 +85,6 @@ class SettingsAdvancedFragment : GenericMainFragment() {
             (requireActivity() as GenericActivity).goToAndroidPermissionSettings()
         }
 
-        viewModel.mediaEncryptionIndex.observe(viewLifecycleOwner) {
-            setupMediaEncryptionPicker()
-        }
-
         viewModel.inputAudioDeviceIndex.observe(viewLifecycleOwner) {
             setupInputAudioDevicePicker()
         }
@@ -120,19 +107,6 @@ class SettingsAdvancedFragment : GenericMainFragment() {
         viewModel.updateRemoteProvisioningUrl()
 
         super.onPause()
-    }
-
-    private fun setupMediaEncryptionPicker() {
-        val index = viewModel.mediaEncryptionIndex.value ?: 0
-        val adapter = ArrayAdapter(
-            requireContext(),
-            R.layout.drop_down_item,
-            viewModel.mediaEncryptionLabels
-        )
-        adapter.setDropDownViewResource(R.layout.generic_dropdown_cell)
-        binding.advancedCallsSettings.mediaEncryption.adapter = adapter
-        binding.advancedCallsSettings.mediaEncryption.onItemSelectedListener = mediaEncryptionDropdownListener
-        binding.advancedCallsSettings.mediaEncryption.setSelection(index)
     }
 
     private fun setupInputAudioDevicePicker() {

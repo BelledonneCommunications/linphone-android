@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="backClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.main.settings.viewmodel.SettingsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/color_background_contrast_in_dark_mode">
+
+        <ImageView
+            android:id="@+id/back"
+            android:onClick="@{backClickListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:adjustViewBounds="true"
+            android:padding="15dp"
+            android:src="@drawable/caret_left"
+            android:contentDescription="@string/content_description_go_back_icon"
+            app:tint="?attr/color_main1_500"
+            app:layout_constraintBottom_toBottomOf="@id/title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/main_page_title_style"
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/top_bar_height"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/settings_advanced_calls"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/back"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            android:background="?attr/color_grey_100"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/settings_title_style"
+                    android:onClick="@{() -> viewModel.toggleEnableVideoFec()}"
+                    android:id="@+id/enable_fec_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/settings_calls_enable_fec_title"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:visibility="@{viewModel.videoEnabled ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintTop_toTopOf="@id/enable_fec_switch"
+                    app:layout_constraintBottom_toBottomOf="@id/enable_fec_switch"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/enable_fec_switch"/>
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    style="@style/material_switch_style"
+                    android:id="@+id/enable_fec_switch"
+                    android:onClick="@{() -> viewModel.toggleEnableVideoFec()}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="16dp"
+                    android:visibility="@{viewModel.videoEnabled ? View.VISIBLE : View.GONE}"
+                    android:enabled="@{viewModel.videoEnabled}"
+                    android:checked="@{viewModel.videoEnabled &amp;&amp; viewModel.videoFecEnabled}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/settings_title_style"
+                    android:onClick="@{() -> viewModel.toggleUseSmffForCallRecording()}"
+                    android:id="@+id/use_smff_call_recording_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/settings_advanced_use_smff_format_for_call_recordings_title"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    app:layout_constraintTop_toTopOf="@id/use_smff_call_recording_switch"
+                    app:layout_constraintBottom_toTopOf="@id/use_smff_call_recording_subtitle"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/use_smff_call_recording_switch"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/settings_subtitle_style"
+                    android:onClick="@{() -> viewModel.toggleUseSmffForCallRecording()}"
+                    android:id="@+id/use_smff_call_recording_subtitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/settings_advanced_use_smff_format_for_call_recordings_subtitle"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    app:layout_constraintTop_toBottomOf="@id/use_smff_call_recording_title"
+                    app:layout_constraintBottom_toBottomOf="@id/use_smff_call_recording_switch"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/use_smff_call_recording_switch"/>
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    style="@style/material_switch_style"
+                    android:id="@+id/use_smff_call_recording_switch"
+                    android:onClick="@{() -> viewModel.toggleUseSmffForCallRecording()}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="16dp"
+                    android:checked="@{viewModel.useSmffForCallRecording}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/enable_fec_switch" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/settings_title_style"
+                    android:id="@+id/media_encryption_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/settings_advanced_media_encryption_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/use_smff_call_recording_switch"/>
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    style="@style/default_text_style"
+                    android:id="@+id/media_encryption"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="8dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:textSize="14sp"
+                    android:textColor="@color/gray_main2_600"
+                    android:gravity="center_vertical"
+                    android:overlapAnchor="false"
+                    android:dropDownVerticalOffset="2dp"
+                    android:spinnerMode="dropdown"
+                    android:popupBackground="@drawable/shape_squircle_white_background"
+                    android:background="@drawable/edit_text_background"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintWidth_max="@dimen/text_input_max_width"
+                    app:layout_constraintTop_toBottomOf="@id/media_encryption_label"
+                    app:layout_constraintStart_toStartOf="@id/media_encryption_label"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <ImageView
+                    android:id="@+id/media_encryption_caret"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:src="@drawable/caret_down"
+                    android:contentDescription="@null"
+                    app:tint="?attr/color_main2_600"
+                    app:layout_constraintTop_toTopOf="@id/media_encryption"
+                    app:layout_constraintBottom_toBottomOf="@id/media_encryption"
+                    app:layout_constraintEnd_toEndOf="@id/media_encryption"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/settings_title_style"
+                    android:onClick="@{() -> viewModel.toggleMediaEncryptionMandatory()}"
+                    android:id="@+id/media_encryption_mandatory_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/settings_advanced_media_encryption_mandatory_title"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    app:layout_constraintTop_toTopOf="@id/media_encryption_mandatory_switch"
+                    app:layout_constraintBottom_toBottomOf="@id/media_encryption_mandatory_switch"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/media_encryption_mandatory_switch"/>
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    style="@style/material_switch_style"
+                    android:id="@+id/media_encryption_mandatory_switch"
+                    android:onClick="@{() -> viewModel.toggleMediaEncryptionMandatory()}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="16dp"
+                    android:checked="@{viewModel.mediaEncryptionMandatory}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/media_encryption" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/section_header_style"
+                    android:id="@+id/early_media_settings_title"
+                    android:onClick="@{() -> viewModel.toggleEarlyMediaExpand()}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginEnd="26dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/settings_advanced_early_media_title"
+                    android:drawableEnd="@{viewModel.expandEarlyMedia ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
+                    android:drawableTint="?attr/color_main2_600"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/media_encryption_mandatory_switch"/>
+
+                <include
+                    android:id="@+id/early_media_settings"
+                    layout="@layout/settings_advanced_calls_early_media"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:visibility="@{viewModel.expandEarlyMedia ? View.VISIBLE : View.GONE, default=gone}"
+                    app:layout_constraintTop_toBottomOf="@id/early_media_settings_title"
+                    bind:viewModel="@{viewModel}"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/section_header_style"
+                    android:id="@+id/auto_answer_settings_title"
+                    android:onClick="@{() -> viewModel.toggleAutoAnswerExpand()}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginEnd="26dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/settings_advanced_auto_answer_title"
+                    android:drawableEnd="@{viewModel.expandAutoAnswer ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
+                    android:drawableTint="?attr/color_main2_600"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/early_media_settings"/>
+
+                <include
+                    android:id="@+id/auto_answer_settings"
+                    layout="@layout/settings_advanced_calls_auto_answer"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:visibility="@{viewModel.expandAutoAnswer ? View.VISIBLE : View.GONE, default=gone}"
+                    app:layout_constraintTop_toBottomOf="@id/auto_answer_settings_title"
+                    bind:viewModel="@{viewModel}"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/section_header_style"
+                    android:id="@+id/audio_codecs_title"
+                    android:onClick="@{() -> viewModel.toggleAudioCodecsExpand()}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginEnd="26dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/settings_advanced_audio_codecs_title"
+                    android:drawableEnd="@{viewModel.expandAudioCodecs ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
+                    android:drawableTint="?attr/color_main2_600"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/auto_answer_settings"/>
+
+                <LinearLayout
+                    android:id="@+id/audio_codecs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical"
+                    android:paddingBottom="16dp"
+                    android:background="@drawable/shape_squircle_white_background"
+                    android:visibility="@{viewModel.expandAudioCodecs ? View.VISIBLE : View.GONE}"
+                    entries="@{viewModel.audioCodecs}"
+                    layout="@{@layout/settings_codec_list_cell}"
+                    app:layout_constraintTop_toBottomOf="@id/audio_codecs_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/section_header_style"
+                    android:id="@+id/video_codecs_title"
+                    android:onClick="@{() -> viewModel.toggleVideoCodecsExpand()}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginEnd="26dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/settings_advanced_video_codecs_title"
+                    android:drawableEnd="@{viewModel.expandVideoCodecs ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
+                    android:drawableTint="?attr/color_main2_600"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/audio_codecs"/>
+
+                <LinearLayout
+                    android:id="@+id/video_codecs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="@dimen/screen_bottom_margin"
+                    android:orientation="vertical"
+                    android:paddingBottom="16dp"
+                    android:background="@drawable/shape_squircle_white_background"
+                    android:visibility="@{viewModel.expandVideoCodecs ? View.VISIBLE : View.GONE}"
+                    entries="@{viewModel.videoCodecs}"
+                    layout="@{@layout/settings_codec_list_cell}"
+                    app:layout_constraintVertical_bias="0"
+                    app:layout_constraintTop_toBottomOf="@id/video_codecs_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
