@@ -271,9 +271,13 @@ class AccountProfileViewModel
                 Log.i("$TAG Removing call logs, conversations & meetings related to account being removed")
                 account.clearCallLogs()
 
+                // Wait for a better API in the SDK, deleteChatRoom will cause user to leave the groups,
+                // which will cause issues in case of multi device
+                /*
                 for (conversation in account.chatRooms) {
                     core.deleteChatRoom(conversation)
                 }
+                */
                 for (meeting in account.conferenceInformationList) {
                     core.deleteConferenceInformation(meeting)
                 }
