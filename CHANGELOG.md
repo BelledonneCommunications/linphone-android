@@ -15,6 +15,10 @@ Group changes to describe their impact on the project, as follows:
 ### Added
 - Added a vu meter for recording volume
 - Added a setting for user to choose whether to sort contacts by first name or last name
+- Added a setting to let app auto-answer call with video sending already enabled
+
+### Changed
+- Reworked some settings (moved calls related ones from advanced settings to advanced calls settings)
 
 ## [6.0.7] - 2025-05-16
 
