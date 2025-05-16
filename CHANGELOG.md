@@ -10,6 +10,26 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [6.0.7] - 2025-05-16
+
+### Added
+- CS, NL and RU translations from Weblate
+
+### Changed
+- Improved find contact performances
+- Make sure speaker audio device is used for playing the ringtone during early media
+- Reworked bottom navigation bar in portrait and unread count indicators
+- No longer delete conversations when deleting account (for now); causes user to leave group which is an issue when using multiple devices
+
+### Fixed
+- Fixed no default account after remote provisioning
+- Prevent lists from refreshing too many times when using LDAP or remote CardDAV contact directories
+- Fixed black miniatures in conference if bundle mode is disabled in account params
+- Fixed long press on a chat message containing a SIP URI triggering call
+- Disable IMDN bottom sheet for incoming messages in groups instead of showing it empty
+- Refresh conversations list after clearing conversation history
+- Fixed another race condition issue related to foreground call service
+
 ## [6.0.6] - 2025-05-02
 
 ### Added
