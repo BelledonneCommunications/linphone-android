@@ -153,7 +153,9 @@ class ConversationViewModel
         @WorkerThread
         override fun onConferenceJoined(chatRoom: ChatRoom, eventLog: EventLog) {
             Log.i("$TAG Conversation was joined")
-            addEvents(arrayOf(eventLog))
+            if (LinphoneUtils.isChatRoomAGroup(chatRoom)) {
+                addEvents(arrayOf(eventLog))
+            }
             computeConversationInfo()
 
             val messageToForward = pendingForwardMessage
@@ -167,8 +169,10 @@ class ConversationViewModel
         @WorkerThread
         override fun onConferenceLeft(chatRoom: ChatRoom, eventLog: EventLog) {
             Log.w("$TAG Conversation was left")
-            addEvents(arrayOf(eventLog))
-            isReadOnly.postValue(true)
+            if (LinphoneUtils.isChatRoomAGroup(chatRoom)) {
+                addEvents(arrayOf(eventLog))
+            }
+            isReadOnly.postValue(chatRoom.isReadOnly)
         }
 
         @WorkerThread

@@ -115,7 +115,7 @@ class ConversationModel
         @WorkerThread
         override fun onConferenceLeft(chatRoom: ChatRoom, eventLog: EventLog) {
             Log.w("TAG Conversation has been left")
-            isReadOnly.postValue(true)
+            isReadOnly.postValue(chatRoom.isReadOnly)
         }
 
         @WorkerThread
