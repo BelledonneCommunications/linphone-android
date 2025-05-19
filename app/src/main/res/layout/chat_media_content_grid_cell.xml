@@ -51,6 +51,7 @@
             android:id="@+id/audio_file"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_margin="1dp"
             android:adjustViewBounds="true"
             android:padding="18dp"
             android:background="@drawable/shape_squircle_main2_200"
