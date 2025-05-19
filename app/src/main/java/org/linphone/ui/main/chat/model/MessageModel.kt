@@ -409,16 +409,11 @@ class MessageModel
         filesList.postValue(arrayListOf())
 
         var displayableContentFound = false
-        var filesContentCount = 0
+        var contentIndex = 0
         val filesPath = arrayListOf<FileModel>()
 
         val contents = chatMessage.contents
         allFilesDownloaded = true
-
-        val notMediaContent = contents.find {
-            it.isIcalendar || it.isVoiceRecording || (it.isText && !it.isFile) || it.isFileTransfer || (it.isFile && !(it.type == "video" || it.type == "image"))
-        }
-        val allContentsAreMedia = notMediaContent == null
         val exactly4Contents = contents.size == 4
 
         for (content in contents) {
@@ -443,7 +438,7 @@ class MessageModel
             } else {
                 if (content.isFile) {
                     Log.d("$TAG Found file content with type [${content.type}/${content.subtype}]")
-                    filesContentCount += 1
+                    contentIndex += 1
 
                     checkAndRepairFilePathIfNeeded(content)
 
@@ -462,7 +457,7 @@ class MessageModel
                             "$TAG Found file ready to be displayed [$path] with MIME [${content.type}/${content.subtype}] for message [${chatMessage.messageId}]"
                         )
 
-                        val wrapBefore = allContentsAreMedia && exactly4Contents && filesContentCount == 3
+                        val wrapBefore = exactly4Contents && contentIndex == 3
                         val fileSize = content.fileSize.toLong()
                         val timestamp = content.creationTimestamp
                         val fileModel = FileModel(
@@ -488,7 +483,7 @@ class MessageModel
                         "$TAG Found file content (not downloaded yet) with type [${content.type}/${content.subtype}] and name [${content.name}]"
                     )
                     allFilesDownloaded = false
-                    filesContentCount += 1
+                    contentIndex += 1
                     val name = content.name ?: ""
                     val timestamp = content.creationTimestamp
                     if (name.isNotEmpty()) {

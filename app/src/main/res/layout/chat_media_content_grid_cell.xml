@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
@@ -48,37 +49,6 @@
             app:layout_constraintBottom_toBottomOf="parent"/>
 
         <ImageView
-            android:id="@+id/audio_file"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_margin="1dp"
-            android:adjustViewBounds="true"
-            android:padding="18dp"
-            android:background="@drawable/shape_squircle_main2_200"
-            android:src="@drawable/file_audio"
-            android:contentDescription="@null"
-            android:visibility="@{model.isAudio ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:tint="?attr/color_main2_600" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_600"
-            android:id="@+id/audio_video_duration"
-            android:onClick="@{() -> model.onClick()}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:text="@{model.audioVideoDuration, default=`00:42`}"
-            android:textColor="@{model.isVideoPreview ? @color/bc_white : @color/main2_600}"
-            android:textSize="12sp"
-            android:visibility="@{(model.isVideoPreview || model.isAudio) &amp;&amp; model.audioVideoDuration.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
-
-        <ImageView
             android:id="@+id/video_preview"
             android:onClick="@{() -> model.onClick()}"
             android:layout_width="@dimen/icon_size"
@@ -91,6 +61,86 @@
             app:layout_constraintStart_toStartOf="@id/image"
             app:layout_constraintEnd_toEndOf="@id/image"
             app:tint="@color/bc_white" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/audio_file"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="1dp"
+            android:visibility="@{model.isAudio ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <View
+                android:id="@+id/background"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@drawable/shape_squircle_file_bubble_background"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+            <View
+                android:id="@+id/top_background"
+                android:layout_width="0dp"
+                android:layout_height="24dp"
+                android:background="@drawable/shape_squircle_file_background_top"
+                app:layout_constraintStart_toStartOf="@id/background"
+                app:layout_constraintEnd_toEndOf="@id/background"
+                app:layout_constraintTop_toTopOf="@id/background"
+                app:layout_constraintBottom_toBottomOf="@id/file_icon"/>
+
+            <ImageView
+                android:id="@+id/file_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:adjustViewBounds="true"
+                android:padding="2dp"
+                android:onClick="@{() -> model.onClick()}"
+                android:contentDescription="@string/content_description_chat_bubble_file"
+                android:src="@drawable/file_audio"
+                app:layout_constraintStart_toStartOf="@id/background"
+                app:layout_constraintEnd_toEndOf="@id/background"
+                app:layout_constraintTop_toTopOf="@id/top_background"
+                app:layout_constraintBottom_toBottomOf="@id/top_background"
+                app:tint="?attr/color_main2_600" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_700"
+                android:id="@+id/file_name"
+                android:onClick="@{() -> model.onClick()}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:text="@{model.fileName, default=`Lorem_ipsum.pdf`}"
+                android:textColor="?attr/color_main2_600"
+                android:textAlignment="center"
+                android:textSize="12sp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:visibility="@{model.transferProgress >= 0 &amp;&amp; model.transferProgress &lt; 100 ? View.INVISIBLE : View.VISIBLE}"
+                app:layout_constraintStart_toStartOf="@id/background"
+                app:layout_constraintEnd_toEndOf="@id/background"
+                app:layout_constraintTop_toBottomOf="@id/file_icon"
+                app:layout_constraintBottom_toTopOf="@id/audio_duration"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_600"
+                android:id="@+id/audio_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="@{model.audioVideoDuration, default=`00:42`}"
+                android:textColor="?attr/color_main2_600"
+                android:textSize="11sp"
+                android:visibility="@{model.audioVideoDuration.length() > 0 ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="@id/background"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="onLongClickListener"
+            type="View.OnLongClickListener" />
+        <variable
+            name="model"
+            type="org.linphone.ui.main.chat.model.FileModel" />
+    </data>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="1dp">
+
+    <View
+        android:id="@+id/background"
+        android:layout_width="@dimen/chat_bubble_grid_file_size"
+        android:layout_height="@dimen/chat_bubble_grid_file_size"
+        android:background="@drawable/shape_squircle_file_bubble_background"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/download_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="@{model.transferProgress == -1 || model.transferProgress >= 100 ? View.GONE : View.VISIBLE, default=gone}"
+        app:constraint_referenced_ids="transfer_progress, transfer_progress_label" />
+
+    <View
+        android:id="@+id/top_background"
+        android:layout_width="0dp"
+        android:layout_height="24dp"
+        android:background="@drawable/shape_squircle_file_background_top"
+        app:layout_constraintStart_toStartOf="@id/background"
+        app:layout_constraintEnd_toEndOf="@id/background"
+        app:layout_constraintTop_toTopOf="@id/background"
+        app:layout_constraintBottom_toBottomOf="@id/file_icon"/>
+
+    <ImageView
+        android:id="@+id/file_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:adjustViewBounds="true"
+        android:padding="2dp"
+        android:onClick="@{() -> model.onClick()}"
+        android:onLongClick="@{onLongClickListener}"
+        android:contentDescription="@string/content_description_chat_bubble_file"
+        android:src="@{model.isWaitingToBeDownloaded ? @drawable/download_simple : model.isPdf ? @drawable/file_pdf : model.isAudio ? @drawable/file_audio : @drawable/file, default=@drawable/file_pdf}"
+        app:layout_constraintStart_toStartOf="@id/background"
+        app:layout_constraintEnd_toEndOf="@id/background"
+        app:layout_constraintTop_toTopOf="@id/top_background"
+        app:layout_constraintBottom_toBottomOf="@id/top_background"
+        app:tint="?attr/color_main2_600" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/default_text_style_700"
+        android:id="@+id/file_name"
+        android:onClick="@{() -> model.onClick()}"
+        android:onLongClick="@{onLongClickListener}"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="2dp"
+        android:text="@{model.fileName, default=`Lorem_ipsum.pdf`}"
+        android:textColor="?attr/color_main2_600"
+        android:textAlignment="center"
+        android:textSize="12sp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:visibility="@{model.transferProgress >= 0 &amp;&amp; model.transferProgress &lt; 100 ? View.INVISIBLE : View.VISIBLE}"
+        app:layout_constraintStart_toStartOf="@id/background"
+        app:layout_constraintEnd_toEndOf="@id/background"
+        app:layout_constraintTop_toBottomOf="@id/file_icon"
+        app:layout_constraintBottom_toTopOf="@id/bottom_barrier"/>
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/bottom_barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="top"
+        app:constraint_referenced_ids="file_size, audio_duration" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/default_text_style_300"
+        android:id="@+id/file_size"
+        android:onClick="@{() -> model.onClick()}"
+        android:onLongClick="@{onLongClickListener}"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:text="@{model.formattedFileSize, default=`42 kb`}"
+        android:textColor="?attr/color_main2_600"
+        android:textSize="12sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:visibility="@{(model.transferProgress >= 0 &amp;&amp; model.transferProgress &lt; 100) || model.fileSize == 0 ? View.GONE : View.VISIBLE, default=gone}"
+        app:layout_constraintEnd_toEndOf="@id/background"
+        app:layout_constraintBottom_toBottomOf="@id/background"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/default_text_style_600"
+        android:id="@+id/audio_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="@{model.audioVideoDuration, default=`00:42`}"
+        android:textColor="?attr/color_main2_600"
+        android:textSize="11sp"
+        android:visibility="@{model.isAudio &amp;&amp; model.audioVideoDuration.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
+        app:layout_constraintBottom_toBottomOf="@id/background"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/transfer_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:indeterminate="false"
+        android:progress="@{model.transferProgress}"
+        android:max="100"
+        app:indicatorSize="50dp"
+        app:trackColor="?attr/color_main1_100"
+        app:indicatorColor="?attr/color_main1_500"
+        app:layout_constraintTop_toBottomOf="@id/top_background"
+        app:layout_constraintBottom_toBottomOf="@id/background"
+        app:layout_constraintStart_toStartOf="@id/background"
+        app:layout_constraintEnd_toEndOf="@id/background"
+        tools:progress="40" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/main_page_title_style"
+        android:id="@+id/transfer_progress_label"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="@{() -> model.onClick()}"
+        android:onLongClick="@{onLongClickListener}"
+        android:text="@{model.transferProgressLabel, default=`40%`}"
+        android:textSize="16sp"
+        android:textAlignment="center"
+        android:textColor="?attr/color_main1_500"
+        app:layout_constraintTop_toTopOf="@id/transfer_progress"
+        app:layout_constraintBottom_toBottomOf="@id/transfer_progress"
+        app:layout_constraintStart_toStartOf="@id/transfer_progress"
+        app:layout_constraintEnd_toEndOf="@id/transfer_progress" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

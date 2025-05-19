@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
@@ -13,205 +13,32 @@
             type="org.linphone.ui.main.chat.model.FileModel" />
     </data>
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_wrapBefore="@{model.flexboxLayoutWrapBefore}"
-        android:padding="1dp">
+        app:layout_wrapBefore="@{model.flexboxLayoutWrapBefore}">
 
-        <androidx.constraintlayout.widget.Group
-            android:id="@+id/file_group"
+        <include
+            android:id="@+id/media_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="@{model.isImage || model.isVideoPreview ? View.GONE : View.VISIBLE}"
-            app:constraint_referenced_ids="file_name, file_background" />
-
-        <androidx.constraintlayout.widget.Group
-            android:id="@+id/download_group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="@{model.transferProgress == -1 || model.transferProgress >= 100 ? View.GONE : View.VISIBLE}"
-            app:constraint_referenced_ids="transfer_progress, transfer_progress_label" />
-
-        <ImageView
-            android:id="@+id/broken_media_icon"
-            android:onClick="@{() -> model.onClick()}"
-            android:layout_width="@dimen/chat_bubble_grid_image_size"
-            android:layout_height="@dimen/chat_bubble_grid_image_size"
-            android:adjustViewBounds="true"
-            android:padding="18dp"
-            android:background="@drawable/shape_squircle_file_background_5dp"
-            android:visibility="@{model.mediaPreviewAvailable ? View.GONE : View.VISIBLE, default=gone}"
-            android:contentDescription="@{model.isVideoPreview ? @string/content_description_chat_bubble_video : @string/content_description_chat_bubble_image}"
-            android:src="@{model.isVideoPreview ? @drawable/file_video : @drawable/file_image, default=@drawable/file_video}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:tint="?attr/color_main2_600" />
-
-        <ImageView
-            android:id="@+id/image"
-            android:onClick="@{() -> model.onClick()}"
-            android:onLongClick="@{onLongClickListener}"
-            android:layout_width="@dimen/chat_bubble_grid_image_size"
-            android:layout_height="@dimen/chat_bubble_grid_image_size"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            android:contentDescription="@{model.isVideoPreview ? @string/content_description_chat_bubble_video : @string/content_description_chat_bubble_image}"
+            layout="@layout/chat_bubble_media_grid_cell"
             android:visibility="@{model.isImage || model.isVideoPreview ? View.VISIBLE : View.GONE}"
-            coilBubbleGrid="@{model.mediaPreview}"
-            coilBubbleFallback="@{brokenMediaIcon}"
+            bind:model="@{model}"
+            bind:onLongClickListener="@{onLongClickListener}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_600"
-            android:id="@+id/video_duration"
+        <include
+            android:id="@+id/file_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:text="@{model.audioVideoDuration, default=`00:42`}"
-            android:textColor="@{model.isVideoPreview ? @color/bc_white : @color/main2_600}"
-            android:textSize="12sp"
-            android:visibility="@{model.isVideoPreview &amp;&amp; model.audioVideoDuration.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
-
-        <ImageView
-            android:id="@+id/video_preview"
-            android:onClick="@{() -> model.onClick()}"
-            android:layout_width="@dimen/icon_size"
-            android:layout_height="@dimen/icon_size"
-            android:src="@drawable/play_fill"
-            android:contentDescription="@null"
-            android:visibility="@{model.isVideoPreview &amp;&amp; model.mediaPreviewAvailable ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintTop_toTopOf="@id/image"
-            app:layout_constraintBottom_toBottomOf="@id/image"
-            app:layout_constraintStart_toStartOf="@id/image"
-            app:layout_constraintEnd_toEndOf="@id/image"
-            app:tint="@color/bc_white" />
-
-        <View
-            android:id="@+id/left_background"
-            android:layout_width="@dimen/chat_bubble_grid_image_size"
-            android:layout_height="@dimen/chat_bubble_grid_image_size"
-            android:background="@drawable/shape_squircle_file_background_left"
-            android:visibility="@{model.isImage || model.isVideoPreview ? View.INVISIBLE : View.VISIBLE}"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <ImageView
-            android:id="@+id/file_icon"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:onClick="@{() -> model.onClick()}"
-            android:onLongClick="@{onLongClickListener}"
-            android:adjustViewBounds="true"
-            android:padding="18dp"
-            android:contentDescription="@string/content_description_chat_bubble_file"
-            android:src="@{model.isWaitingToBeDownloaded ? @drawable/download_simple : model.isPdf ? @drawable/file_pdf : model.isAudio ? @drawable/file_audio : @drawable/file, default=@drawable/file_pdf}"
-            android:visibility="@{model.isImage || model.isVideoPreview || (model.transferProgress >= 0 &amp;&amp; model.transferProgress &lt; 100) ? View.GONE : View.VISIBLE}"
-            app:layout_constraintTop_toTopOf="@id/left_background"
-            app:layout_constraintBottom_toBottomOf="@id/left_background"
-            app:layout_constraintStart_toStartOf="@id/left_background"
-            app:layout_constraintEnd_toEndOf="@id/left_background"
-            app:tint="?attr/color_main2_600" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_600"
-            android:id="@+id/audio_duration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:text="@{model.audioVideoDuration, default=`00:42`}"
-            android:textColor="?attr/color_main2_600"
-            android:textSize="12sp"
-            android:visibility="@{model.isAudio &amp;&amp; model.audioVideoDuration.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintBottom_toBottomOf="@id/left_background"
-            app:layout_constraintStart_toStartOf="@id/left_background"/>
-
-        <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:id="@+id/transfer_progress"
-            android:layout_width="@dimen/chat_bubble_grid_image_size"
-            android:layout_height="@dimen/chat_bubble_grid_image_size"
-            android:indeterminate="false"
-            android:progress="@{model.transferProgress}"
-            android:max="100"
-            app:indicatorSize="50dp"
-            app:trackColor="?attr/color_main1_100"
-            app:indicatorColor="?attr/color_main1_500"
-            app:layout_constraintTop_toTopOf="@id/left_background"
-            app:layout_constraintBottom_toBottomOf="@id/left_background"
-            app:layout_constraintStart_toStartOf="@id/left_background"
-            app:layout_constraintEnd_toEndOf="@id/left_background"
-            tools:progress="40" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/main_page_title_style"
-            android:id="@+id/transfer_progress_label"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:onClick="@{() -> model.onClick()}"
-            android:onLongClick="@{onLongClickListener}"
-            android:text="@{model.transferProgressLabel, default=`40%`}"
-            android:textSize="16sp"
-            android:textAlignment="center"
-            android:textColor="?attr/color_main1_500"
-            app:layout_constraintTop_toTopOf="@id/transfer_progress"
-            app:layout_constraintBottom_toBottomOf="@id/transfer_progress"
-            app:layout_constraintStart_toStartOf="@id/transfer_progress"
-            app:layout_constraintEnd_toEndOf="@id/transfer_progress" />
-
-        <View
-            android:id="@+id/file_background"
-            android:onClick="@{() -> model.onClick()}"
-            android:onLongClick="@{onLongClickListener}"
-            android:layout_width="@dimen/chat_bubble_grid_file_width"
-            android:layout_height="0dp"
-            android:background="@drawable/shape_squircle_white_right"
-            app:layout_constraintTop_toTopOf="@id/left_background"
-            app:layout_constraintBottom_toBottomOf="@id/left_background"
-            app:layout_constraintStart_toEndOf="@id/left_background"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_700"
-            android:id="@+id/file_name"
-            android:onClick="@{() -> model.onClick()}"
-            android:onLongClick="@{onLongClickListener}"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@{model.fileName, default=`Lorem_ipsum.pdf`}"
-            android:textColor="?attr/color_main2_600"
-            android:textSize="13sp"
-            android:maxLines="1"
-            android:ellipsize="middle"
-            app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintStart_toEndOf="@id/left_background"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/file_background"
-            app:layout_constraintBottom_toTopOf="@id/file_size"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_300"
-            android:id="@+id/file_size"
-            android:onClick="@{() -> model.onClick()}"
-            android:onLongClick="@{onLongClickListener}"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@{model.formattedFileSize, default=`42 kb`}"
-            android:textColor="?attr/color_main2_600"
-            android:textSize="12sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:visibility="@{model.isImage || model.isVideoPreview || model.fileSize == 0 ? View.GONE : View.VISIBLE, default=gone}"
-            app:layout_constraintStart_toStartOf="@id/file_name"
-            app:layout_constraintEnd_toEndOf="@id/file_name"
-            app:layout_constraintTop_toBottomOf="@id/file_name"
-            app:layout_constraintBottom_toBottomOf="@id/file_background"/>
+            layout="@layout/chat_bubble_file_grid_cell"
+            android:visibility="@{!model.isImage &amp;&amp; !model.isVideoPreview ? View.VISIBLE : View.GONE}"
+            bind:model="@{model}"
+            bind:onLongClickListener="@{onLongClickListener}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

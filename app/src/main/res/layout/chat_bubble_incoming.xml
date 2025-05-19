@@ -175,7 +175,7 @@
                 android:onLongClick="@{onLongClickListener}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="@{model.filesList.size() >= 2 || (model.filesList.size() == 1 &amp;&amp; !model.firstFileModel.isMedia) ? View.VISIBLE : View.GONE, default=gone}"
+                android:visibility="@{model.filesList.size() >= 2 ? View.VISIBLE : View.GONE, default=gone}"
                 app:alignItems="center"
                 app:flexWrap="wrap"
                 app:justifyContent="@{model.outgoing ? JustifyContent.FLEX_END : JustifyContent.FLEX_START}"
@@ -190,6 +190,16 @@
                 android:layout="@layout/chat_bubble_single_media_content"
                 android:visibility="@{model.filesList.size() == 1 &amp;&amp; model.firstFileModel.isMedia ? View.VISIBLE : View.GONE, default=gone}"
                 bind:inflatedVisibility="@{model.filesList.size() == 1 &amp;&amp; model.firstFileModel.isMedia? View.VISIBLE : View.GONE}"
+                bind:model="@{model.firstFileModel}"
+                bind:onLongClickListener="@{onLongClickListener}"/>
+
+            <ViewStub
+                android:id="@+id/single_file"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout="@layout/chat_bubble_single_file_content"
+                android:visibility="@{model.filesList.size() == 1 &amp;&amp; !model.firstFileModel.isMedia ? View.VISIBLE : View.GONE, default=gone}"
+                bind:inflatedVisibility="@{model.filesList.size() == 1 &amp;&amp; !model.firstFileModel.isMedia? View.VISIBLE : View.GONE}"
                 bind:model="@{model.firstFileModel}"
                 bind:onLongClickListener="@{onLongClickListener}"/>
 

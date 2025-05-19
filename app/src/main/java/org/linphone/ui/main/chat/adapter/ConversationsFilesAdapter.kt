@@ -30,10 +30,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
-import org.linphone.databinding.ChatDocumentContentListCellBinding
+import org.linphone.databinding.ChatBubbleSingleFileContentBinding
 import org.linphone.databinding.ChatMediaContentGridCellBinding
 import org.linphone.databinding.MeetingsListDecorationBinding
 import org.linphone.ui.main.chat.model.FileModel
+import org.linphone.utils.AppUtils
 import org.linphone.utils.HeaderAdapter
 
 class ConversationsFilesAdapter :
@@ -45,6 +46,9 @@ class ConversationsFilesAdapter :
         const val MEDIA_FILE = 1
         const val DOCUMENT_FILE = 2
     }
+
+    private val topBottomPadding = AppUtils.getDimension(R.dimen.chat_documents_list_padding_top_bottom).toInt()
+    private val startEndPadding = AppUtils.getDimension(R.dimen.chat_documents_list_padding_start_end).toInt()
 
     override fun displayHeaderForPosition(position: Int): Boolean {
         if (position == 0) return true
@@ -89,15 +93,16 @@ class ConversationsFilesAdapter :
     }
 
     private fun createDocumentFileViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
-        val binding: ChatDocumentContentListCellBinding = DataBindingUtil.inflate(
+        val binding: ChatBubbleSingleFileContentBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
-            R.layout.chat_document_content_list_cell,
+            R.layout.chat_bubble_single_file_content,
             parent,
             false
         )
         val viewHolder = DocumentFileViewHolder(binding)
         binding.apply {
             lifecycleOwner = parent.findViewTreeLifecycleOwner()
+            root.setPadding(startEndPadding, topBottomPadding, startEndPadding, topBottomPadding)
         }
         return viewHolder
     }
@@ -123,7 +128,7 @@ class ConversationsFilesAdapter :
     }
 
     inner class DocumentFileViewHolder(
-        val binding: ChatDocumentContentListCellBinding
+        val binding: ChatBubbleSingleFileContentBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         @UiThread
         fun bind(fileModel: FileModel) {
