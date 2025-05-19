@@ -91,7 +91,6 @@ class FileModel
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     init {
-        mediaPreviewAvailable.postValue(false)
         updateTransferProgress(-1)
         formattedFileSize.postValue(FileUtils.bytesToDisplayableSize(fileSize))
 

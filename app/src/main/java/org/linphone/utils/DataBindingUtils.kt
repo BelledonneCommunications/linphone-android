@@ -329,7 +329,7 @@ private fun loadImageForChatBubble(
     val isVideo = FileUtils.isExtensionVideo(file)
     if (isImage || isVideo) {
         val dimen = if (grid) {
-            imageView.resources.getDimension(R.dimen.chat_bubble_grid_image_size).toInt()
+            imageView.resources.getDimension(R.dimen.chat_bubble_grid_file_size).toInt()
         } else {
             imageView.resources.getDimension(R.dimen.chat_bubble_big_image_max_size).toInt()
         }

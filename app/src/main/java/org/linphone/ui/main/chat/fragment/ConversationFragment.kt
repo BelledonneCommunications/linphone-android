@@ -128,22 +128,20 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         )
     ) { list ->
         sendMessageViewModel.closeFilePickerBottomSheet()
-        if (list.isNotEmpty()) {
+        val filesToAttach = arrayListOf<String>()
+        lifecycleScope.launch {
             for (uri in list) {
-                lifecycleScope.launch {
-                    withContext(Dispatchers.IO) {
-                        val path = FileUtils.getFilePath(requireContext(), uri, false)
-                        Log.i("$TAG Picked file [$uri] matching path is [$path]")
-                        if (path != null) {
-                            withContext(Dispatchers.Main) {
-                                sendMessageViewModel.addAttachment(path)
-                            }
-                        }
+                withContext(Dispatchers.IO) {
+                    val path = FileUtils.getFilePath(requireContext(), uri, false)
+                    Log.i("$TAG Picked file [$uri] matching path is [$path]")
+                    if (path != null) {
+                        filesToAttach.add(path)
                     }
                 }
             }
-        } else {
-            Log.w("$TAG No file picked")
+            withContext(Dispatchers.Main) {
+                sendMessageViewModel.addAttachments(filesToAttach)
+            }
         }
     }
 
@@ -153,15 +151,19 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         ActivityResultContracts.OpenMultipleDocuments()
     ) { files ->
         sendMessageViewModel.closeFilePickerBottomSheet()
-        for (fileUri in files) {
-            lifecycleScope.launch {
+        val filesToAttach = arrayListOf<String>()
+        lifecycleScope.launch {
+            for (fileUri in files) {
                 val path = FileUtils.getFilePath(requireContext(), fileUri, false).orEmpty()
                 if (path.isNotEmpty()) {
                     Log.i("$TAG Picked file [$path]")
-                    sendMessageViewModel.addAttachment(path)
+                    filesToAttach.add(path)
                 } else {
                     Log.e("$TAG Failed to pick file [$fileUri]")
                 }
+            }
+            withContext(Dispatchers.Main) {
+                sendMessageViewModel.addAttachments(filesToAttach)
             }
         }
     }
@@ -174,7 +176,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         if (path != null) {
             if (captured) {
                 Log.i("$TAG Image was captured and saved in [$path]")
-                sendMessageViewModel.addAttachment(path)
+                sendMessageViewModel.addAttachments(arrayListOf(path))
             } else {
                 Log.w("$TAG Image capture was aborted")
                 lifecycleScope.launch {
@@ -892,7 +894,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                         Log.i("$TAG Rich content URI [$uri] matching path is [$path]")
                         if (path != null) {
                             withContext(Dispatchers.Main) {
-                                sendMessageViewModel.addAttachment(path)
+                                sendMessageViewModel.addAttachments(arrayListOf(path))
                             }
                         }
                     }
@@ -920,7 +922,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             if (files.isNotEmpty()) {
                 Log.i("$TAG Found [${files.size}] files to share from intent")
                 for (path in files) {
-                    sendMessageViewModel.addAttachment(path)
+                    sendMessageViewModel.addAttachments(arrayListOf(path))
                 }
 
                 sharedViewModel.filesToShareFromIntent.value = arrayListOf()

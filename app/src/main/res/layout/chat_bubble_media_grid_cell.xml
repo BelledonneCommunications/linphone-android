@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <import type="android.view.View" />
@@ -11,16 +10,12 @@
         <variable
             name="model"
             type="org.linphone.ui.main.chat.model.FileModel" />
-        <variable
-            name="inflatedVisibility"
-            type="Integer" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="@{inflatedVisibility == View.VISIBLE ? View.VISIBLE : View.GONE}"
-        inflatedLifecycleOwner="@{true}">
+        android:padding="1dp">
 
         <ImageView
             android:id="@+id/broken_media_icon"
@@ -30,11 +25,10 @@
             android:adjustViewBounds="true"
             android:padding="18dp"
             android:background="@drawable/shape_squircle_file_background_5dp"
-            android:visibility="@{model.mediaPreviewAvailable ? View.GONE : View.VISIBLE, default=gone}"
+            android:visibility="@{!model.isMedia || model.mediaPreviewAvailable ? View.GONE : View.VISIBLE, default=gone}"
             android:contentDescription="@{model.isVideoPreview ? @string/content_description_chat_bubble_video : @string/content_description_chat_bubble_image}"
             android:src="@{model.isVideoPreview ? @drawable/file_video : @drawable/file_image, default=@drawable/file_video}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:tint="?attr/color_main2_600" />
 
@@ -42,23 +36,20 @@
             android:id="@+id/image"
             android:onClick="@{() -> model.onClick()}"
             android:onLongClick="@{onLongClickListener}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/chat_bubble_grid_file_size"
+            android:layout_height="@dimen/chat_bubble_grid_file_size"
             android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
+            android:scaleType="centerCrop"
             android:contentDescription="@{model.isVideoPreview ? @string/content_description_chat_bubble_video : @string/content_description_chat_bubble_image}"
-            coilBubble="@{model.mediaPreview}"
+            android:visibility="@{model.isImage || model.isVideoPreview ? View.VISIBLE : View.GONE}"
+            coilBubbleGrid="@{model.mediaPreview}"
             coilBubbleFallback="@{brokenMediaIcon}"
-            app:layout_constraintHeight_max="@dimen/chat_bubble_big_image_max_size"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_600"
             android:id="@+id/video_duration"
-            android:onClick="@{() -> model.onClick()}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
@@ -82,39 +73,6 @@
             app:layout_constraintStart_toStartOf="@id/image"
             app:layout_constraintEnd_toEndOf="@id/image"
             app:tint="@color/bc_white" />
-
-        <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:id="@+id/transfer_progress"
-            android:layout_width="@dimen/chat_bubble_grid_file_size"
-            android:layout_height="@dimen/chat_bubble_grid_file_size"
-            android:indeterminate="false"
-            android:progress="@{model.transferProgress}"
-            android:max="100"
-            android:visibility="@{model.transferProgress == -1 || model.transferProgress >= 100 ? View.GONE : View.VISIBLE}"
-            app:indicatorSize="50dp"
-            app:trackColor="?attr/color_main1_100"
-            app:indicatorColor="?attr/color_main1_500"
-            app:layout_constraintTop_toTopOf="@id/image"
-            app:layout_constraintBottom_toBottomOf="@id/image"
-            app:layout_constraintStart_toStartOf="@id/image"
-            app:layout_constraintEnd_toEndOf="@id/image"
-            tools:progress="40" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/main_page_title_style"
-            android:id="@+id/transfer_progress_label"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:onClick="@{() -> model.onClick()}"
-            android:onLongClick="@{onLongClickListener}"
-            android:text="@{model.transferProgressLabel, default=`40%`}"
-            android:textSize="16sp"
-            android:textAlignment="center"
-            android:textColor="?attr/color_main1_500"
-            app:layout_constraintTop_toTopOf="@id/transfer_progress"
-            app:layout_constraintBottom_toBottomOf="@id/transfer_progress"
-            app:layout_constraintStart_toStartOf="@id/transfer_progress"
-            app:layout_constraintEnd_toEndOf="@id/transfer_progress" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
