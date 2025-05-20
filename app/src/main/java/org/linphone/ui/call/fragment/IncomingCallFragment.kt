@@ -19,16 +19,23 @@
  */
 package org.linphone.ui.call.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallIncomingFragmentBinding
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
+import org.linphone.utils.AppUtils
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 
 @UiThread
 class IncomingCallFragment : GenericCallFragment() {
@@ -40,6 +47,66 @@ class IncomingCallFragment : GenericCallFragment() {
 
     private lateinit var callViewModel: CurrentCallViewModel
 
+    private val marginSize = AppUtils.getDimension(R.dimen.sliding_accept_decline_call_margin)
+    private val areaSize = AppUtils.getDimension(R.dimen.call_button_size) + marginSize
+    private var initialX = 0f
+    private var slidingButtonX = 0f
+    private val slidingButtonTouchListener = View.OnTouchListener { view, event ->
+        val width = binding.bottomBar.root.width.toFloat()
+        val aboveAnswer = view.x + view.width > width - areaSize
+        val aboveDecline = view.x < areaSize
+
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                if (initialX == 0f) {
+                    initialX = view.x
+                }
+                slidingButtonX = view.x - event.rawX
+                true
+            }
+            MotionEvent.ACTION_UP -> {
+                if (aboveAnswer) {
+                    // Accept
+                    callViewModel.answer()
+                } else if (aboveDecline) {
+                    // Decline
+                    callViewModel.hangUp()
+                } else {
+                    // Animate going back to initial position
+                    view.animate()
+                        .x(initialX)
+                        .setDuration(500)
+                        .start()
+                }
+                true
+            }
+            MotionEvent.ACTION_MOVE -> {
+                callViewModel.slidingButtonAboveAnswer.value = aboveAnswer
+                callViewModel.slidingButtonAboveDecline.value = aboveDecline
+
+                val offset = view.x - initialX
+                val percent = abs(offset) / (width / 2)
+                if (offset > 0) {
+                    callViewModel.answerAlpha.value = 1f
+                    callViewModel.declineAlpha.value = 1f - percent
+                } else if (offset < 0) {
+                    callViewModel.answerAlpha.value = 1f - percent
+                    callViewModel.declineAlpha.value = 1f
+                }
+
+                view.animate()
+                    .x(min(max(marginSize, event.rawX + slidingButtonX), width - view.width - marginSize))
+                    .setDuration(0)
+                    .start()
+                true
+            }
+            else -> {
+                view.performClick()
+                false
+            }
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -49,6 +116,7 @@ class IncomingCallFragment : GenericCallFragment() {
         return binding.root
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -68,11 +136,14 @@ class IncomingCallFragment : GenericCallFragment() {
                 }
             }
         }
+
+        binding.bottomBar.slidingButton.setOnTouchListener(slidingButtonTouchListener)
     }
 
     override fun onResume() {
         super.onResume()
 
+        callViewModel.refreshKeyguardLockedStatus()
         coreContext.notificationsManager.setIncomingCallFragmentCurrentlyDisplayed(true)
     }
 

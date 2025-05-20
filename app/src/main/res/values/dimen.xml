@@ -65,6 +65,7 @@
     <dimen name="call_round_corners_texture_view_radius">20dp</dimen>
     <dimen name="call_pip_round_corners_texture_view_radius">5dp</dimen>
     <dimen name="call_button_size">55dp</dimen>
+    <dimen name="sliding_accept_decline_call_margin">10dp</dimen>
     <dimen name="call_button_icon_padding">15dp</dimen>
     <dimen name="call_dtmf_button_size">65dp</dimen>
     <dimen name="call_extra_button_top_margin">30dp</dimen>
