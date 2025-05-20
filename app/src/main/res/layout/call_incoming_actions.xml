@@ -14,6 +14,146 @@
         android:layout_height="@dimen/call_main_actions_menu_height"
         android:background="@drawable/shape_call_bottom_sheet_background">
 
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/sliding_controls"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.isScreenLocked ? View.VISIBLE : View.GONE}"
+            app:constraint_referenced_ids="sliding_button, decline, answer, arrow_green_1, arrow_green_2, arrow_green_3, arrow_red_1, arrow_red_2, arrow_red_3" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/simple_controls"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.isScreenLocked ? View.GONE : View.VISIBLE, default=gone}"
+            app:constraint_referenced_ids="hang_up, answer_call"/>
+
+        <ImageView
+            style="@style/default_text_style_700"
+            android:id="@+id/decline"
+            android:layout_width="@dimen/call_button_size"
+            android:layout_height="@dimen/call_button_size"
+            android:layout_marginStart="@dimen/sliding_accept_decline_call_margin"
+            android:padding="@dimen/call_button_icon_padding"
+            android:src="@drawable/phone_disconnect"
+            android:alpha="@{viewModel.declineAlpha}"
+            android:contentDescription="@null"
+            app:tint="?attr/color_danger_500"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/arrow_red_1"/>
+
+        <ImageView
+            android:id="@+id/arrow_red_1"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:src="@drawable/arrow_red"
+            android:alpha="@{viewModel.declineAlpha}"
+            android:contentDescription="@null"
+            android:rotation="90"
+            app:layout_constraintTop_toTopOf="@id/decline"
+            app:layout_constraintBottom_toBottomOf="@id/decline"
+            app:layout_constraintStart_toEndOf="@id/decline"
+            app:layout_constraintEnd_toStartOf="@id/arrow_red_2" />
+
+        <ImageView
+            android:id="@+id/arrow_red_2"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:src="@drawable/arrow_red"
+            android:alpha="@{viewModel.declineAlpha}"
+            android:contentDescription="@null"
+            android:rotation="90"
+            app:layout_constraintTop_toTopOf="@id/decline"
+            app:layout_constraintBottom_toBottomOf="@id/decline"
+            app:layout_constraintStart_toEndOf="@id/arrow_red_1"
+            app:layout_constraintEnd_toStartOf="@id/arrow_red_3" />
+
+        <ImageView
+            android:id="@+id/arrow_red_3"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:src="@drawable/arrow_red"
+            android:alpha="@{viewModel.declineAlpha}"
+            android:contentDescription="@null"
+            android:rotation="90"
+            app:layout_constraintTop_toTopOf="@id/decline"
+            app:layout_constraintBottom_toBottomOf="@id/decline"
+            app:layout_constraintStart_toEndOf="@id/arrow_red_2"
+            app:layout_constraintEnd_toStartOf="@id/sliding_button"/>
+
+        <ImageView
+            android:id="@+id/arrow_green_1"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:src="@drawable/arrow_green"
+            android:alpha="@{viewModel.answerAlpha}"
+            android:contentDescription="@null"
+            android:rotation="90"
+            app:layout_constraintTop_toTopOf="@id/answer"
+            app:layout_constraintBottom_toBottomOf="@id/answer"
+            app:layout_constraintStart_toEndOf="@id/sliding_button"
+            app:layout_constraintEnd_toStartOf="@id/arrow_green_2" />
+
+        <ImageView
+            android:id="@+id/arrow_green_2"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:src="@drawable/arrow_green"
+            android:alpha="@{viewModel.answerAlpha}"
+            android:contentDescription="@null"
+            android:rotation="90"
+            app:layout_constraintTop_toTopOf="@id/answer"
+            app:layout_constraintBottom_toBottomOf="@id/answer"
+            app:layout_constraintStart_toEndOf="@id/arrow_green_1"
+            app:layout_constraintEnd_toStartOf="@id/arrow_green_3" />
+
+        <ImageView
+            android:id="@+id/arrow_green_3"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:src="@drawable/arrow_green"
+            android:alpha="@{viewModel.answerAlpha}"
+            android:contentDescription="@null"
+            android:rotation="90"
+            app:layout_constraintTop_toTopOf="@id/answer"
+            app:layout_constraintBottom_toBottomOf="@id/answer"
+            app:layout_constraintStart_toEndOf="@id/arrow_green_2"
+            app:layout_constraintEnd_toStartOf="@id/answer" />
+
+        <ImageView
+            style="@style/default_text_style_700"
+            android:id="@+id/answer"
+            android:layout_width="@dimen/call_button_size"
+            android:layout_height="@dimen/call_button_size"
+            android:layout_marginEnd="@dimen/sliding_accept_decline_call_margin"
+            android:padding="@dimen/call_button_icon_padding"
+            android:src="@drawable/phone_call"
+            android:alpha="@{viewModel.answerAlpha}"
+            android:contentDescription="@null"
+            app:tint="?attr/color_success_500"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/arrow_green_3"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+            android:id="@+id/sliding_button"
+            android:layout_width="@dimen/call_button_size"
+            android:layout_height="@dimen/call_button_size"
+            android:padding="@dimen/call_button_icon_padding"
+            android:background="@drawable/shape_round_in_call_button_background"
+            android:src="@{viewModel.slidingButtonAboveAnswer ? @drawable/phone_call : viewModel.slidingButtonAboveDecline ? @drawable/phone_disconnect : viewModel.isVideoEnabled ? @drawable/video_camera : @drawable/phone, default=@drawable/phone}"
+            android:contentDescription="@{viewModel.isVideoEnabled ? @string/content_description_answer_video_call : @string/content_description_answer_audio_call}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/arrow_red_3"
+            app:layout_constraintEnd_toStartOf="@id/arrow_green_1"
+            app:tint="@color/bc_white"
+            android:backgroundTint="@{viewModel.slidingButtonAboveAnswer ? @color/green_success_500 : viewModel.slidingButtonAboveDecline ? @color/red_danger_500 : @color/gray_500, default=@color/gray_500}"/>
+
         <ImageView
             android:id="@+id/hang_up"
             android:layout_width="wrap_content"
@@ -44,32 +184,12 @@
             android:paddingTop="15dp"
             android:paddingEnd="30dp"
             android:paddingBottom="15dp"
-            android:src="@drawable/phone"
-            android:visibility="@{viewModel.isVideoEnabled ? View.GONE : View.VISIBLE}"
-            android:contentDescription="@string/content_description_answer_audio_call"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/answer_video_call"
-            app:layout_constraintStart_toEndOf="@id/hang_up"
-            app:tint="@color/bc_white" />
-
-        <ImageView
-            android:id="@+id/answer_video_call"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/call_button_size"
-            android:background="@drawable/squircle_green_button_background"
-            android:onClick="@{() -> viewModel.answer()}"
-            android:paddingStart="30dp"
-            android:paddingTop="15dp"
-            android:paddingEnd="30dp"
-            android:paddingBottom="15dp"
-            android:src="@drawable/video_camera"
-            android:visibility="@{viewModel.isVideoEnabled ? View.VISIBLE : View.GONE, default=gone}"
-            android:contentDescription="@string/content_description_answer_video_call"
+            android:src="@{viewModel.isVideoEnabled ? @drawable/video_camera : @drawable/phone, default=@drawable/phone}"
+            android:contentDescription="@{viewModel.isVideoEnabled ? @string/content_description_answer_video_call : @string/content_description_answer_audio_call}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/answer_call"
+            app:layout_constraintStart_toEndOf="@id/hang_up"
             app:tint="@color/bc_white" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -20,6 +20,8 @@
 package org.linphone.ui.call.viewmodel
 
 import android.Manifest
+import android.app.KeyguardManager
+import android.content.Context
 import android.content.pm.PackageManager
 import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
@@ -248,6 +250,18 @@ class CurrentCallViewModel
     val removedCharacterAtCurrentPositionEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
+
+    // Sliding answer/decline button
+
+    val isScreenLocked = MutableLiveData<Boolean>()
+
+    val slidingButtonAboveAnswer = MutableLiveData<Boolean>()
+
+    val slidingButtonAboveDecline = MutableLiveData<Boolean>()
+
+    val answerAlpha = MutableLiveData<Float>()
+
+    val declineAlpha = MutableLiveData<Float>()
 
     lateinit var currentCall: Call
 
@@ -508,37 +522,15 @@ class CurrentCallViewModel
         }
     }
 
-    @WorkerThread
-    private fun updateProximitySensor() {
-        if (::currentCall.isInitialized) {
-            val callState = currentCall.state
-            if (LinphoneUtils.isCallIncoming(callState)) {
-                proximitySensorEnabled.postValue(false)
-            } else if (LinphoneUtils.isCallOutgoing(callState)) {
-                val videoEnabled = currentCall.params.isVideoEnabled
-                proximitySensorEnabled.postValue(!videoEnabled)
-            } else {
-                if (isSendingVideo.value == true || isReceivingVideo.value == true) {
-                    proximitySensorEnabled.postValue(false)
-                } else {
-                    val outputAudioDevice = currentCall.outputAudioDevice ?: coreContext.core.outputAudioDevice
-                    if (outputAudioDevice != null && outputAudioDevice.type == AudioDevice.Type.Earpiece) {
-                        proximitySensorEnabled.postValue(true)
-                    } else {
-                        proximitySensorEnabled.postValue(false)
-                    }
-                }
-            }
-        } else {
-            proximitySensorEnabled.postValue(false)
-        }
-    }
-
     init {
         fullScreenMode.value = false
         operationInProgress.value = false
         proximitySensorEnabled.value = false
         videoUpdateInProgress.value = false
+
+        refreshKeyguardLockedStatus()
+        answerAlpha.value = 1f
+        declineAlpha.value = 1f
 
         coreContext.postOnCoreThread { core ->
             coreContext.contactsManager.addListener(contactsListener)
@@ -600,6 +592,14 @@ class CurrentCallViewModel
                 currentCall.removeListener(callListener)
             }
         }
+    }
+
+    @UiThread
+    fun refreshKeyguardLockedStatus() {
+        val keyguardManager = coreContext.context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
+        val secure = keyguardManager.isKeyguardLocked
+        isScreenLocked.value = secure
+        Log.i("$TAG Device is [${if (secure) "locked" else "unlocked"}]")
     }
 
     @UiThread
@@ -1510,5 +1510,31 @@ class CurrentCallViewModel
     @AnyThread
     private fun showRecordingToast() {
         showGreenToast(R.string.call_is_being_recorded, R.drawable.record_fill)
+    }
+
+    @WorkerThread
+    private fun updateProximitySensor() {
+        if (::currentCall.isInitialized) {
+            val callState = currentCall.state
+            if (LinphoneUtils.isCallIncoming(callState)) {
+                proximitySensorEnabled.postValue(false)
+            } else if (LinphoneUtils.isCallOutgoing(callState)) {
+                val videoEnabled = currentCall.params.isVideoEnabled
+                proximitySensorEnabled.postValue(!videoEnabled)
+            } else {
+                if (isSendingVideo.value == true || isReceivingVideo.value == true) {
+                    proximitySensorEnabled.postValue(false)
+                } else {
+                    val outputAudioDevice = currentCall.outputAudioDevice ?: coreContext.core.outputAudioDevice
+                    if (outputAudioDevice != null && outputAudioDevice.type == AudioDevice.Type.Earpiece) {
+                        proximitySensorEnabled.postValue(true)
+                    } else {
+                        proximitySensorEnabled.postValue(false)
+                    }
+                }
+            }
+        } else {
+            proximitySensorEnabled.postValue(false)
+        }
     }
 }
