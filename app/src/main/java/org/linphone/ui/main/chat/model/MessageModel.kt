@@ -436,6 +436,11 @@ class MessageModel
 
                 displayableContentFound = true
             } else {
+                val wrapBefore = if (exactly4Contents) {
+                    contentIndex == 2 // To have a 2x2 grid
+                } else {
+                    contentIndex % 3 == 0 // To have at most 3 columns
+                }
                 if (content.isFile) {
                     Log.d("$TAG Found file content with type [${content.type}/${content.subtype}]")
                     contentIndex += 1
@@ -456,8 +461,6 @@ class MessageModel
                         Log.d(
                             "$TAG Found file ready to be displayed [$path] with MIME [${content.type}/${content.subtype}] for message [${chatMessage.messageId}]"
                         )
-
-                        val wrapBefore = exactly4Contents && contentIndex == 3
                         val fileSize = content.fileSize.toLong()
                         val timestamp = content.creationTimestamp
                         val fileModel = FileModel(
@@ -496,7 +499,8 @@ class MessageModel
                                 timestamp,
                                 isFileEncrypted,
                                 path,
-                                chatMessage.isEphemeral
+                                chatMessage.isEphemeral,
+                                flexboxLayoutWrapBefore = wrapBefore
                             ) { model ->
                                 onContentClicked?.invoke(model)
                             }
@@ -509,7 +513,8 @@ class MessageModel
                                 isFileEncrypted,
                                 name,
                                 chatMessage.isEphemeral,
-                                isWaitingToBeDownloaded = true
+                                isWaitingToBeDownloaded = true,
+                                flexboxLayoutWrapBefore = wrapBefore
                             ) { model ->
                                 downloadContent(model, content)
                             }
