@@ -261,7 +261,14 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
 
-        if (intent != null) handleAuthIntent(intent)
+        if (intent != null) {
+            when (intent.action) {
+                Intent.ACTION_DIAL, Intent.ACTION_CALL ->
+                    handleIntentParams(intent)
+                else ->
+                    handleAuthIntent(intent)
+            }
+        }
     }
 
     override fun onStart() {

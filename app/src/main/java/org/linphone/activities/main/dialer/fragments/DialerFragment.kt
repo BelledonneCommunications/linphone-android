@@ -163,13 +163,6 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
             }
         }
 
-        if (corePreferences.firstStart) {
-            Log.w(
-                "[Dialer] First start detected, wait for assistant to be finished to check for update & request permissions"
-            )
-            return
-        }
-
         if (arguments?.containsKey("URI") == true) {
             val address = arguments?.getString("URI") ?: ""
             Log.i("[Dialer] Found URI to call: $address")
