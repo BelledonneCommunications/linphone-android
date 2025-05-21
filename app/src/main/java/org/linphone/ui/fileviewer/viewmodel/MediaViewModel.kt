@@ -21,6 +21,7 @@ package org.linphone.ui.fileviewer.viewmodel
 
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.view.Surface
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -224,5 +225,12 @@ class MediaViewModel
     fun stopUpdatePlaybackPosition() {
         updatePositionJob?.cancel()
         updatePositionJob = null
+    }
+
+    @UiThread
+    fun setMediaPlayerSurface(surface: Surface) {
+        if (::mediaPlayer.isInitialized) {
+            mediaPlayer.setSurface(surface)
+        }
     }
 }
