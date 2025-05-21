@@ -53,6 +53,7 @@ class TelecomCallControlCallback(
     private var availableEndpoints: List<CallEndpointCompat> = arrayListOf()
     private var currentEndpoint = CallEndpointCompat.TYPE_UNKNOWN
     private var endpointUpdateRequestFromLinphone: Boolean = false
+    private var latestLinphoneRequestedEndpoint: CallEndpointCompat? = null
 
     private val callListener = object : CallListenerStub() {
         @WorkerThread
@@ -138,18 +139,27 @@ class TelecomCallControlCallback(
         }.launchIn(scope)
 
         callControl.currentCallEndpoint.onEach { endpoint ->
-            val type = endpoint.type
-            currentEndpoint = type
+            var newEndpointToUse = endpoint
             if (endpointUpdateRequestFromLinphone) {
-                Log.i("$TAG Linphone requests to use [${endpoint.name}] audio endpoint with type [$type]")
+                Log.i("$TAG Linphone requests to use [${endpoint.name}] audio endpoint with type [${endpointTypeToString(endpoint.type)}]")
             } else {
-                Log.i("$TAG Android requests us to use [${endpoint.name}] audio endpoint with type [$type]")
+                Log.i("$TAG Android requests us to use [${endpoint.name}] audio endpoint with type [${endpointTypeToString(endpoint.type)}]")
             }
 
+            val requestedEndpoint = latestLinphoneRequestedEndpoint
+            if (endpointUpdateRequestFromLinphone && requestedEndpoint != null && requestedEndpoint != endpoint) {
+                Log.w("$TAG WARNING: Linphone requested endpoint [${requestedEndpoint.name}] but Telecom Manager notified endpoint [${endpoint.name}], trying to use the one we requested anyway")
+                newEndpointToUse = requestedEndpoint
+            }
+
+            val type = newEndpointToUse.type
+            currentEndpoint = type
             if (!endpointUpdateRequestFromLinphone && !coreContext.isConnectedToAndroidAuto && (type == CallEndpointCompat.Companion.TYPE_EARPIECE || type == CallEndpointCompat.Companion.TYPE_SPEAKER)) {
-                Log.w("$TAG Device isn't connected to Android Auto, do not follow system request to change audio endpoint to either earpiece or speaker")
+                endpointUpdateRequestFromLinphone = false
+                Log.w("$TAG Device isn't connected to Android Auto, do not follow system request to change audio endpoint to [${newEndpointToUse.name}] with type [${endpointTypeToString(type)}]")
                 return@onEach
             }
+            endpointUpdateRequestFromLinphone = false
 
             // Change audio route in SDK, this way the usual listener will trigger
             // and we'll be able to update the UI accordingly
@@ -180,7 +190,6 @@ class TelecomCallControlCallback(
                     }
                 }
             }
-            endpointUpdateRequestFromLinphone = false
         }.launchIn(scope)
 
         callControl.isMuted.onEach { muted ->
@@ -210,13 +219,13 @@ class TelecomCallControlCallback(
     }
 
     fun applyAudioRouteToCallWithId(routes: List<AudioDevice.Type>): Boolean {
-        endpointUpdateRequestFromLinphone = true
         Log.i("$TAG Looking for audio endpoint with type [${routes.first()}]")
 
         var wiredHeadsetFound = false
+        var skippedBecauseAlreadyInUse = false
         for (endpoint in availableEndpoints) {
             Log.i(
-                "$TAG Found audio endpoint [${endpoint.name}] with type [${endpoint.type}]"
+                "$TAG Found audio endpoint [${endpoint.name}] with type [${endpointTypeToString(endpoint.type)}]"
             )
             val matches = when (endpoint.type) {
                 CallEndpointCompat.Companion.TYPE_EARPIECE -> {
@@ -237,21 +246,24 @@ class TelecomCallControlCallback(
 
             if (matches != null) {
                 Log.i(
-                    "$TAG Found matching audio endpoint [${endpoint.name}], trying to use it"
+                    "$TAG Found matching audio endpoint [${endpoint.name}] with type [${endpointTypeToString(endpoint.type)}], trying to use it"
                 )
                 if (currentEndpoint == endpoint.type) {
                     Log.w("$TAG Endpoint already in use, skipping")
+                    skippedBecauseAlreadyInUse = true
                     continue
                 }
 
                 scope.launch {
-                    Log.i("$TAG Requesting audio endpoint change with [${endpoint.name}]")
+                    Log.i("$TAG Requesting audio endpoint change to [${endpoint.name}] with type [${endpointTypeToString(endpoint.type)}]")
+                    endpointUpdateRequestFromLinphone = true
+                    latestLinphoneRequestedEndpoint = endpoint
                     var result: CallControlResult = callControl.requestEndpointChange(endpoint)
                     var attempts = 1
                     while (result is CallControlResult.Error && attempts <= 10) {
                         delay(100)
                         Log.i(
-                            "$TAG Previous attempt failed [$result], requesting again audio endpoint change with [${endpoint.name}]"
+                            "$TAG Previous attempt failed [$result], requesting again audio endpoint change to [${endpoint.name}] with type [${endpointTypeToString(endpoint.type)}]"
                         )
                         result = callControl.requestEndpointChange(endpoint)
                         attempts += 1
@@ -273,6 +285,8 @@ class TelecomCallControlCallback(
 
         if (routes.size == 1 && routes[0] == AudioDevice.Type.Earpiece && wiredHeadsetFound) {
             Log.e("$TAG User asked for earpiece but endpoint doesn't exists!")
+        } else if (skippedBecauseAlreadyInUse) {
+            Log.w("$TAG This endpoint was already in use (according to Telecom Manager), force changing the device in Linphone just in case")
         } else {
             Log.e("$TAG No matching endpoint found")
         }
@@ -362,6 +376,18 @@ class TelecomCallControlCallback(
             DisconnectCause.ANSWERED_ELSEWHERE -> "ANSWERED_ELSEWHERE"
             DisconnectCause.CALL_PULLED -> "CALL_PULLED"
             else -> "UNEXPECTED: $cause"
+        }
+    }
+
+    private fun endpointTypeToString(type: Int): String {
+        return when (type) {
+            CallEndpointCompat.Companion.TYPE_UNKNOWN -> "UNKNOWN"
+            CallEndpointCompat.Companion.TYPE_EARPIECE -> "EARPIECE"
+            CallEndpointCompat.Companion.TYPE_BLUETOOTH -> "BLUETOOTH"
+            CallEndpointCompat.Companion.TYPE_WIRED_HEADSET -> "WIRED HEADSET"
+            CallEndpointCompat.Companion.TYPE_SPEAKER -> "SPEAKER"
+            CallEndpointCompat.Companion.TYPE_STREAMING -> "STREAMING"
+            else -> "UNEXPECTED: $type"
         }
     }
 }
