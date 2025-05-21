@@ -357,7 +357,7 @@ class CurrentCallViewModel
                     endCall(call)
                 }
             } else {
-                val videoEnabled = call.currentParams.isVideoEnabled
+                val videoEnabled = LinphoneUtils.isVideoEnabled(call)
                 if (videoEnabled && isVideoEnabled.value == false) {
                     if (isBluetoothEnabled.value == true || isHeadsetEnabled.value == true) {
                         Log.i(
