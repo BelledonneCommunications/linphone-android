@@ -109,7 +109,7 @@ class MediaViewerFragment : GenericMainFragment() {
         val textureView = binding.videoPlayer
         if (textureView.isAvailable) {
             Log.i("$TAG Surface created, setting display in mediaPlayer")
-            viewModel.mediaPlayer.setSurface((Surface(textureView.surfaceTexture)))
+            viewModel.setMediaPlayerSurface((Surface(textureView.surfaceTexture)))
         } else {
             Log.i("$TAG Surface not available yet, setting listener")
             textureView.surfaceTextureListener = object : SurfaceTextureListener {
@@ -119,7 +119,7 @@ class MediaViewerFragment : GenericMainFragment() {
                     p2: Int
                 ) {
                     Log.i("$TAG Surface available, setting display in mediaPlayer")
-                    viewModel.mediaPlayer.setSurface(Surface(surfaceTexture))
+                    viewModel.setMediaPlayerSurface(Surface(surfaceTexture))
                 }
 
                 override fun onSurfaceTextureSizeChanged(
