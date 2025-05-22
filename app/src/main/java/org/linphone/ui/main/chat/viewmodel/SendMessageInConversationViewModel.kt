@@ -401,7 +401,8 @@ class SendMessageInConversationViewModel
 
             val fileName = FileUtils.getNameFromFilePath(file)
             val timestamp = System.currentTimeMillis() / 1000
-            val model = FileModel(file, fileName, 0, timestamp, false, file, false) { model ->
+            val size = FileUtils.getFileSize(file)
+            val model = FileModel(file, fileName, size, timestamp, false, file, false) { model ->
                 removeAttachment(model.path)
             }
 

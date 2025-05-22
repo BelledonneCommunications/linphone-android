@@ -217,13 +217,13 @@ class MessageModel
                 transferringFileModel = null
                 if (!allFilesDownloaded) {
                     computeContentsList()
-                }
-
-                for (content in message.contents) {
-                    if (content.isVoiceRecording) {
-                        Log.i("$TAG File transfer done, updating voice record info")
-                        computeVoiceRecordContent(content)
-                        break
+                } else {
+                    for (content in message.contents) {
+                        if (content.isVoiceRecording) {
+                            Log.i("$TAG File transfer done, updating voice record info")
+                            computeVoiceRecordContent(content)
+                            break
+                        }
                     }
                 }
             }
@@ -406,7 +406,7 @@ class MessageModel
     private fun computeContentsList() {
         Log.d("$TAG Computing message contents list")
         text.postValue(Spannable.Factory.getInstance().newSpannable(""))
-        filesList.postValue(arrayListOf())
+        filesList.value.orEmpty().forEach(FileModel::destroy)
 
         var displayableContentFound = false
         var contentIndex = 0
@@ -461,7 +461,11 @@ class MessageModel
                         Log.d(
                             "$TAG Found file ready to be displayed [$path] with MIME [${content.type}/${content.subtype}] for message [${chatMessage.messageId}]"
                         )
-                        val fileSize = content.fileSize.toLong()
+                        val fileSize = if (content.fileSize.toLong() > 0) {
+                            content.fileSize.toLong()
+                        } else {
+                            FileUtils.getFileSize(path)
+                        }
                         val timestamp = content.creationTimestamp
                         val fileModel = FileModel(
                             path,
@@ -492,10 +496,15 @@ class MessageModel
                     if (name.isNotEmpty()) {
                         val fileModel = if (isOutgoing && chatMessage.isFileTransferInProgress) {
                             val path = content.filePath.orEmpty()
+                            val fileSize = if (content.fileSize.toLong() > 0) {
+                                content.fileSize.toLong()
+                            } else {
+                                FileUtils.getFileSize(path)
+                            }
                             FileModel(
                                 path,
                                 name,
-                                content.fileSize.toLong(),
+                                fileSize,
                                 timestamp,
                                 isFileEncrypted,
                                 path,
