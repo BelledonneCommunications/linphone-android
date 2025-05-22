@@ -12,7 +12,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp">
 
         <include
             android:id="@+id/media_layout"
@@ -31,16 +32,17 @@
             layout="@layout/chat_bubble_file_grid_cell"
             android:visibility="@{!model.isImage &amp;&amp; !model.isVideoPreview ? View.VISIBLE : View.GONE}"
             bind:model="@{model}"
+            bind:useGrayBackground="@{true}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
         <ImageView
             android:id="@+id/remove_attachment"
             android:onClick="@{() -> model.onClick()}"
-            android:layout_width="@dimen/icon_size"
-            android:layout_height="@dimen/icon_size"
-            android:layout_marginTop="3dp"
-            android:layout_marginEnd="3dp"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
             android:padding="3dp"
             android:src="@drawable/x"
             android:background="@drawable/shape_white_round"
