@@ -9,6 +9,9 @@
             name="onLongClickListener"
             type="View.OnLongClickListener" />
         <variable
+            name="useGrayBackground"
+            type="Boolean" />
+        <variable
             name="model"
             type="org.linphone.ui.main.chat.model.FileModel" />
     </data>
@@ -22,7 +25,7 @@
         android:id="@+id/background"
         android:layout_width="@dimen/chat_bubble_grid_file_size"
         android:layout_height="@dimen/chat_bubble_grid_file_size"
-        android:background="@drawable/shape_squircle_file_bubble_background"
+        android:background="@{useGrayBackground ? @drawable/shape_squircle_file_bubble_gray_background : @drawable/shape_squircle_file_bubble_background, default=@drawable/shape_squircle_file_bubble_background}"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
