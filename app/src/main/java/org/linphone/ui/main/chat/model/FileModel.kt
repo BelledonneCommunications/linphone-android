@@ -92,7 +92,7 @@ class FileModel
 
     init {
         updateTransferProgress(-1)
-        formattedFileSize.postValue(FileUtils.bytesToDisplayableSize(fileSize))
+        computeFileSize(fileSize)
 
         if (!isWaitingToBeDownloaded) {
             val extension = FileUtils.getExtensionFromFileName(path)
@@ -139,6 +139,11 @@ class FileModel
                 FileUtils.deleteFile(path)
             }
         }
+    }
+
+    @AnyThread
+    fun computeFileSize(fileSize: Long) {
+        formattedFileSize.postValue(FileUtils.bytesToDisplayableSize(fileSize))
     }
 
     @AnyThread

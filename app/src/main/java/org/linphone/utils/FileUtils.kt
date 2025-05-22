@@ -69,6 +69,17 @@ class FileUtils {
         }
 
         @AnyThread
+        fun getFileSize(filePath: String): Long {
+            try {
+                val file = File(filePath)
+                return file.length()
+            } catch (e: Exception) {
+                Log.e("$TAG Failed to get file [$filePath] size: $e")
+            }
+            return 0L
+        }
+
+        @AnyThread
         fun isExtensionImage(path: String): Boolean {
             val extension = getExtensionFromFileName(path)
             val type = getMimeTypeFromExtension(extension)
