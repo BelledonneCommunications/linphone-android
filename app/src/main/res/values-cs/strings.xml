@@ -4,7 +4,7 @@
 ]>
 <resources>
     <string name="sip_address">SIP adresa</string>
-    <string name="sip_address_display_name">Zobrazované jméno</string>
+    <string name="sip_address_display_name">Zobrazené jméno</string>
     <plurals name="days">
         <item quantity="one">%s den</item>
         <item quantity="few">%s dny</item>
@@ -30,7 +30,7 @@
     <string name="call_error_user_not_found_toast">Uživatel nebyl nalezen</string>
     <string name="conference_failed_to_add_participant_invalid_address_toast">Neplatná SIP adresa, nelze přidat do konference</string>
     <string name="dialog_install">Instalovat</string>
-    <string name="welcome_page_2_message">Vaše komunikace jsou bezpečné díky našemu <b>koncovému šifrování</b>.</string>
+    <string name="welcome_page_2_message">Vaše komunikace je bezpečná díky našemu <b>koncovému šifrování</b>.</string>
     <string name="remote_provisioning_config_failed_toast">Došlo k chybě při pokusu o stažení a použití vzdálené konfigurace</string>
     <string name="assistant_third_party_sip_account_warning_explanation">Některé funkce jako skupinové zprávy nebo videokonference vyžadují účet &appName;\n\nTyto funkce jsou skryté, pokud se zaregistrujete pomocí SIP účtu třetí strany.\n\nPro aktivaci v komerčním projektu nás prosím kontaktujte.</string>
     <string name="assistant_permissions_subtitle">Pro plné využívání &appName; potřebujeme, abyste nám udělili následující oprávnění:</string>
@@ -214,13 +214,13 @@
     <string name="assistant_login_cant_parse_address_toast">Neplatná SIP adresa!</string>
     <string name="assistant_account_login_already_connected_error">Účet již existuje</string>
     <string name="assistant_no_account_yet">Ještě nemáte účet?</string>
-    <string name="assistant_account_register">Registrovat</string>
+    <string name="assistant_account_register">Registrace</string>
     <string name="assistant_account_creation_sms_confirmation_title">Potvrďte své telefonní číslo</string>
     <string name="assistant_account_creation_wrong_phone_number">Nesprávné číslo?</string>
     <string name="assistant_account_create">Vytvořit</string>
     <string name="assistant_create_account_using_email_on_our_web_platform">Vytvořte účet pomocí své e-mailové adresy na:</string>
     <string name="assistant_already_have_an_account">Máte již účet?</string>
-    <string name="assistant_sip_account_transport_protocol">Přenos</string>
+    <string name="assistant_sip_account_transport_protocol">Transport</string>
     <string name="assistant_third_party_sip_account_create_linphone_account">Preferuji vytvoření &appName; účtu</string>
     <string name="assistant_third_party_sip_account_warning_ok">Rozumím</string>
     <string name="assistant_account_register_push_notification_not_received_error">Push notifikace s autentifikačním tokenem nebyla přijata během 5 sekund, zkuste to prosím znovu později</string>
@@ -297,7 +297,7 @@
     <string name="settings_contacts_edit_ldap_server_title">Upravit LDAP server</string>
     <string name="settings_contacts_add_carddav_server_title">Přidat adresář CardDAV</string>
     <string name="settings_conversations_title">Konverzace</string>
-    <string name="settings_contacts_carddav_name_title">Zobrazované jméno</string>
+    <string name="settings_contacts_carddav_name_title">Zobrazené jméno</string>
     <string name="settings_contacts_carddav_server_url_title">URL adresa serveru</string>
     <string name="settings_contacts_carddav_username_title">Uživatelské jméno</string>
     <string name="settings_contacts_carddav_password_title">Heslo</string>
@@ -459,9 +459,9 @@
     <string name="contact_presence_status_was_online_yesterday_at">Dostupný včera v %s</string>
     <string name="contact_presence_status_was_online_today_at">Dostupný dnes v %s</string>
     <string name="contact_presence_status_was_online_on">Dostupný na %s</string>
-    <string name="contact_presence_status_online">Dostupný</string>
+    <string name="contact_presence_status_online">Online</string>
     <string name="contact_presence_status_do_not_disturb">Nerušit</string>
-    <string name="contact_call_action">Hovor</string>
+    <string name="contact_call_action">Volat</string>
     <string name="contact_message_action">Zpráva</string>
     <string name="contact_video_call_action">Videohovor</string>
     <string name="contact_make_call_check_device_trust">Ověřit</string>
@@ -478,7 +478,7 @@
     <string name="conversation_action_mark_as_read">Označit jako přečtené</string>
     <string name="conversation_action_mute">Ztlumit</string>
     <string name="conversation_action_unmute">Zrušit ztlumení</string>
-    <string name="conversation_action_call">Hovor</string>
+    <string name="conversation_action_call">Volat</string>
     <string name="conversation_action_delete">Smazat konverzaci</string>
     <string name="conversation_action_leave_group">Opustit skupinu</string>
     <string name="conversation_ephemeral_messages_title">Mizející zprávy</string>
