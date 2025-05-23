@@ -10,6 +10,23 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [6.0.8] - 2025-05-23
+
+### Added
+- Ukrainian & simplified Chinese translations from Weblate
+- Sliding answer/decline button in incoming call fragment if device is locked (will help prevent calls from being unintentionally picked up or hung up while the device is being removed from a pocket)
+
+### Changed
+- Show files with square design when more than one (as it is for media files)
+- Outgoing chat bubbles will now display the sent file size (as it is for received messages)
+
+### Fixed
+- Fixed issue with bluetooth hearing aids
+- Fixed audio call being answered on speakerphone
+- Fixed events related to joined/left conversation being briefly visible sometimes for 1-1 conversations
+- Fixed files/media grid in chat bubble using more than 3 columns in landscape
+- Fixed logs upload server URL setting
+
 ## [6.0.7] - 2025-05-16
 
 ### Added
