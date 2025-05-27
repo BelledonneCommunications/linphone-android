@@ -43,12 +43,12 @@
     <string name="dialog_confirm">Confirmer</string>
 
     <!-- Related to Android notifications -->
-    <string name="notification_channel_call_name">&appName; notifications d\'appels en cours</string>
-    <string name="notification_channel_incoming_call_name">&appName; notifications d\'appels entrants</string>
-    <string name="notification_channel_missed_call_name">&appName; notifications d\'appels manqués</string>
-    <string name="notification_channel_service_name">&appName; notification de service</string>
+    <string name="notification_channel_call_name">Notifications d\'appels en cours</string>
+    <string name="notification_channel_incoming_call_name">Notifications d\'appels entrants</string>
+    <string name="notification_channel_missed_call_name">Notifications d\'appels manqués</string>
+    <string name="notification_channel_service_name">Notification de service</string>
     <string name="notification_channel_service_desc">Ce service sera actif en permanence pour garder l\'app en vie et vous permettre de recevoir appels et messages sans recourir aux notifications push.</string>
-    <string name="notification_channel_chat_name">&appName; notifications des conversations</string>
+    <string name="notification_channel_chat_name">Notifications des conversations</string>
     <string name="notification_chat_message_reaction_received">A réagi par %1$s à : %2$s</string>
     <string name="notification_mark_message_as_read">Marquer comme lu</string>
     <string name="notification_reply_to_message">Répondre</string>
