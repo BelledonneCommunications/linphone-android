@@ -20,8 +20,10 @@
 package org.linphone.ui.main.chat.model
 
 import android.text.Spannable
+import android.text.SpannableStringBuilder
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
+import androidx.core.text.toSpannable
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
@@ -272,6 +274,13 @@ class ConversationModel
         }
     }
 
+    @UiThread
+    fun updateLastMessageInfo() {
+        coreContext.postOnCoreThread {
+            updateLastMessage()
+        }
+    }
+
     @WorkerThread
     private fun updateLastMessageStatus(message: ChatMessage) {
         val isOutgoing = message.isOutgoing
@@ -341,6 +350,11 @@ class ConversationModel
                 lastMessage = message
             }
         } else {
+            lastMessage = null
+            lastMessageTextSender.postValue("")
+            lastMessageContentIcon.postValue(0)
+            lastMessageText.postValue(SpannableStringBuilder("").toSpannable())
+            isLastMessageOutgoing.postValue(false)
             Log.w("$TAG No last message to display for conversation [$id]")
         }
     }

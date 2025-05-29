@@ -82,7 +82,7 @@ class ConversationEphemeralLifetimeFragment : SlidingPaneChildFragment() {
     }
 
     override fun onPause() {
-        sharedViewModel.newChatMessageEphemeralLifetimeToSet.value = Event(
+        sharedViewModel.newChatMessageEphemeralLifetimeToSetEvent.value = Event(
             viewModel.currentlySelectedValue.value ?: 0L
         )
         super.onPause()

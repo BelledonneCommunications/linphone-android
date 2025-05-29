@@ -142,15 +142,11 @@ class SharedMainViewModel
         MutableLiveData<Event<Bundle>>()
     }
 
-    val forceRefreshDisplayedConversation: MutableLiveData<Event<Boolean>> by lazy {
+    val forceRefreshDisplayedConversationEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
 
-    val forceRefreshConversations: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
-    }
-
-    val forceRefreshConversationInfo: MutableLiveData<Event<Boolean>> by lazy {
+    val forceRefreshConversationInfoEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
 
@@ -158,8 +154,12 @@ class SharedMainViewModel
         MutableLiveData<Event<Boolean>>()
     }
 
-    val newChatMessageEphemeralLifetimeToSet: MutableLiveData<Event<Long>> by lazy {
+    val newChatMessageEphemeralLifetimeToSetEvent: MutableLiveData<Event<Long>> by lazy {
         MutableLiveData<Event<Long>>()
+    }
+
+    val updateConversationLastMessageEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
     }
 
     val updateUnreadMessageCountForCurrentConversationEvent: MutableLiveData<Event<Boolean>> by lazy {

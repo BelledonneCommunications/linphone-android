@@ -136,7 +136,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
         viewModel.groupLeftEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG Group has been left, leaving conversation info...")
-                sharedViewModel.forceRefreshConversationInfo.value = Event(true)
+                sharedViewModel.forceRefreshConversationInfoEvent.value = Event(true)
                 goBack()
                 val message = getString(R.string.conversation_group_left_toast)
                 (requireActivity() as GenericActivity).showGreenToast(
@@ -149,7 +149,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
         viewModel.historyDeletedEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG History has been deleted, leaving conversation info...")
-                sharedViewModel.forceRefreshConversations.value = Event(true)
+                sharedViewModel.updateConversationLastMessageEvent.value = Event(viewModel.conversationId)
                 sharedViewModel.forceRefreshConversationEvents.value = Event(true)
                 goBack()
                 val message = getString(R.string.conversation_info_history_deleted_toast)
@@ -180,7 +180,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
 
         viewModel.infoChangedEvent.observe(viewLifecycleOwner) {
             it.consume {
-                sharedViewModel.forceRefreshConversationInfo.postValue(Event(true))
+                sharedViewModel.forceRefreshConversationInfoEvent.postValue(Event(true))
             }
         }
 
@@ -197,7 +197,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
             }
         }
 
-        sharedViewModel.newChatMessageEphemeralLifetimeToSet.observe(viewLifecycleOwner) {
+        sharedViewModel.newChatMessageEphemeralLifetimeToSetEvent.observe(viewLifecycleOwner) {
             it.consume { ephemeralLifetime ->
                 Log.i(
                     "$TAG Setting [$ephemeralLifetime] as new ephemeral lifetime for messages"

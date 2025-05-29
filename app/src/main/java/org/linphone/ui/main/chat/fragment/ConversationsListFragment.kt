@@ -274,13 +274,16 @@ class ConversationsListFragment : AbstractMainFragment() {
             }
         }
 
-        sharedViewModel.forceRefreshConversations.observe(viewLifecycleOwner) {
-            it.consume {
-                listViewModel.filter()
+        sharedViewModel.updateConversationLastMessageEvent.observe(viewLifecycleOwner) {
+            it.consume { conversationId ->
+                val model = listViewModel.conversations.value.orEmpty().find {
+                    it.id == conversationId
+                }
+                model?.updateLastMessageInfo()
             }
         }
 
-        sharedViewModel.forceRefreshDisplayedConversation.observe(viewLifecycleOwner) {
+        sharedViewModel.forceRefreshDisplayedConversationEvent.observe(viewLifecycleOwner) {
             it.consume {
                 val displayChatRoom = sharedViewModel.displayedChatRoom
                 if (displayChatRoom != null) {
