@@ -94,7 +94,6 @@ import org.linphone.utils.hideKeyboard
 import org.linphone.utils.setKeyboardInsetListener
 import org.linphone.utils.showKeyboard
 import androidx.core.net.toUri
-import androidx.lifecycle.observe
 
 @UiThread
 open class ConversationFragment : SlidingPaneChildFragment() {
@@ -819,7 +818,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                 val message = getString(R.string.conversation_message_deleted_toast)
                 val icon = R.drawable.trash_simple
                 (requireActivity() as GenericActivity).showGreenToast(message, icon)
-                sharedViewModel.forceRefreshConversations.value = Event(true)
+                sharedViewModel.updateConversationLastMessageEvent.value = Event(viewModel.conversationId)
             }
         }
 
@@ -929,7 +928,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             }
         }
 
-        sharedViewModel.forceRefreshConversationInfo.observe(viewLifecycleOwner) {
+        sharedViewModel.forceRefreshConversationInfoEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG Force refreshing conversation info")
                 viewModel.refresh()
@@ -943,7 +942,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             }
         }
 
-        sharedViewModel.newChatMessageEphemeralLifetimeToSet.observe(viewLifecycleOwner) {
+        sharedViewModel.newChatMessageEphemeralLifetimeToSetEvent.observe(viewLifecycleOwner) {
             it.consume { ephemeralLifetime ->
                 Log.i(
                     "$TAG Setting [$ephemeralLifetime] as new ephemeral lifetime for messages"
@@ -1190,14 +1189,14 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             Log.i("$TAG Muting conversation")
             viewModel.mute()
             popupWindow.dismiss()
-            sharedViewModel.forceRefreshDisplayedConversation.value = Event(true)
+            sharedViewModel.forceRefreshDisplayedConversationEvent.value = Event(true)
         }
 
         popupView.setUnmuteClickListener {
             Log.i("$TAG Un-muting conversation")
             viewModel.unMute()
             popupWindow.dismiss()
-            sharedViewModel.forceRefreshDisplayedConversation.value = Event(true)
+            sharedViewModel.forceRefreshDisplayedConversationEvent.value = Event(true)
         }
 
         popupView.setConfigureEphemeralMessagesClickListener {
