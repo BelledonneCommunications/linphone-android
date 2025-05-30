@@ -305,7 +305,7 @@
     <string name="history_dialog_delete_call_logs_message">Alle Anrufe werden aus dem Verlauf gelöscht</string>
     <string name="contacts_list_empty">Im Moment kein Kontakt…</string>
     <string name="contacts_list_favourites_title">Favoriten</string>
-    <string name="contacts_list_all_contacts_title">Alle Kontakten</string>
+    <string name="contacts_list_all_contacts_title">Alle Kontakte</string>
     <string name="contacts_list_filter_popup_see_all">Alles sehen</string>
     <string name="contacts_list_filter_popup_see_linphone_only">&appName; Kontakte</string>
     <string name="contacts_list_filter_popup_see_sip_only">SIP Kontakte</string>
@@ -531,7 +531,7 @@
     <string name="call_transfer_confirm_dialog_tittle">Anrufweiterleitung bestätigen</string>
     <string name="call_transfer_confirm_dialog_message">Sie sind dabei, Anruf %1$s an %2$s weiterzuleiten.</string>
     <string name="call_action_transfer">Weiterleiten</string>
-    <string name="call_action_start_new_call">Neues Anruf</string>
+    <string name="call_action_start_new_call">Neuer Anruf</string>
     <string name="call_action_go_to_calls_list">Anrufliste</string>
     <string name="call_action_show_dialer">Wähler</string>
     <string name="call_action_show_messages">Nachrichten</string>
@@ -632,7 +632,7 @@
     <string name="recordings_list_empty">Im Moment keine Aufnahme…</string>
     <string name="car_favorites_contacts_title">Favoriten</string>
     <string name="car_favorites_contacts_list_empty">Noch kein Favoritenkontakt</string>
-    <string name="menu_add_address_to_contacts">Zu Kontakten hinzufügen</string>
+    <string name="menu_add_address_to_contacts">Zu Kontakte hinzufügen</string>
     <string name="menu_see_existing_contact">Siehe Kontakt</string>
     <string name="menu_copy_sip_address">SIP Adresse kopieren</string>
     <string name="menu_copy_phone_number">Telefonnummer kopieren</string>
