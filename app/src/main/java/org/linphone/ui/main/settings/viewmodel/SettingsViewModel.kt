@@ -110,6 +110,7 @@ class SettingsViewModel
         AppUtils.getString(R.string.contact_editor_last_name),
     )
     val sortContactsByValues = arrayListOf(0, 1)
+    val hideEmptyContacts = MutableLiveData<Boolean>()
 
     val ldapAvailable = MutableLiveData<Boolean>()
     val ldapServers = MutableLiveData<List<CardDavLdapModel>>()
@@ -339,6 +340,7 @@ class SettingsViewModel
             )
 
             sortContactsBy.postValue(if (corePreferences.sortContactsByFirstName) 0 else 1)
+            hideEmptyContacts.postValue(corePreferences.hideContactsWithoutPhoneNumberOrSipAddress)
 
             defaultLayout.postValue(core.defaultConferenceLayout.toInt())
 
@@ -562,6 +564,15 @@ class SettingsViewModel
     fun setContactSorting(sortingValue: Int) {
         coreContext.postOnCoreThread { core ->
             corePreferences.sortContactsByFirstName = sortingValue == 0
+        }
+    }
+
+    @UiThread
+    fun toggleHideEmptyContacts() {
+        val newValue = hideEmptyContacts.value == false
+        coreContext.postOnCoreThread {
+            corePreferences.hideContactsWithoutPhoneNumberOrSipAddress = newValue
+            hideEmptyContacts.postValue(newValue)
         }
     }
 

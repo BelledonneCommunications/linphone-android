@@ -276,10 +276,16 @@ class ContactsListViewModel
         val favouritesList = arrayListOf<ContactAvatarModel>()
         var count = 0
         val collator = Collator.getInstance(Locale.getDefault())
+        val hideEmptyContacts = corePreferences.hideContactsWithoutPhoneNumberOrSipAddress
 
         for (result in results) {
             val friend = result.friend
             if (friend != null) {
+                if (hideEmptyContacts && friend.addresses.isEmpty() && friend.phoneNumbers.isEmpty()) {
+                    Log.i("$TAG Friend [${friend.name}] has no SIP address nor phone number, do not show it")
+                    continue
+                }
+
                 if (friend.refKey.orEmpty().isEmpty()) {
                     if (friend.vcard != null) {
                         friend.vcard?.generateUniqueId()

@@ -224,6 +224,13 @@ class CorePreferences
             config.setBool("ui", "sort_contacts_by_first_name", value)
         }
 
+    @get:WorkerThread
+    var hideContactsWithoutPhoneNumberOrSipAddress: Boolean
+        get() = config.getBool("ui", "hide_contacts_without_phone_number_or_sip_address", false)
+        set(value) {
+            config.setBool("ui", "hide_contacts_without_phone_number_or_sip_address", value)
+        }
+
     @get:WorkerThread @set:WorkerThread
     var contactsFilter: String
         get() = config.getString("ui", "contacts_filter", "")!! // Default value must be empty!
