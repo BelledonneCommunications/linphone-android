@@ -683,7 +683,7 @@ fun Friend.getAvatarBitmap(round: Boolean = false): Bitmap? {
             photo ?: getNativeContactPictureUri()?.toString(),
             round
         )
-    } catch (numberFormatException: NumberFormatException) {
+    } catch (_: NumberFormatException) {
         // Expected for contacts created by Linphone
     }
     return null
@@ -720,7 +720,7 @@ fun Friend.getNativeContactPictureUri(): Uri? {
                 lookupUri,
                 ContactsContract.Contacts.Photo.CONTENT_DIRECTORY
             )
-        } catch (numberFormatException: NumberFormatException) {
+        } catch (_: NumberFormatException) {
             // Expected for contacts created by Linphone
         }
     }
@@ -729,7 +729,25 @@ fun Friend.getNativeContactPictureUri(): Uri? {
 
 @WorkerThread
 fun Friend.getPerson(): Person {
-    val personBuilder = Person.Builder().setName(name)
+    val personBuilder = Person.Builder()
+    val personName = if (name.orEmpty().isNotEmpty()) {
+        name
+    } else {
+        if (!lastName.isNullOrEmpty() || !firstName.isNullOrEmpty()) {
+            Log.w("[Friend] Name is null or empty, using first and last name")
+            "$firstName $lastName".trim()
+        } else if (!organization.isNullOrEmpty()) {
+            Log.w("[Friend] Name, first name & last name are null or empty, using organization instead")
+            organization
+        } else if (!jobTitle.isNullOrEmpty()) {
+            Log.w("[Friend] Name, first and last names & organization are null or empty, using job title instead")
+            jobTitle
+        } else {
+            Log.e("[Friend] No identification field filled for this friend!")
+            "Unknown"
+        }
+    }
+    personBuilder.setName(personName)
 
     val bm: Bitmap? = getAvatarBitmap()
     personBuilder.setIcon(
@@ -737,7 +755,7 @@ fun Friend.getPerson(): Person {
             Log.i(
                 "[Friend] Can't use friend [$name] picture path, generating avatar based on initials"
             )
-            AvatarGenerator(coreContext.context).setInitials(AppUtils.getInitials(name.orEmpty())).buildIcon()
+            AvatarGenerator(coreContext.context).setInitials(AppUtils.getInitials(personName.orEmpty())).buildIcon()
         } else {
             IconCompat.createWithAdaptiveBitmap(bm)
         }
