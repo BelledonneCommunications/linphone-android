@@ -639,6 +639,8 @@ class CoreContext
                 configurationMigration5To6()
             } else if (oldVersion < 600004) { // 6.0.4
                 disablePushNotificationsFromThirdPartySipAccounts()
+            } else if (oldVersion < 600009) { // 6.0.9
+                removePortFromSipIdentity()
             }
 
             if (core.logCollectionUploadServerUrl.isNullOrEmpty()) {
@@ -1091,6 +1093,22 @@ class CoreContext
     }
 
     // Migration between versions related
+
+    @WorkerThread
+    private fun removePortFromSipIdentity() {
+        for (account in core.accountList) {
+            val params = account.params
+            val identity = params.identityAddress
+            if (identity != null && identity.port != 0) {
+                val clone = params.clone()
+                val newIdentity = identity.clone()
+                newIdentity.port = 0
+                clone.identityAddress = newIdentity
+                Log.w("$TAG Found account with identity address [${identity.asStringUriOnly()}] that contains port information in domain, removing port information in new identity [${newIdentity.asStringUriOnly()}]")
+                account.params = clone
+            }
+        }
+    }
 
     @WorkerThread
     private fun disablePushNotificationsFromThirdPartySipAccounts() {
