@@ -1220,9 +1220,7 @@ class NotificationsManager
         } else {
             val contact = friend
                 ?: coreContext.contactsManager.findContactByAddress(remoteAddress)
-            val displayName = contact?.name ?: LinphoneUtils.getDisplayName(remoteAddress)
-
-            getPerson(contact, displayName)
+            getPerson(contact, LinphoneUtils.getDisplayName(remoteAddress))
         }
 
         val isVideo = LinphoneUtils.isVideoEnabled(call)
@@ -1588,14 +1586,14 @@ class NotificationsManager
     }
 
     @WorkerThread
-    private fun getPerson(friend: Friend?, displayName: String): Person {
+    private fun getPerson(friend: Friend?, fallbackDisplayName: String): Person {
         return friend?.getPerson()
             ?: Person.Builder()
-                .setName(displayName)
+                .setName(if (fallbackDisplayName.isEmpty()) "Unknown" else fallbackDisplayName)
                 .setIcon(
-                    AvatarGenerator(context).setInitials(AppUtils.getInitials(displayName)).buildIcon()
+                    AvatarGenerator(context).setInitials(AppUtils.getInitials(fallbackDisplayName)).buildIcon()
                 )
-                .setKey(displayName)
+                .setKey(fallbackDisplayName)
                 .setImportant(false)
                 .build()
     }
