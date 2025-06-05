@@ -407,6 +407,10 @@ class CorePreferences
     val showLettersOnDialpad: Boolean
         get() = config.getBool("ui", "show_letters_on_dialpad", true)
 
+    @get:WorkerThread
+    val showMicrophoneAndSpeakerVuMeters: Boolean
+        get() = config.getBool("ui", "show_mic_speaker_vu_meter", false)
+
     // Paths
 
     @get:AnyThread

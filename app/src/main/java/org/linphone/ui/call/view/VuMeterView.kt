@@ -68,7 +68,7 @@ class VuMeterView : View {
         vuMeterPaint = Paint()
         vuMeterPaint.strokeWidth = 2f
         vuMeterPaint.isAntiAlias = true
-        vuMeterPaint.setColor(color)
+        vuMeterPaint.color = color
     }
 
     fun setVuMeterPercentage(percentage: Float) {
@@ -93,7 +93,7 @@ class VuMeterView : View {
     }
 
     override fun onDraw(canvas: Canvas) {
-        paint.setShader(createShader())
+        paint.shader = createShader()
         canvas.drawCircle(width / 2f, height / 2f, width / 2f, paint)
     }
 }

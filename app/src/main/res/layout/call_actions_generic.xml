@@ -115,6 +115,27 @@
             app:layout_constraintEnd_toStartOf="@id/change_audio_output" />
 
         <ImageView
+            android:id="@+id/change_audio_output_background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/in_call_button_background_red"
+            android:contentDescription="@null"
+            app:layout_constraintTop_toTopOf="@id/change_audio_output"
+            app:layout_constraintBottom_toBottomOf="@id/change_audio_output"
+            app:layout_constraintStart_toStartOf="@id/change_audio_output"
+            app:layout_constraintEnd_toEndOf="@id/change_audio_output" />
+
+        <org.linphone.ui.call.view.VuMeterView
+            android:id="@+id/playback_volume_vu_meter"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            vuMeterPercentage="@{viewModel.playbackVolume}"
+            app:layout_constraintTop_toTopOf="@id/change_audio_output_background"
+            app:layout_constraintBottom_toBottomOf="@id/change_audio_output_background"
+            app:layout_constraintStart_toStartOf="@id/change_audio_output_background"
+            app:layout_constraintEnd_toEndOf="@id/change_audio_output_background" />
+
+        <ImageView
             android:onClick="@{() -> viewModel.changeAudioOutputDevice()}"
             android:id="@+id/change_audio_output"
             android:layout_width="@dimen/call_button_size"
@@ -122,7 +143,6 @@
             android:layout_marginEnd="16dp"
             android:padding="@dimen/call_button_icon_padding"
             android:src="@{viewModel.isHearingAidEnabled ? @drawable/ear : viewModel.isHeadsetEnabled ? @drawable/headset : viewModel.isBluetoothEnabled ? @drawable/bluetooth : viewModel.isSpeakerEnabled ? @drawable/speaker_high : @drawable/speaker_slash, default=@drawable/speaker_slash}"
-            android:background="@drawable/in_call_button_background_red"
             android:contentDescription="@string/content_description_change_output_audio_device"
             app:tint="@color/in_call_button_tint_color"
             app:layout_constraintTop_toBottomOf="@id/call_actions_handle"

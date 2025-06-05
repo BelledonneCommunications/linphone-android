@@ -116,6 +116,8 @@ class CurrentCallViewModel
 
     val microphoneRecordingVolume = MutableLiveData<Float>()
 
+    val playbackVolume = MutableLiveData<Float>()
+
     val isSpeakerEnabled = MutableLiveData<Boolean>()
 
     val isHeadsetEnabled = MutableLiveData<Boolean>()
@@ -537,6 +539,7 @@ class CurrentCallViewModel
         proximitySensorEnabled.value = false
         videoUpdateInProgress.value = false
         microphoneRecordingVolume.value = 0f
+        playbackVolume.value = 0f
 
         refreshKeyguardLockedStatus()
         answerAlpha.value = 1f
@@ -1254,12 +1257,14 @@ class CurrentCallViewModel
             Log.i("$TAG Failed to find an existing 1-1 conversation for current call")
         }
 
-        microphoneVolumeVuMeterTickerFlow().onEach {
-            coreContext.postOnCoreThread {
-                val volumeDbm0 = currentCall.recordVolume
-                microphoneRecordingVolume.postValue(computeVuMeterValue(volumeDbm0))
-            }
-        }.launchIn(viewModelScope)
+        if (corePreferences.showMicrophoneAndSpeakerVuMeters) {
+            volumeVuMeterTickerFlow().onEach {
+                coreContext.postOnCoreThread {
+                    microphoneRecordingVolume.postValue(computeVuMeterValue(currentCall.recordVolume))
+                    playbackVolume.postValue(computeVuMeterValue(currentCall.playVolume))
+                }
+            }.launchIn(viewModelScope)
+        }
     }
 
     @WorkerThread
@@ -1530,7 +1535,7 @@ class CurrentCallViewModel
         showGreenToast(R.string.call_is_being_recorded, R.drawable.record_fill)
     }
 
-    private fun microphoneVolumeVuMeterTickerFlow() = flow {
+    private fun volumeVuMeterTickerFlow() = flow {
         while (::currentCall.isInitialized) {
             emit(Unit)
             delay(50)
