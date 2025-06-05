@@ -349,12 +349,27 @@ class ConversationModel
                 message.addListener(chatMessageListener)
                 lastMessage = message
             }
+
+            val timestamp = message.time
+            val humanReadableTimestamp = when {
+                TimestampUtils.isToday(timestamp) -> {
+                    TimestampUtils.timeToString(timestamp)
+                }
+                TimestampUtils.isYesterday(timestamp) -> {
+                    AppUtils.getString(R.string.yesterday)
+                }
+                else -> {
+                    TimestampUtils.toString(timestamp, onlyDate = true)
+                }
+            }
+            dateTime.postValue(humanReadableTimestamp)
         } else {
             lastMessage = null
             lastMessageTextSender.postValue("")
             lastMessageContentIcon.postValue(0)
             lastMessageText.postValue(SpannableStringBuilder("").toSpannable())
             isLastMessageOutgoing.postValue(false)
+            dateTime.postValue("")
             Log.w("$TAG No last message to display for conversation [$id]")
         }
     }
@@ -362,18 +377,6 @@ class ConversationModel
     @WorkerThread
     private fun updateLastUpdatedTime() {
         val timestamp = chatRoom.lastUpdateTime
-        val humanReadableTimestamp = when {
-            TimestampUtils.isToday(timestamp) -> {
-                TimestampUtils.timeToString(chatRoom.lastUpdateTime)
-            }
-            TimestampUtils.isYesterday(timestamp) -> {
-                AppUtils.getString(R.string.yesterday)
-            }
-            else -> {
-                TimestampUtils.toString(chatRoom.lastUpdateTime, onlyDate = true)
-            }
-        }
-        dateTime.postValue(humanReadableTimestamp)
         lastUpdateTime.postValue(timestamp)
     }
 
