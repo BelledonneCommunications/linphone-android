@@ -13,12 +13,28 @@ Group changes to describe their impact on the project, as follows:
 ## [6.1.0] - Unreleased
 
 ### Added
-- Added a vu meter for recording volume
+- Added a vu meter for recording & playback volumes (disabled by default, must be enabled in CorePreferences)
 - Added a setting for user to choose whether to sort contacts by first name or last name
+- Added a setting to hide contacts that have neither a SIP address nor a phone number
 - Added a setting to let app auto-answer call with video sending already enabled
 
 ### Changed
 - Reworked some settings (moved calls related ones from advanced settings to advanced calls settings)
+
+## [6.0.9] - 2025-06-06
+
+### Added
+- German translation (88% complete)
+- Link to user guide in Help section
+- Missing scroll views for help & debug layouts
+
+### Changed
+- Prevent port from being set in the SIP identity address in third party account login + remove port (if any) from SIP identity for existing accounts
+- Show last message timestamp instead of conversation last updated timestamp in conversations list
+
+### Fixed
+- Prevent blinking in conversations list when removing message from chat room
+- Prevent empty (can even lead to crash) display name in call notification (using all identification fields from vCard)
 
 ## [6.0.8] - 2025-05-23
 
