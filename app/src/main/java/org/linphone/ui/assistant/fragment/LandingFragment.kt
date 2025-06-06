@@ -203,47 +203,36 @@ class LandingFragment : GenericFragment() {
         model.privacyPolicyClickedEvent.observe(viewLifecycleOwner) {
             it.consume {
                 val url = getString(R.string.website_privacy_policy_url)
-                try {
-                    val browserIntent = Intent(Intent.ACTION_VIEW, url.toUri())
-                    startActivity(browserIntent)
-                } catch (ise: IllegalStateException) {
-                    Log.e(
-                        "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
-                    )
-                } catch (anfe: ActivityNotFoundException) {
-                    Log.e(
-                        "$TAG Can't start ACTION_VIEW intent for URL [$url], ActivityNotFoundException: $anfe"
-                    )
-                } catch (e: Exception) {
-                    Log.e(
-                        "$TAG Can't start ACTION_VIEW intent for URL [$url]: $e"
-                    )
-                }
+                openUrlInBrowser(url)
             }
         }
 
         model.generalTermsClickedEvent.observe(viewLifecycleOwner) {
             it.consume {
                 val url = getString(R.string.website_terms_and_conditions_url)
-                try {
-                    val browserIntent = Intent(Intent.ACTION_VIEW, url.toUri())
-                    startActivity(browserIntent)
-                } catch (ise: IllegalStateException) {
-                    Log.e(
-                        "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
-                    )
-                } catch (anfe: ActivityNotFoundException) {
-                    Log.e(
-                        "$TAG Can't start ACTION_VIEW intent for URL [$url], ActivityNotFoundException: $anfe"
-                    )
-                } catch (e: Exception) {
-                    Log.e(
-                        "$TAG Can't start ACTION_VIEW intent for URL [$url]: $e"
-                    )
-                }
+                openUrlInBrowser(url)
             }
         }
 
         dialog.show()
+    }
+
+    private fun openUrlInBrowser(url: String) {
+        try {
+            val browserIntent = Intent(Intent.ACTION_VIEW, url.toUri())
+            startActivity(browserIntent)
+        } catch (ise: IllegalStateException) {
+            Log.e(
+                "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
+            )
+        } catch (anfe: ActivityNotFoundException) {
+            Log.e(
+                "$TAG Can't start ACTION_VIEW intent for URL [$url], ActivityNotFoundException: $anfe"
+            )
+        } catch (e: Exception) {
+            Log.e(
+                "$TAG Can't start ACTION_VIEW intent for URL [$url]: $e"
+            )
+        }
     }
 }

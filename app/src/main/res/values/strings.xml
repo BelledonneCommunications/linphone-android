@@ -32,8 +32,9 @@
 
     <string name="website_contact_url" translatable="false">https://linphone.org/contact</string>
     <string name="website_download_url" translatable="false">https://linphone.org/linphone-softphone</string>
+    <string name="website_user_guide_url" translatable="false">https://linphone.org/en/docs/</string>
     <string name="website_privacy_policy_url" translatable="false">https://linphone.org/en/privacy-policy</string>
-    <string name="website_terms_and_conditions_url" translatable="false">https://www.linphone.org/en/terms-of-use</string>
+    <string name="website_terms_and_conditions_url" translatable="false">https://linphone.org/en/terms-of-use</string>
     <string name="web_platform_register_email_url" translatable="false">https://subscribe.linphone.org/register/email</string>
     <string name="web_platform_forgotten_password_url" translatable="false">https://subscribe.linphone.org/</string>
     <string name="website_translate_weblate_url" translatable="false">https://weblate.linphone.org/</string>
@@ -201,11 +202,14 @@
     <!-- Help & troubleshooting related -->
     <string name="help_title">Help</string>
     <string name="help_about_title">About &appName;</string>
+    <string name="help_about_user_guide_title">&appName; user guide</string>
+    <string name="help_about_user_guide_subtitle">Learn how to master all app features, step by step.</string>
     <string name="help_about_privacy_policy_title">Privacy policy</string>
     <string name="help_about_privacy_policy_subtitle">What information &appName; collects and uses</string>
     <string name="help_about_version_title">Version</string>
     <string name="help_about_check_for_update">Check update</string>
     <string name="help_about_contribute_translations_title">Contribute on &appName; translation</string>
+    <string name="help_about_contribute_translations_subtitle">Help make the app accessible to as many people as possible.</string>
     <string name="help_about_advanced_title">Advanced</string>
     <string name="help_version_up_to_date_toast_message">Your version is up-to-date</string>
     <string name="help_error_checking_version_toast_message">An error occurred while checking for update</string>
@@ -213,6 +217,7 @@
     <string name="help_dialog_update_available_message">A new version %s is available. Do you want to update?</string>
     <string name="help_quit_title">Quit app</string>
     <string name="help_troubleshooting_title">Troubleshooting</string>
+    <string name="help_troubleshooting_subtitle">Transmit your diagnostic logs to facilitate bug resolution.</string>
     <string name="help_troubleshooting_print_logs_in_logcat">Print logs in logcat</string>
     <string name="help_troubleshooting_clean_logs">Clean logs</string>
     <string name="help_troubleshooting_share_logs">Share logs</string>

@@ -76,64 +76,24 @@ class HelpFragment : GenericMainFragment() {
             }
         }
 
+        binding.setUserGuideClickListener {
+            val url = getString(R.string.website_user_guide_url)
+            openUrlInBrowser(url)
+        }
+
         binding.setPrivacyPolicyClickListener {
             val url = getString(R.string.website_privacy_policy_url)
-            try {
-                val browserIntent = Intent(Intent.ACTION_VIEW, url.toUri())
-                startActivity(browserIntent)
-            } catch (ise: IllegalStateException) {
-                Log.e(
-                    "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
-                )
-            } catch (anfe: ActivityNotFoundException) {
-                Log.e(
-                    "$TAG Can't start ACTION_VIEW intent for URL [$url], ActivityNotFoundException: $anfe"
-                )
-            } catch (e: Exception) {
-                Log.e(
-                    "$TAG Can't start ACTION_VIEW intent for URL [$url]: $e"
-                )
-            }
+            openUrlInBrowser(url)
         }
 
         binding.setLicensesClickListener {
             val url = getString(R.string.website_open_source_licences_usage_url)
-            try {
-                val browserIntent = Intent(Intent.ACTION_VIEW, url.toUri())
-                startActivity(browserIntent)
-            } catch (ise: IllegalStateException) {
-                Log.e(
-                    "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
-                )
-            } catch (anfe: ActivityNotFoundException) {
-                Log.e(
-                    "$TAG Can't start ACTION_VIEW intent for URL [$url], ActivityNotFoundException: $anfe"
-                )
-            } catch (e: Exception) {
-                Log.e(
-                    "$TAG Can't start ACTION_VIEW intent for URL [$url]: $e"
-                )
-            }
+            openUrlInBrowser(url)
         }
 
         binding.setTranslateClickListener {
             val url = getString(R.string.website_translate_weblate_url)
-            try {
-                val browserIntent = Intent(Intent.ACTION_VIEW, url.toUri())
-                startActivity(browserIntent)
-            } catch (ise: IllegalStateException) {
-                Log.e(
-                    "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
-                )
-            } catch (anfe: ActivityNotFoundException) {
-                Log.e(
-                    "$TAG Can't start ACTION_VIEW intent for URL [$url], ActivityNotFoundException: $anfe"
-                )
-            } catch (e: Exception) {
-                Log.e(
-                    "$TAG Can't start ACTION_VIEW intent for URL [$url]: $e"
-                )
-            }
+            openUrlInBrowser(url)
         }
 
         viewModel.newVersionAvailableEvent.observe(viewLifecycleOwner) {
@@ -181,26 +141,30 @@ class HelpFragment : GenericMainFragment() {
 
         model.confirmEvent.observe(viewLifecycleOwner) {
             it.consume {
-                try {
-                    val browserIntent = Intent(Intent.ACTION_VIEW, url.toUri())
-                    startActivity(browserIntent)
-                } catch (ise: IllegalStateException) {
-                    Log.e(
-                        "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
-                    )
-                } catch (anfe: ActivityNotFoundException) {
-                    Log.e(
-                        "$TAG Can't start ACTION_VIEW intent for URL [$url], ActivityNotFoundException: $anfe"
-                    )
-                } catch (e: Exception) {
-                    Log.e(
-                        "$TAG Can't start ACTION_VIEW intent for URL [$url]: $e"
-                    )
-                }
+                openUrlInBrowser(url)
                 dialog.dismiss()
             }
         }
 
         dialog.show()
+    }
+
+    private fun openUrlInBrowser(url: String) {
+        try {
+            val browserIntent = Intent(Intent.ACTION_VIEW, url.toUri())
+            startActivity(browserIntent)
+        } catch (ise: IllegalStateException) {
+            Log.e(
+                "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
+            )
+        } catch (anfe: ActivityNotFoundException) {
+            Log.e(
+                "$TAG Can't start ACTION_VIEW intent for URL [$url], ActivityNotFoundException: $anfe"
+            )
+        } catch (e: Exception) {
+            Log.e(
+                "$TAG Can't start ACTION_VIEW intent for URL [$url]: $e"
+            )
+        }
     }
 }
