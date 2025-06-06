@@ -157,6 +157,10 @@ class DrawerMenuFragment : GenericMainFragment() {
                     Log.e(
                         "$TAG Can't start ACTION_VIEW intent for URL [$link], ActivityNotFoundException: $anfe"
                     )
+                } catch (e: Exception) {
+                    Log.e(
+                        "$TAG Can't start ACTION_VIEW intent for URL [$link]: $e"
+                    )
                 }
             }
         }

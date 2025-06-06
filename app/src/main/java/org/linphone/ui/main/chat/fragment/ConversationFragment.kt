@@ -796,6 +796,14 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                 try {
                     val browserIntent = Intent(Intent.ACTION_VIEW, url.toUri())
                     startActivity(browserIntent)
+                } catch (ise: IllegalStateException) {
+                    Log.e(
+                        "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
+                    )
+                } catch (anfe: ActivityNotFoundException) {
+                    Log.e(
+                        "$TAG Can't start ACTION_VIEW intent for URL [$url], ActivityNotFoundException: $anfe"
+                    )
                 } catch (e: Exception) {
                     Log.e(
                         "$TAG Can't start ACTION_VIEW intent for URL [$url]: $e"

@@ -153,11 +153,14 @@
     <!-- Help & troubleshooting related -->
     <string name="help_title">Aide</string>
     <string name="help_about_title">À propos de &appName;</string>
+    <string name="help_about_user_guide_title">Guide utilisateur &appName;</string>
+    <string name="help_about_user_guide_subtitle">Apprenez à maîtriser toutes les fonctionnalités de l\'application, pas à pas.</string>
     <string name="help_about_privacy_policy_title">Politique de confidentialité</string>
     <string name="help_about_privacy_policy_subtitle">Quelles informations &appName; collecte et utilise</string>
     <string name="help_about_version_title">Version</string>
     <string name="help_about_check_for_update">Vérifier les mises à jour</string>
     <string name="help_about_contribute_translations_title">Aider à traduire &appName;</string>
+    <string name="help_about_contribute_translations_subtitle">Contribuez à rendre l\'application accessible au plus grand nombre.</string>
     <string name="help_about_advanced_title">Avancé</string>
     <string name="help_version_up_to_date_toast_message">Votre version est à jour</string>
     <string name="help_error_checking_version_toast_message">Une erreur est survenue</string>
@@ -165,6 +168,7 @@
     <string name="help_dialog_update_available_message">Une nouvelle version %s est disponible. Voulez-vous mettre à jour ?</string>
     <string name="help_quit_title">Quitter l\'application</string>
     <string name="help_troubleshooting_title">Dépannage</string>
+    <string name="help_troubleshooting_subtitle">Transmettez vos journaux de diagnostic pour faciliter la résolution des bugs.</string>
     <string name="help_troubleshooting_print_logs_in_logcat">Imprimer les journaux dans logcat</string>
     <string name="help_troubleshooting_clean_logs">Nettoyer les journaux</string>
     <string name="help_troubleshooting_share_logs">Partager les journaux</string>
