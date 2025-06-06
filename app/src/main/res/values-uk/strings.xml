@@ -3,7 +3,7 @@
 <!ENTITY appName "Linphone">
 ]>
 <resources>
-    <string name="sip_address">SIP адреса</string>
+    <string name="sip_address">SIP-адреса</string>
     <string name="device_id">ID пристрою</string>
     <string name="sip_address_display_name">Ім\'я для відображення</string>
     <string name="sip_address_domain">Домен</string>
@@ -65,7 +65,7 @@
     <string name="notification_channel_service_name">Сервірсне повідомлення &appName;</string>
     <string name="notification_channel_service_desc">Цей сервіс працюватиме постійно, щоб підтримувати активність програми та дозволяти вам отримувати дзвінки та повідомлення без push-сповіщень.</string>
     <string name="notification_channel_chat_name">Сповіщення про миттєві повідомлення &appName;</string>
-    <string name="notification_chat_message_reaction_received">Відреагував %1$s to: %2$s</string>
+    <string name="notification_chat_message_reaction_received">Відреагував %1$s на: %2$s</string>
     <string name="notification_mark_message_as_read">Позначити як прочитане</string>
     <string name="notification_reply_to_message">Відповісти</string>
     <string name="notification_missed_call">Пропущено виклик від %s</string>
@@ -153,7 +153,7 @@
     <string name="assistant_login_third_party_sip_account">Використати сторонній обліковий запис SIP</string>
     <string name="assistant_no_account_yet">Ще немає облікового запису?</string>
     <string name="assistant_third_party_sip_account_warning_explanation">Для деяких функцій потрібен обліковий запис &appName;, такі як груповий обмін повідомленнями, відеоконференції…\n\nЦі функції приховані, якщо ви реєструєтесь за допомогою стороннього облікового запису SIP.\n\nЩоб увімкнути їх у комерційному проєкті, зв’яжіться з нами.</string>
-    <string name="assistant_permissions_subtitle">Щоб повною мірою користуватися &appName;, вам потрібно надати нам такі дозволи:</string>
+    <string name="assistant_permissions_subtitle">Щоб повною мірою користуватися &appName;, вам потрібно надати застосунку наступні дозволи:</string>
     <string name="assistant_recover_phone_number_account_subtitle">Введіть номер телефону, прив’язаний до вашого облікового запису, ми надішлемо вам код.</string>
     <string name="assistant_recover_phone_number_account_unavailable_no_push_warning">Схоже, push-сповіщення недоступні на вашому пристрої, але вони обов’язкові для відновлення облікового запису номера телефону в мобільному застосунку.</string>
     <string name="drawer_menu_account_connection_status_failed">Помилка</string>
@@ -567,7 +567,7 @@
     <string name="conversation_event_participant_removed">%s пішов</string>
     <string name="conversation_event_device_added">новий пристрій для %s</string>
     <string name="conversation_event_subject_changed">нова назва: %s</string>
-    <string name="conversation_event_admin_unset">%s більше не є адміністратором</string>
+    <string name="conversation_event_admin_unset">%s більше не є адміном</string>
     <string name="conversation_event_ephemeral_messages_enabled">Тимчасові повідомлення увімкнуто</string>
     <string name="conversation_event_ephemeral_messages_lifetime_changed">Термін дії тимчасових повідомлень тепер %s</string>
     <string name="conversation_event_security_event_lime_identity_key_changed">Ключ ідентифікації LIME змінено для %s</string>

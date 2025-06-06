@@ -657,7 +657,7 @@
     <string name="calls_list_title">Seznam hovorů</string>
     <string name="call_is_being_recorded">Hovor se nahrává</string>
     <string name="call_remote_is_recording">%s nahrává</string>
-    <string name="calls_count_label">%s hovory</string>
+    <string name="calls_count_label">%s hovorů</string>
     <string name="calls_paused_count_label">%s pozastavené hovory</string>
     <string name="calls_list_dialog_merge_into_conference_label">Vytvořit konferenci</string>
     <string name="call_camera_permission_not_granted_toast">Oprávnění pro přístup ke kameře bylo zamítnuto!</string>
