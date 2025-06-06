@@ -10,6 +10,21 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [6.0.9] - 2025-06-06
+
+### Added
+- German translation (88% complete)
+- Link to user guide in Help section
+- Missing scroll views for help & debug layouts
+
+### Changed
+- Prevent port from being set in the SIP identity address in third party account login + remove port (if any) from SIP identity for existing accounts
+- Show last message timestamp instead of conversation last updated timestamp in conversations list
+
+### Fixed
+- Prevent blinking in conversations list when removing message from chat room
+- Prevent empty (can even lead to crash) display name in call notification (using all identification fields from vCard)
+
 ## [6.0.8] - 2025-05-23
 
 ### Added
