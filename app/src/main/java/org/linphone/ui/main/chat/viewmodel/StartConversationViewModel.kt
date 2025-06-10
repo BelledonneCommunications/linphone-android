@@ -111,7 +111,11 @@ class StartConversationViewModel
             params.isChatEnabled = true
             params.isGroupEnabled = true
             params.subject = groupChatRoomSubject
-            params.securityLevel = Conference.SecurityLevel.EndToEnd
+            if (LinphoneUtils.isEndToEndEncryptedChatAvailable(core)) {
+                params.securityLevel = Conference.SecurityLevel.EndToEnd
+            } else {
+                params.securityLevel = Conference.SecurityLevel.None
+            }
             params.account = account
 
             val chatParams = params.chatParams ?: return@postOnCoreThread
