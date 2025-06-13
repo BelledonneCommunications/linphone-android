@@ -69,6 +69,8 @@
         <item quantity="other">%s fichiers en cours de réception</item>
     </plurals>
     <string name="notification_keep_app_alive_message">Cliquez pour ouvrir</string>
+    <string name="notification_enable_speaker_for_call">Activer haut-parleur</string>
+    <string name="notification_disable_speaker_for_call">Désactiver haut-parleur</string>
 
     <!-- First screens user see when app is installed and started -->
     <string name="welcome_page_title">Bienvenue</string>

@@ -110,6 +110,8 @@
     </plurals>
     <string name="notification_file_transfer_upload_download_message" translatable="false">%s, %s</string>
     <string name="notification_keep_app_alive_message">Click to open</string>
+    <string name="notification_enable_speaker_for_call">Turn on speaker</string>
+    <string name="notification_disable_speaker_for_call">Turn off speaker</string>
 
     <!-- First screens user see when app is installed and started -->
     <string name="welcome_page_title">Welcome</string>

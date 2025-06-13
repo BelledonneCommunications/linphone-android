@@ -13,6 +13,7 @@ Group changes to describe their impact on the project, as follows:
 ## [6.1.0] - Unreleased
 
 ### Added
+- Added toggle speaker action in active call notification
 - Added a vu meter for recording & playback volumes (disabled by default, must be enabled in CorePreferences)
 - Added a setting for user to choose whether to sort contacts by first name or last name
 - Added a setting to hide contacts that have neither a SIP address nor a phone number

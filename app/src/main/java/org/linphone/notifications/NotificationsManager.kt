@@ -54,6 +54,7 @@ import org.linphone.contacts.ContactsManager.ContactsListener
 import org.linphone.contacts.getAvatarBitmap
 import org.linphone.contacts.getPerson
 import org.linphone.core.Address
+import org.linphone.core.AudioDevice
 import org.linphone.core.Call
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessageListener
@@ -86,13 +87,14 @@ class NotificationsManager
 
         const val INTENT_HANGUP_CALL_NOTIF_ACTION = "org.linphone.HANGUP_CALL_ACTION"
         const val INTENT_ANSWER_CALL_NOTIF_ACTION = "org.linphone.ANSWER_CALL_ACTION"
+        const val INTENT_TOGGLE_SPEAKER_CALL_NOTIF_ACTION = "org.linphone.TOGGLE_SPEAKER_CALL_ACTION"
         const val INTENT_REPLY_MESSAGE_NOTIF_ACTION = "org.linphone.REPLY_ACTION"
         const val INTENT_MARK_MESSAGE_AS_READ_NOTIF_ACTION = "org.linphone.MARK_AS_READ_ACTION"
         const val INTENT_NOTIF_ID = "NOTIFICATION_ID"
 
         const val KEY_TEXT_REPLY = "key_text_reply"
         const val INTENT_LOCAL_IDENTITY = "LOCAL_IDENTITY"
-        const val INTENT_REMOTE_ADDRESS = "REMOTE_ADDRESS"
+        const val INTENT_REMOTE_SIP_URI = "REMOTE_ADDRESS"
 
         const val CHAT_TAG = "Chat"
         private const val MISSED_CALL_TAG = "Missed call"
@@ -151,7 +153,12 @@ class NotificationsManager
                     Log.i(
                         "$TAG Found call [${addressMatch.asStringUriOnly()}] with contact in notifications, updating it"
                     )
-                    updateCallNotification(notifiable, addressMatch, friend)
+                    val call = coreContext.core.getCallByRemoteAddress2(addressMatch)
+                    if (call == null) {
+                        Log.e("$TAG Failed to get Call from Core using remote address [${addressMatch.asStringUriOnly()}]")
+                        return
+                    }
+                    updateCallNotification(notifiable, call, friend)
                 }
             }
 
@@ -273,6 +280,18 @@ class NotificationsManager
             } else {
                 Log.i("$TAG In-Call service was never started as foreground, waiting for it to be started to stop it")
                 waitForInCallServiceForegroundToStopIt = true
+            }
+        }
+
+        @WorkerThread
+        override fun onAudioDeviceChanged(core: Core, audioDevice: AudioDevice) {
+            if (core.callsNb == 0) return
+
+            val call = core.currentCall ?: core.calls.firstOrNull()
+            if (call != null) {
+                Log.i("$TAG Audio device changed, updating call [${call.remoteAddress.asStringUriOnly()}] notification")
+                val notifiable = getNotifiableForCall(call)
+                updateCallNotification(notifiable, call, null)
             }
         }
 
@@ -1292,22 +1311,33 @@ class NotificationsManager
             setFullScreenIntent(pendingIntent, true)
         }
 
+        if (!isIncoming) {
+            val toggleSpeakerIntent = getCallToggleSpeakerPendingIntent(notifiable)
+
+            val audioDevice = call.outputAudioDevice
+            val isUsingSpeaker = audioDevice?.type == AudioDevice.Type.Speaker
+
+            val toggleSpeakerAction = if (isUsingSpeaker) {
+                Log.i("$TAG Call is using speaker, adding action to disable it")
+                val text = AppUtils.getString(R.string.notification_disable_speaker_for_call)
+                NotificationCompat.Action.Builder(R.drawable.speaker_slash, text, toggleSpeakerIntent).build()
+            } else {
+                Log.i("$TAG Call is not using speaker, adding action to enable it")
+                val text = AppUtils.getString(R.string.notification_enable_speaker_for_call)
+                NotificationCompat.Action.Builder(R.drawable.speaker_high, text, toggleSpeakerIntent).build()
+            }
+            builder.addAction(toggleSpeakerAction)
+        }
+
         return builder.build()
     }
 
     @WorkerThread
     private fun updateCallNotification(
         notifiable: Notifiable,
-        remoteAddress: Address,
-        friend: Friend
+        call: Call,
+        friend: Friend?
     ) {
-        val call = coreContext.core.getCallByRemoteAddress2(remoteAddress)
-        if (call == null) {
-            Log.w(
-                "$TAG Failed to find call with remote SIP URI [${remoteAddress.asStringUriOnly()}]"
-            )
-            return
-        }
         val isIncoming = LinphoneUtils.isCallIncoming(call.state)
 
         val notification = if (isIncoming) {
@@ -1469,7 +1499,7 @@ class NotificationsManager
         val hangupIntent = Intent(context, NotificationBroadcastReceiver::class.java)
         hangupIntent.action = INTENT_HANGUP_CALL_NOTIF_ACTION
         hangupIntent.putExtra(INTENT_NOTIF_ID, notifiable.notificationId)
-        hangupIntent.putExtra(INTENT_REMOTE_ADDRESS, notifiable.remoteAddress)
+        hangupIntent.putExtra(INTENT_REMOTE_SIP_URI, notifiable.remoteAddress)
 
         return PendingIntent.getBroadcast(
             context,
@@ -1484,11 +1514,26 @@ class NotificationsManager
         val answerIntent = Intent(context, NotificationBroadcastReceiver::class.java)
         answerIntent.action = INTENT_ANSWER_CALL_NOTIF_ACTION
         answerIntent.putExtra(INTENT_NOTIF_ID, notifiable.notificationId)
-        answerIntent.putExtra(INTENT_REMOTE_ADDRESS, notifiable.remoteAddress)
+        answerIntent.putExtra(INTENT_REMOTE_SIP_URI, notifiable.remoteAddress)
 
         return PendingIntent.getBroadcast(
             context,
             2,
+            answerIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+    }
+
+    @AnyThread
+    fun getCallToggleSpeakerPendingIntent(notifiable: Notifiable): PendingIntent {
+        val answerIntent = Intent(context, NotificationBroadcastReceiver::class.java)
+        answerIntent.action = INTENT_TOGGLE_SPEAKER_CALL_NOTIF_ACTION
+        answerIntent.putExtra(INTENT_NOTIF_ID, notifiable.notificationId)
+        answerIntent.putExtra(INTENT_REMOTE_SIP_URI, notifiable.remoteAddress)
+
+        return PendingIntent.getBroadcast(
+            context,
+            4,
             answerIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -1535,7 +1580,7 @@ class NotificationsManager
         replyIntent.action = INTENT_REPLY_MESSAGE_NOTIF_ACTION
         replyIntent.putExtra(INTENT_NOTIF_ID, notifiable.notificationId)
         replyIntent.putExtra(INTENT_LOCAL_IDENTITY, notifiable.localIdentity)
-        replyIntent.putExtra(INTENT_REMOTE_ADDRESS, notifiable.remoteAddress)
+        replyIntent.putExtra(INTENT_REMOTE_SIP_URI, notifiable.remoteAddress)
 
         // PendingIntents attached to actions with remote inputs must be mutable
         val replyPendingIntent = PendingIntent.getBroadcast(
@@ -1562,7 +1607,7 @@ class NotificationsManager
         markAsReadIntent.action = INTENT_MARK_MESSAGE_AS_READ_NOTIF_ACTION
         markAsReadIntent.putExtra(INTENT_NOTIF_ID, notifiable.notificationId)
         markAsReadIntent.putExtra(INTENT_LOCAL_IDENTITY, notifiable.localIdentity)
-        markAsReadIntent.putExtra(INTENT_REMOTE_ADDRESS, notifiable.remoteAddress)
+        markAsReadIntent.putExtra(INTENT_REMOTE_SIP_URI, notifiable.remoteAddress)
 
         return PendingIntent.getBroadcast(
             context,

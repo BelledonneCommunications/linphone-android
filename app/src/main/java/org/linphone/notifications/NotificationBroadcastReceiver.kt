@@ -26,8 +26,10 @@ import android.content.Context
 import android.content.Intent
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Address
+import org.linphone.core.AudioDevice
 import org.linphone.core.ConferenceParams
 import org.linphone.core.tools.Log
+import org.linphone.utils.AudioUtils
 
 class NotificationBroadcastReceiver : BroadcastReceiver() {
     companion object {
@@ -36,47 +38,69 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         val notificationId = intent.getIntExtra(NotificationsManager.INTENT_NOTIF_ID, 0)
-        Log.i(
-            "$TAG Got notification broadcast for ID [$notificationId]"
-        )
+        val action = intent.action
+        Log.i("$TAG Got notification broadcast for ID [$notificationId] with action [$action]")
 
         // Wait for coreContext to be ready to handle intent
         while (!coreContext.isReady()) {
             Thread.sleep(50)
         }
 
-        if (intent.action == NotificationsManager.INTENT_ANSWER_CALL_NOTIF_ACTION || intent.action == NotificationsManager.INTENT_HANGUP_CALL_NOTIF_ACTION) {
-            handleCallIntent(intent, notificationId)
-        } else if (intent.action == NotificationsManager.INTENT_REPLY_MESSAGE_NOTIF_ACTION || intent.action == NotificationsManager.INTENT_MARK_MESSAGE_AS_READ_NOTIF_ACTION) {
-            handleChatIntent(context, intent, notificationId)
+        if (
+            action == NotificationsManager.INTENT_ANSWER_CALL_NOTIF_ACTION ||
+            action == NotificationsManager.INTENT_HANGUP_CALL_NOTIF_ACTION ||
+            action == NotificationsManager.INTENT_TOGGLE_SPEAKER_CALL_NOTIF_ACTION
+        ) {
+            handleCallIntent(intent, notificationId, action)
+        } else if (
+            action == NotificationsManager.INTENT_REPLY_MESSAGE_NOTIF_ACTION ||
+            action == NotificationsManager.INTENT_MARK_MESSAGE_AS_READ_NOTIF_ACTION
+        ) {
+            handleChatIntent(context, intent, notificationId, action)
         }
     }
 
-    private fun handleCallIntent(intent: Intent, notificationId: Int) {
-        val remoteSipAddress = intent.getStringExtra(NotificationsManager.INTENT_REMOTE_ADDRESS)
-        if (remoteSipAddress == null) {
+    private fun handleCallIntent(intent: Intent, notificationId: Int, action: String) {
+        val remoteSipUri = intent.getStringExtra(NotificationsManager.INTENT_REMOTE_SIP_URI)
+        if (remoteSipUri == null) {
             Log.e("$TAG Remote SIP address is null for call notification ID [$notificationId]")
             return
         }
 
         coreContext.postOnCoreThread { core ->
             val call = core.calls.find {
-                it.remoteAddress.asStringUriOnly() == remoteSipAddress
+                it.remoteAddress.asStringUriOnly() == remoteSipUri
             }
             if (call == null) {
-                Log.e("$TAG Couldn't find call from remote address [$remoteSipAddress]")
+                Log.e("$TAG Couldn't find call from remote address [$remoteSipUri]")
             } else {
-                if (intent.action == NotificationsManager.INTENT_ANSWER_CALL_NOTIF_ACTION) {
-                    coreContext.answerCall(call)
-                } else {
-                    coreContext.terminateCall(call)
+                when (action) {
+                    NotificationsManager.INTENT_ANSWER_CALL_NOTIF_ACTION -> {
+                        Log.i("$TAG Answering call with remote address [$remoteSipUri]")
+                        coreContext.answerCall(call)
+                    }
+                    NotificationsManager.INTENT_HANGUP_CALL_NOTIF_ACTION -> {
+                        Log.i("$TAG Declining/terminating call with remote address [$remoteSipUri]")
+                        coreContext.terminateCall(call)
+                    }
+                    NotificationsManager.INTENT_TOGGLE_SPEAKER_CALL_NOTIF_ACTION -> {
+                        val audioDevice = call.outputAudioDevice
+                        val isUsingSpeaker = audioDevice?.type == AudioDevice.Type.Speaker
+                        if (isUsingSpeaker) {
+                            Log.i("$TAG Routing audio to earpiece for call [$remoteSipUri]")
+                            AudioUtils.routeAudioToEarpiece(call)
+                        } else {
+                            Log.i("$TAG Routing audio to speaker for call [$remoteSipUri]")
+                            AudioUtils.routeAudioToSpeaker(call)
+                        }
+                    }
                 }
             }
         }
     }
 
-    private fun handleChatIntent(context: Context, intent: Intent, notificationId: Int) {
-        val remoteSipAddress = intent.getStringExtra(NotificationsManager.INTENT_REMOTE_ADDRESS)
+    private fun handleChatIntent(context: Context, intent: Intent, notificationId: Int, action: String) {
+        val remoteSipAddress = intent.getStringExtra(NotificationsManager.INTENT_REMOTE_SIP_URI)
         if (remoteSipAddress == null) {
             Log.e("$TAG Remote SIP address is null for notification ID [$notificationId]")
             return
@@ -88,7 +112,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
         }
 
         val reply = getMessageText(intent)?.toString()
-        if (intent.action == NotificationsManager.INTENT_REPLY_MESSAGE_NOTIF_ACTION) {
+        if (action == NotificationsManager.INTENT_REPLY_MESSAGE_NOTIF_ACTION) {
             if (reply == null) {
                 Log.e("$TAG Couldn't get reply text")
                 return
@@ -128,13 +152,13 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
                 return@postOnCoreThread
             }
 
-            if (intent.action == NotificationsManager.INTENT_REPLY_MESSAGE_NOTIF_ACTION) {
+            if (action == NotificationsManager.INTENT_REPLY_MESSAGE_NOTIF_ACTION) {
                 val msg = room.createMessageFromUtf8(reply)
                 msg.userData = notificationId
                 msg.addListener(coreContext.notificationsManager.chatMessageListener)
                 msg.send()
                 Log.i("$TAG Reply sent for notif id [$notificationId]")
-            } else if (intent.action == NotificationsManager.INTENT_MARK_MESSAGE_AS_READ_NOTIF_ACTION) {
+            } else if (action == NotificationsManager.INTENT_MARK_MESSAGE_AS_READ_NOTIF_ACTION) {
                 Log.i("$TAG Marking chat room from notification id [$notificationId] as read")
                 room.markAsRead()
                 if (!coreContext.notificationsManager.dismissChatNotification(room)) {
