@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="enableExtraAction"
+            type="Boolean" />
+        <variable
+            name="extraActionClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="extraActionIcon"
+            type="android.graphics.drawable.Drawable" />
+        <variable
+            name="extraActionContentDescription"
+            type="String" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.main.viewmodel.AbstractMainViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_bar_height"
+        android:background="?attr/color_main2_000">
+
+        <androidx.constraintlayout.widget.Group
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="title, search_toggle"
+            android:visibility="@{viewModel.searchBarVisible ? View.GONE : View.VISIBLE}" />
+
+        <androidx.constraintlayout.widget.Group
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="cancel_search, search, clear_field"
+            android:visibility="@{viewModel.searchBarVisible ? View.VISIBLE : View.GONE, default=gone}" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/background_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="title, search"
+            app:barrierDirection="bottom" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_800"
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center_vertical"
+            android:text="@{viewModel.title, default=`Title`}"
+            android:textColor="?attr/color_text"
+            android:textSize="28sp"
+            app:layout_constraintVertical_bias="1"
+            app:layout_constraintEnd_toStartOf="@id/search_toggle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageView
+            android:id="@+id/search_toggle"
+            android:onClick="@{() -> viewModel.openSearchBar()}"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginEnd="5dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:src="@drawable/magnifying_glass"
+            android:contentDescription="@string/content_description_open_filter"
+            app:layout_constraintBottom_toBottomOf="@id/title"
+            app:layout_constraintEnd_toStartOf="@id/extra_action"
+            app:layout_constraintTop_toTopOf="@id/title"
+            app:tint="?attr/color_main2_600" />
+
+        <ImageView
+            android:id="@+id/extra_action"
+            android:onClick="@{extraActionClickListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginEnd="5dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:src="@{extraActionIcon, default=@drawable/dots_three_vertical}"
+            android:contentDescription="@{extraActionContentDescription}"
+            android:visibility="@{enableExtraAction ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintBottom_toBottomOf="@id/title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/title"
+            app:tint="?attr/color_main2_600" />
+
+        <ImageView
+            android:id="@+id/cancel_search"
+            android:onClick="@{() -> viewModel.closeSearchBar()}"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="5dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:src="@drawable/caret_left"
+            android:contentDescription="@string/content_description_cancel_filter"
+            app:layout_constraintBottom_toBottomOf="@id/search"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/search"
+            app:tint="?attr/color_main2_600" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="?attr/textInputFilledStyle"
+            android:id="@+id/search"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textColorHint="?attr/color_hint_text"
+            app:hintEnabled="false"
+            app:hintAnimationEnabled="false"
+            app:hintTextColor="?attr/color_hint_text"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            app:layout_constraintEnd_toStartOf="@id/clear_field"
+            app:layout_constraintStart_toEndOf="@id/cancel_search"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textCursorDrawable="@null"
+                android:textColor="?attr/color_text"
+                android:textSize="16sp"
+                android:inputType="text"
+                android:paddingVertical="1dp"
+                android:imeOptions="actionSearch"
+                android:text="@={viewModel.searchFilter}"
+                android:background="@android:color/transparent" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageView
+            android:id="@+id/clear_field"
+            android:onClick="@{() -> viewModel.clearFilter()}"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginEnd="5dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:src="@drawable/x"
+            android:contentDescription="@string/content_description_clear_filter"
+            app:layout_constraintBottom_toBottomOf="@id/search"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/search"
+            app:tint="?attr/color_main2_600" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

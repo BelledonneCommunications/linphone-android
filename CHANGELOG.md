@@ -20,6 +20,7 @@ Group changes to describe their impact on the project, as follows:
 - Added a setting to let app auto-answer call with video sending already enabled
 
 ### Changed
+- Improved UI on tablets with screen sw600dp and higher, will look more like our desktop app
 - Reworked some settings (moved calls related ones from advanced settings to advanced calls settings)
 
 ## [6.0.9] - 2025-06-06

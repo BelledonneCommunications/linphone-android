@@ -5,7 +5,8 @@
 
     <dimen name="screen_bottom_margin">10dp</dimen>
 
-    <dimen name="landscape_nav_bar_width">75dp</dimen>
+    <dimen name="landscape_nav_bar_width">80dp</dimen>
+    <dimen name="bottom_nav_bar_text_size">12sp</dimen>
     <dimen name="sliding_pane_left_fragment_width">350dp</dimen>
     <dimen name="sliding_pane_right_fragment_width">300dp</dimen>
 

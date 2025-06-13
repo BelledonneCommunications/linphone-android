@@ -99,7 +99,7 @@
     </style>
     <style name="bottom_nav_bar_label_style">
         <item name="android:fontFamily">@font/noto_sans</item>
-        <item name="android:textSize">11sp</item>
+        <item name="android:textSize">@dimen/bottom_nav_bar_text_size</item>
         <item name="android:textColor">?attr/color_text</item>
         <item name="android:gravity">center</item>
         <item name="android:maxLines">1</item>
