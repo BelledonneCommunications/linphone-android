@@ -155,6 +155,21 @@ class AppUtils {
         }
 
         @AnyThread
+        fun isTextOnlyContainsEmoji(text: String): Boolean {
+            if (text.isEmpty()) return false
+
+            var textToCheck = text
+            do {
+                var firstSymbol = extractFirstSymbol(textToCheck)
+                var symbolLength = firstSymbol.length
+                if (symbolLength <= 1) return false
+                textToCheck = textToCheck.substring(symbolLength)
+            }  while (textToCheck.isNotEmpty())
+
+            return true
+        }
+
+        @AnyThread
         fun getDeviceName(context: Context): String {
             var name = Settings.Global.getString(
                 context.contentResolver,

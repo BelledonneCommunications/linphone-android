@@ -135,6 +135,8 @@ class MessageModel
 
     val text = MutableLiveData<Spannable>()
 
+    val isTextEmoji = MutableLiveData<Boolean>()
+
     val reactions = MutableLiveData<String>()
 
     val ourReactionIndex = MutableLiveData<Int>()
@@ -654,6 +656,13 @@ class MessageModel
     private fun computeTextContent(content: Content, highlight: String) {
         val textContent = content.utf8Text.orEmpty().trim()
         val spannableBuilder = SpannableStringBuilder(textContent)
+
+        val emojiOnly = AppUtils.isTextOnlyContainsEmoji(textContent)
+        isTextEmoji.postValue(emojiOnly)
+        if (emojiOnly) {
+            text.postValue(spannableBuilder)
+            return
+        }
 
         // Check for search
         if (highlight.isNotEmpty()) {

@@ -84,6 +84,8 @@
     <dimen name="chat_bubble_top_margin">8dp</dimen>
     <dimen name="chat_bubble_grouped_bottom_margin">2dp</dimen>
     <dimen name="chat_bubble_bottom_margin">8dp</dimen>
+    <dimen name="chat_bubble_text_size">14sp</dimen>
+    <dimen name="chat_bubble_emoji_only_text_size">45sp</dimen>
     <dimen name="chat_bubble_long_press_emoji_reaction_size">25dp</dimen>
     <dimen name="chat_bubble_big_image_max_size">175dp</dimen>
     <dimen name="chat_bubble_grid_file_size">87dp</dimen>
