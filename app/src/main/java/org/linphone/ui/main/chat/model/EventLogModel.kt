@@ -20,10 +20,7 @@
 package org.linphone.ui.main.chat.model
 
 import androidx.annotation.WorkerThread
-import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.EventLog
-import org.linphone.core.tools.Log
-import org.linphone.utils.LinphoneUtils
 
 class EventLogModel
     @WorkerThread
@@ -54,35 +51,10 @@ class EventLogModel
         EventModel(eventLog)
     } else {
         val chatMessage = eventLog.chatMessage!!
-        var replyTo = ""
-        var isReply = chatMessage.isReply
-        val replyText = if (chatMessage.isReply) {
-            val replyMessage = chatMessage.replyMessage
-            if (replyMessage != null) {
-                val from = replyMessage.fromAddress
-                val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(from)
-                replyTo = avatarModel.contactName ?: LinphoneUtils.getDisplayName(from)
-
-                LinphoneUtils.getPlainTextDescribingMessage(replyMessage)
-            } else {
-                Log.e(
-                    "$TAG Failed to find the reply message from ID [${chatMessage.replyMessageId}]"
-                )
-                isReply = false
-                ""
-            }
-        } else {
-            ""
-        }
 
         MessageModel(
             chatMessage,
             isFromGroup,
-            isReply,
-            replyTo,
-            replyText,
-            chatMessage.replyMessageId,
-            chatMessage.isForward,
             isGroupedWithPreviousOne,
             isGroupedWithNextOne,
             currentFilter,

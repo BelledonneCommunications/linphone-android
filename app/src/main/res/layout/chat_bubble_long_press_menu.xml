@@ -139,7 +139,8 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="?attr/color_separator"/>
+                    android:background="?attr/color_separator"
+                    android:visibility="@{viewModel.isChatRoomReadOnly ? View.GONE : View.VISIBLE}" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/popup_menu_action_label_style"
@@ -170,7 +171,8 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="?attr/color_separator"/>
+                    android:background="?attr/color_separator"
+                    android:visibility="@{viewModel.hideForward ? View.GONE : View.VISIBLE}" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/popup_menu_danger_action_label_style"

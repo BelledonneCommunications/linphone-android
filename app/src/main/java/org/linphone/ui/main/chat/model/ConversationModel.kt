@@ -107,6 +107,7 @@ class ConversationModel
             }
         }
 
+        @WorkerThread
         override fun onConferenceJoined(chatRoom: ChatRoom, eventLog: EventLog) {
             // This is required as a Created chat room may not have the participants list yet
             Log.i("$TAG Conversation has been joined")
@@ -129,10 +130,12 @@ class ConversationModel
             computeComposingLabel()
         }
 
+        @WorkerThread
         override fun onNewEvent(chatRoom: ChatRoom, eventLog: EventLog) {
             updateLastUpdatedTime()
         }
 
+        @WorkerThread
         override fun onNewEvents(chatRoom: ChatRoom, eventLogs: Array<out EventLog>) {
             updateLastMessage()
             updateLastUpdatedTime()
@@ -340,14 +343,13 @@ class ConversationModel
 
         val message = chatRoom.lastMessageInHistory
         if (message != null) {
+            lastMessage = message
             updateLastMessageStatus(message)
 
             if (message.isOutgoing && message.state != ChatMessage.State.Displayed) {
                 message.addListener(chatMessageListener)
-                lastMessage = message
             } else if (message.contents.find { it.isFileTransfer == true } != null) {
                 message.addListener(chatMessageListener)
-                lastMessage = message
             }
 
             val timestamp = message.time

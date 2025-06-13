@@ -70,11 +70,6 @@ class MessageModel
     constructor(
     val chatMessage: ChatMessage,
     val isFromGroup: Boolean,
-    val isReply: Boolean,
-    val replyTo: String,
-    val replyText: String,
-    val replyToMessageId: String?,
-    val isForward: Boolean,
     isGroupedWithPreviousOne: Boolean,
     isGroupedWithNextOne: Boolean,
     private val currentFilter: String = "",
@@ -115,6 +110,16 @@ class MessageModel
                 chatMessage.chatRoom.localAddress
             )?.params?.instantMessagingEncryptionMandatory == true
             )
+
+    val isReply = chatMessage.isReply
+
+    val replyToMessageId = chatMessage.replyMessageId
+
+    val isForward = chatMessage.isForward
+
+    val replyTo = MutableLiveData<String>()
+
+    val replyText = MutableLiveData<Spannable>()
 
     val avatarModel = MutableLiveData<ContactAvatarModel>()
 
@@ -314,6 +319,9 @@ class MessageModel
         updateReactionsList()
 
         computeContentsList()
+        if (isReply) {
+            computeReplyInfo()
+        }
 
         coreContext.postOnMainThread {
             firstFileModel.addSource(filesList) {
@@ -626,6 +634,19 @@ class MessageModel
         }
         if (textContent != null) {
             computeTextContent(textContent, highlight)
+        }
+    }
+
+    @WorkerThread
+    fun computeReplyInfo() {
+        val replyMessage = chatMessage.replyMessage
+        if (replyMessage != null) {
+            val from = replyMessage.fromAddress
+            val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(from)
+            replyTo.postValue(avatarModel.contactName ?: LinphoneUtils.getDisplayName(from))
+            replyText.postValue(LinphoneUtils.getFormattedTextDescribingMessage(replyMessage))
+        } else {
+            Log.e("$TAG Failed to find the reply message from ID [${chatMessage.replyMessageId}]")
         }
     }
 
