@@ -561,7 +561,7 @@ class MessageModel
 
     @WorkerThread
     private fun downloadContent(model: FileModel, content: Content) {
-        Log.d("$TAG Starting downloading content for file [${model.fileName}]")
+        Log.i("$TAG Start downloading content for file [${model.fileName}]")
 
         if (content.filePath.orEmpty().isEmpty()) {
             val contentName = content.name

@@ -103,7 +103,7 @@ class ConversationMediaListFragment : SlidingPaneChildFragment() {
         binding.mediaList.addItemDecoration(headerItemDecoration)
 
         binding.mediaList.setHasFixedSize(true)
-        val spanCount = 4
+        val spanCount = requireContext().resources.getInteger(R.integer.media_columns)
         val layoutManager = object : GridLayoutManager(requireContext(), spanCount) {
             override fun checkLayoutParams(lp: RecyclerView.LayoutParams): Boolean {
                 lp.width = width / spanCount

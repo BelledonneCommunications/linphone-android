@@ -107,4 +107,6 @@
     <dimen name="spinner_start_padding">15dp</dimen>
     <dimen name="spinner_end_padding">30dp</dimen>
     <dimen name="spinner_caret_end_margin">15dp</dimen>
+
+    <integer name="media_columns">4</integer>
 </resources>
