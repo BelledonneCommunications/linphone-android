@@ -21,6 +21,7 @@
         <item quantity="one">%s jour</item>
         <item quantity="other">%s jours</item>
     </plurals>
+    <string name="search">Rechercher</string>
 
     <plurals name="selection_count_label" tools:ignore="MissingQuantity">
         <item quantity="one">%s selectionné</item>

@@ -135,6 +135,7 @@
                 android:paddingVertical="1dp"
                 android:imeOptions="actionSearch"
                 android:text="@={viewModel.searchFilter}"
+                android:hint="@string/search"
                 android:background="@android:color/transparent" />
 
         </com.google.android.material.textfield.TextInputLayout>

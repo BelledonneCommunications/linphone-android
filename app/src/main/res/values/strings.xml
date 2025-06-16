@@ -61,6 +61,7 @@
         <item quantity="one">%s day</item>
         <item quantity="other">%s days</item>
     </plurals>
+    <string name="search">Search</string>
 
     <plurals name="selection_count_label">
         <item quantity="one">%s selected</item>

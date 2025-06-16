@@ -40,18 +40,18 @@
                 android:src="@drawable/caret_left"
                 android:contentDescription="@string/content_description_go_back_icon"
                 app:tint="?attr/color_main1_500"
-                app:layout_constraintBottom_toBottomOf="@id/title"
+                app:layout_constraintBottom_toBottomOf="@id/invisible_title"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/title"/>
+                app:layout_constraintTop_toTopOf="@id/invisible_title"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/main_page_title_style"
-                android:id="@+id/title"
+                android:id="@+id/invisible_title"
+                android:visibility="invisible"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/top_bar_height"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:text="@string/history_title"
                 app:layout_constraintEnd_toStartOf="@id/menu"
                 app:layout_constraintStart_toEndOf="@id/back"
                 app:layout_constraintTop_toTopOf="parent"/>
@@ -66,9 +66,9 @@
                 android:src="@drawable/dots_three_vertical"
                 android:contentDescription="@string/content_description_show_popup_menu"
                 app:tint="?attr/color_main2_500"
-                app:layout_constraintBottom_toBottomOf="@id/title"
+                app:layout_constraintBottom_toBottomOf="@id/invisible_title"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/title" />
+                app:layout_constraintTop_toTopOf="@id/invisible_title" />
 
             <ScrollView
                 android:id="@+id/scrollView"
@@ -78,7 +78,7 @@
                 android:fillViewport="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/title"
+                app:layout_constraintTop_toBottomOf="@id/invisible_title"
                 app:layout_constraintBottom_toBottomOf="parent">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
