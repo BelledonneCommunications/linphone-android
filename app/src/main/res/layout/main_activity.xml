@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@{viewModel.showAlert ? (viewModel.maxAlertLevel >= 10 ? @drawable/color_danger_500 : @drawable/color_main_activity_top_bar) : (viewModel.pendingFileSharing ? @drawable/color_main_activity_top_bar : (viewModel.atLeastOneCall ? @drawable/color_success_500 : @drawable/color_main1_500)), default=@drawable/color_main1_500}"
+                android:background="@{viewModel.showAlert ? (viewModel.maxAlertLevel >= 10 ? @drawable/color_danger_500 : @drawable/color_main_activity_top_bar) : (viewModel.pendingFilesOrTextSharing ? @drawable/color_main_activity_top_bar : (viewModel.atLeastOneCall ? @drawable/color_success_500 : @drawable/color_main1_500)), default=@drawable/color_main1_500}"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <include
@@ -40,10 +40,10 @@
 
                 <include
                     android:id="@+id/file_sharing_top_bar"
-                    layout="@layout/main_activity_pending_file_sharing_top_bar"
+                    layout="@layout/main_activity_pending_sharing_top_bar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="@{viewModel.pendingFileSharing ? View.VISIBLE : View.GONE, default=gone}"
+                    android:visibility="@{viewModel.pendingFilesOrTextSharing ? View.VISIBLE : View.GONE, default=gone}"
                     app:viewModel="@{viewModel}"/>
 
                 <include

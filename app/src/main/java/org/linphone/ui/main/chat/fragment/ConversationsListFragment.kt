@@ -36,7 +36,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatListFragmentBinding
-import org.linphone.ui.GenericActivity
 import org.linphone.ui.fileviewer.FileViewerActivity
 import org.linphone.ui.fileviewer.MediaViewerActivity
 import org.linphone.ui.main.MainActivity.Companion.ARGUMENTS_CONVERSATION_ID
@@ -247,15 +246,6 @@ class ConversationsListFragment : AbstractMainFragment() {
                         startActivity(intent)
                     }
                 }
-            }
-        }
-
-        sharedViewModel.textToShareFromIntent.observe(viewLifecycleOwner) { textToShare ->
-            if (textToShare.isNotEmpty()) {
-                val message = getString(R.string.conversations_text_waiting_to_be_shared_toast)
-                val icon = R.drawable.file_text
-                (requireActivity() as GenericActivity).showGreenToast(message, icon)
-                Log.i("$TAG Found text waiting to be shared")
             }
         }
 

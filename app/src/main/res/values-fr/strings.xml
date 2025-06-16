@@ -920,4 +920,5 @@
     <string name="content_description_copy_text_to_clipboard">Copier le texte dans le presse-papier</string>
     <string name="content_description_voicemail_available">Au moins un message vocal est disponible</string>
     <string name="content_description_call_voicemail">Faire un appui long pour appeler la boite vocale</string>
+    <string name="content_description_cancel_files_or_text_pending_sharing">Cliquer pour annuler le partage des fichiers ou du texte en attente</string>
 </resources>
