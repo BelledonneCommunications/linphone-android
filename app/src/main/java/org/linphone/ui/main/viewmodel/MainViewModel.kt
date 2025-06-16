@@ -78,11 +78,9 @@ class MainViewModel
 
     val callsStatus = MutableLiveData<String>()
 
-    val pendingFileSharing = MutableLiveData<Boolean>()
+    val pendingFilesOrTextSharing = MutableLiveData<Boolean>()
 
-    val filesCountPendingSharing = MutableLiveData<Int>()
-
-    val filesPendingSharingLabel = MutableLiveData<String>()
+    val filesOrTextPendingSharingLabel = MutableLiveData<String>()
 
     val goBackToCallEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
@@ -112,7 +110,7 @@ class MainViewModel
         MutableLiveData<Event<Boolean>>()
     }
 
-    val clearFilesPendingSharingEvent: MutableLiveData<Event<Boolean>> by lazy {
+    val clearFilesOrTextPendingSharingEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
 
@@ -349,9 +347,8 @@ class MainViewModel
         maxAlertLevel.value = NONE
         nonDefaultAccountNotificationsCount = 0
 
-        pendingFileSharing.value = false
-        filesCountPendingSharing.value = 0
-        filesPendingSharingLabel.value = ""
+        pendingFilesOrTextSharing.value = false
+        filesOrTextPendingSharingLabel.value = ""
 
         enableAccountMonitoring(true)
 
@@ -480,28 +477,32 @@ class MainViewModel
         val count = list.size
         Log.i("$TAG Adding [$count] files to pending sharing files list")
         if (count > 0) {
-            filesCountPendingSharing.value = count
-            filesPendingSharingLabel.value = AppUtils.getStringWithPlural(
+            filesOrTextPendingSharingLabel.value = AppUtils.getStringWithPlural(
                 R.plurals.conversations_files_waiting_to_be_shared_toast,
                 count,
                 "$count"
             )
-            pendingFileSharing.value = true
+            pendingFilesOrTextSharing.value = true
         }
     }
 
     @UiThread
-    fun filesPendingSharingListCleared() {
-        pendingFileSharing.value = false
-        filesCountPendingSharing.value = 0
-        filesPendingSharingLabel.value = ""
+    fun addTextPendingSharing() {
+        filesOrTextPendingSharingLabel.value = AppUtils.getString(R.string.conversations_text_waiting_to_be_shared_toast)
+        pendingFilesOrTextSharing.value = true
+    }
+
+    @UiThread
+    fun filesOrTextPendingSharingListCleared() {
+        pendingFilesOrTextSharing.value = false
+        filesOrTextPendingSharingLabel.value = ""
         Log.i("$TAG List of files pending sharing has been cleared")
     }
 
     @UiThread
-    fun cancelFileSharing() {
+    fun cancelFileOrTextSharing() {
         Log.i("$TAG Clearing list of files pending sharing")
-        clearFilesPendingSharingEvent.value = Event(true)
+        clearFilesOrTextPendingSharingEvent.value = Event(true)
     }
 
     @UiThread

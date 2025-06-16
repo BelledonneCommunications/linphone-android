@@ -46,7 +46,6 @@ import androidx.core.view.updatePadding
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.observe
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavOptions
@@ -250,9 +249,10 @@ class MainActivity : GenericActivity() {
             }
         }
 
-        viewModel.clearFilesPendingSharingEvent.observe(this) {
+        viewModel.clearFilesOrTextPendingSharingEvent.observe(this) {
             it.consume {
                 sharedViewModel.filesToShareFromIntent.value = arrayListOf<String>()
+                sharedViewModel.textToShareFromIntent.value = ""
             }
         }
 
@@ -260,7 +260,15 @@ class MainActivity : GenericActivity() {
             if (list.isNotEmpty()) {
                 viewModel.addFilesPendingSharing(list)
             } else {
-                viewModel.filesPendingSharingListCleared()
+                viewModel.filesOrTextPendingSharingListCleared()
+            }
+        }
+
+        sharedViewModel.textToShareFromIntent.observe(this) { text ->
+            if (!text.isEmpty()) {
+                viewModel.addTextPendingSharing()
+            } else {
+                viewModel.filesOrTextPendingSharingListCleared()
             }
         }
 

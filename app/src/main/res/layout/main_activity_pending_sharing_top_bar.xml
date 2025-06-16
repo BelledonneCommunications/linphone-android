@@ -22,7 +22,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:src="@{viewModel.filesCountPendingSharing > 1 ? @drawable/files : @drawable/file, default=@drawable/file}"
+            android:src="@drawable/share_network"
             android:contentDescription="@null"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -39,7 +39,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:gravity="center_vertical"
-            android:text="@{viewModel.filesPendingSharingLabel, default=@plurals/conversations_files_waiting_to_be_shared_toast}"
+            android:text="@{viewModel.filesOrTextPendingSharingLabel, default=@plurals/conversations_files_waiting_to_be_shared_toast}"
             android:textColor="@color/bc_white"
             android:textSize="16sp"
             android:maxLines="1"
@@ -51,13 +51,13 @@
 
         <ImageView
             android:id="@+id/close_notif"
-            android:onClick="@{() -> viewModel.cancelFileSharing()}"
+            android:onClick="@{() -> viewModel.cancelFileOrTextSharing()}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:src="@drawable/x"
             app:tint="@color/bc_white"
-            android:contentDescription="@string/content_description_dismiss_notification"
+            android:contentDescription="@string/content_description_cancel_files_or_text_pending_sharing"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
