@@ -62,8 +62,6 @@ class MainViewModel
         const val SEND_NOTIFICATIONS_PERMISSION_NOT_GRANTED = 15
         const val DEFAULT_ACCOUNT_DISABLED = 18
         const val NETWORK_NOT_REACHABLE = 19
-        const val SINGLE_CALL = 20
-        const val MULTIPLE_CALLS = 21
     }
 
     val showAlert = MutableLiveData<Boolean>()
@@ -76,7 +74,15 @@ class MainViewModel
 
     val atLeastOneCall = MutableLiveData<Boolean>()
 
+    val callLabel = MutableLiveData<String>()
+
     val callsStatus = MutableLiveData<String>()
+
+    val pendingFileSharing = MutableLiveData<Boolean>()
+
+    val filesCountPendingSharing = MutableLiveData<Int>()
+
+    val filesPendingSharingLabel = MutableLiveData<String>()
 
     val goBackToCallEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
@@ -106,6 +112,10 @@ class MainViewModel
         MutableLiveData<Event<Boolean>>()
     }
 
+    val clearFilesPendingSharingEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     private var accountsFound = -1
 
     var mainIntentHandled = false
@@ -130,7 +140,6 @@ class MainViewModel
         @WorkerThread
         override fun onLastCallEnded(core: Core) {
             Log.i("$TAG Last call ended, removing in-call 'alert'")
-            removeAlert(SINGLE_CALL)
             atLeastOneCall.postValue(false)
             computeNonDefaultAccountNotificationsCount()
         }
@@ -166,9 +175,6 @@ class MainViewModel
             ) {
                 updateCallAlert()
             } else if (core.callsNb == 1) {
-                if (LinphoneUtils.isCallEnding(call.state)) {
-                    removeAlert(MULTIPLE_CALLS)
-                }
                 callsStatus.postValue(LinphoneUtils.callStateToString(call.state))
             }
         }
@@ -342,6 +348,11 @@ class MainViewModel
         atLeastOneCall.value = false
         maxAlertLevel.value = NONE
         nonDefaultAccountNotificationsCount = 0
+
+        pendingFileSharing.value = false
+        filesCountPendingSharing.value = 0
+        filesPendingSharingLabel.value = ""
+
         enableAccountMonitoring(true)
 
         coreContext.postOnCoreThread { core ->
@@ -458,6 +469,42 @@ class MainViewModel
     }
 
     @UiThread
+    fun onCallTopBarClicked() {
+        if (atLeastOneCall.value == true) {
+            goBackToCallEvent.value = Event(true)
+        }
+    }
+
+    @UiThread
+    fun addFilesPendingSharing(list: ArrayList<String>) {
+        val count = list.size
+        Log.i("$TAG Adding [$count] files to pending sharing files list")
+        if (count > 0) {
+            filesCountPendingSharing.value = count
+            filesPendingSharingLabel.value = AppUtils.getStringWithPlural(
+                R.plurals.conversations_files_waiting_to_be_shared_toast,
+                count,
+                "$count"
+            )
+            pendingFileSharing.value = true
+        }
+    }
+
+    @UiThread
+    fun filesPendingSharingListCleared() {
+        pendingFileSharing.value = false
+        filesCountPendingSharing.value = 0
+        filesPendingSharingLabel.value = ""
+        Log.i("$TAG List of files pending sharing has been cleared")
+    }
+
+    @UiThread
+    fun cancelFileSharing() {
+        Log.i("$TAG Clearing list of files pending sharing")
+        clearFilesPendingSharingEvent.value = Event(true)
+    }
+
+    @UiThread
     fun enableAccountMonitoring(enable: Boolean) {
         if (enable != monitorAccount) {
             monitorAccount = enable
@@ -500,8 +547,6 @@ class MainViewModel
         val core = coreContext.core
         val callsNb = core.callsNb
         if (callsNb == 1) {
-            removeAlert(MULTIPLE_CALLS)
-
             val currentCall = core.currentCall ?: core.calls.firstOrNull()
             if (currentCall != null) {
                 val address = currentCall.callLog.remoteAddress
@@ -513,16 +558,11 @@ class MainViewModel
                     contact?.name ?: LinphoneUtils.getDisplayName(address)
                 }
                 Log.i("$TAG Showing single call alert with label [$label]")
-                addAlert(SINGLE_CALL, label)
+                callLabel.postValue(label)
                 callsStatus.postValue(LinphoneUtils.callStateToString(currentCall.state))
             }
         } else if (callsNb > 1) {
-            removeAlert(SINGLE_CALL)
-
-            addAlert(
-                MULTIPLE_CALLS,
-                AppUtils.getFormattedString(R.string.calls_count_label, callsNb)
-            )
+            callLabel.postValue(AppUtils.getFormattedString(R.string.calls_count_label, callsNb))
             callsStatus.postValue("") // TODO: improve ?
         }
     }
@@ -589,9 +629,6 @@ class MainViewModel
                 SEND_NOTIFICATIONS_PERMISSION_NOT_GRANTED, FULL_SCREEN_INTENTS_PERMISSION_NOT_GRANTED -> {
                     R.drawable.bell_simple_slash
                 }
-                SINGLE_CALL, MULTIPLE_CALLS -> {
-                    R.drawable.phone
-                }
                 else -> {
                     R.drawable.bell_simple
                 }
@@ -599,11 +636,8 @@ class MainViewModel
             alertIcon.postValue(icon)
             alertLabel.postValue(label)
 
-            if (type < SINGLE_CALL) {
-                // Call alert is displayed using atLeastOnCall mutable, not showAlert
-                Log.i("$TAG Alert top-bar is currently invisible, display it now")
-                showAlert.postValue(true)
-            }
+            Log.i("$TAG Alert top-bar is currently invisible, display it now")
+            showAlert.postValue(true)
         }
     }
 

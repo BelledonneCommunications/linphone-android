@@ -13,7 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@{viewModel.maxAlertLevel >= 20 ? @drawable/color_success_500 : viewModel.maxAlertLevel >= 10 ? @drawable/color_danger_500 : viewModel.maxAlertLevel > 0 ? @drawable/color_main_activity_top_bar : @drawable/color_main1_500, default=@drawable/color_main1_500}"
+        android:background="@{viewModel.maxAlertLevel >= 10 ? @drawable/color_danger_500 : @drawable/color_main_activity_top_bar, default=@drawable/color_danger_500}"
         android:onClick="@{() -> viewModel.onTopBarClicked()}">
 
         <ImageView
@@ -23,7 +23,6 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:visibility="@{viewModel.showAlert || viewModel.atLeastOneCall ? View.VISIBLE : View.GONE, default=gone}"
             android:src="@{viewModel.alertIcon, default=@drawable/bell_simple}"
             android:contentDescription="@null"
             app:layout_constraintStart_toStartOf="parent"
@@ -46,32 +45,8 @@
             android:textSize="16sp"
             android:maxLines="1"
             android:ellipsize="end"
-            android:visibility="@{viewModel.showAlert || viewModel.atLeastOneCall ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintEnd_toStartOf="@id/end_barrier"
+            app:layout_constraintEnd_toStartOf="@id/close_notif"
             app:layout_constraintStart_toEndOf="@id/icon"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-        <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/end_barrier"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:barrierDirection="start"
-            app:constraint_referenced_ids="call_time, close_notif" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style"
-            android:id="@+id/call_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:gravity="center_vertical"
-            android:text="@{viewModel.callsStatus, default=`Paused`}"
-            android:textColor="@color/bc_white"
-            android:textSize="14sp"
-            android:visibility="@{viewModel.atLeastOneCall ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/label"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
@@ -84,7 +59,6 @@
             android:src="@drawable/x"
             app:tint="@color/bc_white"
             android:contentDescription="@string/content_description_dismiss_notification"
-            android:visibility="@{!viewModel.showAlert || viewModel.atLeastOneCall ? View.GONE : View.VISIBLE, default=gone}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>

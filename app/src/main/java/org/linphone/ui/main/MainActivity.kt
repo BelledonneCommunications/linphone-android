@@ -46,6 +46,7 @@ import androidx.core.view.updatePadding
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.observe
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavOptions
@@ -154,7 +155,8 @@ class MainActivity : GenericActivity() {
         binding.lifecycleOwner = this
         setUpToastsArea(binding.toastsArea)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.inCallTopBar.root) { v, windowInsets ->
+        // Will give the device's status bar background color
+        ViewCompat.setOnApplyWindowInsetsListener(binding.notificationsArea) { v, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.updatePadding(0, insets.top, 0, 0)
             windowInsets
@@ -245,6 +247,20 @@ class MainActivity : GenericActivity() {
         viewModel.lastAccountRemovedEvent.observe(this) {
             it.consume {
                 startActivity(Intent(this, AssistantActivity::class.java))
+            }
+        }
+
+        viewModel.clearFilesPendingSharingEvent.observe(this) {
+            it.consume {
+                sharedViewModel.filesToShareFromIntent.value = arrayListOf<String>()
+            }
+        }
+
+        sharedViewModel.filesToShareFromIntent.observe(this) { list ->
+            if (list.isNotEmpty()) {
+                viewModel.addFilesPendingSharing(list)
+            } else {
+                viewModel.filesPendingSharingListCleared()
             }
         }
 
