@@ -44,7 +44,6 @@ import org.linphone.ui.main.chat.adapter.ConversationsListAdapter
 import org.linphone.ui.main.chat.viewmodel.ConversationsListViewModel
 import org.linphone.ui.main.fragment.AbstractMainFragment
 import org.linphone.ui.main.history.fragment.HistoryMenuDialogFragment
-import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
@@ -248,20 +247,6 @@ class ConversationsListFragment : AbstractMainFragment() {
                         startActivity(intent)
                     }
                 }
-            }
-        }
-
-        sharedViewModel.filesToShareFromIntent.observe(viewLifecycleOwner) { filesToShare ->
-            val count = filesToShare.size
-            if (count > 0) {
-                val message = AppUtils.getStringWithPlural(
-                    R.plurals.conversations_files_waiting_to_be_shared_toast,
-                    count,
-                    filesToShare.size.toString()
-                )
-                val icon = R.drawable.file
-                (requireActivity() as GenericActivity).showGreenToast(message, icon)
-                Log.i("$TAG Found [$count] files waiting to be shared")
             }
         }
 

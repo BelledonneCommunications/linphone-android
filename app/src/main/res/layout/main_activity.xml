@@ -22,15 +22,39 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <include
-                android:id="@+id/in_call_top_bar"
-                layout="@layout/main_activity_notification_top_bar"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:id="@+id/notifications_area"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:viewModel="@{viewModel}"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                android:orientation="vertical"
+                android:background="@{viewModel.showAlert ? (viewModel.maxAlertLevel >= 10 ? @drawable/color_danger_500 : @drawable/color_main_activity_top_bar) : (viewModel.pendingFileSharing ? @drawable/color_main_activity_top_bar : (viewModel.atLeastOneCall ? @drawable/color_success_500 : @drawable/color_main1_500)), default=@drawable/color_main1_500}"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <include
+                    android:id="@+id/alerts_top_bar"
+                    layout="@layout/main_activity_alert_top_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{viewModel.showAlert ? View.VISIBLE : View.GONE, default=gone}"
+                    app:viewModel="@{viewModel}"/>
+
+                <include
+                    android:id="@+id/file_sharing_top_bar"
+                    layout="@layout/main_activity_pending_file_sharing_top_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{viewModel.pendingFileSharing ? View.VISIBLE : View.GONE, default=gone}"
+                    app:viewModel="@{viewModel}"/>
+
+                <include
+                    android:id="@+id/in_call_top_bar"
+                    layout="@layout/main_activity_in_call_top_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{viewModel.atLeastOneCall ? View.VISIBLE : View.GONE, default=gone}"
+                    app:viewModel="@{viewModel}"/>
+
+            </LinearLayout>
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/main_nav_container"
@@ -41,7 +65,7 @@
                 app:navGraph="@navigation/main_nav_graph"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/in_call_top_bar"
+                app:layout_constraintTop_toBottomOf="@id/notifications_area"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
             <LinearLayout
