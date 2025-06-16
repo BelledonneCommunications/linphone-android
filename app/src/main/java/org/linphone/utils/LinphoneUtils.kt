@@ -140,6 +140,23 @@ class LinphoneUtils {
                 }
             }
 
+            val defaultDomain = corePreferences.defaultDomain
+            val currentDomain = friend.core.defaultAccount?.params?.identityAddress?.domain
+            if (defaultDomain != currentDomain) return null
+
+            var defaultDomainAddressesCount = 0
+            var firstDefaultDomainAddress: Address? = null
+            for (address in addresses) {
+                if (address.domain == defaultDomain) {
+                    defaultDomainAddressesCount += 1
+                    firstDefaultDomainAddress = address
+                }
+            }
+            Log.i("$TAG Friend has [$defaultDomainAddressesCount] SIP addresses on the default domain")
+            if (defaultDomainAddressesCount == 1) {
+                return firstDefaultDomainAddress
+            }
+
             return null
         }
 
