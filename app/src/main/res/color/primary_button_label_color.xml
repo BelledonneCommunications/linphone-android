@@ -4,6 +4,8 @@
         android:color="?attr/color_on_main" />
     <item android:state_pressed="true"
         android:color="?attr/color_on_main" />
+    <item android:state_hovered="true"
+        android:color="?attr/color_on_main" />
     <item
         android:color="?attr/color_on_main"/>
 </selector>

@@ -24,22 +24,11 @@
         android:onLongClick="@{onLongClickListener}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="16dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="16dp">
-
-        <ImageView
-            android:id="@+id/background"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="5dp"
-            android:src="@drawable/primary_cell_background"
-            android:contentDescription="@null"
-            app:layout_constraintStart_toEndOf="@id/header"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+        android:background="@drawable/primary_cell_background">
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_500"

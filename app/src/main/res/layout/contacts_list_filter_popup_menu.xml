@@ -30,16 +30,12 @@
         android:background="@drawable/shape_round_popup_menu_background">
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style"
+            style="@style/popup_menu_item"
             android:id="@+id/no_filter"
             android:onClick="@{noFilterClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/popup_menu_item_top_margin"
             android:text="@string/contacts_list_filter_popup_see_all"
-            android:textSize="14sp"
-            android:textColor="?attr/color_main2_500"
-            android:drawablePadding="5dp"
             android:drawableEnd="@drawable/check"
             android:drawableTint="@{seeAllSelected ? @color/green_success_500 : @color/transparent_color, default=@color/transparent_color}"
             app:layout_constraintStart_toStartOf="parent"
@@ -48,17 +44,13 @@
             app:layout_constraintBottom_toTopOf="@id/linphone_filter"/>
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style"
+            style="@style/popup_menu_item"
             android:id="@+id/linphone_filter"
             android:onClick="@{linphoneOnlyClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/popup_menu_item_top_margin"
             android:text="@string/contacts_list_filter_popup_see_linphone_only"
-            android:textSize="14sp"
-            android:textColor="?attr/color_main2_500"
             android:visibility="@{showLinphoneFilter ? View.VISIBLE : View.GONE}"
-            android:drawablePadding="5dp"
             android:drawableEnd="@drawable/check"
             android:drawableTint="@{seeAllSelected ? @color/transparent_color : @color/green_success_500, default=@color/green_success_500}"
             app:layout_constraintStart_toStartOf="parent"
@@ -67,17 +59,13 @@
             app:layout_constraintBottom_toTopOf="@id/sip_filter"/>
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style"
+            style="@style/popup_menu_item"
             android:id="@+id/sip_filter"
             android:onClick="@{sipOnlyClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/popup_menu_item_top_margin"
             android:text="@string/contacts_list_filter_popup_see_sip_only"
-            android:textSize="14sp"
-            android:textColor="?attr/color_main2_500"
             android:visibility="@{showLinphoneFilter ? View.GONE : View.VISIBLE}"
-            android:drawablePadding="5dp"
             android:drawableEnd="@drawable/check"
             android:drawableTint="@{seeAllSelected ? @color/transparent_color : @color/green_success_500, default=@color/green_success_500}"
             app:layout_constraintStart_toStartOf="parent"
@@ -89,7 +77,7 @@
             android:id="@+id/bottom_anchor"
             android:layout_width="wrap_content"
             android:layout_height="1dp"
-            android:layout_marginBottom="@dimen/popup_menu_item_top_margin"
+            android:layout_marginBottom="@dimen/popup_menu_padding"
             app:layout_constraintWidth_max="@dimen/popup_menu_width"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

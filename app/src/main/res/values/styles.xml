@@ -99,7 +99,7 @@
     </style>
     <style name="bottom_nav_bar_label_style">
         <item name="android:fontFamily">@font/noto_sans</item>
-        <item name="android:textSize">@dimen/bottom_nav_bar_text_size</item>
+        <item name="android:textSize">11sp</item>
         <item name="android:textColor">?attr/color_text</item>
         <item name="android:gravity">center</item>
         <item name="android:maxLines">1</item>
@@ -123,7 +123,20 @@
         <item name="android:drawableTint">?attr/color_danger_500</item>
         <item name="android:drawablePadding">8dp</item>
     </style>
-    <style name="popup_menu_action_label_style">
+    <style name="popup_menu_item">
+        <item name="android:fontFamily">@font/noto_sans</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">?attr/color_main2_500</item>
+        <item name="android:layout_marginTop">@dimen/popup_menu_padding</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:background">@drawable/popup_menu_button_background</item>
+        <item name="android:drawablePadding">5dp</item>
+        <item name="drawableTint">?attr/color_main2_700</item>
+        <item name="android:gravity">start|center_vertical</item>
+    </style>
+    <style name="chat_bubble_popup_menu_style">
         <item name="android:fontFamily">@font/noto_sans</item>
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">?attr/color_main2_500</item>
@@ -136,20 +149,6 @@
         <item name="android:drawableTint">?attr/color_main2_500</item>
         <item name="android:drawablePadding">8dp</item>
     </style>
-    <style name="popup_menu_danger_action_label_style">
-        <item name="android:fontFamily">@font/noto_sans</item>
-        <item name="android:textSize">12sp</item>
-        <item name="android:textColor">?attr/color_danger_500</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:paddingStart">15dp</item>
-        <item name="android:paddingEnd">15dp</item>
-        <item name="android:paddingTop">10dp</item>
-        <item name="android:paddingBottom">10dp</item>
-        <item name="android:drawableTint">?attr/color_danger_500</item>
-        <item name="android:drawablePadding">8dp</item>
-    </style>
-
     <style name="message_reaction_style">
         <item name="android:fontFamily">@font/noto_sans</item>
         <item name="android:textColor">?attr/color_text</item>

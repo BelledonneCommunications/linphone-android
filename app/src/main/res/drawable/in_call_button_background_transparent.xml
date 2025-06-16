@@ -3,11 +3,11 @@
     <item android:state_enabled="false"
         android:drawable="@drawable/shape_round_in_call_disabled_button_background" />
     <item android:state_selected="true"
-        android:drawable="@drawable/shape_round_in_call_selected_green_button_background" />
+        android:drawable="@drawable/shape_round_in_call_selected_red_button_background" />
     <item android:state_pressed="true"
         android:drawable="@drawable/shape_round_in_call_pressed_button_background" />
     <item android:state_hovered="true"
         android:drawable="@drawable/shape_round_in_call_pressed_button_background" />
     <item
-        android:drawable="@drawable/shape_round_in_call_button_background" />
+        android:drawable="@drawable/shape_round_transparent_background" />
 </selector>

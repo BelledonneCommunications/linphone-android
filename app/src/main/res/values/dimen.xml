@@ -56,8 +56,7 @@
     <dimen name="text_input_max_width">400dp</dimen>
     <dimen name="emoji_list_max_width">400dp</dimen>
     <dimen name="popup_menu_width">250dp</dimen>
-    <dimen name="popup_menu_padding">15dp</dimen>
-    <dimen name="popup_menu_item_top_margin">20dp</dimen>
+    <dimen name="popup_menu_padding">10dp</dimen>
 
     <dimen name="call_remote_video_top_margin">70dp</dimen> <!-- Size of top text + top & bottom margins -->
     <dimen name="call_main_actions_menu_height">110dp</dimen>

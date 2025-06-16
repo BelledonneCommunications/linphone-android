@@ -4,6 +4,8 @@
         android:drawable="@drawable/color_main2_100" />
     <item android:state_pressed="true"
         android:drawable="@drawable/color_main2_100" />
+    <item android:state_hovered="true"
+        android:drawable="@drawable/color_main2_100" />
     <item
         android:drawable="@color/transparent_color" />
 </selector>

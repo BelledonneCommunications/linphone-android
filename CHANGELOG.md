@@ -13,7 +13,9 @@ Group changes to describe their impact on the project, as follows:
 ## [6.1.0] - Unreleased
 
 ### Added
+- Added hover effect when using a mouse (useful for tablets or devices with desktop mode)
 - Added toggle speaker action in active call notification
+- Added back increased text size for chat messages that only contains emoji(s)
 - Added a vu meter for recording & playback volumes (disabled by default, must be enabled in CorePreferences)
 - Added a setting for user to choose whether to sort contacts by first name or last name
 - Added a setting to hide contacts that have neither a SIP address nor a phone number

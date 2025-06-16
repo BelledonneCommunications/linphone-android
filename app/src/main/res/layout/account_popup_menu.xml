@@ -16,18 +16,16 @@
         android:background="@drawable/shape_round_popup_menu_background">
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style"
+            style="@style/popup_menu_item"
             android:id="@+id/manage_profile"
             android:onClick="@{manageProfileClickListener}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/popup_menu_padding"
+            android:layout_marginBottom="@dimen/popup_menu_padding"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:text="@string/drawer_menu_manage_account"
-            android:textSize="14sp"
-            android:textColor="?attr/color_main2_500"
             android:drawableStart="@drawable/user_circle_gear"
-            android:drawablePadding="5dp"
-            app:drawableTint="?attr/color_main2_700"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

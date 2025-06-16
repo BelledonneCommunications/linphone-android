@@ -4,6 +4,8 @@
         android:drawable="@drawable/shape_squircle_main2_100_background_bottom" />
     <item android:state_pressed="true"
         android:drawable="@drawable/shape_squircle_main2_100_background_bottom" />
+    <item android:state_hovered="true"
+        android:drawable="@drawable/shape_squircle_main2_100_background_bottom" />
     <item
         android:drawable="@drawable/shape_squircle_white_background_bottom" />
 </selector>

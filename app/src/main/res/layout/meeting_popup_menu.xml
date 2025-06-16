@@ -19,23 +19,18 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/popup_menu_padding"
+        android:paddingStart="@dimen/popup_menu_padding"
         android:background="@drawable/shape_round_popup_menu_background">
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style"
+            style="@style/popup_menu_item"
             android:id="@+id/export_as_calendar"
             android:onClick="@{createCalendarEventListener}"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
             android:text="@string/meeting_info_export_as_calendar_event"
-            android:textSize="14sp"
-            android:textColor="?attr/color_main2_500"
             android:drawableStart="@drawable/calendar_blank"
-            android:drawablePadding="5dp"
-            app:drawableTint="?attr/color_main2_500"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -43,26 +38,31 @@
             app:layout_constraintBottom_toTopOf="@id/delete_meeting"/>
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style"
+            style="@style/popup_menu_item"
             android:id="@+id/delete_meeting"
             android:onClick="@{deleteClickListener}"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="20dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
             android:text="@{cancelInsteadOfDelete ? @string/meeting_cancel_action_label : @string/meeting_delete_action_label, default=@string/meeting_delete_action_label}"
-            android:textSize="14sp"
             android:textColor="?attr/color_danger_500"
             android:drawableStart="@drawable/trash_simple"
-            android:drawablePadding="5dp"
             app:drawableTint="?attr/color_danger_500"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/export_as_calendar"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toTopOf="@id/bottom_anchor"/>
+
+        <View
+            android:id="@+id/bottom_anchor"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/popup_menu_padding"
+            app:layout_constraintWidth_max="@dimen/popup_menu_width"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/delete_meeting"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
