@@ -13,7 +13,7 @@
         android:paddingBottom="10dp">
 
         <ImageView
-            android:id="@+id/secured_background"
+            android:id="@+id/unsafe_background"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@null"
@@ -26,48 +26,48 @@
             app:layout_constraintBottom_toBottomOf="parent"/>
 
         <ImageView
-            android:id="@+id/secured_icon"
+            android:id="@+id/unsafe_icon"
             android:layout_width="@dimen/icon_size"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:paddingTop="3dp"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:src="@drawable/lock_simple"
-            app:tint="@color/blue_info_500"
-            app:layout_constraintTop_toTopOf="@id/secured_title"
-            app:layout_constraintBottom_toBottomOf="@id/secured_subtitle"
-            app:layout_constraintStart_toStartOf="@id/secured_background"/>
+            android:src="@drawable/lock_simple_open"
+            app:tint="@color/orange_warning_600"
+            app:layout_constraintTop_toTopOf="@id/unsafe_title"
+            app:layout_constraintBottom_toBottomOf="@id/unsafe_subtitle"
+            app:layout_constraintStart_toStartOf="@id/unsafe_background"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_700"
-            android:id="@+id/secured_title"
+            android:id="@+id/unsafe_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="15dp"
-            android:text="@string/conversation_end_to_end_encrypted_event_title"
+            android:text="@string/conversation_warning_disabled_because_not_secured_title"
             android:textSize="12sp"
-            android:textColor="@color/blue_info_500"
-            app:layout_constraintStart_toEndOf="@id/secured_icon"
-            app:layout_constraintEnd_toEndOf="@id/secured_background"
+            android:textColor="@color/orange_warning_600"
+            app:layout_constraintStart_toEndOf="@id/unsafe_icon"
+            app:layout_constraintEnd_toEndOf="@id/unsafe_background"
             app:layout_constraintTop_toTopOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
-            android:id="@+id/secured_subtitle"
+            android:id="@+id/unsafe_subtitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginBottom="10dp"
             android:layout_marginEnd="15dp"
-            android:text="@string/conversation_end_to_end_encrypted_event_subtitle"
+            android:text="@string/conversation_warning_unsafe_event_subtitle"
             android:textColor="?attr/color_grey_400"
             android:textSize="12sp"
-            app:layout_constraintStart_toEndOf="@id/secured_icon"
-            app:layout_constraintEnd_toEndOf="@id/secured_background"
-            app:layout_constraintTop_toBottomOf="@id/secured_title"
+            app:layout_constraintStart_toEndOf="@id/unsafe_icon"
+            app:layout_constraintEnd_toEndOf="@id/unsafe_background"
+            app:layout_constraintTop_toBottomOf="@id/unsafe_title"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

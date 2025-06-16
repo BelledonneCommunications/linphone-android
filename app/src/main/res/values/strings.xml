@@ -537,10 +537,13 @@
     <string name="conversation_end_to_end_encrypted_event_subtitle">Messages in this conversation are e2e encrypted. Only your correspondent can decrypt them.</string>
     <string name="conversation_end_to_end_encrypted_bottom_sheet_title">Guaranteed confidentiality</string>
     <string name="conversation_end_to_end_encrypted_bottom_sheet_message">Thanks to end-to-end encryption technology in &appName;, messages, calls and meetings confidentiality are guaranteed. No-one can decrypt exchanged data, not even ourselves.</string>
+    <string name="conversation_warning_unsafe_event_subtitle">Messages aren\'t encrypted, make sure you don\'t share sensitive information!</string>
+    <string name="conversation_warning_unsafe_bottom_sheet_title">Unencrypted conversation</string>
+    <string name="conversation_warning_unsafe_bottom_sheet_message">Messages exchanged in this conversation can be intercepted and read by other people than your correspondent, confidentiality is not guaranteed!</string>
     <string name="conversation_warning_disabled_because_not_secured_title">This conversation is not encrypted!</string>
     <string name="conversation_warning_disabled_because_not_secured_subtitle">For your safety, this conversation was disabled.</string>
     <string name="conversation_warning_disabled_encrypted_bottom_sheet_title">Mandatory encryption</string>
-    <string name="conversation_warning_disabled_encrypted_bottom_sheet_message">You enabled mandatory encryption. Non encrypted conversations are disabled for your safety. You can re-create this conversation or disable mandatory encryption in your account parameters.</string>
+    <string name="conversation_warning_disabled_encrypted_bottom_sheet_message">You enabled mandatory encryption. Unencrypted conversations are disabled for your safety. You can re-create this conversation or disable mandatory encryption in your account parameters.</string>
     <string name="conversation_maximum_number_of_attachments_reached">Maximum number of attachments reached!</string>
     <string name="conversation_dialog_set_subject">Set conversation subject</string>
     <string name="conversation_dialog_edit_subject">Edit conversation subject</string>

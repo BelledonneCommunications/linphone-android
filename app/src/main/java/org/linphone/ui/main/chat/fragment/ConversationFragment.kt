@@ -315,6 +315,8 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                         if (e.y >= 0 && e.y <= headerItemDecoration.getDecorationHeight(0)) {
                             if (viewModel.isEndToEndEncrypted.value == true) {
                                 showEndToEndEncryptionDetailsBottomSheet()
+                            } else {
+                                showUnsafeConversationDisabledDetailsBottomSheet()
                             }
                             return true
                         }
@@ -588,8 +590,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
 
         viewModel.isEndToEndEncrypted.observe(viewLifecycleOwner) { encrypted ->
             adapter.setIsConversationSecured(encrypted)
-
-            if (encrypted) {
+            if (encrypted || (!encrypted && viewModel.isEndToEndEncryptionAvailable.value == true)) {
                 binding.eventsList.addItemDecoration(headerItemDecoration)
                 binding.eventsList.addOnItemTouchListener(listItemTouchListener)
             }

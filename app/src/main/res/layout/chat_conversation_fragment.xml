@@ -119,7 +119,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:barrierDirection="top"
-                    app:constraint_referenced_ids="muted, ephemeral_enabled" />
+                    app:constraint_referenced_ids="unsecure, unsecure_label, muted, ephemeral_enabled, ephemeral_duration" />
 
                 <ImageView
                     android:id="@+id/muted"
@@ -130,10 +130,42 @@
                     android:contentDescription="@string/content_description_chat_muted"
                     android:visibility="@{viewModel.isMuted ? View.VISIBLE : View.GONE, default=gone}"
                     app:layout_constraintStart_toStartOf="@id/title"
-                    app:layout_constraintEnd_toStartOf="@id/ephemeral_enabled"
+                    app:layout_constraintEnd_toStartOf="@id/unsecure"
                     app:layout_constraintTop_toBottomOf="@id/title"
                     app:layout_constraintBottom_toBottomOf="@id/avatar"
                     app:tint="?attr/color_main1_500"/>
+
+                <ImageView
+                    android:id="@+id/unsecure"
+                    android:layout_width="@dimen/small_icon_size"
+                    android:layout_height="@dimen/small_icon_size"
+                    android:src="@drawable/lock_simple_open"
+                    android:contentDescription="@string/content_description_chat_unsecured"
+                    android:visibility="@{!viewModel.isEndToEndEncrypted &amp;&amp; viewModel.isEndToEndEncryptionAvailable ? View.VISIBLE : View.GONE, default=gone}"
+                    app:layout_constraintStart_toEndOf="@id/muted"
+                    app:layout_constraintEnd_toStartOf="@id/unsecure_label"
+                    app:layout_constraintTop_toBottomOf="@id/title"
+                    app:layout_constraintBottom_toBottomOf="@id/avatar"
+                    app:tint="?attr/color_warning_600"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style"
+                    android:id="@+id/unsecure_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:paddingBottom="2dp"
+                    android:text="@string/conversation_warning_unsafe_bottom_sheet_title"
+                    android:textSize="12sp"
+                    android:textColor="?attr/color_warning_600"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:visibility="@{!viewModel.isEndToEndEncrypted &amp;&amp; viewModel.isEndToEndEncryptionAvailable ? View.VISIBLE : View.GONE, default=gone}"
+                    app:layout_constraintStart_toEndOf="@id/unsecure"
+                    app:layout_constraintEnd_toStartOf="@id/ephemeral_enabled"
+                    app:layout_constraintTop_toTopOf="@id/unsecure"
+                    app:layout_constraintBottom_toBottomOf="@id/unsecure"/>
 
                 <ImageView
                     android:id="@+id/ephemeral_enabled"
@@ -144,7 +176,7 @@
                     android:src="@drawable/clock_countdown"
                     android:contentDescription="@string/content_description_chat_ephemeral_enabled"
                     android:visibility="@{viewModel.ephemeralLifetime > 0L ? View.VISIBLE : View.GONE, default=gone}"
-                    app:layout_constraintStart_toEndOf="@id/muted"
+                    app:layout_constraintStart_toEndOf="@id/unsecure_label"
                     app:layout_constraintTop_toBottomOf="@id/title"
                     app:layout_constraintBottom_toBottomOf="@id/avatar"
                     app:tint="?attr/color_main1_500"/>
@@ -159,6 +191,8 @@
                     android:paddingBottom="2dp"
                     android:text="@{viewModel.ephemeralLifeTimeLabel, default=`1 day`}"
                     android:textSize="12sp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     android:visibility="@{viewModel.ephemeralLifetime > 0L ? View.VISIBLE : View.GONE, default=gone}"
                     app:layout_constraintStart_toEndOf="@id/ephemeral_enabled"
                     app:layout_constraintTop_toTopOf="@id/ephemeral_enabled"

@@ -201,7 +201,7 @@
             android:layout_height="@dimen/small_icon_size"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="10dp"
-            android:src="@drawable/lock_simple_open_bold"
+            android:src="@drawable/lock_simple_open"
             android:contentDescription="@string/content_description_chat_unsecured"
             android:visibility="@{model.isEncrypted || !model.isEncryptionAvailable ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toBottomOf="@id/date_time"
