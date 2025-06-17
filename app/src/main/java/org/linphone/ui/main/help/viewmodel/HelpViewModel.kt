@@ -44,6 +44,8 @@ class HelpViewModel
     constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Help ViewModel]"
+
+        private const val NUMBER_OF_CLICK_TO_ENABLE_DEVELOPER_MODE = 6
     }
 
     val version = MutableLiveData<String>()
@@ -59,8 +61,6 @@ class HelpViewModel
     val uploadLogsAvailable = MutableLiveData<Boolean>()
 
     val logsUploadInProgress = MutableLiveData<Boolean>()
-
-    val versionClickCount = MutableLiveData<Int>()
 
     val newVersionAvailableEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
         MutableLiveData<Event<Pair<String, String>>>()
@@ -89,6 +89,8 @@ class HelpViewModel
     val showConfigFileEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
     }
+
+    private var versionClickCount: Int = 0
 
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
@@ -136,7 +138,6 @@ class HelpViewModel
     init {
         val currentVersion = BuildConfig.VERSION_NAME
         version.value = currentVersion
-        versionClickCount.value = 0
 
         val versionCode = BuildConfig.VERSION_CODE
         val appGitDescribe = AppUtils.getString(R.string.linphone_app_version)
@@ -151,6 +152,13 @@ class HelpViewModel
         } catch (e: Exception) {
             Log.e("$TAG Failed to get FirebaseApp instance: $e")
             firebaseProjectId.value = "unknown"
+        }
+
+        versionClickCount = if (corePreferences.showDeveloperSettings) {
+            Log.i("$TAG Developer are already enabled")
+            NUMBER_OF_CLICK_TO_ENABLE_DEVELOPER_MODE
+        } else {
+            0
         }
 
         coreContext.postOnCoreThread { core ->
@@ -172,19 +180,25 @@ class HelpViewModel
 
     @UiThread
     fun versionClicked() {
-        if (corePreferences.showDeveloperSettings == true) {
-            showRedToast(R.string.settings_developer_already_enabled_toast, R.drawable.warning_circle)
-            return
-        }
-
-        versionClickCount.value = (versionClickCount.value ?: 0) + 1
-        if (versionClickCount.value == 7) {
-            coreContext.postOnCoreThread {
-                Log.w("$TAG Version was clicked seven times, enabling developer settings")
-                corePreferences.showDeveloperSettings = true
-
-                showGreenToast(R.string.settings_developer_enabled_toast, R.drawable.gear)
+        versionClickCount += 1
+        when (versionClickCount) {
+            NUMBER_OF_CLICK_TO_ENABLE_DEVELOPER_MODE - 2 -> {
+                showGreenToast(R.string.settings_developer_two_more_clicks_required_toast, R.drawable.gear)
             }
+            NUMBER_OF_CLICK_TO_ENABLE_DEVELOPER_MODE - 1 -> {
+                showGreenToast(R.string.settings_developer_one_more_click_required_toast, R.drawable.gear)
+            }
+            NUMBER_OF_CLICK_TO_ENABLE_DEVELOPER_MODE -> {
+                showGreenToast(R.string.settings_developer_enabled_toast, R.drawable.gear)
+                coreContext.postOnCoreThread {
+                    Log.w("$TAG Version was clicked seven times, enabling developer settings")
+                    corePreferences.showDeveloperSettings = true
+                }
+            }
+            NUMBER_OF_CLICK_TO_ENABLE_DEVELOPER_MODE + 1 -> {
+                showGreenToast(R.string.settings_developer_already_enabled_toast, R.drawable.gear)
+            }
+            else -> { }
         }
     }
 

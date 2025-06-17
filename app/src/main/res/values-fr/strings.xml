@@ -306,6 +306,8 @@
 
     <string name="settings_developer_title">Paramètres développeurs</string>
     <string name="settings_developer_show_title">Afficher les paramètres développeurs</string>
+    <string name="settings_developer_two_more_clicks_required_toast">Encore 2 clicks pour activer les paramètres développeurs</string>
+    <string name="settings_developer_one_more_click_required_toast">Encore 1 click pour activer les paramètres développeurs</string>
     <string name="settings_developer_enabled_toast">Paramètres développeurs activés</string>
     <string name="settings_developer_already_enabled_toast">Paramètres développeurs déjà activés</string>
     <string name="settings_developer_enable_vu_meters_title">Activer l\'indicateur des volumes d\'enregistrement et de lecture</string>

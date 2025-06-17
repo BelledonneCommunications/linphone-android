@@ -347,6 +347,8 @@
 
     <string name="settings_developer_title">Developer settings</string>
     <string name="settings_developer_show_title">Show developer settings</string>
+    <string name="settings_developer_two_more_clicks_required_toast">Click 2 more times to enable developer settings</string>
+    <string name="settings_developer_one_more_click_required_toast">Click 1 more time to enable developer settings</string>
     <string name="settings_developer_enabled_toast">Developer settings enabled</string>
     <string name="settings_developer_already_enabled_toast">Developer settings already enabled</string>
     <string name="settings_developer_enable_vu_meters_title">Enable record/playback volume vu meters while in call</string>
