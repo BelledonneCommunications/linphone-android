@@ -155,7 +155,7 @@ class HelpViewModel
         }
 
         versionClickCount = if (corePreferences.showDeveloperSettings) {
-            Log.i("$TAG Developer are already enabled")
+            Log.i("$TAG Developer settings are already enabled")
             NUMBER_OF_CLICK_TO_ENABLE_DEVELOPER_MODE
         } else {
             0
@@ -181,6 +181,7 @@ class HelpViewModel
     @UiThread
     fun versionClicked() {
         versionClickCount += 1
+        Log.i("$TAG Version was clicked [$versionClickCount] times")
         when (versionClickCount) {
             NUMBER_OF_CLICK_TO_ENABLE_DEVELOPER_MODE - 2 -> {
                 showGreenToast(R.string.settings_developer_two_more_clicks_required_toast, R.drawable.gear)
@@ -191,7 +192,7 @@ class HelpViewModel
             NUMBER_OF_CLICK_TO_ENABLE_DEVELOPER_MODE -> {
                 showGreenToast(R.string.settings_developer_enabled_toast, R.drawable.gear)
                 coreContext.postOnCoreThread {
-                    Log.w("$TAG Version was clicked seven times, enabling developer settings")
+                    Log.w("$TAG Enabling developer settings")
                     corePreferences.showDeveloperSettings = true
                 }
             }
