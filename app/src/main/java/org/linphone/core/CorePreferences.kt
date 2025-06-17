@@ -300,6 +300,13 @@ class CorePreferences
 
     // Customization options
 
+    @get:WorkerThread @set:WorkerThread
+    var showMicrophoneAndSpeakerVuMeters: Boolean
+        get() = config.getBool("ui", "show_mic_speaker_vu_meter", false)
+        set(value) {
+            config.setBool("ui", "show_mic_speaker_vu_meter", value)
+        }
+
     @get:WorkerThread
     val defaultDomain: String
         get() = config.getString("app", "default_domain", "sip.linphone.org")!!
@@ -406,10 +413,6 @@ class CorePreferences
     @get:WorkerThread
     val showLettersOnDialpad: Boolean
         get() = config.getBool("ui", "show_letters_on_dialpad", true)
-
-    @get:WorkerThread
-    val showMicrophoneAndSpeakerVuMeters: Boolean
-        get() = config.getBool("ui", "show_mic_speaker_vu_meter", false)
 
     // Paths
 

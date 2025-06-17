@@ -244,6 +244,7 @@ class SettingsViewModel
     val fileSharingServerUrl = MutableLiveData<String>()
     val logsSharingServerUrl = MutableLiveData<String>()
     val createEndToEndEncryptedConferences = MutableLiveData<Boolean>()
+    val enableVuMeters = MutableLiveData<Boolean>()
 
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
@@ -374,6 +375,7 @@ class SettingsViewModel
             fileSharingServerUrl.postValue(core.fileTransferServer)
             logsSharingServerUrl.postValue(core.logCollectionUploadServerUrl)
             createEndToEndEncryptedConferences.postValue(corePreferences.createEndToEndEncryptedMeetingsAndGroupCalls)
+            enableVuMeters.postValue(corePreferences.showMicrophoneAndSpeakerVuMeters)
         }
     }
 
@@ -1146,6 +1148,16 @@ class SettingsViewModel
         coreContext.postOnCoreThread { core ->
             corePreferences.createEndToEndEncryptedMeetingsAndGroupCalls = newValue
             createEndToEndEncryptedConferences.postValue(newValue)
+        }
+    }
+
+    @UiThread
+    fun toggleEnableVuMeters() {
+        val newValue = enableVuMeters.value == false
+
+        coreContext.postOnCoreThread { core ->
+            corePreferences.showMicrophoneAndSpeakerVuMeters = newValue
+            enableVuMeters.postValue(newValue)
         }
     }
 }

@@ -308,6 +308,7 @@
     <string name="settings_developer_show_title">Afficher les paramètres développeurs</string>
     <string name="settings_developer_enabled_toast">Paramètres développeurs activés</string>
     <string name="settings_developer_already_enabled_toast">Paramètres développeurs déjà activés</string>
+    <string name="settings_developer_enable_vu_meters_title">Activer l\'indicateur des volumes d\'enregistrement et de lecture</string>
 
     <!-- Account profile & settings -->
     <string name="manage_account_title">Mon compte</string>
