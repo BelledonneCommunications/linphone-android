@@ -76,7 +76,12 @@ class RecordingsListViewModel
 
     @UiThread
     fun clearFilter() {
-        searchFilter.value = ""
+        if (searchFilter.value.orEmpty().isEmpty()) {
+            searchBarVisible.value = false
+            focusSearchBarEvent.value = Event(false)
+        } else {
+            searchFilter.value = ""
+        }
     }
 
     @UiThread

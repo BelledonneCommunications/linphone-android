@@ -51,13 +51,26 @@
             android:layout_marginEnd="16dp"
             android:text="@string/app_name"
             android:gravity="center_vertical"
-            android:drawableEnd="@drawable/x"
-            android:drawablePadding="15dp"
-            app:drawableTint="?attr/color_main2_600"
             app:layout_constraintTop_toTopOf="@id/brand_icon"
             app:layout_constraintStart_toEndOf="@id/brand_icon"
             app:layout_constraintBottom_toBottomOf="@id/brand_icon"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toStartOf="@id/close_drawer" />
+
+        <ImageView
+            android:id="@+id/close_drawer"
+            android:onClick="@{() -> viewModel.closeDrawerMenu()}"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/x"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/content_description_close_drawer_menu"
+            android:background="@drawable/circle_transparent_button_background"
+            app:drawableTint="?attr/color_main2_600"
+            app:layout_constraintTop_toTopOf="@id/brand_name"
+            app:layout_constraintStart_toEndOf="@id/brand_name"
+            app:layout_constraintBottom_toBottomOf="@id/brand_name"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <ScrollView
             android:layout_width="0dp"

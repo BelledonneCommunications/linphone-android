@@ -15,7 +15,8 @@
         android:onClick="@{() -> model.setAsDefault()}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@{model.isDefault ? @drawable/color_main2_100 : @drawable/color_main2_000, default=@drawable/color_main2_100}">
+        android:selected="@{model.isDefault}"
+        android:background="@drawable/account_list_background">
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/end_barrier"
@@ -129,7 +130,9 @@
             android:padding="15dp"
             android:adjustViewBounds="true"
             android:contentDescription="@string/content_description_open_drawer_menu_icon"
+            android:background="@drawable/circle_transparent_button_background"
             android:src="@drawable/dots_three_vertical"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/name"
             app:layout_constraintBottom_toBottomOf="@id/register_status"

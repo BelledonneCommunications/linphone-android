@@ -188,7 +188,7 @@
             app:layout_constraintBottom_toBottomOf="@id/message_area_background"
             app:layout_constraintEnd_toEndOf="@id/message_area_background"
             app:layout_constraintTop_toTopOf="@id/message_area_background"
-            app:tint="?attr/color_main2_500" />
+            app:tint="@color/icon_primary_color_selector" />
 
         <include
             android:id="@+id/voice_recording_area"
