@@ -63,6 +63,7 @@ class SettingsDeveloperFragment : GenericMainFragment() {
 
     override fun onPause() {
         viewModel.updateSharingServersUrl()
+        viewModel.updatePushCompatibleDomainsList()
 
         super.onPause()
     }

@@ -309,6 +309,7 @@
     <string name="settings_developer_enabled_toast">Paramètres développeurs activés</string>
     <string name="settings_developer_already_enabled_toast">Paramètres développeurs déjà activés</string>
     <string name="settings_developer_enable_vu_meters_title">Activer l\'indicateur des volumes d\'enregistrement et de lecture</string>
+    <string name="settings_developer_push_compatible_domains_list_title">Liste des domaines qui supportent les notifications poussées (séparés par des virgules)</string>
 
     <!-- Account profile & settings -->
     <string name="manage_account_title">Mon compte</string>

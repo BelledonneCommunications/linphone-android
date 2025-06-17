@@ -350,6 +350,7 @@
     <string name="settings_developer_enabled_toast">Developer settings enabled</string>
     <string name="settings_developer_already_enabled_toast">Developer settings already enabled</string>
     <string name="settings_developer_enable_vu_meters_title">Enable record/playback volume vu meters while in call</string>
+    <string name="settings_developer_push_compatible_domains_list_title">List of push notifications compatible domains (comma separated)</string>
 
     <!-- Account profile & settings -->
     <string name="manage_account_title">Manage account</string>

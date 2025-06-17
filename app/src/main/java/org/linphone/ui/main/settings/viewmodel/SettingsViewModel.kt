@@ -245,6 +245,7 @@ class SettingsViewModel
     val logsSharingServerUrl = MutableLiveData<String>()
     val createEndToEndEncryptedConferences = MutableLiveData<Boolean>()
     val enableVuMeters = MutableLiveData<Boolean>()
+    val pushCompatibleDomainsList = MutableLiveData<String>()
 
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
@@ -376,6 +377,19 @@ class SettingsViewModel
             logsSharingServerUrl.postValue(core.logCollectionUploadServerUrl)
             createEndToEndEncryptedConferences.postValue(corePreferences.createEndToEndEncryptedMeetingsAndGroupCalls)
             enableVuMeters.postValue(corePreferences.showMicrophoneAndSpeakerVuMeters)
+
+            val domainsListBuilder = StringBuilder()
+            val domainsArray = corePreferences.pushNotificationCompatibleDomains
+            for (item in domainsArray) {
+                domainsListBuilder.append(item)
+                domainsListBuilder.append(",")
+            }
+            if (domainsListBuilder.isNotEmpty()) {
+                domainsListBuilder.deleteAt(domainsListBuilder.length - 1) // Remove last ','
+            }
+            val domainsList = domainsListBuilder.toString()
+            Log.d("$TAG Computed push compatible domains list is [$domainsList]")
+            pushCompatibleDomainsList.postValue(domainsList)
         }
     }
 
@@ -1158,6 +1172,16 @@ class SettingsViewModel
         coreContext.postOnCoreThread { core ->
             corePreferences.showMicrophoneAndSpeakerVuMeters = newValue
             enableVuMeters.postValue(newValue)
+        }
+    }
+
+    @UiThread
+    fun updatePushCompatibleDomainsList() {
+        coreContext.postOnCoreThread { core ->
+            val flatValue = pushCompatibleDomainsList.value.orEmpty().trim()
+            Log.d("$TAG Updating push compatible domains list using user input [$flatValue]")
+            val newList = flatValue.split(",").toTypedArray()
+            corePreferences.pushNotificationCompatibleDomains = newList
         }
     }
 }

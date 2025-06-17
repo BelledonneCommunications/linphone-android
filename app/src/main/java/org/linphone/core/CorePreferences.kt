@@ -307,12 +307,16 @@ class CorePreferences
             config.setBool("ui", "show_mic_speaker_vu_meter", value)
         }
 
+    @get:WorkerThread @set:WorkerThread
+    var pushNotificationCompatibleDomains: Array<String>
+        get() = config.getStringList("app", "push_notification_domains", arrayOf("sip.linphone.org"))
+        set(value) {
+            config.setStringList("app", "push_notification_domains", value)
+        }
+
     @get:WorkerThread
     val defaultDomain: String
         get() = config.getString("app", "default_domain", "sip.linphone.org")!!
-
-    val pushNotificationCompatibleDomains: Array<String>
-        get() = config.getStringList("app", "push_notification_domains", arrayOf("sip.linphone.org"))
 
     @get:WorkerThread
     val darkModeAllowed: Boolean

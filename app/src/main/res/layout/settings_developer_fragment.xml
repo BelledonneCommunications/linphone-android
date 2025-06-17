@@ -236,6 +236,41 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/e2e_encrypted_conferences_switch" />
 
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/settings_title_style"
+                    android:id="@+id/push_compatible_domains_list_label"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/settings_developer_push_compatible_domains_list_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/enable_vu_meters_switch"/>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    style="@style/default_text_style"
+                    android:id="@+id/push_compatible_domains_list"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginEnd="16dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:text="@={viewModel.pushCompatibleDomainsList}"
+                    android:textSize="14sp"
+                    android:maxLines="1"
+                    android:background="@drawable/edit_text_background"
+                    android:inputType="text|textNoSuggestions"
+                    android:hint="@string/settings_developer_push_compatible_domains_list_title"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintWidth_max="@dimen/text_input_max_width"
+                    app:layout_constraintTop_toBottomOf="@id/push_compatible_domains_list_label"
+                    app:layout_constraintStart_toStartOf="@id/push_compatible_domains_list_label"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
