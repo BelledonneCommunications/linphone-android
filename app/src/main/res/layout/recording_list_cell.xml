@@ -26,6 +26,7 @@
             android:id="@+id/cardview"
             android:onClick="@{onClickListener}"
             android:onLongClick="@{onLongClickListener}"
+            android:onContextClick="@{onLongClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"

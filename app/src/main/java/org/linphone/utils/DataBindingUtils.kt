@@ -223,6 +223,25 @@ fun View.setKeyboardInsetListener(lambda: (visible: Boolean) -> Unit) {
 }
 
 @UiThread
+@BindingAdapter("android:onContextClick")
+fun View.setContextListener(longClickListener: View.OnLongClickListener?) {
+    longClickListener ?: return
+
+    this.setOnContextClickListener {
+        longClickListener.onLongClick(this)
+    }
+}
+
+@UiThread
+@BindingAdapter("android:onContextClick")
+fun View.setContextListener(lambda: () -> Unit) {
+    this.setOnContextClickListener {
+        lambda.invoke()
+        true
+    }
+}
+
+@UiThread
 @BindingAdapter("android:src")
 fun ImageView.setSourceImageResource(resource: Int) {
     this.setImageResource(resource)

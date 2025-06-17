@@ -129,6 +129,7 @@
         <LinearLayout
             android:id="@+id/bubble"
             android:onLongClick="@{onLongClickListener}"
+            android:onContextClick="@{onLongClickListener}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"

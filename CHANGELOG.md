@@ -14,15 +14,20 @@ Group changes to describe their impact on the project, as follows:
 
 ### Added
 - Added hover effect when using a mouse (useful for tablets or devices with desktop mode)
+- Support right click on some items to open bottom sheet/menu
 - Added toggle speaker action in active call notification
-- Added back increased text size for chat messages that only contains emoji(s)
+- Increased text size for chat messages that only contains emoji(s)
+- Dedicated top bar when file(s) or text is waiting to be shared
+- New settings:
+  - one for user to choose whether to sort contacts by first name or last name
+  - one to hide contacts that have neither a SIP address nor a phone number
+  - one to let app auto-answer call with video sending already enabled
 - Added a vu meter for recording & playback volumes (disabled by default, must be enabled in CorePreferences)
-- Added a setting for user to choose whether to sort contacts by first name or last name
-- Added a setting to hide contacts that have neither a SIP address nor a phone number
-- Added a setting to let app auto-answer call with video sending already enabled
 
 ### Changed
+- Hide SIP address/phone number picker dialog if contact has exactly one SIP address matching both the app default domain & the currently selected account domain
 - Improved UI on tablets with screen sw600dp and higher, will look more like our desktop app
+- Split alert top bar in two to be able to see both alerts and ongoing call(s)
 - Reworked some settings (moved calls related ones from advanced settings to advanced calls settings)
 
 ## [6.0.9] - 2025-06-06
