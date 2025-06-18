@@ -19,12 +19,15 @@
  */
 package org.linphone.compatibility
 
+import android.app.ActivityOptions
 import android.app.Notification
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.Bundle
 import android.provider.Settings
 import androidx.annotation.RequiresApi
 import org.linphone.core.tools.Log
@@ -72,6 +75,22 @@ class Api34Compatibility {
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
             Log.i("$TAG Starting ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT")
             context.startActivity(intent, null)
+        }
+
+        fun sendPendingIntent(pendingIntent: PendingIntent, bundle: Bundle) {
+            pendingIntent.send(bundle)
+        }
+
+        fun getPendingIntentActivityOptions(creator: Boolean): ActivityOptions {
+            val options = ActivityOptions.makeBasic()
+            if (creator) {
+                options.pendingIntentCreatorBackgroundActivityStartMode =
+                    ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED
+            } else {
+                options.pendingIntentBackgroundActivityStartMode =
+                    ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED
+            }
+            return options
         }
     }
 }

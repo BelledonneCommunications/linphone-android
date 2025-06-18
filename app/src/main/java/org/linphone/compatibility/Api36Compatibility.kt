@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2023 Belledonne Communications SARL.
+ * Copyright (c) 2010-2025 Belledonne Communications SARL.
  *
  * This file is part of linphone-android
  * (see https://www.linphone.org).
@@ -19,34 +19,24 @@
  */
 package org.linphone.compatibility
 
-import android.Manifest
 import android.app.ActivityOptions
-import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Build
 import androidx.annotation.RequiresApi
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
-class Api33Compatibility {
+@RequiresApi(Build.VERSION_CODES.BAKLAVA)
+class Api36Compatibility {
     companion object {
-        fun getAllRequiredPermissionsArray(): Array<String> {
-            return arrayOf(
-                Manifest.permission.POST_NOTIFICATIONS,
-                Manifest.permission.READ_CONTACTS,
-                Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.CAMERA
-            )
-        }
+        private const val TAG = "[API 36 Compatibility]"
 
-        fun isPostNotificationsPermissionGranted(context: Context): Boolean {
-            return context.checkSelfPermission(
-                Manifest.permission.POST_NOTIFICATIONS
-            ) == PackageManager.PERMISSION_GRANTED
-        }
-
-        fun getPendingIntentActivityOptions(): ActivityOptions {
+        fun getPendingIntentActivityOptions(creator: Boolean): ActivityOptions {
             val options = ActivityOptions.makeBasic()
-            options.isPendingIntentBackgroundActivityLaunchAllowed = true
+            if (creator) {
+                options.pendingIntentCreatorBackgroundActivityStartMode =
+                    ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOW_ALWAYS
+            } else {
+                options.pendingIntentBackgroundActivityStartMode =
+                    ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOW_ALWAYS
+            }
             return options
         }
     }

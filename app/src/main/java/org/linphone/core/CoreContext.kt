@@ -21,6 +21,7 @@ package org.linphone.core
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.media.AudioDeviceCallback
@@ -1002,7 +1003,17 @@ class CoreContext
         intent.addFlags(
             Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
         )
-        context.startActivity(intent)
+        val options = Compatibility.getPendingIntentActivityOptions(true)
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+            options.toBundle()
+        )
+
+        val senderOptions = Compatibility.getPendingIntentActivityOptions(false)
+        Compatibility.sendPendingIntent(pendingIntent, senderOptions.toBundle())
     }
 
     @WorkerThread

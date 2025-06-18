@@ -90,6 +90,11 @@ class NotificationsManager
         const val INTENT_TOGGLE_SPEAKER_CALL_NOTIF_ACTION = "org.linphone.TOGGLE_SPEAKER_CALL_ACTION"
         const val INTENT_REPLY_MESSAGE_NOTIF_ACTION = "org.linphone.REPLY_ACTION"
         const val INTENT_MARK_MESSAGE_AS_READ_NOTIF_ACTION = "org.linphone.MARK_AS_READ_ACTION"
+
+        const val INTENT_ANSWER_CALL_NOTIF_CODE = 2
+        const val INTENT_HANGUP_CALL_NOTIF_CODE = 3
+        const val INTENT_TOGGLE_SPEAKER_CALL_NOTIF_CODE = 4
+
         const val INTENT_NOTIF_ID = "NOTIFICATION_ID"
 
         const val KEY_TEXT_REPLY = "key_text_reply"
@@ -658,18 +663,21 @@ class NotificationsManager
         val notifiable = getNotifiableForCall(call)
 
         val callNotificationIntent = Intent(context, CallActivity::class.java)
-        callNotificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        callNotificationIntent.addFlags(
+            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+        )
         if (isIncoming) {
             callNotificationIntent.putExtra("IncomingCall", true)
         } else {
             callNotificationIntent.putExtra("ActiveCall", true)
         }
-
+        val options = Compatibility.getPendingIntentActivityOptions(true)
         val pendingIntent = PendingIntent.getActivity(
             context,
             0,
             callNotificationIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+            options.toBundle()
         )
 
         val notification = createCallNotification(
@@ -1497,13 +1505,15 @@ class NotificationsManager
     @AnyThread
     fun getCallDeclinePendingIntent(notifiable: Notifiable): PendingIntent {
         val hangupIntent = Intent(context, NotificationBroadcastReceiver::class.java)
-        hangupIntent.action = INTENT_HANGUP_CALL_NOTIF_ACTION
-        hangupIntent.putExtra(INTENT_NOTIF_ID, notifiable.notificationId)
-        hangupIntent.putExtra(INTENT_REMOTE_SIP_URI, notifiable.remoteAddress)
+        hangupIntent.apply {
+            action = INTENT_HANGUP_CALL_NOTIF_ACTION
+            putExtra(INTENT_NOTIF_ID, notifiable.notificationId)
+            putExtra(INTENT_REMOTE_SIP_URI, notifiable.remoteAddress)
+        }
 
         return PendingIntent.getBroadcast(
             context,
-            3,
+            INTENT_HANGUP_CALL_NOTIF_CODE,
             hangupIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -1512,28 +1522,32 @@ class NotificationsManager
     @AnyThread
     fun getCallAnswerPendingIntent(notifiable: Notifiable): PendingIntent {
         val answerIntent = Intent(context, NotificationBroadcastReceiver::class.java)
-        answerIntent.action = INTENT_ANSWER_CALL_NOTIF_ACTION
-        answerIntent.putExtra(INTENT_NOTIF_ID, notifiable.notificationId)
-        answerIntent.putExtra(INTENT_REMOTE_SIP_URI, notifiable.remoteAddress)
+        answerIntent.apply {
+            action = INTENT_ANSWER_CALL_NOTIF_ACTION
+            putExtra(INTENT_NOTIF_ID, notifiable.notificationId)
+            putExtra(INTENT_REMOTE_SIP_URI, notifiable.remoteAddress)
+        }
 
         return PendingIntent.getBroadcast(
             context,
-            2,
+            INTENT_ANSWER_CALL_NOTIF_CODE,
             answerIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
     }
 
     @AnyThread
     fun getCallToggleSpeakerPendingIntent(notifiable: Notifiable): PendingIntent {
         val answerIntent = Intent(context, NotificationBroadcastReceiver::class.java)
-        answerIntent.action = INTENT_TOGGLE_SPEAKER_CALL_NOTIF_ACTION
-        answerIntent.putExtra(INTENT_NOTIF_ID, notifiable.notificationId)
-        answerIntent.putExtra(INTENT_REMOTE_SIP_URI, notifiable.remoteAddress)
+        answerIntent.apply {
+            action = INTENT_TOGGLE_SPEAKER_CALL_NOTIF_ACTION
+            putExtra(INTENT_NOTIF_ID, notifiable.notificationId)
+            putExtra(INTENT_REMOTE_SIP_URI, notifiable.remoteAddress)
+        }
 
         return PendingIntent.getBroadcast(
             context,
-            4,
+            INTENT_TOGGLE_SPEAKER_CALL_NOTIF_CODE,
             answerIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -1577,10 +1591,12 @@ class NotificationsManager
             RemoteInput.Builder(KEY_TEXT_REPLY).setLabel(replyLabel).build()
 
         val replyIntent = Intent(context, NotificationBroadcastReceiver::class.java)
-        replyIntent.action = INTENT_REPLY_MESSAGE_NOTIF_ACTION
-        replyIntent.putExtra(INTENT_NOTIF_ID, notifiable.notificationId)
-        replyIntent.putExtra(INTENT_LOCAL_IDENTITY, notifiable.localIdentity)
-        replyIntent.putExtra(INTENT_REMOTE_SIP_URI, notifiable.remoteAddress)
+        replyIntent.apply {
+            action = INTENT_REPLY_MESSAGE_NOTIF_ACTION
+            putExtra(INTENT_NOTIF_ID, notifiable.notificationId)
+            putExtra(INTENT_LOCAL_IDENTITY, notifiable.localIdentity)
+            putExtra(INTENT_REMOTE_SIP_URI, notifiable.remoteAddress)
+        }
 
         // PendingIntents attached to actions with remote inputs must be mutable
         val replyPendingIntent = PendingIntent.getBroadcast(
@@ -1604,10 +1620,12 @@ class NotificationsManager
     @AnyThread
     private fun getMarkMessageAsReadPendingIntent(notifiable: Notifiable): PendingIntent {
         val markAsReadIntent = Intent(context, NotificationBroadcastReceiver::class.java)
-        markAsReadIntent.action = INTENT_MARK_MESSAGE_AS_READ_NOTIF_ACTION
-        markAsReadIntent.putExtra(INTENT_NOTIF_ID, notifiable.notificationId)
-        markAsReadIntent.putExtra(INTENT_LOCAL_IDENTITY, notifiable.localIdentity)
-        markAsReadIntent.putExtra(INTENT_REMOTE_SIP_URI, notifiable.remoteAddress)
+        markAsReadIntent.apply {
+            action = INTENT_MARK_MESSAGE_AS_READ_NOTIF_ACTION
+            putExtra(INTENT_NOTIF_ID, notifiable.notificationId)
+            putExtra(INTENT_LOCAL_IDENTITY, notifiable.localIdentity)
+            putExtra(INTENT_REMOTE_SIP_URI, notifiable.remoteAddress)
+        }
 
         return PendingIntent.getBroadcast(
             context,
