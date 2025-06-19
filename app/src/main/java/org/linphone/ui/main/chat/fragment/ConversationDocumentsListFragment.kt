@@ -181,12 +181,6 @@ class ConversationDocumentsListFragment : SlidingPaneChildFragment() {
             }
         }
 
-        model.cancelEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                dialog.dismiss()
-            }
-        }
-
         model.confirmEvent.observe(viewLifecycleOwner) {
             it.consume {
                 sharedViewModel.displayFileEvent.value = Event(bundle)

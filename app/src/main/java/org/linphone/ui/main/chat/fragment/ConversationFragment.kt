@@ -1466,7 +1466,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             }
         }
 
-        model.cancelEvent.observe(viewLifecycleOwner) {
+        model.alternativeChoiceEvent.observe(viewLifecycleOwner) {
             it.consume {
                 openFileInAnotherApp(path, mime, bundle)
                 dialog.dismiss()
@@ -1529,12 +1529,6 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         )
 
         model.dismissEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                dialog.dismiss()
-            }
-        }
-
-        model.cancelEvent.observe(viewLifecycleOwner) {
             it.consume {
                 dialog.dismiss()
             }

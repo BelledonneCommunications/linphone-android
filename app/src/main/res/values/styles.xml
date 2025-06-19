@@ -97,6 +97,28 @@
         <item name="android:textColor">@color/tertiary_button_label_color</item>
         <item name="android:textSize">13sp</item>
     </style>
+    <style name="primary_dialog_button_label_style">
+        <item name="android:fontFamily">@font/noto_sans_600</item>
+        <item name="android:textColor">@color/primary_button_label_color</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingStart">15dp</item>
+        <item name="android:paddingEnd">15dp</item>
+        <item name="android:background">@drawable/primary_button_background</item>
+        <item name="android:paddingTop">@dimen/primary_secondary_buttons_label_padding</item>
+        <item name="android:paddingBottom">@dimen/primary_secondary_buttons_label_padding</item>
+    </style>
+    <style name="secondary_dialog_button_label_style">
+        <item name="android:fontFamily">@font/noto_sans_600</item>
+        <item name="android:textColor">@color/secondary_button_label_color</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingStart">15dp</item>
+        <item name="android:paddingEnd">15dp</item>
+        <item name="android:background">@drawable/secondary_button_background</item>
+        <item name="android:paddingTop">@dimen/primary_secondary_buttons_label_padding</item>
+        <item name="android:paddingBottom">@dimen/primary_secondary_buttons_label_padding</item>
+    </style>
     <style name="bottom_nav_bar_label_style">
         <item name="android:fontFamily">@font/noto_sans</item>
         <item name="android:textSize">11sp</item>

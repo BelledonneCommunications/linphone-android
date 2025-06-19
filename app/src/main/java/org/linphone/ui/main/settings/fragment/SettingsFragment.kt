@@ -376,7 +376,7 @@ class SettingsFragment : GenericMainFragment() {
             model
         )
 
-        model.cancelEvent.observe(viewLifecycleOwner) {
+        model.dismissEvent.observe(viewLifecycleOwner) {
             it.consume {
                 viewModel.isVfsEnabled.value = false
                 dialog.dismiss()

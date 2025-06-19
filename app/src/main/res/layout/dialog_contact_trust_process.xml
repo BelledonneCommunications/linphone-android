@@ -106,15 +106,14 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{dismissClickListener}"
-            style="@style/primary_button_label_style"
+            style="@style/primary_dialog_button_label_style"
             android:id="@+id/confirm"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
-            android:text="@string/dialog_ok"
-            app:layout_constraintStart_toStartOf="@id/dialog_background"
+            android:text="@string/dialog_understood"
             app:layout_constraintEnd_toEndOf="@id/dialog_background"
             app:layout_constraintTop_toBottomOf="@id/image1"
             app:layout_constraintBottom_toTopOf="@id/anchor"/>

@@ -297,12 +297,6 @@ class MeetingFragment : SlidingPaneChildFragment() {
             }
         }
 
-        model.cancelEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                dialog.dismiss()
-            }
-        }
-
         model.confirmEvent.observe(viewLifecycleOwner) {
             it.consume {
                 viewModel.cancel()
@@ -319,12 +313,6 @@ class MeetingFragment : SlidingPaneChildFragment() {
         val dialog = DialogUtils.getDeleteMeetingDialog(requireContext(), model)
 
         model.dismissEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                dialog.dismiss()
-            }
-        }
-
-        model.cancelEvent.observe(viewLifecycleOwner) {
             it.consume {
                 dialog.dismiss()
             }

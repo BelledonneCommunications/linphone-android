@@ -333,12 +333,6 @@ class MeetingsListFragment : AbstractMainFragment() {
             }
         }
 
-        model.cancelEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                dialog.dismiss()
-            }
-        }
-
         model.confirmEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG Cancelling meeting [${meetingModel.id}]")
@@ -358,12 +352,6 @@ class MeetingsListFragment : AbstractMainFragment() {
         val dialog = DialogUtils.getDeleteMeetingDialog(requireContext(), model)
 
         model.dismissEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                dialog.dismiss()
-            }
-        }
-
-        model.cancelEvent.observe(viewLifecycleOwner) {
             it.consume {
                 dialog.dismiss()
             }

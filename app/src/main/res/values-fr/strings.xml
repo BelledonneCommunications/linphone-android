@@ -42,6 +42,7 @@
     <string name="dialog_yes">Oui</string>
     <string name="dialog_remove">Retirer</string>
     <string name="dialog_confirm">Confirmer</string>
+    <string name="dialog_understood">J\'ai compris</string>
 
     <!-- Related to Android notifications -->
     <string name="notification_channel_call_name">&appName; notifications d\'appels en cours</string>

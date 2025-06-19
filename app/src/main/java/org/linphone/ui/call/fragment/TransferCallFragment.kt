@@ -282,7 +282,7 @@ class TransferCallFragment : GenericCallFragment() {
             model
         )
 
-        model.cancelEvent.observe(viewLifecycleOwner) {
+        model.dismissEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG Attended transfer was cancelled by user")
                 dialog.dismiss()
@@ -321,7 +321,7 @@ class TransferCallFragment : GenericCallFragment() {
             model
         )
 
-        model.cancelEvent.observe(viewLifecycleOwner) {
+        model.dismissEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG Blind transfer was cancelled by user")
                 dialog.dismiss()

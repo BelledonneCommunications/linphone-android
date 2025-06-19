@@ -31,7 +31,7 @@ class ConfirmationDialogModel
 
     val dismissEvent = MutableLiveData<Event<Boolean>>()
 
-    val cancelEvent = MutableLiveData<Event<Boolean>>()
+    val alternativeChoiceEvent = MutableLiveData<Event<Boolean>>()
 
     val confirmEvent = MutableLiveData<Event<Boolean>>()
 
@@ -45,8 +45,8 @@ class ConfirmationDialogModel
     }
 
     @UiThread
-    fun cancel() {
-        cancelEvent.value = Event(true)
+    fun alternativeChoice() {
+        alternativeChoiceEvent.value = Event(true)
     }
 
     @UiThread
