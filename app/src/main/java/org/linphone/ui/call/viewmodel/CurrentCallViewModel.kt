@@ -1260,8 +1260,12 @@ class CurrentCallViewModel
         if (corePreferences.showMicrophoneAndSpeakerVuMeters) {
             volumeVuMeterTickerFlow().onEach {
                 coreContext.postOnCoreThread {
-                    microphoneRecordingVolume.postValue(computeVuMeterValue(currentCall.recordVolume))
-                    playbackVolume.postValue(computeVuMeterValue(currentCall.playVolume))
+                    val call = currentCall
+                    val state = call.state
+                    if (state == Call.State.End || state == Call.State.Released) return@postOnCoreThread
+
+                    microphoneRecordingVolume.postValue(computeVuMeterValue(call.recordVolume))
+                    playbackVolume.postValue(computeVuMeterValue(call.playVolume))
                 }
             }.launchIn(viewModelScope)
         }
