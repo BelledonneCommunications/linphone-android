@@ -92,16 +92,19 @@ class AudioUtils {
 
             if (!skipTelecom) {
                 val callId = currentCall?.callLog?.callId.orEmpty()
+                Log.i("$TAG Trying to change audio endpoint using Telecom Manager APIs")
                 val success = coreContext.telecomManager.applyAudioRouteToCallWithId(types, callId)
                 if (!success) {
                     Log.w("$TAG Failed to change audio endpoint to [$types] for call ID [$callId]")
                     applyAudioRouteChange(currentCall, types, output, skipTelecom = true)
                 } else {
+                    Log.i("$TAG It seems audio endpoint update using Telecom Manager was successful")
                     return
                 }
+            } else {
+                Log.i("$TAG Trying to change audio endpoint directly in Linphone SDK")
+                applyAudioRouteChangeInLinphone(currentCall, types, output)
             }
-
-            applyAudioRouteChangeInLinphone(currentCall, types, output)
         }
 
         fun applyAudioRouteChangeInLinphone(

@@ -48,6 +48,8 @@ class TelecomCallControlCallback(
 ) {
     companion object {
         private const val TAG = "[Telecom Call Control Callback]"
+
+        private const val DELAY_BEFORE_RELOADING_SOUND_DEVICES_MS = 100L
     }
 
     private var availableEndpoints: List<CallEndpointCompat> = arrayListOf()
@@ -124,12 +126,12 @@ class TelecomCallControlCallback(
             Log.i("$TAG New available audio endpoints list")
             if (availableEndpoints != list) {
                 Log.i(
-                    "$TAG List size of available audio endpoints has changed, reload sound devices in SDK in 500ms"
+                    "$TAG List size of available audio endpoints has changed, reload sound devices in SDK in [$DELAY_BEFORE_RELOADING_SOUND_DEVICES_MS] ms"
                 )
                 coreContext.postOnCoreThreadDelayed({ core ->
                     core.reloadSoundDevices()
                     Log.i("$TAG Sound devices reloaded")
-                }, 500)
+                }, DELAY_BEFORE_RELOADING_SOUND_DEVICES_MS)
             }
 
             availableEndpoints = list
