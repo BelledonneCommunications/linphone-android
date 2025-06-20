@@ -30,16 +30,14 @@
             android:background="?attr/color_background_contrast_in_dark_mode">
 
             <ImageView
+                style="@style/icon_top_bar_button_style"
                 android:id="@+id/back"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:adjustViewBounds="true"
-                android:padding="15dp"
                 android:onClick="@{backClickListener}"
                 android:visibility="@{viewModel.showBackButton ? View.VISIBLE : View.GONE}"
                 android:src="@drawable/caret_left"
                 android:contentDescription="@string/content_description_go_back_icon"
-                android:background="@drawable/circle_transparent_button_background"
                 app:tint="?attr/color_main1_500"
                 app:layout_constraintBottom_toBottomOf="@id/invisible_title"
                 app:layout_constraintStart_toStartOf="parent"
@@ -57,16 +55,15 @@
                 app:layout_constraintStart_toEndOf="@id/back"
                 app:layout_constraintTop_toTopOf="parent"/>
 
-            <ImageView
+
+           <ImageView
+               style="@style/icon_top_bar_button_style"
                 android:onClick="@{() -> viewModel.editContact()}"
                 android:id="@+id/edit"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:padding="15dp"
-                android:adjustViewBounds="true"
                 android:src="@drawable/pencil_simple"
                 android:contentDescription="@string/content_description_contact_edit"
-                android:background="@drawable/circle_transparent_button_background"
                 android:visibility="@{viewModel.isStored ? View.VISIBLE : View.GONE}"
                 app:tint="?attr/color_main2_500"
                 app:layout_constraintBottom_toBottomOf="@id/invisible_title"

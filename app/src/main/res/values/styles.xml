@@ -127,6 +127,15 @@
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
     </style>
+    <style name="icon_top_bar_button_style">
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:layout_marginBottom">2dp</item>
+        <item name="android:layout_marginStart">2dp</item>
+        <item name="android:layout_marginEnd">2dp</item>
+        <item name="android:padding">15dp</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:background">@drawable/circle_transparent_button_background</item>
+    </style>
     <style name="context_menu_action_label_style">
         <item name="android:fontFamily">@font/noto_sans</item>
         <item name="android:textSize">14sp</item>

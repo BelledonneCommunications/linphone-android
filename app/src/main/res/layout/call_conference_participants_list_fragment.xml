@@ -24,15 +24,13 @@
         android:background="?attr/color_background_contrast_in_dark_mode">
 
         <ImageView
+            style="@style/icon_top_bar_button_style"
             android:id="@+id/back"
+            android:onClick="@{backClickListener}"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:padding="15dp"
-            android:adjustViewBounds="true"
-            android:onClick="@{backClickListener}"
             android:src="@drawable/caret_left"
             android:contentDescription="@string/content_description_go_back_icon"
-            android:background="@drawable/circle_transparent_button_background"
             app:tint="?attr/color_main1_500"
             app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintStart_toStartOf="parent"
@@ -46,22 +44,21 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:text="@{viewModel.conferenceModel.participantsLabel, default=`Participant (1)`}"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/show_menu"
             app:layout_constraintStart_toEndOf="@id/back"
             app:layout_constraintTop_toTopOf="parent"/>
 
         <ImageView
+            style="@style/icon_top_bar_button_style"
             android:id="@+id/show_menu"
             android:onClick="@{showMenuClickListener}"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/top_bar_height"
-            android:padding="15dp"
-            android:adjustViewBounds="true"
+            android:layout_height="0dp"
             android:src="@drawable/dots_three_vertical"
-            android:background="@drawable/circle_transparent_button_background"
             android:contentDescription="@string/content_description_show_popup_menu"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/title"
             app:tint="?attr/color_main2_500"/>
 
         <View

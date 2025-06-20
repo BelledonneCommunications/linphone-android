@@ -76,15 +76,14 @@
             app:layout_constraintBottom_toBottomOf="parent" />
 
         <ImageView
+            style="@style/icon_top_bar_button_style"
             android:id="@+id/participant_menu"
             android:onClick="@{() -> model.openMenu(participantMenu)}"
             android:layout_width="@dimen/big_icon_size"
             android:layout_height="@dimen/big_icon_size"
             android:src="@drawable/dots_three_vertical"
             android:padding="10dp"
-            android:adjustViewBounds="true"
             android:contentDescription="@string/content_description_show_popup_menu"
-            android:background="@drawable/circle_transparent_button_background"
             android:visibility="@{model.showMenu ? View.VISIBLE : View.GONE}"
             app:tint="?attr/color_grey_800"
             app:layout_constraintEnd_toEndOf="parent"

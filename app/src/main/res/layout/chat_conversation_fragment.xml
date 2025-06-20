@@ -70,16 +70,14 @@
                     android:visibility="@{viewModel.searchBarVisible ? View.VISIBLE : View.GONE, default=gone}" />
 
                 <ImageView
+                    style="@style/icon_top_bar_button_style"
                     android:id="@+id/back"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/top_bar_height"
-                    android:padding="15dp"
-                    android:adjustViewBounds="true"
                     android:onClick="@{backClickListener}"
                     android:visibility="@{viewModel.isCallConversation || viewModel.showBackButton &amp;&amp; !viewModel.searchBarVisible ? View.VISIBLE : View.GONE}"
                     android:src="@drawable/caret_left"
                     android:contentDescription="@string/content_description_go_back_icon"
-                    android:background="@drawable/circle_transparent_button_background"
                     app:tint="?attr/color_main1_500"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"/>
@@ -167,43 +165,39 @@
                     app:layout_constraintBottom_toBottomOf="@id/ephemeral_enabled"/>
 
                 <ImageView
+                    style="@style/icon_top_bar_button_style"
                     android:id="@+id/show_menu"
                     android:onClick="@{showMenuClickListener}"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/top_bar_height"
-                    android:padding="15dp"
-                    android:adjustViewBounds="true"
                     android:src="@drawable/dots_three_vertical"
                     android:contentDescription="@string/content_description_show_popup_menu"
-                    android:background="@drawable/circle_transparent_button_background"
                     android:visibility="@{viewModel.isCallConversation ? View.GONE : View.VISIBLE}"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:tint="?attr/color_main2_500"/>
 
                 <ImageView
+                    style="@style/icon_top_bar_button_style"
                     android:id="@+id/start_call"
                     android:onClick="@{() -> viewModel.startCall()}"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/top_bar_height"
-                    android:padding="15dp"
                     android:src="@drawable/phone"
                     android:contentDescription="@string/content_description_call_start"
                     android:visibility="@{viewModel.isCallConversation || viewModel.isReadOnly || viewModel.searchBarVisible ? View.GONE : View.VISIBLE}"
-                    android:background="@drawable/circle_transparent_button_background"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/show_menu"
                     app:tint="?attr/color_main2_500" />
 
                 <ImageView
+                    style="@style/icon_top_bar_button_style"
                     android:id="@+id/cancel_search"
                     android:onClick="@{() -> viewModel.closeSearchBar()}"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:padding="15dp"
                     android:src="@drawable/caret_left"
                     android:contentDescription="@string/content_description_cancel_filter"
-                    android:background="@drawable/circle_transparent_button_background"
                     app:layout_constraintBottom_toBottomOf="@id/search"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/search"
@@ -240,30 +234,28 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <ImageView
+                    style="@style/icon_top_bar_button_style"
                     android:id="@+id/search_up"
                     android:onClick="@{() -> viewModel.searchUp()}"
                     android:enabled="@{viewModel.searchFilter.length() > 0}"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:padding="15dp"
                     android:src="@drawable/caret_up"
                     android:contentDescription="@string/content_description_chat_search_message_up"
-                    android:background="@drawable/circle_transparent_button_background"
                     app:layout_constraintBottom_toBottomOf="@id/search"
                     app:layout_constraintEnd_toStartOf="@id/search_down"
                     app:layout_constraintTop_toTopOf="@id/search"
                     app:tint="@color/icon_color_selector" />
 
                 <ImageView
+                    style="@style/icon_top_bar_button_style"
                     android:id="@+id/search_down"
                     android:onClick="@{() -> viewModel.searchDown()}"
                     android:enabled="@{viewModel.searchFilter.length() > 0 &amp;&amp; viewModel.canSearchDown}"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:padding="15dp"
                     android:src="@drawable/caret_down"
                     android:contentDescription="@string/content_description_chat_search_message_down"
-                    android:background="@drawable/circle_transparent_button_background"
                     app:layout_constraintBottom_toBottomOf="@id/search"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/search"

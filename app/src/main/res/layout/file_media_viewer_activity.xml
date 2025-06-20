@@ -56,15 +56,13 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <ImageView
+            style="@style/icon_top_bar_button_style"
             android:id="@+id/back"
             android:onClick="@{backClickListener}"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/top_bar_height"
-            android:adjustViewBounds="true"
-            android:padding="15dp"
             android:src="@drawable/caret_left"
             android:contentDescription="@string/content_description_go_back_icon"
-            android:background="@drawable/circle_transparent_button_background"
             app:tint="?attr/color_main1_500"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -105,30 +103,26 @@
             app:layout_constraintStart_toEndOf="@id/back"/>
 
         <ImageView
+            style="@style/icon_top_bar_button_style"
             android:id="@+id/share"
             android:onClick="@{shareClickListener}"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/top_bar_height"
-            android:adjustViewBounds="true"
-            android:padding="15dp"
             android:src="@drawable/share_network"
             android:contentDescription="@string/content_description_share_file"
-            android:background="@drawable/circle_transparent_button_background"
             android:visibility="@{sharedViewModel.mediaViewerFullScreenMode || viewModel.isCurrentlyDisplayedFileFromEphemeralMessage ? View.GONE : View.VISIBLE}"
             app:tint="@color/gray_main2_500"
             app:layout_constraintEnd_toStartOf="@id/save"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            style="@style/icon_top_bar_button_style"
             android:id="@+id/save"
             android:onClick="@{exportClickListener}"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/top_bar_height"
-            android:adjustViewBounds="true"
-            android:padding="15dp"
             android:src="@drawable/download_simple"
             android:contentDescription="@string/content_description_save_file"
-            android:background="@drawable/circle_transparent_button_background"
             android:visibility="@{sharedViewModel.mediaViewerFullScreenMode || viewModel.isCurrentlyDisplayedFileFromEphemeralMessage ? View.GONE : View.VISIBLE}"
             app:tint="@color/gray_main2_500"
             app:layout_constraintEnd_toEndOf="parent"

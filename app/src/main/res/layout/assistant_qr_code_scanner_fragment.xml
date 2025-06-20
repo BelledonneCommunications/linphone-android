@@ -30,14 +30,13 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:onClick="@{backClickListener}"
+            style="@style/icon_top_bar_button_style"
             android:id="@+id/back"
+            android:onClick="@{backClickListener}"
             android:layout_width="@dimen/top_bar_height"
             android:layout_height="@dimen/top_bar_height"
-            android:padding="15dp"
             android:src="@drawable/caret_left"
             android:contentDescription="@string/content_description_go_back_icon"
-            android:background="@drawable/circle_transparent_button_background"
             app:tint="@color/bc_white"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>

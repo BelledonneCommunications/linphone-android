@@ -75,15 +75,13 @@
             app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
         <ImageView
+            style="@style/icon_top_bar_button_style"
             android:id="@+id/search_toggle"
             android:onClick="@{() -> viewModel.openSearchBar()}"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginEnd="5dp"
-            android:padding="15dp"
             android:src="@drawable/magnifying_glass"
-            android:adjustViewBounds="true"
-            android:background="@drawable/circle_transparent_button_background"
             android:contentDescription="@string/content_description_open_filter"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintBottom_toBottomOf="@id/title"
@@ -92,15 +90,13 @@
             app:tint="?attr/color_on_main" />
 
         <ImageView
+            style="@style/icon_top_bar_button_style"
             android:id="@+id/extra_action"
             android:onClick="@{extraActionClickListener}"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginEnd="5dp"
-            android:padding="15dp"
             android:src="@{extraActionIcon, default=@drawable/dots_three_vertical}"
-            android:adjustViewBounds="true"
-            android:background="@drawable/circle_transparent_button_background"
             android:contentDescription="@{extraActionContentDescription}"
             android:visibility="@{!viewModel.searchBarVisible &amp;&amp; enableExtraAction ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintDimensionRatio="1:1"
@@ -110,15 +106,13 @@
             app:tint="?attr/color_on_main" />
 
         <ImageView
+            style="@style/icon_top_bar_button_style"
             android:id="@+id/cancel_search"
             android:onClick="@{() -> viewModel.closeSearchBar()}"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginStart="5dp"
-            android:padding="15dp"
             android:src="@drawable/caret_left"
-            android:adjustViewBounds="true"
-            android:background="@drawable/circle_transparent_button_background"
             android:contentDescription="@string/content_description_cancel_filter"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintBottom_toBottomOf="@id/search"
@@ -159,15 +153,13 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <ImageView
+            style="@style/icon_top_bar_button_style"
             android:id="@+id/clear_field"
             android:onClick="@{() -> viewModel.clearFilter()}"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginEnd="5dp"
-            android:padding="15dp"
             android:src="@drawable/x"
-            android:adjustViewBounds="true"
-            android:background="@drawable/circle_transparent_button_background"
             android:contentDescription="@string/content_description_clear_filter"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintBottom_toBottomOf="@id/search"

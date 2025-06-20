@@ -36,14 +36,13 @@
             android:layout_height="wrap_content">
 
             <ImageView
+                style="@style/icon_top_bar_button_style"
                 android:id="@+id/back"
                 android:onClick="@{backClickListener}"
                 android:layout_width="@dimen/top_bar_height"
                 android:layout_height="@dimen/top_bar_height"
-                android:padding="15dp"
                 android:src="@drawable/caret_left"
                 android:contentDescription="@string/content_description_go_back_icon"
-                android:background="@drawable/circle_transparent_button_background"
                 android:visibility="@{viewModel.showBackButton ? View.VISIBLE : View.INVISIBLE, default=invisible}"
                 app:tint="?attr/color_main2_500"
                 app:layout_constraintTop_toTopOf="parent"

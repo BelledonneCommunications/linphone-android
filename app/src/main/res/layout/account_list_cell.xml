@@ -123,14 +123,12 @@
             app:layout_constraintEnd_toStartOf="@id/menu"/>
 
         <ImageView
+            style="@style/icon_top_bar_button_style"
             android:onClick="@{() -> model.openMenu(menu)}"
             android:id="@+id/menu"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:padding="15dp"
-            android:adjustViewBounds="true"
             android:contentDescription="@string/content_description_open_drawer_menu_icon"
-            android:background="@drawable/circle_transparent_button_background"
             android:src="@drawable/dots_three_vertical"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"

@@ -30,16 +30,14 @@
             android:background="?attr/color_background_contrast_in_dark_mode">
 
             <ImageView
+                style="@style/icon_top_bar_button_style"
                 android:id="@+id/back"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:padding="15dp"
-                android:adjustViewBounds="true"
                 android:onClick="@{backClickListener}"
                 android:visibility="@{viewModel.showBackButton ? View.VISIBLE : View.GONE}"
                 android:src="@drawable/caret_left"
                 android:contentDescription="@string/content_description_go_back_icon"
-                android:background="@drawable/circle_transparent_button_background"
                 app:tint="?attr/color_main1_500"
                 app:layout_constraintBottom_toBottomOf="@id/invisible_title"
                 app:layout_constraintStart_toStartOf="parent"
@@ -58,15 +56,13 @@
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <ImageView
+                style="@style/icon_top_bar_button_style"
                 android:onClick="@{menuClickListener}"
                 android:id="@+id/menu"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:padding="15dp"
-                android:adjustViewBounds="true"
                 android:src="@drawable/dots_three_vertical"
                 android:contentDescription="@string/content_description_show_popup_menu"
-                android:background="@drawable/circle_transparent_button_background"
                 app:tint="?attr/color_main2_500"
                 app:layout_constraintBottom_toBottomOf="@id/invisible_title"
                 app:layout_constraintEnd_toEndOf="parent"
