@@ -77,6 +77,7 @@ import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
+import androidx.core.content.edit
 
 @UiThread
 class MainActivity : GenericActivity() {
@@ -414,9 +415,8 @@ class MainActivity : GenericActivity() {
                 HISTORY_FRAGMENT_ID
             }
         }
-        with(getPreferences(MODE_PRIVATE).edit()) {
+        getPreferences(MODE_PRIVATE).edit {
             putInt(DEFAULT_FRAGMENT_KEY, defaultFragmentId)
-            apply()
         }
         Log.i("$TAG Stored [$defaultFragmentId] as default page")
 

@@ -33,7 +33,6 @@
     <string name="dialog_accept">Accepter</string>
     <string name="dialog_cancel">Annuler</string>
     <string name="dialog_continue">Continuer</string>
-    <string name="dialog_ok">OK</string>
     <string name="dialog_call">Appeler</string>
     <string name="dialog_delete">Supprimer</string>
     <string name="dialog_install">Installer</string>
@@ -86,7 +85,6 @@
     <!-- Generic toasts -->
     <string name="sip_address_copied_to_clipboard_toast">Adresse copiée</string>
     <string name="new_account_configured_toast">Nouveau compte ajouté</string>
-    <string name="default_account_connection_state_error_toast">Erreur de connexion !</string>
     <string name="file_successfully_exported_to_media_store_toast">Média exporté</string>
     <string name="export_file_to_media_store_error_toast">Échec de l\'exportation</string>
     <string name="file_successfully_exported_to_documents_toast">Document exporté</string>
@@ -372,7 +370,6 @@
     <string name="account_settings_dialog_invalid_password_hint">Mot de passe</string>
     <string name="account_failed_to_find_identity_toast">Le compte selectionné est introuvable !</string>
 
-    <string name="history_title">Historique d\'appel</string>
     <string name="history_call_start_title">Nouvel appel</string>
     <string name="history_call_start_search_bar_filter_hint">Cherchez un contact ou une suggestion</string>
     <string name="history_call_start_create_group_call">Démarrer un appel de groupe</string>

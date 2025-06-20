@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <View xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="1dp"
     android:layout_height="match_parent"
-    android:background="?attr/color_separator">
+    android:background="?attr/color_separator"
+    tools:ignore="Overdraw">
 
 </View>

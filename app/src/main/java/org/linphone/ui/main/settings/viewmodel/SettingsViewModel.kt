@@ -207,8 +207,6 @@ class SettingsViewModel
     val deviceName = MutableLiveData<String>()
     val remoteProvisioningUrl = MutableLiveData<String>()
 
-    val expandAdvancedCalls = MutableLiveData<Boolean>()
-
     val mediaEncryptionIndex = MutableLiveData<Int>()
     val mediaEncryptionLabels = arrayListOf<String>()
     private val mediaEncryptionValues = arrayListOf<MediaEncryption>()
@@ -288,7 +286,6 @@ class SettingsViewModel
         expandNetwork.value = false
         expandUserInterface.value = false
         expandTunnel.value = false
-        expandAdvancedCalls.value = false
         expandAudioDevices.value = false
         expandAudioCodecs.value = false
         expandVideoCodecs.value = false
@@ -1000,11 +997,6 @@ class SettingsViewModel
             coreContext.core.start()
             Log.i("$TAG Core has been restarted")
         }
-    }
-
-    @UiThread
-    fun toggleAdvancedCallsExpand() {
-        expandAdvancedCalls.value = expandAdvancedCalls.value == false
     }
 
     @UiThread

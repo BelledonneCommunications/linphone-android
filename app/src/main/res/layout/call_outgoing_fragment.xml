@@ -121,7 +121,7 @@
                 android:layout_marginBottom="10dp"
                 app:alignTopRight="true"
                 app:displayMode="black_bars"
-                roundCornersRadius="@dimen/call_round_corners_texture_view_radius"
+                app:radius="@dimen/call_round_corners_texture_view_radius"
                 app:layout_constraintBottom_toTopOf="@id/bottom_bar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHeight_max="@dimen/call_video_preview_max_size"

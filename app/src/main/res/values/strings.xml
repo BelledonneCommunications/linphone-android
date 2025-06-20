@@ -73,7 +73,6 @@
     <string name="dialog_accept">Accept</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_continue">Continue</string>
-    <string name="dialog_ok">OK</string>
     <string name="dialog_call">Call</string>
     <string name="dialog_delete">Delete</string>
     <string name="dialog_install">Install</string>
@@ -127,7 +126,6 @@
     <!-- Generic toasts -->
     <string name="sip_address_copied_to_clipboard_toast">SIP address copied into clipboard</string>
     <string name="new_account_configured_toast">New account configured</string>
-    <string name="default_account_connection_state_error_toast">Connection error!</string>
     <string name="file_successfully_exported_to_media_store_toast">File has been exported to native gallery</string>
     <string name="export_file_to_media_store_error_toast">Error trying to export file to native gallery</string>
     <string name="file_successfully_exported_to_documents_toast">File has been exported to documents</string>
@@ -414,7 +412,6 @@
     <string name="account_failed_to_find_identity_toast">Failed to find matching account!</string>
 
     <!-- Call history -->
-    <string name="history_title">Call history</string>
     <string name="history_call_start_title">New call</string>
     <string name="history_call_start_search_bar_filter_hint">Search contact or history call</string>
     <string name="history_call_start_create_group_call">Create a group call</string>

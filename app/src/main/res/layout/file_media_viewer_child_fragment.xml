@@ -69,7 +69,7 @@
             android:padding="10dp"
             android:src="@{viewModel.isMediaPlaying ? @drawable/pause_fill : @drawable/play_fill, default=@drawable/play_fill}"
             android:adjustViewBounds="true"
-            android:contentDescription="@string/content_description_play_pause_audio_playback"
+            android:contentDescription="@string/content_description_play_pause_video_playback"
             android:background="@drawable/circle_transparent_dark_button_background"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

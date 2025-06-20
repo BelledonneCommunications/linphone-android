@@ -49,7 +49,7 @@ class CorePreferences
 
     @get:WorkerThread @set:WorkerThread
     var printLogsInLogcat: Boolean
-        get() = config.getBool("app", "debug", org.linphone.BuildConfig.DEBUG)
+        get() = config.getBool("app", "debug", BuildConfig.DEBUG)
         set(value) {
             config.setBool("app", "debug", value)
         }

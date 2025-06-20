@@ -258,7 +258,7 @@ class ActiveCallFragment : GenericCallFragment() {
                     )
                 } else {
                     // Only allow "trying again" once
-                    showZrtpAlertDialog(false)
+                    showZrtpAlertDialog()
                 }
             }
         }
@@ -408,7 +408,7 @@ class ActiveCallFragment : GenericCallFragment() {
 
         if (callViewModel.isZrtpAlertDialogVisible) {
             Log.i("$TAG Fragment resuming, showing ZRTP alert dialog")
-            showZrtpAlertDialog(false)
+            showZrtpAlertDialog()
         } else if (callViewModel.isZrtpDialogVisible) {
             Log.i("$TAG Fragment resuming, showing ZRTP SAS validation dialog")
             callViewModel.showZrtpSasDialogIfPossible()
@@ -481,12 +481,12 @@ class ActiveCallFragment : GenericCallFragment() {
         callViewModel.isZrtpDialogVisible = true
     }
 
-    private fun showZrtpAlertDialog(allowTryAgain: Boolean = true) {
+    private fun showZrtpAlertDialog() {
         if (zrtpSasDialog != null) {
             zrtpSasDialog?.dismiss()
         }
 
-        val model = ZrtpAlertDialogModel(allowTryAgain)
+        val model = ZrtpAlertDialogModel(false)
         val dialog = DialogUtils.getZrtpAlertDialog(requireActivity(), model)
 
         model.tryAgainEvent.observe(viewLifecycleOwner) { event ->
