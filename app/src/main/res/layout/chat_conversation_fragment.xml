@@ -326,19 +326,33 @@
                     app:layout_constraintStart_toStartOf="@id/events_list"
                     app:layout_constraintEnd_toEndOf="@id/events_list" />
 
+                <ImageView
+                    android:id="@+id/composing_icon"
+                    android:layout_width="@dimen/small_icon_size"
+                    android:layout_height="@dimen/small_icon_size"
+                    android:layout_marginStart="10dp"
+                    android:src="@{viewModel.composingIcon, default=@drawable/microphone}"
+                    android:visibility="@{viewModel.composingLabel.length() == 0 ? View.GONE : View.VISIBLE}"
+                    android:contentDescription="@null"
+                    app:tint="?attr/color_main2_600"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/composing"
+                    app:layout_constraintTop_toTopOf="@id/composing"
+                    app:layout_constraintBottom_toBottomOf="@id/composing"/>
+
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/default_text_style_300"
                     android:id="@+id/composing"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="5dp"
                     android:paddingBottom="5dp"
                     android:background="?attr/color_main2_000"
                     android:text="@{viewModel.composingLabel, default=`John Doe is composing...`}"
                     android:textSize="12sp"
                     android:visibility="@{viewModel.composingLabel.length() == 0 ? View.GONE : View.VISIBLE}"
                     app:layout_constraintBottom_toTopOf="@id/warning_disabled_not_secured"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/composing_icon"
                     app:layout_constraintEnd_toEndOf="parent" />
 
                 <include

@@ -44,7 +44,6 @@ import org.linphone.ui.main.chat.model.EventLogModel
 import org.linphone.ui.main.chat.model.FileModel
 import org.linphone.ui.main.chat.model.MessageModel
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
-import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
@@ -88,6 +87,8 @@ class ConversationViewModel
     val ephemeralLifeTimeLabel = MutableLiveData<String>()
 
     val composingLabel = MutableLiveData<String>()
+
+    val composingIcon = MutableLiveData<Int>()
 
     val searchBarVisible = MutableLiveData<Boolean>()
 
@@ -906,26 +907,12 @@ class ConversationViewModel
     @WorkerThread
     private fun computeComposingLabel() {
         if (!isChatRoomInitialized()) return
-        val composingFriends = arrayListOf<String>()
-        var label = ""
-        for (address in chatRoom.composingAddresses) {
-            val avatar = coreContext.contactsManager.getContactAvatarModelForAddress(address)
-            val name = avatar.name.value ?: LinphoneUtils.getDisplayName(address)
-            composingFriends.add(name)
-            label += "$name, "
-        }
-        if (composingFriends.isNotEmpty()) {
-            label = label.dropLast(2)
 
-            val format = AppUtils.getStringWithPlural(
-                R.plurals.conversation_composing_label,
-                composingFriends.size,
-                label
-            )
-            composingLabel.postValue(format)
-        } else {
-            composingLabel.postValue("")
-        }
+        val pair = LinphoneUtils.getComposingIconAndText(chatRoom)
+        val icon = pair.first
+        composingIcon.postValue(icon)
+        val label = pair.second
+        composingLabel.postValue(label)
     }
 
     @WorkerThread

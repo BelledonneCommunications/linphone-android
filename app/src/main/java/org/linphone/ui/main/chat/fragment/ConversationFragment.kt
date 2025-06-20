@@ -280,11 +280,11 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
         }
 
-        override fun afterTextChanged(p0: Editable?) {
+        override fun afterTextChanged(editable: Editable?) {
             if (viewModel.isGroup.value == true) {
                 sendMessageViewModel.closeParticipantsList()
 
-                val split = p0.toString().split(" ")
+                val split = editable.toString().split(" ")
                 for (part in split) {
                     if (part == "@") {
                         Log.i("$TAG '@' found, opening participants list")
@@ -293,9 +293,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                 }
             }
 
-            if (p0.toString().isNotEmpty()) {
-                sendMessageViewModel.notifyChatMessageIsBeingComposed()
-            }
+            sendMessageViewModel.notifyComposing(editable.toString().isNotEmpty())
         }
     }
 

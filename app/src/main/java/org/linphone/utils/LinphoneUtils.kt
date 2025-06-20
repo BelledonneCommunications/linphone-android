@@ -470,6 +470,38 @@ class LinphoneUtils {
             }
         }
 
+        @WorkerThread
+        fun getComposingIconAndText(chatRoom: ChatRoom): Pair<Int, String> {
+            val composing = chatRoom.isRemoteComposing
+            if (!composing) {
+                return Pair(0, "")
+            }
+
+            var icon = R.drawable.chat_teardrop_dots
+            val composingFriends = arrayListOf<String>()
+            var label = ""
+            for (participant in chatRoom.composingParticipants) {
+                val address = participant.address
+                val avatar = coreContext.contactsManager.getContactAvatarModelForAddress(address)
+                val name = avatar.name.value ?: getDisplayName(address)
+                composingFriends.add(name)
+                label += "$name, "
+            }
+            if (composingFriends.isNotEmpty()) {
+                label = label.dropLast(2)
+
+                // TODO: use voice recording content type to change icon/text
+                val format = AppUtils.getStringWithPlural(
+                    R.plurals.conversation_composing_label,
+                    composingFriends.size,
+                    label
+                )
+                return Pair(icon, format)
+            }
+
+            return Pair(icon, label)
+        }
+
         @AnyThread
         fun formatEphemeralExpiration(duration: Long): String {
             return when (duration) {

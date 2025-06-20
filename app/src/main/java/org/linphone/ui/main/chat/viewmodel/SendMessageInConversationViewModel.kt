@@ -344,10 +344,14 @@ class SendMessageInConversationViewModel
     }
 
     @UiThread
-    fun notifyChatMessageIsBeingComposed() {
+    fun notifyComposing(composing: Boolean) {
         coreContext.postOnCoreThread {
             if (::chatRoom.isInitialized) {
-                chatRoom.compose()
+                if (composing) {
+                    chatRoom.composeTextMessage()
+                } else {
+                    chatRoom.stopComposing()
+                }
             }
         }
     }
@@ -489,6 +493,7 @@ class SendMessageInConversationViewModel
     @UiThread
     fun stopVoiceMessageRecording() {
         coreContext.postOnCoreThread {
+            chatRoom.stopComposing()
             stopVoiceRecorder()
         }
     }
@@ -496,6 +501,7 @@ class SendMessageInConversationViewModel
     @UiThread
     fun cancelVoiceMessageRecording() {
         coreContext.postOnCoreThread {
+            chatRoom.stopComposing()
             stopVoiceRecorder()
 
             val path = voiceMessageRecorder.file
@@ -589,6 +595,7 @@ class SendMessageInConversationViewModel
             }
             else -> {}
         }
+        chatRoom.composeVoiceMessage()
 
         val duration = voiceMessageRecorder.duration
         val formattedDuration = SimpleDateFormat("mm:ss", Locale.getDefault()).format(duration) // duration is in ms

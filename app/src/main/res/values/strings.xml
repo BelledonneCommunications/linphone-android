@@ -533,6 +533,10 @@
         <item quantity="one">%s is composing…</item>
         <item quantity="other">%s are composing…</item>
     </plurals>
+    <plurals name="conversation_composing_voice_message_label">
+        <item quantity="one">%s is recording a voice message…</item>
+        <item quantity="other">%s are recording a voice message…</item>
+    </plurals>
     <string name="conversation_add_participants_title">Add participants</string>
     <string name="conversation_reply_to_message_title">Replying to:</string>
     <string name="conversation_menu_search_in_messages">Search</string>

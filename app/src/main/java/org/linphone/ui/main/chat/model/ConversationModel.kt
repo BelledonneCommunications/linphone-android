@@ -82,6 +82,8 @@ class ConversationModel
 
     val lastMessageContentIcon = MutableLiveData<Int>()
 
+    val composingIcon = MutableLiveData<Int>()
+
     val isLastMessageOutgoing = MutableLiveData<Boolean>()
 
     val dateTime = MutableLiveData<String>()
@@ -428,30 +430,10 @@ class ConversationModel
     private fun computeComposingLabel() {
         val composing = chatRoom.isRemoteComposing
         isComposing.postValue(composing)
-        if (!composing) {
-            composingLabel.postValue("")
-            return
-        }
-
-        val composingFriends = arrayListOf<String>()
-        var label = ""
-        for (address in chatRoom.composingAddresses) {
-            val avatar = coreContext.contactsManager.getContactAvatarModelForAddress(address)
-            val name = avatar.name.value ?: LinphoneUtils.getDisplayName(address)
-            composingFriends.add(name)
-            label += "$name, "
-        }
-        if (composingFriends.isNotEmpty()) {
-            label = label.dropLast(2)
-
-            val format = AppUtils.getStringWithPlural(
-                R.plurals.conversation_composing_label,
-                composingFriends.size,
-                label
-            )
-            composingLabel.postValue(format)
-        } else {
-            composingLabel.postValue("")
-        }
+        val pair = LinphoneUtils.getComposingIconAndText(chatRoom)
+        val icon = pair.first
+        composingIcon.postValue(icon)
+        val label = pair.second
+        composingLabel.postValue(label)
     }
 }
