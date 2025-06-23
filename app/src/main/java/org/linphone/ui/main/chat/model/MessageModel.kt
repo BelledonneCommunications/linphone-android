@@ -111,7 +111,7 @@ class MessageModel
             )?.params?.instantMessagingEncryptionMandatory == true
             )
 
-    val isReply = chatMessage.isReply
+    val isReply = MutableLiveData<Boolean>()
 
     val replyToMessageId = chatMessage.replyMessageId
 
@@ -321,8 +321,11 @@ class MessageModel
         updateReactionsList()
 
         computeContentsList()
-        if (isReply) {
+        if (chatMessage.isReply) {
+            // Wait to see if original message is found before setting isReply to true
             computeReplyInfo()
+        } else {
+            isReply.postValue(false)
         }
 
         coreContext.postOnMainThread {
@@ -647,8 +650,10 @@ class MessageModel
             val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(from)
             replyTo.postValue(avatarModel.contactName ?: LinphoneUtils.getDisplayName(from))
             replyText.postValue(LinphoneUtils.getFormattedTextDescribingMessage(replyMessage))
+            isReply.postValue(true)
         } else {
-            Log.e("$TAG Failed to find the reply message from ID [${chatMessage.replyMessageId}]")
+            Log.w("$TAG Failed to find the reply message from ID [${chatMessage.replyMessageId}]")
+            isReply.postValue(false)
         }
     }
 
