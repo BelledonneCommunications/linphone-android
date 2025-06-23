@@ -339,7 +339,6 @@ class CurrentCallViewModel
                             "$TAG From now on current call will be [${newCurrentCall.remoteAddress.asStringUriOnly()}]"
                         )
                         configureCall(newCurrentCall)
-                        updateEncryption()
                     } else {
                         Log.e("$TAG Failed to get a valid call to display")
                         endCall(call)
@@ -452,7 +451,6 @@ class CurrentCallViewModel
                         )
                         currentCall.removeListener(callListener)
                         configureCall(call)
-                        updateEncryption()
                     } else if (LinphoneUtils.isCallIncoming(call.state)) {
                         Log.w(
                             "$TAG A call is being received [${call.remoteAddress.asStringUriOnly()}], using it as current call unless declined"
@@ -1091,9 +1089,14 @@ class CurrentCallViewModel
         callMediaEncryptionModel.update(call)
         call.addListener(callListener)
 
-        if (call.currentParams.mediaEncryption == MediaEncryption.None) {
-            waitingForEncryptionInfo.postValue(true)
-            isMediaEncrypted.postValue(false)
+        val state = call.state
+        if (LinphoneUtils.isCallOutgoing(state) || LinphoneUtils.isCallIncoming(state)) {
+            if (call.currentParams.mediaEncryption == MediaEncryption.None) {
+                waitingForEncryptionInfo.postValue(true)
+                isMediaEncrypted.postValue(false)
+            } else {
+                updateEncryption()
+            }
         } else {
             updateEncryption()
         }
@@ -1182,7 +1185,6 @@ class CurrentCallViewModel
         updateOutputAudioDevice(audioDevice)
 
         isOutgoing.postValue(call.dir == Call.Dir.Outgoing)
-        val state = call.state
         isOutgoingRinging.postValue(state == Call.State.OutgoingRinging)
         isIncomingEarlyMedia.postValue(state == Call.State.IncomingEarlyMedia)
         isOutgoingEarlyMedia.postValue(state == Call.State.OutgoingEarlyMedia)
