@@ -15,6 +15,7 @@
         android:id="@+id/bottom_nav_bar"
         android:layout_width="@dimen/landscape_nav_bar_width"
         android:layout_height="match_parent"
+        android:elevation="16dp"
         android:background="?attr/color_background_contrast_in_dark_mode">
 
         <androidx.appcompat.widget.AppCompatTextView
