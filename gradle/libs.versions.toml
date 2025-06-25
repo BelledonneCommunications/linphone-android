@@ -1,10 +1,10 @@
 [versions]
-agp = "8.10.1"
-kotlin = "2.0.21"
+agp = "8.11.0"
+kotlin = "2.2.0"
 gmsGoogleServices = "4.4.2"
 firebaseCrashlytics = "3.0.4"
 firebaseBomVersion = "33.15.0"
-ktlint = "12.1.2"
+ktlint = "12.3.0"
 
 annotations = "1.9.1"
 activity = "1.10.1"

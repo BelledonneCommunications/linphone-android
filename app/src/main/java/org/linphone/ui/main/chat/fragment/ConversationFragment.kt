@@ -1325,7 +1325,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
 
             val model = MessageReactionsModel(chatMessageModel.chatMessage) { reactionsModel ->
                 coreContext.postOnMainThread {
-                    if (reactionsModel.allReactions.isEmpty) {
+                    if (reactionsModel.allReactions.isEmpty()) {
                         Log.i("$TAG No reaction to display, closing bottom sheet")
                         val bottomSheetBehavior = BottomSheetBehavior.from(
                             binding.messageBottomSheet.root
