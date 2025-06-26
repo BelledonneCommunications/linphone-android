@@ -687,6 +687,7 @@ class MessageModel
         // Check for mentions
         val chatRoom = chatMessage.chatRoom
         val matcher = Pattern.compile(MENTION_REGEXP).matcher(textContent)
+        var offset = 0
         while (matcher.find()) {
             val start = matcher.start()
             val end = matcher.end()
@@ -712,11 +713,11 @@ class MessageModel
                 )
                 val friend = avatarModel.friend
                 val displayName = friend.name ?: LinphoneUtils.getDisplayName(address)
-                Log.d(
-                    "$TAG Using display name [$displayName] instead of username [$source]"
+                Log.i(
+                    "$TAG Using display name [$displayName] instead of mention username [$source]"
                 )
 
-                spannableBuilder.replace(start, end, "@$displayName")
+                spannableBuilder.replace(start + offset, end + offset, "@$displayName")
                 val span = PatternClickableSpan.StyledClickableSpan(
                     object : SpannableClickedListener {
                         @UiThread
@@ -733,10 +734,11 @@ class MessageModel
                 )
                 spannableBuilder.setSpan(
                     span,
-                    start,
-                    start + displayName.length + 1,
+                    start + offset,
+                    start + offset + displayName.length + 1,
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
+                offset += displayName.length - source.length
             }
         }
 
