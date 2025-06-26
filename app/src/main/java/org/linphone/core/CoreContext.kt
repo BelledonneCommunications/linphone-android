@@ -888,19 +888,25 @@ class CoreContext
                     "$TAG Using account matching address ${localAddress.asStringUriOnly()} as From"
                 )
             } else {
+                val defaultAccount = core.defaultAccount
+                params.account = defaultAccount
                 Log.e(
-                    "$TAG Failed to find account matching address ${localAddress.asStringUriOnly()}"
+                    "$TAG Failed to find account matching address ${localAddress.asStringUriOnly()}, using default one [${defaultAccount?.params?.identityAddress?.asStringUriOnly()}]"
                 )
             }
+        } else {
+            val defaultAccount = core.defaultAccount
+            params.account = defaultAccount
+            Log.i("$TAG No local address given, using default account [${defaultAccount?.params?.identityAddress?.asStringUriOnly()}]")
         }
 
         val username = address.username.orEmpty()
         val domain = address.domain.orEmpty()
-        val defaultAccount = params.account ?: core.defaultAccount
-        if (defaultAccount != null && Compatibility.isIpAddress(domain)) {
+        val account = params.account ?: core.defaultAccount
+        if (account != null && Compatibility.isIpAddress(domain)) {
             Log.i("$TAG SIP URI [${address.asStringUriOnly()}] seems to have an IP address as domain")
             if (username.isNotEmpty() && (username.startsWith("+") || username.isDigitsOnly())) {
-                val identityDomain = defaultAccount.params.identityAddress?.domain
+                val identityDomain = account.params.identityAddress?.domain
                 Log.w("$TAG Username [$username] looks like a phone number, replacing domain [$domain] by the local account one [$identityDomain]")
                 if (identityDomain != null) {
                     val newAddress = address.clone()
