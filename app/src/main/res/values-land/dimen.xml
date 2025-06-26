@@ -7,4 +7,6 @@
 
     <dimen name="dialog_max_width">600dp</dimen>
     <dimen name="top_bar_rounded_corner_radius">0dp</dimen>
+
+    <dimen name="chat_bubble_big_image_max_size">175dp</dimen>
 </resources>

@@ -6,4 +6,6 @@
     <dimen name="sliding_pane_left_fragment_width">500dp</dimen>
 
     <integer name="media_columns">8</integer>
+
+    <dimen name="chat_bubble_big_image_max_size">350dp</dimen>
 </resources>
