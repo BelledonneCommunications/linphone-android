@@ -17,7 +17,6 @@ Group changes to describe their impact on the project, as follows:
 - Support right click on some items to open bottom sheet/menu
 - Added toggle speaker action in active call notification
 - Increased text size for chat messages that only contains emoji(s)
-- Dedicated top bar when file(s) or text is waiting to be shared
 - New settings:
   - one for user to choose whether to sort contacts by first name or last name
   - one to hide contacts that have neither a SIP address nor a phone number
@@ -27,8 +26,23 @@ Group changes to describe their impact on the project, as follows:
 ### Changed
 - Hide SIP address/phone number picker dialog if contact has exactly one SIP address matching both the app default domain & the currently selected account domain
 - Improved UI on tablets with screen sw600dp and higher, will look more like our desktop app
-- Split alert top bar in two to be able to see both alerts and ongoing call(s)
 - Reworked some settings (moved calls related ones from advanced settings to advanced calls settings)
+
+## [6.0.10] - 2025-06-27
+
+### Added
+- Added a new top bar alert area for pending file/text sharing.
+
+### Changed
+- Reworked in-app top bar alerts, now can show both an account alert and an active call alert.
+- Hide SIP address/phone number picker dialog if contact has exactly one SIP address matching the default domain and currently default account domain.
+
+### Fixed
+- Bluetooth not being used automatically when device is connected during a call.
+- Call encryption status label stuck in "Waiting for encryption".
+- Group chat room creation if LIME server URL isn't set.
+- Participant mention if more than one in the same chat message.
+- Force default account in call params when starting one.
 
 ## [6.0.9] - 2025-06-06
 
