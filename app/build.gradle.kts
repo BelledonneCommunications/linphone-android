@@ -32,7 +32,7 @@ if (firebaseCloudMessagingAvailable) {
 }
 
 var gitBranch = ByteArrayOutputStream()
-var gitVersion = "6.0.9"
+var gitVersion = "6.0.10"
 
 task("getGitVersion") {
     val gitVersionStream = ByteArrayOutputStream()
@@ -100,8 +100,8 @@ android {
         applicationId = packageName
         minSdk = 28
         targetSdk = 35
-        versionCode = 600009 // 6.00.009
-        versionName = "6.0.9"
+        versionCode = 600010 // 6.00.010
+        versionName = "6.0.10"
 
         manifestPlaceholders["appAuthRedirectScheme"] = packageName
 

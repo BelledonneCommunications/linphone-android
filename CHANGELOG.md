@@ -10,6 +10,22 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [6.0.10] - 2025-06-27
+
+### Added
+- Added a new top bar alert area for pending file/text sharing.
+
+### Changed
+- Reworked in-app top bar alerts, now can show both an account alert and an active call alert.
+- Hide SIP address/phone number picker dialog if contact has exactly one SIP address matching the default domain and currently default account domain.
+
+### Fixed
+- Bluetooth not being used automatically when device is connected during a call.
+- Call encryption status label stuck in "Waiting for encryption".
+- Group chat room creation if LIME server URL isn't set.
+- Participant mention if more than one in the same chat message.
+- Force default account in call params when starting one.
+
 ## [6.0.9] - 2025-06-06
 
 ### Added
