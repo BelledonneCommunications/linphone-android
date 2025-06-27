@@ -850,4 +850,9 @@
     <string name="settings_advanced_logs_upload_server_url">Adresa URL serveru pro sdílení logů</string>
     <string name="contacts_list_sip_empty">Momentálně žádný SIP kontakt…</string>
     <string name="contacts_change_filter_label">Změnit filtr</string>
+    <string name="help_about_contribute_translations_subtitle">Pomozte zpřístupnit aplikaci co největšímu počtu lidí.</string>
+    <string name="help_about_user_guide_title">Průvodce &appName;</string>
+    <string name="help_about_user_guide_subtitle">Naučte se krok za krokem ovládat všechny funkce aplikace.</string>
+    <string name="help_troubleshooting_subtitle">Předejte své diagnostické protokoly, abyste usnadnili řešení chyb.</string>
+    <string name="content_description_cancel_files_or_text_pending_sharing">Kliknutím zrušíte soubory nebo text čekající na sdílení</string>
 </resources>

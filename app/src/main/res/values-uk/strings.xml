@@ -859,4 +859,9 @@
     </plurals>
     <string name="network_not_reachable">Відсутнє підключення до Інтернету</string>
     <string name="operation_in_progress_overlay">Операція триває, будь ласка, зачекайте</string>
+    <string name="help_about_user_guide_title">&appName; посібник користувача</string>
+    <string name="help_about_user_guide_subtitle">Дізнайтеся, як опанувати всі функції програми крок за кроком.</string>
+    <string name="help_about_contribute_translations_subtitle">Допоможіть зробити застосунок доступним для якомога більшої кількості людей.</string>
+    <string name="help_troubleshooting_subtitle">Надсилайте свої діагностичні журнали для полегшення вирішення помилок.</string>
+    <string name="content_description_cancel_files_or_text_pending_sharing">Натисніть, щоб скасувати обмін файлами або текстом, що очікує надсилання</string>
 </resources>

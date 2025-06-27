@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="yesterday">Ahir</string>
+    <plurals name="days">
+        <item quantity="one">%s dia</item>
+        <item quantity="many">%s dies</item>
+        <item quantity="other">%s dies</item>
+    </plurals>
+</resources>

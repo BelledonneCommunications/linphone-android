@@ -411,9 +411,9 @@
     <string name="conversation_action_configure_ephemeral_messages">配置阅后即焚消息</string>
     <string name="conversation_ephemeral_messages_title">阅后即焚消息</string>
     <string name="conversation_ephemeral_messages_duration_disabled">禁用</string>
-    <string name="conversation_ephemeral_messages_duration_one_minute">分钟</string>
-    <string name="conversation_ephemeral_messages_duration_one_hour">小时</string>
-    <string name="conversation_ephemeral_messages_duration_one_day">天</string>
+    <string name="conversation_ephemeral_messages_duration_one_minute">1分钟</string>
+    <string name="conversation_ephemeral_messages_duration_one_hour">1小时</string>
+    <string name="conversation_ephemeral_messages_duration_one_day">1天</string>
     <string name="conversation_ephemeral_messages_duration_three_days">3天</string>
     <string name="conversation_ephemeral_messages_duration_one_week">1周</string>
     <string name="new_group_conversation_title">新建群组聊天</string>
@@ -832,4 +832,8 @@
     <string name="conversation_info_no_address_to_add_to_contact_toast">没有地址要添加到联系人</string>
     <string name="conversation_event_ephemeral_messages_lifetime_changed">阅后即焚消息生命周期现在是%s</string>
     <string name="full_screen_intent_permission_not_granted">未授予显示来电权限！</string>
+    <string name="help_about_user_guide_subtitle">逐步学习如何掌握所有应用程序功能。</string>
+    <string name="help_about_user_guide_title">&appName; 用户指南</string>
+    <string name="help_about_contribute_translations_subtitle">帮助尽可能多的人访问应用程序。</string>
+    <string name="help_troubleshooting_subtitle">传输您的诊断日志以促进错误解决。</string>
 </resources>
