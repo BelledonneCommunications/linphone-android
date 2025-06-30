@@ -152,14 +152,14 @@ class ContactNewOrEditViewModel
             }
             val name = if (fn.isNotEmpty() && ln.isNotEmpty()) {
                 "$fn $ln"
-            } else if (fn.isNotEmpty()) {
-                fn
-            } else if (ln.isNotEmpty()) {
-                ln
-            } else if (organization.isNotEmpty()) {
-                organization
             } else {
-                "<Unknown>"
+                fn.ifEmpty {
+                    ln.ifEmpty {
+                        organization.ifEmpty {
+                            "<Unknown>"
+                        }
+                    }
+                }
             }
 
             friend.edit()

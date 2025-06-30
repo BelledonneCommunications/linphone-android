@@ -83,6 +83,19 @@ class CardDavViewModel
                     syncInProgress.postValue(false)
                     showGreenToast(R.string.settings_contacts_carddav_sync_successful_toast, R.drawable.check)
 
+                    val name = displayName.value.orEmpty().trim()
+                    if (storeNewContactsInIt.value == true) {
+                        val previous = corePreferences.friendListInWhichStoreNewlyCreatedFriends
+                        if (friendList.isReadOnly) {
+                            Log.w("$TAG User asked to add newly created contacts in this friend list but it is read only, keep currently default friend list [$previous]")
+                        } else {
+                            Log.i(
+                                "$TAG Updating default friend list to store newly created contacts from [$previous] to [$name]"
+                            )
+                            corePreferences.friendListInWhichStoreNewlyCreatedFriends = name
+                        }
+                    }
+
                     Log.i("$TAG Notifying contacts manager that contacts have changed")
                     coreContext.contactsManager.notifyContactsListChanged()
 
@@ -231,13 +244,7 @@ class CardDavViewModel
                 )
             }
 
-            if (storeNewContactsInIt.value == true) {
-                val previous = corePreferences.friendListInWhichStoreNewlyCreatedFriends
-                Log.i(
-                    "$TAG Updating default friend list to store newly created contacts from [$previous] to [$name]"
-                )
-                corePreferences.friendListInWhichStoreNewlyCreatedFriends = name
-            } else if (storeNewContactsInIt.value == false) {
+            if (storeNewContactsInIt.value == false && corePreferences.friendListInWhichStoreNewlyCreatedFriends == name) {
                 Log.i(
                     "$TAG No longer using friend list [$name] as default friend list, switching back to [$LINPHONE_ADDRESS_BOOK_FRIEND_LIST]"
                 )

@@ -51,6 +51,8 @@ class ContactAvatarModel
 
     val isStored = friend.inList()
 
+    val isReadOnly = friend.isReadOnly
+
     val isFavourite = MutableLiveData<Boolean>()
 
     val lastPresenceInfo = MutableLiveData<String>()

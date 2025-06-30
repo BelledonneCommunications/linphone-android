@@ -22,6 +22,9 @@
         <variable
             name="isStored"
             type="Boolean" />
+        <variable
+            name="isReadOnly"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="1dp"
             android:background="@drawable/menu_item_background"
-            android:visibility="@{isStored ? View.VISIBLE : View.GONE}"
+            android:visibility="@{isStored &amp;&amp; !isReadOnly ? View.VISIBLE : View.GONE}"
             android:text="@{isFavourite ? @string/contact_details_remove_from_favourites : @string/contact_details_add_to_favourites, default=@string/contact_details_add_to_favourites}"
             android:drawableStart="@{isFavourite ? @drawable/heart_fill : @drawable/heart, default=@drawable/heart_fill}"
             android:drawableTint="@{isFavourite ? @color/danger_500 : @color/main2_500, default=@color/main2_500}"
@@ -66,7 +69,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/contact_details_delete"
-            android:visibility="@{isStored ? View.VISIBLE : View.GONE}"
+            android:visibility="@{isStored &amp;&amp; !isReadOnly ? View.VISIBLE : View.GONE}"
             android:background="@drawable/menu_item_background"
             android:layout_marginBottom="1dp"
             android:drawableStart="@drawable/trash_simple"

@@ -243,6 +243,7 @@ class ContactsListFragment : AbstractMainFragment() {
                 val modalBottomSheet = ContactsListMenuDialogFragment(
                     model.isFavourite.value == true,
                     model.isStored,
+                    isReadOnly = model.isReadOnly,
                     { // onDismiss
                         adapter.resetSelection()
                     },

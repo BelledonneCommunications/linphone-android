@@ -91,6 +91,8 @@ class ContactViewModel
 
     val isStored = MutableLiveData<Boolean>()
 
+    val isReadOnly = MutableLiveData<Boolean>()
+
     val chatDisabled = MutableLiveData<Boolean>()
 
     val videoCallDisabled = MutableLiveData<Boolean>()
@@ -237,6 +239,7 @@ class ContactViewModel
 
     init {
         isStored.value = false
+        isReadOnly.value = false
 
         expandNumbersAndAddresses.value = true
         trustedDevicesPercentage.value = 0
@@ -312,6 +315,7 @@ class ContactViewModel
         // Do not show edit contact button for contacts not stored in a FriendList or
         // if they are in a temporary one (for example if they are from a remote directory such as LDAP or CardDAV)
         isStored.postValue(!coreContext.contactsManager.isContactTemporary(friend))
+        isReadOnly.postValue(friend.isReadOnly)
 
         contact.value?.destroy()
         contact.postValue(ContactAvatarModel(friend))
