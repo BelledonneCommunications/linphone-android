@@ -266,14 +266,6 @@ class CurrentCallViewModel
 
     val isScreenLocked = MutableLiveData<Boolean>()
 
-    val slidingButtonAboveAnswer = MutableLiveData<Boolean>()
-
-    val slidingButtonAboveDecline = MutableLiveData<Boolean>()
-
-    val answerAlpha = MutableLiveData<Float>()
-
-    val declineAlpha = MutableLiveData<Float>()
-
     lateinit var currentCall: Call
 
     private val contactsListener = object : ContactsListener {
@@ -540,8 +532,6 @@ class CurrentCallViewModel
         playbackVolume.value = 0f
 
         refreshKeyguardLockedStatus()
-        answerAlpha.value = 1f
-        declineAlpha.value = 1f
 
         coreContext.postOnCoreThread { core ->
             hideSipAddresses.postValue(corePreferences.hideSipAddresses)

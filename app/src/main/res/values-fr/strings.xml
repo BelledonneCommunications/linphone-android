@@ -669,6 +669,8 @@
     <string name="call_action_resume_call">Reprendre</string>
     <string name="call_action_record_call">Enregistrer</string>
     <string name="call_action_hang_up">Raccrocher</string>
+    <string name="call_action_decline">Décliner</string>
+    <string name="call_action_answer">Décrocher</string>
     <string name="call_action_change_layout">Disposition</string>
     <string name="call_state_outgoing_progress">En cours</string>
     <string name="call_state_outgoing_ringing">En train de sonner</string>

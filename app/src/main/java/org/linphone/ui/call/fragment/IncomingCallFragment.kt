@@ -33,7 +33,6 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.CallIncomingFragmentBinding
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
 import org.linphone.utils.AppUtils
-import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
@@ -52,7 +51,7 @@ class IncomingCallFragment : GenericCallFragment() {
     private var initialX = 0f
     private var slidingButtonX = 0f
     private val slidingButtonTouchListener = View.OnTouchListener { view, event ->
-        val width = binding.bottomBar.root.width.toFloat()
+        val width = binding.bottomBar.lockedScreenBottomBar.root.width.toFloat()
         val aboveAnswer = view.x + view.width > width - areaSize
         val aboveDecline = view.x < areaSize
 
@@ -81,19 +80,6 @@ class IncomingCallFragment : GenericCallFragment() {
                 true
             }
             MotionEvent.ACTION_MOVE -> {
-                callViewModel.slidingButtonAboveAnswer.value = aboveAnswer
-                callViewModel.slidingButtonAboveDecline.value = aboveDecline
-
-                val offset = view.x - initialX
-                val percent = abs(offset) / (width / 2)
-                if (offset > 0) {
-                    callViewModel.answerAlpha.value = 1f
-                    callViewModel.declineAlpha.value = 1f - percent
-                } else if (offset < 0) {
-                    callViewModel.answerAlpha.value = 1f - percent
-                    callViewModel.declineAlpha.value = 1f
-                }
-
                 view.animate()
                     .x(min(max(marginSize, event.rawX + slidingButtonX), width - view.width - marginSize))
                     .setDuration(0)
@@ -137,7 +123,7 @@ class IncomingCallFragment : GenericCallFragment() {
             }
         }
 
-        binding.bottomBar.slidingButton.setOnTouchListener(slidingButtonTouchListener)
+        binding.bottomBar.lockedScreenBottomBar.slidingButton.setOnTouchListener(slidingButtonTouchListener)
     }
 
     override fun onResume() {

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.call.viewmodel.CurrentCallViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/sliding_controls"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@drawable/shape_call_sliding_controls_background"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_700"
+            android:id="@+id/decline_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:text="@string/call_action_decline"
+            android:textColor="?attr/color_danger_500"
+            android:textSize="13sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_700"
+            android:id="@+id/answer_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+            android:text="@string/call_action_answer"
+            android:textColor="?attr/color_success_500"
+            android:textSize="13sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+            android:id="@+id/sliding_button"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/call_button_size"
+            android:background="@drawable/squircle_green_button_background"
+            android:onClick="@{() -> viewModel.answer()}"
+            android:paddingStart="30dp"
+            android:paddingTop="15dp"
+            android:paddingEnd="30dp"
+            android:paddingBottom="15dp"
+            android:src="@{viewModel.isVideoEnabled ? @drawable/video_camera : @drawable/phone, default=@drawable/phone}"
+            android:contentDescription="@{viewModel.isVideoEnabled ? @string/content_description_answer_video_call : @string/content_description_answer_audio_call}"
+            app:tint="@color/bc_white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.call.viewmodel.CurrentCallViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/call_main_actions_menu_height"
+        android:background="@drawable/shape_call_bottom_sheet_background">
+
+        <ImageView
+            android:id="@+id/hang_up"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/call_button_size"
+            android:layout_marginEnd="30dp"
+            android:background="@drawable/squircle_red_button_background"
+            android:onClick="@{() -> viewModel.hangUp()}"
+            android:paddingStart="30dp"
+            android:paddingTop="15dp"
+            android:paddingEnd="30dp"
+            android:paddingBottom="15dp"
+            android:src="@drawable/phone_disconnect"
+            android:contentDescription="@string/content_description_hang_up_call"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/answer_call"
+            app:layout_constraintStart_toStartOf="parent"
+            app:tint="@color/bc_white" />
+
+        <ImageView
+            android:id="@+id/answer_call"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/call_button_size"
+            android:background="@drawable/squircle_green_button_background"
+            android:onClick="@{() -> viewModel.answer()}"
+            android:paddingStart="30dp"
+            android:paddingTop="15dp"
+            android:paddingEnd="30dp"
+            android:paddingBottom="15dp"
+            android:src="@{viewModel.isVideoEnabled ? @drawable/video_camera : @drawable/phone, default=@drawable/phone}"
+            android:contentDescription="@{viewModel.isVideoEnabled ? @string/content_description_answer_video_call : @string/content_description_answer_audio_call}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/hang_up"
+            app:tint="@color/bc_white" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
