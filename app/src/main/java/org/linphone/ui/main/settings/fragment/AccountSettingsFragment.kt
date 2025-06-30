@@ -54,7 +54,7 @@ class AccountSettingsFragment : GenericMainFragment() {
 
     private lateinit var viewModel: AccountSettingsViewModel
 
-    private val dropdownListener = object : AdapterView.OnItemSelectedListener {
+    private val transportDropdownListener = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             val transport = viewModel.availableTransports[position]
             val transportType = when (transport) {
@@ -64,6 +64,17 @@ class AccountSettingsFragment : GenericMainFragment() {
             }
             Log.i("$TAG Selected transport updated [$transport] -> [${transportType.name}]")
             viewModel.selectedTransport.value = transportType
+        }
+
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+        }
+    }
+
+    private val limeAlgorithmDropdownListener = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            val limeAlgorithm = viewModel.availableLimeAlgorithms[position]
+            Log.i("$TAG Selected LIME algorithm  is now [$limeAlgorithm]")
+            viewModel.selectedLimeAlgorithm.value = limeAlgorithm
         }
 
         override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -116,20 +127,8 @@ class AccountSettingsFragment : GenericMainFragment() {
                     (view.parent as? ViewGroup)?.doOnPreDraw {
                         startPostponedEnterTransition()
 
-                        val adapter = ArrayAdapter(
-                            requireContext(),
-                            R.layout.drop_down_item,
-                            viewModel.availableTransports
-                        )
-                        adapter.setDropDownViewResource(R.layout.generic_dropdown_cell)
-                        val currentTransport = viewModel.selectedTransport.value?.name?.uppercase(
-                            Locale.getDefault()
-                        )
-                        binding.accountAdvancedSettings.transportSpinner.adapter = adapter
-                        binding.accountAdvancedSettings.transportSpinner.setSelection(
-                            viewModel.availableTransports.indexOf(currentTransport)
-                        )
-                        binding.accountAdvancedSettings.transportSpinner.onItemSelectedListener = dropdownListener
+                        setupTransportDropdown()
+                        setupLimeAlgorithmDropdown()
                     }
                 } else {
                     Log.e(
@@ -170,5 +169,38 @@ class AccountSettingsFragment : GenericMainFragment() {
         }
 
         dialog.show()
+    }
+
+    private fun setupTransportDropdown() {
+        val adapter = ArrayAdapter(
+            requireContext(),
+            R.layout.drop_down_item,
+            viewModel.availableTransports
+        )
+        adapter.setDropDownViewResource(R.layout.generic_dropdown_cell)
+        val currentTransport = viewModel.selectedTransport.value?.name?.uppercase(
+            Locale.getDefault()
+        )
+        binding.accountAdvancedSettings.transportSpinner.adapter = adapter
+        binding.accountAdvancedSettings.transportSpinner.setSelection(
+            viewModel.availableTransports.indexOf(currentTransport)
+        )
+        binding.accountAdvancedSettings.transportSpinner.onItemSelectedListener = transportDropdownListener
+    }
+
+    private fun setupLimeAlgorithmDropdown() {
+        val adapter = ArrayAdapter(
+            requireContext(),
+            R.layout.drop_down_item,
+            viewModel.availableLimeAlgorithms
+        )
+        adapter.setDropDownViewResource(R.layout.generic_dropdown_cell)
+        val currentLimeAlgo = viewModel.selectedLimeAlgorithm.value
+
+        binding.accountAdvancedSettings.limeAlgoSpinner.adapter = adapter
+        binding.accountAdvancedSettings.limeAlgoSpinner.setSelection(
+            viewModel.availableLimeAlgorithms.indexOf(currentLimeAlgo)
+        )
+        binding.accountAdvancedSettings.limeAlgoSpinner.onItemSelectedListener = limeAlgorithmDropdownListener
     }
 }

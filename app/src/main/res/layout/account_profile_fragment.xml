@@ -234,6 +234,8 @@
                         android:drawablePadding="5dp"
                         app:drawableTint="?attr/color_main2_600"
                         android:visibility="@{!viewModel.hideSipAddresses || viewModel.showDeviceId ? View.VISIBLE : View.GONE, default=gone}"
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintWidth_max="@dimen/text_input_max_width"
                         app:layout_constraintStart_toEndOf="@id/sip_address_label"
                         app:layout_constraintEnd_toEndOf="@id/details_background"
                         app:layout_constraintTop_toTopOf="@id/sip_address_label"
@@ -352,6 +354,8 @@
                         android:spinnerMode="dropdown"
                         android:popupBackground="@drawable/shape_squircle_white_background"
                         android:background="@drawable/edit_text_background"
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintWidth_max="@dimen/text_input_max_width"
                         app:layout_constraintTop_toBottomOf="@id/prefix_label"
                         app:layout_constraintStart_toStartOf="@id/prefix_label"
                         app:layout_constraintEnd_toEndOf="@id/details_background" />

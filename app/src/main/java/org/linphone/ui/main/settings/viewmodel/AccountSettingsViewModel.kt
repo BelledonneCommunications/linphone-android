@@ -100,6 +100,12 @@ class AccountSettingsViewModel
 
     val accountFoundEvent = MutableLiveData<Event<Boolean>>()
 
+    val showDeveloperSettings = MutableLiveData<Boolean>()
+
+    val availableLimeAlgorithms = arrayListOf<String>()
+
+    val selectedLimeAlgorithm = MutableLiveData<String>()
+
     private lateinit var account: Account
     private lateinit var natPolicy: NatPolicy
     private lateinit var natPolicyAuthInfo: AuthInfo
@@ -119,6 +125,14 @@ class AccountSettingsViewModel
         imEncryptionMandatoryAvailable.addSource(conferenceFactoryUri) {
             imEncryptionMandatoryAvailable.value = isImEncryptionMandatoryAvailable()
         }
+
+        showDeveloperSettings.postValue(corePreferences.showDeveloperSettings)
+
+        availableLimeAlgorithms.add("c25519")
+        availableLimeAlgorithms.add("c448")
+        availableLimeAlgorithms.add("c25519k512")
+        availableLimeAlgorithms.add("c25519mlk512")
+        availableLimeAlgorithms.add("c448mlk1024")
     }
 
     @UiThread
@@ -191,6 +205,8 @@ class AccountSettingsViewModel
                 ccmpServerUrl.postValue(params.ccmpServerUrl)
 
                 limeServerUrl.postValue(params.limeServerUrl)
+
+                selectedLimeAlgorithm.postValue(params.limeAlgo)
 
                 accountFoundEvent.postValue(Event(true))
             } else {
@@ -313,6 +329,7 @@ class AccountSettingsViewModel
 
                 newParams.ccmpServerUrl = ccmpServerUrl.value
                 newParams.limeServerUrl = limeServerUrl.value
+                newParams.limeAlgo = selectedLimeAlgorithm.value
 
                 newParams.useInternationalPrefixForCallsAndChats = applyPrefix.value == true
                 newParams.isDialEscapePlusEnabled = replacePlusBy00.value == true
