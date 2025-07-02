@@ -70,17 +70,6 @@ class AccountSettingsFragment : GenericMainFragment() {
         }
     }
 
-    private val limeAlgorithmDropdownListener = object : AdapterView.OnItemSelectedListener {
-        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            val limeAlgorithm = viewModel.availableLimeAlgorithms[position]
-            Log.i("$TAG Selected LIME algorithm  is now [$limeAlgorithm]")
-            viewModel.selectedLimeAlgorithm.value = limeAlgorithm
-        }
-
-        override fun onNothingSelected(parent: AdapterView<*>?) {
-        }
-    }
-
     override fun goBack(): Boolean {
         try {
             return findNavController().popBackStack()
@@ -128,7 +117,6 @@ class AccountSettingsFragment : GenericMainFragment() {
                         startPostponedEnterTransition()
 
                         setupTransportDropdown()
-                        setupLimeAlgorithmDropdown()
                     }
                 } else {
                     Log.e(
@@ -186,21 +174,5 @@ class AccountSettingsFragment : GenericMainFragment() {
             viewModel.availableTransports.indexOf(currentTransport)
         )
         binding.accountAdvancedSettings.transportSpinner.onItemSelectedListener = transportDropdownListener
-    }
-
-    private fun setupLimeAlgorithmDropdown() {
-        val adapter = ArrayAdapter(
-            requireContext(),
-            R.layout.drop_down_item,
-            viewModel.availableLimeAlgorithms
-        )
-        adapter.setDropDownViewResource(R.layout.generic_dropdown_cell)
-        val currentLimeAlgo = viewModel.selectedLimeAlgorithm.value
-
-        binding.accountAdvancedSettings.limeAlgoSpinner.adapter = adapter
-        binding.accountAdvancedSettings.limeAlgoSpinner.setSelection(
-            viewModel.availableLimeAlgorithms.indexOf(currentLimeAlgo)
-        )
-        binding.accountAdvancedSettings.limeAlgoSpinner.onItemSelectedListener = limeAlgorithmDropdownListener
     }
 }

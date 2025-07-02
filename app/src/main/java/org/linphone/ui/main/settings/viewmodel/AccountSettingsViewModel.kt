@@ -102,9 +102,7 @@ class AccountSettingsViewModel
 
     val showDeveloperSettings = MutableLiveData<Boolean>()
 
-    val availableLimeAlgorithms = arrayListOf<String>()
-
-    val selectedLimeAlgorithm = MutableLiveData<String>()
+    val limeAlgorithms = MutableLiveData<String>()
 
     private lateinit var account: Account
     private lateinit var natPolicy: NatPolicy
@@ -127,12 +125,6 @@ class AccountSettingsViewModel
         }
 
         showDeveloperSettings.postValue(corePreferences.showDeveloperSettings)
-
-        availableLimeAlgorithms.add("c25519")
-        availableLimeAlgorithms.add("c448")
-        availableLimeAlgorithms.add("c25519k512")
-        availableLimeAlgorithms.add("c25519mlk512")
-        availableLimeAlgorithms.add("c448mlk1024")
     }
 
     @UiThread
@@ -206,7 +198,7 @@ class AccountSettingsViewModel
 
                 limeServerUrl.postValue(params.limeServerUrl)
 
-                selectedLimeAlgorithm.postValue(params.limeAlgo)
+                limeAlgorithms.postValue(params.limeAlgo)
 
                 accountFoundEvent.postValue(Event(true))
             } else {
@@ -240,11 +232,11 @@ class AccountSettingsViewModel
 
                 if (::natPolicy.isInitialized) {
                     Log.i("$TAG Also applying changes to NAT policy")
-                    natPolicy.stunServer = stunServer.value
+                    natPolicy.stunServer = stunServer.value.orEmpty().trim()
                     natPolicy.isStunEnabled = stunServer.value.orEmpty().isNotEmpty()
                     natPolicy.isIceEnabled = iceEnabled.value == true
                     natPolicy.isTurnEnabled = turnEnabled.value == true
-                    val stunTurnUsername = turnUsername.value.orEmpty()
+                    val stunTurnUsername = turnUsername.value.orEmpty().trim()
                     natPolicy.stunServerUsername = stunTurnUsername
                     newParams.natPolicy = natPolicy
 
@@ -279,7 +271,7 @@ class AccountSettingsViewModel
 
                 newParams.isCpimInBasicChatRoomEnabled = cpimInBasicChatRooms.value == true
 
-                val mwi = mwiUri.value.orEmpty()
+                val mwi = mwiUri.value.orEmpty().trim()
                 if (mwi.isNotEmpty()) {
                     val mwiAddress = core.interpretUrl(mwi, false)
                     newParams.mwiServerAddress = mwiAddress
@@ -287,7 +279,7 @@ class AccountSettingsViewModel
                     newParams.mwiServerAddress = null
                 }
 
-                val voicemail = voicemailUri.value.orEmpty()
+                val voicemail = voicemailUri.value.orEmpty().trim()
                 if (voicemail.isNotEmpty()) {
                     val voicemailAddress = core.interpretUrl(voicemail, false)
                     newParams.voicemailAddress = voicemailAddress
@@ -327,9 +319,9 @@ class AccountSettingsViewModel
                     newParams.audioVideoConferenceFactoryAddress = null
                 }
 
-                newParams.ccmpServerUrl = ccmpServerUrl.value
-                newParams.limeServerUrl = limeServerUrl.value
-                newParams.limeAlgo = selectedLimeAlgorithm.value
+                newParams.ccmpServerUrl = ccmpServerUrl.value.orEmpty().trim()
+                newParams.limeServerUrl = limeServerUrl.value.orEmpty().trim()
+                newParams.limeAlgo = limeAlgorithms.value.orEmpty().trim()
 
                 newParams.useInternationalPrefixForCallsAndChats = applyPrefix.value == true
                 newParams.isDialEscapePlusEnabled = replacePlusBy00.value == true

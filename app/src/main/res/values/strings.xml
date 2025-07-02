@@ -160,7 +160,8 @@
     <string name="assistant_create_account_using_email_on_our_web_platform">Create an account with your email on:</string>
     <string name="assistant_already_have_an_account">Already have an account?</string>
     <string name="assistant_sip_account_transport_protocol">Transport</string>
-    <string name="assistant_sip_account_lime_algorithm">LIME algorithm</string>
+    <string name="assistant_sip_account_lime_algorithm">LIME algorithm(s) (comma separated)</string>
+    <string name="assistant_sip_account_lime_algorithm_hint">Allowed values are: c25519, c448, c25519k512, c25519mlk512 and c448mlk1024</string>
     <string name="assistant_third_party_sip_account_warning_explanation">Some features require a &appName; account, such as group messaging, video conferences…\n\nThese features are hidden when you register with a third party SIP account.\n\nTo enable it in a commercial project, please contact us.</string>
     <string name="assistant_third_party_sip_account_create_linphone_account">I prefer to create a &appName; account</string>
     <string name="assistant_third_party_sip_account_warning_ok">I understand</string>

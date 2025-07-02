@@ -395,45 +395,30 @@
             android:ellipsize="end"
             android:visibility="@{viewModel.showDeveloperSettings ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintTop_toBottomOf="@id/lime_server"
-            app:layout_constraintBottom_toTopOf="@id/lime_algo_spinner"
+            app:layout_constraintBottom_toTopOf="@id/lime_algo_list"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
-        <androidx.appcompat.widget.AppCompatSpinner
+        <androidx.appcompat.widget.AppCompatEditText
             style="@style/default_text_style"
-            android:id="@+id/lime_algo_spinner"
+            android:id="@+id/lime_algo_list"
             android:layout_width="0dp"
             android:layout_height="50dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:background="@drawable/edit_text_background"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
-            android:textSize="14sp"
-            android:textColor="@color/gray_main2_600"
-            android:gravity="center_vertical"
-            android:overlapAnchor="false"
-            android:dropDownVerticalOffset="25dp"
-            android:spinnerMode="dropdown"
-            android:popupBackground="@drawable/shape_squircle_white_background"
-            android:background="@drawable/edit_text_background"
+            android:text="@={viewModel.limeAlgorithms}"
+            android:inputType="text|textNoSuggestions"
+            android:hint="@string/assistant_sip_account_lime_algorithm_hint"
             android:visibility="@{viewModel.showDeveloperSettings ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintWidth_max="@dimen/text_input_max_width"
             app:layout_constraintTop_toBottomOf="@id/lime_algo_title"
             app:layout_constraintBottom_toTopOf="@id/update_password"
-            app:layout_constraintStart_toStartOf="@id/lime_algo_title"
-            app:layout_constraintEnd_toEndOf="@id/lime_algo_title" />
-
-        <ImageView
-            android:id="@+id/lime_algo_spinner_caret"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/spinner_caret_end_margin"
-            android:src="@drawable/caret_down"
-            android:contentDescription="@null"
-            android:visibility="@{viewModel.showDeveloperSettings ? View.VISIBLE : View.GONE, default=gone}"
-            app:tint="?attr/color_main2_600"
-            app:layout_constraintTop_toTopOf="@id/lime_algo_spinner"
-            app:layout_constraintBottom_toBottomOf="@id/lime_algo_spinner"
-            app:layout_constraintEnd_toEndOf="@id/transport_spinner"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/settings_title_style"
@@ -454,7 +439,7 @@
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lime_algo_spinner"
+            app:layout_constraintTop_toBottomOf="@id/lime_algo_list"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
