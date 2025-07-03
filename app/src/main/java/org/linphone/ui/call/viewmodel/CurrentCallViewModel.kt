@@ -126,6 +126,8 @@ class CurrentCallViewModel
 
     val isBluetoothEnabled = MutableLiveData<Boolean>()
 
+    val isHdmiEnabled = MutableLiveData<Boolean>()
+
     val fullScreenMode = MutableLiveData<Boolean>()
 
     val pipMode = MutableLiveData<Boolean>()
@@ -760,6 +762,9 @@ class CurrentCallViewModel
                             device.deviceName
                         )
                     }
+                    AudioDevice.Type.Hdmi -> {
+                        AppUtils.getString(R.string.call_audio_device_type_hdmi)
+                    }
                     else -> device.deviceName
                 }
                 val isCurrentlyInUse = device.type == currentDevice?.type && device.deviceName == currentDevice.deviceName
@@ -779,6 +784,9 @@ class CurrentCallViewModel
                                     currentCall
                                 )
                                 AudioDevice.Type.Speaker -> AudioUtils.routeAudioToSpeaker(
+                                    currentCall
+                                )
+                                AudioDevice.Type.Hdmi -> AudioUtils.routeAudioToHdmi(
                                     currentCall
                                 )
                                 else -> AudioUtils.routeAudioToEarpiece(currentCall)
@@ -1279,6 +1287,7 @@ class CurrentCallViewModel
         )
         isHearingAidEnabled.postValue(audioDevice?.type == AudioDevice.Type.HearingAid)
         isBluetoothEnabled.postValue(audioDevice?.type == AudioDevice.Type.Bluetooth)
+        isHdmiEnabled.postValue(audioDevice?.type == AudioDevice.Type.Hdmi)
 
         updateProximitySensor()
     }

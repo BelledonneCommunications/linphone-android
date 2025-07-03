@@ -352,6 +352,9 @@ class MeetingWaitingRoomViewModel
                             device.deviceName
                         )
                     }
+                    AudioDevice.Type.Hdmi -> {
+                        AppUtils.getString(R.string.call_audio_device_type_hdmi)
+                    }
                     else -> device.deviceName
                 }
 

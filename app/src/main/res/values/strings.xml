@@ -755,6 +755,7 @@
     <string name="call_audio_device_type_hearing_aid">Hearing aid (%s)</string>
     <string name="call_audio_device_type_headset">Headset</string>
     <string name="call_audio_device_type_headphones">Headphones</string>
+    <string name="call_audio_device_type_hdmi">HDMI</string>
 
     <string name="call_stats_audio_title">Audio</string>
     <string name="call_stats_codec_label">Codec: %s</string>

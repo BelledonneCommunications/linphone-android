@@ -64,6 +64,11 @@ class AudioUtils {
         }
 
         @WorkerThread
+        fun routeAudioToHdmi(call: Call? = null) {
+            routeAudioTo(call, arrayListOf(AudioDevice.Type.Hdmi))
+        }
+
+        @WorkerThread
         private fun routeAudioTo(
             call: Call?,
             types: List<AudioDevice.Type>
