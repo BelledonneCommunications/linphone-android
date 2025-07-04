@@ -309,7 +309,9 @@ class MainActivity : GenericActivity() {
         coreContext.digestAuthenticationRequestedEvent.observe(this) {
             it.consume { identity ->
                 try {
-                    showAuthenticationRequestedDialog(identity)
+                    if (coreContext.digestAuthInfoPendingPasswordUpdate != null) {
+                        showAuthenticationRequestedDialog(identity)
+                    }
                 } catch (e: WindowManager.BadTokenException) {
                     Log.e("$TAG Failed to show authentication dialog: $e")
                 }
