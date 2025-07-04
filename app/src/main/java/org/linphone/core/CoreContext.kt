@@ -499,12 +499,13 @@ class CoreContext
             if (account.findAuthInfo() == digestAuthInfoPendingPasswordUpdate) {
                 Log.i("$TAG Removed account matches auth info pending password update, removing dialog")
                 clearAuthenticationRequestDialogEvent.postValue(Event(true))
+                digestAuthInfoPendingPasswordUpdate = null
             }
 
             if (core.defaultAccount == null || core.defaultAccount == account) {
                 Log.w("$TAG Removed account was the default one, choosing another as default if possible")
                 val newDefaultAccount = core.accountList.find {
-                    it.params.isRegisterEnabled == true
+                    it.params.isRegisterEnabled
                 } ?: core.accountList.firstOrNull()
                 if (newDefaultAccount == null) {
                     Log.e("$TAG Failed to find a new default account!")
