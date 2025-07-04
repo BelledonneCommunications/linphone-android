@@ -41,8 +41,8 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
 import org.linphone.ui.call.model.AudioDeviceModel
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
-import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
+import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
 
 class MeetingWaitingRoomViewModel
@@ -324,40 +324,17 @@ class MeetingWaitingRoomViewModel
             for (device in audioDevices) {
                 // Only list output audio devices
                 if (!device.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) continue
-
-                val name = when (device.type) {
+                when (device.type) {
                     AudioDevice.Type.Earpiece -> {
                         earpieceAudioDevice = device
-                        AppUtils.getString(R.string.call_audio_device_type_earpiece)
                     }
                     AudioDevice.Type.Speaker -> {
                         speakerAudioDevice = device
-                        AppUtils.getString(R.string.call_audio_device_type_speaker)
                     }
-                    AudioDevice.Type.Headset -> {
-                        AppUtils.getString(R.string.call_audio_device_type_headset)
-                    }
-                    AudioDevice.Type.Headphones -> {
-                        AppUtils.getString(R.string.call_audio_device_type_headphones)
-                    }
-                    AudioDevice.Type.Bluetooth -> {
-                        AppUtils.getFormattedString(
-                            R.string.call_audio_device_type_bluetooth,
-                            device.deviceName
-                        )
-                    }
-                    AudioDevice.Type.HearingAid -> {
-                        AppUtils.getFormattedString(
-                            R.string.call_audio_device_type_hearing_aid,
-                            device.deviceName
-                        )
-                    }
-                    AudioDevice.Type.Hdmi -> {
-                        AppUtils.getString(R.string.call_audio_device_type_hdmi)
-                    }
-                    else -> device.deviceName
+                    else -> {}
                 }
 
+                val name = LinphoneUtils.getAudioDeviceName(device)
                 val currentDevice = if (::selectedOutputAudioDevice.isInitialized) {
                     selectedOutputAudioDevice
                 } else {

@@ -36,6 +36,7 @@ import org.linphone.R
 import org.linphone.contacts.getListOfSipAddresses
 import org.linphone.core.Account
 import org.linphone.core.Address
+import org.linphone.core.AudioDevice
 import org.linphone.core.Call
 import org.linphone.core.Call.Dir
 import org.linphone.core.Call.Status
@@ -666,6 +667,43 @@ class LinphoneUtils {
             avatarModel.showTrust.postValue(false)
 
             return avatarModel
+        }
+
+        @WorkerThread
+        fun getAudioDeviceName(device: AudioDevice): String {
+            return when (device.type) {
+                AudioDevice.Type.Microphone -> {
+                    AppUtils.getString(R.string.call_audio_device_type_microphone)
+                }
+                AudioDevice.Type.Earpiece -> {
+                    AppUtils.getString(R.string.call_audio_device_type_earpiece)
+                }
+                AudioDevice.Type.Speaker -> {
+                    AppUtils.getString(R.string.call_audio_device_type_speaker)
+                }
+                AudioDevice.Type.Headset -> {
+                    AppUtils.getString(R.string.call_audio_device_type_headset)
+                }
+                AudioDevice.Type.Headphones -> {
+                    AppUtils.getString(R.string.call_audio_device_type_headphones)
+                }
+                AudioDevice.Type.Bluetooth -> {
+                    AppUtils.getFormattedString(
+                        R.string.call_audio_device_type_bluetooth,
+                        device.deviceName
+                    )
+                }
+                AudioDevice.Type.HearingAid -> {
+                    AppUtils.getFormattedString(
+                        R.string.call_audio_device_type_hearing_aid,
+                        device.deviceName
+                    )
+                }
+                AudioDevice.Type.Hdmi -> {
+                    AppUtils.getString(R.string.call_audio_device_type_hdmi)
+                }
+                else -> "${device.deviceName}(${device.type})"
+            }
         }
     }
 }

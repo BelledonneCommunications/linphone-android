@@ -708,6 +708,7 @@
     <string name="call_dialog_zrtp_security_alert_try_again">Réessayer</string>
     <string name="call_dialog_zrtp_security_alert_message">La confidentialité de votre appel peut être compromise !</string>
 
+    <string name="call_audio_device_type_microphone">Microphone</string>
     <string name="call_audio_device_type_earpiece">Oreillette</string>
     <string name="call_audio_device_type_speaker">Haut parleur</string>
     <string name="call_audio_device_type_bluetooth">Bluetooth (%s)</string>

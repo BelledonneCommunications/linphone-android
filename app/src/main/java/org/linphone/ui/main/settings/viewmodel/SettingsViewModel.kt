@@ -45,6 +45,7 @@ import org.linphone.ui.main.settings.model.CardDavLdapModel
 import org.linphone.ui.main.settings.model.CodecModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
+import org.linphone.utils.LinphoneUtils
 
 class SettingsViewModel
     @UiThread
@@ -1031,10 +1032,11 @@ class SettingsViewModel
 
         var inputIndex = 0
         val defaultInputAudioDevice = core.defaultInputAudioDevice
-        Log.i("$TAG Current default input audio device is [${defaultInputAudioDevice?.id}]")
+        Log.i("$TAG Current default input audio device ID is [${defaultInputAudioDevice?.id}]")
         for (audioDevice in core.extendedAudioDevices) {
             if (audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityRecord)) {
-                inputAudioDeviceLabels.add(audioDevice.id)
+                Log.i("$TAG Found record device [${audioDevice.deviceName}] with audio driver [${audioDevice.driverName}] and type [${audioDevice.type}]")
+                inputAudioDeviceLabels.add(LinphoneUtils.getAudioDeviceName(audioDevice))
                 inputAudioDeviceValues.add(audioDevice)
                 if (audioDevice.id == defaultInputAudioDevice?.id) {
                     inputAudioDeviceIndex.postValue(inputIndex)
@@ -1048,7 +1050,8 @@ class SettingsViewModel
         Log.i("$TAG Current default output audio device is [${defaultOutputAudioDevice?.id}]")
         for (audioDevice in core.extendedAudioDevices) {
             if (audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
-                outputAudioDeviceLabels.add(audioDevice.id)
+                Log.i("$TAG Found playback device [${audioDevice.deviceName}] with audio driver [${audioDevice.driverName}] and type [${audioDevice.type}]")
+                outputAudioDeviceLabels.add(LinphoneUtils.getAudioDeviceName(audioDevice))
                 outputAudioDeviceValues.add(audioDevice)
                 if (audioDevice.id == defaultOutputAudioDevice?.id) {
                     outputAudioDeviceIndex.postValue(outputIndex)

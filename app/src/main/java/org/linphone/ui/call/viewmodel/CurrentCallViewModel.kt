@@ -734,39 +734,17 @@ class CurrentCallViewModel
             for (device in audioDevices) {
                 // Only list output audio devices
                 if (!device.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) continue
-
-                val name = when (device.type) {
+                when (device.type) {
                     AudioDevice.Type.Earpiece -> {
                         earpieceFound = true
-                        AppUtils.getString(R.string.call_audio_device_type_earpiece)
                     }
                     AudioDevice.Type.Speaker -> {
                         speakerFound = true
-                        AppUtils.getString(R.string.call_audio_device_type_speaker)
                     }
-                    AudioDevice.Type.Headset -> {
-                        AppUtils.getString(R.string.call_audio_device_type_headset)
-                    }
-                    AudioDevice.Type.Headphones -> {
-                        AppUtils.getString(R.string.call_audio_device_type_headphones)
-                    }
-                    AudioDevice.Type.Bluetooth -> {
-                        AppUtils.getFormattedString(
-                            R.string.call_audio_device_type_bluetooth,
-                            device.deviceName
-                        )
-                    }
-                    AudioDevice.Type.HearingAid -> {
-                        AppUtils.getFormattedString(
-                            R.string.call_audio_device_type_hearing_aid,
-                            device.deviceName
-                        )
-                    }
-                    AudioDevice.Type.Hdmi -> {
-                        AppUtils.getString(R.string.call_audio_device_type_hdmi)
-                    }
-                    else -> device.deviceName
+                    else -> {}
                 }
+
+                val name = LinphoneUtils.getAudioDeviceName(device)
                 val isCurrentlyInUse = device.type == currentDevice?.type && device.deviceName == currentDevice.deviceName
                 val model = AudioDeviceModel(device, name, device.type, isCurrentlyInUse, true) {
                     // onSelected
