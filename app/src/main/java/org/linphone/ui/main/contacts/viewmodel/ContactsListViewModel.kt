@@ -67,6 +67,8 @@ class ContactsListViewModel
 
     val isDefaultAccountLinphone = MutableLiveData<Boolean>()
 
+    val showResultsLimitReached = MutableLiveData<Boolean>()
+
     val vCardTerminatedEvent: MutableLiveData<Event<Pair<String, File>>> by lazy {
         MutableLiveData<Event<Pair<String, File>>>()
     }
@@ -83,6 +85,14 @@ class ContactsListViewModel
         override fun onSearchResultsReceived(magicSearch: MagicSearch) {
             Log.i("$TAG Magic search contacts available")
             processMagicSearchResults(magicSearch.lastSearch)
+        }
+
+        @WorkerThread
+        override fun onResultsLimitReached(magicSearch: MagicSearch, sourcesFlag: Int) {
+            Log.w("$TAG Results limit reached (configured limit is [${magicSearch.searchLimit}]) for source(s) [$sourcesFlag], user should refine it's search")
+            if (searchFilter.value.orEmpty().isNotEmpty()) {
+                showResultsLimitReached.postValue(true)
+            }
         }
     }
 
@@ -259,6 +269,7 @@ class ContactsListViewModel
             "$TAG Asking Magic search for contacts matching filter [$filter], domain [$domain] and in sources Friends/LDAP/CardDAV"
         )
         searchInProgress.postValue(filter.isNotEmpty())
+        showResultsLimitReached.postValue(false)
         magicSearch.getContactsListAsync(
             filter,
             domain,

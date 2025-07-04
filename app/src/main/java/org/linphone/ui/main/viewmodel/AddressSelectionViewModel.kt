@@ -62,6 +62,8 @@ abstract class AddressSelectionViewModel
 
     val isEmpty = MutableLiveData<Boolean>()
 
+    val showResultsLimitReached = MutableLiveData<Boolean>()
+
     protected var magicSearchSourceFlags = MagicSearch.Source.All.toInt()
 
     protected var skipConversation: Boolean = true
@@ -76,6 +78,14 @@ abstract class AddressSelectionViewModel
         override fun onSearchResultsReceived(magicSearch: MagicSearch) {
             Log.i("$TAG Magic search contacts available")
             processMagicSearchResults(magicSearch.lastSearch)
+        }
+
+        @WorkerThread
+        override fun onResultsLimitReached(magicSearch: MagicSearch, sourcesFlag: Int) {
+            Log.w("$TAG Results limit reached (configured limit is [${magicSearch.searchLimit}]) for source(s) [$sourcesFlag], user should refine it's search")
+            if (searchFilter.value.orEmpty().isNotEmpty()) {
+                showResultsLimitReached.postValue(true)
+            }
         }
     }
 
@@ -241,6 +251,7 @@ abstract class AddressSelectionViewModel
             "$TAG Asking Magic search for contacts matching filter [$filter], domain [$domain] and in sources [$sources]"
         )
         searchInProgress.postValue(filter.isNotEmpty())
+        showResultsLimitReached.postValue(false)
         magicSearch.getContactsListAsync(
             filter,
             domain,

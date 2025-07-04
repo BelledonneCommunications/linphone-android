@@ -162,6 +162,23 @@
                 app:layout_constraintTop_toTopOf="@id/search_bar"
                 app:tint="?attr/color_main2_600" />
 
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_300"
+                android:id="@+id/results_limit_reached"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@string/contacts_list_search_results_limit_reached_label"
+                android:textColor="?attr/color_main2_600"
+                android:textSize="12sp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:visibility="@{viewModel.showResultsLimitReached ? View.VISIBLE : View.GONE, default=gone}"
+                app:layout_constraintTop_toBottomOf="@id/search_bar"
+                app:layout_constraintStart_toStartOf="@id/search_bar"
+                app:layout_constraintEnd_toEndOf="@id/search_bar"/>
+
             <ImageView
                 android:id="@+id/no_contacts_nor_suggestion_image"
                 android:layout_width="0dp"
@@ -198,7 +215,7 @@
                 android:visibility="@{viewModel.isEmpty ? View.GONE : View.VISIBLE}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/search_bar"
+                app:layout_constraintTop_toBottomOf="@id/results_limit_reached"
                 app:layout_constraintBottom_toBottomOf="parent" />
 
             <com.google.android.material.progressindicator.CircularProgressIndicator

@@ -397,6 +397,7 @@
     <string name="contacts_list_filter_popup_see_all">Tous les contacts</string>
     <string name="contacts_list_filter_popup_see_linphone_only">Contacts &appName;</string>
     <string name="contacts_list_filter_popup_see_sip_only">Contacts SIP</string>
+    <string name="contacts_list_search_results_limit_reached_label">Nombre maximal de résultats atteint, affinez votre recherche.</string>
 
     <string name="contact_new_title">Nouveau contact</string>
     <string name="contact_edit_title">Modifier contact</string>

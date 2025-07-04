@@ -104,11 +104,25 @@
                         android:layout_marginTop="16dp"
                         android:text="@string/contacts_list_all_contacts_title" />
 
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/default_text_style_300"
+                        android:id="@+id/results_limit_reached"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="@string/contacts_list_search_results_limit_reached_label"
+                        android:textColor="?attr/color_main2_600"
+                        android:textSize="12sp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:visibility="@{viewModel.showResultsLimitReached ? View.VISIBLE : View.GONE, default=gone}"/>
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/contactsList"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginTop="8dp" />
+                        android:layout_marginTop="4dp" />
 
                 </LinearLayout>
 

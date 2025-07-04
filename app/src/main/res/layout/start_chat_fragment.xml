@@ -139,6 +139,23 @@
                 app:layout_constraintTop_toTopOf="@id/search_bar"
                 app:tint="?attr/color_main2_600" />
 
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_300"
+                android:id="@+id/results_limit_reached"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@string/contacts_list_search_results_limit_reached_label"
+                android:textColor="?attr/color_main2_600"
+                android:textSize="12sp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:visibility="@{viewModel.showResultsLimitReached ? View.VISIBLE : View.GONE, default=gone}"
+                app:layout_constraintTop_toBottomOf="@id/search_bar"
+                app:layout_constraintStart_toStartOf="@id/search_bar"
+                app:layout_constraintEnd_toEndOf="@id/search_bar"/>
+
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/group_chat"
                 android:layout_width="wrap_content"
@@ -164,13 +181,13 @@
                 android:layout_width="44dp"
                 android:layout_height="44dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="28dp"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/shape_orange_round"
                 android:padding="10dp"
                 android:src="@drawable/users_three"
                 android:contentDescription="@null"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/search_bar"
+                app:layout_constraintTop_toBottomOf="@id/results_limit_reached"
                 app:tint="?attr/color_on_main" />
 
             <androidx.appcompat.widget.AppCompatTextView
