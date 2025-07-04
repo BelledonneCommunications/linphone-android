@@ -348,7 +348,7 @@ class CorePreferences
 
     @get:WorkerThread
     val magicSearchResultsLimit: Int
-        get() = config.getInt("ui", "max_number_of_magic_search_results", 1000)
+        get() = config.getInt("ui", "max_number_of_magic_search_results", 300)
 
     @get:WorkerThread
     val singleSignOnClientId: String

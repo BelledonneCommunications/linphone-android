@@ -233,6 +233,7 @@
     <string name="settings_contacts_carddav_sync_error_toast">Erreur de synchronization !</string>
     <string name="settings_contacts_carddav_deleted_toast">Compte CardDAV supprimé</string>
     <string name="settings_contacts_carddav_mandatory_field_not_filled_toast">Veuillez remplir au moins le nom d\'affichage et l\'URL du serveur</string>
+    <string name="settings_contacts_ldap_enabled_title">Activé</string>
     <string name="settings_contacts_ldap_server_url_title">URL du serveur (ne peut être vide)</string>
     <string name="settings_contacts_ldap_bind_dn_title">Bind DN</string>
     <string name="settings_contacts_ldap_password_title">Mot de passe</string>

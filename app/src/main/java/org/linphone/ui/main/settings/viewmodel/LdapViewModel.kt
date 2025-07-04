@@ -35,6 +35,8 @@ class LdapViewModel : GenericViewModel() {
 
     val isEdit = MutableLiveData<Boolean>()
 
+    val isEnabled = MutableLiveData<Boolean>()
+
     val serverUrl = MutableLiveData<String>()
 
     val bindDn = MutableLiveData<String>()
@@ -71,6 +73,7 @@ class LdapViewModel : GenericViewModel() {
 
     init {
         isEdit.value = false
+        isEnabled.value = true
         showPassword.value = false
 
         useTls.value = true
@@ -93,6 +96,7 @@ class LdapViewModel : GenericViewModel() {
             isEdit.postValue(true)
             ldapToEdit = found
             val ldapParams = ldapToEdit.params
+            isEnabled.postValue(ldapParams.enabled)
 
             serverUrl.postValue(ldapParams.server)
             bindDn.postValue(ldapParams.bindDn.orEmpty())
@@ -123,6 +127,11 @@ class LdapViewModel : GenericViewModel() {
     }
 
     @UiThread
+    fun toggleEnabled() {
+        isEnabled.value = isEnabled.value == false
+    }
+
+    @UiThread
     fun toggleShowPassword() {
         showPassword.value = showPassword.value == false
     }
@@ -145,7 +154,7 @@ class LdapViewModel : GenericViewModel() {
 
                 val ldapParams = core.createLdapParams()
 
-                ldapParams.enabled = true
+                ldapParams.enabled = isEnabled.value == true
                 ldapParams.server = server
                 ldapParams.bindDn = bindDn.value.orEmpty().trim()
                 ldapParams.password = password.value.orEmpty().trim()
