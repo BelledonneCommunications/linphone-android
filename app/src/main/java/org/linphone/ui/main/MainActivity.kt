@@ -66,7 +66,6 @@ import org.linphone.databinding.MainActivityBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.assistant.AssistantActivity
 import org.linphone.ui.main.chat.fragment.ConversationsListFragmentDirections
-import org.linphone.ui.main.help.fragment.DebugFragmentDirections
 import org.linphone.utils.PasswordDialogModel
 import org.linphone.ui.main.sso.fragment.SingleSignOnFragmentDirections
 import org.linphone.ui.main.viewmodel.MainViewModel
@@ -722,8 +721,13 @@ class MainActivity : GenericActivity() {
                     sharedViewModel.showConversationEvent.value = Event(conversationId)
                 }
 
-                val action = DebugFragmentDirections.actionDebugFragmentToConversationsListFragment()
-                findNavController().navigate(action)
+                val action = ConversationsListFragmentDirections.actionGlobalConversationsListFragment()
+                val options = NavOptions.Builder()
+                options.apply {
+                    setPopUpTo(R.id.helpFragment, true)
+                    setLaunchSingleTop(true)
+                }
+                findNavController().navigate(action, options.build())
             } else {
                 val conversationId = parseShortcutIfAny(intent)
                 if (conversationId != null) {

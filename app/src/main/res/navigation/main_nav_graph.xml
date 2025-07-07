@@ -228,14 +228,7 @@
         android:id="@+id/debugFragment"
         android:name="org.linphone.ui.main.help.fragment.DebugFragment"
         android:label="DebugFragment"
-        tools:layout="@layout/help_debug_fragment" >
-        <action
-            android:id="@+id/action_debugFragment_to_conversationsListFragment"
-            app:destination="@id/conversationsListFragment"
-            app:launchSingleTop="true"
-            app:popUpTo="@id/helpFragment"
-            app:popUpToInclusive="true"/>
-    </fragment>
+        tools:layout="@layout/help_debug_fragment"/>
 
     <fragment
         android:id="@+id/accountSettingsFragment"

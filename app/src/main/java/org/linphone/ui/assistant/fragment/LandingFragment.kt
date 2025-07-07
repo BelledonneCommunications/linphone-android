@@ -78,6 +78,14 @@ class LandingFragment : GenericFragment() {
             requireActivity().finish()
         }
 
+        binding.setHelpClickListener {
+            if (findNavController().currentDestination?.id == R.id.landingFragment) {
+                val action =
+                    LandingFragmentDirections.actionLandingFragmentToHelpFragment()
+                findNavController().navigate(action)
+            }
+        }
+
         binding.setRegisterClickListener {
             if (viewModel.conditionsAndPrivacyPolicyAccepted) {
                 goToRegisterFragment()

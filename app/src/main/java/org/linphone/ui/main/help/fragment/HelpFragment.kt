@@ -27,7 +27,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navGraphViewModels
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.HelpFragmentBinding
@@ -37,6 +36,7 @@ import org.linphone.ui.main.help.viewmodel.HelpViewModel
 import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.utils.DialogUtils
 import androidx.core.net.toUri
+import androidx.lifecycle.ViewModelProvider
 
 @UiThread
 class HelpFragment : GenericMainFragment() {
@@ -46,9 +46,7 @@ class HelpFragment : GenericMainFragment() {
 
     private lateinit var binding: HelpFragmentBinding
 
-    val viewModel: HelpViewModel by navGraphViewModels(
-        R.id.main_nav_graph
-    )
+    private lateinit var viewModel: HelpViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -62,6 +60,8 @@ class HelpFragment : GenericMainFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
+
+        viewModel = ViewModelProvider(this)[HelpViewModel::class.java]
         binding.viewModel = viewModel
         observeToastEvents(viewModel)
 

@@ -62,6 +62,8 @@ class HelpViewModel
 
     val versionClickCount = MutableLiveData<Int>()
 
+    val canConfigFileBeViewed = MutableLiveData<Boolean>()
+
     val newVersionAvailableEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
         MutableLiveData<Event<Pair<String, String>>>()
     }
