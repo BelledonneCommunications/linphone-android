@@ -62,6 +62,8 @@ class HelpViewModel
 
     val logsUploadInProgress = MutableLiveData<Boolean>()
 
+    val canConfigFileBeViewed = MutableLiveData<Boolean>()
+
     val newVersionAvailableEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
         MutableLiveData<Event<Pair<String, String>>>()
     }

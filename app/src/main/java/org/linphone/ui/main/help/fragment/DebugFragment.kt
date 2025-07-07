@@ -28,22 +28,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navGraphViewModels
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.HelpDebugFragmentBinding
 import org.linphone.ui.GenericActivity
+import org.linphone.ui.assistant.AssistantActivity
 import org.linphone.ui.fileviewer.FileViewerActivity
+import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.help.viewmodel.HelpViewModel
 
 class DebugFragment : GenericMainFragment() {
     private lateinit var binding: HelpDebugFragmentBinding
 
-    val viewModel: HelpViewModel by navGraphViewModels(
-        R.id.main_nav_graph
-    )
+    private lateinit var viewModel: HelpViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,8 +57,12 @@ class DebugFragment : GenericMainFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
+
+        viewModel = ViewModelProvider(this)[HelpViewModel::class.java]
         binding.viewModel = viewModel
         observeToastEvents(viewModel)
+
+        viewModel.canConfigFileBeViewed.postValue(requireActivity() is MainActivity)
 
         binding.setBackClickListener {
             goBack()
@@ -91,6 +95,13 @@ class DebugFragment : GenericMainFragment() {
 
         viewModel.uploadDebugLogsFinishedEvent.observe(viewLifecycleOwner) {
             it.consume { url ->
+                if (requireActivity() is AssistantActivity) {
+                    val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                    val label = "Logs upload URL"
+                    clipboard.setPrimaryClip(ClipData.newPlainText(label, url))
+                    return@consume
+                }
+
                 val appName = requireContext().getString(R.string.app_name)
                 val intent = Intent(Intent.ACTION_SEND)
                 intent.putExtra(

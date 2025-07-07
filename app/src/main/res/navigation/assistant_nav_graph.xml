@@ -144,6 +144,14 @@
             app:launchSingleTop="true"
             app:popUpTo="@id/landingFragment"
             app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_landingFragment_to_helpFragment"
+            app:destination="@id/helpFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:launchSingleTop="true" />
 
     </fragment>
 
@@ -168,5 +176,26 @@
         app:launchSingleTop="true"
         app:enterAnim="@anim/slide_in"
         app:popExitAnim="@anim/slide_out" />
+
+    <fragment
+        android:id="@+id/helpFragment"
+        android:name="org.linphone.ui.main.help.fragment.HelpFragment"
+        android:label="HelpFragment"
+        tools:layout="@layout/help_fragment">
+        <action
+            android:id="@+id/action_helpFragment_to_debugFragment"
+            app:destination="@id/debugFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:launchSingleTop="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/debugFragment"
+        android:name="org.linphone.ui.main.help.fragment.DebugFragment"
+        android:label="DebugFragment"
+        tools:layout="@layout/help_debug_fragment"/>
 
 </navigation>
