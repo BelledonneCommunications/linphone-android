@@ -411,7 +411,7 @@
 
     <string name="account_settings_dialog_invalid_password_title">Authentication needed</string>
     <string name="account_settings_dialog_invalid_password_message">Connection failed because authentication is missing or invalid for account \n%s.\n\nYou can provide password again, or check your account configuration in the settings.</string>
-    <string name="account_settings_dialog_invalid_password_hint">New password</string>
+    <string name="account_settings_dialog_invalid_password_hint">Password</string>
     <string name="account_failed_to_find_identity_toast">Failed to find matching account!</string>
 
     <!-- Call history -->
