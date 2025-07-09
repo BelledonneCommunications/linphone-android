@@ -132,10 +132,10 @@
     <string name="assistant_permissions_title">Donner les permissions</string>
     <string name="assistant_permissions_grant_all_of_them">OK</string>
     <string name="assistant_permissions_skip_permissions">Plus tard</string>
-    <string name="assistant_permissions_subtitle">Pour vous permettre de vous profitez pleinement de &appName;, nous avons besoin des autorisations suivantes :</string>
-    <string name="assistant_permissions_read_contacts_title"><b>Contacts :</b> Pour vous afficher vos contacts et retrouver qui utilise &appName;.</string>
+    <string name="assistant_permissions_subtitle">Pour vous permettre de profiter pleinement de &appName;, nous avons besoin des autorisations suivantes :</string>
+    <string name="assistant_permissions_read_contacts_title"><b>Contacts :</b> Pour afficher vos contacts et retrouver qui utilise &appName;.</string>
     <string name="assistant_permissions_post_notifications_title"><b>Notifications :</b> Pour vous informer quand vous recevez un message ou un appel.</string>
-    <string name="assistant_permissions_record_audio_title"><b>Microphone :</b> Pour permettre à vos correspondants de vous entendre. </string>
+    <string name="assistant_permissions_record_audio_title"><b>Microphone :</b> Pour permettre à vos correspondants de vous entendre.</string>
     <string name="assistant_permissions_access_camera_title"><b>Caméra :</b> Pour capturer votre vidéo lors des appels et des conférences.</string>
 
     <!-- Main navigation items -->
