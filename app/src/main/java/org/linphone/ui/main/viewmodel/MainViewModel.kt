@@ -163,7 +163,7 @@ class MainViewModel
             state: Call.State?,
             message: String
         ) {
-            Log.i("$TAG A call's state changed, updating 'alerts' if needed")
+            Log.i("$TAG Call [${call.remoteAddress.asStringUriOnly()}] state changed to [$state], updating 'alerts' if needed")
             if (
                 core.callsNb > 1 && (
                     LinphoneUtils.isCallEnding(call.state) ||
@@ -173,7 +173,14 @@ class MainViewModel
             ) {
                 updateCallAlert()
             } else if (core.callsNb == 1) {
-                callsStatus.postValue(LinphoneUtils.callStateToString(call.state))
+                if (callsStatus.value.orEmpty().isEmpty()) {
+                    // In case there was more than one call and now there is only one left
+                    updateCallAlert()
+                } else if (call.state != Call.State.Released) {
+                    // When you have two calls, when the one is ended core.callsNb will become 1
+                    // but the ended one will still go to Released state after that
+                    callsStatus.postValue(LinphoneUtils.callStateToString(call.state))
+                }
             }
         }
 
@@ -564,7 +571,7 @@ class MainViewModel
             }
         } else if (callsNb > 1) {
             callLabel.postValue(AppUtils.getFormattedString(R.string.calls_count_label, callsNb))
-            callsStatus.postValue("") // TODO: improve ?
+            callsStatus.postValue("")
         }
     }
 
