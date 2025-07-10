@@ -261,6 +261,7 @@
                     android:text="@string/settings_contacts_carddav_use_as_default_title"
                     android:maxLines="2"
                     android:ellipsize="end"
+                    android:visibility="@{viewModel.isReadOnly ? View.GONE : View.VISIBLE}"
                     app:layout_constraintTop_toTopOf="@id/save_new_contacts_in_this_list_switch"
                     app:layout_constraintBottom_toBottomOf="@id/save_new_contacts_in_this_list_switch"
                     app:layout_constraintStart_toStartOf="parent"
@@ -274,8 +275,28 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginEnd="16dp"
                     android:checked="@={viewModel.storeNewContactsInIt}"
+                    android:visibility="@{viewModel.isReadOnly ? View.GONE : View.VISIBLE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/realm" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/settings_title_style"
+                    android:id="@+id/carddav_read_only"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/settings_contacts_carddav_read_only_label"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:drawableStart="@drawable/warning_circle"
+                    android:drawablePadding="5dp"
+                    app:drawableTint="?attr/color_main2_700"
+                    android:visibility="@{viewModel.isReadOnly ? View.VISIBLE : View.GONE, default=gone}"
+                    app:layout_constraintTop_toBottomOf="@id/save_new_contacts_in_this_list_switch"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

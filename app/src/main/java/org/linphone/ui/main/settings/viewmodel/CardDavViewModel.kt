@@ -58,6 +58,8 @@ class CardDavViewModel
 
     val storeNewContactsInIt = MutableLiveData<Boolean>()
 
+    val isReadOnly = MutableLiveData<Boolean>()
+
     val syncSuccessfulEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -88,12 +90,14 @@ class CardDavViewModel
                         val previous = corePreferences.friendListInWhichStoreNewlyCreatedFriends
                         if (friendList.isReadOnly) {
                             Log.w("$TAG User asked to add newly created contacts in this friend list but it is read only, keep currently default friend list [$previous]")
+                            storeNewContactsInIt.postValue(false)
                         } else {
                             Log.i(
                                 "$TAG Updating default friend list to store newly created contacts from [$previous] to [$name]"
                             )
                             corePreferences.friendListInWhichStoreNewlyCreatedFriends = name
                         }
+                        isReadOnly.postValue(friendList.isReadOnly)
                     }
 
                     Log.i("$TAG Notifying contacts manager that contacts have changed")
@@ -142,6 +146,7 @@ class CardDavViewModel
             isEdit.postValue(true)
             friendList = found
             friendList.addListener(friendListListener)
+            isReadOnly.postValue(friendList.isReadOnly)
 
             displayName.postValue(name)
             storeNewContactsInIt.postValue(

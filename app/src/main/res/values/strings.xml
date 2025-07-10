@@ -272,6 +272,7 @@
     <string name="settings_contacts_carddav_sync_error_toast">Synchronization error!</string>
     <string name="settings_contacts_carddav_deleted_toast">CardDAV account removed</string>
     <string name="settings_contacts_carddav_mandatory_field_not_filled_toast">Please fill at least the display name and the server URL</string>
+    <string name="settings_contacts_carddav_read_only_label">This address-book is read-only</string>
     <string name="settings_contacts_ldap_enabled_title">Enabled</string>
     <string name="settings_contacts_ldap_server_url_title">Server URL (can\'t be empty)</string>
     <string name="settings_contacts_ldap_bind_dn_title">Bind DN</string>
