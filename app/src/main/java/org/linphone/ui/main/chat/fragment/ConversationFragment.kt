@@ -1324,7 +1324,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
 
             val model = MessageReactionsModel(chatMessageModel.chatMessage) { reactionsModel ->
                 coreContext.postOnMainThread {
-                    if (reactionsModel.allReactions.isEmpty) {
+                    if (reactionsModel.allReactions.value.orEmpty().isEmpty()) {
                         Log.i("$TAG No reaction to display, closing bottom sheet")
                         val bottomSheetBehavior = BottomSheetBehavior.from(
                             binding.messageBottomSheet.root
@@ -1390,7 +1390,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
 
     @UiThread
     private fun displayReactions(model: MessageReactionsModel) {
-        val totalCount = model.allReactions.size
+        val totalCount = model.allReactions.value.orEmpty().size
         val label = getString(R.string.message_reactions_info_all_title, totalCount.toString())
 
         val tabs = binding.messageBottomSheet.tabs
@@ -1400,7 +1400,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         )
 
         var index = 1
-        for (reaction in model.differentReactions.value.orEmpty()) {
+        for (reaction in model.differentReactions) {
             val count = model.reactionsMap[reaction]
             val tabLabel = getString(
                 R.string.message_reactions_info_emoji_title,
@@ -1417,7 +1417,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 val filter = tab?.tag.toString()
                 if (filter.isEmpty()) {
-                    bottomSheetAdapter.submitList(model.allReactions)
+                    bottomSheetAdapter.submitList(model.allReactions.value.orEmpty())
                 } else {
                     bottomSheetAdapter.submitList(model.filterReactions(filter))
                 }
@@ -1430,7 +1430,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             }
         })
 
-        val initialList = model.allReactions
+        val initialList = model.allReactions.value.orEmpty()
         bottomSheetAdapter.submitList(initialList)
         Log.i("$TAG Submitted [${initialList.size}] items for default reactions list")
     }
