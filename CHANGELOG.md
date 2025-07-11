@@ -28,6 +28,18 @@ Group changes to describe their impact on the project, as follows:
 - Improved UI on tablets with screen sw600dp and higher, will look more like our desktop app
 - Reworked some settings (moved calls related ones from advanced settings to advanced calls settings)
 
+## [6.0.11] - 2025-07-11
+
+### Added
+- Added toggle in LDAP configuration to allow to quickly enable/disable it
+
+### Changed
+- Reduced maximum number of contacts displayed in contacts list, new call/conversation, meeting participant selection etc...
+- Updated translations
+
+### Fixed
+- Calls top bar wrong notification label when going from two calls to one.
+
 ## [6.0.10] - 2025-06-27
 
 ### Added
