@@ -38,9 +38,9 @@ class MessageReactionsModel
         private const val TAG = "[Message Reactions Model]"
     }
 
-    val allReactions = arrayListOf<MessageBottomSheetParticipantModel>()
+    val allReactions = MutableLiveData<ArrayList<MessageBottomSheetParticipantModel>>()
 
-    val differentReactions = MutableLiveData<ArrayList<String>>()
+    val differentReactions = arrayListOf<String>()
 
     val reactionsMap = HashMap<String, Int>()
 
@@ -71,7 +71,7 @@ class MessageReactionsModel
     fun filterReactions(emoji: String): ArrayList<MessageBottomSheetParticipantModel> {
         val filteredList = arrayListOf<MessageBottomSheetParticipantModel>()
 
-        for (reaction in allReactions) {
+        for (reaction in allReactions.value.orEmpty()) {
             if (reaction.value == emoji) {
                 filteredList.add(reaction)
             }
@@ -83,16 +83,17 @@ class MessageReactionsModel
     @WorkerThread
     private fun computeReactions() {
         reactionsMap.clear()
-        allReactions.clear()
+        differentReactions.clear()
 
-        val differentReactionsList = arrayListOf<String>()
+        val allReactionsList = arrayListOf<MessageBottomSheetParticipantModel>()
         for (reaction in chatMessage.reactions) {
             val body = reaction.body
             val count = reactionsMap.getOrDefault(body, 0)
             reactionsMap[body] = count + 1
+            Log.i("$TAG Found reaction with body [$body] (count = ${count + 1}) from [${reaction.fromAddress.asStringUriOnly()}]")
 
             val isOurOwn = reaction.fromAddress.weakEqual(chatMessage.chatRoom.localAddress)
-            allReactions.add(
+            allReactionsList.add(
                 MessageBottomSheetParticipantModel(
                     reaction.fromAddress,
                     reaction.body,
@@ -111,15 +112,15 @@ class MessageReactionsModel
                 }
             )
 
-            if (!differentReactionsList.contains(body)) {
-                differentReactionsList.add(body)
+            if (!differentReactions.contains(body)) {
+                differentReactions.add(body)
             }
         }
 
         Log.i(
-            "$TAG [${differentReactionsList.size}] reactions found on a total of [${allReactions.size}]"
+            "$TAG [${differentReactions.size}] reactions found on a total of [${allReactionsList.size}]"
         )
-        differentReactions.postValue(differentReactionsList)
+        allReactions.postValue(allReactionsList)
         onReactionsUpdated?.invoke(this)
     }
 }
