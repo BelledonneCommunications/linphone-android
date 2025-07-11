@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE resources [
-    <!ENTITY appName "Linphone">
+<!ENTITY appName "Linphone">
 ]>
 <resources>
     <string name="app_name">&appName;</string>
-    <string name="sip_address">SIP Adresse</string>
-    <string name="device_id">Gerät ID</string>
+    <string name="sip_address">SIP-Adresse</string>
+    <string name="device_id">Geräte-ID</string>
     <string name="sip_address_display_name">Anzeigename</string>
-    <string name="sip_address_domain">Domain</string>
+    <string name="sip_address_domain">Domäne</string>
     <string name="username">Benutzername</string>
     <string name="authentication_id">Authentifizierungs ID (falls anders)</string>
     <string name="password">Passwort</string>
@@ -21,12 +21,10 @@
         <item quantity="one">%s Tag</item>
         <item quantity="other">%s Tage</item>
     </plurals>
-
     <plurals name="selection_count_label">
         <item quantity="one">%s ausgewählt</item>
         <item quantity="other">%s ausgewählt</item>
     </plurals>
-
     <!-- Dialog various possible buttons label -->
     <string name="dialog_deny">Ablehnen</string>
     <string name="dialog_accept">Akzeptieren</string>
@@ -67,7 +65,6 @@
         <item quantity="other">%s Dateien werden heruntergeladen</item>
     </plurals>
     <string name="notification_file_transfer_upload_download_message" translatable="false">%s, %s</string>
-
     <!-- First screens user see when app is installed and started -->
     <string name="notification_keep_app_alive_message">Zum Öffnen klicken</string>
     <string name="welcome_page_title">Willkommen</string>
@@ -97,8 +94,8 @@
     <string name="assistant_account_login">Login</string>
     <string name="assistant_scan_qr_code">QR-Code scannen</string>
     <string name="assistant_qr_code_invalid_toast">Ungültiger QR-Code!</string>
-    <string name="assistant_login_third_party_sip_account">Dritter SIP Konto verwenden</string>
-    <string name="assistant_login_third_party_sip_account_title">Drittanbieters SIP-Konto</string>
+    <string name="assistant_login_third_party_sip_account">Drittanbieter-SIP-Konto verwenden</string>
+    <string name="assistant_login_third_party_sip_account_title">Drittanbieter-SIP-Konto</string>
     <string name="assistant_login_using_single_sign_on">Single sign on</string>
     <string name="assistant_login_cant_parse_address_toast">SIP Adresse ist ungültig!</string>
     <string name="assistant_login_address_without_username_toast">SIP Adresse enthält keinen Benutzernamen!</string>
@@ -106,14 +103,14 @@
     <string name="assistant_no_account_yet">Noch kein Konto?</string>
     <string name="assistant_account_register">Registrieren</string>
     <string name="assistant_account_creation_sms_confirmation_title">Bestätigen Sie Ihre Telefonnummer</string>
-    <string name="assistant_account_creation_sms_confirmation_explanation">Wir haben einen Bestätigungscode an Ihre Telefonnummer %1$s gesendet.\\n\\nBitte geben Sie unten den Bestätigungscode ein:</string>
+    <string name="assistant_account_creation_sms_confirmation_explanation">Wir haben einen Bestätigungscode an Ihre Telefonnummer %1$s gesendet.\n\nBitte geben Sie den Bestätigungscode unten ein:</string>
     <string name="assistant_account_creation_wrong_phone_number">Falsche Nummer?</string>
     <string name="assistant_account_create">Erstellen</string>
     <string name="assistant_create_account_using_email_on_our_web_platform">Erstellen Sie mit Ihrer E-Mail ein Konto bei:</string>
     <string name="assistant_already_have_an_account">Haben Sie bereits ein Konto?</string>
     <string name="assistant_sip_account_transport_protocol">Transport</string>
-    <string name="assistant_third_party_sip_account_warning_explanation">Für einige Funktionen ist ein &appName; Konto erforderlich, z. B. Gruppennachrichten, Videokonferenzen usw.\\n\\nDiese Funktionen sind ausgeblendet, wenn Sie sich mit einem SIP-Konto eines Drittanbieters registrieren.\\n\\nUm sie in einem kommerziellen Projekt zu aktivieren, kontaktieren Sie uns bitte.</string>
-    <string name="assistant_third_party_sip_account_create_linphone_account">Ich möchte lieber ein &appName; Konto erstellen</string>
+    <string name="assistant_third_party_sip_account_warning_explanation">Für einige Funktionen ist ein &appName;-Konto erforderlich, z. B. Gruppennachrichten, Videokonferenzen…\n\nDiese Funktionen sind ausgeblendet, wenn Sie sich mit einem SIP-Konto eines Drittanbieters registrieren.\n\nUm sie in einem kommerziellen Projekt zu aktivieren, kontaktieren Sie uns bitte.</string>
+    <string name="assistant_third_party_sip_account_create_linphone_account">Ich möchte lieber ein &appName;-Konto erstellen</string>
     <string name="assistant_third_party_sip_account_warning_ok">Ich verstehe</string>
     <string name="assistant_account_register_push_notification_not_received_error">Push Benachrichtigung mit Authentifizierungstoken nicht innerhalb von 5 Sekunden empfangen, bitte versuchen Sie es später erneut</string>
     <string name="assistant_account_register_unexpected_error">Unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.</string>
@@ -122,11 +119,11 @@
     <string name="assistant_permissions_title">Berechtigungen erteilen</string>
     <string name="assistant_permissions_grant_all_of_them">OK</string>
     <string name="assistant_permissions_skip_permissions">Mach es später</string>
-    <string name="assistant_permissions_subtitle">Um den vollen Genuss zu erzielen, müssen Sie &appName; die folgenden Berechtigungen erteilen:</string>
-    <string name="assistant_permissions_read_contacts_title"><b>Kontakte lesen:</b> Um Ihre &appName; Kontakte anzuzeigen und herauszufinden, wer verwendet.</string>
-    <string name="assistant_permissions_post_notifications_title"><b>Postbenachrichtigungen:</b> Lassen Sie sich informieren, wenn Sie eine Nachricht oder einen Anruf erhalten.</string>
-    <string name="assistant_permissions_record_audio_title"><b>Audio aufnehmen:</b> Damit Ihr Gesprächspartner Sie hören kann und um Sprachnachrichten aufzuzeichnen.</string>
-    <string name="assistant_permissions_access_camera_title"><b>Auf die Kamera zugreifen:</b> Zum Aufnehmen von Videos während Videoanrufen und -konferenzen.</string>
+    <string name="assistant_permissions_subtitle">Um &appName; in vollem Umfang genießen zu können, müssen Sie uns die folgenden Berechtigungen erteilen:</string>
+    <string name="assistant_permissions_read_contacts_title"><b>Kontakte:</b> Um Ihre Kontakte anzuzeigen und herauszufinden, wer &appName; verwendet.</string>
+    <string name="assistant_permissions_post_notifications_title"><b>Benachrichtigungen:</b> Um informiert zu werden, wenn Sie eine Nachricht oder einen Anruf erhalten.</string>
+    <string name="assistant_permissions_record_audio_title"><b>Mikrofon:</b> Damit Ihre Gesprächspartner Sie hören können.</string>
+    <string name="assistant_permissions_access_camera_title"><b>Kamera:</b> Zum Aufnehmen von Videos während Videoanrufen und -konferenzen.</string>
     <string name="bottom_navigation_contacts_label">Kontakte</string>
     <string name="bottom_navigation_calls_label">Anrufe</string>
     <string name="bottom_navigation_conversations_label">Gespräche</string>
@@ -167,7 +164,7 @@
     <string name="settings_security_title">Sicherheit</string>
     <string name="settings_security_enable_vfs_title">Alles verschlüsseln</string>
     <string name="settings_security_enable_vfs_subtitle">Achtung: Sobald es aktiviert ist, kann es nicht mehr deaktiviert werden!</string>
-    <string name="settings_security_enable_vfs_dialog_confirmation_message">Nach der Aktivierung müssen Sie die App neu starten. Danach werden alle Anwendungsdaten verschlüsselt und sind nur noch über die Anwendung zugänglich. Vorsicht, der Vorgang kann nicht rückgängig gemacht werden!</string>
+    <string name="settings_security_enable_vfs_dialog_confirmation_message">Nach der Aktivierung müssen Sie die App neu starten.\nDanach werden alle Anwendungsdaten verschlüsselt und sind nur noch über die Anwendung zugänglich.\n\nVorsicht, dieser Vorgang kann nicht rückgängig gemacht werden!</string>
     <string name="settings_security_prevent_screenshots_title">Aufzeichnung der Benutzeroberfläche verhindern</string>
     <string name="settings_calls_title">Anrufe</string>
     <string name="settings_calls_echo_canceller_title">Verwenden Sie die Software Echounterdrückung</string>
@@ -214,9 +211,9 @@
     <string name="settings_contacts_ldap_min_characters_title">Min Zeichen zum Starten einer Abfrage</string>
     <string name="settings_contacts_ldap_name_attributes_title">Namensattribute</string>
     <string name="settings_contacts_ldap_sip_attributes_title">SIP Attribute</string>
-    <string name="settings_contacts_ldap_sip_domain_title">SIP domäne</string>
+    <string name="settings_contacts_ldap_sip_domain_title">SIP-Domäne</string>
     <string name="settings_contacts_ldap_error_toast">Ein Fehler ist aufgetreten, LDAP Server nicht gespeichert!</string>
-    <string name="settings_contacts_ldap_empty_server_error_toast">Die Server URL darf nicht leer sein.</string>
+    <string name="settings_contacts_ldap_empty_server_error_toast">Die Server-URL darf nicht leer sein.</string>
     <string name="settings_meetings_title">Besprechungen</string>
     <string name="settings_meetings_default_layout_title">Standardlayout</string>
     <string name="settings_meetings_layout_active_speaker_label">Aktiver Lautsprecher</string>
@@ -305,7 +302,7 @@
     <string name="account_settings_replace_plus_by_00_title">Beim Formatieren von Telefonnummern + durch 00 ersetzen</string>
     <string name="account_settings_update_password_title">Passwort aktualisieren</string>
     <string name="account_settings_dialog_invalid_password_title">Authentifizierung erforderlich</string>
-    <string name="account_settings_dialog_invalid_password_message">Verbindung fehlgeschlagen, da Authentifizierung für Konto %s fehlt oder ungültig ist.\\n\\nSie können das Passwort erneut eingeben oder Ihre Kontokonfiguration in den Einstellungen überprüfen.</string>
+    <string name="account_settings_dialog_invalid_password_message">Verbindung fehlgeschlagen, da Authentifizierung für Konto %s fehlt oder ungültig ist.\n\nSie können das Passwort erneut eingeben oder Ihre Kontokonfiguration in den Einstellungen überprüfen.</string>
     <string name="account_settings_dialog_invalid_password_hint">Neues Passwort</string>
     <string name="account_failed_to_find_identity_toast">Es konnte kein passendes Konto gefunden werden!</string>
     <string name="history_title">Anrufverlauf</string>
@@ -355,9 +352,9 @@
     <string name="contact_deleted_toast">Kontakt wurde entfernt</string>
     <string name="contact_details_phone_number_copied_to_clipboard_toast">Nummer in die Zwischenablage kopiert</string>
     <string name="contact_dialog_increase_trust_level_title">Erhöhen Sie das Vertrauensniveau</string>
-    <string name="contact_dialog_increase_trust_level_message">Sie sind dabei, das Gerät %2$s von %1$s anzurufen. Möchten Sie den Anruf durchführen?</string>
+    <string name="contact_dialog_increase_trust_level_message">Sie sind dabei, das Gerät %2$s von %1$s anzurufen.\nMöchten Sie den Anruf durchführen?</string>
     <string name="contact_dialog_devices_trust_help_title">Vertrauensstufe</string>
-    <string name="contact_dialog_devices_trust_help_message">Überprüfen Sie alle Ihre Kontaktgeräte, um sicherzustellen, dass Ihre Kommunikation geschützt und unverändert bleibt. Wenn alles verifiziert ist, erreichen Sie das maximale Vertrauensniveau.</string>
+    <string name="contact_dialog_devices_trust_help_message">Überprüfen Sie alle Ihre Kontaktgeräte, um sicherzustellen, dass Ihre Kommunikation geschützt und unverändert bleibt.\nWenn alles verifiziert ist, erreichen Sie das maximale Vertrauensniveau.</string>
     <string name="contact_dialog_delete_title">%s löschen?</string>
     <string name="contact_dialog_delete_message">Dieser Kontakt wird endgültig entfernt.</string>
     <string name="contact_dialog_pick_phone_number_or_sip_address_title">Eine Nummer oder SIP Adresse wählen</string>
@@ -380,7 +377,6 @@
         <item quantity="other">%s Dateien warten auf Freigabe</item>
     </plurals>
     <string name="conversations_text_waiting_to_be_shared_toast">Text wartet darauf, geteilt zu werden</string>
-
     <string name="conversation_action_mark_as_read">Als gelesen markieren</string>
     <string name="conversation_action_mute">Stumm</string>
     <string name="conversation_action_unmute">Stumm aufheben</string>
@@ -389,7 +385,7 @@
     <string name="conversation_action_leave_group">Verlasse die Gruppe</string>
     <string name="conversation_action_configure_ephemeral_messages">kurzlebiger Nachrichten konfigurieren</string>
     <string name="conversation_ephemeral_messages_title">Kurzlebiger Nachrichten</string>
-    <string name="conversation_ephemeral_messages_subtitle">Neue Nachrichten werden automatisch gelöscht, sobald sie von allen gelesen wurden.\\nWählen Sie eine Dauer:</string>
+    <string name="conversation_ephemeral_messages_subtitle">Neue Nachrichten werden automatisch gelöscht, sobald sie von allen gelesen wurden.\nWählen Sie eine Dauer:</string>
     <string name="conversation_ephemeral_messages_duration_disabled">Deaktiviert</string>
     <string name="conversation_ephemeral_messages_duration_one_minute">1 Minute</string>
     <string name="conversation_ephemeral_messages_duration_one_hour">1 Stunde</string>
@@ -431,7 +427,7 @@
     <string name="conversation_dialog_subject_cant_be_empty_error">Betreff ist obligatorisch</string>
     <string name="conversation_dialog_subject_hint">Gesprächsbetreff</string>
     <string name="conversation_dialog_open_or_export_file_title">Datei öffnen oder exportieren?</string>
-    <string name="conversation_dialog_open_or_export_file_message">&appName; kann diese Datei nicht öffnen.\\n\\nMöchten Sie sie in einer anderen App öffnen (falls möglich) oder auf Ihr Gerät exportieren?</string>
+    <string name="conversation_dialog_open_or_export_file_message">&appName; kann diese Datei nicht öffnen.\n\nMöchten Sie sie in einer anderen App öffnen (falls möglich) oder auf Ihr Gerät exportieren?</string>
     <string name="conversation_dialog_open_file_label">Datei öffnen</string>
     <string name="conversation_dialog_export_file_label">Datei exportieren</string>
     <string name="conversation_dialog_open_plain_text_label">Als reinen Text öffnen</string>
@@ -507,7 +503,7 @@
     <string name="meeting_schedule_title">Neue Besprechung</string>
     <string name="meeting_schedule_meeting_label">Besprechung</string>
     <string name="meeting_schedule_broadcast_label">Übertragen</string>
-    <string name="meeting_schedule_broadcast_help">Infos zur Übertragen.\\n<u>Mehr erfahren</u></string>
+    <string name="meeting_schedule_broadcast_help">Infos zur Übertragen.\n<u>Mehr erfahren</u></string>
     <string name="meeting_schedule_subject_hint">Titel hinzufügen…</string>
     <string name="meeting_schedule_pick_start_date_title">Startdatum wählen</string>
     <string name="meeting_schedule_pick_start_time_title">Startzeit wählen</string>
@@ -571,7 +567,7 @@
     <string name="call_state_connected">Aktiv</string>
     <string name="call_state_paused">Pausieren</string>
     <string name="call_state_paused_by_remote">Fern pausiert</string>
-    <string name="call_state_resuming">Fortsetzen</string>
+    <string name="call_state_resuming">Fortsetzen…</string>
     <string name="call_state_ended">Beendet</string>
     <string name="call_waiting_for_encryption_info">Warten auf Verschlüsselung…</string>
     <string name="call_zrtp_end_to_end_encrypted">Ende-zu-Ende verschlüsselt durch ZRTP</string>
@@ -588,8 +584,8 @@
     <string name="calls_list_dialog_merge_into_conference_label">Konferenz erstellen</string>
     <string name="call_camera_permission_not_granted_toast">Kamera Erlaubnis abgelehnt!</string>
     <string name="call_dialog_zrtp_validate_trust_title">Überprüfen des Geräts</string>
-    <string name="call_dialog_zrtp_validate_trust_message">Zu Ihrer Sicherheit müssen wir Ihr Endgerät authentifizieren.\\nBitte tauschen Sie Ihre Codes aus:</string>
-    <string name="call_dialog_zrtp_validate_trust_warning_message">Zu Ihrer Sicherheit müssen wir Ihr entsprechendes Gerät erneut authentifizieren.\\nBitte tauschen Sie Ihre Codes erneut aus:</string>
+    <string name="call_dialog_zrtp_validate_trust_message">Zu Ihrer Sicherheit müssen wir Ihr Endgerät authentifizieren.\nBitte tauschen Sie Ihre Codes aus:</string>
+    <string name="call_dialog_zrtp_validate_trust_warning_message">Zu Ihrer Sicherheit müssen wir Ihr entsprechendes Gerät erneut authentifizieren.\nBitte tauschen Sie Ihre Codes erneut aus:</string>
     <string name="call_dialog_zrtp_validate_trust_local_code_label">Ihr Code:</string>
     <string name="call_dialog_zrtp_validate_trust_remote_code_label">Entsprechender Code:</string>
     <string name="call_dialog_zrtp_validate_trust_letters_do_not_match">Nichts zusammenpasst</string>
@@ -792,8 +788,8 @@
     <string name="content_description_join_conference">Nehmen Sie an der Konferenz teil</string>
     <string name="content_description_carddav_delete">Löschen Sie diese CardDAV-Konfiguration</string>
     <string name="content_description_carddav_save">CardDAV Konfiguration speichern</string>
-    <string name="content_description_ldap_delete">"Diese LDAP Konfiguration löschen "</string>
-    <string name="content_description_ldap_save">" LDAP Konfiguration speichen"</string>
+    <string name="content_description_ldap_delete">Diese LDAP-Konfiguration löschen</string>
+    <string name="content_description_ldap_save">LDAP-Konfiguration speichen</string>
     <string name="content_description_play_call_recording">Plays the call recording</string>
     <string name="settings_calls_change_ringtone_pick_title">Klingelton auswählen</string>
     <string name="web_platform_register_email_url">TURN aktivieren</string>
@@ -826,7 +822,7 @@
     <string name="settings_developer_show_title">Entwicklereinstellungen anzeigen</string>
     <string name="settings_developer_enabled_toast">Entwicklereinstellungen aktiviert</string>
     <string name="conversation_no_app_registered_to_handle_content_type_dialog_title">Als Klartext öffnen?</string>
-    <string name="conversation_no_app_registered_to_handle_content_type_dialog_message">Es wurde keine App zum Öffnen dieser Datei gefunden.  Möchten Sie versuchen, die Datei als reinen Text zu öffnen?</string>
+    <string name="conversation_no_app_registered_to_handle_content_type_dialog_message">Es wurde keine App zum Öffnen dieser Datei gefunden.\n\nMöchten Sie versuchen, die Datei als reinen Text zu öffnen?</string>
     <string name="conversation_take_picture_label">Foto aufnehmen</string>
     <string name="conversation_pick_file_from_gallery_label">Galerie öffnen</string>
     <string name="conversation_pick_any_file_label">Datei auswählen</string>
@@ -838,4 +834,19 @@
     <string name="meeting_cancel_action_label">Besprechung absagen</string>
     <string name="meeting_schedule_delete_dialog_title">Besprechung löschen?</string>
     <string name="meeting_schedule_delete_dialog_message">Möchten Sie die Besprechung löschen?</string>
+    <string name="assistant_forgotten_password_title">Passwort vergessen</string>
+    <string name="assistant_forgotten_password_message">Sie haben Ihren Account erstellt mit:</string>
+    <string name="assistant_recover_phone_number_account_subtitle">Geben Sie die mit Ihrem Konto verknüpfte Telefonnummer ein, und wir senden Ihnen einen Code zu.</string>
+    <string name="assistant_account_register_unavailable_no_push_warning">Benachrichtigungen scheinen auf Ihrem Gerät nicht verfügbar zu sein, sind allerdings nötig um einen Account in der App zu erstellen.\n\nWir laden Sie ein, stattdessen einen Account auf unserer Webplattform zu erstellen:</string>
+    <string name="assistant_recover_email_account_label">Einer E-Mail</string>
+    <string name="assistant_recover_phone_number_account_label">Einer Telefonnummer</string>
+    <string name="assistant_recover_phone_number_account_send_code_label">Code senden</string>
+    <string name="assistant_recover_phone_number_account_unavailable_no_push_warning">Benachrichtigungen scheinen auf Ihrem Gerät nicht verfügbar zu sein, sind aber für die Wiederherstellung eines Rufnummernkontos in der mobilen App zwingend erforderlich.</string>
+    <string name="help_about_user_guide_title">&appName; Benutzeranleitung</string>
+    <string name="help_about_user_guide_subtitle">Lerne alle Funktionen der App zu meistern, Schritt für Schritt.</string>
+    <string name="content_description_cancel_files_or_text_pending_sharing">Hier tippen um Datei- oder Textfreigaben abzubrechen</string>
+    <string name="help_about_contribute_translations_title">Zu &appName;-Übersetzungen beitragen</string>
+    <string name="help_about_contribute_translations_subtitle">Helfen Sie mit, die App so vielen Menschen wie möglich zugänglich zu machen.</string>
+    <string name="help_troubleshooting_subtitle">Übermitteln Sie Ihre Diagnoseprotokolle, um die Fehlerbehebung zu erleichtern.</string>
+    <string name="settings_advanced_audio_codecs_stereo_subtitle">Stereo</string>
 </resources>

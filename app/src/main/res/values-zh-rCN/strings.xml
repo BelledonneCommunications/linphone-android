@@ -104,7 +104,7 @@
     </plurals>
     <string name="notification_keep_app_alive_message">点击打开</string>
     <string name="welcome_page_title">欢迎</string>
-    <string name="welcome_page_subtitle">在 &appName;</string>
+    <string name="welcome_page_subtitle">在&appName;</string>
     <string name="welcome_page_2_title">安全</string>
     <string name="welcome_page_2_message">通讯是 <b>端对端 </b>安全的。</string>
     <string name="welcome_page_3_title">开源</string>
@@ -335,7 +335,7 @@
     <string name="account_settings_replace_plus_by_00_title">格式化电话号码时，将+替换为00</string>
     <string name="account_settings_update_password_title">更新密码</string>
     <string name="account_settings_dialog_invalid_password_title">需要身份验证</string>
-    <string name="account_settings_dialog_invalid_password_hint">新的密码</string>
+    <string name="account_settings_dialog_invalid_password_hint">密码</string>
     <string name="account_failed_to_find_identity_toast">找不到匹配的账户！</string>
     <string name="history_title">通话记录</string>
     <string name="history_call_start_title">新呼叫</string>
@@ -492,7 +492,7 @@
     <string name="conversation_event_conference_destroyed">您已离开该组</string>
     <string name="conversation_event_participant_added">%s已加入</string>
     <string name="conversation_event_participant_removed">%s已离开</string>
-    <string name="conversation_event_device_removed">%s的新设备</string>
+    <string name="conversation_event_device_removed">%s的设备已删除</string>
     <string name="conversation_event_subject_changed">新主题：%s</string>
     <string name="conversation_event_admin_set">%s是管理员</string>
     <string name="conversation_event_admin_unset">%s不再是管理员</string>
@@ -836,4 +836,5 @@
     <string name="help_about_user_guide_title">&appName; 用户指南</string>
     <string name="help_about_contribute_translations_subtitle">帮助尽可能多的人访问应用程序。</string>
     <string name="help_troubleshooting_subtitle">传输您的诊断日志以促进错误解决。</string>
+    <string name="content_description_cancel_files_or_text_pending_sharing">单击可取消待共享的文件或文本</string>
 </resources>

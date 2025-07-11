@@ -407,7 +407,7 @@
     <string name="account_settings_apply_international_prefix_title">Formátovat telefonní čísla s mezinárodní předvolbou</string>
     <string name="account_settings_update_password_title">Aktualizovat heslo</string>
     <string name="manage_account_dialog_international_prefix_help_message">Vyberte svou zemi, aby &appName; mohl správně spárovat vaše kontakty.</string>
-    <string name="account_settings_dialog_invalid_password_hint">Nové heslo</string>
+    <string name="account_settings_dialog_invalid_password_hint">Heslo</string>
     <string name="account_failed_to_find_identity_toast">Odpovídající účet nebyl nalezen!</string>
     <string name="history_call_start_title">Nový hovor</string>
     <string name="history_call_start_search_bar_filter_hint">Hledat kontakt nebo historii hovorů</string>

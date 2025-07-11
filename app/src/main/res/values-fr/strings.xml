@@ -1,7 +1,7 @@
-<?xml version='1.0' encoding='UTF-8'?>
-
-<!DOCTYPE resources [<!ENTITY appName "Linphone">]>
-
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [
+<!ENTITY appName "Linphone">
+]>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Common words -->
     <string name="sip_address">Adresse SIP</string>
@@ -21,12 +21,10 @@
         <item quantity="one">%s jour</item>
         <item quantity="other">%s jours</item>
     </plurals>
-
     <plurals name="selection_count_label" tools:ignore="MissingQuantity">
         <item quantity="one">%s selectionné</item>
         <item quantity="other">%s selectionnés</item>
     </plurals>
-
     <!-- Dialog various possible buttons label -->
     <string name="dialog_deny">Refuser</string>
     <string name="dialog_accept">Accepter</string>
@@ -41,7 +39,6 @@
     <string name="dialog_yes">Oui</string>
     <string name="dialog_remove">Retirer</string>
     <string name="dialog_confirm">Confirmer</string>
-
     <!-- Related to Android notifications -->
     <string name="notification_channel_call_name">Notifications d\'appels en cours</string>
     <string name="notification_channel_incoming_call_name">Notifications d\'appels entrants</string>
@@ -69,7 +66,6 @@
         <item quantity="other">%s fichiers en cours de réception</item>
     </plurals>
     <string name="notification_keep_app_alive_message">Cliquez pour ouvrir</string>
-
     <!-- First screens user see when app is installed and started -->
     <string name="welcome_page_title">Bienvenue</string>
     <string name="welcome_page_subtitle">sur &appName;</string>
@@ -78,7 +74,6 @@
     <string name="welcome_page_2_message">Vos communications sont en sécurité grâce au <b>chiffrement de bout en bout</b>.</string>
     <string name="welcome_page_3_title">Open source</string>
     <string name="welcome_page_3_message">Une application open source et un <b>service gratuit</b> depuis <b>2001</b>.</string>
-
     <!-- Generic toasts -->
     <string name="sip_address_copied_to_clipboard_toast">Adresse copiée</string>
     <string name="new_account_configured_toast">Nouveau compte ajouté</string>
@@ -91,7 +86,6 @@
     <string name="remote_provisioning_config_applied_toast">Configuration appliquée</string>
     <string name="remote_provisioning_config_failed_toast">Erreur lors du chargement ou de l\'application de la configuration</string>
     <string name="media_player_generic_error_toast">Erreur lors de la création du lecteur média</string>
-
     <!-- Assistant related string (account register / login / etc...) -->
     <string name="assistant_dialog_general_terms_and_privacy_policy_title">Conditions de service &amp; politique de confidentialité</string>
     <string name="assistant_dialog_general_terms_label">conditions de service</string>
@@ -141,13 +135,11 @@
     <string name="assistant_recover_phone_number_account_subtitle">Veuillez saisir le numéro de téléphone lié à votre compte, nous allons vous envoyer un code.</string>
     <string name="assistant_recover_phone_number_account_send_code_label">Envoyer le code</string>
     <string name="assistant_recover_phone_number_account_unavailable_no_push_warning">Les notifications push ne semblent pas être disponibles sur votre appareil. Celles-ci sont nécessaires à la récupération d’un compte sur l’application mobile avec un numéro de téléphone.</string>
-
     <!-- Main navigation items -->
     <string name="bottom_navigation_contacts_label">Contacts</string>
     <string name="bottom_navigation_calls_label">Appels</string>
     <string name="bottom_navigation_conversations_label">Conversations</string>
     <string name="bottom_navigation_meetings_label">Réunions</string>
-
     <!-- Side menu -->
     <string name="drawer_menu_manage_account">Mon compte</string>
     <string name="drawer_menu_account_connection_status_connected">Connecté</string>
@@ -157,7 +149,6 @@
     <string name="drawer_menu_account_connection_status_failed">Erreur</string>
     <string name="drawer_menu_no_account_configured_yet">Aucun compte configuré</string>
     <string name="drawer_menu_add_account">Ajouter un compte</string>
-
     <!-- Help & troubleshooting related -->
     <string name="help_title">Aide</string>
     <string name="help_about_title">À propos de &appName;</string>
@@ -188,7 +179,6 @@
     <string name="help_troubleshooting_debug_logs_upload_error_toast_message">Échec à l\'envoi des journaux</string>
     <string name="help_troubleshooting_show_config_file">Afficher la configuration</string>
     <string name="help_troubleshooting_clear_native_friends_in_database">Supprimer les contacts natifs importés</string>
-
     <!-- App & SDK settings -->
     <string name="settings_title">Paramètres</string>
     <string name="settings_security_title">Securité</string>
@@ -273,7 +263,6 @@
     <string name="settings_tunnel_mode_disabled_label">Désactivé</string>
     <string name="settings_tunnel_mode_always_label">Toujours</string>
     <string name="settings_tunnel_mode_auto_label">Auto</string>
-
     <string name="settings_advanced_title">Paramètres avancés</string>
     <string name="settings_advanced_print_logs_crashlytics_title">Aider les développeurs à corriger les problèmes en envoyant les logs à Crashlytics après un crash</string>
     <string name="settings_advanced_start_at_boot_title">Démarrer au lancement du téléphone</string>
@@ -303,12 +292,10 @@
     <string name="settings_advanced_audio_codecs_stereo_subtitle">stéréo</string>
     <string name="settings_advanced_video_codecs_title">Codecs vidéo</string>
     <string name="settings_advanced_go_to_android_app_settings_title">Paramètres Android de &appName;</string>
-
     <string name="settings_developer_title">Paramètres développeurs</string>
     <string name="settings_developer_show_title">Afficher les paramètres développeurs</string>
     <string name="settings_developer_enabled_toast">Paramètres développeurs activés</string>
     <string name="settings_developer_already_enabled_toast">Paramètres développeurs déjà activés</string>
-
     <!-- Account profile & settings -->
     <string name="manage_account_title">Mon compte</string>
     <string name="manage_account_details_title">Détails</string>
@@ -335,7 +322,6 @@
     <string name="manage_account_device_last_connection">Dernière connexion :</string>
     <string name="manage_account_dialog_remove_account_title">Se déconnecter du compte ?</string>
     <string name="manage_account_dialog_remove_account_message">Si vous souhaitez supprimer définitivement votre compte rendez-vous sur : https://sip.linphone.org</string>
-
     <string name="account_settings_title">Paramètres de compte</string>
     <string name="account_settings_push_notification_title">Activer les notifications push</string>
     <string name="account_settings_push_notification_not_available_title">Notifications push non disponibles</string>
@@ -361,12 +347,10 @@
     <string name="account_settings_apply_international_prefix_title">Formatter les numéros en utilisant l\'indicatif international</string>
     <string name="account_settings_replace_plus_by_00_title">Remplacer + par 00 lors du formattage des numéros de téléphone</string>
     <string name="account_settings_update_password_title">Mettre à jour le mot de passe</string>
-
     <string name="account_settings_dialog_invalid_password_title">Autentification requise</string>
     <string name="account_settings_dialog_invalid_password_message">La connexion a échoué pour le compte \n%s.\n\nVous pouvez renseigner votre mot de passe à nouveau ou bien vérifier les options de configuration de votre compte.</string>
     <string name="account_settings_dialog_invalid_password_hint">Mot de passe</string>
     <string name="account_failed_to_find_identity_toast">Le compte selectionné est introuvable !</string>
-
     <string name="history_title">Historique d\'appel</string>
     <string name="history_call_start_title">Nouvel appel</string>
     <string name="history_call_start_search_bar_filter_hint">Cherchez un contact ou une suggestion</string>
@@ -376,12 +360,10 @@
     <string name="history_group_call_start_dialog_subject_hint">Nom de l\'appel de groupe</string>
     <string name="history_list_empty_history">Aucun appel dans votre historique…</string>
     <string name="history_group_call_go_to_conversation">Conversation</string>
-
     <string name="history_dialog_delete_all_call_logs_title">Supprimer l\'historique d\'appels ?</string>
     <string name="history_dialog_delete_all_call_logs_message">L\'ensemble de votre historique d\'appels sera définitivement supprimé.</string>
     <string name="history_dialog_delete_call_logs_title">Supprimer l\'historique d\'appels ?</string>
     <string name="history_dialog_delete_call_logs_message">L\'ensemble de votre historique d\'appels avec ce correspondant sera définitivement supprimé.</string>
-
     <!-- Contacts -->
     <string name="contacts_list_empty">Aucun contact pour le moment…</string>
     <string name="contacts_list_sip_empty">Aucun contact SIP pour le moment…</string>
@@ -391,7 +373,6 @@
     <string name="contacts_list_filter_popup_see_all">Tous les contacts</string>
     <string name="contacts_list_filter_popup_see_linphone_only">Contacts &appName;</string>
     <string name="contacts_list_filter_popup_see_sip_only">Contacts SIP</string>
-
     <string name="contact_new_title">Nouveau contact</string>
     <string name="contact_edit_title">Modifier contact</string>
     <string name="contact_editor_first_name">Prénom</string>
@@ -405,7 +386,6 @@
     <string name="contact_editor_dialog_abort_confirmation_title">Ignorer les modifications ?</string>
     <string name="contact_editor_dialog_abort_confirmation_message">Toutes vos modifications seront perdues.</string>
     <string name="contact_editor_mandatory_field_not_filled_toast">Veuillez saisir au moins un nom, prénom ou le nom de l\'entreprise</string>
-
     <string name="contact_details_numbers_and_addresses_title">Coordonnées</string>
     <string name="contact_details_company_name">Entreprise :</string>
     <string name="contact_details_job_title">Poste :</string>
@@ -421,7 +401,6 @@
     <string name="contact_sms_invite_content">Salut, rejoins moi sur &appName; ! Tu peux le télécharger gratuitement sur %s</string>
     <string name="contact_deleted_toast">Contact supprimé</string>
     <string name="contact_details_phone_number_copied_to_clipboard_toast">Numéro de téléphone copié</string>
-
     <string name="contact_dialog_increase_trust_level_title">Vérifier l\'appareil ?</string>
     <string name="contact_dialog_increase_trust_level_message">Voulez-vous appeler l\’appareil %2$s de %1$s ?</string>
     <string name="contact_dialog_devices_trust_help_title">Niveau de confiance</string>
@@ -429,7 +408,6 @@
     <string name="contact_dialog_delete_title">Supprimer %s ?</string>
     <string name="contact_dialog_delete_message">Ce contact sera définitivement supprimé.</string>
     <string name="contact_dialog_pick_phone_number_or_sip_address_title">Choisissez un numéro ou adresse SIP</string>
-
     <string name="contact_presence_status_online">En ligne</string>
     <string name="contact_presence_status_was_online_on">En ligne il y a %s</string>
     <string name="contact_presence_status_was_online_today_at">En ligne à %s</string>
@@ -441,7 +419,6 @@
     <string name="contact_video_call_action">Appel vidéo</string>
     <string name="contact_make_call_check_device_trust">Vérifier</string>
     <string name="contact_device_without_name">Appareil sans nom</string>
-
     <!-- Chat -->
     <string name="conversations_list_empty">Aucune conversation pour le moment…</string>
     <string name="conversations_list_is_being_removed_label">En cours de suppression…</string>
@@ -451,7 +428,6 @@
         <item quantity="other">%s fichiers en attente de partage</item>
     </plurals>
     <string name="conversations_text_waiting_to_be_shared_toast">Texte en attente de partage</string>
-
     <string name="conversation_action_mark_as_read">Marquer comme lu</string>
     <string name="conversation_action_mute">Mettre en sourdine</string>
     <string name="conversation_action_unmute">Réactiver les notifications</string>
@@ -530,7 +506,6 @@
     <string name="conversation_pick_any_file_label">Choisir un fichier</string>
     <string name="conversation_file_cant_be_opened_error_toast">Impossible d\'ouvrir le fichier !</string>
     <string name="conversation_pdf_file_cant_be_opened_error_toast">Impossible d\'ouvrir un PDF protégé par mot de passe</string>
-
     <string name="conversation_info_participants_list_title">Participants (%s)</string>
     <string name="conversation_info_add_participants_label">Ajouter des participants</string>
     <string name="conversation_info_participant_is_admin_label">Administrateur</string>
@@ -551,7 +526,6 @@
     <string name="conversation_info_no_address_to_add_to_contact_toast">Aucune adresse à ajouter au contact</string>
     <string name="conversation_info_confirm_start_group_call_dialog_title">Lancer un appel de groupe ?</string>
     <string name="conversation_info_confirm_start_group_call_dialog_message">Tous les participants de la conversation recevront un appel.</string>
-
     <string name="conversation_event_conference_created">Vous avez rejoint la conversation</string>
     <string name="conversation_event_conference_destroyed">Vous avez quitté la conversation</string>
     <string name="conversation_event_participant_added">%s a rejoint la conversation</string>
@@ -568,15 +542,12 @@
     <string name="conversation_event_security_event_man_in_the_middle_detected">Attaque de l\'homme du milieu détectée pour %s</string>
     <string name="conversation_event_security_event_level_downgraded">Baisse du niveau de sécurité due à %s</string>
     <string name="conversation_event_security_event_max_participant_count_exceeded">Nombre maximum de terminaux dépassé pour %s</string>
-
     <string name="conversation_details_media_documents_title">Médias &amp; documents</string>
     <string name="conversation_media_list_title">Médias partagés</string>
     <string name="conversation_document_list_title">Documents partagés</string>
-
     <string name="conversation_forward_message_title">Transférer à…</string>
     <string name="conversation_message_forwarded_toast">Message transféré</string>
     <string name="conversation_message_forward_cancelled_toast">Transfert annulé</string>
-
     <string name="message_delivery_info_read_title">Lu %s</string>
     <string name="message_delivery_info_received_title">Reçu %s</string>
     <string name="message_delivery_info_sent_title">Envoyé %s</string>
@@ -585,15 +556,12 @@
     <string name="message_reactions_info_emoji_title">%1$s %2$s</string>
     <string name="message_reaction_click_to_remove_label">Cliquez pour supprimer</string>
     <string name="message_forwarded_label">Transféré</string>
-
     <string name="message_meeting_invitation_content_description">invitation à une réunion :</string>
     <string name="message_meeting_invitation_updated_content_description">réunion mise à jour :</string>
     <string name="message_meeting_invitation_cancelled_content_description">réunion annulée :</string>
     <string name="message_voice_message_content_description">message vocal</string>
-
     <!-- Scheduled conferences -->
     <string name="meetings_list_no_meeting_for_today">Aucune réunion aujourd\'hui</string>
-
     <string name="meeting_schedule_title">Nouvelle réunion</string>
     <string name="meeting_schedule_meeting_label">Réunion</string>
     <string name="meeting_schedule_broadcast_label">Webinar</string>
@@ -632,13 +600,11 @@
     <string name="meeting_failed_to_send_invites_toast">Échec de l\'envoi des invitations à la réunion !</string>
     <string name="meeting_failed_to_send_part_of_invites_toast">Échec de l\'envoi des invitations à certains des participants !</string>
     <string name="meeting_address_copied_to_clipboard_toast">Adresse de la réunion copiée</string>
-
     <string name="meeting_waiting_room_join">Rejoindre</string>
     <string name="meeting_waiting_room_cancel">Annuler</string>
     <string name="meeting_waiting_room_joining_title">Connexion à la réunion</string>
     <string name="meeting_waiting_room_joining_subtitle">Vous allez rejoindre la réunion dans quelques instants…</string>
     <string name="meeting_waiting_room_failed_to_join_toast">Échec de connexion à la conférence!</string>
-
     <!-- Call related -->
     <string name="call_outgoing">Appel sortant</string>
     <string name="call_audio_incoming">Appel entrant</string>
@@ -652,7 +618,6 @@
     <string name="call_transfer_no_active_call_label">Pas d\'autre appel</string>
     <string name="call_transfer_confirm_dialog_tittle">Confirmer le transfert</string>
     <string name="call_transfer_confirm_dialog_message">Vous allez transférer %1$s à %2$s.</string>
-
     <string name="call_action_transfer">Transfert</string>
     <string name="call_action_start_new_call">Nouvel appel</string>
     <string name="call_action_go_to_calls_list">Liste des appels</string>
@@ -686,7 +651,6 @@
     <string name="calls_list_dialog_merge_into_conference_label">Créer une conférence</string>
     <string name="call_audio_record_permission_not_granted_toast">Permission d\'enregistrer l\'audio déclinée !</string>
     <string name="call_camera_permission_not_granted_toast">Permission d\'utliser la caméra déclinée !</string>
-
     <string name="call_dialog_zrtp_validate_trust_title">Vérification de sécurité</string>
     <string name="call_dialog_zrtp_validate_trust_message">Pour garantir le chiffrement, nous avons besoin d’authentifier l’appareil de votre correspondant.\nVeuillez échanger vos codes :</string>
     <string name="call_dialog_zrtp_validate_trust_warning_message">Pour garantir le chiffrement, nous avons besoin de réauthentifier l’appareil de votre correspondant.\nVeuillez ré-échanger vos codes :</string>
@@ -696,14 +660,12 @@
     <string name="call_dialog_zrtp_security_alert_title">Alerte de sécurité</string>
     <string name="call_dialog_zrtp_security_alert_try_again">Réessayer</string>
     <string name="call_dialog_zrtp_security_alert_message">La confidentialité de votre appel peut être compromise !</string>
-
     <string name="call_audio_device_type_earpiece">Oreillette</string>
     <string name="call_audio_device_type_speaker">Haut parleur</string>
     <string name="call_audio_device_type_bluetooth">Bluetooth (%s)</string>
     <string name="call_audio_device_type_hearing_aid">Aide auditive (%s)</string>
     <string name="call_audio_device_type_headset">Casque</string>
     <string name="call_audio_device_type_headphones">Écouteurs</string>
-
     <string name="call_stats_audio_title">Audio</string>
     <string name="call_stats_codec_label">Codec : %s</string>
     <string name="call_stats_bandwidth_label">Bande passante : %s</string>
@@ -716,7 +678,6 @@
     <string name="call_stats_fec_lost_packets_label">Paquets perdus : %s</string>
     <string name="call_stats_fec_repaired_packets_label">Paquets réparés : %s</string>
     <string name="call_stats_fec_lost_bandwidth_label">Bande passante : %s</string>
-
     <string name="call_stats_media_encryption_title">Chiffrement du média</string>
     <string name="call_stats_media_encryption">Chiffrement : %s</string>
     <string name="call_stats_media_encryption_zrtp_post_quantum">ZRTP Post Quantique</string>
@@ -725,7 +686,6 @@
     <string name="call_stats_zrtp_hash_algo">Algorithme de hachage : %s</string>
     <string name="call_stats_zrtp_auth_tag_algo">Algorithme d\'authentification : %s</string>
     <string name="call_stats_zrtp_sas_algo">Algorithme SAS : %s</string>
-
     <string name="call_history_deleted_toast">Historique supprimé</string>
     <string name="call_can_be_trusted_toast">Appareil authentifié</string>
     <string name="call_transfer_in_progress_toast">Transfert en cours</string>
@@ -737,7 +697,6 @@
     <string name="call_error_io_error_toast">Service indisponible ou erreur réseau</string>
     <string name="call_error_server_timeout_toast">Délai d\'attente du serveur dépassé</string>
     <string name="call_error_temporarily_unavailable_toast">Temporairement indisponible</string>
-
     <!-- Conference (in-call) -->
     <string name="conference_share_link_title">Partager le lien</string>
     <string name="conference_call_empty">En attente d\'autres participants…</string>
@@ -756,23 +715,18 @@
     <string name="conference_participant_paused_text">En pause</string>
     <string name="conference_active_speaker_is_screen_sharing">partage son écran</string>
     <string name="conference_failed_to_add_participant_invalid_address_toast">Adresse SIP invalide, ajout impossible à la réunion</string>
-
     <string name="conference_layout_grid">Mosaïque</string>
     <string name="conference_layout_active_speaker">Intervenant actif</string>
     <string name="conference_layout_audio_only">Audio uniquement</string>
     <string name="conference_too_many_participants_for_mosaic_layout_toast">Trop de participants pour l\'affichage mosaïque</string>
-
     <string name="conference_remotely_hosted_title">Appel de groupe distant</string>
     <string name="conference_locally_hosted_title">Appel de groupe local</string>
-
     <!-- Call records -->
     <string name="recordings_title">Enregistrements</string>
     <string name="recordings_list_empty">Aucun appel enregistré…</string>
-
     <!-- Android Auto UI texts -->
     <string name="car_favorites_contacts_title">Favoris</string>
     <string name="car_favorites_contacts_list_empty">Aucun contact favori</string>
-
     <!-- Various menu entries -->
     <string name="menu_add_address_to_contacts">Ajouter aux contacts</string>
     <string name="menu_see_existing_contact">Voir le contact</string>
@@ -788,7 +742,6 @@
     <string name="menu_copy_chat_message">Copier le texte</string>
     <string name="menu_export_selected_item">Télécharger</string>
     <string name="menu_share_selected_item">Partager</string>
-
     <!-- Colors -->
     <string name="orange">Orange</string>
     <string name="yellow">Jaune</string>
@@ -797,7 +750,6 @@
     <string name="red">Rouge</string>
     <string name="pink">Rose</string>
     <string name="purple">Violet</string>
-
     <!-- Misc -->
     <string name="list_filter_no_result_found">Aucun résultat…</string>
     <string name="multiple_participants_selection_placeholder">Les participants selectionnés apparaîtront ici</string>
@@ -820,16 +772,13 @@
         <item quantity="one">%s message vocal en attente</item>
         <item quantity="other">%s messages vocaux en attente</item>
     </plurals>
-
     <!-- Keep <u></u> in the following strings translations! -->
     <string name="welcome_carousel_skip"><u>Passer</u></string>
     <string name="assistant_forgotten_password"><u>Mot de passe oublié ?</u></string>
     <string name="call_zrtp_sas_validation_skip"><u>Passer</u></string>
-
     <!-- Keep <b></b> in the following strings translations! -->
     <string name="conversation_message_meeting_updated_label"><b>La réunion a été mise à jour</b></string>
     <string name="conversation_message_meeting_cancelled_label"><b>La réunion a été annulée</b></string>
-
     <!-- Content description for accessibility -->
     <string name="content_description_trusted_contact_icon">La confiance a été vérifiée avec tous les appareils du contact</string>
     <string name="content_description_not_trusted_contact_icon">Au moins un appareil du contact n\'est pas de confiance !</string>

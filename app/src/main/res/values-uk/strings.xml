@@ -416,7 +416,7 @@
     <string name="account_settings_update_password_title">Оновити пароль</string>
     <string name="account_settings_dialog_invalid_password_title">Потрібна автентифікація</string>
     <string name="account_settings_dialog_invalid_password_message">З’єднання не вдалося, оскільки автентифікація відсутня або недійсна для облікового запису\n%s.\n\nВи можете ввести пароль ще раз або перевірити конфігурацію облікового запису в налаштуваннях.</string>
-    <string name="account_settings_dialog_invalid_password_hint">Новий пароль</string>
+    <string name="account_settings_dialog_invalid_password_hint">Пароль</string>
     <string name="account_failed_to_find_identity_toast">Не вдалося знайти відповідний обліковий запис!</string>
     <string name="history_title">Історія дзвінків</string>
     <string name="history_call_start_title">Новий дзвінок</string>
