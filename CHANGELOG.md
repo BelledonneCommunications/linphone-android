@@ -10,6 +10,18 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [6.0.11] - 2025-07-11
+
+### Added
+- Added toggle in LDAP configuration to allow to quickly enable/disable it
+
+### Changed
+- Reduced maximum number of contacts displayed in contacts list, new call/conversation, meeting participant selection etc...
+- Updated translations
+
+### Fixed
+- Calls top bar wrong notification label when going from two calls to one.
+
 ## [6.0.10] - 2025-06-27
 
 ### Added
