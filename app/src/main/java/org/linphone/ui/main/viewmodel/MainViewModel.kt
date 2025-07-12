@@ -416,13 +416,6 @@ class MainViewModel
     }
 
     @UiThread
-    fun updateNetworkReachability() {
-        coreContext.postOnCoreThread {
-            checkNetworkReachability()
-        }
-    }
-
-    @UiThread
     fun updateMissingPermissionAlert() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             coreContext.postOnCoreThread {
@@ -437,13 +430,25 @@ class MainViewModel
     }
 
     @UiThread
-    fun checkForNewAccount() {
+    fun updateAccountsAndNetworkReachability() {
         coreContext.postOnCoreThread { core ->
-            val count = core.accountList.size
+            val accounts = core.accountList
+            val count = accounts.size
             if (count > accountsFound) {
+                Log.i("$TAG Newly added account detected!")
                 showNewAccountToastEvent.postValue(Event(true))
             }
             accountsFound = count
+
+            checkNetworkReachability()
+
+            for (account in accounts) {
+                if (account.state == RegistrationState.Failed) {
+                    val identity = account.params.identityAddress?.asStringUriOnly().orEmpty()
+                    Log.i("$TAG Account [$identity] registration state is failed, refreshing REGISTER")
+                    account.refreshRegister()
+                }
+            }
         }
     }
 

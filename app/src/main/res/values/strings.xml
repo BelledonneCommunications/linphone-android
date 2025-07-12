@@ -19,6 +19,7 @@
     <string name="notification_channel_service_id" translatable="false">linphone_6.0_notification_service_id</string>
     <string name="notification_channel_chat_id" translatable="false">linphone_6.0_notification_chat_id</string>
     <string name="notification_channel_without_ringtone_incoming_call_id" translatable="false">linphone_6.0.1_notification_incoming_call_id</string>
+    <string name="notification_channel_account_error_id" translatable="false">linphone_6.1_account_error_id</string>
 
     <string name="emoji_love" translatable="false">❤️</string>
     <string name="emoji_thumbs_up" translatable="false">👍</string>
@@ -84,12 +85,13 @@
     <string name="dialog_understood">Understood</string>
 
     <!-- Related to Android notifications -->
-    <string name="notification_channel_call_name">&appName; active calls notifications</string>
-    <string name="notification_channel_incoming_call_name">&appName; incoming calls notifications</string>
-    <string name="notification_channel_missed_call_name">&appName; missed calls notifications</string>
-    <string name="notification_channel_service_name">&appName; service notification</string>
+    <string name="notification_channel_call_name">Active calls notifications</string>
+    <string name="notification_channel_incoming_call_name">Incoming calls notifications</string>
+    <string name="notification_channel_missed_call_name">Missed calls notifications</string>
+    <string name="notification_channel_service_name">Service notification</string>
     <string name="notification_channel_service_desc">This service will run all the time to keep app alive and allow you to receive calls and messages without push notifications.</string>
-    <string name="notification_channel_chat_name">&appName; instant messages notifications</string>
+    <string name="notification_channel_chat_name">Instant messages notifications</string>
+    <string name="notification_channel_account_error_name">Account error notifications</string>
     <string name="notification_chat_message_reaction_received">Reacted by %1$s to: %2$s</string>
     <string name="notification_mark_message_as_read">Mark as read</string>
     <string name="notification_reply_to_message">Reply</string>
@@ -113,6 +115,8 @@
     <string name="notification_keep_app_alive_message">Click to open</string>
     <string name="notification_enable_speaker_for_call">Turn on speaker</string>
     <string name="notification_disable_speaker_for_call">Turn off speaker</string>
+    <string name="notification_account_registration_error_title">Account %s registration failed!</string>
+    <string name="notification_account_registration_error_message">Open &appName; to refresh the registration</string>
 
     <!-- First screens user see when app is installed and started -->
     <string name="welcome_page_title">Welcome</string>

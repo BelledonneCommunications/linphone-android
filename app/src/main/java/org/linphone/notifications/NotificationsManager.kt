@@ -53,6 +53,7 @@ import org.linphone.contacts.AvatarGenerator
 import org.linphone.contacts.ContactsManager.ContactsListener
 import org.linphone.contacts.getAvatarBitmap
 import org.linphone.contacts.getPerson
+import org.linphone.core.Account
 import org.linphone.core.Address
 import org.linphone.core.AudioDevice
 import org.linphone.core.Call
@@ -69,6 +70,7 @@ import org.linphone.core.CoreListenerStub
 import org.linphone.core.Factory
 import org.linphone.core.Friend
 import org.linphone.core.MediaDirection
+import org.linphone.core.RegistrationState
 import org.linphone.core.tools.Log
 import org.linphone.ui.call.CallActivity
 import org.linphone.ui.main.MainActivity
@@ -102,12 +104,16 @@ class NotificationsManager
         const val INTENT_REMOTE_SIP_URI = "REMOTE_ADDRESS"
 
         const val CHAT_TAG = "Chat"
+
+        private const val ACCOUNT_ERROR_TAG = "Account Error"
+
         private const val MISSED_CALL_TAG = "Missed call"
         const val CHAT_NOTIFICATIONS_GROUP = "CHAT_NOTIF_GROUP"
 
         private const val INCOMING_CALL_ID = 1
         private const val DUMMY_NOTIF_ID = 3
         private const val KEEP_ALIVE_FOR_THIRD_PARTY_ACCOUNTS_ID = 5
+        private const val ACCOUNT_REGISTRATION_ERROR_ID = 7
         private const val MISSED_CALL_ID = 10
     }
 
@@ -129,6 +135,7 @@ class NotificationsManager
     private val callNotificationsMap: HashMap<String, Notifiable> = HashMap()
     private val chatNotificationsMap: HashMap<String, Notifiable> = HashMap()
     private val previousChatNotifications: ArrayList<Int> = arrayListOf()
+    private val accountsErrorNotificationsMap: HashMap<String, Int> = HashMap()
 
     private val notificationsMap = HashMap<Int, Notification>()
 
@@ -451,6 +458,27 @@ class NotificationsManager
             )
             dismissChatNotification(chatRoom)
         }
+
+        @WorkerThread
+        override fun onAccountRegistrationStateChanged(
+            core: Core,
+            account: Account,
+            state: RegistrationState?,
+            message: String
+        ) {
+            if (state == RegistrationState.Failed) {
+                showAccountErrorNotification(account)
+            } else if (state == RegistrationState.Ok) {
+                // Check if a notification exists for that identity address and if yes, remove it
+                val identity = account.params.identityAddress?.asStringUriOnly().orEmpty()
+                val notificationId = accountsErrorNotificationsMap.getOrDefault(identity, -1)
+                if (notificationId != -1) {
+                    accountsErrorNotificationsMap.remove(identity)
+                    Log.i("$TAG Removing account registration error notification with ID [$notificationId] for [$identity]")
+                    cancelNotification(notificationId, ACCOUNT_ERROR_TAG)
+                }
+            }
+        }
     }
 
     val chatMessageListener: ChatMessageListener = object : ChatMessageListenerStub() {
@@ -599,6 +627,7 @@ class NotificationsManager
         createMissedCallNotificationChannel()
         createActiveCallNotificationChannel()
         createMessageChannel()
+        createAccountErrorNotificationChannel()
     }
 
     @WorkerThread
@@ -1122,6 +1151,49 @@ class NotificationsManager
             "$TAG Updating chat notification with ID [${notifiable.notificationId}]"
         )
         notify(notifiable.notificationId, notification, CHAT_TAG)
+    }
+
+    @WorkerThread
+    private fun showAccountErrorNotification(account: Account) {
+        // Don't do it if background mode is not enabled, otherwise it will trigger every time
+        // the app is put in background and it's not relevant as long as push notifications work
+        if (!corePreferences.keepServiceAlive) return
+
+        if (Compatibility.isPostNotificationsPermissionGranted(context)) {
+            val pendingIntent = TaskStackBuilder.create(context).run {
+                addNextIntentWithParentStack(
+                    Intent(context, MainActivity::class.java).apply {
+                        action = Intent.ACTION_MAIN // Needed as well
+                    }
+                )
+                getPendingIntent(
+                    ACCOUNT_REGISTRATION_ERROR_ID,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )!!
+            }
+
+            val identity = account.params.identityAddress?.asStringUriOnly().orEmpty()
+            val notificationId = identity.hashCode()
+
+            val notification = NotificationCompat.Builder(
+                context,
+                context.getString(R.string.notification_channel_account_error_id)
+            )
+                .setContentTitle(context.getString(R.string.notification_account_registration_error_title, identity))
+                .setContentText(context.getString(R.string.notification_account_registration_error_message))
+                .setSmallIcon(R.drawable.linphone_notification)
+                .setAutoCancel(false)
+                .setOngoing(true)
+                .setCategory(NotificationCompat.CATEGORY_ERROR)
+                .setWhen(System.currentTimeMillis())
+                .setShowWhen(true)
+                .setContentIntent(pendingIntent)
+                .build()
+
+            accountsErrorNotificationsMap.put(identity, notificationId)
+            Log.i("$TAG Showing account registration error notification with ID [$notificationId] for [$identity]")
+            notify(notificationId, notification, ACCOUNT_ERROR_TAG)
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -1803,6 +1875,21 @@ class NotificationsManager
             enableLights(false)
             enableVibration(false)
             setShowBadge(false)
+        }
+        notificationManager.createNotificationChannel(channel)
+    }
+
+    @MainThread
+    private fun createAccountErrorNotificationChannel() {
+        val id = context.getString(R.string.notification_channel_account_error_id)
+        val name = context.getString(R.string.notification_channel_account_error_name)
+
+        val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH).apply {
+            description = name
+            lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            enableLights(true)
+            enableVibration(true)
+            setShowBadge(true)
         }
         notificationManager.createNotificationChannel(channel)
     }

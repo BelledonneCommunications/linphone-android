@@ -428,9 +428,8 @@ class MainActivity : GenericActivity() {
         super.onResume()
 
         viewModel.enableAccountMonitoring(true)
-        viewModel.checkForNewAccount()
-        viewModel.updateNetworkReachability()
         viewModel.updateMissingPermissionAlert()
+        viewModel.updateAccountsAndNetworkReachability()
     }
 
     override fun onNewIntent(intent: Intent) {

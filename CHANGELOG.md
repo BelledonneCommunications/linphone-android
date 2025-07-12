@@ -17,16 +17,24 @@ Group changes to describe their impact on the project, as follows:
 - Support right click on some items to open bottom sheet/menu
 - Added toggle speaker action in active call notification
 - Increased text size for chat messages that only contains emoji(s)
+- Handle read-only CardDAV address books, disable edit/delete menus for contacts in read-only FriendList.
+- Show information to user when filtering contacts doesn't show them all and user may have to refine it's search
+- Show Android notification when an account goes to failed registration state (only when background mode is enabled)
 - New settings:
   - one for user to choose whether to sort contacts by first name or last name
   - one to hide contacts that have neither a SIP address nor a phone number
   - one to let app auto-answer call with video sending already enabled
-- Added a vu meter for recording & playback volumes (disabled by default, must be enabled in CorePreferences)
+- Added a vu meter for recording & playback volumes (must be enabled in developer settings)
+- Added a way to go to Help & Troubleshooting pages from Assistant
+- Added support for HDMI audio devices
 
 ### Changed
 - Hide SIP address/phone number picker dialog if contact has exactly one SIP address matching both the app default domain & the currently selected account domain
 - Improved UI on tablets with screen sw600dp and higher, will look more like our desktop app
+- Simplified audio device name in settings
 - Reworked some settings (moved calls related ones from advanced settings to advanced calls settings)
+- Increased shared media preview size in chat
+- Un-encrypted conversation warning will be more visible for accounts that support end-to-end encrypted conversations
 
 ## [6.0.11] - 2025-07-11
 
