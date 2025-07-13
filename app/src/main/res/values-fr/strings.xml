@@ -548,6 +548,13 @@
     <string name="conversation_pick_any_file_label">Choisir un fichier</string>
     <string name="conversation_file_cant_be_opened_error_toast">Impossible d\'ouvrir le fichier !</string>
     <string name="conversation_pdf_file_cant_be_opened_error_toast">Impossible d\'ouvrir un PDF protégé par mot de passe</string>
+    <string name="conversation_editing_message_title">Modification du message</string>
+    <string name="conversation_message_edited_label">Modifié</string>
+    <string name="conversation_dialog_delete_chat_message_title">Supprimer le message ?</string>
+    <string name="conversation_dialog_delete_locally_label">Pour moi</string>
+    <string name="conversation_dialog_delete_for_everyone_label">Pour tout le monde</string>
+    <string name="conversation_message_content_deleted_label"><i>Le message a été supprimé</i></string>
+    <string name="conversation_message_content_deleted_by_us_label"><i>Vous avez supprimé le message</i></string>
 
     <string name="conversation_info_participants_list_title">Participants (%s)</string>
     <string name="conversation_info_add_participants_label">Ajouter des participants</string>
@@ -805,6 +812,7 @@
     <string name="menu_invite">Inviter</string>
     <string name="menu_resend_chat_message">Ré-envoyer</string>
     <string name="menu_show_imdn">Info de réception</string>
+    <string name="menu_edit_chat_message">Modifier</string>
     <string name="menu_reply_to_chat_message">Répondre</string>
     <string name="menu_forward_chat_message">Transférer</string>
     <string name="menu_copy_chat_message">Copier le texte</string>
@@ -913,6 +921,7 @@
     <string name="content_description_chat_start_voice_message_recording">Démarre l\'enregistrement d\'un message vocal</string>
     <string name="content_description_chat_send_message">Envoie le message</string>
     <string name="content_description_chat_cancel_reply">Le message ne sera plus une réponse à un précédent message</string>
+    <string name="content_description_chat_cancel_edit">Annule l\'édition du message</string>
     <string name="content_description_chat_open_emoji_picker">Ouvre le selectionneur d\'emoji</string>
     <string name="content_description_chat_open_attach_file">Ouvre le selectionneur de fichier</string>
     <string name="content_description_chat_edit_conversation_subject">Cliquez pour modifier le sujet de la conversation</string>

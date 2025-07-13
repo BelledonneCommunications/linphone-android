@@ -607,6 +607,16 @@ class LinphoneUtils {
 
         @WorkerThread
         private fun getTextDescribingMessage(message: ChatMessage): Pair<String, String> {
+            // Check if message is empty (when deleted by it's sender, for everyone)
+            if (message.isRetracted) {
+                val text = if (message.isOutgoing) {
+                    AppUtils.getString(R.string.conversation_message_content_deleted_by_us_label)
+                } else {
+                    AppUtils.getString(R.string.conversation_message_content_deleted_label)
+                }
+                return Pair(text, "")
+            }
+
             // If message contains text, then use that
             var text = message.contents.find { content -> content.isText }?.utf8Text ?: ""
             var contentDescription = ""

@@ -305,6 +305,30 @@ class ConversationViewModel
                 Log.e("$TAG Failed to find matching message in conversation events list")
             }
         }
+
+        @WorkerThread
+        override fun onMessageRetracted(chatRoom: ChatRoom, message: ChatMessage) {
+            for (model in eventsList.reversed()) {
+                if (model.model is MessageModel && model.model.replyToMessageId == message.messageId) {
+                    model.model.computeReplyInfo()
+                    break
+                }
+            }
+
+            if (message.isOutgoing) {
+                messageDeletedEvent.postValue(Event(true))
+            }
+        }
+
+        @WorkerThread
+        override fun onMessageContentEdited(chatRoom: ChatRoom, message: ChatMessage) {
+            for (model in eventsList.reversed()) {
+                if (model.model is MessageModel && model.model.replyToMessageId == message.messageId) {
+                    model.model.computeReplyInfo()
+                    break
+                }
+            }
+        }
     }
 
     private val contactsListener = object : ContactsManager.ContactsListener {
@@ -452,6 +476,15 @@ class ConversationViewModel
             Log.i("$TAG Deleting message id [${chatMessageModel.id}] from database")
             chatRoom.deleteMessage(chatMessageModel.chatMessage)
             messageDeletedEvent.postValue(Event(true))
+        }
+    }
+
+    @UiThread
+    fun deleteChatMessageForEveryone(chatMessageModel: MessageModel) {
+        coreContext.postOnCoreThread {
+            val message = chatMessageModel.chatMessage
+            Log.i("$TAG Sending order to delete contents of message [${message.messageId}] to every participant of the conversation")
+            chatRoom.retractMessage(message)
         }
     }
 

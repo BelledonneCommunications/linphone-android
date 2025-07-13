@@ -84,6 +84,10 @@ class SendMessageInConversationViewModel
 
     val attachments = MutableLiveData<ArrayList<FileModel>>()
 
+    val isEditing = MutableLiveData<Boolean>()
+
+    val isEditingMessage = MutableLiveData<Spannable>()
+
     val isReplying = MutableLiveData<Boolean>()
 
     val isReplyingTo = MutableLiveData<String>()
@@ -132,6 +136,8 @@ class SendMessageInConversationViewModel
     lateinit var chatRoom: ChatRoom
 
     private var chatMessageToReplyTo: ChatMessage? = null
+
+    private var chatMessageToEdit: ChatMessage? = null
 
     private lateinit var voiceMessageRecorder: Recorder
 
@@ -229,6 +235,28 @@ class SendMessageInConversationViewModel
     }
 
     @UiThread
+    fun editMessage(model: MessageModel) {
+        val newValue = model.text.value?.toString() ?: ""
+        textToSend.value = newValue
+
+        coreContext.postOnCoreThread {
+            val message = model.chatMessage
+            Log.i("$TAG Pending message edit [${message.messageId}]")
+            chatMessageToEdit = message
+            isEditingMessage.postValue(LinphoneUtils.getFormattedTextDescribingMessage(message))
+            isEditing.postValue(true)
+        }
+    }
+
+    @UiThread
+    fun cancelEdit() {
+        Log.i("$TAG Cancelling edit")
+        isEditing.value = false
+        chatMessageToEdit = null
+        textToSend.value = ""
+    }
+
+    @UiThread
     fun replyToMessage(model: MessageModel) {
         coreContext.postOnCoreThread {
             val message = model.chatMessage
@@ -253,9 +281,12 @@ class SendMessageInConversationViewModel
             val isBasicChatRoom: Boolean = chatRoom.hasCapability(ChatRoom.Capabilities.Basic.toInt())
 
             val messageToReplyTo = chatMessageToReplyTo
+            val messageToEdit = chatMessageToEdit
             val message = if (messageToReplyTo != null) {
                 Log.i("$TAG Sending message as reply to [${messageToReplyTo.messageId}]")
                 chatRoom.createReplyMessage(messageToReplyTo)
+            } else if (messageToEdit != null) {
+                chatRoom.createReplacesMessage(messageToEdit)
             } else {
                 chatRoom.createEmptyMessage()
             }
@@ -325,6 +356,7 @@ class SendMessageInConversationViewModel
             Log.i("$TAG Message sent, re-setting defaults")
             textToSend.postValue("")
             isReplying.postValue(false)
+            isEditing.postValue(false)
             isFileAttachmentsListOpen.postValue(false)
             isParticipantsListOpen.postValue(false)
             isEmojiPickerOpen.postValue(false)
@@ -339,6 +371,7 @@ class SendMessageInConversationViewModel
             attachments.postValue(attachmentsList)
 
             chatMessageToReplyTo = null
+            chatMessageToEdit = null
             maxNumberOfAttachmentsReached.postValue(false)
         }
     }

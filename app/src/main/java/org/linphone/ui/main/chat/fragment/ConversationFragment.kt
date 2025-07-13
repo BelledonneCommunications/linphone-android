@@ -94,6 +94,7 @@ import org.linphone.utils.hideKeyboard
 import org.linphone.utils.setKeyboardInsetListener
 import org.linphone.utils.showKeyboard
 import androidx.core.net.toUri
+import org.linphone.ui.main.chat.model.MessageDeleteDialogModel
 
 @UiThread
 open class ConversationFragment : SlidingPaneChildFragment() {
@@ -846,6 +847,22 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             }
         }
 
+        messageLongPressViewModel.editMessageEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                val model = messageLongPressViewModel.messageModel.value
+                if (model != null) {
+                    sendMessageViewModel.editMessage(model)
+
+                    // Open keyboard & focus edit text
+                    binding.sendArea.messageToSend.showKeyboard()
+                    // Put cursor at the end
+                    coreContext.postOnMainThread {
+                        binding.sendArea.messageToSend.setSelection(binding.sendArea.messageToSend.length())
+                    }
+                }
+            }
+        }
+
         messageLongPressViewModel.replyToMessageEvent.observe(viewLifecycleOwner) {
             it.consume {
                 val model = messageLongPressViewModel.messageModel.value
@@ -861,7 +878,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             it.consume {
                 val model = messageLongPressViewModel.messageModel.value
                 if (model != null) {
-                    viewModel.deleteChatMessage(model)
+                    showHowToDeleteMessageDialog(model)
                 }
             }
         }
@@ -1558,5 +1575,45 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         } catch (exception: ActivityNotFoundException) {
             Log.e("$TAG No activity found to handle intent ACTION_CREATE_DOCUMENT: $exception")
         }
+    }
+
+    private fun showHowToDeleteMessageDialog(model: MessageModel) {
+        val canBeRetracted = messageLongPressViewModel.canBeRemotelyDeleted.value == true
+        val dialogModel = MessageDeleteDialogModel(canBeRetracted)
+
+        val dialog = DialogUtils.getHowToDeleteMessageDialog(
+            requireActivity(),
+            dialogModel
+        )
+
+        dialogModel.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        dialogModel.cancelEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        dialogModel.deleteLocallyEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Deleting chat message locally")
+                viewModel.deleteChatMessage(model)
+                dialog.dismiss()
+            }
+        }
+
+        dialogModel.deleteForEveryoneEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Deleting chat message (content) for everyone")
+                viewModel.deleteChatMessageForEveryone(model)
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
     }
 }

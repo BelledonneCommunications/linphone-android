@@ -51,7 +51,6 @@ class EventLogModel
         EventModel(eventLog)
     } else {
         val chatMessage = eventLog.chatMessage!!
-
         MessageModel(
             chatMessage,
             isFromGroup,

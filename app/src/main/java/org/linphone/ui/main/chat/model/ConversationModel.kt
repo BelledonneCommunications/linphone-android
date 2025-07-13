@@ -170,6 +170,22 @@ class ConversationModel
             Log.i("$TAG An ephemeral message lifetime has expired, updating last displayed message")
             updateLastMessage()
         }
+
+        @WorkerThread
+        override fun onMessageRetracted(chatRoom: ChatRoom, message: ChatMessage) {
+            if (lastMessage == null || message.messageId == lastMessage?.messageId) {
+                Log.i("$TAG Last message [${message.messageId}] has been retracted")
+                updateLastMessage()
+            }
+        }
+
+        @WorkerThread
+        override fun onMessageContentEdited(chatRoom: ChatRoom, message: ChatMessage) {
+            if (lastMessage == null || message.messageId == lastMessage?.messageId) {
+                Log.i("$TAG Last message [${message.messageId}] has been edited")
+                updateLastMessage()
+            }
+        }
     }
 
     private val chatMessageListener = object : ChatMessageListenerStub() {
@@ -309,7 +325,9 @@ class ConversationModel
             lastMessageDeliveryIcon.postValue(LinphoneUtils.getChatIconResId(message.state))
         }
 
-        if (message.isForward) {
+        if (message.isRetracted) {
+            lastMessageContentIcon.postValue(R.drawable.trash)
+        } else if (message.isForward) {
             lastMessageContentIcon.postValue(R.drawable.forward)
         } else {
             val firstContent = message.contents.firstOrNull()
@@ -350,7 +368,7 @@ class ConversationModel
 
             if (message.isOutgoing && message.state != ChatMessage.State.Displayed) {
                 message.addListener(chatMessageListener)
-            } else if (message.contents.find { it.isFileTransfer == true } != null) {
+            } else if (message.contents.find { it.isFileTransfer } != null) {
                 message.addListener(chatMessageListener)
             }
 

@@ -131,6 +131,23 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/chat_bubble_popup_menu_style"
+                    android:id="@+id/action_edit"
+                    android:onClick="@{() -> viewModel.edit()}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/menu_edit_chat_message"
+                    android:background="@drawable/action_background_middle"
+                    android:visibility="@{viewModel.isChatRoomReadOnly || !viewModel.canBeEdited ? View.GONE : View.VISIBLE}"
+                    android:drawableEnd="@drawable/pencil_simple" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/color_separator"
+                    android:visibility="@{viewModel.isChatRoomReadOnly || !viewModel.canBeEdited ? View.GONE : View.VISIBLE}"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/chat_bubble_popup_menu_style"
                     android:id="@+id/action_reply"
                     android:onClick="@{() -> viewModel.reply()}"
                     android:layout_width="match_parent"

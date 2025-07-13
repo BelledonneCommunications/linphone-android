@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.main.chat.model.MessageDeleteDialogModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:onClick="@{() -> viewModel.dismiss()}"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/dialog_background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="2dp"
+            android:src="@drawable/shape_dialog_background"
+            android:contentDescription="@null"
+            app:layout_constraintWidth_max="@dimen/dialog_max_width"
+            app:layout_constraintBottom_toBottomOf="@id/anchor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/section_header_style"
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:paddingTop="@dimen/dialog_top_bottom_margin"
+            android:text="@string/conversation_dialog_delete_chat_message_title"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintBottom_toTopOf="@id/cancel"
+            app:layout_constraintStart_toStartOf="@id/dialog_background"
+            app:layout_constraintEnd_toEndOf="@id/dialog_background"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{() -> viewModel.deleteForEveryone()}"
+            style="@style/primary_dialog_button_label_style"
+            android:id="@+id/delete_for_everyone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/conversation_dialog_delete_for_everyone_label"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:enabled="@{viewModel.canBeRetracted}"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="@id/dialog_background"
+            app:layout_constraintEnd_toStartOf="@id/delete_locally"
+            app:layout_constraintTop_toTopOf="@id/cancel"
+            app:layout_constraintBottom_toBottomOf="@id/cancel"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{() -> viewModel.deleteLocally()}"
+            style="@style/primary_dialog_button_label_style"
+            android:id="@+id/delete_locally"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/conversation_dialog_delete_locally_label"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintStart_toEndOf="@id/delete_for_everyone"
+            app:layout_constraintEnd_toStartOf="@id/cancel"
+            app:layout_constraintTop_toTopOf="@id/cancel"
+            app:layout_constraintBottom_toBottomOf="@id/cancel"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{() -> viewModel.dismiss()}"
+            style="@style/secondary_dialog_button_label_style"
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/dialog_cancel"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintStart_toEndOf="@id/delete_locally"
+            app:layout_constraintEnd_toEndOf="@id/dialog_background"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintBottom_toTopOf="@id/anchor"/>
+
+        <View
+            android:id="@+id/anchor"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dialog_top_bottom_margin"
+            app:layout_constraintTop_toBottomOf="@id/cancel"
+            app:layout_constraintStart_toStartOf="@id/dialog_background"
+            app:layout_constraintEnd_toEndOf="@id/dialog_background"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

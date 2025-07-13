@@ -145,6 +145,10 @@ class MessageModel
 
     val firstFileModel = MediatorLiveData<FileModel>()
 
+    val hasBeenEdited = MutableLiveData<Boolean>()
+
+    val hasBeenRetracted = MutableLiveData<Boolean>()
+
     val isSelected = MutableLiveData<Boolean>()
 
     // Below are for conferences info
@@ -303,6 +307,21 @@ class MessageModel
             Log.d("$TAG Ephemeral timer started")
             updateEphemeralTimer()
         }
+
+        @WorkerThread
+        override fun onContentEdited(message: ChatMessage) {
+            Log.i("$TAG Message [${message.messageId}] has been edited")
+            hasBeenEdited.postValue(true)
+            computeContentsList()
+        }
+
+        @WorkerThread
+        override fun onRetracted(message: ChatMessage) {
+            Log.i("$TAG Content(s) of the message have been deleted by it's sender")
+            hasBeenEdited.postValue(false)
+            hasBeenRetracted.postValue(true)
+            computeContentsList()
+        }
     }
 
     init {
@@ -320,6 +339,8 @@ class MessageModel
         statusIcon.postValue(LinphoneUtils.getChatIconResId(chatMessage.state))
         updateReactionsList()
 
+        hasBeenEdited.postValue(chatMessage.isEdited && !chatMessage.isRetracted)
+        hasBeenRetracted.postValue(chatMessage.isRetracted)
         computeContentsList()
         if (chatMessage.isReply) {
             // Wait to see if original message is found before setting isReply to true
@@ -420,6 +441,12 @@ class MessageModel
         Log.d("$TAG Computing message contents list")
         text.postValue(Spannable.Factory.getInstance().newSpannable(""))
         filesList.value.orEmpty().forEach(FileModel::destroy)
+
+        if (chatMessage.isRetracted) {
+            meetingFound.postValue(false)
+            isVoiceRecord.postValue(false)
+            isTextEmoji.postValue(false)
+        }
 
         var displayableContentFound = false
         var contentIndex = 0

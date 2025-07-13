@@ -40,13 +40,20 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <include
+            android:id="@+id/edit_area"
+            layout="@layout/chat_conversation_edit_area"
+            bind:viewModel="@{viewModel}"
+            android:visibility="@{viewModel.isEditing ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintTop_toBottomOf="@id/reply_area" />
+
+        <include
             android:id="@+id/attachments"
             layout="@layout/chat_conversation_attachments_area"
             bind:viewModel="@{viewModel}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="@{viewModel.isFileAttachmentsListOpen ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintTop_toBottomOf="@id/reply_area" />
+            app:layout_constraintTop_toBottomOf="@id/edit_area" />
 
         <androidx.emoji2.emojipicker.EmojiPickerView
             android:id="@+id/emoji_picker"
@@ -169,7 +176,7 @@
             android:visibility="@{viewModel.isCallConversation || viewModel.textToSend.length() > 0 || viewModel.attachments.size() > 0 ? View.VISIBLE : View.GONE, default=gone}"
             android:onClick="@{() -> viewModel.sendMessage()}"
             android:padding="8dp"
-            android:src="@drawable/paper_plane_right"
+            android:src="@{viewModel.isEditing ? @drawable/pencil_simple : @drawable/paper_plane_right, default=@drawable/paper_plane_right}"
             android:contentDescription="@string/content_description_chat_send_message"
             app:layout_constraintBottom_toBottomOf="@id/message_area_background"
             app:layout_constraintEnd_toEndOf="@id/message_area_background"

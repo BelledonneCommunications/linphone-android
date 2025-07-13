@@ -48,6 +48,10 @@ class ChatMessageLongPressViewModel : GenericViewModel() {
 
     val isChatRoomReadOnly = MutableLiveData<Boolean>()
 
+    val canBeEdited = MutableLiveData<Boolean>()
+
+    val canBeRemotelyDeleted = MutableLiveData<Boolean>()
+
     val messageModel = MutableLiveData<MessageModel>()
 
     val isMessageOutgoing = MutableLiveData<Boolean>()
@@ -55,6 +59,10 @@ class ChatMessageLongPressViewModel : GenericViewModel() {
     val isMessageInError = MutableLiveData<Boolean>()
 
     val showImdnInfoEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    val editMessageEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
 
@@ -76,6 +84,8 @@ class ChatMessageLongPressViewModel : GenericViewModel() {
 
     init {
         visible.value = false
+        canBeEdited.value = false
+        canBeRemotelyDeleted.value = false
     }
 
     @UiThread
@@ -87,6 +97,9 @@ class ChatMessageLongPressViewModel : GenericViewModel() {
 
     @UiThread
     fun setMessage(model: MessageModel) {
+        canBeEdited.postValue(model.chatMessage.isEditable)
+        canBeRemotelyDeleted.postValue(model.chatMessage.isRetractable)
+
         hideCopyTextToClipboard.value = model.text.value.isNullOrEmpty()
         isChatRoomReadOnly.value = model.chatRoomIsReadOnly
         isMessageOutgoing.value = model.isOutgoing
@@ -121,6 +134,13 @@ class ChatMessageLongPressViewModel : GenericViewModel() {
     fun reply() {
         Log.i("$TAG Replying to message")
         replyToMessageEvent.value = Event(true)
+        dismiss()
+    }
+
+    @UiThread
+    fun edit() {
+        Log.i("$TAG Editing message")
+        editMessageEvent.value = Event(true)
         dismiss()
     }
 

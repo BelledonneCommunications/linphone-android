@@ -67,6 +67,8 @@ import org.linphone.ui.main.contacts.model.ContactTrustDialogModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.model.GroupSetOrEditSubjectDialogModel
 import androidx.core.graphics.drawable.toDrawable
+import org.linphone.databinding.DialogDeleteChatMessageBinding
+import org.linphone.ui.main.chat.model.MessageDeleteDialogModel
 
 class DialogUtils {
     companion object {
@@ -522,6 +524,22 @@ class DialogUtils {
             val binding: DialogDeleteMeetingBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
                 R.layout.dialog_delete_meeting,
+                null,
+                false
+            )
+            binding.viewModel = viewModel
+
+            return getDialog(context, binding)
+        }
+
+        @UiThread
+        fun getHowToDeleteMessageDialog(
+            context: Context,
+            viewModel: MessageDeleteDialogModel
+        ): Dialog {
+            val binding: DialogDeleteChatMessageBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_delete_chat_message,
                 null,
                 false
             )

@@ -481,6 +481,18 @@ class NotificationsManager
                 }
             }
         }
+
+        @WorkerThread
+        override fun onMessageRetracted(core: Core, chatRoom: ChatRoom, message: ChatMessage) {
+            Log.i("$TAG A message has been retracted, checking if notification should be updated")
+            updateConversationNotification(chatRoom, message)
+        }
+
+        @WorkerThread
+        override fun onMessageContentEdited(core: Core, chatRoom: ChatRoom, message: ChatMessage) {
+            Log.i("$TAG A message has been edited, checking if notification should be updated")
+            updateConversationNotification(chatRoom, message)
+        }
     }
 
     val chatMessageListener: ChatMessageListener = object : ChatMessageListenerStub() {
@@ -1100,6 +1112,7 @@ class NotificationsManager
 
         val notifiableMessage = NotifiableMessage(
             text,
+            message.messageId,
             contact,
             displayName,
             address.asStringUriOnly(),
@@ -1262,6 +1275,7 @@ class NotificationsManager
         val address = message.fromAddress
         val notifiableMessage = NotifiableMessage(
             text,
+            message.messageId,
             contact,
             displayName,
             address.asStringUriOnly(),
@@ -1637,6 +1651,7 @@ class NotificationsManager
         val senderAddress = message.fromAddress
         val reply = NotifiableMessage(
             text,
+            message.messageId,
             null,
             notifiable.myself ?: LinphoneUtils.getDisplayName(senderAddress),
             senderAddress.asStringUriOnly(),
@@ -1929,6 +1944,47 @@ class NotificationsManager
         }
     }
 
+    @WorkerThread
+    private fun updateConversationNotification(chatRoom: ChatRoom, message: ChatMessage) {
+        if (corePreferences.disableChat) return
+
+        val chatRoomPeerAddress = chatRoom.peerAddress.asStringUriOnly()
+        val notifiable: Notifiable? = chatNotificationsMap[chatRoomPeerAddress]
+        if (notifiable == null) {
+            Log.i("$TAG No notification for conversation [$chatRoomPeerAddress], nothing to do")
+            return
+        }
+
+        val found = notifiable.messages.find {
+            it.messageId == message.messageId
+        }
+        if (found != null) {
+            Log.i("$TAG Edited message is in the currently displayed notification, updating it")
+            val index = notifiable.messages.indexOf(found)
+            notifiable.messages.remove(found)
+            if (!message.isRetracted) {
+                val notifiableMessage = getNotifiableForChatMessage(message)
+                notifiable.messages.add(index, notifiableMessage)
+            }
+            chatNotificationsMap[chatRoomPeerAddress] = notifiable
+
+            val me = coreContext.contactsManager.getMePerson(chatRoom.localAddress)
+            val pendingIntent = getChatRoomPendingIntent(
+                chatRoom,
+                notifiable.notificationId
+            )
+            val notification = createMessageNotification(
+                notifiable,
+                pendingIntent,
+                LinphoneUtils.getConversationId(chatRoom),
+                me
+            )
+            notify(notifiable.notificationId, notification, CHAT_TAG)
+        } else {
+            Log.i("$TAG Edited/retracted message isn't in currently displayed notification, nothing to update")
+        }
+    }
+
     @AnyThread
     fun foregroundServiceTypeMaskToString(mask: Int): String {
         var stringBuilder = StringBuilder()
@@ -1962,6 +2018,7 @@ class NotificationsManager
 
     class NotifiableMessage(
         val message: String,
+        val messageId: String,
         var friend: Friend?,
         var sender: String,
         val senderAddress: String,
