@@ -55,6 +55,7 @@
             android:background="?attr/color_grey_100"
             android:visibility="@{viewModel.isEmojiPickerOpen ? View.VISIBLE : View.GONE, default=gone}"
             app:emojiPickedListener="@{(emoji) -> viewModel.insertEmoji(emoji.emoji)}"
+            app:emojiGridRows="5"
             app:layout_constraintTop_toBottomOf="@id/attachments" />
 
         <include
