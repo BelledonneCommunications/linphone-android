@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
@@ -28,283 +29,293 @@
             type="org.linphone.ui.assistant.viewmodel.AccountLoginViewModel" />
     </data>
 
-    <ScrollView
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
         android:background="?attr/color_main2_000">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
-            <ImageView
-                android:id="@+id/logo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                android:contentDescription="@null"
-                android:src="@drawable/assistant_logo"
-                app:layout_constraintStart_toEndOf="@id/title"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/mountains"
-                app:layout_constraintTop_toBottomOf="@id/register" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/back"
-                android:onClick="@{backClickListener}"
-                android:layout_width="@dimen/top_bar_height"
-                android:layout_height="@dimen/top_bar_height"
-                android:layout_marginStart="40dp"
-                android:padding="15dp"
-                android:src="@drawable/caret_left"
-                android:contentDescription="@string/content_description_go_back_icon"
-                android:background="@drawable/circle_transparent_button_background"
-                android:visibility="@{viewModel.showBackButton ? View.VISIBLE : View.INVISIBLE, default=invisible}"
-                app:tint="?attr/color_main2_500"
-                app:layout_constraintTop_toTopOf="@id/title"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/title"/>
-    
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/assistant_page_title_style"
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/top_bar_height"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="@dimen/assistant_title_top_margin"
-                android:text="@string/assistant_account_login"
-                android:textColor="?attr/color_text"
-                android:textSize="28sp"
-                android:drawableStart="@drawable/user_circle"
-                android:drawablePadding="10dp"
-                app:layout_constraintWidth_min="@dimen/button_max_width"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@id/back"/>
+                <ImageView
+                    android:id="@+id/logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@null"
+                    android:src="@drawable/assistant_logo"
+                    app:layout_constraintStart_toEndOf="@id/title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/mountains"
+                    app:layout_constraintTop_toBottomOf="@id/register" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style"
-                android:id="@+id/help"
-                android:onClick="@{helpClickListener}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="20dp"
-                android:text="@string/help_title"
-                android:textSize="14sp"
-                android:textColor="?attr/color_main2_500"
-                android:drawableStart="@drawable/question"
-                android:drawablePadding="5dp"
-                app:drawableTint="?attr/color_main2_500"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                <ImageView
+                    android:id="@+id/back"
+                    android:onClick="@{backClickListener}"
+                    android:layout_width="@dimen/top_bar_height"
+                    android:layout_height="@dimen/top_bar_height"
+                    android:layout_marginStart="40dp"
+                    android:padding="15dp"
+                    android:src="@drawable/caret_left"
+                    android:contentDescription="@string/content_description_go_back_icon"
+                    android:background="@drawable/circle_transparent_button_background"
+                    android:visibility="@{viewModel.showBackButton ? View.VISIBLE : View.INVISIBLE, default=invisible}"
+                    app:tint="?attr/color_main2_500"
+                    app:layout_constraintTop_toTopOf="@id/title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/title"/>
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style"
-                android:id="@+id/no_account_yet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="20dp"
-                android:text="@string/assistant_no_account_yet"
-                android:textSize="14sp"
-                android:textColor="?attr/color_main2_700"
-                android:visibility="@{viewModel.hideCreateAccount ? View.GONE : View.VISIBLE}"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintEnd_toStartOf="@id/register"
-                app:layout_constraintTop_toTopOf="@id/register"
-                app:layout_constraintBottom_toBottomOf="@id/register"/>
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/assistant_page_title_style"
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/top_bar_height"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="@dimen/assistant_title_top_margin"
+                    android:text="@string/assistant_account_login"
+                    android:textColor="?attr/color_text"
+                    android:textSize="28sp"
+                    android:drawableStart="@drawable/user_circle"
+                    android:drawablePadding="10dp"
+                    app:layout_constraintWidth_min="@dimen/button_max_width"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/back"/>
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/primary_button_label_style"
-                android:id="@+id/register"
-                android:onClick="@{registerClickListener}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:layout_marginEnd="40dp"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:text="@string/assistant_account_register"
-                android:visibility="@{viewModel.hideCreateAccount ? View.GONE : View.VISIBLE}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/help"/>
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style"
+                    android:id="@+id/help"
+                    android:onClick="@{helpClickListener}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:text="@string/help_title"
+                    android:textSize="14sp"
+                    android:textColor="?attr/color_main2_500"
+                    android:drawableStart="@drawable/question"
+                    android:drawablePadding="5dp"
+                    app:drawableTint="?attr/color_main2_500"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/header_style"
-                android:id="@+id/sip_identity_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="16dp"
-                android:labelFor="@id/sip_identity"
-                android:text="@{@string/username + `*`, default=`Username*`}"
-                app:layout_constraintVertical_chainStyle="packed"
-                app:layout_constraintTop_toBottomOf="@id/title"
-                app:layout_constraintStart_toStartOf="@id/sip_identity"
-                app:layout_constraintBottom_toTopOf="@id/sip_identity"/>
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style"
+                    android:id="@+id/no_account_yet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:text="@string/assistant_no_account_yet"
+                    android:textSize="14sp"
+                    android:textColor="?attr/color_main2_700"
+                    android:visibility="@{viewModel.hideCreateAccount ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintEnd_toStartOf="@id/register"
+                    app:layout_constraintTop_toTopOf="@id/register"
+                    app:layout_constraintBottom_toBottomOf="@id/register"/>
 
-            <androidx.appcompat.widget.AppCompatEditText
-                style="@style/default_text_style"
-                android:id="@+id/sip_identity"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:text="@={viewModel.sipIdentity, default=`johndoe`}"
-                android:textSize="14sp"
-                android:textColor="?attr/color_main2_600"
-                android:background="@drawable/edit_text_background"
-                android:inputType="text|textNoSuggestions"
-                android:hint="@string/username"
-                app:layout_constraintWidth_max="@dimen/text_input_max_width"
-                app:layout_constraintStart_toStartOf="@id/title"
-                app:layout_constraintEnd_toEndOf="@id/title"
-                app:layout_constraintTop_toBottomOf="@id/sip_identity_label"
-                app:layout_constraintBottom_toTopOf="@id/password_label"/>
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/primary_button_label_style"
+                    android:id="@+id/register"
+                    android:onClick="@{registerClickListener}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginEnd="40dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:text="@string/assistant_account_register"
+                    android:visibility="@{viewModel.hideCreateAccount ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/help"/>
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/header_style"
-                android:id="@+id/password_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="16dp"
-                android:labelFor="@id/password"
-                android:text="@{@string/password + `*`, default=`Password*`}"
-                app:layout_constraintWidth_max="@dimen/text_input_max_width"
-                app:layout_constraintTop_toBottomOf="@id/sip_identity"
-                app:layout_constraintStart_toStartOf="@id/password"
-                app:layout_constraintBottom_toTopOf="@id/password"/>
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/header_style"
+                    android:id="@+id/sip_identity_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="16dp"
+                    android:labelFor="@id/sip_identity"
+                    android:text="@{@string/username + `*`, default=`Username*`}"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    app:layout_constraintTop_toBottomOf="@id/title"
+                    app:layout_constraintStart_toStartOf="@id/sip_identity"
+                    app:layout_constraintBottom_toTopOf="@id/sip_identity"/>
 
-            <androidx.appcompat.widget.AppCompatEditText
-                style="@style/default_text_style"
-                android:id="@+id/password"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:text="@={viewModel.password, default=`johndoe`}"
-                android:textSize="14sp"
-                android:textColor="?attr/color_main2_600"
-                android:background="@drawable/edit_text_background"
-                android:hint="@string/password"
-                passwordInputType="@{viewModel.showPassword ? InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD : InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD, default=textPassword}"
-                app:layout_constraintWidth_max="@dimen/text_input_max_width"
-                app:layout_constraintStart_toStartOf="@id/title"
-                app:layout_constraintEnd_toEndOf="@id/title"
-                app:layout_constraintTop_toBottomOf="@id/password_label"
-                app:layout_constraintBottom_toTopOf="@id/login"/>
+                <androidx.appcompat.widget.AppCompatEditText
+                    style="@style/default_text_style"
+                    android:id="@+id/sip_identity"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:text="@={viewModel.sipIdentity, default=`johndoe`}"
+                    android:textSize="14sp"
+                    android:textColor="?attr/color_main2_600"
+                    android:background="@drawable/edit_text_background"
+                    android:inputType="text|textNoSuggestions"
+                    android:hint="@string/username"
+                    app:layout_constraintWidth_max="@dimen/text_input_max_width"
+                    app:layout_constraintStart_toStartOf="@id/title"
+                    app:layout_constraintEnd_toEndOf="@id/title"
+                    app:layout_constraintTop_toBottomOf="@id/sip_identity_label"
+                    app:layout_constraintBottom_toTopOf="@id/password_label"/>
 
-            <ImageView
-                android:id="@+id/eye"
-                android:onClick="@{() -> viewModel.toggleShowPassword()}"
-                android:layout_width="@dimen/icon_size"
-                android:layout_height="0dp"
-                android:padding="4dp"
-                android:layout_marginEnd="20dp"
-                android:contentDescription="@string/content_description_toggle_password_visibility"
-                android:src="@{viewModel.showPassword ? @drawable/eye_slash : @drawable/eye, default=@drawable/eye}"
-                app:tint="?attr/color_main2_500"
-                app:layout_constraintEnd_toEndOf="@id/password"
-                app:layout_constraintTop_toTopOf="@id/password"
-                app:layout_constraintBottom_toBottomOf="@id/password" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/header_style"
+                    android:id="@+id/password_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="16dp"
+                    android:labelFor="@id/password"
+                    android:text="@{@string/password + `*`, default=`Password*`}"
+                    app:layout_constraintWidth_max="@dimen/text_input_max_width"
+                    app:layout_constraintTop_toBottomOf="@id/sip_identity"
+                    app:layout_constraintStart_toStartOf="@id/password"
+                    app:layout_constraintBottom_toTopOf="@id/password"/>
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/primary_button_label_style"
-                android:id="@+id/login"
-                android:onClick="@{() -> viewModel.login()}"
-                android:enabled="@{viewModel.loginEnabled &amp;&amp; !viewModel.registrationInProgress, default=false}"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:text="@string/assistant_account_login"
-                app:layout_constraintWidth_max="@dimen/button_max_width"
-                app:layout_constraintTop_toBottomOf="@id/password"
-                app:layout_constraintStart_toStartOf="@id/title"
-                app:layout_constraintBottom_toTopOf="@id/scan_qr_code"/>
+                <androidx.appcompat.widget.AppCompatEditText
+                    style="@style/default_text_style"
+                    android:id="@+id/password"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:text="@={viewModel.password, default=`johndoe`}"
+                    android:textSize="14sp"
+                    android:textColor="?attr/color_main2_600"
+                    android:background="@drawable/edit_text_background"
+                    android:hint="@string/password"
+                    passwordInputType="@{viewModel.showPassword ? InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD : InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD, default=textPassword}"
+                    app:layout_constraintWidth_max="@dimen/text_input_max_width"
+                    app:layout_constraintStart_toStartOf="@id/title"
+                    app:layout_constraintEnd_toEndOf="@id/title"
+                    app:layout_constraintTop_toBottomOf="@id/password_label"
+                    app:layout_constraintBottom_toTopOf="@id/login"/>
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style_600"
-                android:id="@+id/forgotten_password"
-                android:onClick="@{forgottenPasswordClickListener}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:paddingTop="13dp"
-                android:paddingBottom="13dp"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:text="@string/assistant_forgotten_password"
-                android:textSize="13sp"
-                android:textColor="?attr/color_main2_500"
-                app:layout_constraintStart_toEndOf="@id/login"
-                app:layout_constraintTop_toTopOf="@id/login"
-                app:layout_constraintBottom_toBottomOf="@id/login"/>
+                <ImageView
+                    android:id="@+id/eye"
+                    android:onClick="@{() -> viewModel.toggleShowPassword()}"
+                    android:layout_width="@dimen/icon_size"
+                    android:layout_height="0dp"
+                    android:padding="4dp"
+                    android:layout_marginEnd="20dp"
+                    android:contentDescription="@string/content_description_toggle_password_visibility"
+                    android:src="@{viewModel.showPassword ? @drawable/eye_slash : @drawable/eye, default=@drawable/eye}"
+                    app:tint="?attr/color_main2_500"
+                    app:layout_constraintEnd_toEndOf="@id/password"
+                    app:layout_constraintTop_toTopOf="@id/password"
+                    app:layout_constraintBottom_toBottomOf="@id/password" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/secondary_button_label_style"
-                android:id="@+id/scan_qr_code"
-                android:onClick="@{qrCodeClickListener}"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:text="@string/assistant_scan_qr_code"
-                android:drawableStart="@drawable/qr_code"
-                android:drawablePadding="8dp"
-                android:visibility="@{viewModel.hideScanQrCode ? View.GONE : View.VISIBLE}"
-                app:drawableTint="@color/secondary_button_label_color"
-                app:layout_constraintStart_toStartOf="@id/title"
-                app:layout_constraintEnd_toEndOf="@id/title"
-                app:layout_constraintTop_toBottomOf="@id/login"
-                app:layout_constraintBottom_toTopOf="@id/third_party_sip_account" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/primary_button_label_style"
+                    android:id="@+id/login"
+                    android:onClick="@{() -> viewModel.login()}"
+                    android:enabled="@{viewModel.loginEnabled &amp;&amp; !viewModel.registrationInProgress, default=false}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:text="@string/assistant_account_login"
+                    app:layout_constraintWidth_max="@dimen/button_max_width"
+                    app:layout_constraintTop_toBottomOf="@id/password"
+                    app:layout_constraintStart_toStartOf="@id/title"
+                    app:layout_constraintBottom_toTopOf="@id/scan_qr_code"/>
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/secondary_button_label_style"
-                android:id="@+id/third_party_sip_account"
-                android:onClick="@{thirdPartySipAccountLoginClickListener}"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:text="@string/assistant_login_third_party_sip_account"
-                android:visibility="@{viewModel.hideThirdPartyAccount ? View.GONE : View.VISIBLE}"
-                app:layout_constraintStart_toStartOf="@id/title"
-                app:layout_constraintEnd_toEndOf="@id/title"
-                app:layout_constraintTop_toBottomOf="@id/scan_qr_code"
-                app:layout_constraintBottom_toTopOf="@id/mountains"/>
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style_600"
+                    android:id="@+id/forgotten_password"
+                    android:onClick="@{forgottenPasswordClickListener}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:paddingTop="13dp"
+                    android:paddingBottom="13dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:text="@string/assistant_forgotten_password"
+                    android:textSize="13sp"
+                    android:textColor="?attr/color_main2_500"
+                    app:layout_constraintStart_toEndOf="@id/login"
+                    app:layout_constraintTop_toTopOf="@id/login"
+                    app:layout_constraintBottom_toBottomOf="@id/login"/>
 
-            <ImageView
-                android:id="@+id/mountains"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:src="@drawable/mountains"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                android:contentDescription="@null"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:tint="?attr/color_main1_500" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/secondary_button_label_style"
+                    android:id="@+id/scan_qr_code"
+                    android:onClick="@{qrCodeClickListener}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:text="@string/assistant_scan_qr_code"
+                    android:drawableStart="@drawable/qr_code"
+                    android:drawablePadding="8dp"
+                    android:visibility="@{viewModel.hideScanQrCode ? View.GONE : View.VISIBLE}"
+                    app:drawableTint="@color/secondary_button_label_color"
+                    app:layout_constraintStart_toStartOf="@id/title"
+                    app:layout_constraintEnd_toEndOf="@id/title"
+                    app:layout_constraintTop_toBottomOf="@id/login"
+                    app:layout_constraintBottom_toTopOf="@id/third_party_sip_account" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/secondary_button_label_style"
+                    android:id="@+id/third_party_sip_account"
+                    android:onClick="@{thirdPartySipAccountLoginClickListener}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:text="@string/assistant_login_third_party_sip_account"
+                    android:visibility="@{viewModel.hideThirdPartyAccount ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintStart_toStartOf="@id/title"
+                    app:layout_constraintEnd_toEndOf="@id/title"
+                    app:layout_constraintTop_toBottomOf="@id/scan_qr_code"
+                    app:layout_constraintBottom_toTopOf="@id/mountains"/>
 
-    </ScrollView>
+                <ImageView
+                    android:id="@+id/mountains"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/mountains"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@null"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:tint="?attr/color_main1_500" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+        <include
+            layout="@layout/operation_in_progress"
+            bind:visibility="@{viewModel.registrationInProgress}" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>
