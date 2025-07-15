@@ -223,6 +223,7 @@
                 android:textSize="16sp"
                 android:maxLines="1"
                 android:ellipsize="end"
+                android:labelFor="@id/group_call_icon"
                 app:layout_constraintBottom_toBottomOf="@id/group_call_icon"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/group_call_icon"

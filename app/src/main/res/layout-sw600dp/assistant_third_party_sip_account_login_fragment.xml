@@ -68,13 +68,14 @@
                 app:layout_constraintStart_toEndOf="@id/back"/>
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/username_label"
                 style="@style/header_style"
+                android:id="@+id/username_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="16dp"
+                android:labelFor="@id/username"
                 android:text="@{@string/username + `*`}"
                 app:layout_constraintVertical_chainStyle="packed"
                 app:layout_constraintTop_toBottomOf="@id/title"
@@ -103,13 +104,14 @@
                 app:layout_constraintEnd_toEndOf="@id/title"/>
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/password_label"
                 style="@style/header_style"
+                android:id="@+id/password_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="16dp"
+                android:labelFor="@id/password"
                 android:text="@{@string/password + `*`}"
                 app:layout_constraintTop_toBottomOf="@id/username"
                 app:layout_constraintBottom_toTopOf="@id/password"
@@ -151,13 +153,14 @@
                 app:layout_constraintBottom_toBottomOf="@id/password" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/domain_label"
                 style="@style/header_style"
+                android:id="@+id/domain_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
+                android:labelFor="@id/domain"
                 android:text="@{@string/sip_address_domain + `*`, default=`Domain*`}"
                 app:layout_constraintTop_toBottomOf="@id/password"
                 app:layout_constraintBottom_toTopOf="@id/domain"
@@ -185,13 +188,14 @@
                 app:layout_constraintEnd_toEndOf="@id/title"/>
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/display_name_label"
                 style="@style/header_style"
+                android:id="@+id/display_name_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
+                android:labelFor="@id/display_name"
                 android:text="@string/sip_address_display_name"
                 app:layout_constraintTop_toBottomOf="@id/domain"
                 app:layout_constraintBottom_toTopOf="@id/display_name"
@@ -219,13 +223,14 @@
                 app:layout_constraintEnd_toEndOf="@id/title"/>
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/transport_label"
                 style="@style/header_style"
+                android:id="@+id/transport_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
+                android:labelFor="@id/transport"
                 android:text="@string/assistant_sip_account_transport_protocol"
                 app:layout_constraintTop_toBottomOf="@id/display_name"
                 app:layout_constraintBottom_toTopOf="@id/transport"
@@ -262,9 +267,9 @@
                 app:layout_constraintEnd_toEndOf="@id/transport"/>
 
             <androidx.appcompat.widget.AppCompatTextView
+                style="@style/primary_button_label_style"
                 android:onClick="@{() -> viewModel.login()}"
                 android:enabled="@{viewModel.loginEnabled &amp;&amp; !viewModel.registrationInProgress, default=false}"
-                style="@style/primary_button_label_style"
                 android:id="@+id/login"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -306,13 +311,14 @@
                 android:visibility="@{viewModel.expandAdvancedSettings ? View.VISIBLE : View.GONE, default=gone}" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/authentication_id_label"
                 style="@style/header_style"
+                android:id="@+id/authentication_id_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
+                android:labelFor="@id/authentication_id"
                 android:text="@string/authentication_id"
                 app:layout_constraintTop_toBottomOf="@id/advanced_settings"
                 app:layout_constraintStart_toStartOf="@id/authentication_id"/>
@@ -338,13 +344,14 @@
                 app:layout_constraintEnd_toEndOf="@id/advanced_settings"/>
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/outbound_proxy_label"
                 style="@style/header_style"
+                android:id="@+id/outbound_proxy_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
+                android:labelFor="@id/outbound_proxy"
                 android:text="@string/account_settings_sip_proxy_url_title"
                 app:layout_constraintTop_toBottomOf="@id/authentication_id"
                 app:layout_constraintStart_toStartOf="@id/outbound_proxy"/>

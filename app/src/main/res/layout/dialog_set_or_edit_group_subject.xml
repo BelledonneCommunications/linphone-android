@@ -44,6 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:paddingTop="@dimen/dialog_top_bottom_margin"
+            android:labelFor="@id/subject"
             android:text="@{viewModel.isGroupConversation ? viewModel.isEdit ? @string/conversation_dialog_edit_subject : @string/conversation_dialog_set_subject : @string/history_group_call_start_dialog_set_subject, default=@string/history_group_call_start_dialog_set_subject}"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintBottom_toTopOf="@id/subject"

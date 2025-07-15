@@ -104,7 +104,7 @@
             app:layout_constraintEnd_toEndOf="@id/calls_list"/>
 
         <ImageView
-            android:id="@+id/layout"
+            android:id="@+id/numpad"
             android:onClick="@{() -> viewModel.showNumpad()}"
             android:enabled="@{!viewModel.isPaused &amp;&amp; !viewModel.isPausedByRemote}"
             android:layout_width="0dp"
@@ -206,6 +206,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/call_action_transfer"
+            android:labelFor="@id/transfer"
             app:layout_constraintTop_toBottomOf="@id/transfer"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/new_call_label"/>
@@ -217,6 +218,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/call_action_start_new_call"
+            android:labelFor="@id/new_call"
             app:layout_constraintTop_toBottomOf="@id/new_call"
             app:layout_constraintStart_toEndOf="@id/transfer_label"
             app:layout_constraintEnd_toStartOf="@id/calls_list_label" />
@@ -228,6 +230,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/call_action_go_to_calls_list"
+            android:labelFor="@id/calls_list"
             app:layout_constraintTop_toBottomOf="@id/calls_list"
             app:layout_constraintStart_toEndOf="@id/new_call_label"
             app:layout_constraintEnd_toStartOf="@id/layout_label" />
@@ -240,7 +243,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/call_action_show_dialer"
-            app:layout_constraintTop_toBottomOf="@id/layout"
+            android:labelFor="@id/numpad"
+            app:layout_constraintTop_toBottomOf="@id/numpad"
             app:layout_constraintStart_toEndOf="@id/calls_list_label"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -252,6 +256,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
             android:text="@string/call_action_show_messages"
+            android:labelFor="@id/chat"
             android:enabled="@{!viewModel.operationInProgress}"
             app:layout_constraintTop_toBottomOf="@id/chat"
             app:layout_constraintStart_toStartOf="@id/transfer_label"
@@ -267,6 +272,7 @@
             android:enabled="@{viewModel.canBePaused}"
             android:selected="@{viewModel.isPaused}"
             android:text="@{viewModel.isPaused ? @string/call_action_resume_call : @string/call_action_pause_call, default=@string/call_action_pause_call}"
+            android:labelFor="@id/pause_call"
             app:layout_constraintTop_toBottomOf="@id/pause_call"
             app:layout_constraintStart_toStartOf="@id/new_call_label"
             app:layout_constraintEnd_toEndOf="@id/new_call_label" />
@@ -280,6 +286,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
             android:text="@string/call_action_record_call"
+            android:labelFor="@id/record_call"
             app:layout_constraintTop_toBottomOf="@id/record_call"
             app:layout_constraintStart_toStartOf="@id/calls_list_label"
             app:layout_constraintEnd_toEndOf="@id/calls_list_label" />

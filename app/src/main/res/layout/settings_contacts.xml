@@ -16,7 +16,7 @@
         android:background="@drawable/shape_squircle_white_background">
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/settings_title_style"
+            style="@style/settings_title_padding_style"
             android:id="@+id/sort_contacts_by_first_name_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -26,6 +26,7 @@
             android:text="@string/settings_contacts_sort_by_first_name_title"
             android:maxLines="2"
             android:ellipsize="end"
+            android:labelFor="@id/sort_contacts_by_first_name_spinner"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
@@ -36,7 +37,6 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginTop="8dp"
             android:background="@drawable/edit_text_background"
             android:paddingStart="@dimen/spinner_start_padding"
             android:paddingEnd="@dimen/spinner_end_padding"
@@ -72,6 +72,7 @@
             android:text="@string/settings_contacts_hide_empty_contacts_title"
             android:maxLines="2"
             android:ellipsize="end"
+            android:labelFor="@id/hide_empty_contacts_switch"
             app:layout_constraintTop_toTopOf="@id/hide_empty_contacts_switch"
             app:layout_constraintBottom_toBottomOf="@id/hide_empty_contacts_switch"
             app:layout_constraintStart_toStartOf="parent"

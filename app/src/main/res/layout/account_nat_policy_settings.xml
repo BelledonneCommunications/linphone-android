@@ -17,7 +17,7 @@
         android:background="@drawable/shape_squircle_white_background">
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/settings_title_style"
+            style="@style/settings_title_padding_style"
             android:id="@+id/stun_server_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -27,6 +27,7 @@
             android:text="@string/account_settings_stun_server_url_title"
             android:maxLines="2"
             android:ellipsize="end"
+            android:labelFor="@id/stun_server"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
@@ -69,6 +70,7 @@
             android:text="@string/account_settings_enable_ice_title"
             android:maxLines="2"
             android:ellipsize="end"
+            android:labelFor="@id/ice_switch"
             app:layout_constraintTop_toTopOf="@id/ice_switch"
             app:layout_constraintBottom_toBottomOf="@id/ice_switch"
             app:layout_constraintStart_toStartOf="parent"
@@ -95,13 +97,14 @@
             android:text="@string/account_settings_enable_turn_title"
             android:maxLines="2"
             android:ellipsize="end"
+            android:labelFor="@id/turn_switch"
             app:layout_constraintTop_toTopOf="@id/turn_switch"
             app:layout_constraintBottom_toBottomOf="@id/turn_switch"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/turn_switch"/>
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/settings_title_style"
+            style="@style/settings_title_padding_style"
             android:id="@+id/turn_username_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -111,7 +114,8 @@
             android:text="@string/account_settings_turn_username_title"
             android:maxLines="2"
             android:ellipsize="end"
-            app:layout_constraintTop_toBottomOf="@id/turn_title"
+            android:labelFor="@id/turn_username"
+            app:layout_constraintTop_toBottomOf="@id/turn_switch"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -134,7 +138,7 @@
             app:layout_constraintTop_toBottomOf="@id/turn_username_title" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/settings_title_style"
+            style="@style/settings_title_padding_style"
             android:id="@+id/turn_password_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -144,6 +148,7 @@
             android:text="@string/account_settings_turn_password_title"
             android:maxLines="2"
             android:ellipsize="end"
+            android:labelFor="@id/turn_password"
             app:layout_constraintTop_toBottomOf="@id/turn_username"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>

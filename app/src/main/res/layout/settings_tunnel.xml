@@ -17,13 +17,14 @@
         android:background="@drawable/shape_squircle_white_background">
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/header_style"
+            style="@style/settings_title_padding_style"
             android:id="@+id/tunnel_host_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="20dp"
             android:text="@string/settings_tunnel_main_host_label"
+            android:labelFor="@id/tunnel_host"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
@@ -33,7 +34,6 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             android:text="@={viewModel.tunnelMainHost}"
@@ -50,13 +50,14 @@
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/header_style"
+            style="@style/settings_title_padding_style"
             android:id="@+id/tunnel_port_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:text="@string/settings_tunnel_main_port_label"
+            android:labelFor="@id/tunnel_port"
             app:layout_constraintTop_toBottomOf="@id/tunnel_host"
             app:layout_constraintStart_toStartOf="parent"/>
 
@@ -66,7 +67,6 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             android:text="@={viewModel.tunnelMainPort}"
@@ -93,6 +93,7 @@
             android:text="@string/settings_tunnel_dual_mode_label"
             android:maxLines="2"
             android:ellipsize="end"
+            android:labelFor="@id/tunnel_dual_mode_switch"
             app:layout_constraintTop_toTopOf="@id/tunnel_dual_mode_switch"
             app:layout_constraintBottom_toBottomOf="@id/tunnel_dual_mode_switch"
             app:layout_constraintStart_toStartOf="parent"
@@ -104,21 +105,22 @@
             android:onClick="@{() -> viewModel.toggleTunnelDualMode()}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="16dp"
             android:checked="@{viewModel.tunnelDualMode}"
             app:layout_constraintTop_toBottomOf="@id/tunnel_port"
             app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/header_style"
+            style="@style/settings_title_padding_style"
             android:id="@+id/tunnel_dual_host_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:text="@string/settings_tunnel_second_host_label"
             android:visibility="@{viewModel.tunnelDualMode ? View.VISIBLE : View.GONE, default=gone}"
+            android:labelFor="@id/tunnel_dual_host"
             app:layout_constraintTop_toBottomOf="@id/tunnel_dual_mode_switch"
             app:layout_constraintStart_toStartOf="parent"/>
 
@@ -128,7 +130,6 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             android:text="@={viewModel.tunnelDualHost}"
@@ -146,13 +147,14 @@
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/header_style"
+            style="@style/settings_title_padding_style"
             android:id="@+id/tunnel_dual_port_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:text="@string/settings_tunnel_second_port_label"
+            android:labelFor="@id/tunnel_dual_port"
             android:visibility="@{viewModel.tunnelDualMode ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintTop_toBottomOf="@id/tunnel_dual_host"
             app:layout_constraintStart_toStartOf="parent"/>
@@ -163,7 +165,6 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             android:text="@={viewModel.tunnelDualPort}"
@@ -181,13 +182,14 @@
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/header_style"
+            style="@style/settings_title_padding_style"
             android:id="@+id/tunnel_mode_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:text="@string/settings_tunnel_mode_label"
+            android:labelFor="@id/tunnel_mode_spinner"
             app:layout_constraintTop_toBottomOf="@id/tunnel_dual_port"
             app:layout_constraintStart_toStartOf="parent"/>
 
@@ -197,7 +199,6 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             android:textSize="14sp"

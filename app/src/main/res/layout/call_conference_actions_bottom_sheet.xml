@@ -187,6 +187,7 @@
             android:layout_height="wrap_content"
             android:text="@string/conference_action_screen_sharing"
             android:enabled="false"
+            android:labelFor="@id/screen_sharing"
             app:layout_constraintTop_toBottomOf="@id/screen_sharing"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/participants_label"/>
@@ -198,6 +199,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ellipsize="middle"
+            android:labelFor="@id/participants"
             android:text="@{viewModel.conferenceModel.participantsLabel, default=@string/conference_action_show_participants}"
             app:layout_constraintTop_toBottomOf="@id/participants"
             app:layout_constraintStart_toEndOf="@id/screen_sharing_label"
@@ -210,6 +212,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/call_action_go_to_calls_list"
+            android:labelFor="@id/calls_list"
             app:layout_constraintTop_toBottomOf="@id/calls_list"
             app:layout_constraintStart_toEndOf="@id/participants_label"
             app:layout_constraintEnd_toStartOf="@id/layout_label" />
@@ -221,6 +224,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/call_action_change_layout"
+            android:labelFor="@id/layout"
             app:layout_constraintTop_toBottomOf="@id/layout"
             app:layout_constraintStart_toEndOf="@id/calls_list_label"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -233,6 +237,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
             android:text="@string/call_action_show_messages"
+            android:labelFor="@id/chat"
             android:enabled="@{viewModel.conferenceModel.isConversationAvailable}"
             app:layout_constraintTop_toBottomOf="@id/chat"
             app:layout_constraintStart_toStartOf="@id/screen_sharing_label"
@@ -247,6 +252,7 @@
             android:enabled="@{viewModel.canBePaused}"
             android:selected="@{viewModel.isPaused}"
             android:text="@{viewModel.isPaused ? @string/call_action_resume_call : @string/call_action_pause_call, default=@string/call_action_pause_call}"
+            android:labelFor="@id/pause_call"
             app:layout_constraintTop_toBottomOf="@id/pause_call"
             app:layout_constraintStart_toStartOf="@id/participants_label"
             app:layout_constraintEnd_toEndOf="@id/participants_label" />
@@ -258,6 +264,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
             android:text="@string/call_action_record_call"
+            android:labelFor="@id/record_call"
             android:enabled="false"
             app:layout_constraintTop_toBottomOf="@id/record_call"
             app:layout_constraintStart_toStartOf="@id/calls_list_label"

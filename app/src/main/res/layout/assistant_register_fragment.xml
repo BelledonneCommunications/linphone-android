@@ -115,6 +115,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="48dp"
                     android:layout_marginEnd="16dp"
+                    android:labelFor="@id/username"
                     android:text="@{@string/username + `*`}"
                     app:layout_constraintTop_toBottomOf="@id/title"
                     app:layout_constraintStart_toStartOf="@id/username"/>
@@ -160,6 +161,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
                     android:layout_marginTop="16dp"
+                    android:labelFor="@id/phone_number"
                     android:text="@{@string/phone_number + `*`}"
                     app:layout_constraintTop_toBottomOf="@id/username_error"
                     app:layout_constraintStart_toStartOf="@id/prefix"/>
@@ -247,6 +249,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
                     android:layout_marginTop="16dp"
+                    android:labelFor="@id/password"
                     android:text="@{@string/password + `*`}"
                     app:layout_constraintTop_toBottomOf="@id/phone_number_error"
                     app:layout_constraintStart_toStartOf="@id/password"/>

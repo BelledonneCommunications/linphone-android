@@ -67,6 +67,12 @@
         <item name="android:textColor">?attr/color_main2_500</item>
         <item name="android:textSize">13sp</item>
     </style>
+    <style name="settings_title_padding_style">
+        <item name="android:fontFamily">@font/noto_sans_700</item>
+        <item name="android:textColor">?attr/color_main2_500</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:paddingBottom">5dp</item>
+    </style>
     <style name="settings_subtitle_style">
         <item name="android:fontFamily">@font/noto_sans</item>
         <item name="android:textColor">?attr/color_main2_500</item>

@@ -209,8 +209,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="20dp"
-                        android:paddingTop="8dp"
-                        android:paddingBottom="8dp"
                         android:text="@string/sip_address"
                         android:visibility="@{!viewModel.hideSipAddresses || viewModel.showDeviceId ? View.VISIBLE : View.GONE, default=gone}"
                         app:layout_constraintStart_toStartOf="@id/details_background"
@@ -248,8 +246,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="20dp"
-                        android:paddingTop="8dp"
-                        android:paddingBottom="8dp"
                         android:text="@string/device_id"
                         android:visibility="@{viewModel.showDeviceId ? View.VISIBLE : View.GONE, default=gone}"
                         app:layout_constraintStart_toStartOf="@id/details_background"
@@ -279,15 +275,14 @@
                         app:layout_constraintBottom_toBottomOf="@id/device_id_label"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/settings_title_style"
+                        style="@style/settings_title_padding_style"
                         android:id="@+id/display_name_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
-                        android:paddingTop="8dp"
-                        android:paddingBottom="8dp"
+                        android:layout_marginTop="20dp"
                         android:text="@string/sip_address_display_name"
+                        android:labelFor="@id/display_name"
                         app:layout_constraintStart_toStartOf="@id/details_background"
                         app:layout_constraintTop_toBottomOf="@id/device_id"/>
 
@@ -297,7 +292,6 @@
                         android:layout_width="0dp"
                         android:layout_height="50dp"
                         android:layout_marginEnd="16dp"
-                        android:layout_marginTop="5dp"
                         android:paddingStart="20dp"
                         android:paddingEnd="20dp"
                         android:text="@={viewModel.displayName, default=`John Doe`}"
@@ -312,15 +306,14 @@
                         app:layout_constraintEnd_toEndOf="@id/details_background"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/settings_title_style"
+                        style="@style/settings_title_padding_style"
                         android:id="@+id/prefix_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
-                        android:paddingTop="8dp"
-                        android:paddingBottom="8dp"
+                        android:layout_marginTop="20dp"
                         android:text="@string/manage_account_international_prefix"
+                        android:labelFor="@id/prefix"
                         app:layout_constraintStart_toStartOf="@id/details_background"
                         app:layout_constraintTop_toBottomOf="@id/display_name"/>
 
@@ -343,7 +336,6 @@
                         android:layout_width="0dp"
                         android:layout_height="50dp"
                         android:layout_marginEnd="16dp"
-                        android:layout_marginTop="5dp"
                         android:paddingStart="20dp"
                         android:paddingEnd="20dp"
                         android:textSize="14sp"

@@ -111,6 +111,7 @@
             android:textSize="16sp"
             android:textAlignment="center"
             android:textColor="?attr/color_main1_500"
+            android:labelFor="@id/transfer_progress"
             app:layout_constraintTop_toTopOf="@id/transfer_progress"
             app:layout_constraintBottom_toBottomOf="@id/transfer_progress"
             app:layout_constraintStart_toStartOf="@id/transfer_progress"

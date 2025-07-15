@@ -84,6 +84,7 @@
                     android:text="@string/settings_contacts_ldap_enabled_title"
                     android:maxLines="2"
                     android:ellipsize="end"
+                    android:labelFor="@id/enabled_switch"
                     app:layout_constraintTop_toTopOf="@id/enabled_switch"
                     app:layout_constraintBottom_toBottomOf="@id/enabled_switch"
                     app:layout_constraintStart_toStartOf="parent"
@@ -102,7 +103,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
+                    style="@style/settings_title_padding_style"
                     android:id="@+id/server_url_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -112,6 +113,7 @@
                     android:text="@string/settings_contacts_ldap_server_url_title"
                     android:maxLines="2"
                     android:ellipsize="end"
+                    android:labelFor="@id/server_url"
                     app:layout_constraintTop_toBottomOf="@id/enabled_switch"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
@@ -134,7 +136,7 @@
                     app:layout_constraintTop_toBottomOf="@id/server_url_title"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
+                    style="@style/settings_title_padding_style"
                     android:id="@+id/bind_dn_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -144,6 +146,7 @@
                     android:text="@string/settings_contacts_ldap_bind_dn_title"
                     android:maxLines="2"
                     android:ellipsize="end"
+                    android:labelFor="@id/bind_dn"
                     app:layout_constraintTop_toBottomOf="@id/server_url"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
@@ -166,7 +169,7 @@
                     app:layout_constraintTop_toBottomOf="@id/bind_dn_title"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
+                    style="@style/settings_title_padding_style"
                     android:id="@+id/password_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -176,6 +179,7 @@
                     android:text="@string/settings_contacts_ldap_password_title"
                     android:maxLines="2"
                     android:ellipsize="end"
+                    android:labelFor="@id/password"
                     app:layout_constraintTop_toBottomOf="@id/bind_dn"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
@@ -222,6 +226,7 @@
                     android:text="@string/settings_contacts_ldap_use_tls_title"
                     android:maxLines="2"
                     android:ellipsize="end"
+                    android:labelFor="@id/tls_switch"
                     app:layout_constraintTop_toTopOf="@id/tls_switch"
                     app:layout_constraintBottom_toBottomOf="@id/tls_switch"
                     app:layout_constraintStart_toStartOf="parent"
@@ -240,7 +245,7 @@
                     app:layout_constraintTop_toBottomOf="@id/password" />
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
+                    style="@style/settings_title_padding_style"
                     android:id="@+id/search_base_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -250,6 +255,7 @@
                     android:text="@string/settings_contacts_ldap_search_base_title"
                     android:maxLines="2"
                     android:ellipsize="end"
+                    android:labelFor="@id/search_base"
                     app:layout_constraintTop_toBottomOf="@id/tls_switch"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
@@ -272,7 +278,7 @@
                     app:layout_constraintTop_toBottomOf="@id/search_base_title"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
+                    style="@style/settings_title_padding_style"
                     android:id="@+id/search_filter_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -282,6 +288,7 @@
                     android:text="@string/settings_contacts_ldap_search_filter_title"
                     android:maxLines="2"
                     android:ellipsize="end"
+                    android:labelFor="@id/search_filter"
                     app:layout_constraintTop_toBottomOf="@id/search_base"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
@@ -304,7 +311,7 @@
                     app:layout_constraintTop_toBottomOf="@id/search_filter_title"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
+                    style="@style/settings_title_padding_style"
                     android:id="@+id/max_results_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -314,6 +321,7 @@
                     android:text="@string/settings_contacts_ldap_max_results_title"
                     android:maxLines="2"
                     android:ellipsize="end"
+                    android:labelFor="@id/max_results"
                     app:layout_constraintTop_toBottomOf="@id/search_filter"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
@@ -336,7 +344,7 @@
                     app:layout_constraintTop_toBottomOf="@id/max_results_title"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
+                    style="@style/settings_title_padding_style"
                     android:id="@+id/request_timeout_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -346,6 +354,7 @@
                     android:text="@string/settings_contacts_ldap_request_timeout_title"
                     android:maxLines="2"
                     android:ellipsize="end"
+                    android:labelFor="@id/request_timeout"
                     app:layout_constraintTop_toBottomOf="@id/max_results"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
@@ -368,7 +377,7 @@
                     app:layout_constraintTop_toBottomOf="@id/request_timeout_title"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
+                    style="@style/settings_title_padding_style"
                     android:id="@+id/request_delay_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -378,6 +387,7 @@
                     android:text="@string/settings_contacts_ldap_request_delay_title"
                     android:maxLines="2"
                     android:ellipsize="end"
+                    android:labelFor="@id/request_delay"
                     app:layout_constraintTop_toBottomOf="@id/request_timeout"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
@@ -400,7 +410,7 @@
                     app:layout_constraintTop_toBottomOf="@id/request_delay_title"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
+                    style="@style/settings_title_padding_style"
                     android:id="@+id/min_chars_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -410,6 +420,7 @@
                     android:text="@string/settings_contacts_ldap_min_characters_title"
                     android:maxLines="2"
                     android:ellipsize="end"
+                    android:labelFor="@id/min_chars"
                     app:layout_constraintTop_toBottomOf="@id/request_delay"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
@@ -432,7 +443,7 @@
                     app:layout_constraintTop_toBottomOf="@id/min_chars_title"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
+                    style="@style/settings_title_padding_style"
                     android:id="@+id/name_attributes_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -442,6 +453,7 @@
                     android:text="@string/settings_contacts_ldap_name_attributes_title"
                     android:maxLines="2"
                     android:ellipsize="end"
+                    android:labelFor="@id/name_attributes"
                     app:layout_constraintTop_toBottomOf="@id/min_chars"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
@@ -464,7 +476,7 @@
                     app:layout_constraintTop_toBottomOf="@id/name_attributes_title"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
+                    style="@style/settings_title_padding_style"
                     android:id="@+id/sip_attributes_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -474,6 +486,7 @@
                     android:text="@string/settings_contacts_ldap_sip_attributes_title"
                     android:maxLines="2"
                     android:ellipsize="end"
+                    android:labelFor="@id/sip_attributes"
                     app:layout_constraintTop_toBottomOf="@id/name_attributes"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
@@ -496,7 +509,7 @@
                     app:layout_constraintTop_toBottomOf="@id/sip_attributes_title"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
+                    style="@style/settings_title_padding_style"
                     android:id="@+id/sip_domain_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -506,6 +519,7 @@
                     android:text="@string/settings_contacts_ldap_sip_domain_title"
                     android:maxLines="2"
                     android:ellipsize="end"
+                    android:labelFor="@id/sip_domain"
                     app:layout_constraintTop_toBottomOf="@id/sip_attributes"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>

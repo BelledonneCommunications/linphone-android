@@ -156,6 +156,7 @@
                     android:layout_marginTop="30dp"
                     android:layout_marginEnd="16dp"
                     android:text="@string/contact_editor_first_name"
+                    android:labelFor="@id/first_name"
                     app:layout_constraintStart_toStartOf="@id/first_name"
                     app:layout_constraintTop_toBottomOf="@id/avatar_barrier"/>
 
@@ -189,6 +190,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:text="@string/contact_editor_last_name"
+                    android:labelFor="@id/last_name"
                     app:layout_constraintStart_toStartOf="@id/last_name"
                     app:layout_constraintTop_toBottomOf="@id/first_name"/>
 
@@ -268,6 +270,7 @@
                     android:layout_marginTop="30dp"
                     android:layout_marginEnd="16dp"
                     android:text="@string/contact_editor_company"
+                    android:labelFor="@id/company"
                     app:layout_constraintStart_toStartOf="@id/company"
                     app:layout_constraintTop_toBottomOf="@id/phone_numbers"/>
 
@@ -301,6 +304,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:text="@string/contact_editor_job_title"
+                    android:labelFor="@id/job_title"
                     app:layout_constraintStart_toStartOf="@id/job_title"
                     app:layout_constraintTop_toBottomOf="@id/company"/>
 

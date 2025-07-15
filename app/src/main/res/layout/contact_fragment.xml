@@ -167,6 +167,7 @@
                         android:layout_marginTop="8dp"
                         android:text="@string/contact_call_action"
                         android:textSize="14sp"
+                        android:labelFor="@id/call"
                         app:layout_constraintTop_toBottomOf="@id/call"
                         app:layout_constraintStart_toStartOf="@id/call"
                         app:layout_constraintEnd_toEndOf="@id/call"/>
@@ -199,6 +200,7 @@
                         android:layout_marginTop="8dp"
                         android:text="@string/contact_message_action"
                         android:textSize="14sp"
+                        android:labelFor="@id/chat"
                         app:layout_constraintTop_toBottomOf="@id/chat"
                         app:layout_constraintStart_toStartOf="@id/chat"
                         app:layout_constraintEnd_toEndOf="@id/chat"/>
@@ -231,6 +233,7 @@
                         android:layout_marginTop="8dp"
                         android:text="@string/contact_video_call_action"
                         android:textSize="14sp"
+                        android:labelFor="@id/video_call"
                         app:layout_constraintTop_toBottomOf="@id/video_call"
                         app:layout_constraintStart_toStartOf="@id/video_call"
                         app:layout_constraintEnd_toEndOf="@id/video_call"/>

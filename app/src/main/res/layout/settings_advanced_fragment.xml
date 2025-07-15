@@ -69,6 +69,7 @@
                     android:text="@string/settings_advanced_print_logs_crashlytics_title"
                     android:maxLines="3"
                     android:ellipsize="end"
+                    android:labelFor="@id/crashlytics_switch"
                     android:visibility="@{viewModel.isCrashlyticsAvailable ? View.VISIBLE : View.GONE}"
                     app:layout_constraintTop_toTopOf="@id/crashlytics_switch"
                     app:layout_constraintBottom_toBottomOf="@id/crashlytics_switch"
@@ -98,6 +99,7 @@
                     android:text="@string/settings_advanced_start_at_boot_title"
                     android:maxLines="2"
                     android:ellipsize="end"
+                    android:labelFor="@id/start_at_boot_switch"
                     app:layout_constraintTop_toTopOf="@id/start_at_boot_switch"
                     app:layout_constraintBottom_toBottomOf="@id/start_at_boot_switch"
                     app:layout_constraintStart_toStartOf="parent"
@@ -125,6 +127,7 @@
                     android:text="@string/settings_advanced_keep_alive_service_title"
                     android:maxLines="2"
                     android:ellipsize="end"
+                    android:labelFor="@id/keep_alive_service_switch"
                     app:layout_constraintTop_toTopOf="@id/keep_alive_service_switch"
                     app:layout_constraintBottom_toBottomOf="@id/keep_alive_service_switch"
                     app:layout_constraintStart_toStartOf="parent"
@@ -143,15 +146,14 @@
                     app:layout_constraintTop_toBottomOf="@id/start_at_boot_switch"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
+                    style="@style/settings_title_padding_style"
                     android:id="@+id/device_id_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
+                    android:layout_marginTop="20dp"
                     android:text="@string/settings_advanced_device_id"
+                    android:labelFor="@id/device_id"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/keep_alive_service_switch"/>
 
@@ -176,15 +178,14 @@
                     app:layout_constraintEnd_toEndOf="parent"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
+                    style="@style/settings_title_padding_style"
                     android:id="@+id/remote_provisioning_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
+                    android:layout_marginTop="20dp"
                     android:text="@string/settings_advanced_remote_provisioning_url"
+                    android:labelFor="@id/remote_provisioning"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/device_id"/>
 
@@ -217,7 +218,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/tertiary_button_background"
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp"
@@ -239,7 +240,7 @@
                     android:padding="5dp"
                     android:layout_marginStart="26dp"
                     android:layout_marginEnd="26dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="20dp"
                     android:text="@string/settings_advanced_audio_devices_title"
                     android:drawableEnd="@{viewModel.expandAudioDevices ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
                     android:drawableTint="?attr/color_main2_600"
@@ -263,16 +264,15 @@
                     app:layout_constraintEnd_toEndOf="parent">
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/settings_title_style"
+                        style="@style/settings_title_padding_style"
                         android:id="@+id/input_audio_device_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
-                        android:paddingTop="8dp"
-                        android:paddingBottom="8dp"
+                        android:layout_marginTop="20dp"
                         android:text="@string/settings_advanced_input_audio_device_title"
                         android:visibility="@{viewModel.expandAudioDevices ? View.VISIBLE : View.GONE}"
+                        android:labelFor="@id/input_audio_device"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -282,7 +282,6 @@
                         android:layout_width="0dp"
                         android:layout_height="50dp"
                         android:layout_marginEnd="16dp"
-                        android:layout_marginTop="8dp"
                         android:paddingStart="20dp"
                         android:paddingEnd="20dp"
                         android:textSize="14sp"
@@ -314,16 +313,15 @@
                         app:layout_constraintEnd_toEndOf="@id/input_audio_device"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/settings_title_style"
+                        style="@style/settings_title_padding_style"
                         android:id="@+id/output_audio_device_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
-                        android:paddingTop="8dp"
-                        android:paddingBottom="8dp"
+                        android:layout_marginTop="20dp"
                         android:text="@string/settings_advanced_output_audio_device_title"
                         android:visibility="@{viewModel.expandAudioDevices ? View.VISIBLE : View.GONE}"
+                        android:labelFor="@id/output_audio_device"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/input_audio_device"/>
 
@@ -333,7 +331,6 @@
                         android:layout_width="0dp"
                         android:layout_height="50dp"
                         android:layout_marginEnd="16dp"
-                        android:layout_marginTop="8dp"
                         android:paddingStart="20dp"
                         android:paddingEnd="20dp"
                         android:textSize="14sp"
@@ -373,7 +370,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:layout_margin="16dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="@dimen/screen_bottom_margin"
                     android:text="@string/settings_advanced_go_to_android_app_settings_title"
                     android:drawableEnd="@drawable/arrow_square_out"
                     android:drawableTint="?attr/color_main2_600"

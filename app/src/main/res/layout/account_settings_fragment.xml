@@ -96,6 +96,7 @@
                             android:text="@{viewModel.pushNotificationsAvailable ? @string/account_settings_push_notification_title : @string/account_settings_push_notification_not_available_title, default=@string/account_settings_push_notification_title}"
                             android:maxLines="2"
                             android:ellipsize="end"
+                            android:labelFor="@id/push_notifications_switch"
                             android:visibility="@{viewModel.isDomainInPushNotificationCompatibleList ? View.VISIBLE : View.GONE}"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toBottomOf="@id/push_notifications_switch"
@@ -107,7 +108,7 @@
                             android:id="@+id/im_encryption_mandatory_switch"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
+                            android:layout_marginTop="20dp"
                             android:layout_marginEnd="16dp"
                             android:checked="@={viewModel.imEncryptionMandatory}"
                             android:visibility="@{viewModel.imEncryptionMandatoryAvailable ? View.VISIBLE : View.GONE}"
@@ -124,6 +125,7 @@
                             android:text="@string/account_settings_im_encryption_mandatory_title"
                             android:maxLines="2"
                             android:ellipsize="end"
+                            android:labelFor="@id/im_encryption_mandatory_switch"
                             android:visibility="@{viewModel.imEncryptionMandatoryAvailable ? View.VISIBLE : View.GONE}"
                             app:layout_constraintTop_toTopOf="@id/im_encryption_mandatory_switch"
                             app:layout_constraintBottom_toBottomOf="@id/im_encryption_mandatory_switch"
@@ -131,7 +133,7 @@
                             app:layout_constraintEnd_toStartOf="@id/im_encryption_mandatory_switch"/>
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            style="@style/settings_title_style"
+                            style="@style/settings_title_padding_style"
                             android:id="@+id/voicemail_uri_title"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -141,6 +143,7 @@
                             android:text="@string/account_settings_voicemail_uri_title"
                             android:maxLines="2"
                             android:ellipsize="end"
+                            android:labelFor="@id/voicemail_uri"
                             app:layout_constraintTop_toBottomOf="@id/im_encryption_mandatory_switch"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"/>
@@ -164,7 +167,7 @@
                             app:layout_constraintTop_toBottomOf="@id/voicemail_uri_title" />
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            style="@style/settings_title_style"
+                            style="@style/settings_title_padding_style"
                             android:id="@+id/mwi_uri_title"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -174,6 +177,7 @@
                             android:text="@string/account_settings_mwi_uri_title"
                             android:maxLines="2"
                             android:ellipsize="end"
+                            android:labelFor="@id/mwi_uri"
                             app:layout_constraintTop_toBottomOf="@id/voicemail_uri"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"/>
@@ -206,6 +210,7 @@
                             android:text="@string/account_settings_apply_international_prefix_title"
                             android:maxLines="2"
                             android:ellipsize="end"
+                            android:labelFor="@id/apply_international_switch"
                             app:layout_constraintTop_toTopOf="@id/apply_international_switch"
                             app:layout_constraintBottom_toBottomOf="@id/apply_international_switch"
                             app:layout_constraintStart_toStartOf="parent"
@@ -216,7 +221,7 @@
                             android:id="@+id/apply_international_switch"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
+                            android:layout_marginTop="20dp"
                             android:layout_marginEnd="16dp"
                             android:checked="@={viewModel.applyPrefix}"
                             app:layout_constraintTop_toBottomOf="@id/mwi_uri"
@@ -233,6 +238,7 @@
                             android:text="@string/account_settings_replace_plus_by_00_title"
                             android:maxLines="2"
                             android:ellipsize="end"
+                            android:labelFor="@id/replace_plus_by_00_switch"
                             app:layout_constraintTop_toTopOf="@id/replace_plus_by_00_switch"
                             app:layout_constraintBottom_toBottomOf="@id/replace_plus_by_00_switch"
                             app:layout_constraintStart_toStartOf="parent"
@@ -243,7 +249,7 @@
                             android:id="@+id/replace_plus_by_00_switch"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
+                            android:layout_marginTop="20dp"
                             android:layout_marginEnd="16dp"
                             android:layout_marginBottom="20dp"
                             android:checked="@={viewModel.replacePlusBy00}"
@@ -262,7 +268,7 @@
                         android:padding="5dp"
                         android:layout_marginStart="26dp"
                         android:layout_marginEnd="26dp"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="20dp"
                         android:layout_marginBottom="10dp"
                         android:text="@string/account_settings_nat_policy_title"
                         android:drawableEnd="@{viewModel.expandNatPolicySettings ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
