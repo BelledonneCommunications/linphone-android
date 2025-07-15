@@ -89,6 +89,7 @@
             android:layout_marginEnd="10dp"
             android:background="?attr/color_separator"
             android:visibility="gone"
+            android:importantForAccessibility="no"
             app:layout_constraintStart_toStartOf="@id/name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>

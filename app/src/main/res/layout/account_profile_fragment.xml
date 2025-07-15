@@ -536,6 +536,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:background="?attr/color_separator"
+                        android:importantForAccessibility="no"
                         app:layout_constraintStart_toStartOf="@id/action_settings"
                         app:layout_constraintEnd_toEndOf="@id/action_settings"
                         app:layout_constraintTop_toBottomOf="@+id/action_settings"/>

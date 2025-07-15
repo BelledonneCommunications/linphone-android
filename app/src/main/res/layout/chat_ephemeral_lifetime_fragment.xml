@@ -114,7 +114,8 @@
                         android:layout_height="1dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:background="?attr/color_separator"/>
+                        android:background="?attr/color_separator"
+                        android:importantForAccessibility="no"/>
 
                     <RadioButton
                         style="@style/default_text_style"
@@ -138,7 +139,8 @@
                         android:layout_height="1dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:background="?attr/color_separator"/>
+                        android:background="?attr/color_separator"
+                        android:importantForAccessibility="no"/>
 
                     <RadioButton
                         style="@style/default_text_style"
@@ -162,7 +164,8 @@
                         android:layout_height="1dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:background="?attr/color_separator"/>
+                        android:background="?attr/color_separator"
+                        android:importantForAccessibility="no"/>
 
                     <RadioButton
                         style="@style/default_text_style"
@@ -186,7 +189,8 @@
                         android:layout_height="1dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:background="?attr/color_separator"/>
+                        android:background="?attr/color_separator"
+                        android:importantForAccessibility="no"/>
 
                     <RadioButton
                         style="@style/default_text_style"
@@ -210,7 +214,8 @@
                         android:layout_height="1dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:background="?attr/color_separator"/>
+                        android:background="?attr/color_separator"
+                        android:importantForAccessibility="no"/>
 
                     <RadioButton
                         style="@style/default_text_style"

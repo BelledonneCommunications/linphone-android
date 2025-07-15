@@ -19,6 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="?attr/color_separator"
+            android:importantForAccessibility="no"
             app:layout_constraintTop_toTopOf="parent"/>
 
         <androidx.core.widget.NestedScrollView

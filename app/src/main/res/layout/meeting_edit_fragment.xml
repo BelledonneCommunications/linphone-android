@@ -102,6 +102,7 @@
                         android:layout_height="1dp"
                         android:layout_marginTop="10dp"
                         android:background="?attr/color_separator"
+                        android:importantForAccessibility="no"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/subject" />
@@ -229,6 +230,7 @@
                         android:layout_height="1dp"
                         android:layout_marginTop="16dp"
                         android:background="?attr/color_separator"
+                        android:importantForAccessibility="no"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/repeat" />
@@ -261,6 +263,7 @@
                         android:layout_height="1dp"
                         android:layout_marginTop="16dp"
                         android:background="?attr/color_separator"
+                        android:importantForAccessibility="no"
                         android:visibility="@{viewModel.isBroadcastSelected ? View.VISIBLE : View.GONE}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -291,6 +294,7 @@
                         android:layout_height="1dp"
                         android:layout_marginTop="16dp"
                         android:background="?attr/color_separator"
+                        android:importantForAccessibility="no"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/speakers" />
@@ -363,6 +367,7 @@
                         android:layout_height="1dp"
                         android:layout_marginTop="16dp"
                         android:background="?attr/color_separator"
+                        android:importantForAccessibility="no"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/participants_list" />

@@ -162,6 +162,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:text="@string/vertical_separator"
+                android:importantForAccessibility="no"
                 app:layout_constraintTop_toTopOf="@id/name"
                 app:layout_constraintStart_toEndOf="@id/name"
                 app:layout_constraintEnd_toStartOf="@id/chronometer"/>

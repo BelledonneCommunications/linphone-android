@@ -110,6 +110,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="?attr/color_separator"
+                    android:importantForAccessibility="no"
                     android:visibility="@{viewModel.isMessageInError &amp;&amp; viewModel.isMessageOutgoing ? View.VISIBLE : View.GONE, default=gone}"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -125,7 +126,8 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="?attr/color_separator"/>
+                    android:background="?attr/color_separator"
+                    android:importantForAccessibility="no"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/chat_bubble_popup_menu_style"
@@ -142,6 +144,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="?attr/color_separator"
+                    android:importantForAccessibility="no"
                     android:visibility="@{viewModel.isChatRoomReadOnly ? View.GONE : View.VISIBLE}" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -159,6 +162,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="?attr/color_separator"
+                    android:importantForAccessibility="no"
                     android:visibility="@{viewModel.hideCopyTextToClipboard ? View.GONE : View.VISIBLE}"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -176,6 +180,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="?attr/color_separator"
+                    android:importantForAccessibility="no"
                     android:visibility="@{viewModel.hideForward ? View.GONE : View.VISIBLE}" />
 
                 <androidx.appcompat.widget.AppCompatTextView

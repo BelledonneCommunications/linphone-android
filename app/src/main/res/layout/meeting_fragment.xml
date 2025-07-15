@@ -130,6 +130,7 @@
                         android:layout_height="1dp"
                         android:layout_marginTop="16dp"
                         android:background="?attr/color_separator"
+                        android:importantForAccessibility="no"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/subject" />
@@ -216,6 +217,7 @@
                         android:layout_height="1dp"
                         android:layout_marginTop="16dp"
                         android:background="?attr/color_separator"
+                        android:importantForAccessibility="no"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/timezone" />
@@ -247,6 +249,7 @@
                         android:layout_height="1dp"
                         android:layout_marginTop="16dp"
                         android:background="?attr/color_separator"
+                        android:importantForAccessibility="no"
                         android:visibility="@{viewModel.description.length() > 0 ? View.VISIBLE : View.GONE}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -293,6 +296,7 @@
                         android:layout_height="1dp"
                         android:layout_marginTop="16dp"
                         android:background="?attr/color_separator"
+                        android:importantForAccessibility="no"
                         android:visibility="@{viewModel.isBroadcast ? View.VISIBLE : View.GONE}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -334,6 +338,7 @@
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:background="?attr/color_separator"
+                android:importantForAccessibility="no"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/scrollView" />
