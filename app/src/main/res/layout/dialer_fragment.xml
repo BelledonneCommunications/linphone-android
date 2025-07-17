@@ -33,7 +33,7 @@
             app:justifyContent="flex_end">
 
             <RelativeLayout
-                android:layout_width="300dp"
+                android:layout_width="264dp"
                 android:layout_height="@dimen/main_activity_top_bar_size"
                 android:layout_alignParentTop="true"
                 android:layout_margin="25dp"
