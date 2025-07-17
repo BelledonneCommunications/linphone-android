@@ -15,14 +15,9 @@
 
         android:background="?attr/backgroundColor"
         android:weightSum="1"
-        app:alignContent="space_around"
-        app:alignItems="center"
+        app:alignContent="flex_end"
         app:flexWrap="wrap"
-        app:justifyContent="space_evenly">
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="75dp" />
+        app:justifyContent="center">
 
         <View
             android:layout_width="0dp"
@@ -271,10 +266,6 @@
 
         <View android:layout_width="0dp" android:layout_height="0dp" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="75dp"
-            app:layout_wrapBefore="true" />
 
     </com.google.android.flexbox.FlexboxLayout>
 
