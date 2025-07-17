@@ -189,6 +189,7 @@ class HistoryViewModel
     @UiThread
     fun startAudioCall() {
         coreContext.postOnCoreThread { core ->
+            if (!::address.isInitialized) return@postOnCoreThread
             coreContext.startAudioCall(address)
         }
     }
@@ -196,6 +197,7 @@ class HistoryViewModel
     @UiThread
     fun startVideoCall() {
         coreContext.postOnCoreThread { core ->
+            if (!::address.isInitialized) return@postOnCoreThread
             coreContext.startVideoCall(address)
         }
     }
@@ -215,6 +217,8 @@ class HistoryViewModel
     @UiThread
     fun goToConversation() {
         coreContext.postOnCoreThread { core ->
+            if (!::address.isInitialized) return@postOnCoreThread
+
             val account = core.defaultAccount
             val localSipUri = account?.params?.identityAddress?.asStringUriOnly()
             if (!localSipUri.isNullOrEmpty()) {
@@ -312,9 +316,8 @@ class HistoryViewModel
     @UiThread
     fun goToMeetingWaitingRoom() {
         coreContext.postOnCoreThread {
-            if (::address.isInitialized) {
-                conferenceToJoinEvent.postValue(Event(address.asStringUriOnly()))
-            }
+            if (!::address.isInitialized) return@postOnCoreThread
+            conferenceToJoinEvent.postValue(Event(address.asStringUriOnly()))
         }
     }
 

@@ -178,12 +178,14 @@ class ContactViewModel
     private val contactsListener = object : ContactsManager.ContactsListener {
         @WorkerThread
         override fun onContactsLoaded() {
-            val friend = coreContext.contactsManager.findContactById(refKey)
-            if (friend != null && friend != this@ContactViewModel.friend) {
+            if (!::friend.isInitialized) return
+
+            val found = coreContext.contactsManager.findContactById(refKey)
+            if (found != null && found != friend) {
                 Log.i(
-                    "$TAG Found contact [${friend.name}] matching ref key [$refKey] after contacts have been loaded/updated"
+                    "$TAG Found contact [${found.name}] matching ref key [$refKey] after contacts have been loaded/updated"
                 )
-                this@ContactViewModel.friend = friend
+                friend = found
                 refreshContactInfo()
             }
         }
