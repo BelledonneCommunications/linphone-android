@@ -151,7 +151,7 @@
             android:name=".ui.call.CallActivity"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.LinphoneInCall"
-            android:launchMode="singleTask"
+            android:launchMode="singleInstance"
             android:turnScreenOn="true"
             android:showWhenLocked="true"
             android:resizeableActivity="true"
