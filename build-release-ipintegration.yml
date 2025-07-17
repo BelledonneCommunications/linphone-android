@@ -5,6 +5,8 @@ variables:
   appVersionCode: $(MAJOR)$(MINOR)$(YEAR:yy)$(DAYOFYEAR)$(REV:r)
   baseFolder: '$(Build.SourcesDirectory)/app/src/ecx'
   resellerName: 'IP Integration'
+  SentryAuthToken: $(SentryAuthToken)
+  
 steps:
 - checkout: self
 
