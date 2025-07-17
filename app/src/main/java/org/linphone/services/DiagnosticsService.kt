@@ -59,7 +59,7 @@ class DiagnosticsService {
             }
         }
 
-        suspend fun uploadDiagnostics(context: Context) {
+        fun getLogsZip(context: Context): File {
             val logsFolder: String = FileTree.getLogsDirectory(context)
 
             val linphoneLogFiles = getLinphoneLogs(context)
@@ -73,10 +73,16 @@ class DiagnosticsService {
 
             val zipFile = FileTree.zipAll(logsFolder)
 
-            Log.i("Uploading logs from file ${zipFile.path}")
-
             // Flush current log files
             Timber.forest().forEach { t -> if (t is FileTree) t.flush() }
+
+            Log.i("Uploading logs from file ${zipFile.path}")
+
+            return zipFile
+        }
+
+        suspend fun uploadDiagnostics(context: Context) {
+            val zipFile = getLogsZip(context)
 
             val body = zipFile
                 .readBytes()
