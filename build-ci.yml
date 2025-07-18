@@ -5,7 +5,7 @@ variables:
   appVersionCode: $(MAJOR)$(MINOR)$(YEAR:yy)$(DAYOFYEAR)$(REV:r)
   artifactName: 'apk-release'
   resellerName: 'Dimensions Technologies'
-  SentryAuthToken: $(SentryAuthToken) 
+  SentryAuthToken: '$(SENTRYAUTHTOKEN)'
 
 stages:
 - stage: Build

@@ -5,7 +5,7 @@ variables:
   appVersionCode: $(MAJOR)$(MINOR)$(YEAR:yy)$(DAYOFYEAR)$(REV:r)
   baseFolder: '$(Build.SourcesDirectory)/app/src/voyager'
   resellerName: 'Voyager Internet'
-  SentryAuthToken: $(SentryAuthToken) 
+  SentryAuthToken: '$(SENTRYAUTHTOKEN)'
   
 steps:
 - checkout: self

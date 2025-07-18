@@ -4,7 +4,7 @@ pool:
 variables:
   appVersionCode: $(MAJOR)$(MINOR)$(YEAR:yy)$(DAYOFYEAR)$(REV:r)
   resellerName: 'Dimensions Technologies'
-  SentryAuthToken: $(SentryAuthToken) 
+  SentryAuthToken: '$(SENTRYAUTHTOKEN)'
           
 steps:
 - checkout: self
