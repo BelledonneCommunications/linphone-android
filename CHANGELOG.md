@@ -10,6 +10,12 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [6.0.12] - 2025-07-18
+
+### Fixed
+- Reactions list in bottom sheet update while opened
+- Crashes due to late init properties being used before initialized
+
 ## [6.0.11] - 2025-07-11
 
 ### Added
