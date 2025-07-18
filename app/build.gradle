@@ -7,11 +7,22 @@ plugins {
     id 'io.sentry.android.gradle' version '5.8.0'
 }
 
+// Quick test to see how environment variables load:
+def reseller = System.getenv("resellerName")
+def resellerUpper = System.getenv("RESELLERNAME")
+println "Reseller name: ${reseller} | ${resellerUpper}"
+
+def sentryTest = System.getenv("sentryTest")
+println "SentryTest: ${sentryTest?.length()}"
+
+def sentryToken = System.getenv("SENTRYAUTHTOKEN")
+println "SentryAuthToken: ${sentryToken?.length()}"
+
 sentry {
     includeSourceContext = true
     org = "dimensions-technologies"
     projectName = "connect-android"
-    authToken = System.getenv("SentryAuthToken")
+    authToken = System.getenv("SENTRYAUTHTOKEN")
 }
 
 def appVersionName = "5.3.0"
