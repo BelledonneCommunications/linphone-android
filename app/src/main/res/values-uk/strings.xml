@@ -864,4 +864,5 @@
     <string name="help_about_contribute_translations_subtitle">Допоможіть зробити застосунок доступним для якомога більшої кількості людей.</string>
     <string name="help_troubleshooting_subtitle">Надсилайте свої діагностичні журнали для полегшення вирішення помилок.</string>
     <string name="content_description_cancel_files_or_text_pending_sharing">Натисніть, щоб скасувати обмін файлами або текстом, що очікує надсилання</string>
+    <string name="settings_contacts_ldap_enabled_title">Увімкнуто</string>
 </resources>
