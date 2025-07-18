@@ -36,6 +36,12 @@ Group changes to describe their impact on the project, as follows:
 - Increased shared media preview size in chat
 - Un-encrypted conversation warning will be more visible for accounts that support end-to-end encrypted conversations
 
+## [6.0.12] - 2025-07-18
+
+### Fixed
+- Reactions list in bottom sheet update while opened
+- Crashes due to late init properties being used before initialized
+
 ## [6.0.11] - 2025-07-11
 
 ### Added
