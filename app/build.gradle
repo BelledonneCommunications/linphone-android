@@ -8,15 +8,11 @@ plugins {
 }
 
 // Quick test to see how environment variables load:
-def reseller = System.getenv("resellerName")
-def resellerUpper = System.getenv("RESELLERNAME")
-println "Reseller name: ${reseller} | ${resellerUpper}"
-
-def sentryTest = System.getenv("sentryTest")
-println "SentryTest: ${sentryTest?.length()}"
+def reseller = System.getenv("RESELLERNAME")
+println "Reseller name: ${reseller}"
 
 def sentryToken = System.getenv("SENTRYAUTHTOKEN")
-println "SentryAuthToken: ${sentryToken?.length()}"
+println "Sentry auth token: ${sentryToken?.length()}"
 
 sentry {
     includeSourceContext = true
