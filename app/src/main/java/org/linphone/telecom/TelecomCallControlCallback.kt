@@ -57,6 +57,8 @@ class TelecomCallControlCallback(
     private var endpointUpdateRequestFromLinphone: Boolean = false
     private var latestLinphoneRequestedEndpoint: CallEndpointCompat? = null
 
+    private var mutedByTelecomManager = false
+
     private val callListener = object : CallListenerStub() {
         @WorkerThread
         override fun onStateChanged(call: Call, state: Call.State?, message: String) {
@@ -201,8 +203,10 @@ class TelecomCallControlCallback(
                     "$TAG We're asked to [${if (muted) "mute" else "unmute"}] the call in state [$callState]"
                 )
                 // Only follow un-mute requests for not outgoing calls (such as joining a conference muted)
-                // and if connected to Android Auto that has a way to let user mute/unmute from the car directly.
-                if (muted || (!LinphoneUtils.isCallOutgoing(callState, false) && coreContext.isConnectedToAndroidAuto)) {
+                // and if connected to Android Auto that has a way to let user mute/unmute from the car directly
+                // or if we muted the call previously following Telecom Manager request.
+                if (muted || mutedByTelecomManager || (!LinphoneUtils.isCallOutgoing(callState, false) && coreContext.isConnectedToAndroidAuto)) {
+                    mutedByTelecomManager = muted
                     call.microphoneMuted = muted
                     coreContext.refreshMicrophoneMuteStateEvent.postValue(Event(true))
                 } else {
