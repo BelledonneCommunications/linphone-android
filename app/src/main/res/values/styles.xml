@@ -245,7 +245,7 @@
 
     <style name="call_remote_name_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">@color/white_color</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">24sp</item>
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
         <item name="autoSizeTextType">uniform</item>
@@ -315,12 +315,12 @@
 
     <style name="call_header_title" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">@color/white_color</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">24sp</item>
     </style>
 
     <style name="call_header_subtitle" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">@color/white_color</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="call_remote_recording_font" parent="@android:style/TextAppearance.Medium">

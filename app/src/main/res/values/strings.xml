@@ -443,6 +443,8 @@
     <string name="call_action_statistics">Call statistics</string>
     <string name="call_action_add_call">Start new call</string>
     <string name="call_action_transfer_call">Transfer call</string>
+    <string name="call_action_hold">Hold</string>
+    <string name="call_action_retrieve">Retrieve</string>
     <string name="call_action_attended_transfer_call">Attended transfer</string>
     <string name="call_context_action_resume">Resume call</string>
     <string name="call_context_action_pause">Pause call</string>
@@ -1059,4 +1061,6 @@
     <string name="microsoft_teams">Microsoft Teams</string>
     <string name="unknown_formatted_number">Unknown</string>
     <string name="call_history_dialog_call_back">Call back</string>
+    <string name="call_action_mute">Mute</string>
+    <string name="call_action_unmute">Unmute</string>
 </resources>

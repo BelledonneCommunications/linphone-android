@@ -3,10 +3,10 @@
     android:width="164dp"
     android:height="164dp">
     <item
-    android:drawable="@drawable/icon_dialpad"
-    android:width="164dp"
-    android:height="164dp"
-    android:layout_width="128dp"
-    android:layout_height="128dp"
-    android:tint="@color/red_color"/>
+        android:drawable="@drawable/icon_dialpad"
+        android:width="164dp"
+        android:height="164dp"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:tint="@color/red_color"/>
 </selector>
