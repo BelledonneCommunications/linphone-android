@@ -128,6 +128,15 @@
         <item name="android:paddingBottom">0dp</item>
     </style>
 
+
+    <!-- Call screen -->
+    <style name="call_action_button">
+        <item name="android:layout_width">64dp</item>
+        <item name="android:layout_height">64dp</item>
+        <item name="android:layout_marginHorizontal"></item>
+        <!--<item name="android:layout_margin">5dp</item>-->
+    </style>
+
     <!-- Assistant related -->
 
     <style name="assistant_input_field_header_font" parent="@android:style/TextAppearance.Medium">

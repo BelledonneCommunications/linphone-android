@@ -19,94 +19,94 @@
         <variable
             name="conferenceViewModel"
             type="org.linphone.activities.voip.viewmodels.ConferenceViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/buttons_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/voip_buttons_fragment_size">
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/hangup"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/button_call_terminate_background"
-            android:contentDescription="@string/content_description_terminate_call"
-            android:onClick="@{() -> controlsViewModel.hangUp()}"
-            android:padding="5dp"
-            android:src="@drawable/icon_call_hangup"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="W,1.26:1"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <ImageView
+        <TextView
             android:id="@+id/microphone"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="5dp"
-            android:background="@drawable/button_background_reverse"
-            android:contentDescription="@{callsViewModel.isMicrophoneMuted ? @string/content_description_disable_mic_mute : @string/content_description_enable_mic_mute}"
-            android:enabled="@{callsViewModel.isMuteMicrophoneEnabled &amp;&amp; !conferenceViewModel.isMeListenerOnly}"
-            android:onClick="@{() -> callsViewModel.toggleMuteMicrophone()}"
-            android:padding="5dp"
-            android:selected="@{callsViewModel.isMicrophoneMuted || conferenceViewModel.isMeListenerOnly}"
-            android:src="@drawable/icon_toggle_mic"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="W,1:1"
-            app:layout_constraintEnd_toStartOf="@id/speaker"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toEndOf="@id/hangup" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/numpad"
+            style="@style/call_options_font"
+            android:layout_height="wrap_content"
+            android:enabled="@{!conferenceViewModel.isBroadcast}"
+            android:gravity="center"
+            android:onClick="@{() -> controlsViewModel.showNumpad()}"
+            android:text="Mute"
+            app:drawableTopCompat="@drawable/icon_toggle_mic"
+            />
 
-        <ImageView
+        <LinearLayout
+            android:id="@+id/numpad"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@id/microphone"
+            app:layout_constraintStart_toEndOf="@id/microphone"
+            app:layout_constraintEnd_toStartOf="@id/speaker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="@{!conferenceViewModel.isBroadcast}"
+            android:gravity="center"
+
+            android:onClick="@{() -> controlsViewModel.showNumpad()}">
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:paddingBottom="10dp"
+                app:tint="@color/white_color"
+                android:src="@drawable/call_dialpad" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/call_action_numpad"
+                android:textSize="12sp"
+                android:textColor="@color/white_color" />
+        </LinearLayout>
+
+
+        <TextView
             android:id="@+id/speaker"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/button_background_reverse"
+            android:layout_height="wrap_content"
+            style="@style/call_options_font"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="@id/numpad"
+            app:layout_constraintStart_toEndOf="@id/numpad"
+            app:layout_constraintEnd_toEndOf="parent"
             android:contentDescription="@{controlsViewModel.isSpeakerSelected ? @string/content_description_disable_speaker : @string/content_description_enable_speaker}"
             android:onClick="@{() -> controlsViewModel.toggleSpeaker()}"
-            android:padding="5dp"
             android:selected="@{controlsViewModel.isSpeakerSelected}"
-            android:src="@drawable/icon_toggle_speaker"
+            app:drawableTopCompat="@drawable/icon_toggle_speaker"
+            android:text="Speaker"
             android:visibility="@{controlsViewModel.audioRoutesEnabled ? View.GONE : View.VISIBLE}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="W,1:1"
-            app:layout_constraintEnd_toStartOf="@id/audio_routes"
-            app:layout_constraintStart_toEndOf="@id/microphone" />
+            />
 
         <ImageView
             android:id="@+id/audio_routes"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
             android:background="@drawable/button_toggle_background_reverse"
             android:contentDescription="@string/content_description_toggle_audio_menu"
             android:onClick="@{() -> controlsViewModel.toggleRoutesMenu()}"
-            android:padding="5dp"
             android:selected="@{controlsViewModel.audioRoutesSelected}"
             android:src="@drawable/icon_audio_routes"
-            android:visibility="@{controlsViewModel.audioRoutesEnabled ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="W,1:1"
-            app:layout_constraintEnd_toStartOf="@id/video"
-            app:layout_constraintStart_toEndOf="@id/speaker" />
-
+            android:style="@style/call_action_button"
+            android:visibility="@{controlsViewModel.audioRoutesEnabled ? View.VISIBLE : View.GONE, default=gone}" />
+        <!--
         <ImageView
             android:id="@+id/video"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="5dp"
+            android:style="@style/call_action_button"
             android:background="@drawable/button_background_reverse"
             android:contentDescription="@{controlsViewModel.isVideoEnabled &amp;&amp; controlsViewModel.isSendingVideo ? @string/content_description_disable_video : @string/content_description_enable_video}"
             android:enabled="@{controlsViewModel.isVideoAvailable &amp;&amp; !controlsViewModel.isVideoUpdateInProgress &amp;&amp; !conferenceViewModel.isMeListenerOnly}"
             android:onClick="@{() -> (!conferenceViewModel.conferenceExists || conferenceViewModel.conferenceDisplayMode != ConferenceDisplayMode.AUDIO_ONLY) ? controlsViewModel.toggleVideo() : conferenceViewModel.switchLayoutFromAudioOnlyToActiveSpeaker()}"
-            android:padding="5dp"
             android:selected="@{controlsViewModel.isVideoEnabled &amp;&amp; controlsViewModel.isSendingVideo &amp;&amp; !conferenceViewModel.isMeListenerOnly}"
             android:visibility="@{controlsViewModel.hideVideo ? View.GONE : View.VISIBLE}"
             android:src="@drawable/icon_toggle_camera"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="W,1:1"
-            app:layout_constraintEnd_toStartOf="@id/more"
-            app:layout_constraintStart_toEndOf="@id/audio_routes" />
-
+            />
+-->
         <ProgressBar
             android:id="@+id/video_toggle_in_progress"
             style="?android:attr/progressBarStyle"
@@ -117,31 +117,67 @@
             app:layout_constraintEnd_toEndOf="@id/video"
             app:layout_constraintStart_toStartOf="@id/video" />
 
-        <ImageView
-            android:id="@+id/more"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/button_background"
-            android:contentDescription="@string/content_description_call_context_menu"
-            android:onClick="@{() -> controlsViewModel.showExtraButtons()}"
-            android:padding="5dp"
-            android:src="@drawable/icon_call_more"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="W,1:1"
-            app:layout_constraintEnd_toEndOf="parent" />
 
-        <TextView
-            android:id="@+id/extra_count"
-            style="@style/unread_count_font"
+        <LinearLayout
+            android:id="@+id/pause_call"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/microphone"
+            app:layout_constraintEnd_toEndOf="@id/microphone"
+            app:layout_constraintStart_toStartOf="parent"
+            android:paddingTop="30dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/unread_message_count_bg"
+            android:contentDescription="@string/content_description_pause_call"
+            android:enabled="@{callsViewModel.currentCallData.isPaused || callsViewModel.currentCallData.canBePaused}"
+            android:onClick="@{() -> callsViewModel.currentCallData.togglePause()}"
+            android:selected="@{callsViewModel.currentCallData.isPaused}"
             android:gravity="center"
-            android:text="@{String.valueOf(callsViewModel.chatAndCallsCount), default=2}"
-            android:translationY="@{controlsViewModel.bouncyCounterTranslateY}"
-            android:visibility="@{callsViewModel.chatAndCallsCount == 0 ? View.GONE : View.VISIBLE}"
-            app:layout_constraintEnd_toEndOf="@id/more"
-            app:layout_constraintTop_toTopOf="@id/more" />
+            android:visibility="@{controlsViewModel.fullScreenMode || controlsViewModel.pipMode ? View.GONE : View.VISIBLE}">
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:paddingBottom="10dp"
+                android:src="@drawable/icon_pause"
+                app:tint="@color/green_color" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hold"
+                android:textSize="12sp"
+                android:textColor="@color/green_color" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/hangup"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@id/pause_call"
+            app:layout_constraintStart_toStartOf="@id/numpad"
+            app:layout_constraintEnd_toEndOf="@id/numpad"
+            android:paddingTop="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/content_description_terminate_call"
+            android:onClick="@{() -> controlsViewModel.hangUp()}"
+            android:src="@drawable/icon_call_hangup"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:paddingBottom="10dp"
+                app:tint="@color/red_color"
+                android:src="@drawable/icon_call_hangup"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="End call"
+                android:textSize="12sp"
+                android:textColor="@color/red_color" />
+        </LinearLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
