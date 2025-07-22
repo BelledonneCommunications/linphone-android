@@ -18,7 +18,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/voipBackgroundColor">
+        android:background="@color/black_color">
 
         <ProgressBar
             android:id="@+id/progress"
@@ -122,8 +122,8 @@
             android:id="@+id/buttons"
             layout="@layout/voip_buttons_outgoing"
             android:layout_width="0dp"
-            android:layout_height="@dimen/voip_buttons_fragment_size"
-            android:layout_margin="10dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
             app:callsViewModel="@{callsViewModel}"
             app:controlsViewModel="@{controlsViewModel}"
             app:layout_constraintBottom_toBottomOf="parent"

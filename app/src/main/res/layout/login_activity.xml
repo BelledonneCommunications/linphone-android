@@ -71,7 +71,8 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/section_margin"
                     android:layout_marginBottom="8dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -125,18 +126,17 @@
                     android:id="@+id/send_logs_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="end"
-                    >
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="5" />
+                    android:layout_marginTop="25dp"
+                    android:gravity="end">
+                    <TextView
+                        android:text="Upload logs"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
                     <ImageView
                         android:id="@+id/send_logs"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:contentDescription="@string/content_description_upload_logs"
                         android:src="@drawable/icon_upload_file"
                         android:padding="5dp"/>
@@ -153,6 +153,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/backgroundColor"
+        android:visibility="gone"
         android:padding="20dp">
 
         <androidx.core.widget.NestedScrollView

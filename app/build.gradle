@@ -11,14 +11,16 @@ plugins {
 def reseller = System.getenv("RESELLERNAME")
 println "Reseller name: ${reseller}"
 
-def sentryToken = System.getenv("SENTRYAUTHTOKEN")
-println "Sentry auth token: ${sentryToken?.length()}"
+
+def sentryToken = System.getenv("SENTRYTOKEN")
+def sentryAuthToken = System.getenv("SENTRYAUTHTOKEN")
+println "Sentry auth token: ${sentryToken?.length()} | ${sentryAuthToken?.length()}"
 
 sentry {
     includeSourceContext = true
     org = "dimensions-technologies"
     projectName = "connect-android"
-    authToken = System.getenv("SENTRYAUTHTOKEN")
+    authToken = sentryToken
 }
 
 def appVersionName = "5.3.0"

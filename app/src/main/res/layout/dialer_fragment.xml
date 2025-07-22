@@ -27,73 +27,70 @@
         <com.google.android.flexbox.FlexboxLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:flexDirection="column"
-            android:layout_marginBottom="40dp"
+            android:layout_marginBottom="30dp"
             app:alignItems="center"
+            app:flexDirection="column"
             app:justifyContent="flex_end">
 
             <RelativeLayout
                 android:layout_width="264dp"
                 android:layout_height="@dimen/main_activity_top_bar_size"
                 android:layout_alignParentTop="true"
-                android:layout_margin="25dp"
+                android:layout_margin="20dp"
                 android:background="?attr/lightToolbarBackgroundColor">
 
                 <ImageView
                     android:id="@+id/erase"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/paste"
+                    android:contentDescription="@string/content_description_dialer_erase"
+                    android:focusableInTouchMode="true"
                     android:onClick="@{() -> viewModel.eraseLastChar()}"
                     android:onLongClick="@{() -> viewModel.eraseAll()}"
-                    android:contentDescription="@string/content_description_dialer_erase"
-                    android:layout_width="wrap_content"
-                    android:layout_height="24dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:layout_centerVertical="true"
-                    android:focusableInTouchMode="true"
-                    android:src="@drawable/icon_backspace"
-                    android:layout_toStartOf="@+id/paste"
-                    android:layout_alignParentEnd="true"
-                    />
+                    android:src="@drawable/icon_backspace" />
 
                 <ImageView
-                    android:visibility="gone"
                     android:id="@+id/paste"
-                    android:onClick="@{() -> viewModel.pasteUri()}"
-                    android:contentDescription="Paste"
                     android:layout_width="wrap_content"
                     android:layout_height="24dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="Paste"
+                    android:focusableInTouchMode="true"
+                    android:onClick="@{() -> viewModel.pasteUri()}"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:layout_centerVertical="true"
-                    android:focusableInTouchMode="true"
                     android:src="@drawable/icon_paste"
-                    android:layout_alignParentEnd="true"
-                    />
+                    android:visibility="gone" />
 
                 <EditText
                     android:id="@+id/sip_uri_input"
-                    android:text="@={viewModel.enteredUri}"
-                    android:enabled="false"
-                    android:beforeTextChanged="@{(text, start, count, after) -> viewModel.onBeforeUriChanged(sipUriInput, count, after)}"
-                    android:afterTextChanged="@{(text) -> viewModel.onAfterUriChanged(sipUriInput, text)}"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
                     android:layout_toStartOf="@id/erase"
+                    android:afterTextChanged="@{(text) -> viewModel.onAfterUriChanged(sipUriInput, text)}"
                     android:background="@color/transparent_color"
                     android:backgroundTint="@color/transparent_color"
+                    android:beforeTextChanged="@{(text, start, count, after) -> viewModel.onBeforeUriChanged(sipUriInput, count, after)}"
                     android:ellipsize="start"
+                    android:enabled="false"
                     android:inputType="textEmailAddress|textUri|textNoSuggestions"
                     android:paddingStart="20dp"
                     android:paddingEnd="5dp"
-                    android:textColorHint="@color/light_grey_color"
-                    />
+                    android:text="@={viewModel.enteredUri}"
+                    android:textColorHint="@color/light_grey_color" />
 
             </RelativeLayout>
 
             <include
-                layout="@layout/numpad_new"
                 android:id="@+id/dialpad"
+                layout="@layout/numpad_new"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:keyListener="@{viewModel.onKeyClick}" />
@@ -104,34 +101,32 @@
                 android:contentDescription="2">
 
                 <ImageView
-                    android:onClick="@{() -> viewModel.startCall()}"
-                    android:visibility="@{viewModel.atLeastOneCall ? View.GONE : View.VISIBLE}"
-                    android:contentDescription="@string/content_description_start_call"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="22dp"
-                    app:tint="@color/white_color"
-                    android:src="@{viewModel.autoInitiateVideoCalls ? @drawable/call_video_start : @drawable/icon_call, default=@drawable/icon_call}" />
-
-                <ImageView
+                    android:contentDescription="@string/content_description_start_call"
                     android:onClick="@{() -> viewModel.startCall()}"
-                    android:visibility="@{viewModel.atLeastOneCall &amp;&amp; !viewModel.transferVisibility ? View.VISIBLE : View.GONE, default=gone}"
-                    android:contentDescription="@string/content_description_add_call"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/call"
                     android:padding="22dp"
-                    android:src="@drawable/call_add" />
+                    android:src="@{viewModel.autoInitiateVideoCalls ? @drawable/call_video_start : @drawable/icon_call, default=@drawable/icon_call}"
+                    android:visibility="@{viewModel.atLeastOneCall ? View.GONE : View.VISIBLE}"
+                    app:tint="@color/white_color" />
 
                 <ImageView
-                    android:onClick="@{transferCallClickListener}"
-                    android:visibility="@{viewModel.atLeastOneCall &amp;&amp; viewModel.transferVisibility ? View.VISIBLE : View.GONE, default=gone}"
-                    android:contentDescription="@string/content_description_transfer_call"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/call"
+                    android:contentDescription="@string/content_description_add_call"
+                    android:onClick="@{() -> viewModel.startCall()}"
                     android:padding="22dp"
-                    android:src="@drawable/call_transfer" />
+                    android:src="@drawable/call_add"
+                    android:visibility="@{viewModel.atLeastOneCall &amp;&amp; !viewModel.transferVisibility ? View.VISIBLE : View.GONE, default=gone}" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/content_description_transfer_call"
+                    android:onClick="@{transferCallClickListener}"
+                    android:padding="22dp"
+                    android:src="@drawable/call_transfer"
+                    android:visibility="@{viewModel.atLeastOneCall &amp;&amp; viewModel.transferVisibility ? View.VISIBLE : View.GONE, default=gone}" />
             </RelativeLayout>
 
         </com.google.android.flexbox.FlexboxLayout>

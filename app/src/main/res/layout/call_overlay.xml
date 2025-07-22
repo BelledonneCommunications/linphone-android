@@ -9,18 +9,18 @@
     </data>
 
     <RelativeLayout
-        android:layout_width="@dimen/call_overlay_size"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/call_overlay_size"
+        android:background="@color/primary_color"
         android:visibility="@{visibility ? View.VISIBLE : View.GONE}">
 
-        <ImageView
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/background_round_primary_color"
-            android:contentDescription="@string/content_description_go_back_to_call"
-            android:adjustViewBounds="true"
-            android:padding="10dp"
-            android:src="@drawable/call_back" />
+            android:gravity="center"
+            android:textSize="18sp"
+            android:text="Return to call"
+            android:textColor="@color/white_color"/>
 
     </RelativeLayout>
 

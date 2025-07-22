@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
@@ -18,12 +19,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/voipBackgroundColor">
+        android:background="@{controlsViewModel.fullScreenMode ? @color/black_color : @color/transparent_color}">
 
         <TextureView
             android:id="@+id/remote_video_surface"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
 
         <ProgressBar
             android:id="@+id/progress"
@@ -238,8 +241,8 @@
             android:id="@+id/buttons"
             layout="@layout/voip_buttons_incoming"
             android:layout_width="0dp"
-            android:layout_height="@dimen/voip_buttons_fragment_size"
-            android:layout_margin="10dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="25dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

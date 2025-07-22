@@ -147,6 +147,14 @@ class SingleCallFragment : GenericVideoPreviewFragment<VoipSingleCallFragmentBin
             }
         }
 
+        controlsViewModel.goBackEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                goBack()
+            }
+        }
+
         controlsViewModel.foldingState.observe(
             viewLifecycleOwner
         ) { feature ->
@@ -196,15 +204,15 @@ class SingleCallFragment : GenericVideoPreviewFragment<VoipSingleCallFragmentBin
     override fun onResume() {
         super.onResume()
 
-        coreContext.core.nativeVideoWindowId = binding.remoteVideoSurface
-        setupLocalVideoPreview(binding.localPreviewVideoSurface, binding.switchCamera)
+        // coreContext.core.nativeVideoWindowId = binding.remoteVideoSurface
+        // setupLocalVideoPreview(binding.localPreviewVideoSurface, binding.switchCamera)
     }
 
     override fun onPause() {
         super.onPause()
 
         controlsViewModel.hideExtraButtons(true)
-        cleanUpLocalVideoPreview(binding.localPreviewVideoSurface)
+        // cleanUpLocalVideoPreview(binding.localPreviewVideoSurface)
     }
 
     private fun showCallVideoUpdateDialog(call: Call) {
@@ -261,5 +269,9 @@ class SingleCallFragment : GenericVideoPreviewFragment<VoipSingleCallFragmentBin
         }
 
         set.applyTo(constraintLayout)
+    }
+
+    fun onGoBack() {
+        goBack()
     }
 }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="164dp"
+    android:height="164dp">
+    <item
+        android:drawable="@drawable/icon_dialpad"
+        android:width="164dp"
+        android:height="164dp"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:tint="@color/red_color"/>
+</selector>

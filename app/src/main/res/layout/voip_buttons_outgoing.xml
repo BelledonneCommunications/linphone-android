@@ -16,69 +16,107 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/voip_buttons_fragment_size">
+            android:layout_width="match_parent"
+            android:layout_height="200dp">
 
-        <ImageView
-            android:id="@+id/hangup"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/button_call_terminate_background"
-            android:contentDescription="@string/content_description_terminate_call"
-            android:onClick="@{() -> controlsViewModel.hangUp()}"
-            android:padding="5dp"
-            android:src="@drawable/icon_call_hangup"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="W,1.26:1"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <ImageView
+        <TextView
             android:id="@+id/microphone"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="5dp"
-            android:background="@drawable/button_background_reverse"
+            style="@style/call_options_font"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:text="@{callsViewModel.isMicrophoneMuted ? @string/call_action_unmute : @string/call_action_mute, default=@string/call_action_mute}"
             android:contentDescription="@{callsViewModel.isMicrophoneMuted ? @string/content_description_disable_mic_mute : @string/content_description_enable_mic_mute}"
             android:enabled="@{callsViewModel.isMuteMicrophoneEnabled}"
             android:onClick="@{() -> callsViewModel.toggleMuteMicrophone()}"
-            android:padding="5dp"
-            android:selected="@{callsViewModel.isMicrophoneMuted}"
-            android:src="@drawable/icon_toggle_mic"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="W,1:1"
-            app:layout_constraintEnd_toStartOf="@id/speaker"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="@id/hangup" />
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="10dp"
+            android:background="@{callsViewModel.isMicrophoneMuted ? @color/primary_color : @color/transparent_color, default=@color/transparent_color}"
+            app:drawableTopCompat="@drawable/call_actions_mute"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/numpad"/>
 
-        <ImageView
-            android:id="@+id/speaker"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="5dp"
-            android:background="@drawable/button_background_reverse"
-            android:contentDescription="@{controlsViewModel.isSpeakerSelected ? @string/content_description_disable_speaker : @string/content_description_enable_speaker}"
-            android:onClick="@{() -> controlsViewModel.toggleSpeaker()}"
-            android:padding="5dp"
-            android:selected="@{controlsViewModel.isSpeakerSelected}"
-            android:src="@drawable/icon_toggle_speaker"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="W,1:1"
-            app:layout_constraintEnd_toEndOf="@id/numpad"
-            app:layout_constraintStart_toEndOf="@id/microphone" />
 
-        <ImageView
+        <LinearLayout
             android:id="@+id/numpad"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/button_background"
-            android:contentDescription="@string/content_description_show_numpad"
-            android:onClick="@{() -> controlsViewModel.showNumpad()}"
-            android:padding="10dp"
-            android:src="@drawable/icon_call_numpad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:visibility="@{controlsViewModel.isOutgoingEarlyMedia ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="W,1:1"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:gravity="center"
+            android:paddingVertical="10dp"
+            android:paddingHorizontal="15dp"
+            android:onClick="@{() -> controlsViewModel.showNumpad()}"
+            android:contentDescription="@string/content_description_show_numpad"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/microphone"
+            app:layout_constraintEnd_toStartOf="@id/speaker">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:padding="8dp"
+                android:src="@drawable/call_dialpad"
+                app:tint="@color/white_color" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/call_action_numpad"
+                android:textColor="@color/white_color"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/speaker"
+            style="@style/call_options_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@{controlsViewModel.isSpeakerSelected ? @color/primary_color : @color/transparent_color, default=@color/transparent_color}"
+            android:contentDescription="@{controlsViewModel.isSpeakerSelected ? @string/content_description_disable_speaker : @string/content_description_enable_speaker}"
+            android:gravity="center"
+            android:onClick="@{() -> controlsViewModel.toggleSpeaker()}"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="10dp"
+            android:selected="@{controlsViewModel.isSpeakerSelected}"
+            android:text="Speaker"
+            android:visibility="@{controlsViewModel.audioRoutesEnabled ? View.GONE : View.VISIBLE}"
+            app:drawableTopCompat="@drawable/call_actions_audio"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/numpad"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+
+        <LinearLayout
+            android:id="@+id/hangup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/content_description_terminate_call"
+            android:onClick="@{() -> controlsViewModel.hangUp()}"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingTop="30dp"
+            android:paddingHorizontal="15dp"
+            app:layout_constraintTop_toBottomOf="@id/microphone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:paddingBottom="10dp"
+                android:src="@drawable/icon_end_call"
+                app:tint="@color/red_color" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="End call"
+                android:textColor="@color/red_color"
+                android:textSize="12sp" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

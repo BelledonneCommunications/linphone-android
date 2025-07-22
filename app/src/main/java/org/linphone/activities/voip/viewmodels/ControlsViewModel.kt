@@ -101,6 +101,10 @@ class ControlsViewModel : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val goBackEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     val askPermissionEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
     }
@@ -448,6 +452,10 @@ class ControlsViewModel : ViewModel() {
         } else {
             goToDialerForCallTransfer()
         }
+    }
+
+    fun goBack() {
+        goBackEvent.value = Event(true)
     }
 
     private fun attendedTransfer() {
