@@ -30,11 +30,19 @@
                 android:layout_alignParentTop="true"
                 tools:layout="@layout/status_fragment" />
 
+            <include
+                android:id="@+id/call_overlay"
+                layout="@layout/call_overlay"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/call_overlay_size"
+                android:layout_below="@id/status_fragment"
+                tools:visibility="@{callOverlayViewModel.displayCallOverlay, default=visible}" />
+
             <androidx.drawerlayout.widget.DrawerLayout
                 android:id="@+id/side_menu"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/status_fragment">
+                android:layout_below="@id/call_overlay">
 
                 <include
                     android:id="@+id/content"
@@ -73,15 +81,6 @@
                 </RelativeLayout>
 
             </androidx.drawerlayout.widget.DrawerLayout>
-
-            <include
-                android:id="@+id/call_overlay"
-                layout="@layout/call_overlay"
-                android:layout_width="@dimen/call_overlay_size"
-                android:layout_height="@dimen/call_overlay_size"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentBottom="true"
-                tools:visibility="@{callOverlayViewModel.displayCallOverlay}"/>
 
         </RelativeLayout>
 

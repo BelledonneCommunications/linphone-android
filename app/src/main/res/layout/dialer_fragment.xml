@@ -27,7 +27,7 @@
         <com.google.android.flexbox.FlexboxLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="40dp"
+            android:layout_marginBottom="30dp"
             app:alignItems="center"
             app:flexDirection="column"
             app:justifyContent="flex_end">
@@ -36,7 +36,7 @@
                 android:layout_width="264dp"
                 android:layout_height="@dimen/main_activity_top_bar_size"
                 android:layout_alignParentTop="true"
-                android:layout_margin="25dp"
+                android:layout_margin="20dp"
                 android:background="?attr/lightToolbarBackgroundColor">
 
                 <ImageView
