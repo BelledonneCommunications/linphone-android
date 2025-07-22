@@ -75,12 +75,13 @@ stages:
         displayName: "Build App"
         inputs:
           gradleWrapperFile: 'gradlew'
-          tasks: 'bundleRelease'
-          options: '-PSentryAuthToken=$(SentryAuthToken)'
+          tasks: 'bundleRelease'          
           publishJUnitResults: false
           javaHomeOption: 'JDKVersion'
           sonarQubeRunAnalysis: false
-          spotBugsAnalysis: false
+          spotBugsAnalysis: false#
+        env:
+          SENTRY_AUTH_TOKEN: $(SentryAuthToken) # Map secret variable SentryAuthToken to an environment variable
 
       - task: PublishBuildArtifacts@1
         condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
