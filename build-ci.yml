@@ -4,8 +4,9 @@ pool:
 variables:
   appVersionCode: $(MAJOR)$(MINOR)$(YEAR:yy)$(DAYOFYEAR)$(REV:r)
   artifactName: 'apk-release'
-  resellerName: 'Dimensions Technologies'
-  sentryToken: $(SentryAuthToken)
+  sentryToken: 'TEST TEST TEST'
+  testVar: $(SentryAuthToken)
+  resellerName: 'Dimensions Technologies TEST'
 
 stages:
 - stage: Build
