@@ -148,7 +148,7 @@ class ContactsListFragment : AbstractMainFragment() {
             listViewModel.fetchInProgress.value = false
         }
 
-        listViewModel.favourites.observe(
+        listViewModel.favouritesList.observe(
             viewLifecycleOwner
         ) {
             favouritesAdapter.submitList(it)

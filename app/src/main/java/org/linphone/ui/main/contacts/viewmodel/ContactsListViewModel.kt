@@ -51,7 +51,7 @@ class ContactsListViewModel
 
     val contactsList = MutableLiveData<ArrayList<ContactAvatarModel>>()
 
-    val favourites = MutableLiveData<ArrayList<ContactAvatarModel>>()
+    val favouritesList = MutableLiveData<ArrayList<ContactAvatarModel>>()
 
     val fetchInProgress = MutableLiveData<Boolean>()
 
@@ -78,13 +78,23 @@ class ContactsListViewModel
 
     private lateinit var magicSearch: MagicSearch
 
+    private lateinit var favouritesMagicSearch: MagicSearch
+
     private var firstLoad = true
 
     private val magicSearchListener = object : MagicSearchListenerStub() {
         @WorkerThread
         override fun onSearchResultsReceived(magicSearch: MagicSearch) {
             Log.i("$TAG Magic search contacts available")
-            processMagicSearchResults(magicSearch.lastSearch)
+            processMagicSearchResults(magicSearch.lastSearch, favourites = false)
+        }
+    }
+
+    private val favouritesMagicSearchListener = object : MagicSearchListenerStub() {
+        @WorkerThread
+        override fun onSearchResultsReceived(magicSearch: MagicSearch) {
+            Log.i("$TAG Magic search favourites contacts available")
+            processMagicSearchResults(magicSearch.lastSearch, favourites = true)
         }
 
         @WorkerThread
@@ -101,6 +111,7 @@ class ContactsListViewModel
         override fun onContactsLoaded() {
             Log.i("$TAG Contacts have been (re)loaded, updating list")
             magicSearch.resetSearchCache()
+            favouritesMagicSearch.resetSearchCache()
 
             applyFilter(
                 currentFilter,
@@ -128,6 +139,10 @@ class ContactsListViewModel
             magicSearch.searchLimit = corePreferences.magicSearchResultsLimit
             magicSearch.addListener(magicSearchListener)
 
+            favouritesMagicSearch = core.createMagicSearch()
+            favouritesMagicSearch.limitedSearch = false
+            favouritesMagicSearch.addListener(favouritesMagicSearchListener)
+
             coreContext.postOnMainThread {
                 applyFilter(currentFilter)
             }
@@ -138,6 +153,7 @@ class ContactsListViewModel
     override fun onCleared() {
         coreContext.postOnCoreThread {
             magicSearch.removeListener(magicSearchListener)
+            favouritesMagicSearch.removeListener(favouritesMagicSearchListener)
             coreContext.contactsManager.removeListener(contactsListener)
         }
         super.onCleared()
@@ -182,7 +198,7 @@ class ContactsListViewModel
             Log.i("$TAG Newly set filter is [${corePreferences.contactsFilter}]")
 
             coreContext.postOnMainThread {
-                applyFilter(currentFilter)
+                applyFilter(currentFilter, domainFilter, filterChanged = true)
             }
         }
     }
@@ -249,7 +265,8 @@ class ContactsListViewModel
     @WorkerThread
     private fun applyFilter(
         filter: String,
-        domain: String
+        domain: String,
+        filterChanged: Boolean = false
     ) {
         if (contactsList.value.orEmpty().isEmpty()) {
             fetchInProgress.postValue(true)
@@ -270,6 +287,16 @@ class ContactsListViewModel
         )
         searchInProgress.postValue(filter.isNotEmpty())
         showResultsLimitReached.postValue(false)
+
+        if (filter.isEmpty() && (favouritesList.value.orEmpty().isEmpty() || filterChanged)) {
+            favouritesMagicSearch.getContactsListAsync(
+                filter,
+                domain,
+                MagicSearch.Source.FavoriteFriends.toInt(),
+                MagicSearch.Aggregation.Friend
+            )
+        }
+
         magicSearch.getContactsListAsync(
             filter,
             domain,
@@ -279,12 +306,11 @@ class ContactsListViewModel
     }
 
     @WorkerThread
-    private fun processMagicSearchResults(results: Array<SearchResult>) {
+    private fun processMagicSearchResults(results: Array<SearchResult>, favourites: Boolean) {
         // Do not call destroy() on previous list items as they are cached and will be re-used
-        Log.i("$TAG Processing [${results.size}] results")
+        Log.i("$TAG Processing [${results.size}] results, favourites is [$favourites]")
 
         val list = arrayListOf<ContactAvatarModel>()
-        val favouritesList = arrayListOf<ContactAvatarModel>()
         var count = 0
         val collator = Collator.getInstance(Locale.getDefault())
         val hideEmptyContacts = corePreferences.hideContactsWithoutPhoneNumberOrSipAddress
@@ -322,11 +348,8 @@ class ContactsListViewModel
 
             val starred = friend?.starred == true
             model.isFavourite.postValue(starred)
-            if (starred) {
-                favouritesList.add(model)
-            }
 
-            if (firstLoad && count == 20) {
+            if (!favourites && firstLoad && count == 20) {
                 list.sortWith { model1, model2 ->
                     collator.compare(model1.getNameToUseForSorting(), model2.getNameToUseForSorting())
                 }
@@ -334,19 +357,19 @@ class ContactsListViewModel
             }
         }
 
-        favouritesList.sortWith { model1, model2 ->
-            collator.compare(model1.getNameToUseForSorting(), model2.getNameToUseForSorting())
-        }
         list.sortWith { model1, model2 ->
             collator.compare(model1.getNameToUseForSorting(), model2.getNameToUseForSorting())
         }
 
         searchInProgress.postValue(false)
-        favourites.postValue(favouritesList)
-        contactsList.postValue(list)
+        if (favourites) {
+            favouritesList.postValue(list)
+        } else {
+            contactsList.postValue(list)
+            firstLoad = false
+        }
 
         Log.i("$TAG Processed [${results.size}] results into [${list.size} contacts]")
-        firstLoad = false
     }
 
     @WorkerThread

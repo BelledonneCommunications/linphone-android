@@ -73,7 +73,7 @@
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/section_header_style"
                         android:id="@+id/favourites_label"
-                        android:visibility="@{!viewModel.isListFiltered &amp;&amp; viewModel.favourites.size() > 0 ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{!viewModel.isListFiltered &amp;&amp; viewModel.favouritesList.size() > 0 ? View.VISIBLE : View.GONE}"
                         onClickListener="@{() -> viewModel.toggleFavouritesVisibility()}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -87,7 +87,7 @@
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/favourites_contacts_list"
-                        android:visibility="@{viewModel.showFavourites &amp;&amp; !viewModel.isListFiltered &amp;&amp; viewModel.favourites.size() > 0 ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{viewModel.showFavourites &amp;&amp; !viewModel.isListFiltered &amp;&amp; viewModel.favouritesList.size() > 0 ? View.VISIBLE : View.GONE}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp" />
@@ -95,7 +95,7 @@
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/section_header_style"
                         android:id="@+id/all_contacts_label"
-                        android:visibility="@{!viewModel.isListFiltered &amp;&amp; viewModel.favourites.size() > 0 ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{!viewModel.isListFiltered &amp;&amp; viewModel.favouritesList.size() > 0 ? View.VISIBLE : View.GONE}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
