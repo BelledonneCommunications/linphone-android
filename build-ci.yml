@@ -4,9 +4,7 @@ pool:
 variables:
   appVersionCode: $(MAJOR)$(MINOR)$(YEAR:yy)$(DAYOFYEAR)$(REV:r)
   artifactName: 'apk-release'
-  sentryToken: 'TEST TEST TEST'
-  testVar: $(SentryAuthToken)
-  resellerName: 'Dimensions Technologies TEST'
+  resellerName: 'Dimensions Technologies'
 
 stages:
 - stage: Build
@@ -78,6 +76,7 @@ stages:
         inputs:
           gradleWrapperFile: 'gradlew'
           tasks: 'bundleRelease'
+          options: '-PSentryAuthToken=$(SentryAuthToken)'
           publishJUnitResults: false
           javaHomeOption: 'JDKVersion'
           sonarQubeRunAnalysis: false
