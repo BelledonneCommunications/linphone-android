@@ -53,6 +53,7 @@
             android:gravity="center"
             android:paddingVertical="10dp"
             android:onClick="@{() -> controlsViewModel.showNumpad()}"
+            android:contentDescription="@string/content_description_show_numpad"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="@id/microphone"
             app:layout_constraintStart_toEndOf="@id/vert_guide1"
@@ -108,20 +109,6 @@
             app:layout_constraintBottom_toBottomOf="@id/numpad"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/numpad" />
-        <!--
-        <ImageView
-            android:id="@+id/video"
-            android:style="@style/call_action_button"
-            android:background="@drawable/button_background_reverse"
-            android:contentDescription="@{controlsViewModel.isVideoEnabled &amp;&amp; controlsViewModel.isSendingVideo ? @string/content_description_disable_video : @string/content_description_enable_video}"
-            android:enabled="@{controlsViewModel.isVideoAvailable &amp;&amp; !controlsViewModel.isVideoUpdateInProgress &amp;&amp; !conferenceViewModel.isMeListenerOnly}"
-            android:onClick="@{() -> (!conferenceViewModel.conferenceExists || conferenceViewModel.conferenceDisplayMode != ConferenceDisplayMode.AUDIO_ONLY) ? controlsViewModel.toggleVideo() : conferenceViewModel.switchLayoutFromAudioOnlyToActiveSpeaker()}"
-            android:selected="@{controlsViewModel.isVideoEnabled &amp;&amp; controlsViewModel.isSendingVideo &amp;&amp; !conferenceViewModel.isMeListenerOnly}"
-            android:visibility="@{controlsViewModel.hideVideo ? View.GONE : View.VISIBLE}"
-            android:src="@drawable/icon_toggle_camera"
-            />
--->
-
 
         <LinearLayout
             android:id="@+id/pause_call"
@@ -155,6 +142,22 @@
         </LinearLayout>
 
 
+        <TextView
+            android:id="@+id/transfer_call"
+            style="@style/call_options_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:onClick="@{() -> controlsViewModel.transferCall()}"
+            android:text="@{controlsViewModel.attendedTransfer ? @string/call_action_attended_transfer_call : @string/call_action_transfer_call, default=@string/call_action_transfer_call}"
+            app:drawableTopCompat="@drawable/call_actions_transfer"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="0dp"
+            app:layout_constraintBottom_toBottomOf="@id/pause_call"
+            app:layout_constraintEnd_toEndOf="@id/vert_guide2"
+            app:layout_constraintStart_toStartOf="@id/vert_guide1" />
+
+
         <LinearLayout
             android:id="@+id/hangup"
             android:layout_width="wrap_content"
@@ -165,8 +168,8 @@
             android:orientation="vertical"
             android:paddingTop="30dp"
             app:layout_constraintBottom_toBottomOf="@id/pause_call"
-            app:layout_constraintEnd_toEndOf="@id/vert_guide2"
-            app:layout_constraintStart_toStartOf="@id/vert_guide1">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/vert_guide2">
 
             <ImageView
                 android:layout_width="60dp"
