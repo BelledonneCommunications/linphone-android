@@ -11,6 +11,9 @@ plugins {
 def reseller = System.getenv("RESELLERNAME")
 println "Reseller name: ${reseller}"
 
+def testVar1 = System.getenv("testVar")
+def testVar2 = System.getenv("TESTVAR")
+println "Test vars: ${testVar1?.length()} | ${testVar2?.length()}"
 
 def sentryToken = System.getenv("SENTRYTOKEN")
 def sentryAuthToken = System.getenv("SENTRYAUTHTOKEN")
