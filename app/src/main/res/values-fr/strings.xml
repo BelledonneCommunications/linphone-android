@@ -544,7 +544,7 @@
     <string name="conversation_search_no_match_found">Aucun résultat trouvé</string>
     <string name="conversation_search_no_more_match">Dernier résultat atteint</string>
     <string name="conversation_take_picture_label">Prendre une photo</string>
-    <string name="conversation_pick_file_from_gallery_label">Ouvrir la gallerie</string>
+    <string name="conversation_pick_file_from_gallery_label">Ouvrir la galerie</string>
     <string name="conversation_pick_any_file_label">Choisir un fichier</string>
     <string name="conversation_file_cant_be_opened_error_toast">Impossible d\'ouvrir le fichier !</string>
     <string name="conversation_pdf_file_cant_be_opened_error_toast">Impossible d\'ouvrir un PDF protégé par mot de passe</string>
