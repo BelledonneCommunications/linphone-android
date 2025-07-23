@@ -99,10 +99,10 @@ android {
         targetCompatibility = 17
     }
 
-    compileSdkVersion 34
+    compileSdkVersion 36
     defaultConfig {
         minSdkVersion 23
-        targetSdkVersion 34
+        targetSdkVersion 36
         versionCode appVersionCode
         versionName "${project.version}"
         applicationId packageName
