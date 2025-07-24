@@ -16,6 +16,7 @@
         <variable
             name="viewModel"
             type="org.linphone.activities.main.dialer.viewmodels.DialerViewModel"/>
+
     </data>
 
     <RelativeLayout
@@ -97,36 +98,26 @@
 
             <RelativeLayout
                 style="@style/numpad_button"
-                android:backgroundTint="@color/primary_color"
-                android:contentDescription="2">
+                android:backgroundTint="@color/primary_color">
 
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:contentDescription="@string/content_description_start_call"
                     android:onClick="@{() -> viewModel.startCall()}"
-                    android:padding="22dp"
+                    android:padding="20dp"
                     android:src="@{viewModel.autoInitiateVideoCalls ? @drawable/call_video_start : @drawable/icon_call, default=@drawable/icon_call}"
-                    android:visibility="@{viewModel.atLeastOneCall ? View.GONE : View.VISIBLE}"
+                    android:visibility="@{viewModel.atLeastOneCall &amp;&amp; viewModel.transferState == org.linphone.activities.voip.TransferState.PENDING_BLIND ? View.GONE : View.VISIBLE}"
                     app:tint="@color/white_color" />
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/content_description_add_call"
-                    android:onClick="@{() -> viewModel.startCall()}"
-                    android:padding="22dp"
-                    android:src="@drawable/call_add"
-                    android:visibility="@{viewModel.atLeastOneCall &amp;&amp; !viewModel.transferVisibility ? View.VISIBLE : View.GONE, default=gone}" />
 
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/content_description_transfer_call"
                     android:onClick="@{transferCallClickListener}"
-                    android:padding="22dp"
-                    android:src="@drawable/call_transfer"
-                    android:visibility="@{viewModel.atLeastOneCall &amp;&amp; viewModel.transferVisibility ? View.VISIBLE : View.GONE, default=gone}" />
+                    android:padding="14dp"
+                    android:src="@drawable/call_actions_transfer"
+                    android:visibility="@{viewModel.atLeastOneCall &amp;&amp; viewModel.transferState == org.linphone.activities.voip.TransferState.PENDING_BLIND ? View.VISIBLE : View.GONE, default=gone}" />
             </RelativeLayout>
 
         </com.google.android.flexbox.FlexboxLayout>

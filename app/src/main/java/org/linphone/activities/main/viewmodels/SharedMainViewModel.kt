@@ -99,6 +99,7 @@ class SharedMainViewModel : ViewModel() {
 
     /* Call */
 
+    // FIXME: OBSOLETE - remove
     var pendingCallTransfer: Boolean = false
 
     /* Conference */

@@ -29,12 +29,14 @@ import androidx.window.layout.FoldingFeature
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.activities.voip.TransferState
 import org.linphone.core.*
+import org.linphone.services.TransferService
 import org.linphone.utils.*
 import org.linphone.utils.Event
 import org.linphone.utils.Log
 
-class ControlsViewModel : ViewModel() {
+class ControlsViewModel() : ViewModel() {
     val isSpeakerSelected = MutableLiveData<Boolean>()
 
     val isBluetoothHeadsetSelected = MutableLiveData<Boolean>()
@@ -116,6 +118,10 @@ class ControlsViewModel : ViewModel() {
     val foldingState = MutableLiveData<FoldingFeature>()
 
     val hideVideo = corePreferences.disableVideo
+
+    val transferService = TransferService.getInstance()
+
+    val transferState = transferService.transferState
 
     private val nonEarpieceOutputAudioDevice = MutableLiveData<Boolean>()
 
@@ -445,13 +451,33 @@ class ControlsViewModel : ViewModel() {
         goToConferenceLayoutSettingsEvent.value = Event(true)
     }
 
-    fun transferCall() {
-        // In case there is more than 1 call, transfer will be attended instead of blind
-        if (coreContext.core.callsNb > 1) {
-            attendedTransfer()
-        } else {
+    fun startTransfer() {
+        val currentCall = coreContext.core.currentCall
+        if (currentCall != null) {
+            currentCall.pause()
             goToDialerForCallTransfer()
         }
+    }
+
+    fun startBlindTransfer() {
+        transferService.transferState.value = TransferState.PENDING_BLIND
+        startTransfer()
+    }
+
+    fun startConsultTransfer() {
+        transferService.transferState.value = TransferState.PENDING_CONSULT
+        startTransfer()
+    }
+
+    fun completeTransfer() {
+        if (coreContext.core.callsNb > 1) {
+            attendedTransfer()
+        }
+        transferService.transferState.value = TransferState.NONE
+    }
+
+    fun cancelTransfer() {
+        transferService.transferState.value = TransferState.NONE
     }
 
     fun goBack() {
@@ -466,7 +492,7 @@ class ControlsViewModel : ViewModel() {
             Log.e("[Call Controls] Can't do an attended transfer without a current call")
             return
         }
-        if (core.callsNb <= 1) {
+        if (core.callsNb < 2) {
             Log.e("[Call Controls] Need at least two calls to do an attended transfer")
             return
         }

@@ -31,11 +31,12 @@ import org.linphone.activities.main.dialer.NumpadDigitListener
 import org.linphone.activities.main.viewmodels.LogsUploadViewModel
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.*
+import org.linphone.services.TransferService
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.Log
 
-class DialerViewModel : LogsUploadViewModel() {
+class DialerViewModel() : LogsUploadViewModel() {
     val enteredUri = MutableLiveData<String>()
 
     val atLeastOneCall = MutableLiveData<Boolean>()
@@ -55,6 +56,8 @@ class DialerViewModel : LogsUploadViewModel() {
     val updateAvailableEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
     }
+
+    val transferState = TransferService.getInstance().transferState
 
     private val vibrator = coreContext.context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
 
@@ -156,7 +159,7 @@ class DialerViewModel : LogsUploadViewModel() {
 
         enteredUri.value = ""
         atLeastOneCall.value = coreContext.core.callsNb > 0
-        transferVisibility.value = false
+        transferVisibility.value = true
         hideAddContactButton.value = true // corePreferences.readOnlyNativeContacts
 
         showSwitchCamera.value = coreContext.showSwitchCameraButton()

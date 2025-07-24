@@ -141,8 +141,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/voip_translucent_popup_background"
-                android:onClick="@{() -> controlsViewModel.hideExtraButtons(false)}"
                 android:visibility="@{controlsViewModel.showExtras ? View.VISIBLE : View.GONE, default=gone}" />
+<!-- TODO: add click to close -->
+
+            <include
+                android:id="@+id/extra_buttons"
+                layout="@layout/voip_transfer_context_menu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:translationY="@{controlsViewModel.extraButtonsMenuTranslateY, default=@dimen/voip_call_extra_buttons_translate_y}"
+                android:visibility="@{View.VISIBLE, default=gone}"
+                app:controlsViewModel="@{controlsViewModel}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintWidth_max="@dimen/voip_extra_menu_max_width" />
 
             <ViewStub
                 android:id="@+id/stubbed_call_stats"
@@ -162,6 +177,7 @@
                 android:visibility="@{controlsViewModel.numpadVisible ? View.VISIBLE : View.GONE, default=gone}"
                 app:controlsViewModel="@{controlsViewModel}"
                 app:inflatedVisibility="@{controlsViewModel.numpadVisible ? View.VISIBLE : View.GONE}" />
+
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/vertical_center"

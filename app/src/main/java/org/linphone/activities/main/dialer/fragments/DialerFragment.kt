@@ -46,6 +46,7 @@ import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.navigateToConferenceScheduling
 import org.linphone.activities.navigateToConfigFileViewer
 import org.linphone.activities.navigateToContacts
+import org.linphone.activities.voip.TransferState
 import org.linphone.compatibility.Compatibility
 import org.linphone.databinding.DialerFragmentBinding
 import org.linphone.mediastream.Version
@@ -111,12 +112,19 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
         }
 
         binding.setTransferCallClickListener {
+            // if (!sharedViewModel.pendingCallTransfer) {
+            if (viewModel.transferState.value == TransferState.PENDING_BLIND) {
+                viewModel.transferCall()
+                viewModel.transferState.value = TransferState.NONE
+            }
+            /*
             if (viewModel.transferCall()) {
                 // Transfer has been consumed, otherwise it might have been a "bis" use
                 sharedViewModel.pendingCallTransfer = false
                 viewModel.transferVisibility.value = false
                 coreContext.onCallStarted()
             }
+            */
         }
 
         viewModel.enteredUri.observe(
@@ -190,7 +198,7 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
         arguments?.clear()
 
         Log.i("[Dialer] Pending call transfer mode = ${sharedViewModel.pendingCallTransfer}")
-        viewModel.transferVisibility.value = sharedViewModel.pendingCallTransfer
+        // viewModel.transferVisibility.value = sharedViewModel.pendingCallTransfer
 
         viewModel.autoInitiateVideoCalls.value = coreContext.core.videoActivationPolicy.automaticallyInitiate
 
