@@ -117,6 +117,19 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
 
+            <!-- Transparent overlay to capture clicks when video is enabled but not yet receiving -->
+            <View
+                android:id="@+id/video_click_overlay"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:onClick="@{() -> viewModel.toggleFullScreen()}"
+                android:visibility="@{viewModel.isVideoEnabled &amp;&amp; !viewModel.isReceivingVideo &amp;&amp; !(viewModel.isPaused || viewModel.isPausedByRemote) ? View.VISIBLE : View.GONE}"
+                android:background="@android:color/transparent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/hinge_bottom"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/header_info_visibility"
                 android:layout_width="wrap_content"
