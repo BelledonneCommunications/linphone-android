@@ -115,8 +115,8 @@
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/content_description_transfer_call"
                     android:onClick="@{transferCallClickListener}"
-                    android:padding="14dp"
-                    android:src="@drawable/call_actions_transfer"
+                    android:padding="20dp"
+                    android:src="@drawable/call_actions_complete_transfer"
                     android:visibility="@{viewModel.atLeastOneCall &amp;&amp; viewModel.transferState == org.linphone.activities.voip.TransferState.PENDING_BLIND ? View.VISIBLE : View.GONE, default=gone}" />
             </RelativeLayout>
 

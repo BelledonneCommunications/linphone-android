@@ -1014,16 +1014,18 @@ class CoreContext(
     }
 
     fun transferCallTo(addressToCall: String): Boolean {
+        val address = core.interpretUrl(addressToCall, LinphoneUtils.applyInternationalPrefix())
+        return transferCallTo(address)
+    }
+
+    fun transferCallTo(addressToCall: Address?): Boolean {
         val currentCall = core.currentCall ?: core.calls.firstOrNull()
         if (currentCall == null) {
             Log.e("[Context] Couldn't find a call to transfer")
-        } else {
-            val address = core.interpretUrl(addressToCall, LinphoneUtils.applyInternationalPrefix())
-            if (address != null) {
-                Log.i("[Context] Transferring current call to $addressToCall")
-                currentCall.transferTo(address)
-                return true
-            }
+        } else if (addressToCall != null) {
+            Log.i("[Context] Transferring current call to $addressToCall")
+            currentCall.transferTo(addressToCall)
+            return true
         }
         return false
     }

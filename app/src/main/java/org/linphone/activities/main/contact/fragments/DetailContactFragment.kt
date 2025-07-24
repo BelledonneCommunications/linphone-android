@@ -34,7 +34,6 @@ import org.linphone.activities.main.contact.viewmodels.ContactViewModelFactory
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.navigateToChatRoom
 import org.linphone.activities.navigateToContactEditor
-import org.linphone.activities.navigateToDialer
 import org.linphone.databinding.ContactDetailFragmentBinding
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
@@ -87,6 +86,8 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
             viewLifecycleOwner
         ) {
             it.consume { address ->
+                coreContext.startCall(address)
+                /*
                 if (coreContext.core.callsNb > 0) {
                     Log.i(
                         "[Contact] Starting dialer with pre-filled URI ${address.asStringUriOnly()}, is transfer? ${sharedViewModel.pendingCallTransfer}"
@@ -107,6 +108,7 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
                 } else {
                     coreContext.startCall(address)
                 }
+                */
             }
         }
 
