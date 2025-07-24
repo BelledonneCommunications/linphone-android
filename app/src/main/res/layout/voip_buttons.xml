@@ -32,6 +32,7 @@
             style="@style/call_options_font"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:visibility="@{callsViewModel.currentCallData.isPaused ? View.GONE : View.VISIBLE}"
             android:gravity="center"
             android:text="@{callsViewModel.isMicrophoneMuted ? @string/call_action_unmute : @string/call_action_mute, default=@string/call_action_mute}"
             android:contentDescription="@{callsViewModel.isMicrophoneMuted ? @string/content_description_disable_mic_mute : @string/content_description_enable_mic_mute}"
@@ -43,19 +44,21 @@
             app:drawableTopCompat="@drawable/call_actions_mute"
             app:layout_constraintEnd_toStartOf="@id/vert_guide1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/horiz_center"/>
 
         <LinearLayout
             android:id="@+id/numpad"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="@{callsViewModel.currentCallData.isPaused ? View.GONE : View.VISIBLE}"
             android:enabled="@{!conferenceViewModel.isBroadcast}"
             android:gravity="center"
             android:paddingVertical="10dp"
             android:onClick="@{() -> controlsViewModel.showNumpad()}"
             android:contentDescription="@string/content_description_show_numpad"
             android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="@id/microphone"
+            app:layout_constraintBottom_toBottomOf="@id/horiz_center"
             app:layout_constraintStart_toEndOf="@id/vert_guide1"
             app:layout_constraintEnd_toStartOf="@id/vert_guide2">
 
@@ -80,6 +83,7 @@
             style="@style/call_options_font"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="@{callsViewModel.currentCallData.isPaused || controlsViewModel.audioRoutesEnabled ? View.GONE : View.VISIBLE}"
             android:background="@{controlsViewModel.isSpeakerSelected ? @color/primary_color : @color/transparent_color, default=@color/transparent_color}"
             android:contentDescription="@{controlsViewModel.isSpeakerSelected ? @string/content_description_disable_speaker : @string/content_description_enable_speaker}"
             android:gravity="center"
@@ -88,9 +92,8 @@
             android:paddingVertical="10dp"
             android:selected="@{controlsViewModel.isSpeakerSelected}"
             android:text="Speaker"
-            android:visibility="@{controlsViewModel.audioRoutesEnabled ? View.GONE : View.VISIBLE}"
             app:drawableTopCompat="@drawable/call_actions_audio"
-            app:layout_constraintBottom_toBottomOf="@id/numpad"
+            app:layout_constraintBottom_toBottomOf="@id/horiz_center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/vert_guide2" />
 
@@ -104,7 +107,7 @@
             android:onClick="@{() -> controlsViewModel.toggleRoutesMenu()}"
             android:selected="@{controlsViewModel.audioRoutesSelected}"
             android:text="Audio"
-            android:visibility="@{controlsViewModel.audioRoutesEnabled ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{controlsViewModel.audioRoutesEnabled &amp;&amp; !callsViewModel.currentCallData.isPaused() ? View.VISIBLE : View.GONE, default=gone}"
             app:drawableTopCompat="@drawable/icon_audio_routes"
             app:layout_constraintBottom_toBottomOf="@id/numpad"
             app:layout_constraintEnd_toEndOf="parent"
@@ -114,17 +117,17 @@
             android:id="@+id/pause_call"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:contentDescription="@string/content_description_pause_call"
             android:enabled="@{callsViewModel.currentCallData.isPaused || callsViewModel.currentCallData.canBePaused}"
             android:gravity="center"
             android:onClick="@{() -> callsViewModel.currentCallData.togglePause()}"
             android:orientation="vertical"
-            android:paddingTop="30dp"
-
             android:visibility="@{controlsViewModel.fullScreenMode || controlsViewModel.pipMode ? View.GONE : View.VISIBLE}"
-            app:layout_constraintEnd_toStartOf="@id/vert_guide1"
+            app:layout_constraintTop_toTopOf="@id/horiz_center"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/microphone">
+            app:layout_constraintEnd_toStartOf="@id/vert_guide1">
 
             <ImageView
                 android:layout_width="60dp"
@@ -143,31 +146,52 @@
 
 
         <TextView
-            android:id="@+id/transfer_call"
+            android:id="@+id/start_transfer"
             style="@style/call_options_font"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:onClick="@{() -> controlsViewModel.transferCall()}"
-            android:text="@{controlsViewModel.attendedTransfer ? @string/call_action_attended_transfer_call : @string/call_action_transfer_call, default=@string/call_action_transfer_call}"
-            app:drawableTopCompat="@drawable/call_actions_transfer"
+            android:layout_marginTop="15dp"
+            android:onClick="@{() -> controlsViewModel.showExtraButtons()}"
             android:paddingHorizontal="15dp"
             android:paddingVertical="0dp"
-            app:layout_constraintBottom_toBottomOf="@id/pause_call"
+            android:text="@string/call_action_transfer_call"
+            android:visibility="@{controlsViewModel.transferState == org.linphone.activities.voip.TransferState.PENDING_CONSULT ? View.GONE : View.VISIBLE, default=visible}"
+            app:drawableTopCompat="@drawable/call_actions_transfer"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/vert_guide2"
+            app:layout_constraintStart_toStartOf="@id/vert_guide1"
+            app:layout_constraintTop_toTopOf="@id/horiz_center"
+            app:layout_constraintVertical_bias="0.6" />
+
+        <TextView
+            android:id="@+id/complete_transfer"
+            style="@style/call_options_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> controlsViewModel.completeTransfer()}"
+            android:visibility="@{controlsViewModel.transferState == org.linphone.activities.voip.TransferState.PENDING_CONSULT ? View.VISIBLE : View.GONE, default=gone}"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="0dp"
+            android:layout_marginTop="15dp"
+            android:text="@string/complete_transfer"
+            app:drawableTopCompat="@drawable/icon_check"
+            app:layout_constraintTop_toTopOf="@id/horiz_center"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/vert_guide2"
             app:layout_constraintStart_toStartOf="@id/vert_guide1" />
-
 
         <LinearLayout
             android:id="@+id/hangup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:visibility="@{callsViewModel.currentCallData.isPaused ? View.GONE : View.VISIBLE}"
             android:contentDescription="@string/content_description_terminate_call"
             android:gravity="center"
             android:onClick="@{() -> controlsViewModel.hangUp()}"
             android:orientation="vertical"
-            android:paddingTop="30dp"
-            app:layout_constraintBottom_toBottomOf="@id/pause_call"
+            app:layout_constraintTop_toTopOf="@id/horiz_center"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/vert_guide2">
 
@@ -200,6 +224,12 @@
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.666" />
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/horiz_center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.5"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
