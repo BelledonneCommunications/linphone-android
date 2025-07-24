@@ -34,6 +34,7 @@ import org.linphone.activities.main.contact.data.ContactAdditionalData
 import org.linphone.activities.main.contact.data.ContactNumberOrAddressClickListener
 import org.linphone.activities.main.contact.data.ContactNumberOrAddressData
 import org.linphone.activities.main.viewmodels.MessageNotifierViewModel
+import org.linphone.activities.voip.TransferState
 import org.linphone.contact.ContactDataInterface
 import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.contact.hasLongTermPresence
@@ -42,6 +43,7 @@ import org.linphone.models.realtime.PresenceIconState
 import org.linphone.models.search.UserDataModel
 import org.linphone.services.DirectoriesService
 import org.linphone.services.PhoneFormatterService
+import org.linphone.services.TransferService
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.Log
@@ -78,6 +80,8 @@ class ContactViewModel(friend: Friend) : MessageNotifierViewModel(), ContactData
     val isFavourite = MutableLiveData<Boolean>()
     val canBeFavourite = MutableLiveData<Boolean>()
     val subTitle = MutableLiveData("")
+
+    val transferState = TransferService.getInstance().transferState
 
     val sendSmsToEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
@@ -378,7 +382,18 @@ class ContactViewModel(friend: Friend) : MessageNotifierViewModel(), ContactData
     fun startCall() {
         val numbersAndAddresses = numbersAndAddresses.value
         if (numbersAndAddresses != null && numbersAndAddresses.any()) {
-            numbersAndAddresses.first().startCall()
+            val firstNumber = numbersAndAddresses.first()
+
+            if (transferState.value == TransferState.PENDING_BLIND) {
+                if (!coreContext.transferCallTo(firstNumber.address)) {
+                    onMessageToNotifyEvent.value = Event(
+                        org.linphone.R.string.dialer_transfer_failed
+                    )
+                }
+                transferState.value = TransferState.NONE
+            } else {
+                firstNumber.startCall()
+            }
         }
     }
 

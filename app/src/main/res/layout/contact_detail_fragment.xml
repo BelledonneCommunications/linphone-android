@@ -177,7 +177,7 @@
                     android:layout_gravity="center_horizontal"
                     app:tint="@color/dark_primary_text_color"
                     android:background="@drawable/round_orange_button_background"
-                    android:src="@drawable/icon_call" />
+                    android:src="@{ viewModel.transferState == org.linphone.activities.voip.TransferState.PENDING_BLIND ? @drawable/call_actions_complete_transfer: @drawable/icon_call, default=@drawable/icon_call}" />
 
             </LinearLayout>
 
