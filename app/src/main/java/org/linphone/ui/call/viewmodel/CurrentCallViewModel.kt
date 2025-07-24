@@ -364,7 +364,7 @@ class CurrentCallViewModel
                     }
                 }
                 isVideoEnabled.postValue(videoEnabled)
-                updateVideoDirection(call.currentParams.videoDirection)
+                updateVideoDirection(call.currentParams.videoDirection, skipIfNotStreamsRunning = true)
 
                 if (call.state == Call.State.Connected) {
                     updateCallDuration()
@@ -1151,7 +1151,7 @@ class CurrentCallViewModel
             )
         } else {
             isVideoEnabled.postValue(call.currentParams.isVideoEnabled)
-            updateVideoDirection(call.currentParams.videoDirection)
+            updateVideoDirection(call.currentParams.videoDirection, skipIfNotStreamsRunning = true)
         }
 
         if (ActivityCompat.checkSelfPermission(
@@ -1290,9 +1290,9 @@ class CurrentCallViewModel
     }
 
     @WorkerThread
-    private fun updateVideoDirection(direction: MediaDirection) {
+    private fun updateVideoDirection(direction: MediaDirection, skipIfNotStreamsRunning: Boolean = false) {
         val state = currentCall.state
-        if (state != Call.State.StreamsRunning) {
+        if (skipIfNotStreamsRunning && state != Call.State.StreamsRunning) {
             return
         }
 
