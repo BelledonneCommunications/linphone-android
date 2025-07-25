@@ -34,7 +34,7 @@
             android:textColor="?attr/color_main2_500"
             android:maxLines="1"
             android:ellipsize="end"
-            android:visibility="@{model.firstMeetingOfTheWeek ? View.VISIBLE : View.GONE}"
+            android:visibility="@{model.firstMeetingOfTheWeek ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintStart_toStartOf="@id/cardview"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/header_day"

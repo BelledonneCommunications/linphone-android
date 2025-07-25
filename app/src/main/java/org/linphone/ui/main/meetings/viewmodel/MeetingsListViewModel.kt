@@ -188,6 +188,10 @@ class MeetingsListViewModel
         var previousModel: MeetingModel? = null
         var previousModelWeekLabel = ""
         var meetingForTodayFound = false
+        val todayWeekLabel = TimestampUtils.firstAndLastDayOfWeek(
+            System.currentTimeMillis(),
+            false
+        )
         Log.d("$TAG There are [${sortedSource.size}] conference info in DB")
 
         for (info: ConferenceInfo in sortedSource) {
@@ -234,17 +238,12 @@ class MeetingsListViewModel
                 // but only add that fake meeting if filter is empty
                 if (!meetingForTodayFound && model.isAfterToday) {
                     if (filter.isEmpty()) {
-                        val todayWeekLabel = TimestampUtils.firstAndLastDayOfWeek(
-                            System.currentTimeMillis(),
-                            false
-                        )
                         val first = previousModelWeekLabel != todayWeekLabel
                         list.add(MeetingListItemModel(null, first))
                         meetingForTodayFound = true
 
-                        // Consider next meeting is first of the week (do not count "no meeting today" as first)
                         previousModelWeekLabel = model.weekLabel
-                        firstMeetingOfTheWeek = true
+                        firstMeetingOfTheWeek = false
                     }
                 } else {
                     previousModelWeekLabel = model.weekLabel
@@ -258,10 +257,6 @@ class MeetingsListViewModel
         // If no meeting was found after today, insert "Today" fake model at the end,
         // but only add that fake meeting if filter is empty
         if (!meetingForTodayFound && filter.isEmpty()) {
-            val todayWeekLabel = TimestampUtils.firstAndLastDayOfWeek(
-                System.currentTimeMillis(),
-                false
-            )
             val firstMeetingOfTheWeek = previousModelWeekLabel != todayWeekLabel
             list.add(MeetingListItemModel(null, firstMeetingOfTheWeek))
         }
