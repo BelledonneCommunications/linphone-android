@@ -39,13 +39,13 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="52sp"
         android:background="?attr/backgroundColor"
         android:gravity="center_vertical"
         android:onClick="@{clickListener}"
         android:onLongClick="@{longClickListener}"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp">
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp">
 
         <LinearLayout
             android:id="@+id/right"
@@ -80,9 +80,10 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_toStartOf="@id/right"
+            android:layout_centerVertical="true"
             android:gravity="center_vertical">
 
             <ImageView
@@ -99,8 +100,8 @@
                 />
 
             <ImageView
-                android:layout_width="@dimen/contact_presence_badge_size"
-                android:layout_height="@dimen/contact_presence_badge_size"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
                 android:layout_alignBottom="@id/avatar"
                 android:layout_marginStart="25dp"
                 android:adjustViewBounds="true"
@@ -112,15 +113,14 @@
 
             <ImageView
                 android:id="@+id/icon"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="10dp"
+                android:layout_width="14sp"
+                android:layout_height="14sp"
+                android:layout_marginEnd="8dp"
                 android:layout_toEndOf="@id/avatar"
-                android:adjustViewBounds="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
                 android:contentDescription="@{viewModel.iconContentDescription}"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:src="@{viewModel.statusIconResource, default=@drawable/call_status_outgoing}"
+                android:src="@{viewModel.statusIconResource, default=@drawable/call_outgoing}"
                 app:attrTint="@{viewModel.dimensionsAttrTintColor}"
                 />
 
@@ -134,37 +134,41 @@
 
                 <TextView
                     android:id="@+id/contact_name"
+                    style="@style/contact_name_list_cell_font"
+
                     app:textStyle="@{viewModel.dimensionsContactNameForegroundStyle}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
                     android:singleLine="true"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="@{viewModel.dimensionsContactName, default=`Rick Sanchez`}" />
+                    android:text="@{viewModel.dimensionsContactName, default=`Jebediah Springfield`}" />
 
                 <TextView
                     android:id="@+id/contact_number"
+                    style="@style/contact_number_list_cell_font"
                     app:textStyle="@{viewModel.dimensionsContactNumberForegroundStyle}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
                     android:singleLine="true"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textSize="12sp"
-                    android:text="@{viewModel.dimensionsContactNumber, default=`071234 56789`}"
+                    android:text="@{viewModel.dimensionsContactNumber, default=`07987 123 4567`}"
                     />
 
             </LinearLayout>
 
             <TextView
                 android:id="@+id/startTime"
-                app:textStyle="@{viewModel.dimensionsContactNameForegroundStyle}"
+                style="@style/contact_number_list_cell_font"
+                app:textStyle="@{viewModel.dimensionsContactNumberForegroundStyle}"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@{viewModel.dimensionsStartTime, default=`Today 00:00`}"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:maxWidth="150dp"
+                android:gravity="end"
+                android:maxLines="2"
+                android:text="@{viewModel.dimensionsStartTime, default=`Yesterday 09:37`}"
                 android:layout_alignParentEnd="true"/>
 
         </RelativeLayout>
