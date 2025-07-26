@@ -1,5 +1,6 @@
 package org.linphone.ui.fileviewer
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -127,23 +128,13 @@ class FileViewerActivity : GenericActivity() {
 
         viewModel.exportPlainTextFileEvent.observe(this) {
             it.consume { name ->
-                val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
-                    addCategory(Intent.CATEGORY_OPENABLE)
-                    type = "text/plain"
-                    putExtra(Intent.EXTRA_TITLE, name)
-                }
-                startActivityForResult(intent, EXPORT_FILE_AS_DOCUMENT)
+                exportFile(name, "text/plain")
             }
         }
 
         viewModel.exportPdfEvent.observe(this) {
             it.consume { name ->
-                val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
-                    addCategory(Intent.CATEGORY_OPENABLE)
-                    type = "application/pdf"
-                    putExtra(Intent.EXTRA_TITLE, name)
-                }
-                startActivityForResult(intent, EXPORT_FILE_AS_DOCUMENT)
+                exportFile(name, "application/pdf")
             }
         }
     }
@@ -210,6 +201,19 @@ class FileViewerActivity : GenericActivity() {
             } else {
                 Log.e("$TAG Failed to copy file [$filePath] to share!")
             }
+        }
+    }
+
+    private fun exportFile(name: String, mimeType: String) {
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = mimeType
+            putExtra(Intent.EXTRA_TITLE, name)
+        }
+        try {
+            startActivityForResult(intent, EXPORT_FILE_AS_DOCUMENT)
+        } catch (exception: ActivityNotFoundException) {
+            Log.e("$TAG No activity found to handle intent ACTION_CREATE_DOCUMENT: $exception")
         }
     }
 }

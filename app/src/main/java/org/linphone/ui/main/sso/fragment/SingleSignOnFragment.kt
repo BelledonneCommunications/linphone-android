@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.sso.fragment
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -75,7 +76,11 @@ class SingleSignOnFragment : GenericMainFragment() {
         viewModel.startAuthIntentEvent.observe(viewLifecycleOwner) {
             it.consume { intent ->
                 Log.i("$TAG Starting auth intent activity")
-                startActivityForResult(intent, ACTIVITY_RESULT_ID)
+                try {
+                    startActivityForResult(intent, ACTIVITY_RESULT_ID)
+                } catch (exception: ActivityNotFoundException) {
+                    Log.e("$TAG No activity found to handle intent: $exception")
+                }
             }
         }
 

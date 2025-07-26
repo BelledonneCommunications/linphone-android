@@ -1560,6 +1560,10 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             type = mime
             putExtra(Intent.EXTRA_TITLE, name)
         }
-        startActivityForResult(intent, EXPORT_FILE_AS_DOCUMENT)
+        try {
+            startActivityForResult(intent, EXPORT_FILE_AS_DOCUMENT)
+        } catch (exception: ActivityNotFoundException) {
+            Log.e("$TAG No activity found to handle intent ACTION_CREATE_DOCUMENT: $exception")
+        }
     }
 }
