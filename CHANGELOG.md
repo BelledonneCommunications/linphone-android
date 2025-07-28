@@ -10,6 +10,11 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [5.3.0] - 2025-07-28
+
+## Changed
+- Updated SDK & fixed broken API compatibility
+
 ## [5.2.5] - 2024-05-03
 
 ## Changed
