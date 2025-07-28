@@ -1310,7 +1310,7 @@ class NotificationsManager
                 remoteAddress
             )
             Person.Builder()
-                .setName(subject)
+                .setName(subject.ifEmpty { "Unknown" })
                 .setIcon(
                     AvatarGenerator(context).setInitials(AppUtils.getInitials(subject)).buildIcon()
                 )
@@ -1724,7 +1724,7 @@ class NotificationsManager
     private fun getPerson(friend: Friend?, fallbackDisplayName: String): Person {
         return friend?.getPerson()
             ?: Person.Builder()
-                .setName(if (fallbackDisplayName.isEmpty()) "Unknown" else fallbackDisplayName)
+                .setName(fallbackDisplayName.ifEmpty { "Unknown" })
                 .setIcon(
                     AvatarGenerator(context).setInitials(AppUtils.getInitials(fallbackDisplayName)).buildIcon()
                 )
