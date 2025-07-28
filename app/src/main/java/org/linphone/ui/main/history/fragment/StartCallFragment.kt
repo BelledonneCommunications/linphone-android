@@ -24,6 +24,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.core.view.doOnPreDraw
@@ -68,6 +69,24 @@ class StartCallFragment : GenericAddressPickerFragment() {
         override fun onSlide(bottomSheet: View, slideOffset: Float) { }
     }
 
+    private val backPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            val actionsBottomSheetBehavior = BottomSheetBehavior.from(binding.numpadLayout.root)
+            if (actionsBottomSheetBehavior.state != BottomSheetBehavior.STATE_COLLAPSED) {
+                actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                return
+            }
+
+            Log.i("$TAG Back gesture/click detected, no bottom sheet is expanded, going back")
+            isEnabled = false
+            try {
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            } catch (ise: IllegalStateException) {
+                Log.w("$TAG Can't go back: $ise")
+            }
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -91,6 +110,8 @@ class StartCallFragment : GenericAddressPickerFragment() {
         observeToastEvents(viewModel)
 
         binding.setBackClickListener {
+            // If back button from UI was clicked, go back even if numpad is opened
+            backPressedCallback.isEnabled = false
             goBack()
         }
 
@@ -181,6 +202,11 @@ class StartCallFragment : GenericAddressPickerFragment() {
                 viewModel.isNumpadVisible.value = false
             }
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            backPressedCallback
+        )
     }
 
     @WorkerThread
