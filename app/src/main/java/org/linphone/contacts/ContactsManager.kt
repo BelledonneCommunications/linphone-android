@@ -628,7 +628,7 @@ class ContactsManager
         val name = account?.params?.identityAddress?.displayName ?: LinphoneUtils.getDisplayName(
             localAddress
         )
-        val personBuilder = Person.Builder().setName(name)
+        val personBuilder = Person.Builder().setName(name.ifEmpty { "Unknown" })
 
         val photo = account?.params?.pictureUri.orEmpty()
         val bm = ImageUtils.getBitmap(coreContext.context, photo)
@@ -747,7 +747,7 @@ fun Friend.getPerson(): Person {
             "Unknown"
         }
     }
-    personBuilder.setName(personName)
+    personBuilder.setName(personName.orEmpty().ifEmpty { "Unknown" })
 
     val bm: Bitmap? = getAvatarBitmap()
     personBuilder.setIcon(
