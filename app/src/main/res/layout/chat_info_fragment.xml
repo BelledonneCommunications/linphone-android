@@ -204,7 +204,7 @@
                     android:onClick="@{() -> viewModel.toggleMute()}"
                     android:padding="16dp"
                     android:contentDescription="@string/content_description_chat_toggle_mute"
-                    android:src="@{viewModel.isMuted ? @drawable/bell_simple : @drawable/bell_simple_slash, default=@drawable/bell_simple_slash}"
+                    android:src="@{viewModel.isMuted ? @drawable/bell : @drawable/bell_slash, default=@drawable/bell_slash}"
                     android:visibility="@{viewModel.isReadOnly ? View.GONE : View.VISIBLE}"
                     app:layout_constraintEnd_toStartOf="@id/call"
                     app:layout_constraintStart_toStartOf="parent"

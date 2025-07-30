@@ -173,7 +173,7 @@
             android:layout_width="@dimen/small_icon_size"
             android:layout_height="@dimen/small_icon_size"
             android:layout_marginEnd="10dp"
-            android:src="@drawable/bell_simple_slash"
+            android:src="@drawable/bell_slash"
             android:contentDescription="@string/content_description_chat_muted"
             android:visibility="@{model.isMuted ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toStartOf="@id/last_sent_message_status"

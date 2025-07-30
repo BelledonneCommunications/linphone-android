@@ -635,10 +635,10 @@ class MainViewModel
                     R.drawable.wifi_slash
                 }
                 SEND_NOTIFICATIONS_PERMISSION_NOT_GRANTED, FULL_SCREEN_INTENTS_PERMISSION_NOT_GRANTED -> {
-                    R.drawable.bell_simple_slash
+                    R.drawable.bell_slash
                 }
                 else -> {
-                    R.drawable.bell_simple
+                    R.drawable.bell
                 }
             }
             alertIcon.postValue(icon)

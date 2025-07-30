@@ -99,7 +99,7 @@
                     android:layout_marginTop="68dp"
                     android:background="@drawable/circle_light_blue_button_background"
                     android:padding="16dp"
-                    android:src="@drawable/bell_simple_slash"
+                    android:src="@drawable/bell_slash"
                     android:contentDescription="@null"
                     app:tint="?attr/color_main2_500"
                     app:layout_constraintVertical_chainStyle="packed"
