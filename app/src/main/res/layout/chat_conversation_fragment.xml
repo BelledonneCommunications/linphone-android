@@ -126,7 +126,7 @@
                     android:layout_width="@dimen/small_icon_size"
                     android:layout_height="@dimen/small_icon_size"
                     android:layout_marginEnd="5dp"
-                    android:src="@drawable/bell_simple_slash"
+                    android:src="@drawable/bell_slash"
                     android:contentDescription="@string/content_description_chat_muted"
                     android:visibility="@{viewModel.isMuted ? View.VISIBLE : View.GONE, default=gone}"
                     app:layout_constraintStart_toStartOf="@id/title"

@@ -62,7 +62,7 @@
             android:text="@{isMuted ? @string/conversation_action_unmute : @string/conversation_action_mute, default=@string/conversation_action_mute}"
             android:background="@drawable/menu_item_background"
             android:layout_marginBottom="1dp"
-            android:drawableStart="@{isMuted ? @drawable/bell_simple : @drawable/bell_simple_slash, default=@drawable/bell_simple_slash}"
+            android:drawableStart="@{isMuted ? @drawable/bell : @drawable/bell_slash, default=@drawable/bell_slash}"
             android:visibility="@{isReadOnly ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toTopOf="@id/call"
             app:layout_constraintStart_toStartOf="parent"
