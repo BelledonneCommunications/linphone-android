@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.main.history.viewmodels.RecordingPlaybackViewModel" />
+
+        <variable
+            name="sharedMainViewModel"
+            type="org.linphone.activities.main.viewmodels.SharedMainViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="25dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Call recordings"
+            android:textSize="24sp"
+            android:textColor="@color/primary_color"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.call.callId, default=`Call id here`}"
+            android:textColor="@color/green_color" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.call.contactName, default=`John Jackson`}"
+            android:textColor="@color/green_color" />
+    </LinearLayout>
+</layout>

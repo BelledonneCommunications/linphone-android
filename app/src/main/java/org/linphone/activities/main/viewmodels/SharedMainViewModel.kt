@@ -25,6 +25,7 @@ import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.activities.main.history.data.GroupedCallLogData
 import org.linphone.core.*
+import org.linphone.models.callhistory.CallHistoryItemViewModel
 import org.linphone.utils.Event
 
 class SharedMainViewModel : ViewModel() {
@@ -35,7 +36,7 @@ class SharedMainViewModel : ViewModel() {
     var isSlidingPaneSlideable = MutableLiveData<Boolean>()
 
     /* Call history */
-
+    val selectedHistoryItem = MutableLiveData<CallHistoryItemViewModel>()
     val selectedCallLogGroup = MutableLiveData<GroupedCallLogData>()
 
     /* Chat */

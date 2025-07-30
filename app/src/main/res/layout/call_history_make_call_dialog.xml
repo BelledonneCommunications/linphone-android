@@ -1,29 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="historyViewModel"
+            type="org.linphone.activities.main.history.viewmodels.CallLogsListViewModel" />
+        <variable
+            name="callViewModel"
+            type="org.linphone.models.callhistory.CallHistoryItemViewModel" />
+    </data>
 
-    <LinearLayout  android:background="@color/white_color"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:background="@drawable/shape_context_menu_background"
+        android:padding="15dp">
 
-        <!-- Title -->
         <TextView
             android:id="@+id/callHistoryMakeCallDialogTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="?attr/primaryTextColor"
-            android:textSize="20sp"
+            android:textSize="18sp"
+            android:text="@{callViewModel.contactName, default=`Rick Sanchez`}"
             android:gravity="center"
-            android:paddingBottom="8dp" />
+            android:paddingBottom="20dp" />
 
-        <!-- Centered Button -->
-        <Button
-            android:id="@+id/callHistoryMakeCallDialogButton"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/callHistoryDialog_MakeCallButton"
+            android:onClick="@{() -> historyViewModel.makeCall(callViewModel)}"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Call"
-            android:layout_gravity="center" />
+            android:text="@{historyViewModel.trasferState == org.linphone.activities.voip.TransferState.PENDING_BLIND ? `Transfer` : `Call back`, default=`Call back`}"
+            android:textColor="@color/primary_color"
+            android:textSize="22sp"
+            android:gravity="center"
+            android:padding="10dp" />
 
+        <TextView
+            android:id="@+id/callHistoryDialog_PlayRecordingButton"
+            android:onClick="@{() -> historyViewModel.playRecording(callViewModel)}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Play recording"
+            android:textColor="@color/primary_color"
+            android:textSize="22sp"
+            android:padding="10dp"
+            android:gravity="center" />
     </LinearLayout>
 </layout>

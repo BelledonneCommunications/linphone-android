@@ -38,11 +38,8 @@ import org.linphone.activities.main.history.adapters.CallLogsListAdapter
 import org.linphone.activities.main.history.data.GroupedCallLogData
 import org.linphone.activities.main.history.viewmodels.CallLogsListViewModel
 import org.linphone.activities.main.viewmodels.TabsViewModel
-import org.linphone.activities.navigateToCallHistory
-import org.linphone.activities.navigateToConferenceCallHistory
 import org.linphone.core.ConferenceInfo
 import org.linphone.databinding.HistoryMasterFragmentBinding
-import org.linphone.models.callhistory.CallHistoryItemViewModel
 import org.linphone.models.callhistory.PbxType
 import org.linphone.services.CallHistoryService
 import org.linphone.utils.*
@@ -204,27 +201,20 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
             }
         }
 
-        adapter.selectedCallLogEvent.observe(
-            viewLifecycleOwner
-        ) {
-            it.consume { callLog ->
-                sharedViewModel.selectedCallLogGroup.value = callLog
-                if (callLog.lastCallLog.wasConference()) {
-                    navigateToConferenceCallHistory(binding.slidingPane)
-                } else {
-                    navigateToCallHistory(binding.slidingPane)
-                }
+        adapter.showCallLogContextMenuEvent.observe(viewLifecycleOwner) {
+            it.consume { call ->
+                binding.contextItemViewModel = call
+                sharedViewModel.selectedHistoryItem.value = call
+                listViewModel.showContextMenu()
             }
         }
 
-        adapter.startCallToEvent.observe(
+        listViewModel.makeCallEvent.observe(
             viewLifecycleOwner
         ) { it ->
-            it.consume { callLogGroup ->
-                val callLog = callLogGroup.lastCallLog
+            it.consume { callLog ->
 
-                if (callLog is CallHistoryItemViewModel &&
-                    callLog.call.pbxType == PbxType.Teams
+                if (callLog.call.pbxType == PbxType.Teams
                 ) {
                     if (!callLog.call.isConference) {
                         // FixMe - This sends the intent and then returns control to this app, this isn't valid behaviour
@@ -263,7 +253,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
                             val cleanAddress = LinphoneUtils.getCleanedAddress(
                                 callLog.remoteAddress
                             )
-                            val localAddress = callLogGroup.lastCallLog.localAddress
+                            val localAddress = callLog.localAddress
                             Log.i(
                                 "[History] Starting call to ${cleanAddress.asStringUriOnly()} with local address ${localAddress.asStringUriOnly()}"
                             )
@@ -276,6 +266,12 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
                     }
                 }
             }
+        }
+
+        listViewModel.playRecordingEvent.observe(
+            viewLifecycleOwner
+        ) { it ->
+            it.consume { call -> navigateToRecordingPlayback(binding.slidingPane) }
         }
 
         callHistoryService.updateMissedCallTimestamp()
@@ -300,7 +296,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
             val callLogGroup = adapter.currentList[index]
             list.add(callLogGroup)
 
-            if (callLogGroup.lastCallLogId == sharedViewModel.selectedCallLogGroup.value?.lastCallLogId) {
+            if (callLogGroup.lastCallLogId == sharedViewModel.selectedHistoryItem.value?.callId) {
                 closeSlidingPane = true
             }
         }

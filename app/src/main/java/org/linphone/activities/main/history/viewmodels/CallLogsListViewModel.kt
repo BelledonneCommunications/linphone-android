@@ -29,7 +29,9 @@ import org.linphone.R
 import org.linphone.activities.main.history.data.GroupedCallLogData
 import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.core.*
+import org.linphone.models.callhistory.CallHistoryItemViewModel
 import org.linphone.services.CallHistoryService
+import org.linphone.services.TransferService
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
@@ -49,6 +51,16 @@ class CallLogsListViewModel : ViewModel() {
     val contactsUpdatedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
+
+    val makeCallEvent: MutableLiveData<Event<CallHistoryItemViewModel>> by lazy {
+        MutableLiveData<Event<CallHistoryItemViewModel>>()
+    }
+
+    val playRecordingEvent: MutableLiveData<Event<CallHistoryItemViewModel>> by lazy {
+        MutableLiveData<Event<CallHistoryItemViewModel>>()
+    }
+
+    val trasferState = TransferService.getInstance().transferState
 
     private val listener: CoreListenerStub = object : CoreListenerStub() {
         override fun onCallLogUpdated(core: Core, log: CallLog) {
@@ -160,8 +172,6 @@ class CallLogsListViewModel : ViewModel() {
         }.dispose()
     }
 
-
-
     val contextMenuTranslateY = MutableLiveData<Float>()
     private val contextMenuAnimator: ValueAnimator by lazy {
         ValueAnimator.ofFloat(
@@ -191,6 +201,16 @@ class CallLogsListViewModel : ViewModel() {
             contextMenuAnimator.reverse()
         }
         isContextMenuOpen.value = false
+    }
+
+    fun makeCall(call: CallHistoryItemViewModel) {
+        hideContextMenu(false)
+        makeCallEvent.value = Event(call)
+    }
+
+    fun playRecording(call: CallHistoryItemViewModel) {
+        hideContextMenu(false)
+        playRecordingEvent.value = Event(call)
     }
 }
 

@@ -629,6 +629,18 @@ internal fun MasterCallLogsFragment.navigateToConferenceWaitingRoom(
     )
 }
 
+internal fun MasterCallLogsFragment.navigateToRecordingPlayback(slidingPane: SlidingPaneLayout) {
+    if (findNavController().currentDestination?.id == R.id.masterCallLogsFragment) {
+        val navHostFragment = childFragmentManager.findFragmentById(R.id.history_nav_container) as NavHostFragment
+        navHostFragment.navController.navigate(
+            R.id.action_global_recordingPlaybackFragment,
+            null,
+            popupTo(R.id.recordingPlaybackFragment, false)
+        )
+        if (!slidingPane.isOpen) slidingPane.openPane()
+    }
+}
+
 internal fun DetailCallLogFragment.navigateToContacts(sipUriToAdd: String) {
     if (sipUriToAdd.isEmpty()) {
         Log.e("[Navigation] SIP URI to add to contact is empty!")
