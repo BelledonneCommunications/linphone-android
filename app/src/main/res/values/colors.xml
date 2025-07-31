@@ -28,7 +28,7 @@
     <color name="voip_call_record_background">#EBEBEB</color>
     <color name="voip_calls_list_inactive_background">#F0F1F2</color>
     <color name="voip_translucent_popup_background">#A64B5964</color>
-    <color name="voip_translucent_popup_alt_background">#E64B5964</color>
+    <color name="voip_translucent_popup_alt_background">#FF4B5964</color>
     <color name="voip_numpad_background">#E4E4E4</color>
     <color name="voip_conference_participant_paused_background">#303030</color>
     <color name="voip_dark_color">#252E35</color>  <!-- Background -->
