@@ -15,13 +15,13 @@
 
     <!-- About screen -->
     <string name="about_link" translatable="false">https://linphone.org</string>
-    <string name="about_privacy_policy_link" translatable="false">https://www.linphone.org/privacy-policy</string>
+    <string name="about_privacy_policy_link" translatable="false">https://linphone.org/en/privacy-policy</string>
     <string name="about_license_link" translatable="false">https://www.gnu.org/licenses/gpl-3.0.html</string>
     <string name="about_version" translatable="false">&appName; Android %s</string>
     <string name="about_liblinphone_sdk_version" translatable="false">&appName; SDK %s</string>
     <string name="about_privacy_policy">Visit our privacy policy</string>
-    <string name="about_text" translatable="false">GNU General Public License v3.0\n © 2010–2023 Belledonne Communications</string>
-    <string name="about_weblate_link" translatable="false">https://weblate.linphone.org/projects/linphone/</string>
+    <string name="about_text" translatable="false">GNU General Public License v3.0\n © 2010–2025 Belledonne Communications</string>
+    <string name="about_weblate_link" translatable="false">https://weblate.linphone.org</string>
     <string name="about_weblate_translation">Help us translate &appName;</string>
 
     <!-- Logs -->
@@ -100,7 +100,7 @@
     <string name="no_sip_contact">No SIP contact in your address book.</string>
     <string name="contact_filter_hint">Search contacts</string>
     <string name="contact_send_sms_invite_text">Hello, join me on &appName;! You can download it for free at %s</string>
-    <string name="contact_send_sms_invite_download_link" translatable="false">https://linphone.org/download</string>
+    <string name="contact_send_sms_invite_download_link" translatable="false">https://linphone.org/en/getting-started</string>
     <string name="contact_last_name">Last name</string>
     <string name="contact_first_name">First name</string>
     <string name="contact_organization">Organization</string>
@@ -439,13 +439,13 @@
     <string name="assistant_phone_number_info_title">What will my phone number be used for?</string>
     <string name="assistant_phone_number_link_info_content">\nYour friends will find you more easily if you link your account to your phone number\n\nYou will see in your address book who is using &appName; and your friends will know that they can reach you on &appName; as well.\n</string>
     <string name="assistant_phone_number_link_info_content_already_account">You can only use your phone number with one &appName; account.\n\nIf you had already linked your number to an other account but you prefer to use this one, simply link it now and your number will automatically be moved to this account.</string>
-    <string name="assistant_general_terms_link" translatable="false">https://www.linphone.org/general-terms</string>
-    <string name="assistant_privacy_policy_link" translatable="false">https://www.linphone.org/privacy-policy</string>
+    <string name="assistant_general_terms_link" translatable="false">https://linphone.org/en/terms-of-use</string>
+    <string name="assistant_privacy_policy_link" translatable="false">https://linphone.org/en/privacy-policy</string>
     <string name="assistant_general_terms">terms of use</string>
     <string name="assistant_privacy_policy">privacy policy</string>
     <string name="assistant_read_and_agree_terms">I accept Belledonne Communications\' %1$s and %2$s</string>
     <string name="assistant_generic_account_warning">Some features require a &appName; account, such as group messaging or ephemeral messaging.\n\nThese features are hidden when you register with a third party SIP account.\n\nTo enable it in a commercial project, please contact us.</string>
-    <string name="assistant_generic_account_warning_contact_link" translatable="false">https://www.linphone.org/contact</string>
+    <string name="assistant_generic_account_warning_contact_link" translatable="false">https://linphone.org/contact</string>
     <string name="assistant_generic_account_warning_continue_button_text">I understand</string>
     <string name="assistant_alternative_way_create_account">To create an account using your email:</string>
     <string name="assistant_no_push_warning">Your device doesn\'t seem to be able to receive push notifications.\n\nAs we now require them for the account creation process, you won\'t be able to create an account inside the app, but you can create it on our website:</string>
