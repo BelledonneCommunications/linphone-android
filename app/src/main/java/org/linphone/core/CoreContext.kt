@@ -640,6 +640,25 @@ class CoreContext(
         }
         core.config.setBool("app", "migration_5.1_required", false)
 
+        if (core.logCollectionUploadServerUrl == "https://www.linphone.org:444/lft.php") {
+            core.logCollectionUploadServerUrl = "https://files.linphone.org/http-file-transfer-server/hft.php"
+        }
+        if (core.fileTransferServer == "https://www.linphone.org:444/lft.php") {
+            core.fileTransferServer = "https://files.linphone.org/http-file-transfer-server/hft.php"
+        }
+        if (core.config.getString(
+                "misc",
+                "version_check_url_root",
+                "https://www.linphone.org/releases"
+            ) == "https://www.linphone.org/releases"
+        ) {
+            core.config.setString(
+                "misc",
+                "version_check_url_root",
+                "https://download.linphone.org/releases"
+            )
+        }
+
         Log.i("[Context] Core configured")
     }
 
