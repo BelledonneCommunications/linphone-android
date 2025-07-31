@@ -36,6 +36,20 @@ Group changes to describe their impact on the project, as follows:
 - Increased shared media preview size in chat
 - Un-encrypted conversation warning will be more visible for accounts that support end-to-end encrypted conversations
 
+## [6.0.13] - 2025-07-31
+
+### Fixed
+- Missing favourites if contacts list size exceeds magic search max results setting
+- Muted call on some devices due to Telecom Manager quickly muting/unmuting call
+- Full screen without video during outgoing early media call if video has been declined by remote end
+- Removed duplicated week label if "no meeting today" is the first entry for current week
+- Prevent crash during file export if no app on the device can handle it
+- Prevent crash that could happen with chat message notification if sender name (or group chat room subject) is empty
+
+### Changed
+- Back gesture / navigation button will close the numpad bottom sheet if it's open instead of leaving the page directly
+- Updated bell and bell_slash icons
+
 ## [6.0.12] - 2025-07-18
 
 ### Fixed
