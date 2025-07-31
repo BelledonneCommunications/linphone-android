@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
@@ -16,29 +17,30 @@
         android:id="@+id/numpad_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/voip_translucent_popup_background"
         android:clickable="true"
         android:visibility="@{inflatedVisibility}"
+        android:background="@color/voip_translucent_popup_background"
         inflatedLifecycleOwner="@{true}">
 
         <View
             android:id="@+id/background"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="490dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="80dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="70dp"
             android:background="@drawable/shape_call_popup_background"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/dialpad_start"
             app:layout_constraintWidth_max="@dimen/voip_views_max_width" />
 
         <ImageView
             android:id="@+id/hide_numpad"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_margin="10dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:padding="10dp"
             android:contentDescription="@string/content_description_hide_numpad"
             android:onClick="@{() -> controlsViewModel.hideNumpad()}"
             android:src="@drawable/icon_cancel_alt"
@@ -49,8 +51,7 @@
             android:id="@+id/entered_dtmfs"
             style="@style/call_dtmf_history_font"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_height="75dp"
             android:ellipsize="start"
             android:gravity="center_horizontal"
             android:maxLines="1"
@@ -68,7 +69,7 @@
             app:layout_constraintBottom_toTopOf="@id/dtmf_4"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toStartOf="@id/dtmf_2"
-            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="@id/background"
             app:layout_constraintTop_toBottomOf="@id/entered_dtmfs"
             app:layout_constraintVertical_chainStyle="spread"
@@ -111,7 +112,7 @@
             app:layout_constraintBottom_toTopOf="@id/dtmf_7"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toStartOf="@id/dtmf_5"
-            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="@id/background"
             app:layout_constraintTop_toBottomOf="@id/dtmf_1"
             app:layout_constraintWidth_max="@dimen/voip_numpad_button_max_size" />
@@ -151,7 +152,7 @@
             app:layout_constraintBottom_toTopOf="@id/dtmf_star"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toStartOf="@id/dtmf_8"
-            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="@id/background"
             app:layout_constraintTop_toBottomOf="@id/dtmf_4"
             app:layout_constraintWidth_max="@dimen/voip_numpad_button_max_size" />
@@ -188,10 +189,10 @@
             android:contentDescription="@string/content_description_numpad_star"
             android:onClick="@{() -> controlsViewModel.handleDtmfClick('*')}"
             android:src="@drawable/voip_numpad_star"
-            app:layout_constraintBottom_toBottomOf="@id/background"
+            app:layout_constraintBottom_toBottomOf="@id/buttons_end"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toStartOf="@id/dtmf_0"
-            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="@id/background"
             app:layout_constraintTop_toBottomOf="@id/dtmf_7"
             app:layout_constraintWidth_max="@dimen/voip_numpad_button_max_size" />
@@ -202,7 +203,7 @@
             android:contentDescription="@string/content_description_numpad_0"
             android:onClick="@{() -> controlsViewModel.handleDtmfClick('0')}"
             android:src="@drawable/voip_numpad_0"
-            app:layout_constraintBottom_toBottomOf="@id/background"
+            app:layout_constraintBottom_toBottomOf="@id/buttons_end"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toStartOf="@id/dtmf_sharp"
             app:layout_constraintStart_toEndOf="@id/dtmf_star"
@@ -215,12 +216,28 @@
             android:contentDescription="@string/content_description_numpad_sharp"
             android:onClick="@{() -> controlsViewModel.handleDtmfClick('#')}"
             android:src="@drawable/voip_numpad_hash"
-            app:layout_constraintBottom_toBottomOf="@id/background"
+            app:layout_constraintBottom_toBottomOf="@id/buttons_end"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="@id/background"
             app:layout_constraintStart_toEndOf="@id/dtmf_0"
             app:layout_constraintTop_toBottomOf="@id/dtmf_9"
             app:layout_constraintWidth_max="@dimen/voip_numpad_button_max_size" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/dialpad_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_end="500dp"
+            />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/buttons_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_end="50dp"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
