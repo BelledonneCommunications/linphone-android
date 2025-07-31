@@ -31,8 +31,7 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinator"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="?attr/voipBackgroundColor">
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraint_layout"
@@ -62,7 +61,7 @@
                 app:controlsViewModel="@{controlsViewModel}"
                 app:inflatedVisibility="@{conferenceViewModel.conferenceDisplayMode == ConferenceDisplayMode.GRID &amp;&amp; conferenceViewModel.conferenceExists &amp;&amp; !callsViewModel.currentCallData.isActiveAndNotInConference ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <ViewStub
                 android:id="@+id/stubbed_conference_audio_only_layout"
@@ -94,10 +93,10 @@
                 android:id="@+id/primary_buttons"
                 layout="@layout/voip_buttons"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/voip_buttons_fragment_size"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="40dp"
                 android:visibility="@{controlsViewModel.fullScreenMode || controlsViewModel.pipMode ? View.GONE : View.VISIBLE}"
                 app:callsViewModel="@{callsViewModel}"
                 app:conferenceViewModel="@{conferenceViewModel}"
@@ -135,6 +134,7 @@
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp"
                 android:translationY="@{controlsViewModel.extraButtonsMenuTranslateY, default=@dimen/voip_call_extra_buttons_translate_y}"
+                android:visibility="@{View.VISIBLE, default=gone}"
                 app:callsViewModel="@{callsViewModel}"
                 app:conferenceViewModel="@{conferenceViewModel}"
                 app:controlsViewModel="@{controlsViewModel}"
