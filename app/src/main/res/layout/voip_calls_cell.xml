@@ -16,8 +16,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@{data.isPaused ? @color/voip_calls_list_inactive_background : @color/voip_dark_gray, default=@color/voip_dark_gray}"
             android:orientation="horizontal">
+            <!--android:background="@{data.isPaused ? @color/voip_calls_list_inactive_background : @color/voip_dark_gray, default=@color/voip_dark_gray}"-->
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -52,9 +52,9 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:contentDescription="@null"
-                    android:tint="@color/white_color"
+                    app:tint="@color/white_color"
                     android:src="@{data.isIncoming ? @drawable/call_incoming : data.isOutgoing ? @drawable/call_outgoing : data.isPaused ? @drawable/call_actions_pause : @drawable/icon_call, default=@drawable/call_outgoing}" />
 
             </RelativeLayout>
