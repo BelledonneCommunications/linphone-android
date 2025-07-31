@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <import type="android.view.View" />
@@ -10,21 +11,20 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white_color">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/voip_call_list_size"
-            android:background="@{data.isPaused ? @color/voip_calls_list_inactive_background : @color/voip_dark_gray, default=@color/voip_dark_gray}"
-            android:orientation="horizontal"
-            android:layout_marginBottom="1dp">
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+            <!--android:background="@{data.isPaused ? @color/voip_calls_list_inactive_background : @color/voip_dark_gray, default=@color/voip_dark_gray}"-->
 
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp">
+                android:layout_height="match_parent"
+                android:layout_marginRight="12dp">
 
+                <!--
                 <ImageView
                     android:visibility="@{data.isInRemoteConference ? View.GONE : View.VISIBLE}"
                     android:layout_width="@dimen/contact_avatar_size"
@@ -37,6 +37,7 @@
                     android:background="@drawable/generated_avatar_bg"
                     android:src="@drawable/voip_single_contact_avatar"/>
 
+
                 <ImageView
                     android:visibility="@{data.isInRemoteConference ? View.VISIBLE : View.GONE, default=gone}"
                     android:layout_width="45dp"
@@ -46,12 +47,15 @@
                     android:contentDescription="@null"
                     android:background="@drawable/generated_avatar_bg"
                     android:src="@drawable/icon_multiple_contacts_avatar" />
+                -->
 
                 <ImageView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
                     android:contentDescription="@null"
-                    android:src="@{data.isIncoming ? @drawable/voip_call_header_incoming : data.isOutgoing ? @drawable/voip_call_header_outgoing : data.isPaused ? @drawable/voip_call_header_paused : @drawable/voip_call_header_active, default=@drawable/voip_call_header_active}" />
+                    app:tint="@color/white_color"
+                    android:src="@{data.isIncoming ? @drawable/call_incoming : data.isOutgoing ? @drawable/call_outgoing : data.isPaused ? @drawable/call_actions_pause : @drawable/icon_call, default=@drawable/call_outgoing}" />
 
             </RelativeLayout>
 
@@ -136,7 +140,19 @@
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/icon_calls_list_menu"
                 android:padding="5dp"
+                android:visibility="gone"
                 android:contentDescription="@string/content_description_call_context_menu"/>
+
+            <ImageView
+                android:onClick="@{() -> data.resume()}"
+                android:visibility="@{data.isPaused ? View.VISIBLE : View.GONE}"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="10dp"
+                app:tint="@color/green_color"
+                android:src="@drawable/icon_call"
+                android:contentDescription="Switch to this call" />
 
         </LinearLayout>
 

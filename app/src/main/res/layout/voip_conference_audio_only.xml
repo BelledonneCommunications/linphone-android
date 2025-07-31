@@ -25,6 +25,7 @@
         android:layout_height="match_parent"
         android:layout_margin="@{controlsViewModel.fullScreenMode || controlsViewModel.pipMode ? @dimen/margin_0dp : @dimen/voip_remote_margin, default=@dimen/voip_remote_margin}"
         android:paddingBottom="@{controlsViewModel.fullScreenMode || controlsViewModel.pipMode ? @dimen/margin_0dp : @dimen/voip_buttons_fragment_margin_size}"
+        android:paddingTop="15dp"
         android:visibility="@{inflatedVisibility}"
         inflatedLifecycleOwner="@{true}">
 
@@ -56,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="@{controlsViewModel.fullScreenMode || controlsViewModel.pipMode ? View.GONE : View.VISIBLE}"
-            app:constraint_referenced_ids="remote_name,active_conference_timer,toggle_pause_conference" />
+            app:constraint_referenced_ids="remote_name,active_conference_timer"/>
 
         <TextView
             android:id="@+id/remote_name"
@@ -67,19 +68,21 @@
             android:layout_marginTop="@{controlsViewModel.folded ? @dimen/voip_conference_header_folded_top_margin : @dimen/margin_0dp}"
             android:ellipsize="end"
             android:maxLines="1"
+            android:gravity="center"
             android:text="@{conferenceViewModel.subject, default=@string/conference_default_title}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/toggle_conference_recording"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/hinge_top" />
 
         <Chronometer
             android:id="@+id/active_conference_timer"
             style="@style/call_header_subtitle"
-            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/remote_name" />
-
+<!--
         <ImageView
             android:id="@+id/toggle_pause_conference"
             android:layout_width="40dp"
@@ -120,6 +123,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:visibility="@{conferenceViewModel.isRemotelyRecorded ? View.VISIBLE : View.GONE, default=gone}" />
+-->
 
         <ScrollView
             android:id="@+id/grid_scrollview"
@@ -129,7 +133,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/hinge_bottom">
-
 
             <androidx.gridlayout.widget.GridLayout
                 android:id="@+id/grid_layout"

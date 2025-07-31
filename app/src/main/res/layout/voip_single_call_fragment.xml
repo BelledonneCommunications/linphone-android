@@ -30,7 +30,8 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinator"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_margin="20dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraint_layout"
@@ -42,7 +43,6 @@
                 android:id="@+id/audio_routes"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:layout_margin="15dp"
                 android:contentDescription="Go back to previous page"
                 android:onClick="@{() -> controlsViewModel.goBack()}"
                 android:src="@drawable/icon_back"
@@ -50,16 +50,73 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:tint="@color/white_color" />
 
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/call_list"
+                android:visibility="@{callsViewModel.callsData.size() > 1 ? View.VISIBLE : View.GONE}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:layout_constraintTop_toBottomOf="@id/audio_routes"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:entries="@{callsViewModel.callsData}"
+                    app:layout="@{@layout/voip_calls_cell}"/>
+
+            </androidx.core.widget.NestedScrollView>
+
+            <LinearLayout
+                android:id="@+id/bottom_buttons"
+                android:visibility="@{callsViewModel.callsData.size() > 1 ? View.VISIBLE : View.GONE}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:gravity="end"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/call_list">
+
+                <Button
+                    android:onClick="@{() -> conferenceViewModel.addCallsToConference()}"
+                    android:enabled="@{callsViewModel.callsData.size() > 1 &amp;&amp; conferenceViewModel.isMeAdmin}"
+                    android:visibility="@{conferenceViewModel.conferenceExists ? View.VISIBLE : View.GONE, default=gone}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary_color"
+                    android:background="@color/transparent_color"
+                    android:text="Merge calls"
+                    android:contentDescription="Add to conference"/>
+
+                <Button
+                    android:onClick="@{() -> callsViewModel.mergeCallsIntoConference()}"
+                    android:visibility="@{conferenceViewModel.conferenceExists ? View.GONE : View.VISIBLE, default=gone}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:textColor="@color/primary_color"
+                    android:background="@color/transparent_color"
+                    android:text="Merge calls"
+                    android:textSize="13sp"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="0dp"
+                    android:contentDescription="Merge into conference"/>
+
+            </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/call_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="25dp"
-                app:layout_constraintBottom_toTopOf="@id/vertical_center"
+                app:layout_constraintTop_toBottomOf="@id/call_list"
+                app:layout_constraintBottom_toBottomOf="@id/vertical_center"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintStart_toStartOf="parent">
 
                 <TextView
                     android:id="@+id/display_name"
@@ -89,6 +146,8 @@
                     android:layout_marginTop="14sp"
                     android:alpha="0.5" />
             </LinearLayout>
+
+
 
             <!--
             <ImageView
