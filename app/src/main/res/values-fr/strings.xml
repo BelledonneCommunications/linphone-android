@@ -186,7 +186,6 @@
     <string name="help_troubleshooting_debug_logs_cleaned_toast_message">Les journaux ont été nettoyés</string>
     <string name="help_troubleshooting_debug_logs_upload_error_toast_message">Échec à l\'envoi des journaux</string>
     <string name="help_troubleshooting_show_config_file">Afficher la configuration</string>
-    <string name="help_troubleshooting_clear_native_friends_in_database">Supprimer les contacts natifs importés</string>
 
     <!-- App & SDK settings -->
     <string name="settings_title">Paramètres</string>
@@ -318,6 +317,9 @@
     <string name="settings_developer_already_enabled_toast">Paramètres développeurs déjà activés</string>
     <string name="settings_developer_enable_vu_meters_title">Activer l\'indicateur des volumes d\'enregistrement et de lecture</string>
     <string name="settings_developer_push_compatible_domains_list_title">Liste des domaines qui supportent les notifications poussées (séparés par des virgules)</string>
+    <string name="settings_developer_clear_native_friends_in_database_title">Supprimer les contacts natifs importés</string>
+    <string name="settings_developer_clear_native_friends_in_database_subtitle">Ils seront synchronisés à nouveau au prochain démarrage de l\'application sauf si vous retirez la permission de lire les contacts</string>
+    <string name="settings_developer_cleared_native_friends_in_database_toast">Contacts importés supprimés</string>
 
     <!-- Account profile & settings -->
     <string name="manage_account_title">Mon compte</string>

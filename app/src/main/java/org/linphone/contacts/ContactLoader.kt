@@ -314,83 +314,16 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                 }
                 Log.i("$TAG Friends added")
             } else {
+                val friendsArray = friends.values.toTypedArray()
                 Log.i(
                     "$TAG Friend list [$NATIVE_ADDRESS_BOOK_FRIEND_LIST] found, synchronizing existing friends with new ones"
                 )
-                for (localFriend in friendsList.friends) {
-                    val newlyFetchedFriend = friends[localFriend.refKey]
-                    if (newlyFetchedFriend != null) {
-                        friends.remove(localFriend.refKey)
-                        localFriend.nativeUri =
-                            newlyFetchedFriend.nativeUri // Native URI isn't stored in linphone database, needs to be updated
-                        if (newlyFetchedFriend.dumpVcard() == localFriend.dumpVcard()) continue
-
-                        localFriend.edit()
-                        // Update basic fields that may have changed
-                        localFriend.name = newlyFetchedFriend.name
-                        localFriend.organization = newlyFetchedFriend.organization
-                        localFriend.jobTitle = newlyFetchedFriend.jobTitle
-                        localFriend.photo = newlyFetchedFriend.photo
-
-                        // Clear local friend phone numbers & add all newly fetched one ones
-                        var atLeastAPhoneNumberWasRemoved = false
-                        for (phoneNumber in localFriend.phoneNumbersWithLabel) {
-                            val found = newlyFetchedFriend.phoneNumbers.find {
-                                it == phoneNumber.phoneNumber
-                            }
-                            if (found == null) {
-                                atLeastAPhoneNumberWasRemoved = true
-                            }
-                            localFriend.removePhoneNumberWithLabel(phoneNumber)
-                        }
-                        for (phoneNumber in newlyFetchedFriend.phoneNumbersWithLabel) {
-                            localFriend.addPhoneNumberWithLabel(phoneNumber)
-                        }
-
-                        // If at least a phone number was removed, remove all SIP address from local friend before adding all from newly fetched one.
-                        // If none was removed, simply add SIP addresses from fetched contact that aren't already in the local friend.
-                        if (atLeastAPhoneNumberWasRemoved) {
-                            Log.w(
-                                "$TAG At least a phone number was removed from native contact [${localFriend.name}], clearing all SIP addresses from local friend before adding back the ones that still exists"
-                            )
-                            for (sipAddress in localFriend.addresses) {
-                                localFriend.removeAddress(sipAddress)
-                            }
-                        }
-
-                        // Adding only newly added SIP address(es) in native contact if any
-                        for (sipAddress in newlyFetchedFriend.addresses) {
-                            localFriend.addAddress(sipAddress)
-                        }
-                        localFriend.done()
-                    } else {
-                        Log.i(
-                            "$TAG Friend [${localFriend.name}] with ref key [${localFriend.refKey}] not found in newly fetched batch, removing it"
-                        )
-                        friendsList.removeFriend(localFriend)
-                    }
+                val changes = friendsList.synchronizeFriendsWith(friendsArray)
+                if (changes) {
+                    Log.i("$TAG Locally stored friends synchronized with native address book")
+                } else {
+                    Log.i("$TAG No changes detected between native address book and local friends storage")
                 }
-
-                // Check for newly created friends since last sync
-                val localFriends = friendsList.friends
-                for ((key, newFriend) in friends.entries) {
-                    val found = localFriends.find {
-                        it.refKey == key
-                    }
-                    if (found == null) {
-                        if (newFriend.refKey == null) {
-                            Log.w(
-                                "$TAG Found friend [${newFriend.name}] with no refKey, using ID [$key]"
-                            )
-                            newFriend.refKey = key
-                        }
-                        Log.i(
-                            "$TAG Friend [${newFriend.name}] with ref key [${newFriend.refKey}] not found in currently stored list, adding it"
-                        )
-                        friendsList.addLocalFriend(newFriend)
-                    }
-                }
-                Log.i("$TAG Friends synchronized")
             }
             friends.clear()
 

@@ -228,7 +228,6 @@
     <string name="help_troubleshooting_debug_logs_cleaned_toast_message">Debug logs have been cleaned</string>
     <string name="help_troubleshooting_debug_logs_upload_error_toast_message">Failed to upload debug logs</string>
     <string name="help_troubleshooting_show_config_file">Show configuration</string>
-    <string name="help_troubleshooting_clear_native_friends_in_database">Clear imported contacts from native address book</string>
 
     <!-- App & SDK settings -->
     <string name="settings_title">Settings</string>
@@ -360,6 +359,9 @@
     <string name="settings_developer_already_enabled_toast">Developer settings already enabled</string>
     <string name="settings_developer_enable_vu_meters_title">Enable record/playback volume vu meters while in call</string>
     <string name="settings_developer_push_compatible_domains_list_title">List of push notifications compatible domains (comma separated)</string>
+    <string name="settings_developer_clear_native_friends_in_database_title">Clear imported contacts from native address book</string>
+    <string name="settings_developer_clear_native_friends_in_database_subtitle">They will be imported again the next time the app starts unless you remove the contacts permission</string>
+    <string name="settings_developer_cleared_native_friends_in_database_toast">Imported contacts have been deleted</string>
 
     <!-- Account profile & settings -->
     <string name="manage_account_title">Manage account</string>

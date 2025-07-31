@@ -29,7 +29,6 @@ import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
-import org.linphone.contacts.ContactLoader.Companion.NATIVE_ADDRESS_BOOK_FRIEND_LIST
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.VersionUpdateCheckResult
@@ -248,22 +247,6 @@ class HelpViewModel
                 } else {
                     Log.e("$TAG Failed to save .linphonerc string as file in cache folder")
                 }
-            }
-        }
-    }
-
-    @UiThread
-    fun clearNativeFriendsDatabase() {
-        coreContext.postOnCoreThread { core ->
-            val list = core.getFriendListByName(NATIVE_ADDRESS_BOOK_FRIEND_LIST)
-            if (list != null) {
-                val friends = list.friends
-                Log.i("$TAG Friend list to remove found with [${friends.size}] friends")
-                for (friend in friends) {
-                    list.removeFriend(friend)
-                }
-                core.removeFriendList(list)
-                Log.i("$TAG Friend list [$NATIVE_ADDRESS_BOOK_FRIEND_LIST] removed")
             }
         }
     }

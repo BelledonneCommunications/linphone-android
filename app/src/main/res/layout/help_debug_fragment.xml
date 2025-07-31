@@ -295,27 +295,6 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/firebase_project_subtitle"/>
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/settings_title_style"
-                        android:id="@+id/clear_friends_db"
-                        android:onClick="@{() -> viewModel.clearNativeFriendsDatabase()}"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginBottom="@dimen/screen_bottom_margin"
-                        android:text="@string/help_troubleshooting_clear_native_friends_in_database"
-                        android:maxLines="1"
-                        android:ellipsize="end"
-                        android:drawableEnd="@drawable/trash_simple"
-                        android:drawableTint="?attr/color_main2_600"
-                        android:visibility="gone"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/show_config_file"/>
-
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </ScrollView>
