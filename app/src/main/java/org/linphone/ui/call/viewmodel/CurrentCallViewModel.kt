@@ -1296,8 +1296,9 @@ class CurrentCallViewModel
             return
         }
 
-        val isSending = direction == MediaDirection.SendRecv || direction == MediaDirection.SendOnly
-        val isReceiving = direction == MediaDirection.SendRecv || direction == MediaDirection.RecvOnly
+        val isConnected = state == Call.State.Connected || state == Call.State.StreamsRunning
+        val isSending = (state == Call.State.OutgoingEarlyMedia || isConnected) && (direction == MediaDirection.SendRecv || direction == MediaDirection.SendOnly)
+        val isReceiving = (state == Call.State.IncomingEarlyMedia || isConnected) && (direction == MediaDirection.SendRecv || direction == MediaDirection.RecvOnly)
 
         val wasSending = isSendingVideo.value == true
         val wasReceiving = isReceivingVideo.value == true
