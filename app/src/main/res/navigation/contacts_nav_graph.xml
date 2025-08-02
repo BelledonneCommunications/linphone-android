@@ -8,13 +8,13 @@
 
     <fragment
         android:id="@+id/emptyFragment"
-        android:name="org.linphone.ui.main.fragment.EmptyFragment"
+        android:name="com.naminfo.ui.main.fragment.EmptyFragment"
         android:label="EmptyFragment"
         tools:layout="@layout/empty_fragment" />
 
     <fragment
         android:id="@+id/contactFragment"
-        android:name="org.linphone.ui.main.contacts.fragment.ContactFragment"
+        android:name="com.naminfo.ui.main.contacts.fragment.ContactFragment"
         android:label="ContactFragment"
         tools:layout="@layout/contact_fragment" >
         <argument
@@ -42,7 +42,7 @@
 
     <fragment
         android:id="@+id/editContactFragment"
-        android:name="org.linphone.ui.main.contacts.fragment.EditContactFragment"
+        android:name="com.naminfo.ui.main.contacts.fragment.EditContactFragment"
         android:label="EditContactFragment"
         tools:layout="@layout/contact_new_or_edit_fragment" >
         <argument

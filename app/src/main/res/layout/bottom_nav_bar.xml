@@ -5,10 +5,10 @@
 
     <data>
         <import type="android.view.View" />
-        <import type="org.linphone.ui.NotoSansFont" />
+        <import type="com.naminfo.ui.NotoSansFont" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.viewmodel.AbstractMainViewModel" />
+            type="com.naminfo.ui.main.viewmodel.AbstractMainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

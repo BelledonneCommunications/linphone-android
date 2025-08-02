@@ -34,13 +34,13 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.chat.viewmodel.ConversationViewModel" />
+            type="com.naminfo.ui.main.chat.viewmodel.ConversationViewModel" />
         <variable
             name="sendMessageViewModel"
-            type="org.linphone.ui.main.chat.viewmodel.SendMessageInConversationViewModel" />
+            type="com.naminfo.ui.main.chat.viewmodel.SendMessageInConversationViewModel" />
         <variable
             name="messageLongPressViewModel"
-            type="org.linphone.ui.main.chat.viewmodel.ChatMessageLongPressViewModel" />
+            type="com.naminfo.ui.main.chat.viewmodel.ChatMessageLongPressViewModel" />
     </data>
 
     <FrameLayout

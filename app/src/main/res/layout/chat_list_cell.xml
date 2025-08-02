@@ -5,10 +5,10 @@
 
     <data>
         <import type="android.view.View" />
-        <import type="org.linphone.ui.NotoSansFont" />
+        <import type="com.naminfo.ui.NotoSansFont" />
         <variable
             name="model"
-            type="org.linphone.ui.main.chat.model.ConversationModel" />
+            type="com.naminfo.ui.main.chat.model.ConversationModel" />
         <variable
             name="onClickListener"
             type="View.OnClickListener" />

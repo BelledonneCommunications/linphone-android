@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/outgoingCallFragment"
-        android:name="org.linphone.ui.call.fragment.OutgoingCallFragment"
+        android:name="com.naminfo.ui.call.fragment.OutgoingCallFragment"
         android:label="OutgoingCallFragment"
         tools:layout="@layout/call_outgoing_fragment">
         <action
@@ -32,7 +32,7 @@
 
     <fragment
         android:id="@+id/incomingCallFragment"
-        android:name="org.linphone.ui.call.fragment.IncomingCallFragment"
+        android:name="com.naminfo.ui.call.fragment.IncomingCallFragment"
         android:label="IncomingCallFragment"
         tools:layout="@layout/call_incoming_fragment">
         <action
@@ -57,7 +57,7 @@
 
     <fragment
         android:id="@+id/activeCallFragment"
-        android:name="org.linphone.ui.call.fragment.ActiveCallFragment"
+        android:name="com.naminfo.ui.call.fragment.ActiveCallFragment"
         android:label="ActiveCallFragment"
         tools:layout="@layout/call_active_fragment">
         <action
@@ -100,21 +100,21 @@
 
     <fragment
         android:id="@+id/newCallFragment"
-        android:name="org.linphone.ui.call.fragment.NewCallFragment"
+        android:name="com.naminfo.ui.call.fragment.NewCallFragment"
         android:label="NewCallFragment"
         tools:layout="@layout/start_call_fragment" >
     </fragment>
 
     <fragment
         android:id="@+id/transferCallFragment"
-        android:name="org.linphone.ui.call.fragment.TransferCallFragment"
+        android:name="com.naminfo.ui.call.fragment.TransferCallFragment"
         android:label="TransferCallFragment"
         tools:layout="@layout/start_call_fragment" >
     </fragment>
 
     <fragment
         android:id="@+id/callsListFragment"
-        android:name="org.linphone.ui.call.fragment.CallsListFragment"
+        android:name="com.naminfo.ui.call.fragment.CallsListFragment"
         android:label="CallsListFragment"
         tools:layout="@layout/calls_list_fragment" >
         <action
@@ -127,7 +127,7 @@
 
     <fragment
         android:id="@+id/endedCallFragment"
-        android:name="org.linphone.ui.call.fragment.EndedCallFragment"
+        android:name="com.naminfo.ui.call.fragment.EndedCallFragment"
         android:label="EndedCallFragment"
         tools:layout="@layout/call_ended_fragment"/>
 
@@ -137,7 +137,7 @@
 
     <fragment
         android:id="@+id/activeConferenceCallFragment"
-        android:name="org.linphone.ui.call.conference.fragment.ActiveConferenceCallFragment"
+        android:name="com.naminfo.ui.call.conference.fragment.ActiveConferenceCallFragment"
         android:label="ActiveConferenceCallFragment"
         tools:layout="@layout/call_active_conference_fragment">
         <action
@@ -174,7 +174,7 @@
 
     <fragment
         android:id="@+id/conferenceParticipantsListFragment"
-        android:name="org.linphone.ui.call.conference.fragment.ConferenceParticipantsListFragment"
+        android:name="com.naminfo.ui.call.conference.fragment.ConferenceParticipantsListFragment"
         android:label="ConferenceParticipantsListFragment"
         tools:layout="@layout/call_conference_participants_list_fragment">
         <action
@@ -187,7 +187,7 @@
 
     <fragment
         android:id="@+id/inCallConversationFragment"
-        android:name="org.linphone.ui.call.fragment.ConversationFragment"
+        android:name="com.naminfo.ui.call.fragment.ConversationFragment"
         android:label="ConversationFragment"
         tools:layout="@layout/chat_conversation_fragment">
         <argument
@@ -197,7 +197,7 @@
 
     <fragment
         android:id="@+id/conferenceAddParticipantsFragment"
-        android:name="org.linphone.ui.call.conference.fragment.ConferenceAddParticipantsFragment"
+        android:name="com.naminfo.ui.call.conference.fragment.ConferenceAddParticipantsFragment"
         android:label="ConferenceAddParticipantsFragment"
         tools:layout="@layout/generic_add_participants_fragment"/>
 

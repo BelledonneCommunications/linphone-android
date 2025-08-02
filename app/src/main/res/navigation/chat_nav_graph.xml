@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/emptyFragment"
-        android:name="org.linphone.ui.main.fragment.EmptyFragment"
+        android:name="com.naminfo.ui.main.fragment.EmptyFragment"
         android:label="EmptyFragment"
         tools:layout="@layout/empty_fragment"/>
 
     <fragment
         android:id="@+id/conversationFragment"
-        android:name="org.linphone.ui.main.chat.fragment.ConversationFragment"
+        android:name="com.naminfo.ui.main.chat.fragment.ConversationFragment"
         android:label="ConversationFragment"
         tools:layout="@layout/chat_conversation_fragment">
         <argument
@@ -73,7 +73,7 @@
 
     <fragment
         android:id="@+id/conversationInfoFragment"
-        android:name="org.linphone.ui.main.chat.fragment.ConversationInfoFragment"
+        android:name="com.naminfo.ui.main.chat.fragment.ConversationInfoFragment"
         android:label="ConversationInfoFragment"
         tools:layout="@layout/chat_info_fragment">
         <argument
@@ -115,7 +115,7 @@
 
     <fragment
         android:id="@+id/addParticipantsFragment"
-        android:name="org.linphone.ui.main.fragment.AddParticipantsFragment"
+        android:name="com.naminfo.ui.main.fragment.AddParticipantsFragment"
         android:label="AddParticipantsFragment"
         tools:layout="@layout/generic_add_participants_fragment">
         <argument
@@ -127,7 +127,7 @@
 
     <fragment
         android:id="@+id/conversationEphemeralLifetimeFragment"
-        android:name="org.linphone.ui.main.chat.fragment.ConversationEphemeralLifetimeFragment"
+        android:name="com.naminfo.ui.main.chat.fragment.ConversationEphemeralLifetimeFragment"
         android:label="ConversationEphemeralLifetimeFragment"
         tools:layout="@layout/chat_ephemeral_lifetime_fragment">
         <argument
@@ -137,7 +137,7 @@
 
     <fragment
         android:id="@+id/conversationMediaListFragment"
-        android:name="org.linphone.ui.main.chat.fragment.ConversationMediaListFragment"
+        android:name="com.naminfo.ui.main.chat.fragment.ConversationMediaListFragment"
         android:label="ConversationMediaListFragment"
         tools:layout="@layout/chat_media_fragment">
         <argument
@@ -147,7 +147,7 @@
 
     <fragment
         android:id="@+id/conversationDocumentsListFragment"
-        android:name="org.linphone.ui.main.chat.fragment.ConversationDocumentsListFragment"
+        android:name="com.naminfo.ui.main.chat.fragment.ConversationDocumentsListFragment"
         android:label="ConversationDocumentsListFragment"
         tools:layout="@layout/chat_documents_fragment">
         <argument
@@ -157,7 +157,7 @@
 
     <fragment
         android:id="@+id/conversationForwardMessageFragment"
-        android:name="org.linphone.ui.main.chat.fragment.ConversationForwardMessageFragment"
+        android:name="com.naminfo.ui.main.chat.fragment.ConversationForwardMessageFragment"
         android:label="ConversationForwardMessageFragment"
         tools:layout="@layout/chat_message_forward_fragment">
         <action

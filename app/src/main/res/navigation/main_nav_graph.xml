@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/contactsListFragment"
-        android:name="org.linphone.ui.main.contacts.fragment.ContactsListFragment"
+        android:name="com.naminfo.ui.main.contacts.fragment.ContactsListFragment"
         android:label="ContactsListFragment"
         tools:layout="@layout/contacts_list_fragment">
         <action
@@ -38,7 +38,7 @@
 
     <fragment
         android:id="@+id/historyListFragment"
-        android:name="org.linphone.ui.main.history.fragment.HistoryListFragment"
+        android:name="com.naminfo.ui.main.history.fragment.HistoryListFragment"
         android:label="HistoryListFragment"
         tools:layout="@layout/history_list_fragment">
         <action
@@ -75,7 +75,7 @@
 
     <fragment
         android:id="@+id/accountProfileFragment"
-        android:name="org.linphone.ui.main.settings.fragment.AccountProfileFragment"
+        android:name="com.naminfo.ui.main.settings.fragment.AccountProfileFragment"
         android:label="AccountProfileFragment"
         tools:layout="@layout/account_profile_fragment">
         <argument
@@ -110,7 +110,7 @@
 
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="org.linphone.ui.main.settings.fragment.SettingsFragment"
+        android:name="com.naminfo.ui.main.settings.fragment.SettingsFragment"
         android:label="SettingsFragment"
         tools:layout="@layout/settings_fragment" >
         <action
@@ -166,7 +166,7 @@
 
     <fragment
         android:id="@+id/helpFragment"
-        android:name="org.linphone.ui.main.help.fragment.HelpFragment"
+        android:name="com.naminfo.ui.main.help.fragment.HelpFragment"
         android:label="HelpFragment"
         tools:layout="@layout/help_fragment" >
         <action
@@ -190,7 +190,7 @@
 
     <fragment
         android:id="@+id/recordingsListFragment"
-        android:name="org.linphone.ui.main.recordings.fragment.RecordingsListFragment"
+        android:name="com.naminfo.ui.main.recordings.fragment.RecordingsListFragment"
         android:label="RecordingsListFragment"
         tools:layout="@layout/recordings_list_fragment">
 
@@ -216,31 +216,31 @@
 
     <fragment
         android:id="@+id/startCallFragment"
-        android:name="org.linphone.ui.main.history.fragment.StartCallFragment"
+        android:name="com.naminfo.ui.main.history.fragment.StartCallFragment"
         android:label="StartCallFragment"
         tools:layout="@layout/start_call_fragment" />
 
     <fragment
         android:id="@+id/newContactFragment"
-        android:name="org.linphone.ui.main.contacts.fragment.NewContactFragment"
+        android:name="com.naminfo.ui.main.contacts.fragment.NewContactFragment"
         android:label="NewContactFragment"
         tools:layout="@layout/contact_new_or_edit_fragment"/>
 
     <fragment
         android:id="@+id/accountProfileModeFragment"
-        android:name="org.linphone.ui.main.settings.fragment.AccountProfileModeFragment"
+        android:name="com.naminfo.ui.main.settings.fragment.AccountProfileModeFragment"
         android:label="AccountProfileModeFragment"
         tools:layout="@layout/account_profile_secure_mode_fragment"/>
 
     <fragment
         android:id="@+id/debugFragment"
-        android:name="org.linphone.ui.main.help.fragment.DebugFragment"
+        android:name="com.naminfo.ui.main.help.fragment.DebugFragment"
         android:label="DebugFragment"
         tools:layout="@layout/help_debug_fragment"/>
 
     <fragment
         android:id="@+id/accountSettingsFragment"
-        android:name="org.linphone.ui.main.settings.fragment.AccountSettingsFragment"
+        android:name="com.naminfo.ui.main.settings.fragment.AccountSettingsFragment"
         android:label="AccountSettingsFragment"
         tools:layout="@layout/account_settings_fragment">
         <argument
@@ -250,7 +250,7 @@
 
     <fragment
         android:id="@+id/conversationsListFragment"
-        android:name="org.linphone.ui.main.chat.fragment.ConversationsListFragment"
+        android:name="com.naminfo.ui.main.chat.fragment.ConversationsListFragment"
         android:label="ConversationsListFragment"
         tools:layout="@layout/chat_list_fragment" >
         <action
@@ -293,13 +293,13 @@
 
     <fragment
         android:id="@+id/startConversationFragment"
-        android:name="org.linphone.ui.main.chat.fragment.StartConversationFragment"
+        android:name="com.naminfo.ui.main.chat.fragment.StartConversationFragment"
         android:label="StartConversationFragment"
         tools:layout="@layout/start_chat_fragment"/>
 
     <fragment
         android:id="@+id/meetingsListFragment"
-        android:name="org.linphone.ui.main.meetings.fragment.MeetingsListFragment"
+        android:name="com.naminfo.ui.main.meetings.fragment.MeetingsListFragment"
         android:label="MeetingsListFragment"
         tools:layout="@layout/meetings_list_fragment">
         <action
@@ -336,7 +336,7 @@
 
     <fragment
         android:id="@+id/scheduleMeetingFragment"
-        android:name="org.linphone.ui.main.meetings.fragment.ScheduleMeetingFragment"
+        android:name="com.naminfo.ui.main.meetings.fragment.ScheduleMeetingFragment"
         android:label="ScheduleMeetingFragment"
         tools:layout="@layout/meeting_schedule_fragment">
         <action
@@ -360,7 +360,7 @@
 
     <fragment
         android:id="@+id/addParticipantsFragment"
-        android:name="org.linphone.ui.main.fragment.AddParticipantsFragment"
+        android:name="com.naminfo.ui.main.fragment.AddParticipantsFragment"
         android:label="AddParticipantsFragment"
         tools:layout="@layout/generic_add_participants_fragment">
         <argument
@@ -378,7 +378,7 @@
 
     <fragment
         android:id="@+id/meetingWaitingRoomFragment"
-        android:name="org.linphone.ui.main.meetings.fragment.MeetingWaitingRoomFragment"
+        android:name="com.naminfo.ui.main.meetings.fragment.MeetingWaitingRoomFragment"
         android:label="MeetingWaitingRoomFragment"
         tools:layout="@layout/meeting_waiting_room_fragment">
         <argument
@@ -388,7 +388,7 @@
 
     <fragment
         android:id="@+id/ldapServerConfigurationFragment"
-        android:name="org.linphone.ui.main.settings.fragment.LdapServerConfigurationFragment"
+        android:name="com.naminfo.ui.main.settings.fragment.LdapServerConfigurationFragment"
         android:label="LdapServerConfigurationFragment"
         tools:layout="@layout/settings_contacts_ldap" >
         <argument
@@ -399,7 +399,7 @@
 
     <fragment
         android:id="@+id/cardDavAddressBookConfigurationFragment"
-        android:name="org.linphone.ui.main.settings.fragment.CardDavAddressBookConfigurationFragment"
+        android:name="com.naminfo.ui.main.settings.fragment.CardDavAddressBookConfigurationFragment"
         android:label="CardDavAddressBookConfigurationFragment"
         tools:layout="@layout/settings_contacts_carddav" >
         <argument
@@ -410,14 +410,14 @@
 
     <fragment
         android:id="@+id/settingsAdvancedFragment"
-        android:name="org.linphone.ui.main.settings.fragment.SettingsAdvancedFragment"
+        android:name="com.naminfo.ui.main.settings.fragment.SettingsAdvancedFragment"
         android:label="SettingsAdvancedFragment"
         tools:layout="@layout/settings_advanced_fragment">
     </fragment>
 
     <fragment
         android:id="@+id/singleSignOnFragment"
-        android:name="org.linphone.ui.main.sso.fragment.SingleSignOnFragment"
+        android:name="com.naminfo.ui.main.sso.fragment.SingleSignOnFragment"
         android:label="SingleSignOnFragment"
         tools:layout="@layout/single_sign_on_fragment">
         <argument
@@ -438,19 +438,19 @@
 
     <fragment
         android:id="@+id/recordingMediaPlayerFragment"
-        android:name="org.linphone.ui.main.recordings.fragment.RecordingMediaPlayerFragment"
+        android:name="com.naminfo.ui.main.recordings.fragment.RecordingMediaPlayerFragment"
         android:label="RecordingMediaPlayerFragment"
         tools:layout="@layout/recording_player_fragment"/>
 
     <fragment
         android:id="@+id/settingsDeveloperFragment"
-        android:name="org.linphone.ui.main.settings.fragment.SettingsDeveloperFragment"
+        android:name="com.naminfo.ui.main.settings.fragment.SettingsDeveloperFragment"
         android:label="SettingsDeveloperFragment"
         tools:layout="@layout/settings_developer_fragment"/>
 
     <fragment
         android:id="@+id/settingsAdvancedCallFragment"
-        android:name="org.linphone.ui.main.settings.fragment.SettingsAdvancedCallFragment"
+        android:name="com.naminfo.ui.main.settings.fragment.SettingsAdvancedCallFragment"
         android:label="SettingsAdvancedCallFragment"
         tools:layout="@layout/settings_advanced_calls_fragment"/>
 

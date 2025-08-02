@@ -30,7 +30,7 @@ dependencyResolutionManagement {
                     "file://${localSdkPath}/maven_repository/"
                 )
                 content {
-                    includeGroup("org.linphone")
+                    includeGroup("com.linphone")
                 }
             }
         } else {
@@ -46,5 +46,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Linphone"
+rootProject.name = "NewMobionFS-V2"
 include(":app")

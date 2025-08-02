@@ -7,7 +7,7 @@
         <import type="android.view.View" />
         <variable
             name="model"
-            type="org.linphone.ui.main.model.SelectedAddressModel" />
+            type="com.naminfo.ui.main.model.SelectedAddressModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -19,7 +19,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.settings.viewmodel.AccountProfileViewModel" />
+            type="com.naminfo.ui.main.settings.viewmodel.AccountProfileViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

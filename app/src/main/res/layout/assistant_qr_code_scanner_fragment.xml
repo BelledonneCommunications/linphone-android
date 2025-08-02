@@ -9,7 +9,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.assistant.viewmodel.QrCodeViewModel" />
+            type="com.naminfo.ui.assistant.viewmodel.QrCodeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,7 +17,7 @@
         android:layout_height="match_parent"
         android:background="@color/bc_black">
 
-        <org.linphone.ui.call.view.RoundCornersTextureView
+        <com.naminfo.ui.call.view.RoundCornersTextureView
             android:id="@+id/qr_code_preview"
             android:layout_width="0dp"
             android:layout_height="0dp"

@@ -7,7 +7,7 @@
         <import type="android.view.View" />
         <variable
             name="model"
-            type="org.linphone.ui.main.meetings.model.ParticipantModel" />
+            type="com.naminfo.ui.main.meetings.model.ParticipantModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

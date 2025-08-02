@@ -8,13 +8,13 @@
 
     <fragment
         android:id="@+id/emptyFragment"
-        android:name="org.linphone.ui.main.fragment.EmptyFragment"
+        android:name="com.naminfo.ui.main.fragment.EmptyFragment"
         android:label="EmptyFragment"
         tools:layout="@layout/empty_fragment"/>
 
     <fragment
         android:id="@+id/historyFragment"
-        android:name="org.linphone.ui.main.history.fragment.HistoryFragment"
+        android:name="com.naminfo.ui.main.history.fragment.HistoryFragment"
         android:label="HistoryFragment"
         tools:layout="@layout/history_fragment">
         <argument
@@ -44,7 +44,7 @@
 
     <fragment
         android:id="@+id/conferenceConversationFragment"
-        android:name="org.linphone.ui.main.history.fragment.ConferenceConversationFragment"
+        android:name="com.naminfo.ui.main.history.fragment.ConferenceConversationFragment"
         android:label="ConferenceConversationFragment"
         tools:layout="@layout/chat_conversation_fragment">
         <argument

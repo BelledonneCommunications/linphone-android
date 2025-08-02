@@ -7,7 +7,7 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.viewmodel.MainViewModel" />
+            type="com.naminfo.ui.main.viewmodel.MainViewModel" />
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout
@@ -86,7 +86,7 @@
         <!-- Side Menu -->
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/drawer_menu_content"
-            android:name="org.linphone.ui.main.fragment.DrawerMenuFragment"
+            android:name="com.naminfo.ui.main.fragment.DrawerMenuFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="?attr/color_main2_000"

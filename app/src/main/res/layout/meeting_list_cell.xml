@@ -7,7 +7,7 @@
         <import type="android.view.View" />
         <variable
             name="model"
-            type="org.linphone.ui.main.meetings.model.MeetingModel" />
+            type="com.naminfo.ui.main.meetings.model.MeetingModel" />
         <variable
             name="onClickListener"
             type="View.OnClickListener" />

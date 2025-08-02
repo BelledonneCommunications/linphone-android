@@ -4,7 +4,7 @@
 
     <data>
         <import type="android.view.View" />
-        <import type="org.linphone.ui.call.conference.viewmodel.ConferenceViewModel" />
+        <import type="com.naminfo.ui.call.conference.viewmodel.ConferenceViewModel" />
         <variable
             name="gridClickListener"
             type="View.OnClickListener" />
@@ -16,7 +16,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.call.conference.viewmodel.ConferenceViewModel" />
+            type="com.naminfo.ui.call.conference.viewmodel.ConferenceViewModel" />
     </data>
 
     <LinearLayout

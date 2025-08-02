@@ -16,7 +16,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.recordings.viewmodel.RecordingMediaPlayerViewModel" />
+            type="com.naminfo.ui.main.recordings.viewmodel.RecordingMediaPlayerViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

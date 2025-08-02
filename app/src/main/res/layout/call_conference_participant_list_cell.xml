@@ -13,7 +13,7 @@
             type="View.OnLongClickListener" />
         <variable
             name="model"
-            type="org.linphone.ui.call.conference.model.ConferenceParticipantModel" />
+            type="com.naminfo.ui.call.conference.model.ConferenceParticipantModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

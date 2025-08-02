@@ -7,7 +7,7 @@
         <import type="android.view.View" />
         <variable
             name="model"
-            type="org.linphone.ui.call.conference.model.ConferenceParticipantDeviceModel" />
+            type="com.naminfo.ui.call.conference.model.ConferenceParticipantDeviceModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

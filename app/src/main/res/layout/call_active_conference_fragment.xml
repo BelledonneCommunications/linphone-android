@@ -5,7 +5,7 @@
 
     <data>
         <import type="android.view.View" />
-        <import type="org.linphone.ui.call.conference.viewmodel.ConferenceViewModel" />
+        <import type="com.naminfo.ui.call.conference.viewmodel.ConferenceViewModel" />
         <variable
             name="backClickListener"
             type="View.OnClickListener" />
@@ -26,16 +26,16 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.call.viewmodel.CurrentCallViewModel" />
+            type="com.naminfo.ui.call.viewmodel.CurrentCallViewModel" />
         <variable
             name="conferenceViewModel"
-            type="org.linphone.ui.call.conference.viewmodel.ConferenceViewModel" />
+            type="com.naminfo.ui.call.conference.viewmodel.ConferenceViewModel" />
         <variable
             name="callsViewModel"
-            type="org.linphone.ui.call.viewmodel.CallsViewModel" />
+            type="com.naminfo.ui.call.viewmodel.CallsViewModel" />
         <variable
             name="numpadModel"
-            type="org.linphone.ui.main.history.model.NumpadModel" />
+            type="com.naminfo.ui.main.history.model.NumpadModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -239,7 +239,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
-            <org.linphone.ui.call.view.RoundCornersTextureView
+            <com.naminfo.ui.call.view.RoundCornersTextureView
                 android:id="@+id/local_preview_video_surface"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

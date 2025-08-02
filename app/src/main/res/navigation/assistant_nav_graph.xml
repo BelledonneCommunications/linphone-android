@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/registerFragment"
-        android:name="org.linphone.ui.assistant.fragment.RegisterFragment"
+        android:name="com.naminfo.ui.assistant.fragment.RegisterFragment"
         android:label="RegisterFragment"
         tools:layout="@layout/assistant_register_fragment" >
 
@@ -24,19 +24,19 @@
 
     <fragment
         android:id="@+id/qrCodeScannerFragment"
-        android:name="org.linphone.ui.assistant.fragment.QrCodeScannerFragment"
+        android:name="com.naminfo.ui.assistant.fragment.QrCodeScannerFragment"
         android:label="QrCodeScannerFragment"
         tools:layout="@layout/assistant_qr_code_scanner_fragment" />
 
     <fragment
         android:id="@+id/thirdPartySipAccountLoginFragment"
-        android:name="org.linphone.ui.assistant.fragment.ThirdPartySipAccountLoginFragment"
+        android:name="com.naminfo.ui.assistant.fragment.ThirdPartySipAccountLoginFragment"
         android:label="ThirdPartySipAccountLoginFragment"
         tools:layout="@layout/assistant_third_party_sip_account_login_fragment" />
 
     <fragment
         android:id="@+id/thirdPartySipAccountWarningFragment"
-        android:name="org.linphone.ui.assistant.fragment.ThirdPartySipAccountWarningFragment"
+        android:name="com.naminfo.ui.assistant.fragment.ThirdPartySipAccountWarningFragment"
         android:label="ThirdPartySipAccountWarningFragment"
         tools:layout="@layout/assistant_third_party_sip_account_warning_fragment" >
 
@@ -66,7 +66,7 @@
 
     <fragment
         android:id="@+id/registerCodeConfirmationFragment"
-        android:name="org.linphone.ui.assistant.fragment.RegisterCodeConfirmationFragment"
+        android:name="com.naminfo.ui.assistant.fragment.RegisterCodeConfirmationFragment"
         android:label="RegisterCodeConfirmationFragment"
         tools:layout="@layout/assistant_register_confirm_sms_code_fragment" >
         <action
@@ -83,7 +83,7 @@
 
     <fragment
         android:id="@+id/permissionsFragment"
-        android:name="org.linphone.ui.assistant.fragment.PermissionsFragment"
+        android:name="com.naminfo.ui.assistant.fragment.PermissionsFragment"
         android:label="PermissionsFragment"
         tools:layout="@layout/assistant_permissions_fragment">
 
@@ -104,7 +104,7 @@
 
     <fragment
         android:id="@+id/landingFragment"
-        android:name="org.linphone.ui.assistant.fragment.LandingFragment"
+        android:name="com.naminfo.ui.assistant.fragment.LandingFragment"
         android:label="LandingFragment"
         tools:layout="@layout/assistant_landing_fragment" >
 
@@ -157,7 +157,7 @@
 
     <fragment
         android:id="@+id/singleSignOnFragment"
-        android:name="org.linphone.ui.main.sso.fragment.SingleSignOnFragment"
+        android:name="com.naminfo.ui.main.sso.fragment.SingleSignOnFragment"
         android:label="SingleSignOnFragment"
         tools:layout="@layout/single_sign_on_fragment">
         <argument
@@ -179,7 +179,7 @@
 
     <fragment
         android:id="@+id/helpFragment"
-        android:name="org.linphone.ui.main.help.fragment.HelpFragment"
+        android:name="com.naminfo.ui.main.help.fragment.HelpFragment"
         android:label="HelpFragment"
         tools:layout="@layout/help_fragment">
         <action
@@ -194,7 +194,7 @@
 
     <fragment
         android:id="@+id/debugFragment"
-        android:name="org.linphone.ui.main.help.fragment.DebugFragment"
+        android:name="com.naminfo.ui.main.help.fragment.DebugFragment"
         android:label="DebugFragment"
         tools:layout="@layout/help_debug_fragment"/>
 

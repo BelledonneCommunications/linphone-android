@@ -7,7 +7,7 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.chat.viewmodel.ChatMessageLongPressViewModel" />
+            type="com.naminfo.ui.main.chat.viewmodel.ChatMessageLongPressViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

@@ -7,7 +7,7 @@
         <import type="android.view.View" />
         <variable
             name="model"
-            type="org.linphone.ui.main.recordings.model.RecordingModel" />
+            type="com.naminfo.ui.main.recordings.model.RecordingModel" />
         <variable
             name="onClickListener"
             type="View.OnClickListener" />

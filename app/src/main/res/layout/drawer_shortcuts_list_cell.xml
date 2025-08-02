@@ -6,7 +6,7 @@
         <import type="android.view.View" />
         <variable
             name="model"
-            type="org.linphone.ui.main.model.ShortcutModel" />
+            type="com.naminfo.ui.main.model.ShortcutModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

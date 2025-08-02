@@ -25,7 +25,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.help.viewmodel.HelpViewModel" />
+            type="com.naminfo.ui.main.help.viewmodel.HelpViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

@@ -10,7 +10,7 @@
             type="View.OnClickListener" />
         <variable
             name="model"
-            type="org.linphone.ui.main.history.model.NumpadModel" />
+            type="com.naminfo.ui.main.history.model.NumpadModel" />
         <variable
             name="showCallTransferIcon"
             type="Boolean" />

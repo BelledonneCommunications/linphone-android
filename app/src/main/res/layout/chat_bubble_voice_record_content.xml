@@ -10,7 +10,7 @@
             type="View.OnLongClickListener" />
         <variable
             name="model"
-            type="org.linphone.ui.main.chat.model.MessageModel" />
+            type="com.naminfo.ui.main.chat.model.MessageModel" />
         <variable
             name="inflatedVisibility"
             type="Integer" />

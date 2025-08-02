@@ -4,13 +4,13 @@
 
     <data>
         <import type="android.view.View" />
-        <import type="org.linphone.ui.call.conference.viewmodel.ConferenceViewModel" />
+        <import type="com.naminfo.ui.call.conference.viewmodel.ConferenceViewModel" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.call.viewmodel.CurrentCallViewModel" />
+            type="com.naminfo.ui.call.viewmodel.CurrentCallViewModel" />
         <variable
             name="conferenceViewModel"
-            type="org.linphone.ui.call.conference.viewmodel.ConferenceViewModel" />
+            type="com.naminfo.ui.call.conference.viewmodel.ConferenceViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,7 +19,7 @@
         android:layout_height="match_parent"
         android:background="@color/gray_900">
 
-        <org.linphone.ui.call.conference.view.GridBoxLayout
+        <com.naminfo.ui.call.conference.view.GridBoxLayout
             android:id="@+id/grid_box_layout"
             android:layout_width="0dp"
             android:layout_height="0dp"

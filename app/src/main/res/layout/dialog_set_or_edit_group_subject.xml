@@ -7,7 +7,7 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.model.GroupSetOrEditSubjectDialogModel" />
+            type="com.naminfo.ui.main.model.GroupSetOrEditSubjectDialogModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

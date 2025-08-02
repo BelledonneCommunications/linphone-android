@@ -13,7 +13,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.contacts.viewmodel.ContactsListViewModel" />
+            type="com.naminfo.ui.main.contacts.viewmodel.ContactsListViewModel" />
     </data>
 
     <androidx.slidingpanelayout.widget.SlidingPaneLayout

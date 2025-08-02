@@ -6,7 +6,7 @@
         <import type="android.view.View" />
         <variable
             name="model"
-            type="org.linphone.ui.main.settings.model.CardDavLdapModel" />
+            type="com.naminfo.ui.main.settings.model.CardDavLdapModel" />
     </data>
 
     <androidx.appcompat.widget.AppCompatTextView

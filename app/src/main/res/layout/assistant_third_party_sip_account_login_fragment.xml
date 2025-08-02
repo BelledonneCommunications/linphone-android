@@ -11,7 +11,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.assistant.viewmodel.ThirdPartySipAccountLoginViewModel" />
+            type="com.naminfo.ui.assistant.viewmodel.ThirdPartySipAccountLoginViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

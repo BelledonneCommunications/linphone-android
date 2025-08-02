@@ -7,7 +7,7 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.call.model.ZrtpAlertDialogModel" />
+            type="com.naminfo.ui.call.model.ZrtpAlertDialogModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

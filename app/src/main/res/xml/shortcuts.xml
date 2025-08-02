@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
-    <share-target android:targetClass="org.linphone.ui.main.MainActivity">
+    <share-target android:targetClass="com.naminfo.ui.main.MainActivity">
         <data android:mimeType="text/*" />
         <data android:mimeType="image/*" />
         <data android:mimeType="audio/*" />

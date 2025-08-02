@@ -8,7 +8,7 @@
         <import type="org.linphone.core.SecurityLevel" />
         <variable
             name="model"
-            type="org.linphone.contacts.AbstractAvatarModel" />
+            type="com.naminfo.contacts.AbstractAvatarModel" />
         <variable
             name="hidePresence"
             type="Boolean" />

@@ -19,7 +19,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.history.viewmodel.HistoryListViewModel" />
+            type="com.naminfo.ui.main.history.viewmodel.HistoryListViewModel" />
     </data>
 
     <androidx.slidingpanelayout.widget.SlidingPaneLayout

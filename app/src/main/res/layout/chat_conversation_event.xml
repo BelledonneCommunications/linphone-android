@@ -6,7 +6,7 @@
         <import type="android.view.View" />
         <variable
             name="model"
-            type="org.linphone.ui.main.chat.model.EventModel" />
+            type="com.naminfo.ui.main.chat.model.EventModel" />
     </data>
 
     <RelativeLayout

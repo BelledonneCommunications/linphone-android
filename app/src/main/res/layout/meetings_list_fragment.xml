@@ -16,7 +16,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.meetings.viewmodel.MeetingsListViewModel" />
+            type="com.naminfo.ui.main.meetings.viewmodel.MeetingsListViewModel" />
     </data>
 
     <androidx.slidingpanelayout.widget.SlidingPaneLayout

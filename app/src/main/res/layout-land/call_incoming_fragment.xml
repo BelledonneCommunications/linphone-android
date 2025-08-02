@@ -7,7 +7,7 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.call.viewmodel.CurrentCallViewModel" />
+            type="com.naminfo.ui.call.viewmodel.CurrentCallViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -75,7 +75,7 @@
             app:layout_constraintTop_toTopOf="@id/name_address"
             app:layout_constraintBottom_toBottomOf="@id/name_address" />
 
-        <org.linphone.ui.call.view.RoundCornersTextureView
+        <com.naminfo.ui.call.view.RoundCornersTextureView
             android:id="@+id/remote_video_surface"
             android:layout_width="0dp"
             android:layout_height="0dp"

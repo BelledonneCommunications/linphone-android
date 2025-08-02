@@ -4,10 +4,10 @@
 
     <data>
         <import type="android.view.View" />
-        <import type="org.linphone.core.AudioDevice.Type" />
+        <import type="com.naminfo.core.AudioDevice.Type" />
         <variable
             name="model"
-            type="org.linphone.ui.call.model.AudioDeviceModel" />
+            type="com.naminfo.ui.call.model.AudioDeviceModel" />
     </data>
 
     <com.google.android.material.radiobutton.MaterialRadioButton

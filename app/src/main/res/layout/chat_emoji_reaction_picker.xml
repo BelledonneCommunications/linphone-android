@@ -10,7 +10,7 @@
             type="View.OnClickListener" />
         <variable
             name="model"
-            type="org.linphone.ui.main.chat.model.MessageModel" />
+            type="com.naminfo.ui.main.chat.model.MessageModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

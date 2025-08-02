@@ -6,7 +6,7 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.sso.viewmodel.SingleSignOnViewModel" />
+            type="com.naminfo.ui.main.sso.viewmodel.SingleSignOnViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

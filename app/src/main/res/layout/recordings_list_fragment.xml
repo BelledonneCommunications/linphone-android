@@ -10,7 +10,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.recordings.viewmodel.RecordingsListViewModel" />
+            type="com.naminfo.ui.main.recordings.viewmodel.RecordingsListViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

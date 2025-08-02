@@ -10,7 +10,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.chat.viewmodel.ConversationMediaListViewModel" />
+            type="com.naminfo.ui.main.chat.viewmodel.ConversationMediaListViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

@@ -10,7 +10,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.contacts.model.ContactTrustDialogModel" />
+            type="com.naminfo.ui.main.contacts.model.ContactTrustDialogModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

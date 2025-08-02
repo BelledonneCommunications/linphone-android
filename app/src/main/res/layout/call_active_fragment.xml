@@ -25,13 +25,13 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.call.viewmodel.CurrentCallViewModel" />
+            type="com.naminfo.ui.call.viewmodel.CurrentCallViewModel" />
         <variable
             name="callsViewModel"
-            type="org.linphone.ui.call.viewmodel.CallsViewModel" />
+            type="com.naminfo.ui.call.viewmodel.CallsViewModel" />
         <variable
             name="numpadModel"
-            type="org.linphone.ui.main.history.model.NumpadModel" />
+            type="com.naminfo.ui.main.history.model.NumpadModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -104,7 +104,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
-            <org.linphone.ui.call.view.RoundCornersTextureView
+            <com.naminfo.ui.call.view.RoundCornersTextureView
                 android:id="@+id/remote_video_surface"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -254,7 +254,7 @@
                 app:layout_constraintStart_toEndOf="@id/back"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
-            <org.linphone.ui.call.view.RoundCornersTextureView
+            <com.naminfo.ui.call.view.RoundCornersTextureView
                 android:id="@+id/local_preview_video_surface"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

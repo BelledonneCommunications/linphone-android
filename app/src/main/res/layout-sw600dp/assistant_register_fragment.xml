@@ -20,7 +20,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.assistant.viewmodel.AccountCreationViewModel" />
+            type="com.naminfo.ui.assistant.viewmodel.AccountCreationViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

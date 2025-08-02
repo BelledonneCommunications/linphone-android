@@ -22,7 +22,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.meetings.viewmodel.MeetingViewModel" />
+            type="com.naminfo.ui.main.meetings.viewmodel.MeetingViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

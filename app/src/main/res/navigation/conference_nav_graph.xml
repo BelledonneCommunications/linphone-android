@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/conferenceGridFragment"
-        android:name="org.linphone.ui.call.conference.fragment.ConferenceGridFragment"
+        android:name="com.naminfo.ui.call.conference.fragment.ConferenceGridFragment"
         android:label="ConferenceGridFragment"
         tools:layout="@layout/call_conference_grid_fragment">
         <action
@@ -26,7 +26,7 @@
 
     <fragment
         android:id="@+id/conferenceActiveSpeakerFragment"
-        android:name="org.linphone.ui.call.conference.fragment.ConferenceActiveSpeakerFragment"
+        android:name="com.naminfo.ui.call.conference.fragment.ConferenceActiveSpeakerFragment"
         android:label="ConferenceActiveSpeakerFragment"
         tools:layout="@layout/call_conference_active_speaker_fragment">
         <action
@@ -44,7 +44,7 @@
     </fragment>
     <fragment
         android:id="@+id/conferenceAudioOnlyFragment"
-        android:name="org.linphone.ui.call.conference.fragment.ConferenceAudioOnlyFragment"
+        android:name="com.naminfo.ui.call.conference.fragment.ConferenceAudioOnlyFragment"
         android:label="ConferenceAudioOnlyFragment"
         tools:layout="@layout/call_conference_audio_only_fragment">
         <action

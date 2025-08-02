@@ -8,7 +8,7 @@
             type="String" />
         <variable
             name="model"
-            type="org.linphone.ui.main.history.model.NumpadModel" />
+            type="com.naminfo.ui.main.history.model.NumpadModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

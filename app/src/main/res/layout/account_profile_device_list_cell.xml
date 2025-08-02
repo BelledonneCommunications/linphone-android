@@ -7,7 +7,7 @@
         <import type="android.view.View" />
         <variable
             name="model"
-            type="org.linphone.ui.main.settings.model.AccountDeviceModel" />
+            type="com.naminfo.ui.main.settings.model.AccountDeviceModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

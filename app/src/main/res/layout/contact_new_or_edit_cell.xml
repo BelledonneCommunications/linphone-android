@@ -8,7 +8,7 @@
         <import type="android.text.InputType" />
         <variable
             name="model"
-            type="org.linphone.ui.main.contacts.model.NewOrEditNumberOrAddressModel" />
+            type="com.naminfo.ui.main.contacts.model.NewOrEditNumberOrAddressModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -10,7 +10,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.fileviewer.viewmodel.MediaViewModel" />
+            type="com.naminfo.ui.fileviewer.viewmodel.MediaViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,7 +26,7 @@
             android:visibility="@{viewModel.fullScreenMode ? View.GONE : viewModel.isAudio || viewModel.isVideo ? View.VISIBLE : View.GONE}"
             app:constraint_referenced_ids="play_pause_audio_playback, progress, duration" />
 
-        <org.linphone.ui.fileviewer.view.RatioTextureView
+        <com.naminfo.ui.fileviewer.view.RatioTextureView
             android:id="@+id/video_player"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

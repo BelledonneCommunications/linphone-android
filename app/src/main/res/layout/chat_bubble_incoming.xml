@@ -6,7 +6,7 @@
     <data>
         <import type="android.view.View" />
         <import type="com.google.android.flexbox.JustifyContent" />
-        <import type="org.linphone.core.ChatMessage.State" />
+        <import type="com.naminfo.core.ChatMessage.State" />
         <variable
             name="onLongClickListener"
             type="View.OnLongClickListener" />
@@ -21,7 +21,7 @@
             type="View.OnClickListener" />
         <variable
             name="model"
-            type="org.linphone.ui.main.chat.model.MessageModel" />
+            type="com.naminfo.ui.main.chat.model.MessageModel" />
         <variable
             name="inflatedVisibility"
             type="Integer" />
@@ -224,7 +224,7 @@
                 bind:model="@{model}"
                 bind:onLongClickListener="@{onLongClickListener}" />
 
-            <org.linphone.ui.main.chat.view.ChatBubbleTextView
+            <com.naminfo.ui.main.chat.view.ChatBubbleTextView
                 style="@style/default_text_style"
                 android:id="@+id/text_content"
                 android:onLongClick="@{onLongClickListener}"

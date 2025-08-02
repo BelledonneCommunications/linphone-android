@@ -10,7 +10,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.meetings.viewmodel.MeetingWaitingRoomViewModel" />
+            type="com.naminfo.ui.main.meetings.viewmodel.MeetingWaitingRoomViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -87,7 +87,7 @@
             app:layout_constraintTop_toTopOf="@id/no_video_background"
             app:layout_constraintBottom_toBottomOf="@id/no_video_background" />
 
-        <org.linphone.ui.call.view.RoundCornersTextureView
+        <com.naminfo.ui.call.view.RoundCornersTextureView
             android:id="@+id/video_preview"
             android:layout_width="0dp"
             android:layout_height="0dp"

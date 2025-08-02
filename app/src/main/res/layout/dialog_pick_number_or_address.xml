@@ -7,7 +7,7 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel" />
+            type="com.naminfo.ui.main.contacts.model.NumberOrAddressPickerDialogModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

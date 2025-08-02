@@ -7,7 +7,7 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.chat.viewmodel.SendMessageInConversationViewModel" />
+            type="com.naminfo.ui.main.chat.viewmodel.SendMessageInConversationViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -4,13 +4,13 @@
 
     <data>
         <import type="android.view.View" />
-        <import type="org.linphone.ui.call.conference.viewmodel.ConferenceViewModel" />
+        <import type="com.naminfo.ui.call.conference.viewmodel.ConferenceViewModel" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.call.viewmodel.CurrentCallViewModel" />
+            type="com.naminfo.ui.call.viewmodel.CurrentCallViewModel" />
         <variable
             name="conferenceViewModel"
-            type="org.linphone.ui.call.conference.viewmodel.ConferenceViewModel" />
+            type="com.naminfo.ui.call.conference.viewmodel.ConferenceViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

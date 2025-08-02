@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/emptyFragment"
-        android:name="org.linphone.ui.main.fragment.EmptyFragment"
+        android:name="com.naminfo.ui.main.fragment.EmptyFragment"
         android:label="EmptyFragment"
         tools:layout="@layout/empty_fragment"/>
 
     <fragment
         android:id="@+id/meetingFragment"
-        android:name="org.linphone.ui.main.meetings.fragment.MeetingFragment"
+        android:name="com.naminfo.ui.main.meetings.fragment.MeetingFragment"
         android:label="MeetingFragment"
         tools:layout="@layout/meeting_fragment">
         <argument
@@ -41,7 +41,7 @@
 
     <fragment
         android:id="@+id/editMeetingFragment"
-        android:name="org.linphone.ui.main.meetings.fragment.EditMeetingFragment"
+        android:name="com.naminfo.ui.main.meetings.fragment.EditMeetingFragment"
         android:label="EditMeetingFragment"
         tools:layout="@layout/meeting_edit_fragment">
         <argument
@@ -58,7 +58,7 @@
 
     <fragment
         android:id="@+id/addParticipantsFragment"
-        android:name="org.linphone.ui.main.fragment.AddParticipantsFragment"
+        android:name="com.naminfo.ui.main.fragment.AddParticipantsFragment"
         android:label="AddParticipantsFragment"
         tools:layout="@layout/generic_add_participants_fragment">
         <argument

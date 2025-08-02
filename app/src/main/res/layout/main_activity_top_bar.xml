@@ -19,7 +19,7 @@
             type="String" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.viewmodel.AbstractMainViewModel" />
+            type="com.naminfo.ui.main.viewmodel.AbstractMainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

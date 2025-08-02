@@ -6,10 +6,10 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.call.viewmodel.CurrentCallViewModel" />
+            type="com.naminfo.ui.call.viewmodel.CurrentCallViewModel" />
         <variable
             name="model"
-            type="org.linphone.ui.call.model.CallMediaEncryptionModel" />
+            type="com.naminfo.ui.call.model.CallMediaEncryptionModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -10,7 +10,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.settings.viewmodel.AccountSettingsViewModel" />
+            type="com.naminfo.ui.main.settings.viewmodel.AccountSettingsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -7,7 +7,7 @@
         <import type="android.view.View" />
         <variable
             name="model"
-            type="org.linphone.ui.call.conference.model.ConferenceParticipantDeviceModel" />
+            type="com.naminfo.ui.call.conference.model.ConferenceParticipantDeviceModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -36,7 +36,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
 
-        <org.linphone.ui.call.view.RoundCornersTextureView
+        <com.naminfo.ui.call.view.RoundCornersTextureView
             android:id="@+id/participant_video_surface"
             android:layout_width="0dp"
             android:layout_height="0dp"

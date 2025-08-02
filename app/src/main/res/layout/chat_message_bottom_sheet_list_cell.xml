@@ -7,7 +7,7 @@
         <import type="android.view.View" />
         <variable
             name="model"
-            type="org.linphone.ui.main.chat.model.MessageBottomSheetParticipantModel" />
+            type="com.naminfo.ui.main.chat.model.MessageBottomSheetParticipantModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
