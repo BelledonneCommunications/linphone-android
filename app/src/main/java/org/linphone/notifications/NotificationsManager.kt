@@ -204,27 +204,23 @@ class NotificationsManager
                     )
                     showCallNotification(call, false)
                 }
-                Call.State.Connected,
-                Call.State.StreamsRunning -> {
-                    if (currentState == Call.State.Connected && call.dir == Call.Dir.Incoming) {
+                Call.State.Connected -> {
+                    if (call.dir == Call.Dir.Incoming) {
                         Log.i(
                             "$TAG Connected call was incoming (so it was answered), removing incoming call notification"
                         )
                         removeIncomingCallNotification()
                     }
-
-                    if (currentState == Call.State.Connected || call.dir == Call.Dir.Incoming) {
-                        Log.i(
-                            "$TAG Showing connected call notification for [${call.remoteAddress.asStringUriOnly()}]"
-                        )
-                        showCallNotification(call, false)
-                    }
+                    Log.i(
+                        "$TAG Showing connected call notification for [${call.remoteAddress.asStringUriOnly()}]"
+                    )
+                    showCallNotification(call, false)
                 }
-                Call.State.Updating -> {
+                Call.State.StreamsRunning -> {
                     val notifiable = getNotifiableForCall(call)
                     if (notifiable.notificationId == currentInCallServiceNotificationId) {
                         Log.i(
-                            "$TAG Update foreground Service type in case video was enabled/disabled since last time"
+                            "$TAG Update foreground service type in case video was enabled/disabled since last time"
                         )
                         startInCallForegroundService(call)
                     }
@@ -853,7 +849,7 @@ class NotificationsManager
 
         if (Compatibility.isPostNotificationsPermissionGranted(context)) {
             Log.i(
-                "$TAG Service found, starting it as foreground using notification ID [${notifiable.notificationId}] with type(s) [$mask]"
+                "$TAG Service found, starting it as foreground using notification ID [${notifiable.notificationId}] with type(s) [${foregroundServiceTypeMaskToString(mask)}]($mask)"
             )
             Compatibility.startServiceForeground(
                 service,
@@ -1775,6 +1771,26 @@ class NotificationsManager
                 Log.e("$TAG Failed to play message received sound file: $e")
             }
         }
+    }
+
+    @AnyThread
+    fun foregroundServiceTypeMaskToString(mask: Int): String {
+        var stringBuilder = StringBuilder()
+        val values = hashMapOf(
+            "PHONE_CALL" to Compatibility.FOREGROUND_SERVICE_TYPE_PHONE_CALL,
+            "MICROPHONE" to Compatibility.FOREGROUND_SERVICE_TYPE_MICROPHONE,
+            "CAMERA" to Compatibility.FOREGROUND_SERVICE_TYPE_CAMERA,
+            "SPECIAL_USE" to Compatibility.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
+        )
+        for ((key, value) in values) {
+            if (mask and value == value) {
+                if (stringBuilder.isNotEmpty()) {
+                    stringBuilder.append(" & ")
+                }
+                stringBuilder.append(key)
+            }
+        }
+        return stringBuilder.toString()
     }
 
     class Notifiable(val notificationId: Int) {
