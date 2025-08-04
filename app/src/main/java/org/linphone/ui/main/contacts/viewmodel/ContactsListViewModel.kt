@@ -88,14 +88,6 @@ class ContactsListViewModel
             Log.i("$TAG Magic search contacts available")
             processMagicSearchResults(magicSearch.lastSearch, favourites = false)
         }
-    }
-
-    private val favouritesMagicSearchListener = object : MagicSearchListenerStub() {
-        @WorkerThread
-        override fun onSearchResultsReceived(magicSearch: MagicSearch) {
-            Log.i("$TAG Magic search favourites contacts available")
-            processMagicSearchResults(magicSearch.lastSearch, favourites = true)
-        }
 
         @WorkerThread
         override fun onResultsLimitReached(magicSearch: MagicSearch, sourcesFlag: Int) {
@@ -103,6 +95,14 @@ class ContactsListViewModel
             if (searchFilter.value.orEmpty().isNotEmpty()) {
                 showResultsLimitReached.postValue(true)
             }
+        }
+    }
+
+    private val favouritesMagicSearchListener = object : MagicSearchListenerStub() {
+        @WorkerThread
+        override fun onSearchResultsReceived(magicSearch: MagicSearch) {
+            Log.i("$TAG Magic search favourites contacts available")
+            processMagicSearchResults(magicSearch.lastSearch, favourites = true)
         }
     }
 
