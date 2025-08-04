@@ -45,7 +45,7 @@ class ConversationContactOrSuggestionModel
         ?: if (friend != null) {
             friend.name ?: LinphoneUtils.getDisplayName(address)
         } else {
-            address.username.orEmpty()
+            address.username ?: address.domain.orEmpty()
         }
 
     val sipUri = address.asStringUriOnly()
