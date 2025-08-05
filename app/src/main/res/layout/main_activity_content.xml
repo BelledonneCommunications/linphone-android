@@ -33,7 +33,7 @@
         android:id="@+id/tabs_fragment"
         android:name="org.linphone.activities.main.fragments.TabsFragment"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/main_activity_tabs_fragment_size"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         tools:layout="@layout/tabs_fragment"/>
 

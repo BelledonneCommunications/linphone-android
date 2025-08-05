@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
+<layout xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -24,6 +24,12 @@
             name="viewModel"
             type="org.linphone.activities.main.viewmodels.TabsViewModel" />
     </data>
+
+    <RelativeLayout
+        android:id="@+id/tabs_container"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="?attr/navbarColor">
 
     <androidx.constraintlayout.motion.widget.MotionLayout
         android:id="@+id/motion_layout"
@@ -52,24 +58,19 @@
             android:orientation="vertical"
             layout_constraintGuide_percent="@{viewModel.rightAnchor, default=0.75}" />
 
-        <RelativeLayout
+        <ImageView
             android:id="@+id/contacts"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@drawable/footer_button"
             android:onClick="@{contactsClickListener}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/guidelineLeft">
+            app:layout_constraintEnd_toEndOf="@id/guidelineLeft"
+            android:padding="15dp"
+            android:contentDescription="@string/content_description_menu_contacts"
+            android:src="@drawable/icon_users"
+            app:tint="@color/tab_icon_color">
+        </ImageView>
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:padding="15dp"
-                android:contentDescription="@string/content_description_menu_contacts"
-                android:src="@drawable/icon_users"
-                app:tint="@color/dark_primary_text_color" />
-        </RelativeLayout>
 
         <ImageView
             android:id="@+id/history"
@@ -79,8 +80,7 @@
             android:padding="15dp"
             android:contentDescription="@string/content_description_menu_history"
             android:src="@drawable/icon_history"
-            android:background="@drawable/footer_button"
-            app:tint="@color/dark_primary_text_color"
+            app:tint="@color/tab_icon_color"
             app:layout_constraintStart_toStartOf="@id/guidelineLeft"
             app:layout_constraintEnd_toEndOf="@id/guidelineMiddle" />
 
@@ -98,25 +98,20 @@
             app:layout_constraintRight_toLeftOf="@id/guidelineMiddle"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <RelativeLayout
+        <ImageView
             android:id="@+id/dialer"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@drawable/footer_button"
             android:onClick="@{dialerClickListener}"
             app:layout_constraintStart_toStartOf="@id/guidelineMiddle"
-            app:layout_constraintEnd_toEndOf="@id/guidelineRight">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@id/guidelineRight"
                 android:layout_centerInParent="true"
                 android:padding="15dp"
                 android:contentDescription="@string/content_description_menu_dialer"
                 android:src="@drawable/icon_dialpad"
-                app:tint="@color/dark_primary_text_color" />
+                app:tint="@color/tab_icon_color" >
 
-        </RelativeLayout>
+        </ImageView>
 
         <!--
         android:src="@drawable/footer_chat"
@@ -130,7 +125,7 @@
             android:layout_centerInParent="true"
             android:contentDescription="@string/content_description_menu_chat"
             android:padding="15dp"
-            android:background="@drawable/footer_button"
+            app:tint="@color/tab_icon_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/guidelineRight" />
 
@@ -154,13 +149,15 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
+            app:tint="@color/tab_icon_color"
             android:contentDescription="@string/content_description_menu_voicemail"
-            android:padding="15dp"
-            android:background="@drawable/footer_button"
-            android:src="@drawable/footer_voicemail"
             android:onClick="@{voicemailClickListener}"
+            android:padding="15dp"
+            android:src="@drawable/footer_voicemail"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/guidelineRight"/>
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@id/guidelineRight"
+            tools:layout_editor_absoluteY="0dp" />
 
         <TextView
             android:id="@+id/voicemail_unread_count"
@@ -180,8 +177,9 @@
             android:id="@+id/selector"
             android:layout_width="0dp"
             android:layout_height="@dimen/tabs_fragment_selector_size"
-            android:background="?attr/accentColor" />
+            android:background="@color/transparent_color"
+            android:visibility="gone"/>
 
     </androidx.constraintlayout.motion.widget.MotionLayout>
-
+    </RelativeLayout>
 </layout>

@@ -24,12 +24,15 @@ import android.content.ComponentCallbacks2
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import androidx.annotation.MainThread
 import androidx.annotation.StringRes
 import androidx.annotation.WorkerThread
@@ -179,6 +182,11 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                 options ->
             options.addEventProcessor(SentryEventProcessor(this))
         })
+
+        enableEdgeToEdge(
+            SystemBarStyle.dark(Color.TRANSPARENT),
+            SystemBarStyle.dark(Color.TRANSPARENT)
+        )
 
         if (intent.hasExtra("login")) {
             Log.i("AUTH login COMPLETE!")
