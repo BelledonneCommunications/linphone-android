@@ -22,8 +22,18 @@
         <item name="colorPrimary">@color/primary_color</item>
         <item name="android:colorPrimary">@color/primary_color</item>
         <!-- Comment out the following line to disable system's status bar coloring -->
-        <item name="android:colorPrimaryDark">@color/primary_dark_color</item>
-        <item name="android:navigationBarColor">@color/voip_dark_color</item>
+        <!-- original <item name="android:colorPrimaryDark">@color/primary_dark_color</item>-->
+        <item name="android:colorPrimaryDark">@color/white_color</item>
+
+        <!-- original <item name="android:navigationBarColor">@color/voip_dark_color</item>-->
+        <item name="android:navigationBarColor">@color/white_color</item>
+        <!--<item name="android:windowTranslucentNavigation">true</item>-->
+
+        <!--<item name="android:statusBarColor">@android:color/white</item>-->
+        <item name="android:statusBarColor">@android:color/white</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <!--<item name="android:windowTranslucentStatus">true</item>-->
+
 
         <item name="android:textColorPrimary">@color/light_primary_text_color</item>
         <item name="android:textColorSecondary">@color/grey_color</item>

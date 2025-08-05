@@ -20,7 +20,12 @@
 package org.linphone.activities.main.fragments
 
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.View
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
@@ -51,6 +56,22 @@ class TabsFragment : GenericFragment<TabsFragmentBinding>(), NavController.OnDes
             ViewModelProvider(this)[TabsViewModel::class.java]
         }
         binding.viewModel = viewModel
+
+        val tabsContainer = view.findViewById<RelativeLayout>(R.id.tabs_container)
+        ViewCompat.setOnApplyWindowInsetsListener(tabsContainer) { v, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
+
+            val contentDpHeight = 60f
+            val contentPixelHeight = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                contentDpHeight,
+                resources.displayMetrics
+            )
+
+            tabsContainer.layoutParams.height = (insets.bottom + contentPixelHeight).toInt()
+
+            WindowInsetsCompat.CONSUMED
+        }
 
         binding.setHistoryClickListener {
             when (findNavController().currentDestination?.id) {
@@ -149,6 +170,24 @@ class TabsFragment : GenericFragment<TabsFragmentBinding>(), NavController.OnDes
                     R.id.chat_rooms
                 )
             }
+        }
+
+        // Highlight the appropriate tab
+        // First reset all
+        val tabChat = view?.findViewById<ImageView>(R.id.chat)
+        val tabContacts = view?.findViewById<ImageView>(R.id.contacts)
+        val tabDialpad = view?.findViewById<ImageView>(R.id.dialer)
+        val tabHistory = view?.findViewById<ImageView>(R.id.history)
+        if (tabChat != null) tabChat.isSelected = false
+        if (tabContacts != null) tabContacts.isSelected = false
+        if (tabDialpad != null) tabDialpad.isSelected = false
+        if (tabHistory != null) tabHistory.isSelected = false
+
+        when (destination.id) {
+            R.id.dialerFragment -> if (tabDialpad != null) tabDialpad.isSelected = true
+            R.id.dimensionsContactsFragment -> if (tabContacts != null) tabContacts.isSelected = true
+            R.id.masterCallLogsFragment -> if (tabHistory != null) tabHistory.isSelected = true
+            R.id.masterChatRoomsFragment -> if (tabChat != null) tabChat.isSelected = true
         }
     }
 }

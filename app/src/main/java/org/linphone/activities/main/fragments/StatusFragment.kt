@@ -20,7 +20,11 @@
 package org.linphone.activities.main.fragments
 
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.View
+import android.widget.RelativeLayout
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
@@ -53,6 +57,22 @@ class StatusFragment : GenericFragment<StatusFragmentBinding>() {
             if (defaultAccount != null) {
                 viewModel.updateDefaultAccountRegistrationStatus(defaultAccount.state)
             }
+        }
+
+        val statusContainer = view.findViewById<RelativeLayout>(R.id.status_container)
+        ViewCompat.setOnApplyWindowInsetsListener(statusContainer) { v, windowInsets ->
+            val insets = windowInsets.getInsets((WindowInsetsCompat.Type.statusBars()))
+
+            val contentDpHeight = 50f
+            val contentPixelHeight = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                contentDpHeight,
+                resources.displayMetrics
+            )
+
+            statusContainer.layoutParams.height = (insets.top + contentPixelHeight).toInt()
+
+            WindowInsetsCompat.CONSUMED
         }
 
         binding.setMenuClickListener {

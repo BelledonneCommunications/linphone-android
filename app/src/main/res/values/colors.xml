@@ -9,6 +9,7 @@
     <color name="primary_color_disabled">#4DFE5E00</color> <!-- Try to have a color that renders well on both light & dark theme -->
     <color name="notification_led_color">#ff8000</color>
     <color name="navbar_color">#18313e</color>
+    <color name="navbar_color_highlight">#28414e</color>
 
     <color name="black_color">#000000</color>
     <color name="dark_grey_color">#444444</color>

@@ -26,7 +26,7 @@
                 android:id="@+id/status_fragment"
                 android:name="org.linphone.activities.main.fragments.StatusFragment"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/status_fragment_size"
+                android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 tools:layout="@layout/status_fragment" />
 
@@ -46,7 +46,7 @@
 
                 <include
                     android:id="@+id/content"
-                    layout="@layout/main_activity_content"/>
+                    layout="@layout/main_activity_content" />
 
                 <!-- Side Menu -->
                 <RelativeLayout
