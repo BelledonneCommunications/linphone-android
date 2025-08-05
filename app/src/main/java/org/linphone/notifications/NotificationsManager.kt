@@ -280,6 +280,12 @@ class NotificationsManager
         }
 
         @WorkerThread
+        override fun onFirstCallStarted(core: Core) {
+            Log.i("$TAG First call started")
+            waitForInCallServiceForegroundToStopIt = false
+        }
+
+        @WorkerThread
         override fun onLastCallEnded(core: Core) {
             Log.i("$TAG Last call ended")
             if (inCallServiceForegroundNotificationPublished) {
