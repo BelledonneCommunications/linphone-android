@@ -99,7 +99,9 @@ class CallsListFragment : GenericCallFragment() {
 
         adapter.callClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
-                model.togglePauseResume()
+                coreContext.postOnCoreThread {
+                    model.togglePauseResume()
+                }
             }
         }
 
