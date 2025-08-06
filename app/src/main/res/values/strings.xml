@@ -441,8 +441,9 @@
     <string name="call_action_numpad">Numpad</string>
     <string name="call_action_change_conf_layout">Change layout</string>
     <string name="call_action_statistics">Call statistics</string>
-    <string name="call_action_add_call">Start new call</string>
-    <string name="call_action_transfer_call">Transfer call</string>
+    <string name="call_action_add_call">New call</string>
+    <string name="call_action_blind_transfer">Blind transfer</string>
+    <string name="call_action_consult_transfer">Consult transfer</string>
     <string name="call_action_hold">Hold</string>
     <string name="call_action_retrieve">Retrieve</string>
     <string name="call_action_attended_transfer_call">Attended transfer</string>

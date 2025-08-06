@@ -22,214 +22,210 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/buttons_layout"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/microphone"
-            style="@style/call_options_font"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:visibility="@{callsViewModel.currentCallData.isPaused ? View.GONE : View.VISIBLE}"
-            android:gravity="center"
-            android:text="@{callsViewModel.isMicrophoneMuted ? @string/call_action_unmute : @string/call_action_mute, default=@string/call_action_mute}"
-            android:contentDescription="@{callsViewModel.isMicrophoneMuted ? @string/content_description_disable_mic_mute : @string/content_description_enable_mic_mute}"
-            android:enabled="@{callsViewModel.isMuteMicrophoneEnabled &amp;&amp; !conferenceViewModel.isMeListenerOnly}"
-            android:onClick="@{() -> callsViewModel.toggleMuteMicrophone()}"
-            android:paddingHorizontal="15dp"
-            android:paddingVertical="10dp"
-            android:background="@{callsViewModel.isMicrophoneMuted ? @color/primary_color : @color/transparent_color, default=@color/transparent_color}"
-            app:drawableTopCompat="@drawable/call_actions_mute"
-            app:layout_constraintEnd_toStartOf="@id/vert_guide1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/horiz_center"/>
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/numpad"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="@{callsViewModel.currentCallData.isPaused ? View.GONE : View.VISIBLE}"
-            android:enabled="@{!conferenceViewModel.isBroadcast}"
-            android:gravity="center"
-            android:paddingVertical="10dp"
-            android:onClick="@{() -> controlsViewModel.showNumpad()}"
-            android:contentDescription="@string/content_description_show_numpad"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="@id/horiz_center"
-            app:layout_constraintStart_toEndOf="@id/vert_guide1"
-            app:layout_constraintEnd_toStartOf="@id/vert_guide2">
-
-            <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:padding="8dp"
-                android:src="@drawable/call_dialpad"
-                app:tint="@color/white_color" />
+            android:visibility="@{callsViewModel.currentCallData.isPaused ? View.GONE : View.VISIBLE}">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/microphone"
+                style="@style/call_options_font"
                 android:layout_height="wrap_content"
-                android:text="@string/call_action_numpad"
-                android:textColor="@color/white_color"
-                android:textSize="12sp" />
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@{callsViewModel.isMicrophoneMuted ? @string/call_action_unmute : @string/call_action_mute, default=@string/call_action_mute}"
+                android:contentDescription="@{callsViewModel.isMicrophoneMuted ? @string/content_description_disable_mic_mute : @string/content_description_enable_mic_mute}"
+                android:enabled="@{callsViewModel.isMuteMicrophoneEnabled &amp;&amp; !conferenceViewModel.isMeListenerOnly}"
+                android:onClick="@{() -> callsViewModel.toggleMuteMicrophone()}"
+                android:paddingVertical="10dp"
+                android:background="@{callsViewModel.isMicrophoneMuted ? @color/primary_color : @color/transparent_color, default=@color/transparent_color}"
+                app:drawableTopCompat="@drawable/call_actions_mute" />
+
+            <LinearLayout
+                android:id="@+id/numpad"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:enabled="@{!conferenceViewModel.isBroadcast}"
+                android:gravity="center"
+                android:paddingVertical="10dp"
+                android:onClick="@{() -> controlsViewModel.showNumpad()}"
+                android:contentDescription="@string/content_description_show_numpad"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:padding="8dp"
+                    android:src="@drawable/call_dialpad"
+                    app:tint="@color/white_color" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/call_action_numpad"
+                    android:textColor="@color/white_color"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/speaker"
+                style="@style/call_options_font"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:visibility="@{controlsViewModel.audioRoutesEnabled ? View.GONE : View.VISIBLE}"
+                android:background="@{controlsViewModel.isSpeakerSelected ? @color/primary_color : @color/transparent_color, default=@color/transparent_color}"
+                android:contentDescription="@{controlsViewModel.isSpeakerSelected ? @string/content_description_disable_speaker : @string/content_description_enable_speaker}"
+                android:gravity="center"
+                android:onClick="@{() -> controlsViewModel.toggleSpeaker()}"
+                android:paddingVertical="10dp"
+                android:selected="@{controlsViewModel.isSpeakerSelected}"
+                android:text="Speaker"
+                app:drawableTopCompat="@drawable/call_actions_audio" />
+
+            <TextView
+                android:id="@+id/audio_routes"
+                style="@style/call_action_button"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:contentDescription="@string/content_description_toggle_audio_menu"
+                android:gravity="center"
+                android:onClick="@{() -> controlsViewModel.toggleRoutesMenu()}"
+                android:selected="@{controlsViewModel.audioRoutesSelected}"
+                android:text="Audio"
+                android:visibility="@{controlsViewModel.audioRoutesEnabled ? View.VISIBLE : View.GONE, default=gone}"
+                app:drawableTopCompat="@drawable/icon_audio_routes"/>
         </LinearLayout>
 
 
-        <TextView
-            android:id="@+id/speaker"
-            style="@style/call_options_font"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="@{callsViewModel.currentCallData.isPaused || controlsViewModel.audioRoutesEnabled ? View.GONE : View.VISIBLE}"
-            android:background="@{controlsViewModel.isSpeakerSelected ? @color/primary_color : @color/transparent_color, default=@color/transparent_color}"
-            android:contentDescription="@{controlsViewModel.isSpeakerSelected ? @string/content_description_disable_speaker : @string/content_description_enable_speaker}"
-            android:gravity="center"
-            android:onClick="@{() -> controlsViewModel.toggleSpeaker()}"
-            android:paddingHorizontal="15dp"
-            android:paddingVertical="10dp"
-            android:selected="@{controlsViewModel.isSpeakerSelected}"
-            android:text="Speaker"
-            app:drawableTopCompat="@drawable/call_actions_audio"
-            app:layout_constraintBottom_toBottomOf="@id/horiz_center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/vert_guide2" />
-
-        <TextView
-            android:id="@+id/audio_routes"
-            style="@style/call_action_button"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:contentDescription="@string/content_description_toggle_audio_menu"
-            android:gravity="center"
-            android:onClick="@{() -> controlsViewModel.toggleRoutesMenu()}"
-            android:selected="@{controlsViewModel.audioRoutesSelected}"
-            android:text="Audio"
-            android:visibility="@{controlsViewModel.audioRoutesEnabled &amp;&amp; !callsViewModel.currentCallData.isPaused() ? View.VISIBLE : View.GONE, default=gone}"
-            app:drawableTopCompat="@drawable/icon_audio_routes"
-            app:layout_constraintBottom_toBottomOf="@id/numpad"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/numpad" />
 
         <LinearLayout
-            android:id="@+id/pause_call"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:contentDescription="@string/content_description_pause_call"
-            android:enabled="@{callsViewModel.currentCallData.isPaused || callsViewModel.currentCallData.canBePaused}"
-            android:gravity="center"
-            android:onClick="@{() -> callsViewModel.currentCallData.togglePause()}"
-            android:orientation="vertical"
-            android:visibility="@{controlsViewModel.fullScreenMode || controlsViewModel.pipMode ? View.GONE : View.VISIBLE}"
-            app:layout_constraintTop_toTopOf="@id/horiz_center"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/vert_guide1">
-
-            <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:paddingBottom="10dp"
-                android:src="@{callsViewModel.currentCallData.isPaused ? @drawable/icon_call : @drawable/call_actions_pause, default=@drawable/call_actions_pause}"
-                app:tint="@color/green_color" />
+            android:visibility="@{controlsViewModel.transferState == org.linphone.activities.voip.TransferState.NONE &amp;&amp; !callsViewModel.currentCallData.isPaused &amp;&amp; !callsViewModel.currentCallData.isConferenceCall() ? View.VISIBLE : View.GONE, default=visible}">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/start_blind_transfer"
+                style="@style/call_options_font"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@{callsViewModel.currentCallData.isPaused ? @string/call_action_retrieve : @string/call_action_hold, default=@string/call_action_hold}"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:onClick="@{() -> controlsViewModel.startBlindTransfer()}"
+                android:text="@string/call_action_blind_transfer"
+                app:drawableTopCompat="@drawable/call_actions_transfer" />
+
+            <TextView
+                android:id="@+id/new_call"
+                style="@style/call_options_font"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:onClick="@{() -> controlsViewModel.goToDialerForNewCall()}"
+                android:text="@string/call_action_add_call"
+                app:drawableTopCompat="@drawable/icon_add_call" />
+
+            <TextView
+                android:id="@+id/start_consult_transfer"
+                style="@style/call_options_font"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:onClick="@{() -> controlsViewModel.startConsultTransfer()}"
+                android:text="@string/call_action_consult_transfer"
+                app:drawableTopCompat="@drawable/call_actions_transfer" />
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/pause_call"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="15dp"
+                android:contentDescription="@string/content_description_pause_call"
+                android:enabled="@{callsViewModel.currentCallData.isPaused || callsViewModel.currentCallData.canBePaused}"
+                android:gravity="center"
+                android:onClick="@{() -> callsViewModel.currentCallData.togglePause()}"
+                android:orientation="vertical"
+                android:visibility="@{controlsViewModel.fullScreenMode || controlsViewModel.pipMode || callsViewModel.currentCallData.isConferenceCall() ? View.GONE : View.VISIBLE}">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:paddingBottom="10dp"
+                    android:src="@{callsViewModel.currentCallData.isPaused ? @drawable/icon_call : @drawable/call_actions_pause, default=@drawable/call_actions_pause}"
+                    app:tint="@color/green_color" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{callsViewModel.currentCallData.isPaused ? @string/call_action_retrieve : @string/call_action_hold, default=@string/call_action_hold}"
+                    android:textColor="@color/green_color"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+
+            <!-- FIXME: Match visibility of this to consulting call -->
+            <TextView
+                android:id="@+id/complete_transfer"
+                style="@style/call_options_font"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="@{() -> controlsViewModel.completeTransfer()}"
+                android:visibility="@{controlsViewModel.transferState == org.linphone.activities.voip.TransferState.PENDING_CONSULT &amp;&amp; !callsViewModel.currentCallData.isPaused  ? View.VISIBLE : View.GONE, default=visible}"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="0dp"
+                android:layout_marginTop="15dp"
+                android:text="@string/complete_transfer"
                 android:textColor="@color/green_color"
-                android:textSize="12sp" />
-        </LinearLayout>
+                android:drawableTint="@color/green_color"
+                app:drawableTopCompat="@drawable/icon_check" />
 
 
-        <TextView
-            android:id="@+id/start_transfer"
-            style="@style/call_options_font"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:onClick="@{() -> controlsViewModel.showExtraButtons()}"
-            android:paddingHorizontal="15dp"
-            android:paddingVertical="0dp"
-            android:text="@string/call_action_transfer_call"
-            android:visibility="@{controlsViewModel.transferState == org.linphone.activities.voip.TransferState.PENDING_CONSULT ? View.GONE : View.VISIBLE, default=visible}"
-            app:drawableTopCompat="@drawable/call_actions_transfer"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/vert_guide2"
-            app:layout_constraintStart_toStartOf="@id/vert_guide1"
-            app:layout_constraintTop_toTopOf="@id/horiz_center"
-            app:layout_constraintVertical_bias="0.6" />
-
-        <TextView
-            android:id="@+id/complete_transfer"
-            style="@style/call_options_font"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="@{() -> controlsViewModel.completeTransfer()}"
-            android:visibility="@{controlsViewModel.transferState == org.linphone.activities.voip.TransferState.PENDING_CONSULT ? View.VISIBLE : View.GONE, default=gone}"
-            android:paddingHorizontal="15dp"
-            android:paddingVertical="0dp"
-            android:layout_marginTop="15dp"
-            android:text="@string/complete_transfer"
-            app:drawableTopCompat="@drawable/icon_check"
-            app:layout_constraintTop_toTopOf="@id/horiz_center"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/vert_guide2"
-            app:layout_constraintStart_toStartOf="@id/vert_guide1" />
-
-        <LinearLayout
-            android:id="@+id/hangup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:visibility="@{callsViewModel.currentCallData.isPaused ? View.GONE : View.VISIBLE}"
-            android:contentDescription="@string/content_description_terminate_call"
-            android:gravity="center"
-            android:onClick="@{() -> controlsViewModel.hangUp()}"
-            android:orientation="vertical"
-            app:layout_constraintTop_toTopOf="@id/horiz_center"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/vert_guide2">
-
-            <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:paddingBottom="10dp"
-                android:src="@drawable/icon_end_call"
-                app:tint="@color/red_color" />
-
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/hangup"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="End call"
-                android:textColor="@color/red_color"
-                android:textSize="12sp" />
+                android:layout_weight="1"
+                android:layout_marginTop="15dp"
+                android:visibility="@{callsViewModel.currentCallData.isPaused ? View.GONE : View.VISIBLE}"
+                android:contentDescription="@string/content_description_terminate_call"
+                android:gravity="center"
+                android:onClick="@{() -> controlsViewModel.hangUp()}"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:paddingBottom="10dp"
+                    android:src="@drawable/icon_end_call"
+                    app:tint="@color/red_color" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="End call"
+                    android:textColor="@color/red_color"
+                    android:textSize="12sp" />
+            </LinearLayout>
         </LinearLayout>
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/vert_guide1"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.333" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/vert_guide2"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.666" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/horiz_center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.5"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
+    </LinearLayout>
 </layout>
