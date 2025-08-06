@@ -36,6 +36,15 @@ Group changes to describe their impact on the project, as follows:
 - Increased shared media preview size in chat
 - Un-encrypted conversation warning will be more visible for accounts that support end-to-end encrypted conversations
 
+## [6.0.14] - 2025-08-06
+
+### Fixed
+- Fixed ANR due to deadlock caused by method being called from wrong thread
+- Fixed microphone not always recording audio while app in background or if screen is turned off
+- Fixed missing favorites in start call / create conversation views
+- Fixed outgoing call view in full screen
+- Fixed generated avatar for SIP URIs without username
+
 ## [6.0.13] - 2025-07-31
 
 ### Fixed
