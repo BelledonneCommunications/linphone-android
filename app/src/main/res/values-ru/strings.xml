@@ -314,7 +314,7 @@
     <string name="account_settings_update_password_title">Обновить пароль</string>
     <string name="account_settings_dialog_invalid_password_title">Требуется аутентификация</string>
     <string name="account_settings_dialog_invalid_password_message">Подключение не удалось, так как аутентификация отсутствует или недействительна для учетной записи\n%s\n\nВы можете снова указать пароль или проверить конфигурацию аккаунта в настройках.</string>
-    <string name="account_settings_dialog_invalid_password_hint">Новый пароль</string>
+    <string name="account_settings_dialog_invalid_password_hint">Пароль</string>
     <string name="account_failed_to_find_identity_toast">Не удалось найти соответствующий аккаунт!</string>
     <string name="history_title">История звонков</string>
     <string name="history_call_start_title">Новый вызов</string>
@@ -859,4 +859,10 @@
     <string name="assistant_recover_email_account_label">Электронная почта</string>
     <string name="drawer_menu_account_connection_status_refreshing">Обновляется</string>
     <string name="content_description_open_drawer_menu_icon">Открыть меню ящика</string>
+    <string name="help_troubleshooting_subtitle">Отправьте свои диагностические журналы, чтобы облегчить устранение ошибок.</string>
+    <string name="settings_contacts_ldap_enabled_title">Включено</string>
+    <string name="content_description_cancel_files_or_text_pending_sharing">Нажмите, чтобы отменить файлы или текст в ожидании обмена</string>
+    <string name="help_about_user_guide_title">&amp;appname; Руководство пользователя</string>
+    <string name="help_about_user_guide_subtitle">Узнайте, как освоить все функции приложения, шаг за шагом.</string>
+    <string name="help_about_contribute_translations_subtitle">Помогите сделать приложение доступным как можно большим количеством людей.</string>
 </resources>

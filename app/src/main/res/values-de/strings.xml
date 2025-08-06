@@ -849,4 +849,7 @@
     <string name="help_about_contribute_translations_subtitle">Helfen Sie mit, die App so vielen Menschen wie möglich zugänglich zu machen.</string>
     <string name="help_troubleshooting_subtitle">Übermitteln Sie Ihre Diagnoseprotokolle, um die Fehlerbehebung zu erleichtern.</string>
     <string name="settings_advanced_audio_codecs_stereo_subtitle">Stereo</string>
+    <string name="contact_sms_invite_content">Hallo, komm mit zu &appName;! Du kannst es hier %s kostenlos herunterladen</string>
+    <string name="settings_contacts_ldap_enabled_title">Aktiviert</string>
+    <string name="assistant_forgotten_password_subtitle">Wähle wie Sie Ihr Konto wiederherstellen.</string>
 </resources>

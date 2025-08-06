@@ -327,9 +327,9 @@
     <string name="settings_network_allow_ipv6">Povolit IPv6</string>
     <string name="settings_user_interface_title">Uživatelské rozhraní</string>
     <string name="settings_user_interface_auto_show_dialpad_title">Automaticky otevřít číselník</string>
-    <string name="settings_user_interface_theme_title">Téma</string>
-    <string name="settings_user_interface_dark_theme_label">Tmavé téma</string>
-    <string name="settings_user_interface_light_theme_label">Světlé téma</string>
+    <string name="settings_user_interface_theme_title">Motiv</string>
+    <string name="settings_user_interface_dark_theme_label">Tmavý motiv</string>
+    <string name="settings_user_interface_light_theme_label">Světlý motiv</string>
     <string name="settings_user_interface_auto_theme_label">Automaticky</string>
     <string name="settings_user_interface_color_title">Hlavní barva</string>
     <string name="settings_tunnel_title">Tunel</string>

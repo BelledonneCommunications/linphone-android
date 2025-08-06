@@ -837,4 +837,5 @@
     <string name="help_about_contribute_translations_subtitle">帮助尽可能多的人访问应用程序。</string>
     <string name="help_troubleshooting_subtitle">传输您的诊断日志以促进错误解决。</string>
     <string name="content_description_cancel_files_or_text_pending_sharing">单击可取消待共享的文件或文本</string>
+    <string name="settings_contacts_ldap_enabled_title">已启用</string>
 </resources>
