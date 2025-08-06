@@ -69,6 +69,7 @@
 
             </androidx.core.widget.NestedScrollView>
 
+            <!--
             <LinearLayout
                 android:id="@+id/bottom_buttons"
                 android:visibility="@{callsViewModel.callsData.size() > 1 ? View.VISIBLE : View.GONE}"
@@ -104,8 +105,8 @@
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="0dp"
                     android:contentDescription="Merge into conference"/>
-
             </LinearLayout>
+            -->
 
             <LinearLayout
                 android:id="@+id/call_info"

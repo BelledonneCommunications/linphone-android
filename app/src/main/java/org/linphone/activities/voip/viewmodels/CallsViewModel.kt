@@ -197,9 +197,18 @@ class CallsViewModel : ViewModel() {
         val params = core.createConferenceParams(null)
         params.subject = AppUtils.getString(R.string.conference_local_title)
         // Prevent group call to start in audio only layout
-        params.isVideoEnabled = true
+        // params.isVideoEnabled = true
+        params.isVideoEnabled = false
+        params.isAudioEnabled = true
+        params.isLocalParticipantEnabled = true
+        params.account = coreContext.core.defaultAccount
+
         val conference = core.createConferenceWithParams(params)
-        conference?.addParticipants(core.calls)
+        if (conference != null) {
+            conference.addParticipants(core.calls)
+        } else {
+            Log.e("Failed to create conference")
+        }
     }
 
     private fun initCallList() {
