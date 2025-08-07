@@ -461,7 +461,7 @@ class LinphoneUtils {
                 ChatMessage.State.InProgress, ChatMessage.State.FileTransferInProgress -> {
                     R.drawable.animated_in_progress
                 }
-                ChatMessage.State.PendingDelivery -> {
+                ChatMessage.State.PendingDelivery, ChatMessage.State.Queued -> {
                     R.drawable.hourglass
                 }
                 else -> {
