@@ -27,9 +27,11 @@ import java.util.*
 import kotlinx.coroutines.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.activities.voip.TransferState
 import org.linphone.compatibility.Compatibility
 import org.linphone.contact.GenericContactData
 import org.linphone.core.*
+import org.linphone.services.TransferService
 import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.Log
@@ -152,6 +154,7 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
 
     fun resume() {
         call.resume()
+        TransferService.getInstance().transferState.value = TransferState.NONE
     }
 
     fun accept() {

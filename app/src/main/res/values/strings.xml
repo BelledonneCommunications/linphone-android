@@ -362,7 +362,7 @@
     <string name="conference_paused_title">You are currently out of the meeting.</string>
     <string name="conference_paused_subtitle">Click on play button to join it back.</string>
     <string name="conference_default_title">Remote group call</string>
-    <string name="conference_local_title">Local group call</string>
+    <string name="conference_local_title">Local conference call</string>
     <string name="conference_invite_title">Meeting invite:</string>
     <string name="conference_broadcast_invite_title">Broadcast invite:</string>
     <string name="conference_broadcast_invite_you_are_speaker">(you are a speaker)</string>
@@ -441,11 +441,13 @@
     <string name="call_action_numpad">Numpad</string>
     <string name="call_action_change_conf_layout">Change layout</string>
     <string name="call_action_statistics">Call statistics</string>
-    <string name="call_action_add_call">Start new call</string>
-    <string name="call_action_transfer_call">Transfer call</string>
+    <string name="call_action_add_call">New call</string>
+    <string name="call_action_blind_transfer">Blind transfer</string>
+    <string name="call_action_consult_transfer">Consult transfer</string>
     <string name="call_action_hold">Hold</string>
     <string name="call_action_retrieve">Retrieve</string>
     <string name="call_action_attended_transfer_call">Attended transfer</string>
+    <string name="call_action_transfer">Transfer</string>
     <string name="call_context_action_resume">Resume call</string>
     <string name="call_context_action_pause">Pause call</string>
     <string name="call_context_action_transfer">Transfer call</string>

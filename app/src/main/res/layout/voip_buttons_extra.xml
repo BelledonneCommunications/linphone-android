@@ -110,7 +110,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@{controlsViewModel.attendedTransfer ? @string/call_action_attended_transfer_call : @string/call_action_transfer_call, default=@string/call_action_transfer_call}"
+            android:text="@{controlsViewModel.attendedTransfer ? @string/call_action_attended_transfer_call : @string/call_action_blind_transfer, default=@string/call_action_blind_transfer}"
             android:visibility="@{conferenceViewModel.conferenceExists ? View.GONE : View.VISIBLE, default=gone}"
             app:drawableTopCompat="@drawable/icon_call_forward"
             app:layout_constraintBottom_toBottomOf="parent"

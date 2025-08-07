@@ -107,19 +107,58 @@
 
 
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:visibility="@{controlsViewModel.transferState == org.linphone.activities.voip.TransferState.NONE &amp;&amp; !callsViewModel.currentCallData.isPaused &amp;&amp; !callsViewModel.currentCallData.isConferenceCall() ? View.VISIBLE : View.GONE, default=visible}">
+
+            <TextView
+                android:id="@+id/start_blind_transfer"
+                style="@style/call_options_font"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:onClick="@{() -> controlsViewModel.startBlindTransfer()}"
+                android:text="@string/call_action_blind_transfer"
+                app:drawableTopCompat="@drawable/call_actions_transfer" />
+
+            <TextView
+                android:id="@+id/new_call"
+                style="@style/call_options_font"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:onClick="@{() -> controlsViewModel.goToDialerForNewCall()}"
+                android:text="@string/call_action_add_call"
+                app:drawableTopCompat="@drawable/icon_add_call" />
+
+            <TextView
+                android:id="@+id/start_consult_transfer"
+                style="@style/call_options_font"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:onClick="@{() -> controlsViewModel.startConsultTransfer()}"
+                android:text="@string/call_action_consult_transfer"
+                app:drawableTopCompat="@drawable/call_actions_transfer" />
+        </LinearLayout>
 
 
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:id="@+id/pause_call"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_marginTop="15dp"
                 android:contentDescription="@string/content_description_pause_call"
                 android:enabled="@{callsViewModel.currentCallData.isPaused || callsViewModel.currentCallData.canBePaused}"
                 android:gravity="center"
@@ -151,30 +190,22 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:onClick="@{() -> controlsViewModel.completeTransfer()}"
-                android:visibility="@{controlsViewModel.transferState == org.linphone.activities.voip.TransferState.PENDING_CONSULT &amp;&amp; !callsViewModel.currentCallData.isPaused ? View.VISIBLE : View.GONE, default=gone}"
+                android:visibility="@{controlsViewModel.transferState == org.linphone.activities.voip.TransferState.PENDING_CONSULT &amp;&amp; !callsViewModel.currentCallData.isPaused  ? View.VISIBLE : View.GONE, default=visible}"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="0dp"
+                android:layout_marginTop="15dp"
                 android:text="@string/complete_transfer"
                 android:textColor="@color/green_color"
                 android:drawableTint="@color/green_color"
-                android:gravity="center"
                 app:drawableTopCompat="@drawable/icon_check" />
 
-            <TextView
-                android:id="@+id/start_consult_transfer"
-                style="@style/call_options_font"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:onClick="@{() -> controlsViewModel.showExtraButtons()}"
-                android:text="@string/call_action_transfer"
-                app:drawableTopCompat="@drawable/call_actions_transfer"
-                android:visibility="@{controlsViewModel.transferState == org.linphone.activities.voip.TransferState.NONE &amp;&amp; !callsViewModel.currentCallData.isPaused &amp;&amp; !callsViewModel.currentCallData.isConferenceCall() ? View.VISIBLE : View.GONE, default=visible}"/>
 
             <LinearLayout
                 android:id="@+id/hangup"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_marginTop="15dp"
                 android:visibility="@{callsViewModel.currentCallData.isPaused ? View.GONE : View.VISIBLE}"
                 android:contentDescription="@string/content_description_terminate_call"
                 android:gravity="center"
