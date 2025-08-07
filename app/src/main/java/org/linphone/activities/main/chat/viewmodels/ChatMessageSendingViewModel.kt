@@ -380,9 +380,10 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
                 Log.w("[Chat Message Sending] Recorder isn't closed, resuming recording")
                 recorder.start()
             }
+
             Recorder.State.Closed -> {
                 val extension = when (recorder.params.fileFormat) {
-                    Recorder.FileFormat.Mkv -> "mkv"
+                    MediaFileFormat.Mkv -> "mkv"
                     else -> "wav"
                 }
                 val tempFileName = "voice-recording-${System.currentTimeMillis()}.$extension"
@@ -525,9 +526,9 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         Log.i("[Chat Message Sending] Creating recorder for voice message")
         val recorderParams = coreContext.core.createRecorderParams()
         if (corePreferences.voiceMessagesFormatMkv) {
-            recorderParams.fileFormat = Recorder.FileFormat.Mkv
+            recorderParams.fileFormat = MediaFileFormat.Mkv
         } else {
-            recorderParams.fileFormat = Recorder.FileFormat.Wav
+            recorderParams.fileFormat = MediaFileFormat.Wav
         }
 
         val recordingAudioDevice = AudioRouteUtils.getAudioRecordingDeviceForVoiceMessage()

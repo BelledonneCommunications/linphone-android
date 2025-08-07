@@ -6,6 +6,7 @@ import org.linphone.R
 import org.linphone.core.Address
 import org.linphone.core.Call
 import org.linphone.core.CallLog
+import org.linphone.core.ChatRoom
 import org.linphone.core.ConferenceInfo
 import org.linphone.core.ErrorInfo
 import org.linphone.services.PhoneFormatterService
@@ -119,6 +120,10 @@ class CallHistoryItemViewModel(
 
     override fun getCallId(): String? {
         return call.documentId
+    }
+
+    override fun getChatRoom(): ChatRoom? {
+        TODO("Not yet implemented")
     }
 
     override fun getConferenceInfo(): ConferenceInfo? {

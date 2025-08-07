@@ -135,6 +135,8 @@ class CoreContext(
     private var overlayY = 0f
     private var callOverlay: View? = null
     private var previousCallState = Call.State.Idle
+    private var lastConferenceId: String? = null
+
     private lateinit var phoneStateListener: PhoneStateInterface
 
     private val activityMonitor = ActivityMonitor()
@@ -1122,8 +1124,8 @@ class CoreContext(
             }
         }
 
-        val conference = core.conference
-        if (conference == null || !conference.isIn) {
+        val conf = conference
+        if (conf == null || conf.isIn) {
             val call = core.currentCall
             if (call == null) {
                 Log.w("[Context] Switching camera while not in call")
@@ -1395,6 +1397,21 @@ class CoreContext(
                 core.invite(userInfo.presenceId)
             }
         }
+    }
+
+    val conference: Conference?
+        get() {
+            if (lastConferenceId != null) {
+                return core.searchConferenceByIdentifier(lastConferenceId as String)
+            }
+
+            return null
+        }
+
+    fun createConference(params: ConferenceParams): Conference? {
+        val conf = core.createConferenceWithParams(params)
+        lastConferenceId = conf?.identifier
+        return conf
     }
 
     /* VFS */

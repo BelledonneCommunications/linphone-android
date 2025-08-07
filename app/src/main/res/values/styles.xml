@@ -112,8 +112,8 @@
 
     <style name="numpad_button">
         <item name="android:background" >@drawable/button_numpad_background</item>
-        <item name="android:layout_width">80dp</item>
-        <item name="android:layout_height">80dp</item>
+        <item name="android:layout_width">@dimen/voip_numpad_button_max_size</item>
+        <item name="android:layout_height">@dimen/voip_numpad_button_max_size</item>
         <item name="android:layout_margin">6dp</item>
         <item name="android:clipToPadding">false</item>
     </style>
@@ -122,7 +122,7 @@
         <!--<item name="android:textColor">@color/light_primary_text_color</item>-->
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:layout_centerInParent">true</item>
-        <item name="android:textSize">38sp</item>
+        <item name="android:textSize">@dimen/voip_numpad_button_digit_size</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:paddingTop">0dp</item>
         <item name="android:paddingBottom">15sp</item>
@@ -132,7 +132,7 @@
         <item name="android:textColor">@color/primary_color</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:layout_centerInParent">true</item>
-        <item name="android:textSize">13sp</item>
+        <item name="android:textSize">@dimen/voip_numpad_button_text_size</item>
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:paddingTop">40sp</item>
         <item name="android:paddingBottom">0dp</item>
