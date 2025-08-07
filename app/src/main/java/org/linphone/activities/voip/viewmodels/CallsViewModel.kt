@@ -203,7 +203,7 @@ class CallsViewModel : ViewModel() {
         params.isLocalParticipantEnabled = true
         params.account = coreContext.core.defaultAccount
 
-        val conference = core.createConferenceWithParams(params)
+        val conference = coreContext.createConference(params)
         if (conference != null) {
             conference.addParticipants(core.calls)
         } else {

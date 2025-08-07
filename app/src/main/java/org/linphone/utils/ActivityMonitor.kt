@@ -24,7 +24,6 @@ import android.app.Application.ActivityLifecycleCallbacks
 import android.os.Bundle
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.tools.service.AndroidDispatcher
-import org.linphone.core.tools.service.CoreManager
 
 class ActivityMonitor : ActivityLifecycleCallbacks {
     private val activities = ArrayList<Activity>()
@@ -99,6 +98,7 @@ class ActivityMonitor : ActivityLifecycleCallbacks {
     }
 
     override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+
     internal inner class InactivityChecker : Runnable {
         private var isCanceled = false
         fun cancel() {
@@ -106,6 +106,13 @@ class ActivityMonitor : ActivityLifecycleCallbacks {
         }
 
         override fun run() {
+            if (!isCanceled) {
+                if (mRunningActivities == 0 && mActive) {
+                    mActive = false
+                    onBackgroundMode()
+                }
+            }
+            /*
             if (CoreManager.isReady()) {
                 synchronized(CoreManager.instance()) {
                     if (!isCanceled) {
@@ -116,6 +123,7 @@ class ActivityMonitor : ActivityLifecycleCallbacks {
                     }
                 }
             }
+            */
         }
     }
 }

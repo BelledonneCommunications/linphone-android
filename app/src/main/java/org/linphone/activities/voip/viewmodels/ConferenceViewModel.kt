@@ -199,7 +199,8 @@ class ConferenceViewModel : ViewModel() {
             }
         }
 
-        override fun onActiveSpeakerParticipantDevice(
+/*
+        fun onActiveSpeakerParticipantDevice(
             conference: Conference,
             participantDevice: ParticipantDevice
         ) {
@@ -223,7 +224,7 @@ class ConferenceViewModel : ViewModel() {
                 )
             }
         }
-
+*/
         override fun onParticipantDeviceMediaAvailabilityChanged(
             conference: Conference,
             device: ParticipantDevice
@@ -306,7 +307,7 @@ class ConferenceViewModel : ViewModel() {
 
         subject.value = AppUtils.getString(R.string.conference_default_title)
 
-        var conference = coreContext.core.conference ?: coreContext.core.currentCall?.conference
+        var conference = coreContext.conference ?: coreContext.core.currentCall?.conference
         if (conference == null) {
             for (call in coreContext.core.calls) {
                 if (call.conference != null) {
@@ -558,15 +559,20 @@ class ConferenceViewModel : ViewModel() {
         speakingParticipantFound.value = false
         speakingParticipantVideoEnabled.value = false
 
-        val conferenceInfo = conference.core.findConferenceInformationFromUri(
-            conference.conferenceAddress
-        )
+        var conferenceInfo: ConferenceInfo? = null
+
+        if (conference.conferenceAddress != null) {
+            conferenceInfo = conference.core.findConferenceInformationFromUri(
+                conference.conferenceAddress as Address
+            )
+        }
         var allSpeaker = true
         for (info in conferenceInfo?.participantInfos.orEmpty()) {
             if (info.role == Participant.Role.Listener) {
                 allSpeaker = false
             }
         }
+
         isBroadcast.value = !allSpeaker
         if (!allSpeaker) {
             Log.i(
@@ -668,9 +674,13 @@ class ConferenceViewModel : ViewModel() {
             "[Conference] New participant device found: ${device.name} (${device.address.asStringUriOnly()})"
         )
 
-        val conferenceInfo = conference.core.findConferenceInformationFromUri(
-            conference.conferenceAddress
-        )
+        var conferenceInfo: ConferenceInfo? = null
+        if (conference.conferenceAddress != null) {
+            conferenceInfo = conference.core.findConferenceInformationFromUri(
+                conference.conferenceAddress as Address
+            )
+        }
+
         val info = conferenceInfo?.participantInfos?.find {
             it.address.weakEqual(device.address)
         }
