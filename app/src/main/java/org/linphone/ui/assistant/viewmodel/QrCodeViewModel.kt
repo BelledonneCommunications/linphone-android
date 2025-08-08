@@ -31,6 +31,7 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
 import org.linphone.utils.Event
 import org.linphone.R
+import org.linphone.core.GlobalState
 
 class QrCodeViewModel
     @UiThread
@@ -39,7 +40,7 @@ class QrCodeViewModel
         private const val TAG = "[Qr Code Scanner ViewModel]"
     }
 
-    val qrCodeFoundEvent = MutableLiveData<Event<Boolean>>()
+    val remoteProvisioningSuccessfulEvent = MutableLiveData<Event<Boolean>>()
 
     val onErrorEvent = MutableLiveData<Event<Boolean>>()
 
@@ -47,12 +48,25 @@ class QrCodeViewModel
         @WorkerThread
         override fun onConfiguringStatus(core: Core, status: ConfiguringState, message: String?) {
             Log.i("$TAG Configuring state is [$status]")
-            if (status == ConfiguringState.Successful) {
-                qrCodeFoundEvent.postValue(Event(true))
-            } else if (status == ConfiguringState.Failed) {
+            if (status == ConfiguringState.Failed) {
                 Log.e("$TAG Failure applying remote provisioning: $message")
                 showRedToast(R.string.remote_provisioning_config_failed_toast, R.drawable.warning_circle)
                 onErrorEvent.postValue(Event(true))
+            }
+        }
+
+        @WorkerThread
+        override fun onGlobalStateChanged(core: Core, state: GlobalState?, message: String) {
+            if (state == GlobalState.On) {
+                if (core.accountList.isEmpty()) {
+                    Log.w("$TAG Provisioning was successful but no account has been configured yet, staying in assistant")
+                    // Remote provisioning didn't contain any account
+                    // and there wasn't at least one configured before either
+                    remoteProvisioningSuccessfulEvent.postValue(Event(false))
+                } else {
+                    Log.i("$TAG At least an account exists in Core, leaving assistant")
+                    remoteProvisioningSuccessfulEvent.postValue(Event(true))
+                }
             }
         }
 
@@ -68,17 +82,20 @@ class QrCodeViewModel
                     showRedToast(R.string.assistant_qr_code_invalid_toast, R.drawable.warning_circle)
                 } else {
                     Log.i(
-                        "$TAG QR code URL set, restarting the Core to apply configuration changes"
+                        "$TAG QR code URL set, restarting the Core outside of iterate() loop to apply configuration changes"
                     )
                     core.nativePreviewWindowId = null
                     core.isVideoPreviewEnabled = false
                     core.isQrcodeVideoPreviewEnabled = false
-
                     core.provisioningUri = result
-                    coreContext.core.stop()
-                    Log.i("$TAG Core has been stopped, restarting it")
-                    coreContext.core.start()
-                    Log.i("$TAG Core has been restarted")
+
+                    coreContext.postOnCoreThread { core ->
+                        Log.i("$TAG Stopping Core")
+                        coreContext.core.stop()
+                        Log.i("$TAG Core has been stopped, restarting it")
+                        coreContext.core.start()
+                        Log.i("$TAG Core has been restarted")
+                    }
                 }
             }
         }

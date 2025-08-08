@@ -84,10 +84,12 @@ class QrCodeScannerFragment : GenericFragment() {
             goBack()
         }
 
-        viewModel.qrCodeFoundEvent.observe(viewLifecycleOwner) {
-            it.consume { isValid ->
-                if (isValid) {
+        viewModel.remoteProvisioningSuccessfulEvent.observe(viewLifecycleOwner) {
+            it.consume { atLeastOneAccountFound ->
+                if (atLeastOneAccountFound) {
                     requireActivity().finish()
+                } else {
+                    goBack()
                 }
             }
         }
