@@ -48,8 +48,7 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
                 return
             }
 
-            Factory.instance().setLogCollectionPath(context.filesDir.absolutePath)
-            Factory.instance().enableLogCollection(LogCollectionState.Enabled)
+
 
             // For VFS
             Factory.instance().setCacheDir(context.cacheDir.absolutePath)
@@ -61,19 +60,21 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
                 CoreContext.activateVFS()
             }
 
-            val config = Factory.instance().createConfigWithFactory(
+            corePreferences.config = Factory.instance().createConfigWithFactory(
                 corePreferences.configPath,
                 corePreferences.factoryConfigPath
             )
-            corePreferences.config = config
 
             val appName = context.getString(R.string.app_name)
+            Factory.instance().setLogCollectionPath(context.filesDir.absolutePath)
             Factory.instance().setLoggerDomain(appName)
             Factory.instance().enableLogcatLogs(corePreferences.logcatLogsOutput)
-            Factory.instance().enableLogCollection(LogCollectionState.Disabled)
             if (corePreferences.debugLogs) {
-                Factory.instance().loggingService.setLogLevel(LogLevel.Message)
+                Factory.instance().loggingService.setLogLevel(LogLevel.Debug)
                 Factory.instance().enableLogCollection(LogCollectionState.Enabled)
+            }
+            else {
+                Factory.instance().enableLogCollection(LogCollectionState.Disabled)
             }
 
             Log.i("[Application] Core config & preferences created")
@@ -91,9 +92,8 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
                 return false
             }
 
-            Log.i(
-                "[Application] Core context is being created ${if (pushReceived) "from push" else ""}"
-            )
+            Log.i("[Application] Core context is being created ${if (pushReceived) "from push" else ""}")
+
             coreContext = CoreContext(
                 context,
                 corePreferences.config,
