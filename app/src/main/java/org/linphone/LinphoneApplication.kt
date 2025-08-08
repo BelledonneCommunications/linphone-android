@@ -48,8 +48,6 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
                 return
             }
 
-
-
             // For VFS
             Factory.instance().setCacheDir(context.cacheDir.absolutePath)
 
@@ -72,8 +70,7 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
             if (corePreferences.debugLogs) {
                 Factory.instance().loggingService.setLogLevel(LogLevel.Debug)
                 Factory.instance().enableLogCollection(LogCollectionState.Enabled)
-            }
-            else {
+            } else {
                 Factory.instance().enableLogCollection(LogCollectionState.Disabled)
             }
 
@@ -92,7 +89,9 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
                 return false
             }
 
-            Log.i("[Application] Core context is being created ${if (pushReceived) "from push" else ""}")
+            Log.i(
+                "[Application] Core context is being created ${if (pushReceived) "from push" else ""}"
+            )
 
             coreContext = CoreContext(
                 context,

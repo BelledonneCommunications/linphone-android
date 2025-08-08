@@ -43,7 +43,7 @@
                 <ImageView
                     android:id="@+id/erase"
                     android:layout_width="wrap_content"
-                    android:layout_height="24dp"
+                    android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_toStartOf="@+id/paste"
@@ -53,6 +53,8 @@
                     android:onLongClick="@{() -> viewModel.eraseAll()}"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:src="@drawable/icon_backspace" />
 
                 <ImageView

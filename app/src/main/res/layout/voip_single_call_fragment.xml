@@ -50,62 +50,72 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:tint="@color/white_color" />
 
+
             <androidx.core.widget.NestedScrollView
                 android:id="@+id/call_list"
-                android:visibility="@{callsViewModel.callsData.size() > 1 ? View.VISIBLE : View.GONE}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                app:layout_constraintTop_toBottomOf="@id/audio_routes"
+                android:visibility="@{callsViewModel.callsData.size() > 1 ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/audio_routes">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     app:entries="@{callsViewModel.callsData}"
-                    app:layout="@{@layout/voip_calls_cell}"/>
+                    app:layout="@{@layout/voip_calls_cell}" />
 
             </androidx.core.widget.NestedScrollView>
 
-
-            <!--android:visibility="@{callsViewModel.callsData.size() > 1 ? View.VISIBLE : View.GONE}"-->
             <LinearLayout
                 android:id="@+id/bottom_buttons"
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal"
                 android:gravity="end"
-                app:layout_constraintStart_toStartOf="parent"
+                android:orientation="horizontal"
+                android:visibility="@{callsViewModel.callsData.size() > 1 ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/call_list">
 
                 <Button
-                    android:onClick="@{() -> conferenceViewModel.addCallsToConference()}"
-                    android:enabled="@{callsViewModel.callsData.size() > 1 &amp;&amp; conferenceViewModel.isMeAdmin}"
-                    android:visibility="@{conferenceViewModel.conferenceExists ? View.VISIBLE : View.GONE, default=gone}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/primary_color"
                     android:background="@color/transparent_color"
+                    android:contentDescription="Add to conference"
+                    android:drawableLeft="@drawable/icon_call_merge"
+                    android:drawableTint="@color/primary_color"
+                    android:enabled="@{callsViewModel.callsData.size() > 1 &amp;&amp; conferenceViewModel.isMeAdmin}"
+                    android:letterSpacing="0"
+                    android:onClick="@{() -> conferenceViewModel.addCallsToConference()}"
+                    android:paddingHorizontal="0dp"
+                    android:paddingVertical="0dp"
                     android:text="Merge calls"
-                    android:contentDescription="Add to conference"/>
+                    android:textAllCaps="false"
+                    android:textColor="@color/primary_color"
+                    android:textSize="14sp"
+                    android:visibility="@{conferenceViewModel.conferenceExists ? View.VISIBLE : View.GONE, default=gone}" />
 
                 <Button
-                    android:onClick="@{() -> callsViewModel.mergeCallsIntoConference()}"
-                    android:visibility="@{conferenceViewModel.conferenceExists ? View.GONE : View.VISIBLE, default=visible}"
                     android:layout_width="wrap_content"
-                    android:layout_height="35dp"
-                    android:textColor="@color/primary_color"
+                    android:layout_height="36dp"
                     android:background="@color/transparent_color"
-                    android:text="Merge calls"
-                    android:textSize="13sp"
-                    android:paddingHorizontal="10dp"
+                    android:contentDescription="Merge into conference"
+                    android:drawableLeft="@drawable/icon_call_merge"
+                    android:drawableTint="@color/primary_color"
+                    android:letterSpacing="0"
+                    android:onClick="@{() -> callsViewModel.mergeCallsIntoConference()}"
+                    android:paddingHorizontal="0dp"
                     android:paddingVertical="0dp"
-                    android:contentDescription="Merge into conference"/>
+                    android:text="Merge calls"
+                    android:textAllCaps="false"
+                    android:textColor="@color/primary_color"
+                    android:textSize="14sp"
+                    android:visibility="@{conferenceViewModel.conferenceExists ? View.GONE : View.VISIBLE, default=visible}" />
 
             </LinearLayout>
 
@@ -113,12 +123,13 @@
                 android:id="@+id/call_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
                 android:orientation="vertical"
                 android:padding="25dp"
-                app:layout_constraintTop_toBottomOf="@id/call_list"
-                app:layout_constraintBottom_toBottomOf="@id/vertical_center"
+                app:layout_constraintBottom_toTopOf="@id/primary_buttons"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/call_list">
 
                 <TextView
                     android:id="@+id/display_name"
@@ -148,7 +159,6 @@
                     android:layout_marginTop="14sp"
                     android:alpha="0.5" />
             </LinearLayout>
-
 
 
             <!--
@@ -188,14 +198,14 @@
                 layout="@layout/voip_buttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="50dp"
                 android:visibility="@{controlsViewModel.fullScreenMode || controlsViewModel.pipMode ? View.GONE : View.VISIBLE}"
                 app:callsViewModel="@{callsViewModel}"
                 app:conferenceViewModel="@{conferenceViewModel}"
                 app:controlsViewModel="@{controlsViewModel}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/vertical_center" />
+                app:layout_constraintStart_toStartOf="parent" />
 
             <View
                 android:id="@+id/popup_background"
@@ -203,7 +213,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/voip_translucent_popup_background"
                 android:visibility="@{controlsViewModel.showExtras ? View.VISIBLE : View.GONE, default=gone}" />
-<!-- TODO: add click to close -->
+            <!-- TODO: add click to close -->
 
             <include
                 android:id="@+id/extra_buttons"
@@ -239,13 +249,6 @@
                 app:controlsViewModel="@{controlsViewModel}"
                 app:inflatedVisibility="@{controlsViewModel.numpadVisible ? View.VISIBLE : View.GONE}" />
 
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/vertical_center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.5" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -64,8 +64,14 @@ class NativeCallWrapper(var callId: String) : Connection() {
     override fun onHold() {
         Log.i("[Connection] Pausing telecom call with id: $callId")
         getCall()?.let { call ->
-            if (call.conference != null) {
-                call.conference?.leave()
+            val conf = call.conference
+            if (conf != null) {
+                val duration = conf.duration
+                Log.i("[Connection] call duration: $duration seconds")
+                // Unsure why, but when creating a conference we immediately get an onHold event.
+                // This would cause us to leave the conference. To avoid breaking anything else, we'll skip
+                // leave() but only if it's just been created. Use a quick and dirty duration check for this.
+                if (duration > 5) { call.conference?.leave() } else { }
             } else {
                 call.pause()
             }
