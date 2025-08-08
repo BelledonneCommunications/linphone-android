@@ -29,11 +29,11 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:background="@drawable/shape_call_popup_background"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/dialpad_start"
-            app:layout_constraintWidth_max="@dimen/voip_views_max_width" />
+            app:layout_constraintWidth_max="400dp" />
 
         <ImageView
             android:id="@+id/hide_numpad"
