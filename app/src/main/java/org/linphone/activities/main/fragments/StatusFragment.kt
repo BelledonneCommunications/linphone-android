@@ -72,7 +72,7 @@ class StatusFragment : GenericFragment<StatusFragmentBinding>() {
 
             statusContainer.layoutParams.height = (insets.top + contentPixelHeight).toInt()
 
-            WindowInsetsCompat.CONSUMED
+            windowInsets
         }
 
         binding.setMenuClickListener {
