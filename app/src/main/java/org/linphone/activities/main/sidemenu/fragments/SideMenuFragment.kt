@@ -25,7 +25,10 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.provider.MediaStore
 import android.view.View
+import android.widget.RelativeLayout
 import androidx.core.content.FileProvider
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.gson.GsonBuilder
@@ -56,6 +59,8 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        applyWindowInsets(view)
 
         binding.lifecycleOwner = viewLifecycleOwner
 
@@ -160,6 +165,18 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
                 },
                 { error -> Log.e(error) }
             )
+    }
+
+    private fun applyWindowInsets(view: View) {
+        val container = view.findViewById<RelativeLayout>(R.id.side_menu_container)
+        ViewCompat.setOnApplyWindowInsetsListener(container) { v, windowInsets ->
+            val statusInsets = windowInsets.getInsets((WindowInsetsCompat.Type.statusBars()))
+            val navInsets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
+
+            container.setPadding(0, statusInsets.top, 0, navInsets.bottom)
+            // WindowInsetsCompat.CONSUMED
+            windowInsets
+        }
     }
 
     override fun onDestroyView() {

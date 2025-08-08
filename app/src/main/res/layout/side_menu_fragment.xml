@@ -40,6 +40,7 @@
     </data>
 
     <RelativeLayout
+        android:id="@+id/side_menu_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/backgroundColor">
@@ -47,7 +48,7 @@
         <RelativeLayout
             android:id="@+id/main_account"
             android:enabled="@{viewModel.defaultAccountFound}"
-            android:visibility= "@{View.GONE}"
+            android:visibility= "gone"
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:background="?attr/lightToolbarBackgroundColor">
@@ -360,13 +361,13 @@
         <LinearLayout
             android:id="@+id/side_menu_quit"
             android:onClick="@{quitClickListener}"
-            android:visibility="@{viewModel.showQuit ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.showQuit ? View.VISIBLE : View.GONE, default=gone}"
             android:layout_width="match_parent"
+            android:gravity="center_vertical"
             android:layout_height="50dp"
             android:layout_alignParentBottom="true"
             android:background="?attr/navbarColor"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="wrap_content"

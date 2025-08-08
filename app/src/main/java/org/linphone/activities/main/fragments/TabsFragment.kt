@@ -70,7 +70,8 @@ class TabsFragment : GenericFragment<TabsFragmentBinding>(), NavController.OnDes
 
             tabsContainer.layoutParams.height = (insets.bottom + contentPixelHeight).toInt()
 
-            WindowInsetsCompat.CONSUMED
+            //  WindowInsetsCompat.CONSUMED
+            windowInsets
         }
 
         binding.setHistoryClickListener {
