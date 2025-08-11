@@ -11,13 +11,14 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/voip_activity_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:keepScreenOn="true">
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/status_fragment"
-            android:visibility="@{controlsViewModel.fullScreenMode || controlsViewModel.pipMode ? View.GONE : View.VISIBLE}"
+            android:visibility="gone"
             android:name="org.linphone.activities.voip.fragments.StatusFragment"
             android:layout_width="match_parent"
             android:layout_height="@dimen/status_fragment_size"
