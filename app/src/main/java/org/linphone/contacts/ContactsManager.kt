@@ -803,12 +803,12 @@ fun Friend.getListOfSipAddressesAndPhoneNumbers(listener: ContactNumberOrAddress
 
     val indexOfLastSipAddress = addressesAndNumbers.count()
     for (number in phoneNumbersWithLabel) {
-        val presenceModel = getPresenceModelForUriOrTel(number.phoneNumber)
+        val phoneNumber = number.phoneNumber
+        val presenceModel = getPresenceModelForUriOrTel(phoneNumber)
         val hasPresenceInfo = !presenceModel?.contact.isNullOrEmpty()
         var presenceAddress: Address? = null
 
         if (presenceModel != null && hasPresenceInfo) {
-            Log.d("[Friend] Phone number [${number.phoneNumber}] has presence information")
             // Show linked SIP address if not already stored as-is
             val contact = presenceModel.contact
             if (!contact.isNullOrEmpty()) {
@@ -823,13 +823,13 @@ fun Friend.getListOfSipAddressesAndPhoneNumbers(listener: ContactNumberOrAddress
                             address.asStringUriOnly(),
                             true, // SIP addresses are always enabled
                             listener,
-                            true
+                            true,
+                            hasPresence = true
                         )
                         addressesAndNumbers.add(indexOfLastSipAddress, data)
                     }
-                    Log.d(
-                        "[Friend] Phone number [${number.phoneNumber}] is linked to SIP address [${presenceAddress.asStringUriOnly()}]"
-                    )
+                } else {
+                    Log.e("[Contacts Manager] Failed to parse phone number [$phoneNumber] contact address [$contact] from presence model!")
                 }
             }
         }
@@ -838,17 +838,20 @@ fun Friend.getListOfSipAddressesAndPhoneNumbers(listener: ContactNumberOrAddress
         val defaultAccount = LinphoneUtils.getDefaultAccount()
         val enablePhoneNumbers = hasPresenceInfo || !isEndToEndEncryptionMandatory()
         val address = presenceAddress ?: core.interpretUrl(
-            number.phoneNumber,
+            phoneNumber,
             LinphoneUtils.applyInternationalPrefix(defaultAccount)
         )
+        address ?: continue
+
         val label = PhoneNumberUtils.vcardParamStringToAddressBookLabel(
             coreContext.context.resources,
             number.label ?: ""
         )
+        Log.d("[Contacts Manager] Parsed phone number [$phoneNumber] with label [$label] into address [${address.asStringUriOnly()}], presence address is [${presenceAddress?.asStringUriOnly()}]")
         val data = ContactNumberOrAddressModel(
             this,
             address,
-            number.phoneNumber,
+            phoneNumber,
             enablePhoneNumbers,
             listener,
             false,
