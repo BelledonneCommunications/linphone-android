@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/top_bar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/main_activity_top_bar_size"
@@ -32,27 +32,22 @@
                 android:layout_width="54dp"
                 android:layout_height="match_parent"
                 android:background="?attr/button_background_drawable"
-                android:padding="15dp"
-                android:src="@drawable/icon_back" />
+                android:padding="12dp"
+                android:src="@drawable/icon_back"
+                linphone:layout_constraintStart_toStartOf="parent" />
 
             <TextView
                 style="@style/accent_colored_title_font"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.6"
                 android:gravity="center"
                 android:singleLine="true"
                 android:ellipsize="end"
-                android:padding="15dp"
-                android:text="@string/settings_video_title"/>
+                android:layout_margin="0dp"
+                android:text="@string/settings_video_title"
+                linphone:layout_constraintStart_toStartOf="parent"/>
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.2"
-                android:visibility="@{sharedMainViewModel.isSlidingPaneSlideable ? View.INVISIBLE : View.GONE}" />
-
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
