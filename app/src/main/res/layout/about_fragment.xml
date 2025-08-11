@@ -29,10 +29,10 @@
         android:layout_height="match_parent"
         android:background="?attr/backgroundColor">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/top_bar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/main_activity_top_bar_size"
+            android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
             android:background="?attr/lightToolbarBackgroundColor"
             android:orientation="horizontal">
@@ -40,31 +40,25 @@
             <ImageView
                 android:id="@+id/back"
                 android:contentDescription="@string/content_description_go_back"
-                android:layout_width="0dp"
+                android:layout_width="54dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.2"
                 android:background="?attr/button_background_drawable"
-                android:padding="18dp"
-                android:src="@drawable/back" />
+                android:padding="12dp"
+                android:src="@drawable/icon_back"
+                linphone:layout_constraintStart_toStartOf="parent"/>
 
             <TextView
                 style="@style/accent_colored_title_font"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.6"
                 android:gravity="center"
                 android:singleLine="true"
                 android:ellipsize="end"
-                android:padding="15dp"
-                android:text="@string/about"/>
+                android:layout_margin="0dp"
+                android:text="@string/about"
+                linphone:layout_constraintStart_toStartOf="parent"/>
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.2"
-                android:visibility="invisible" />
-
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.core.widget.NestedScrollView
             android:layout_below="@id/top_bar"
@@ -95,13 +89,14 @@
                             android:layout_height="wrap_content"
                             android:adjustViewBounds="true"
                             android:layout_gravity="center"
-                            android:layout_marginBottom="20dp"
                             android:contentDescription="@null"
-                            android:src="@drawable/about_logo_dark"/>
+                            android:src="@drawable/about_logo_dark"
+                            android:visibility="gone"/>
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:layout_marginTop="20dp"
                             android:text="Version"
                             style="@style/standard_small_text_font" />
                         <TextView
