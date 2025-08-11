@@ -40,7 +40,6 @@ import org.linphone.activities.main.history.viewmodels.CallLogsListViewModel
 import org.linphone.activities.main.viewmodels.TabsViewModel
 import org.linphone.activities.navigateToCallHistory
 import org.linphone.activities.navigateToConferenceCallHistory
-import org.linphone.activities.navigateToDialer
 import org.linphone.core.ConferenceInfo
 import org.linphone.databinding.HistoryMasterFragmentBinding
 import org.linphone.models.callhistory.CallHistoryItemViewModel
@@ -260,33 +259,19 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
                             }
                         }
 
-                        coreContext.core.callsNb > 0 -> {
-                            val cleanAddress =
-                                LinphoneUtils.getCleanedAddress(callLog.remoteAddress)
-                            Log.i(
-                                "[History] Starting dialer with pre-filled URI ${cleanAddress.asStringUriOnly()}, is transfer? ${sharedViewModel.pendingCallTransfer}"
-                            )
-                            sharedViewModel.updateDialerAnimationsBasedOnDestination.value = Event(
-                                R.id.masterCallLogsFragment
-                            )
-                            val args = Bundle()
-                            args.putString("URI", cleanAddress.asStringUriOnly())
-                            args.putBoolean("Transfer", sharedViewModel.pendingCallTransfer)
-                            args.putBoolean(
-                                "SkipAutoCallStart",
-                                true
-                            ) // If auto start call setting is enabled, ignore it
-                            navigateToDialer(args)
-                        }
-
                         else -> {
-                            val cleanAddress =
-                                LinphoneUtils.getCleanedAddress(callLog.remoteAddress)
+                            val cleanAddress = LinphoneUtils.getCleanedAddress(
+                                callLog.remoteAddress
+                            )
                             val localAddress = callLogGroup.lastCallLog.localAddress
                             Log.i(
                                 "[History] Starting call to ${cleanAddress.asStringUriOnly()} with local address ${localAddress.asStringUriOnly()}"
                             )
-                            coreContext.startCall(cleanAddress, localAddress = localAddress)
+
+                            coreContext.startCallOrTransfer(
+                                cleanAddress,
+                                localAddress = localAddress
+                            )
                         }
                     }
                 }

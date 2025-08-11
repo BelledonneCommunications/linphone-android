@@ -86,7 +86,8 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
             viewLifecycleOwner
         ) {
             it.consume { address ->
-                coreContext.startCall(address)
+                coreContext.startCallOrTransfer(address)
+                // coreContext.startCall(address)
                 /*
                 if (coreContext.core.callsNb > 0) {
                     Log.i(

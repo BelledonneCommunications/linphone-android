@@ -35,10 +35,12 @@ import org.linphone.R
 import org.linphone.activities.main.adapters.SelectionListAdapter
 import org.linphone.activities.main.history.data.GroupedCallLogData
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
+import org.linphone.activities.voip.TransferState
 import org.linphone.databinding.GenericListHeaderBinding
 import org.linphone.databinding.HistoryListCellBinding
 import org.linphone.models.callhistory.CallHistoryItemViewModel
 import org.linphone.models.callhistory.PbxType
+import org.linphone.services.TransferService
 import org.linphone.utils.Event
 import org.linphone.utils.HeaderAdapter
 import org.linphone.utils.Log
@@ -150,9 +152,13 @@ class CallLogsListAdapter(
             dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_dialog_background)
 
             val button: Button = dialogView.findViewById(R.id.callHistoryMakeCallDialogButton)
+
+            val isTransfer = TransferService.getInstance().transferState.value == TransferState.PENDING_BLIND
+
+            if (isTransfer) button.text = "Transfer"
+
             button.setOnClickListener {
                 dialog.dismiss()
-
                 startCallToEvent.value = Event(callLogGroup)
             }
 

@@ -58,6 +58,7 @@ import kotlinx.coroutines.rx3.await
 import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.activities.voip.TransferState
 import org.linphone.authentication.DimensionsAccountsManager
 import org.linphone.compatibility.Compatibility
 import org.linphone.compatibility.PhoneStateInterface
@@ -68,6 +69,7 @@ import org.linphone.mediastream.Version
 import org.linphone.models.UserDevice
 import org.linphone.notifications.NotificationsManager
 import org.linphone.services.PushTokenService
+import org.linphone.services.TransferService
 import org.linphone.services.UserService
 import org.linphone.telecom.TelecomHelper
 import org.linphone.utils.*
@@ -1030,6 +1032,22 @@ class CoreContext(
             return true
         }
         return false
+    }
+
+    fun startCallOrTransfer(
+        address: Address,
+        callParams: CallParams? = null,
+        forceZRTP: Boolean = false,
+        localAddress: Address? = null
+    ) {
+        val transferState = TransferService.getInstance().transferState
+        if (transferState.value == TransferState.PENDING_BLIND) {
+            val ok = transferCallTo(address)
+            if (!ok) callErrorMessageResourceId.value = Event("Failed to transfer call")
+            transferState.value = TransferState.NONE
+        } else {
+            startCall(address, callParams, forceZRTP, localAddress)
+        }
     }
 
     fun startCall(to: String) {
