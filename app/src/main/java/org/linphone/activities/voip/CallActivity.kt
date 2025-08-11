@@ -23,9 +23,16 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.view.Window
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -64,6 +71,11 @@ class CallActivity : ProximitySensorActivity() {
 
         super.onCreate(savedInstanceState)
 
+        enableEdgeToEdge(
+            SystemBarStyle.dark(Color.TRANSPARENT),
+            SystemBarStyle.dark(Color.TRANSPARENT)
+        )
+
         binding = DataBindingUtil.setContentView(this, R.layout.voip_activity)
         binding.lifecycleOwner = this
     }
@@ -97,11 +109,15 @@ class CallActivity : ProximitySensorActivity() {
             }
         }
 
+        toggleSystemUiMargins(window, false)
+        /*
         controlsViewModel.fullScreenMode.observe(
             this
         ) { hide ->
             Compatibility.hideAndroidSystemUI(hide, window)
+
         }
+        */
 
         controlsViewModel.proximitySensorEnabled.observe(
             this
@@ -191,6 +207,27 @@ class CallActivity : ProximitySensorActivity() {
         }
 
         checkPermissions()
+    }
+
+    private fun toggleSystemUiMargins(view: Window, isSysUiHidden: Boolean) {
+        val container = view.findViewById<ConstraintLayout>(R.id.voip_activity_container)
+
+        if (isSysUiHidden) {
+            container.setPadding(0, 0, 0, 0)
+        } else {
+            ViewCompat.setOnApplyWindowInsetsListener(container) { v, windowInsets ->
+                val statusInsets = windowInsets.getInsets((WindowInsetsCompat.Type.statusBars()))
+                val navInsets = windowInsets.getInsets((WindowInsetsCompat.Type.navigationBars()))
+                container.setPadding(
+                    statusInsets.left,
+                    statusInsets.top,
+                    statusInsets.right,
+                    navInsets.bottom
+                )
+
+                windowInsets
+            }
+        }
     }
 
     override fun onUserLeaveHint() {

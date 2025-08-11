@@ -39,7 +39,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:background="?attr/backgroundColor"
         android:gravity="center_vertical"
         android:onClick="@{clickListener}"
@@ -141,7 +141,7 @@
                     android:singleLine="true"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="@{viewModel.dimensionsContactName}" />
+                    android:text="@{viewModel.dimensionsContactName, default=`Rick Sanchez`}" />
 
                 <TextView
                     android:id="@+id/contact_number"
@@ -152,7 +152,8 @@
                     android:singleLine="true"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="@{viewModel.dimensionsContactNumber}"
+                    android:textSize="12sp"
+                    android:text="@{viewModel.dimensionsContactNumber, default=`071234 56789`}"
                     />
 
             </LinearLayout>
@@ -161,8 +162,9 @@
                 android:id="@+id/startTime"
                 app:textStyle="@{viewModel.dimensionsContactNameForegroundStyle}"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{viewModel.dimensionsStartTime}"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@{viewModel.dimensionsStartTime, default=`Today 00:00`}"
                 android:layout_alignParentEnd="true"/>
 
         </RelativeLayout>
