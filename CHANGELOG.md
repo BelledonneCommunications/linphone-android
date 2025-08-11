@@ -10,6 +10,14 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [6.0.15] - 2025-08-11
+
+### Fixed
+- Crash due to changes in SDK triggering fatal error if linphone_core_stop() is called from linphone_core_iterate() loop (which was done when scanning QR code)
+
+### Changed
+- Prevent leaving assistant after doing a remote provisioning if there is still no account after it (if there was no account before and no account was provided in downloaded config)
+
 ## [6.0.14] - 2025-08-06
 
 ### Fixed
