@@ -20,181 +20,210 @@
             type="org.linphone.activities.main.history.viewmodels.CallLogsListViewModel" />
     </data>
 
-    <androidx.slidingpanelayout.widget.SlidingPaneLayout
-        android:id="@+id/sliding_pane"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:layout_width="@dimen/master_fragment_width"
+        <androidx.slidingpanelayout.widget.SlidingPaneLayout
+            android:id="@+id/sliding_pane"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?attr/backgroundColor"
-            android:layout_gravity="start">
+            tools:context=".MainActivity">
 
-            <LinearLayout
-                android:id="@+id/top_bar"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/main_activity_top_bar_size"
-                android:background="?attr/lightToolbarBackgroundColor"
-                android:orientation="horizontal">
+            <RelativeLayout
+                android:layout_width="@dimen/master_fragment_width"
+                android:layout_height="match_parent"
+                android:background="?attr/backgroundColor"
+                android:layout_gravity="start">
 
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.2">
+                <LinearLayout
+                    android:id="@+id/top_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/main_activity_top_bar_size"
+                    android:background="?attr/lightToolbarBackgroundColor"
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="match_parent"
+                    <RelativeLayout
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:background="?attr/button_background_drawable"
-                        android:enabled="@{viewModel.filter != CallLogsFilter.ALL}"
-                        android:onClick="@{() -> viewModel.showAllCallLogs()}"
-                        android:gravity="center"
-                        android:paddingLeft="15dp"
-                        android:paddingRight="15dp"
-                        android:paddingTop="10dp"
-                        android:textSize="18sp"
-                        android:textColor="@{viewModel.filter == CallLogsFilter.ALL ? @color/primary_color : @color/light_primary_text_color}"
-                        android:text="History"/>
+                        android:layout_weight="0.2">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="?attr/button_background_drawable"
+                            android:enabled="@{viewModel.filter != CallLogsFilter.ALL}"
+                            android:onClick="@{() -> viewModel.showAllCallLogs()}"
+                            android:gravity="center"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="15dp"
+                            android:paddingTop="10dp"
+                            android:textSize="18sp"
+                            android:textColor="@{viewModel.filter == CallLogsFilter.ALL ? @color/primary_color : @color/light_primary_text_color}"
+                            android:text="History"/>
+
+                        <View
+                            android:visibility="@{viewModel.filter == CallLogsFilter.ALL ? View.VISIBLE : View.GONE}"
+                            android:layout_width="match_parent"
+                            android:layout_height="5dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="?attr/accentColor" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="?attr/button_background_drawable"
+                            android:enabled="@{viewModel.filter != CallLogsFilter.MISSED}"
+                            android:textColor="@{viewModel.filter == CallLogsFilter.MISSED ? @color/primary_color : @color/light_primary_text_color}"
+                            android:gravity="center"
+                            android:onClick="@{() -> viewModel.showOnlyMissedCallLogs()}"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="15dp"
+                            android:paddingTop="10dp"
+                            android:textSize="18sp"
+                            android:text="Missed"/>
+
+                        <View
+                            android:visibility="@{viewModel.filter == CallLogsFilter.MISSED ? View.VISIBLE : View.GONE}"
+                            android:layout_width="match_parent"
+                            android:layout_height="5dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="?attr/accentColor" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:visibility="@{viewModel.showConferencesFilter ? View.VISIBLE : View.INVISIBLE}">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="?attr/button_background_drawable"
+                            android:contentDescription="@string/content_description_show_missed_calls"
+                            android:enabled="@{viewModel.filter != CallLogsFilter.CONFERENCE}"
+                            android:gravity="center"
+                            android:onClick="@{() -> viewModel.showOnlyConferenceCallLogs()}"
+                            android:padding="8dp"
+                            android:src="@drawable/icon_video_conf_history_filter" />
+
+                        <View
+                            android:visibility="@{viewModel.filter == CallLogsFilter.CONFERENCE ? View.VISIBLE : View.GONE}"
+                            android:layout_width="match_parent"
+                            android:layout_height="5dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="?attr/accentColor" />
+
+                    </RelativeLayout>
 
                     <View
-                        android:visibility="@{viewModel.filter == CallLogsFilter.ALL ? View.VISIBLE : View.GONE}"
-                        android:layout_width="match_parent"
-                        android:layout_height="5dp"
-                        android:layout_alignParentBottom="true"
-                        android:background="?attr/accentColor" />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.2">
-
-                    <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:background="?attr/button_background_drawable"
-                        android:enabled="@{viewModel.filter != CallLogsFilter.MISSED}"
-                        android:textColor="@{viewModel.filter == CallLogsFilter.MISSED ? @color/primary_color : @color/light_primary_text_color}"
-                        android:gravity="center"
-                        android:onClick="@{() -> viewModel.showOnlyMissedCallLogs()}"
-                        android:paddingLeft="15dp"
-                        android:paddingRight="15dp"
-                        android:paddingTop="10dp"
-                        android:textSize="18sp"
-                        android:text="Missed"/>
-
-                    <View
-                        android:visibility="@{viewModel.filter == CallLogsFilter.MISSED ? View.VISIBLE : View.GONE}"
-                        android:layout_width="match_parent"
-                        android:layout_height="5dp"
-                        android:layout_alignParentBottom="true"
-                        android:background="?attr/accentColor" />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.2"
-                    android:visibility="@{viewModel.showConferencesFilter ? View.VISIBLE : View.INVISIBLE}">
+                        android:layout_weight="0.1" />
 
                     <ImageView
-                        android:layout_width="match_parent"
+                        android:visibility="invisible"
+                        android:onClick="@{editClickListener}"
+                        android:enabled="@{!viewModel.callLogs.empty}"
+                        android:contentDescription="@string/content_description_enter_edition_mode"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
+                        android:layout_weight="0.1"
                         android:background="?attr/button_background_drawable"
-                        android:contentDescription="@string/content_description_show_missed_calls"
-                        android:enabled="@{viewModel.filter != CallLogsFilter.CONFERENCE}"
-                        android:gravity="center"
-                        android:onClick="@{() -> viewModel.showOnlyConferenceCallLogs()}"
-                        android:padding="8dp"
-                        android:src="@drawable/icon_video_conf_history_filter" />
+                        android:padding="15dp"
+                        android:src="@drawable/delete" />
 
-                    <View
-                        android:visibility="@{viewModel.filter == CallLogsFilter.CONFERENCE ? View.VISIBLE : View.GONE}"
-                        android:layout_width="match_parent"
-                        android:layout_height="5dp"
-                        android:layout_alignParentBottom="true"
-                        android:background="?attr/accentColor" />
+                </LinearLayout>
 
-                </RelativeLayout>
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/list_edit_top_bar_fragment"
+                    android:name="org.linphone.activities.main.fragments.ListTopBarFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/main_activity_top_bar_size"
+                    android:layout_alignTop="@id/top_bar"
+                    tools:layout="@layout/list_edit_top_bar_fragment" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/callLogsList"
+                    android:layout_below="@id/top_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    style="@style/empty_list_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="@string/no_call_history"
+                    android:visibility="@{viewModel.callLogs.empty &amp;&amp; viewModel.filter == CallLogsFilter.ALL ? View.VISIBLE : View.GONE}" />
+
+                <TextView
+                    style="@style/empty_list_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="@string/no_missed_call_history"
+                    android:visibility="@{viewModel.callLogs.empty &amp;&amp; viewModel.filter == CallLogsFilter.MISSED ? View.VISIBLE : View.GONE}" />
+
+                <TextView
+                    style="@style/empty_list_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="@string/no_conference_call_history"
+                    android:visibility="@{viewModel.callLogs.empty &amp;&amp; viewModel.filter == CallLogsFilter.CONFERENCE ? View.VISIBLE : View.GONE}" />
 
                 <View
-                    android:layout_width="0dp"
+                    android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.1" />
+                    android:layout_alignParentRight="true"
+                    android:background="?attr/dividerColor" />
 
-                <ImageView
-                    android:visibility="invisible"
-                    android:onClick="@{editClickListener}"
-                    android:enabled="@{!viewModel.callLogs.empty}"
-                    android:contentDescription="@string/content_description_enter_edition_mode"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.1"
-                    android:background="?attr/button_background_drawable"
-                    android:padding="15dp"
-                    android:src="@drawable/delete" />
-
-            </LinearLayout>
+            </RelativeLayout>
 
             <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/list_edit_top_bar_fragment"
-                android:name="org.linphone.activities.main.fragments.ListTopBarFragment"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/main_activity_top_bar_size"
-                android:layout_alignTop="@id/top_bar"
-                tools:layout="@layout/list_edit_top_bar_fragment" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/callLogsList"
-                android:layout_below="@id/top_bar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <TextView
-                style="@style/empty_list_font"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/no_call_history"
-                android:visibility="@{viewModel.callLogs.empty &amp;&amp; viewModel.filter == CallLogsFilter.ALL ? View.VISIBLE : View.GONE}" />
-
-            <TextView
-                style="@style/empty_list_font"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/no_missed_call_history"
-                android:visibility="@{viewModel.callLogs.empty &amp;&amp; viewModel.filter == CallLogsFilter.MISSED ? View.VISIBLE : View.GONE}" />
-
-            <TextView
-                style="@style/empty_list_font"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/no_conference_call_history"
-                android:visibility="@{viewModel.callLogs.empty &amp;&amp; viewModel.filter == CallLogsFilter.CONFERENCE ? View.VISIBLE : View.GONE}" />
-
-            <View
-                android:layout_width="1dp"
+                android:id="@+id/history_nav_container"
+                android:name="androidx.navigation.fragment.NavHostFragment"
+                android:layout_width="300dp"
                 android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:background="?attr/dividerColor" />
+                android:layout_weight="1"
+                app:defaultNavHost="false"
+                app:navGraph="@navigation/history_nav_graph"/>
 
-        </RelativeLayout>
+        </androidx.slidingpanelayout.widget.SlidingPaneLayout>
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/history_nav_container"
-            android:name="androidx.navigation.fragment.NavHostFragment"
-            android:layout_width="300dp"
+
+        <View
+            android:id="@+id/popup_background"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            app:defaultNavHost="false"
-            app:navGraph="@navigation/history_nav_graph"/>
+            android:background="@color/voip_translucent_popup_background"
+            android:onClick="@{() -> viewModel.hideContextMenu(true)}"
+            android:visibility="@{viewModel.isContextMenuOpen ? View.VISIBLE : View.GONE, default=gone}" />
+        <!-- TODO: add click to close -->
 
-    </androidx.slidingpanelayout.widget.SlidingPaneLayout>
+        <include
+            android:id="@+id/extra_buttons"
+            layout="@layout/voip_transfer_context_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:translationY="@{viewModel.contextMenuTranslateY, default=@dimen/voip_call_extra_buttons_translate_y}"
+            android:visibility="@{View.VISIBLE, default=gone}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintWidth_max="@dimen/voip_extra_menu_max_width" />
+            <!--app:controlsViewModel="@{viewModel}"-->
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

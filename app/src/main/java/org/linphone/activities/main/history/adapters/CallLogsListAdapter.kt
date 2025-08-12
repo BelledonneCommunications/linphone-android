@@ -63,6 +63,10 @@ class CallLogsListAdapter(
         MutableLiveData<Event<GroupedCallLogData>>()
     }
 
+    val loadRecordingEvent: MutableLiveData<Event<GroupedCallLogData>> by lazy {
+        MutableLiveData<Event<GroupedCallLogData>>()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val binding: HistoryListCellBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
