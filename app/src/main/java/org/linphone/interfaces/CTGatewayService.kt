@@ -6,6 +6,7 @@ import org.linphone.models.TenantBrandingDefinition
 import org.linphone.models.UserDevice
 import org.linphone.models.UserInfo
 import org.linphone.models.UserSession
+import org.linphone.models.callhistory.CallRecordingInfo
 import org.linphone.models.callhistory.ReportRequest
 import org.linphone.models.callhistory.UserCallHistorySummary
 import org.linphone.models.contact.ContactDirectoryModel
@@ -117,4 +118,7 @@ interface CTGatewayService {
         @Path("deviceId") deviceId: String,
         @Body request: UserSession
     ): Response<Void>
+
+    @GET("api/v1.0/callsessions/{sessionId}/recordings")
+    suspend fun getRecordingInfoList(@Path("sessionId") sessionId: String): Response<List<CallRecordingInfo>>
 }
