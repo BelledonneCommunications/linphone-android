@@ -878,7 +878,13 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             it.consume {
                 val model = messageLongPressViewModel.messageModel.value
                 if (model != null) {
-                    showHowToDeleteMessageDialog(model)
+                    if (model.isOutgoing && !(model.hasBeenRetracted.value ?: false)) {
+                        // For sent messages let user choose between delete locally / delete for everyone
+                        showHowToDeleteMessageDialog(model)
+                    } else {
+                        // For received messages or retracted sent ones you can only delete locally
+                        viewModel.deleteChatMessage(model)
+                    }
                 }
             }
         }
