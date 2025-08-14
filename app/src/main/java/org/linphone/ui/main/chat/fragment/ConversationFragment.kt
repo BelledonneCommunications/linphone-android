@@ -832,9 +832,21 @@ open class ConversationFragment : SlidingPaneChildFragment() {
 
         viewModel.itemToScrollTo.observe(viewLifecycleOwner) { position ->
             if (position >= 0) {
-                Log.i("$TAG Scrolling to message/event at position [$position]")
                 val recyclerView = binding.eventsList
-                recyclerView.scrollToPosition(position)
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val firstDisplayedItemPosition = layoutManager.findFirstVisibleItemPosition()
+                val lastDisplayedItemPosition = layoutManager.findLastVisibleItemPosition()
+                Log.i(
+                    "$TAG Scrolling to message/event at position [$position], " +
+                        "display show events between positions [$firstDisplayedItemPosition] and [$lastDisplayedItemPosition]"
+                )
+                if (firstDisplayedItemPosition > position && position > 0) {
+                    recyclerView.scrollToPosition(position - 1)
+                } else if (lastDisplayedItemPosition < position && position < layoutManager.itemCount - 1) {
+                    recyclerView.scrollToPosition(position + 1)
+                } else {
+                    recyclerView.scrollToPosition(position)
+                }
             }
         }
 
