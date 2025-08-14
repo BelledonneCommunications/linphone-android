@@ -2,6 +2,7 @@ package org.linphone.interfaces
 
 import ReportResult
 import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import org.linphone.models.TenantBrandingDefinition
 import org.linphone.models.UserDevice
 import org.linphone.models.UserInfo
@@ -121,4 +122,7 @@ interface CTGatewayService {
 
     @GET("api/v1.0/callsessions/{sessionId}/recordings")
     suspend fun getRecordingInfoList(@Path("sessionId") sessionId: String): Response<List<CallRecordingInfo>>
+
+    @POST("api/v1.0/callsessions/{sessionId}/recordings/audio")
+    suspend fun getRecordingAudio(@Path("sessionId") sessionId: String, @Body recordingId: String): ResponseBody
 }

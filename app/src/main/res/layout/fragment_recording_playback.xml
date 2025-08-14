@@ -60,45 +60,37 @@
             android:textSize="21sp"
             android:gravity="center"
             android:layout_marginHorizontal="25dp"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="25dp" />
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.call.time, default=`Monday 09:30`}"
             android:gravity="center"
-            android:layout_marginHorizontal="25dp" />
+            android:layout_marginHorizontal="25dp">
 
-        <FrameLayout
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="3sp"
+                android:text="@{viewModel.call.time, default=`Monday`}" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@{viewModel.call.time, default=`09:30`}" />
+        </LinearLayout>
+
+        <androidx.media3.ui.PlayerView
+            android:id="@+id/mediaPlayerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/lightToolbarBackgroundColor"
-            android:padding="50dp"
-            android:layout_marginVertical="20dp">
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:alpha="0.3"
-                android:src="@drawable/recording_play_pause"/>
-        </FrameLayout>
+            android:layout_height="160dp"
+            android:layout_marginVertical="20dp"
+            app:time_bar_scrubbing_enabled="true"
+            android:keepScreenOn="true">
+        </androidx.media3.ui.PlayerView>
 
 
-
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="15dp"
-            android:text="@{viewModel.currentRecording.label, default=current label}"
-            android:textColor="@color/red_color"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="25dp"
-            android:text="@string/recordings"
-            android:textSize="16sp"
-            android:textColor="@color/primary_color"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recordingsList"

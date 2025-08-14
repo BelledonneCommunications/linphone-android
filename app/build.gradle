@@ -318,6 +318,10 @@ dependencies {
 
     //Datetime handling
     implementation 'com.jakewharton.threetenabp:threetenabp:1.4.9'
+
+    // Media player
+    implementation("androidx.media3:media3-exoplayer:1.8.0")
+    implementation("androidx.media3:media3-ui:1.8.0")
 }
 
 task generateContactsXml(type: Copy) {

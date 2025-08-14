@@ -1,5 +1,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View"/>
@@ -17,37 +18,41 @@
             type="org.linphone.activities.main.history.viewmodels.RecordingInfoViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:onClick="@{clickListener}"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:background="?attr/backgroundColor">
+        android:layout_height="52dp"
+        tools:background="@color/white_color">
 
-        <ImageView
-            android:id="@+id/record_play_pause"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/content_description_recording_toggle_play"
-            android:padding="10dp"
-            android:src="@drawable/recording_play_pause" />
-
-        <TextView
-            android:layout_width="0dp"
+        <FrameLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/record_play_pause"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:text="@{viewModel.label, default=`Jebediah Springfield`}" />
+            android:visibility="@{ viewModel.isPlaying ? View.VISIBLE : View.GONE, default=gone }"
+            android:background="@color/light_grey_color">
+        </FrameLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="52sp"
+            android:orientation="vertical"
+            android:paddingVertical="8dp"
+            android:paddingHorizontal="15dp"
+            android:onClick="@{clickListener}">
+
+            <TextView
+                android:id="@+id/label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="@{viewModel.label, default=`Jebediah Springfield ➔ Lisa Simpson`}" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="@{viewModel.formattedDuration, default=`32 seconds`}"
+                android:textSize="12sp"/>
+        </LinearLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 
 </layout>

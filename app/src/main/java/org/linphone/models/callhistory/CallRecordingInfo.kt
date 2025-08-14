@@ -3,8 +3,6 @@ package org.linphone.models.callhistory
 import com.google.gson.annotations.SerializedName
 
 data class CallRecordingInfo(
-    @SerializedName("sessionId")
-    val sessionId: String?,
 
     @SerializedName("id")
     val id: String?,

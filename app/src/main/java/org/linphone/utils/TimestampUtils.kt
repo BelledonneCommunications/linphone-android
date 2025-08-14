@@ -100,6 +100,21 @@ class TimestampUtils {
             }
         }
 
+        fun durationToFriendlyString(seconds: Int): String {
+            if (seconds < 60) {
+                return "$seconds seconds"
+            } else if (seconds < (60 * 60)) {
+                val minutes = Math.round(seconds.toDouble() / 60)
+                return "$minutes minutes"
+            } else {
+                val hours = Math.floor((seconds.toDouble() % 86400) / 3600)
+                val minutes = Math.floor((seconds.toDouble() % 3600) / 60)
+                var str = "$hours hours"
+                if (minutes > 0) str += " {minutes} minutes"
+                return str
+            }
+        }
+
         fun durationToString(hours: Int, minutes: Int): String {
             val calendar = Calendar.getInstance()
             calendar.set(Calendar.HOUR_OF_DAY, hours)

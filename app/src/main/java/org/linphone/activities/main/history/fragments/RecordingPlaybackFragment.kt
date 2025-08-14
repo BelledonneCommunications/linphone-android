@@ -2,7 +2,13 @@ package org.linphone.activities.main.history.fragments
 
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.OptIn
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModelProvider
+import androidx.media3.common.MediaItem
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.ui.PlayerView
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -20,6 +26,10 @@ class RecordingPlaybackFragment : GenericFragment<FragmentRecordingPlaybackBindi
     private lateinit var viewModel: RecordingPlaybackViewModel
 
     private lateinit var recordingsService: RecordingsService
+
+    private lateinit var mediaPlayer: ExoPlayer
+
+    private lateinit var adapter: RecordingInfoListAdapter
 
     override fun getLayoutId(): Int = R.layout.fragment_recording_playback
 
@@ -44,7 +54,7 @@ class RecordingPlaybackFragment : GenericFragment<FragmentRecordingPlaybackBindi
             }
         }
 
-        val adapter = RecordingInfoListAdapter(viewLifecycleOwner)
+        adapter = RecordingInfoListAdapter(viewLifecycleOwner)
         binding.recordingsList.setHasFixedSize(true)
         binding.recordingsList.adapter = adapter
 
@@ -56,11 +66,13 @@ class RecordingPlaybackFragment : GenericFragment<FragmentRecordingPlaybackBindi
         }
 
         adapter.recordingSelected.observe(viewLifecycleOwner) { it ->
-            it.consume { item ->
-                Log.d("Recording selected: $item")
-                viewModel.currentRecording.value = item
-            }
+            it.consume { item -> playRecording(item) }
         }
+
+        mediaPlayer = ExoPlayer.Builder(requireContext()).build()
+
+        val playerView = view.findViewById<PlayerView>(R.id.mediaPlayerView)
+        playerView.player = mediaPlayer
     }
 
     private fun populateRecordingList(sessionId: String) {
@@ -72,6 +84,46 @@ class RecordingPlaybackFragment : GenericFragment<FragmentRecordingPlaybackBindi
                 Log.d("Got ${recs.size} recordings.")
 
                 viewModel.recordings.value = recs
+            }
+        }
+    }
+
+    @OptIn(UnstableApi::class)
+    private fun playRecording(item: RecordingInfoViewModel) {
+        Log.d("Recording selected: $item")
+        viewModel.currentRecording.value = item
+
+        // Mark the item as playing
+        val recordings = adapter.currentList
+        for (r in recordings) {
+            r.isPlaying.value = false
+        }
+        item.isPlaying.value = true
+
+        mediaPlayer.stop()
+
+        val sessionId = viewModel.call.value?.callId
+
+        if (sessionId == null || item.info.id == null) {
+            Log.e("Unable to play recording - info is incomplete.")
+            viewModel.currentRecording.value = null
+        } else {
+            try {
+                runBlocking {
+                    launch {
+                        val file = recordingsService.getRecordingAudio(sessionId, item.info.id)
+
+                        val uri = file.toUri()
+                        // val sourceUri = RawResourceDataSource.buildRawResourceUri(R.raw.example)
+                        val mediaItem = MediaItem.fromUri(uri)
+                        mediaPlayer.setMediaItem(mediaItem)
+                        mediaPlayer.prepare()
+                        mediaPlayer.play()
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("Failed to retrieve recording audio.")
+                viewModel.currentRecording.value = null
             }
         }
     }
