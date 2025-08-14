@@ -465,6 +465,7 @@ class ControlsViewModel() : ViewModel() {
     }
 
     fun startConsultTransfer() {
+        // FIXME: Move transfer state management to a central location (CoreContext?)
         transferService.transferState.value = TransferState.PENDING_CONSULT
         startTransfer()
     }
