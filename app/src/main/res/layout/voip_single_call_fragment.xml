@@ -30,8 +30,7 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinator"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="20dp">
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraint_layout"
@@ -46,6 +45,7 @@
                 android:contentDescription="Go back to previous page"
                 android:onClick="@{() -> controlsViewModel.goBack()}"
                 android:src="@drawable/icon_back"
+                android:layout_margin="20dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:tint="@color/white_color" />
@@ -75,6 +75,7 @@
                 android:id="@+id/bottom_buttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="20dp"
                 android:gravity="end"
                 android:orientation="horizontal"
                 android:visibility="@{callsViewModel.callsData.size() > 1 ? View.VISIBLE : View.GONE}"
@@ -212,7 +213,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/voip_translucent_popup_background"
-                android:visibility="@{controlsViewModel.showExtras ? View.VISIBLE : View.GONE, default=gone}" />
+                android:onClick="@{() -> controlsViewModel.hideExtraButtons(true)}"
+                android:visibility="@{controlsViewModel.showExtras ? View.VISIBLE : View.GONE, default=visible}" />
             <!-- TODO: add click to close -->
 
             <include
@@ -220,10 +222,10 @@
                 layout="@layout/voip_transfer_context_menu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
+                android:layout_margin="15dp"
+
                 android:translationY="@{controlsViewModel.extraButtonsMenuTranslateY, default=@dimen/voip_call_extra_buttons_translate_y}"
-                android:visibility="@{View.VISIBLE, default=gone}"
+                android:visibility="@{View.VISIBLE, default=visible}"
                 app:controlsViewModel="@{controlsViewModel}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
