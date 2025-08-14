@@ -27,6 +27,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.transition.MaterialSharedAxis
+import io.reactivex.rxjava3.disposables.Disposable
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -42,6 +43,7 @@ import org.linphone.core.ConferenceInfo
 import org.linphone.databinding.HistoryMasterFragmentBinding
 import org.linphone.models.callhistory.PbxType
 import org.linphone.services.CallHistoryService
+import org.linphone.services.UserService
 import org.linphone.utils.*
 import org.linphone.utils.Log
 
@@ -49,6 +51,8 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
     val callHistoryService = CallHistoryService.getInstance(coreContext.context)
     override val dialogConfirmationMessageBeforeRemoval = R.plurals.history_delete_dialog
     private lateinit var listViewModel: CallLogsListViewModel
+
+    private var permissionSubscription: Disposable? = null
 
     private val observer = object : RecyclerView.AdapterDataObserver() {
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
@@ -63,6 +67,10 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
     override fun onDestroyView() {
         binding.callLogsList.adapter = null
         adapter.unregisterAdapterDataObserver(observer)
+
+        permissionSubscription?.dispose()
+        permissionSubscription = null
+
         super.onDestroyView()
     }
 
@@ -125,6 +133,16 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
 
         val layoutManager = LinearLayoutManager(requireContext())
         binding.callLogsList.layoutManager = layoutManager
+
+        val hasPlaybackPermission = UserService.getInstance(requireContext()).user.map { u ->
+            u.hasPermission(
+                "recording.play"
+            )
+        }
+        permissionSubscription = hasPlaybackPermission.subscribe(
+            { hasPermission -> listViewModel.hasPlaybackPermission.value = hasPermission },
+            { error -> Log.e(error) }
+        )
 
         // Swipe action
 //        val swipeConfiguration = RecyclerViewSwipeConfiguration()
@@ -205,7 +223,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
             it.consume { call ->
                 binding.contextItemViewModel = call
                 sharedViewModel.selectedHistoryItem.value = call
-                listViewModel.showContextMenu()
+                listViewModel.showContextMenu(call)
             }
         }
 

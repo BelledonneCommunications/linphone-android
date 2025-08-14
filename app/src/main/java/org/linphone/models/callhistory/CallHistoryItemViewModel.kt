@@ -38,6 +38,8 @@ class CallHistoryItemViewModel(
     var icon: String = buildIcon()
     var isSelected: Boolean = false
 
+    var canCallBack = number.isNotEmpty()
+
 //    val canCall: Observable<Boolean> = Observable.defer {
 //        if (call.pbxType == PbxType.Teams) {
 //            Observable.just(!call.isConference)

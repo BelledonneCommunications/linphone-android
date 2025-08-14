@@ -62,6 +62,8 @@ class CallLogsListViewModel : ViewModel() {
 
     val trasferState = TransferService.getInstance().transferState
 
+    val hasPlaybackPermission = MutableLiveData<Boolean>(false)
+
     private val listener: CoreListenerStub = object : CoreListenerStub() {
         override fun onCallLogUpdated(core: Core, log: CallLog) {
             updateCallLogs()
@@ -186,9 +188,11 @@ class CallLogsListViewModel : ViewModel() {
         }
     }
 
-    fun showContextMenu() {
-        contextMenuAnimator.start()
-        isContextMenuOpen.value = true
+    fun showContextMenu(call: CallHistoryItemViewModel) {
+        if (call.canCallBack || (call.call.hasRecording && hasPlaybackPermission.value == true)) {
+            contextMenuAnimator.start()
+            isContextMenuOpen.value = true
+        }
     }
 
     fun hideContextMenu(skipAnimation: Boolean) {

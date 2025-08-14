@@ -36,7 +36,8 @@
             android:textColor="@color/primary_color"
             android:textSize="22sp"
             android:gravity="center"
-            android:padding="10dp" />
+            android:padding="10dp"
+            android:visibility="@{callViewModel.canCallBack ? View.VISIBLE : View.GONE}" />
 
         <TextView
             android:id="@+id/callHistoryDialog_PlayRecordingButton"
@@ -47,6 +48,8 @@
             android:textColor="@color/primary_color"
             android:textSize="22sp"
             android:padding="10dp"
-            android:gravity="center" />
+            android:gravity="center"
+            android:visibility="@{callViewModel.call.hasRecording &amp;&amp; historyViewModel.hasPlaybackPermission ? View.VISIBLE : View.GONE, default=visible }"
+            />
     </LinearLayout>
 </layout>

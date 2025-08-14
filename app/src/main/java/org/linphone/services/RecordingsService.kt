@@ -16,7 +16,7 @@ class RecordingsService(val context: Context) : DefaultLifecycleObserver {
 
     init {
         // Create the cache folder, deleting any existing files if it already exists
-        //TODO: Implement a better mechanism for clearing cached files
+        // TODO: Implement a better mechanism for clearing cached files
         val cacheDir = File(cacheDirPath)
         if (cacheDir.exists()) cacheDir.deleteRecursively()
         cacheDir.mkdir()

@@ -55,6 +55,11 @@ data class UserInfo(
     }
 
     fun hasClientPermission(): Boolean {
-        return permissions.contains("customer.user.uc.mobile")
+        return hasPermission("customer.user.uc.mobile")
+    }
+
+    fun hasPermission(permission: String): Boolean {
+        val match = permissions.find { str -> str.startsWith(permission) }
+        return match != null
     }
 }
