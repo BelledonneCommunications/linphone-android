@@ -968,6 +968,14 @@ class ConversationViewModel
             val message = if (latestMatch == null) {
                 R.string.conversation_search_no_match_found
             } else {
+                // Scroll to last matching event anyway, user may have scrolled away
+                val found = eventsList.find {
+                    it.eventLog == latestMatch
+                }
+                if (found != null) { // This should always be true
+                    val index = eventsList.indexOf(found)
+                    itemToScrollTo.postValue(index)
+                }
                 R.string.conversation_search_no_more_match
             }
             showRedToast(message, R.drawable.magnifying_glass)
@@ -987,13 +995,7 @@ class ConversationViewModel
                 Log.i("$TAG Found result is already in history, no need to load more history")
                 (found.model as? MessageModel)?.highlightText(textToSearch)
                 val index = eventsList.indexOf(found)
-                if (direction == SearchDirection.Down && index < eventsList.size - 1) {
-                    // Go to next message to prevent the message we are looking for to be behind the scroll to bottom button
-                    itemToScrollTo.postValue(index + 1)
-                } else {
-                    // Go to previous message so target message won't be displayed stuck to the top
-                    itemToScrollTo.postValue(index - 1)
-                }
+                itemToScrollTo.postValue(index)
                 searchInProgress.postValue(false)
             }
 
