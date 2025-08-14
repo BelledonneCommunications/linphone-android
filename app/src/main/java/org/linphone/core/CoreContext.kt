@@ -1429,6 +1429,9 @@ class CoreContext(
     fun createConference(params: ConferenceParams): Conference? {
         val conf = core.createConferenceWithParams(params)
         lastConferenceId = conf?.identifier
+
+        TransferService.getInstance().transferState.value = TransferState.NONE
+
         return conf
     }
 
