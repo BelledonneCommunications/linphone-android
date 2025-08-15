@@ -4,7 +4,6 @@ pool:
 variables:
   appVersionCode: $(MAJOR)$(MINOR)$(YEAR:yy)$(DAYOFYEAR)$(REV:r)
   resellerName: 'Dimensions Technologies'
-  sentryAuthToken: '$(SentryAuthToken)'
           
 steps:
 - checkout: self
@@ -107,6 +106,8 @@ steps:
     javaHomeOption: 'JDKVersion'
     sonarQubeRunAnalysis: false
     spotBugsAnalysis: false
+  env:
+    SENTRY_AUTH_TOKEN: $(SentryAuthToken) # Map secret variable SentryAuthToken to an environment variable
 
 - task: PublishBuildArtifacts@1
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
