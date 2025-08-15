@@ -15,12 +15,12 @@ class UrlHelper {
 
         @SuppressLint("CheckResult")
         fun openHelp(context: Context, path: String? = null) {
-            BrandingService.getInstance(context).brand.first(null).subscribe { brand ->
+            BrandingService.getInstance(context).brand.first(Optional.empty()).subscribe { brand ->
                 val deployment = DimensionsEnvironmentService.getInstance(context).getCurrentEnvironment()
                 val user = AuthStateManager.getInstance(context).getUser()
                 var lang = Locale.getDefault().toString().lowercase()
 
-                val validLocales : ArrayList<String> = arrayListOf("en-us", "en-gb")
+                val validLocales: ArrayList<String> = arrayListOf("en-us", "en-gb")
                 if (!validLocales.contains(lang)) {
                     lang = "en-us"
                 }
