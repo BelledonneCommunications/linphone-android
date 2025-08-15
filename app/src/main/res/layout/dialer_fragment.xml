@@ -4,6 +4,9 @@
 
     <data>
         <import type="android.view.View"/>
+
+        <variable name="fragment" type="org.linphone.activities.main.dialer.fragments.DialerFragment" />
+
         <variable
             name="newContactClickListener"
             type="android.view.View.OnClickListener"/>
@@ -13,17 +16,17 @@
         <variable
             name="transferCallClickListener"
             type="android.view.View.OnClickListener"/>
+
         <variable
             name="viewModel"
             type="org.linphone.activities.main.dialer.viewmodels.DialerViewModel"/>
-
     </data>
 
     <RelativeLayout
         android:background="?attr/backgroundColor"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        android:layout_height="match_parent"
+        android:onClick="@{() -> fragment.clearFocus() }">
 
         <com.google.android.flexbox.FlexboxLayout
             android:layout_width="match_parent"
@@ -82,8 +85,8 @@
                     android:backgroundTint="@color/transparent_color"
                     android:beforeTextChanged="@{(text, start, count, after) -> viewModel.onBeforeUriChanged(sipUriInput, count, after)}"
                     android:ellipsize="start"
-                    android:enabled="false"
-                    android:inputType="textEmailAddress|textUri|textNoSuggestions"
+                    android:textIsSelectable="true"
+                    android:inputType="none"
                     android:paddingStart="20dp"
                     android:paddingEnd="5dp"
                     android:text="@={viewModel.enteredUri}"
