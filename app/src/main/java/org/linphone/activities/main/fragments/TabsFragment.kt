@@ -61,7 +61,7 @@ class TabsFragment : GenericFragment<TabsFragmentBinding>(), NavController.OnDes
         ViewCompat.setOnApplyWindowInsetsListener(tabsContainer) { v, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
 
-            val contentDpHeight = 60f
+            val contentDpHeight = 68f
             val contentPixelHeight = TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
                 contentDpHeight,

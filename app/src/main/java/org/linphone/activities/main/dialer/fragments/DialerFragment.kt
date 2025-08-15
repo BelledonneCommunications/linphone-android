@@ -31,6 +31,7 @@ import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.transition.MaterialSharedAxis
@@ -72,6 +73,8 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
         viewModel = ViewModelProvider(this)[DialerViewModel::class.java]
         binding.viewModel = viewModel
 
+        binding.fragment = this
+
         useMaterialSharedAxisXForwardAnimation = false
         sharedViewModel.updateDialerAnimationsBasedOnDestination.observe(
             viewLifecycleOwner
@@ -112,19 +115,10 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
         }
 
         binding.setTransferCallClickListener {
-            // if (!sharedViewModel.pendingCallTransfer) {
             if (viewModel.transferState.value == TransferState.PENDING_BLIND) {
                 viewModel.transferCall()
                 viewModel.transferState.value = TransferState.NONE
             }
-            /*
-            if (viewModel.transferCall()) {
-                // Transfer has been consumed, otherwise it might have been a "bis" use
-                sharedViewModel.pendingCallTransfer = false
-                viewModel.transferVisibility.value = false
-                coreContext.onCallStarted()
-            }
-            */
         }
 
         viewModel.enteredUri.observe(
@@ -202,6 +196,10 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
 
         viewModel.autoInitiateVideoCalls.value = coreContext.core.videoActivationPolicy.automaticallyInitiate
 
+        val sipInput = view.findViewById<TextView>(R.id.sip_uri_input)
+        sipInput.showSoftInputOnFocus = false
+        sipInput.isCursorVisible = true
+
         checkForUpdate()
 
         checkPermissions()
@@ -224,6 +222,10 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
         uploadLogsInitiatedByUs = false
 
         viewModel.enteredUri.value = sharedViewModel.dialerUri
+    }
+
+    fun clearFocus() {
+        view?.clearFocus()
     }
 
     @Deprecated("Deprecated in Java")

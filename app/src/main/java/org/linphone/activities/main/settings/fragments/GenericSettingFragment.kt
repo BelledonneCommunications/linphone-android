@@ -21,6 +21,8 @@ package org.linphone.activities.main.settings.fragments
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.ViewDataBinding
 import org.linphone.activities.GenericFragment
 
@@ -29,5 +31,12 @@ abstract class GenericSettingFragment<T : ViewDataBinding> : GenericFragment<T>(
         useMaterialSharedAxisXForwardAnimation = sharedViewModel.isSlidingPaneSlideable.value == false
 
         super.onViewCreated(view, savedInstanceState)
+
+        ViewCompat.setOnApplyWindowInsetsListener(view) { v, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            view.setPadding(0, 0, 0, insets.bottom)
+
+            windowInsets
+        }
     }
 }

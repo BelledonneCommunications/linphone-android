@@ -23,7 +23,7 @@
                 android:name="androidx.navigation.fragment.NavHostFragment"
                 app:defaultNavHost="true"
                 app:navGraph="@navigation/main_nav_graph"
-                tools:layout="@layout/dialer_fragment" />
+                tools:layout="@layout/dialer_fragment"  />
 
         </RelativeLayout>
 

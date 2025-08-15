@@ -12,7 +12,6 @@
         android:id="@+id/numpad"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:background="?attr/backgroundColor"
         android:weightSum="1"
         app:alignContent="flex_end"
