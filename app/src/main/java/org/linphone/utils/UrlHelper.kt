@@ -15,7 +15,7 @@ class UrlHelper {
 
         @SuppressLint("CheckResult")
         fun openHelp(context: Context, path: String? = null) {
-            BrandingService.getInstance(context).brand.subscribe { brand ->
+            BrandingService.getInstance(context).brand.first(null).subscribe { brand ->
                 val deployment = DimensionsEnvironmentService.getInstance(context).getCurrentEnvironment()
                 val user = AuthStateManager.getInstance(context).getUser()
                 var lang = Locale.getDefault().toString().lowercase()

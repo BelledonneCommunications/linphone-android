@@ -162,7 +162,8 @@
                     android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginStart="6dp">
 
                     <LinearLayout
                         android:visibility="@{viewModel.showAccounts ? View.VISIBLE : View.GONE}"
@@ -176,11 +177,11 @@
                         android:onClick="@{assistantClickListener}"
                         android:visibility="@{viewModel.showAssistant ? View.VISIBLE : View.GONE}"
                         android:layout_width="match_parent"
-                        android:layout_height="45dp">
+                        android:layout_height="50dp">
 
                         <ImageView
                             android:layout_width="45dp"
-                            android:layout_height="45dp"
+                            android:layout_height="50dp"
                             android:padding="10dp"
                             android:contentDescription="@string/assistant"
                             android:src="@drawable/menu_assistant" />
@@ -189,28 +190,22 @@
                             android:text="@string/assistant"
                             style="@style/standard_text_font"
                             android:layout_width="match_parent"
-                            android:layout_height="45dp"
+                            android:layout_height="50dp"
                             android:gravity="center_vertical"
                             android:paddingLeft="5dp"
                             android:paddingRight="16dp" />
 
                     </LinearLayout>
 
-                    <View
-                        android:visibility="@{viewModel.showAssistant ? View.VISIBLE : View.GONE}"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="?dividerColor" />
-
                     <LinearLayout
                         android:onClick="@{settingsClickListener}"
                         android:visibility="@{viewModel.showSettings ? View.VISIBLE : View.GONE}"
                         android:layout_width="match_parent"
-                        android:layout_height="45dp">
+                        android:layout_height="50dp">
 
                         <ImageView
                             android:layout_width="45dp"
-                            android:layout_height="45dp"
+                            android:layout_height="50dp"
                             android:contentDescription="@string/settings"
                             android:padding="10dp"
                             android:src="@drawable/icon_settings" />
@@ -219,28 +214,22 @@
                             android:text="@string/settings"
                             style="@style/standard_text_font"
                             android:layout_width="match_parent"
-                            android:layout_height="45dp"
+                            android:layout_height="50dp"
                             android:gravity="center_vertical"
                             android:paddingLeft="5dp"
                             android:paddingRight="16dp" />
 
                     </LinearLayout>
 
-                    <View
-                        android:visibility="@{viewModel.showSettings ? View.VISIBLE : View.GONE}"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="?dividerColor" />
-
                     <LinearLayout
                         android:onClick="@{recordingsClickListener}"
                         android:visibility="@{viewModel.showRecordings ? View.VISIBLE : View.GONE}"
                         android:layout_width="match_parent"
-                        android:layout_height="45dp">
+                        android:layout_height="50dp">
 
                         <ImageView
                             android:layout_width="45dp"
-                            android:layout_height="45dp"
+                            android:layout_height="50dp"
                             android:padding="10dp"
                             android:contentDescription="@string/recordings"
                             android:src="@drawable/menu_recordings" />
@@ -249,28 +238,22 @@
                             android:text="@string/recordings"
                             style="@style/standard_text_font"
                             android:layout_width="match_parent"
-                            android:layout_height="45dp"
+                            android:layout_height="50dp"
                             android:gravity="center_vertical"
                             android:paddingLeft="5dp"
                             android:paddingRight="16dp" />
 
                     </LinearLayout>
 
-                    <View
-                        android:visibility="@{viewModel.showRecordings ? View.VISIBLE : View.GONE}"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="?dividerColor" />
-
                     <LinearLayout
                         android:onClick="@{conferencesClickListener}"
                         android:visibility="@{viewModel.showScheduledConferences ? View.VISIBLE : View.GONE}"
                         android:layout_width="match_parent"
-                        android:layout_height="45dp">
+                        android:layout_height="50dp">
 
                         <ImageView
                             android:layout_width="45dp"
-                            android:layout_height="45dp"
+                            android:layout_height="50dp"
                             android:padding="7dp"
                             android:contentDescription="@string/conference_scheduled"
                             android:src="@drawable/icon_meeting_schedule" />
@@ -279,28 +262,45 @@
                             android:text="@string/conference_scheduled"
                             style="@style/standard_text_font"
                             android:layout_width="match_parent"
-                            android:layout_height="45dp"
+                            android:layout_height="50dp"
                             android:gravity="center_vertical"
                             android:paddingLeft="5dp"
                             android:paddingRight="16dp" />
 
                     </LinearLayout>
 
-                    <View
-                        android:visibility="@{viewModel.showScheduledConferences ? View.VISIBLE : View.GONE}"
+                    <LinearLayout
+                        android:onClick="@{helpClickListener}"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="?dividerColor" />
+                        android:layout_height="50dp">
+
+                        <ImageView
+                            android:layout_width="45dp"
+                            android:layout_height="50dp"
+                            android:padding="10dp"
+                            android:contentDescription="@string/about"
+                            android:src="@drawable/icon_help" />
+
+                        <TextView
+                            android:text="Help"
+                            style="@style/standard_text_font"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="16dp" />
+
+                    </LinearLayout>
 
                     <LinearLayout
                         android:onClick="@{aboutClickListener}"
                         android:visibility="@{viewModel.showAbout ? View.VISIBLE : View.GONE}"
                         android:layout_width="match_parent"
-                        android:layout_height="45dp">
+                        android:layout_height="50dp">
 
                         <ImageView
                             android:layout_width="45dp"
-                            android:layout_height="45dp"
+                            android:layout_height="50dp"
                             android:padding="10dp"
                             android:contentDescription="@string/about"
                             android:src="@drawable/icon_info" />
@@ -309,22 +309,16 @@
                             android:text="@string/about"
                             style="@style/standard_text_font"
                             android:layout_width="match_parent"
-                            android:layout_height="45dp"
+                            android:layout_height="50dp"
                             android:gravity="center_vertical"
                             android:paddingLeft="5dp"
                             android:paddingRight="16dp" />
-
                     </LinearLayout>
-
-                    <View
-                        android:visibility="@{viewModel.showAbout ? View.VISIBLE : View.GONE}"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="?dividerColor" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_marginVertical="15dp"
                         android:onClick="@{logoutClickListener}"
                         android:visibility="@{viewModel.showLogout ? View.VISIBLE : View.GONE}">
 
@@ -344,15 +338,7 @@
                             android:paddingLeft="5dp"
                             android:paddingRight="16dp"
                             android:text="@string/log_out" />
-
                     </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_weight="1"
-                        android:background="?dividerColor"
-                        android:visibility="@{viewModel.showAbout ? View.VISIBLE : View.GONE}" />
 
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
