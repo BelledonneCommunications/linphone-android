@@ -28,7 +28,7 @@
     <RelativeLayout
         android:id="@+id/tabs_container"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="68dp"
         android:background="?attr/navbarColor">
 
     <androidx.constraintlayout.motion.widget.MotionLayout
