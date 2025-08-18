@@ -15,13 +15,12 @@ class UrlHelper {
 
         @SuppressLint("CheckResult")
         fun openHelp(context: Context, path: String? = null) {
-            BrandingService.getInstance(context).brand.subscribe { brand ->
+            BrandingService.getInstance(context).brand.first(Optional.empty()).subscribe { brand ->
                 val deployment = DimensionsEnvironmentService.getInstance(context).getCurrentEnvironment()
                 val user = AuthStateManager.getInstance(context).getUser()
                 var lang = Locale.getDefault().toString().lowercase()
 
-                // val validLocales : ArrayList<String> = arrayListOf("en-us", "en-gb")  //put this back in when we have localization on mobile docs
-                val validLocales: ArrayList<String> = arrayListOf("en-us")
+                val validLocales: ArrayList<String> = arrayListOf("en-us", "en-gb")
                 if (!validLocales.contains(lang)) {
                     lang = "en-us"
                 }
@@ -35,7 +34,7 @@ class UrlHelper {
                 if (!brandingDocumentUri.isNullOrBlank()) {
                     openBrowser(
                         context,
-                        "$brandingDocumentUri/mobile/$lang/${subPath}$tenantId".lowercase()
+                        "$brandingDocumentUri/mobile/$lang/${subPath}$tenantId"
                     )
                 }
             }
