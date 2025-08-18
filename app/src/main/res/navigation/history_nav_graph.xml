@@ -19,6 +19,16 @@
         tools:layout="@layout/history_detail_fragment"
         android:label="DetailCallLogFragment" />
 
+    <action
+        android:id="@+id/action_global_recordingPlaybackFragment"
+        app:destination="@id/recordingPlaybackFragment" />
+
+    <fragment
+        android:id="@+id/recordingPlaybackFragment"
+        android:name="org.linphone.activities.main.history.fragments.RecordingPlaybackFragment"
+        tools:layout="@layout/fragment_recording_playback"
+        android:label="RecordingPlaybackFragment" />
+
     <fragment
         android:id="@+id/detailConferenceCallLogFragment"
         android:name="org.linphone.activities.main.history.fragments.DetailConferenceCallLogFragment"

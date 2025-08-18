@@ -19,14 +19,20 @@
  */
 package org.linphone.activities.main.history.viewmodels
 
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.R
 import org.linphone.activities.main.history.data.GroupedCallLogData
 import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.core.*
+import org.linphone.models.callhistory.CallHistoryItemViewModel
 import org.linphone.services.CallHistoryService
+import org.linphone.services.TransferService
+import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.Log
@@ -40,9 +46,23 @@ class CallLogsListViewModel : ViewModel() {
 
     val showConferencesFilter = MutableLiveData<Boolean>()
 
+    val isContextMenuOpen = MutableLiveData<Boolean>()
+
     val contactsUpdatedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
+
+    val makeCallEvent: MutableLiveData<Event<CallHistoryItemViewModel>> by lazy {
+        MutableLiveData<Event<CallHistoryItemViewModel>>()
+    }
+
+    val playRecordingEvent: MutableLiveData<Event<CallHistoryItemViewModel>> by lazy {
+        MutableLiveData<Event<CallHistoryItemViewModel>>()
+    }
+
+    val trasferState = TransferService.getInstance().transferState
+
+    val hasPlaybackPermission = MutableLiveData<Boolean>(false)
 
     private val listener: CoreListenerStub = object : CoreListenerStub() {
         override fun onCallLogUpdated(core: Core, log: CallLog) {
@@ -152,6 +172,49 @@ class CallLogsListViewModel : ViewModel() {
 
             callLogs.postValue(updatedCallLogs)
         }.dispose()
+    }
+
+    val contextMenuTranslateY = MutableLiveData<Float>()
+    private val contextMenuAnimator: ValueAnimator by lazy {
+        ValueAnimator.ofFloat(
+            AppUtils.getDimension(R.dimen.voip_call_extra_buttons_translate_y),
+            0f
+        ).apply {
+            addUpdateListener {
+                val value = it.animatedValue as Float
+                contextMenuTranslateY.value = value
+            }
+            duration = if (corePreferences.enableAnimations) 500 else 0
+        }
+    }
+
+    fun showContextMenu(call: CallHistoryItemViewModel) {
+        if (call.canCallBack || (call.call.hasRecording && hasPlaybackPermission.value == true)) {
+            contextMenuAnimator.start()
+            isContextMenuOpen.value = true
+        }
+    }
+
+    fun hideContextMenu(skipAnimation: Boolean) {
+        // Animation must be skipped when called from Fragment's onPause() !
+        if (skipAnimation) {
+            contextMenuTranslateY.value = AppUtils.getDimension(
+                R.dimen.voip_call_extra_buttons_translate_y
+            )
+        } else {
+            contextMenuAnimator.reverse()
+        }
+        isContextMenuOpen.value = false
+    }
+
+    fun makeCall(call: CallHistoryItemViewModel) {
+        hideContextMenu(false)
+        makeCallEvent.value = Event(call)
+    }
+
+    fun playRecording(call: CallHistoryItemViewModel) {
+        hideContextMenu(false)
+        playRecordingEvent.value = Event(call)
     }
 }
 

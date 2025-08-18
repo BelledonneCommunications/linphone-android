@@ -19,13 +19,10 @@
  */
 package org.linphone.activities.main.history.adapters
 
-import android.app.AlertDialog
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
@@ -35,12 +32,10 @@ import org.linphone.R
 import org.linphone.activities.main.adapters.SelectionListAdapter
 import org.linphone.activities.main.history.data.GroupedCallLogData
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
-import org.linphone.activities.voip.TransferState
 import org.linphone.databinding.GenericListHeaderBinding
 import org.linphone.databinding.HistoryListCellBinding
 import org.linphone.models.callhistory.CallHistoryItemViewModel
 import org.linphone.models.callhistory.PbxType
-import org.linphone.services.TransferService
 import org.linphone.utils.Event
 import org.linphone.utils.HeaderAdapter
 import org.linphone.utils.Log
@@ -59,8 +54,8 @@ class CallLogsListAdapter(
         MutableLiveData<Event<GroupedCallLogData>>()
     }
 
-    val startCallToEvent: MutableLiveData<Event<GroupedCallLogData>> by lazy {
-        MutableLiveData<Event<GroupedCallLogData>>()
+    val showCallLogContextMenuEvent: MutableLiveData<Event<CallHistoryItemViewModel>> by lazy {
+        MutableLiveData<Event<CallHistoryItemViewModel>>()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -103,7 +98,7 @@ class CallLogsListAdapter(
                             val lastCallLog = callLogGroup.lastCallLog
                             if (lastCallLog is CallHistoryItemViewModel) {
                                 if (lastCallLog.call.pbxType != PbxType.Teams) {
-                                    showMakeCallDialog(callLogGroup)
+                                    showContextMenu(callLogGroup)
                                 }
                             }
                         }
@@ -134,35 +129,10 @@ class CallLogsListAdapter(
         }
     }
 
-    private fun showMakeCallDialog(callLogGroup: GroupedCallLogData) {
+    private fun showContextMenu(callLogGroup: GroupedCallLogData) {
         val callHistoryItemViewModel = callLogGroup.lastCallLog
         if (callHistoryItemViewModel is CallHistoryItemViewModel) {
-            val inflater = LayoutInflater.from(context)
-            val dialogView = inflater.inflate(R.layout.call_history_make_call_dialog, null)
-
-            val titleTextView: TextView = dialogView.findViewById(
-                R.id.callHistoryMakeCallDialogTitle
-            )
-            titleTextView.text = callHistoryItemViewModel.contactName
-
-            val dialog = AlertDialog.Builder(context)
-                .setView(dialogView) // Set the custom layout as the dialog's content
-                .create()
-
-            dialog.window?.setBackgroundDrawableResource(R.drawable.rounded_dialog_background)
-
-            val button: Button = dialogView.findViewById(R.id.callHistoryMakeCallDialogButton)
-
-            val isTransfer = TransferService.getInstance().transferState.value == TransferState.PENDING_BLIND
-
-            if (isTransfer) button.text = "Transfer"
-
-            button.setOnClickListener {
-                dialog.dismiss()
-                startCallToEvent.value = Event(callLogGroup)
-            }
-
-            dialog.show()
+            showCallLogContextMenuEvent.value = Event(callHistoryItemViewModel)
         }
     }
 

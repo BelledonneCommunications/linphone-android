@@ -122,8 +122,8 @@
 
     <!-- History -->
     <string name="history_calls_list">Calls</string>
-    <string name="no_call_history">No call in your history</string>
-    <string name="no_missed_call_history">No missed call in your history</string>
+    <string name="no_call_history">No call history</string>
+    <string name="no_missed_call_history">No missed calls in your history</string>
     <string name="no_conference_call_history">No meeting call in your history</string>
     <string name="history_delete_one_dialog">Do you want to delete this record?</string>
     <string name="history_delete_many_dialog">Do you want to delete these records?</string>

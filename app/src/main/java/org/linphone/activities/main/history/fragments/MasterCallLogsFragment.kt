@@ -27,6 +27,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.transition.MaterialSharedAxis
+import io.reactivex.rxjava3.disposables.Disposable
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -38,13 +39,11 @@ import org.linphone.activities.main.history.adapters.CallLogsListAdapter
 import org.linphone.activities.main.history.data.GroupedCallLogData
 import org.linphone.activities.main.history.viewmodels.CallLogsListViewModel
 import org.linphone.activities.main.viewmodels.TabsViewModel
-import org.linphone.activities.navigateToCallHistory
-import org.linphone.activities.navigateToConferenceCallHistory
 import org.linphone.core.ConferenceInfo
 import org.linphone.databinding.HistoryMasterFragmentBinding
-import org.linphone.models.callhistory.CallHistoryItemViewModel
 import org.linphone.models.callhistory.PbxType
 import org.linphone.services.CallHistoryService
+import org.linphone.services.UserService
 import org.linphone.utils.*
 import org.linphone.utils.Log
 
@@ -52,6 +51,8 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
     val callHistoryService = CallHistoryService.getInstance(coreContext.context)
     override val dialogConfirmationMessageBeforeRemoval = R.plurals.history_delete_dialog
     private lateinit var listViewModel: CallLogsListViewModel
+
+    private var permissionSubscription: Disposable? = null
 
     private val observer = object : RecyclerView.AdapterDataObserver() {
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
@@ -66,6 +67,10 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
     override fun onDestroyView() {
         binding.callLogsList.adapter = null
         adapter.unregisterAdapterDataObserver(observer)
+
+        permissionSubscription?.dispose()
+        permissionSubscription = null
+
         super.onDestroyView()
     }
 
@@ -128,6 +133,16 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
 
         val layoutManager = LinearLayoutManager(requireContext())
         binding.callLogsList.layoutManager = layoutManager
+
+        val hasPlaybackPermission = UserService.getInstance(requireContext()).user.map { u ->
+            u.hasPermission(
+                "recording.play"
+            )
+        }
+        permissionSubscription = hasPlaybackPermission.subscribe(
+            { hasPermission -> listViewModel.hasPlaybackPermission.value = hasPermission },
+            { error -> Log.e(error) }
+        )
 
         // Swipe action
 //        val swipeConfiguration = RecyclerViewSwipeConfiguration()
@@ -204,27 +219,20 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
             }
         }
 
-        adapter.selectedCallLogEvent.observe(
-            viewLifecycleOwner
-        ) {
-            it.consume { callLog ->
-                sharedViewModel.selectedCallLogGroup.value = callLog
-                if (callLog.lastCallLog.wasConference()) {
-                    navigateToConferenceCallHistory(binding.slidingPane)
-                } else {
-                    navigateToCallHistory(binding.slidingPane)
-                }
+        adapter.showCallLogContextMenuEvent.observe(viewLifecycleOwner) {
+            it.consume { call ->
+                binding.contextItemViewModel = call
+                sharedViewModel.selectedHistoryItem.value = call
+                listViewModel.showContextMenu(call)
             }
         }
 
-        adapter.startCallToEvent.observe(
+        listViewModel.makeCallEvent.observe(
             viewLifecycleOwner
         ) { it ->
-            it.consume { callLogGroup ->
-                val callLog = callLogGroup.lastCallLog
+            it.consume { callLog ->
 
-                if (callLog is CallHistoryItemViewModel &&
-                    callLog.call.pbxType == PbxType.Teams
+                if (callLog.call.pbxType == PbxType.Teams
                 ) {
                     if (!callLog.call.isConference) {
                         // FixMe - This sends the intent and then returns control to this app, this isn't valid behaviour
@@ -263,7 +271,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
                             val cleanAddress = LinphoneUtils.getCleanedAddress(
                                 callLog.remoteAddress
                             )
-                            val localAddress = callLogGroup.lastCallLog.localAddress
+                            val localAddress = callLog.localAddress
                             Log.i(
                                 "[History] Starting call to ${cleanAddress.asStringUriOnly()} with local address ${localAddress.asStringUriOnly()}"
                             )
@@ -276,6 +284,12 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
                     }
                 }
             }
+        }
+
+        listViewModel.playRecordingEvent.observe(
+            viewLifecycleOwner
+        ) { it ->
+            it.consume { call -> navigateToRecordingPlayback(binding.slidingPane) }
         }
 
         callHistoryService.updateMissedCallTimestamp()
@@ -300,7 +314,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
             val callLogGroup = adapter.currentList[index]
             list.add(callLogGroup)
 
-            if (callLogGroup.lastCallLogId == sharedViewModel.selectedCallLogGroup.value?.lastCallLogId) {
+            if (callLogGroup.lastCallLogId == sharedViewModel.selectedHistoryItem.value?.callId) {
                 closeSlidingPane = true
             }
         }

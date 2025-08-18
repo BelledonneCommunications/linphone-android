@@ -166,7 +166,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/searchBar">
+                android:layout_below="@id/searchBar"
+                android:layout_marginTop="10dp">
 
                 <TextView
                     style="@style/empty_list_font"
@@ -188,7 +189,7 @@
 
                 <include
                     layout="@layout/wait_layout"
-                    app:visibility="@{viewModel.fetchInProgress}"/>
+                    app:visibility="@{viewModel.fetchInProgress}" />
 
             </RelativeLayout>
 

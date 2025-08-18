@@ -32,7 +32,7 @@
         <item name="navbarColor">@color/primary_dark_color</item>
 
         <item name="backgroundColor">@color/voip_dark_color4</item>
-        <item name="backgroundColor2">@color/voip_gray</item>
+        <item name="backgroundColor2">@color/voip_dark_color4</item>
         <item name="backgroundColor3">@color/voip_dark_color5</item>
         <item name="backgroundColor4">@color/voip_dark_color5</item>
         <item name="backgroundContrastColor">@color/white_color</item>

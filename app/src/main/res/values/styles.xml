@@ -367,22 +367,20 @@
 
     <style name="contact_name_list_cell_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/primaryTextColor</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="contact_name_list_cell_font_missed_call" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/warningTextColor</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
-    <style name="contact_number_list_cell_font" parent="@android:style/TextAppearance.Medium">
+    <style name="contact_number_list_cell_font" parent="@android:style/TextAppearance.Small">
         <item name="android:textColor">@color/light_grey_color</item>
-        <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="contact_number_list_cell_font_missed_call" parent="@android:style/TextAppearance.Medium">
+    <style name="contact_number_list_cell_font_missed_call" parent="@android:style/TextAppearance.Small">
         <item name="android:textColor">?attr/warningTextColor</item>
-        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="big_contact_name_font" parent="@android:style/TextAppearance.Medium">

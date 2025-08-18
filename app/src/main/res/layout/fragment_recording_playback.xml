@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.main.history.viewmodels.RecordingPlaybackViewModel" />
+
+        <variable
+            name="sharedMainViewModel"
+            type="org.linphone.activities.main.viewmodels.SharedMainViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="?attr/backgroundColor">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:background="?attr/lightToolbarBackgroundColor"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/back"
+                android:contentDescription="@string/content_description_go_back"
+                android:layout_width="54dp"
+                android:layout_height="match_parent"
+                android:background="?attr/button_background_drawable"
+                android:padding="12dp"
+                android:src="@drawable/icon_back"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                style="@style/accent_colored_title_font"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:layout_margin="0dp"
+                android:text="Call Recordings"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.call.contactName, default=`Jebbediah Springfield`}"
+            android:textSize="21sp"
+            android:gravity="center"
+            android:layout_marginHorizontal="25dp"
+            android:layout_marginTop="25dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginHorizontal="25dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="3sp"
+                android:text="@{viewModel.call.time, default=`Monday`}" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@{viewModel.call.time, default=`09:30`}" />
+        </LinearLayout>
+
+        <androidx.media3.ui.PlayerView
+            android:id="@+id/mediaPlayerView"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_marginVertical="20dp"
+            app:time_bar_scrubbing_enabled="true"
+            android:keepScreenOn="true">
+        </androidx.media3.ui.PlayerView>
+
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recordingsList"
+            android:layout_marginTop="5dp"
+            android:layout_marginHorizontal="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
+</layout>
