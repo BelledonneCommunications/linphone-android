@@ -219,9 +219,6 @@
                 android:textSize="@dimen/chat_bubble_text_size"
                 android:textColor="?attr/color_main2_500"
                 android:gravity="center_vertical|start"
-                android:drawableEnd="@drawable/trash"
-                android:drawablePadding="5dp"
-                android:drawableTint="?attr/color_main2_500"
                 android:visibility="@{model.hasBeenRetracted ? View.VISIBLE : View.GONE, default=gone}"/>
 
             <LinearLayout
