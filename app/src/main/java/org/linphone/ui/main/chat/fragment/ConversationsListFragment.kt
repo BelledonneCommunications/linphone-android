@@ -251,8 +251,8 @@ class ConversationsListFragment : AbstractMainFragment() {
 
         sharedViewModel.updateConversationLastMessageEvent.observe(viewLifecycleOwner) {
             it.consume { conversationId ->
-                val model = listViewModel.conversations.value.orEmpty().find {
-                    it.id == conversationId
+                val model = listViewModel.conversations.value.orEmpty().find { conversationModel ->
+                    conversationModel.id == conversationId
                 }
                 model?.updateLastMessageInfo()
             }

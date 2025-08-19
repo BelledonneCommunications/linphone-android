@@ -251,7 +251,7 @@ class MainActivity : GenericActivity() {
 
         viewModel.clearFilesOrTextPendingSharingEvent.observe(this) {
             it.consume {
-                sharedViewModel.filesToShareFromIntent.value = arrayListOf<String>()
+                sharedViewModel.filesToShareFromIntent.value = arrayListOf()
                 sharedViewModel.textToShareFromIntent.value = ""
             }
         }

@@ -55,6 +55,8 @@ class MeetingModel
 
     val time = "$startTime - $endTime"
 
+    val isMyselfOrganizer = isOrganizer()
+
     val isBroadcast = MutableLiveData<Boolean>()
 
     val subject = MutableLiveData<String>()
@@ -90,7 +92,7 @@ class MeetingModel
     }
 
     @WorkerThread
-    fun isOrganizer(): Boolean {
+    private fun isOrganizer(): Boolean {
         return coreContext.core.accountList.find { account ->
             val address = account.params.identityAddress
             address != null && conferenceInfo.organizer?.weakEqual(address) == true

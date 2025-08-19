@@ -156,7 +156,7 @@ class ConferenceViewModel
             } else {
                 Log.w("$TAG Notified active speaker participant device is null, using first one that's not us")
                 val firstNotUs = participantDevices.value.orEmpty().find {
-                    it.isMe == false
+                    !it.isMe
                 }
                 if (firstNotUs != null) {
                     Log.i("$TAG Newly active speaker participant is [${firstNotUs.name}]")

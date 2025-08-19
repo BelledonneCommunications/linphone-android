@@ -175,7 +175,9 @@ class ConferenceParticipantsListFragment : GenericCallFragment() {
 
         model.confirmEvent.observe(viewLifecycleOwner) {
             it.consume {
-                viewModel.conferenceModel.kickParticipant(participant)
+                coreContext.postOnCoreThread {
+                    viewModel.conferenceModel.kickParticipant(participant)
+                }
                 val message = getString(R.string.conference_participant_was_kicked_out_toast)
                 val icon = R.drawable.check
                 (requireActivity() as GenericActivity).showGreenToast(message, icon)

@@ -544,8 +544,8 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                     "$TAG Voice record playback finished, looking for voice record in next message"
                 )
                 val list = viewModel.eventsList
-                val model = list.find {
-                    (it.model as? MessageModel)?.id == id
+                val model = list.find { eventLogModel ->
+                    (eventLogModel.model as? MessageModel)?.id == id
                 }
                 if (model != null) {
                     val index = list.indexOf(model)
@@ -770,13 +770,15 @@ open class ConversationFragment : SlidingPaneChildFragment() {
 
         viewModel.sipUriToCallEvent.observe(viewLifecycleOwner) {
             it.consume { sipUri ->
-                if (messageLongPressViewModel.visible.value == true) return@consume
-                val address = coreContext.core.interpretUrl(sipUri, false)
-                if (address != null) {
-                    Log.i("$TAG Starting audio call to parsed SIP URI [${address.asStringUriOnly()}]")
-                    coreContext.startAudioCall(address)
-                } else {
-                    Log.w("$TAG Failed to parse [$sipUri] as SIP URI")
+                coreContext.postOnCoreThread {
+                    if (messageLongPressViewModel.visible.value == true) return@postOnCoreThread
+                    val address = coreContext.core.interpretUrl(sipUri, false)
+                    if (address != null) {
+                        Log.i("$TAG Starting audio call to parsed SIP URI [${address.asStringUriOnly()}]")
+                        coreContext.startAudioCall(address)
+                    } else {
+                        Log.w("$TAG Failed to parse [$sipUri] as SIP URI")
+                    }
                 }
             }
         }

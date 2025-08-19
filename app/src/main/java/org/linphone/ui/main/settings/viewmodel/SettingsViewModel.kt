@@ -866,7 +866,9 @@ class SettingsViewModel
         if (newValue.isNotEmpty()) {
             try {
                 val delay = newValue.toInt()
-                corePreferences.autoAnswerDelay = delay
+                coreContext.postOnCoreThread {
+                    corePreferences.autoAnswerDelay = delay
+                }
             } catch (nfe: NumberFormatException) {
                 Log.e("$TAG Ignoring new auto answer incoming calls delay as it can't be converted to int: $nfe")
             }
