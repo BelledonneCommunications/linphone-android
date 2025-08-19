@@ -1,6 +1,5 @@
 package org.linphone.utils
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -8,35 +7,38 @@ import androidx.core.net.toUri
 import java.util.Locale
 import org.linphone.authentication.AuthStateManager
 import org.linphone.environment.DimensionsEnvironmentService
+import org.linphone.models.TenantBrandingDefinition
 import org.linphone.services.BrandingService
 
 class UrlHelper {
     companion object {
 
-        @SuppressLint("CheckResult")
-        fun openHelp(context: Context, path: String? = null) {
-            BrandingService.getInstance(context).brand.first(Optional.empty()).subscribe { brand ->
-                val deployment = DimensionsEnvironmentService.getInstance(context).getCurrentEnvironment()
-                val user = AuthStateManager.getInstance(context).getUser()
-                var lang = Locale.getDefault().toString().lowercase()
+        suspend fun openHelp(context: Context, path: String? = null) {
+            val user = AuthStateManager.getInstance(context).getUser()
+            val deployment = DimensionsEnvironmentService.getInstance(context).getCurrentEnvironment()
+            var lang = Locale.getDefault().toString().lowercase()
 
-                val validLocales: ArrayList<String> = arrayListOf("en-us", "en-gb")
-                if (!validLocales.contains(lang)) {
-                    lang = "en-us"
-                }
+            var defaultBrand = TenantBrandingDefinition()
+            defaultBrand.brandName = "Default"
+            val brand = BrandingService.getInstance(context).brand
+                .blockingFirst()
+                .getOrNull()
 
-                val tenantBrandingDefinition = if (brand.isPresent()) brand.get() else null
-                val brandingDocumentUri = if (tenantBrandingDefinition?.documentationRootUrl.isNullOrBlank()) deployment?.documentationUri else tenantBrandingDefinition?.documentationRootUrl
+            val validLocales: ArrayList<String> = arrayListOf("en-us", "en-gb")
+            if (!validLocales.contains(lang)) {
+                lang = "en-us"
+            }
 
-                val subPath = if (path == null) "" else "$path/"
-                val tenantId = if (user == null) "" else "?tenantId=${user.tenantId}"
+            val brandingDocumentUri = if (brand?.documentationRootUrl.isNullOrBlank()) deployment?.documentationUri else brand?.documentationRootUrl
 
-                if (!brandingDocumentUri.isNullOrBlank()) {
-                    openBrowser(
-                        context,
-                        "$brandingDocumentUri/mobile/$lang/${subPath}$tenantId"
-                    )
-                }
+            val subPath = if (path == null) "" else "$path/"
+            val tenantId = if (user == null) "" else "?tenantId=${user.tenantId}"
+
+            if (!brandingDocumentUri.isNullOrBlank()) {
+                openBrowser(
+                    context,
+                    "$brandingDocumentUri/mobile/$lang/${subPath}$tenantId"
+                )
             }
         }
 

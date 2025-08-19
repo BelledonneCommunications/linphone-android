@@ -27,13 +27,13 @@
     <RelativeLayout
         android:id="@+id/status_container"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:gravity="bottom"
         android:background="?attr/navbarColor">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:orientation="horizontal">
 
             <ImageView

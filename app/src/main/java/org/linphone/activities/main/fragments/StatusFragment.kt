@@ -63,7 +63,7 @@ class StatusFragment : GenericFragment<StatusFragmentBinding>() {
         ViewCompat.setOnApplyWindowInsetsListener(statusContainer) { v, windowInsets ->
             val insets = windowInsets.getInsets((WindowInsetsCompat.Type.statusBars()))
 
-            val contentDpHeight = 50f
+            val contentDpHeight = 60f
             val contentPixelHeight = TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
                 contentDpHeight,
