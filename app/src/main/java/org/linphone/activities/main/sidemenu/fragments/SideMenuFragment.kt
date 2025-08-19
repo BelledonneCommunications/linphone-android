@@ -34,6 +34,8 @@ import androidx.lifecycle.lifecycleScope
 import com.google.gson.GsonBuilder
 import io.reactivex.rxjava3.disposables.Disposable
 import java.io.File
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -133,7 +135,9 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
         binding.setHelpClickListener {
             sharedViewModel.toggleDrawerEvent.value = Event(true)
 
-            UrlHelper.openHelp(requireContext())
+            CoroutineScope(Dispatchers.IO).launch {
+                UrlHelper.openHelp(requireContext())
+            }
         }
 
         binding.setLogoutClickListener {

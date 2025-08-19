@@ -477,10 +477,11 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
     }
 
     private suspend fun getMissedCallTimestamp() {
-        val response = APIClientService(context).getUCGatewayService().doGetMissedCallDate()
+        val response = APIClientService(context).getUCGatewayService().getMissedCallDate()
 
         if (response.code() < 200 || response.code() > 299) {
-            throw Exception("Error fetching user info: " + response.message())
+            Log.e("Error fetching user info: " + response.message())
+            return
         }
 
         val formattedDateTimeString = response.body()!!.missedCallTimestamp
