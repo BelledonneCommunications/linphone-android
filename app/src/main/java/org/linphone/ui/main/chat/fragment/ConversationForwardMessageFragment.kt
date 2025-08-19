@@ -149,7 +149,7 @@ class ConversationForwardMessageFragment : SlidingPaneChildFragment() {
             }
         }
 
-        viewModel.hideNumberOrAddressPickerDialogEvent.observe(viewLifecycleOwner) {
+        viewModel.dismissNumberOrAddressPickerDialogEvent.observe(viewLifecycleOwner) {
             it.consume {
                 numberOrAddressPickerDialog?.dismiss()
                 numberOrAddressPickerDialog = null
@@ -172,7 +172,7 @@ class ConversationForwardMessageFragment : SlidingPaneChildFragment() {
         }
     }
 
-    private fun showNumberOrAddressPickerDialog(list: ArrayList<ContactNumberOrAddressModel>) {
+    private fun showNumberOrAddressPickerDialog(list: List<ContactNumberOrAddressModel>) {
         val numberOrAddressModel = NumberOrAddressPickerDialogModel(list)
         val dialog =
             DialogUtils.getNumberOrAddressPickerDialog(

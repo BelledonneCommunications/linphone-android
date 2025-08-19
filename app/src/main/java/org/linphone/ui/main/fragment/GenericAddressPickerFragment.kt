@@ -23,23 +23,13 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.UiThread
-import androidx.annotation.WorkerThread
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.contacts.getListOfSipAddressesAndPhoneNumbers
-import org.linphone.core.Address
-import org.linphone.core.Friend
-import org.linphone.core.tools.Log
 import org.linphone.ui.main.adapter.ConversationsContactsAndSuggestionsListAdapter
-import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
-import org.linphone.ui.main.model.ConversationContactOrSuggestionModel
-import org.linphone.ui.main.model.SelectedAddressModel
 import org.linphone.ui.main.viewmodel.AddressSelectionViewModel
 import org.linphone.utils.DialogUtils
-import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.RecyclerViewHeaderDecoration
 
 @UiThread
@@ -56,31 +46,6 @@ abstract class GenericAddressPickerFragment : GenericMainFragment() {
 
     private lateinit var recyclerView: RecyclerView
 
-    private val listener = object : ContactNumberOrAddressClickListener {
-        @UiThread
-        override fun onClicked(model: ContactNumberOrAddressModel) {
-            val address = model.address
-            coreContext.postOnCoreThread {
-                if (address != null) {
-                    Log.i(
-                        "$TAG Selected address [${model.address.asStringUriOnly()}] from friend [${model.friend.name}]"
-                    )
-                    onAddressSelected(model.address, model.friend)
-                }
-            }
-
-            numberOrAddressPickerDialog?.dismiss()
-            numberOrAddressPickerDialog = null
-        }
-
-        @UiThread
-        override fun onLongPress(model: ContactNumberOrAddressModel) {
-        }
-    }
-
-    @WorkerThread
-    abstract fun onSingleAddressSelected(address: Address, friend: Friend)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -92,13 +57,26 @@ abstract class GenericAddressPickerFragment : GenericMainFragment() {
 
         adapter.onClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
-                handleClickOnContactModel(model)
+                viewModel.handleClickOnContactModel(model)
             }
         }
 
         viewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
             val trimmed = filter.trim()
             viewModel.applyFilter(trimmed)
+        }
+
+        viewModel.showNumberOrAddressPickerDialogEvent.observe(viewLifecycleOwner) {
+            it.consume { list ->
+                showNumbersOrAddressesDialog(list)
+            }
+        }
+
+        viewModel.dismissNumberOrAddressPickerDialogEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                numberOrAddressPickerDialog?.dismiss()
+                numberOrAddressPickerDialog = null
+            }
         }
     }
 
@@ -109,7 +87,6 @@ abstract class GenericAddressPickerFragment : GenericMainFragment() {
         numberOrAddressPickerDialog = null
     }
 
-    @UiThread
     protected fun setupRecyclerView(view: RecyclerView) {
         recyclerView = view
         recyclerView.setHasFixedSize(true)
@@ -119,7 +96,6 @@ abstract class GenericAddressPickerFragment : GenericMainFragment() {
         recyclerView.addItemDecoration(headerItemDecoration)
     }
 
-    @UiThread
     protected fun attachAdapter() {
         if (::recyclerView.isInitialized) {
             if (recyclerView.adapter != adapter) {
@@ -128,82 +104,21 @@ abstract class GenericAddressPickerFragment : GenericMainFragment() {
         }
     }
 
-    @WorkerThread
-    fun onAddressSelected(address: Address, friend: Friend) {
-        if (viewModel.multipleSelectionMode.value == true) {
-            val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(address)
-            val model = SelectedAddressModel(address, avatarModel) {
-                viewModel.removeAddressModelFromSelection(it)
-            }
-            viewModel.addAddressModelToSelection(model)
-        } else {
-            onSingleAddressSelected(address, friend)
-        }
-
-        // Clear filter after it was used
-        coreContext.postOnMainThread {
-            viewModel.clearFilter()
-        }
-    }
-
-    private fun handleClickOnContactModel(model: ConversationContactOrSuggestionModel) {
-        if (model.selected.value == true) {
-            Log.i(
-                "$TAG User clicked on already selected item [${model.name}], removing it from selection"
+    private fun showNumbersOrAddressesDialog(list: List<ContactNumberOrAddressModel>) {
+        val numberOrAddressModel = NumberOrAddressPickerDialogModel(list)
+        val dialog =
+            DialogUtils.getNumberOrAddressPickerDialog(
+                requireActivity(),
+                numberOrAddressModel
             )
-            val found = viewModel.selection.value.orEmpty().find {
-                it.address.weakEqual(model.address) || it.avatarModel?.friend == model.friend
-            }
-            if (found != null) {
-                coreContext.postOnCoreThread {
-                    viewModel.removeAddressModelFromSelection(found)
-                }
-                return
-            } else {
-                Log.e("$TAG Failed to find already selected entry matching the one clicked")
+        numberOrAddressPickerDialog = dialog
+
+        numberOrAddressModel.dismissEvent.observe(viewLifecycleOwner) { event ->
+            event.consume {
+                dialog.dismiss()
             }
         }
 
-        coreContext.postOnCoreThread { core ->
-            val friend = model.friend
-            if (friend == null) {
-                Log.i("$TAG Friend is null, using address [${model.address.asStringUriOnly()}]")
-                val fakeFriend = core.createFriend()
-                fakeFriend.addAddress(model.address)
-                onAddressSelected(model.address, fakeFriend)
-                return@postOnCoreThread
-            }
-
-            val singleAvailableAddress = LinphoneUtils.getSingleAvailableAddressForFriend(friend)
-            if (singleAvailableAddress != null) {
-                Log.i(
-                    "$TAG Only 1 SIP address or phone number found for contact [${friend.name}], using it"
-                )
-                onAddressSelected(singleAvailableAddress, friend)
-            } else {
-                val list = friend.getListOfSipAddressesAndPhoneNumbers(listener)
-                Log.i(
-                    "$TAG [${list.size}] numbers or addresses found for contact [${friend.name}], showing selection dialog"
-                )
-
-                coreContext.postOnMainThread {
-                    val numberOrAddressModel = NumberOrAddressPickerDialogModel(list)
-                    val dialog =
-                        DialogUtils.getNumberOrAddressPickerDialog(
-                            requireActivity(),
-                            numberOrAddressModel
-                        )
-                    numberOrAddressPickerDialog = dialog
-
-                    numberOrAddressModel.dismissEvent.observe(viewLifecycleOwner) { event ->
-                        event.consume {
-                            dialog.dismiss()
-                        }
-                    }
-
-                    dialog.show()
-                }
-            }
-        }
+        dialog.show()
     }
 }

@@ -28,6 +28,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.contacts.ContactsManager
+import org.linphone.contacts.getListOfSipAddressesAndPhoneNumbers
 import org.linphone.core.Address
 import org.linphone.core.ChatRoom
 import org.linphone.core.Friend
@@ -36,10 +37,15 @@ import org.linphone.core.MagicSearchListenerStub
 import org.linphone.core.SearchResult
 import org.linphone.mediastream.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
+import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
+import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
 import org.linphone.ui.main.model.ConversationContactOrSuggestionModel
 import org.linphone.ui.main.model.SelectedAddressModel
 import org.linphone.utils.AppUtils
+import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
+import kotlin.collections.find
+import kotlin.collections.orEmpty
 
 abstract class AddressSelectionViewModel
     @UiThread
@@ -64,6 +70,14 @@ abstract class AddressSelectionViewModel
 
     val showResultsLimitReached = MutableLiveData<Boolean>()
 
+    val showNumberOrAddressPickerDialogEvent: MutableLiveData<Event<List<ContactNumberOrAddressModel>>> by lazy {
+        MutableLiveData<Event<List<ContactNumberOrAddressModel>>>()
+    }
+
+    val dismissNumberOrAddressPickerDialogEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     protected var magicSearchSourceFlags = MagicSearch.Source.All.toInt()
 
     protected var skipConversation: Boolean = true
@@ -74,6 +88,27 @@ abstract class AddressSelectionViewModel
     private lateinit var magicSearch: MagicSearch
 
     private lateinit var favouritesMagicSearch: MagicSearch
+
+    protected val numberOrAddressClickListener = object : ContactNumberOrAddressClickListener {
+        @UiThread
+        override fun onClicked(model: ContactNumberOrAddressModel) {
+            val address = model.address
+            coreContext.postOnCoreThread {
+                if (address != null) {
+                    Log.i(
+                        "$TAG Selected address [${model.address.asStringUriOnly()}] from friend [${model.friend.name}]"
+                    )
+                    onAddressSelected(model.address, model.friend)
+                }
+            }
+
+            dismissNumberOrAddressPickerDialogEvent.postValue(Event(true))
+        }
+
+        @UiThread
+        override fun onLongPress(model: ContactNumberOrAddressModel) {
+        }
+    }
 
     private val magicSearchListener = object : MagicSearchListenerStub() {
         @WorkerThread
@@ -107,6 +142,9 @@ abstract class AddressSelectionViewModel
         @WorkerThread
         override fun onContactFoundInRemoteDirectory(friend: Friend) { }
     }
+
+    @WorkerThread
+    abstract fun onSingleAddressSelected(address: Address, friend: Friend?)
 
     init {
         multipleSelectionMode.value = false
@@ -470,5 +508,69 @@ abstract class AddressSelectionViewModel
             }
         }
         return conversationsList
+    }
+
+    @UiThread
+    fun handleClickOnContactModel(model: ConversationContactOrSuggestionModel) {
+        if (model.selected.value == true) {
+            org.linphone.core.tools.Log.i(
+                "$TAG User clicked on already selected item [${model.name}], removing it from selection"
+            )
+            val found = selection.value.orEmpty().find {
+                it.address.weakEqual(model.address) || it.avatarModel?.friend == model.friend
+            }
+            if (found != null) {
+                coreContext.postOnCoreThread {
+                    removeAddressModelFromSelection(found)
+                }
+                return
+            } else {
+                org.linphone.core.tools.Log.e("$TAG Failed to find already selected entry matching the one clicked")
+            }
+        }
+
+        coreContext.postOnCoreThread { core ->
+            val friend = model.friend
+            if (friend == null) {
+                org.linphone.core.tools.Log.i("$TAG Friend is null, using address [${model.address.asStringUriOnly()}]")
+                val fakeFriend = core.createFriend()
+                fakeFriend.addAddress(model.address)
+                onAddressSelected(model.address, fakeFriend)
+                return@postOnCoreThread
+            }
+
+            val singleAvailableAddress = LinphoneUtils.getSingleAvailableAddressForFriend(friend)
+            if (singleAvailableAddress != null) {
+                org.linphone.core.tools.Log.i(
+                    "$TAG Only 1 SIP address or phone number found for contact [${friend.name}], using it"
+                )
+                onAddressSelected(singleAvailableAddress, friend)
+            } else {
+                val list = friend.getListOfSipAddressesAndPhoneNumbers(numberOrAddressClickListener)
+                org.linphone.core.tools.Log.i(
+                    "$TAG [${list.size}] numbers or addresses found for contact [${friend.name}], showing selection dialog"
+                )
+
+                showNumberOrAddressPickerDialogEvent.postValue(Event(list))
+            }
+        }
+    }
+
+    @WorkerThread
+    private fun onAddressSelected(address: Address, friend: Friend) {
+        if (multipleSelectionMode.value == true) {
+            val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(address)
+            val model = SelectedAddressModel(address, avatarModel) {
+                removeAddressModelFromSelection(it)
+            }
+            addAddressModelToSelection(model)
+        } else {
+            onSingleAddressSelected(address, friend)
+        }
+
+        // Clear filter after it was used
+        coreContext.postOnMainThread {
+            clearFilter()
+        }
     }
 }

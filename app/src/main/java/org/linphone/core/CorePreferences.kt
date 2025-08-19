@@ -40,84 +40,84 @@ class CorePreferences
 
     private var _config: Config? = null
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var config: Config
         get() = _config ?: coreContext.core.config
         set(value) {
             _config = value
         }
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var printLogsInLogcat: Boolean
         get() = config.getBool("app", "debug", BuildConfig.DEBUG)
         set(value) {
             config.setBool("app", "debug", value)
         }
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var sendLogsToCrashlytics: Boolean
         get() = config.getBool("app", "send_logs_to_crashlytics", BuildConfig.CRASHLYTICS_ENABLED)
         set(value) {
             config.setBool("app", "send_logs_to_crashlytics", value)
         }
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var firstLaunch: Boolean
         get() = config.getBool("app", "first_6.0_launch", true)
         set(value) {
             config.setBool("app", "first_6.0_launch", value)
         }
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var linphoneConfigurationVersion: Int
         get() = config.getInt("app", "config_version", 52005)
         set(value) {
             config.setInt("app", "config_version", value)
         }
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var autoStart: Boolean
         get() = config.getBool("app", "auto_start", true)
         set(value) {
             config.setBool("app", "auto_start", value)
         }
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var checkForUpdateServerUrl: String
         get() = config.getString("misc", "version_check_url_root", "").orEmpty()
         set(value) {
             config.setString("misc", "version_check_url_root", value)
         }
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var conditionsAndPrivacyPolicyAccepted: Boolean
         get() = config.getBool("app", "read_and_agree_terms_and_privacy", false)
         set(value) {
             config.setBool("app", "read_and_agree_terms_and_privacy", value)
         }
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var publishPresence: Boolean
         get() = config.getBool("app", "publish_presence", true)
         set(value) {
             config.setBool("app", "publish_presence", value)
         }
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var keepServiceAlive: Boolean
         get() = config.getBool("app", "keep_service_alive", false)
         set(value) {
             config.setBool("app", "keep_service_alive", value)
         }
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var deviceName: String
         get() = config.getString("app", "device", "").orEmpty().trim()
         set(value) {
             config.setString("app", "device", value.trim())
         }
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var showDeveloperSettings: Boolean
         get() = config.getBool("ui", "show_developer_settings", false)
         set(value) {
@@ -127,63 +127,63 @@ class CorePreferences
     // Call settings
 
     // This won't be done if bluetooth or wired headset is used
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var routeAudioToSpeakerWhenVideoIsEnabled: Boolean
         get() = config.getBool("app", "route_audio_to_speaker_when_video_enabled", true)
         set(value) {
             config.setBool("app", "route_audio_to_speaker_when_video_enabled", value)
         }
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var callRecordingUseSmffFormat: Boolean
         get() = config.getBool("app", "use_smff_for_call_recording", false)
         set(value) {
             config.setBool("app", "use_smff_for_call_recording", value)
         }
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var automaticallyStartCallRecording: Boolean
         get() = config.getBool("app", "auto_start_call_record", false)
         set(value) {
             config.setBool("app", "auto_start_call_record", value)
         }
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var showDialogWhenCallingDeviceUuidDirectly: Boolean
         get() = config.getBool("app", "show_confirmation_dialog_zrtp_trust_call", true)
         set(value) {
             config.setBool("app", "show_confirmation_dialog_zrtp_trust_call", value)
         }
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var acceptEarlyMedia: Boolean
         get() = config.getBool("sip", "incoming_calls_early_media", false)
         set(value) {
             config.setBool("sip", "incoming_calls_early_media", value)
         }
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var allowOutgoingEarlyMedia: Boolean
         get() = config.getBool("misc", "real_early_media", false)
         set(value) {
             config.setBool("misc", "real_early_media", value)
         }
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var autoAnswerEnabled: Boolean
         get() = config.getBool("app", "auto_answer", false)
         set(value) {
             config.setBool("app", "auto_answer", value)
         }
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var autoAnswerDelay: Int
         get() = config.getInt("app", "auto_answer_delay", 0)
         set(value) {
             config.setInt("app", "auto_answer_delay", value)
         }
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var autoAnswerVideoCallsWithVideoDirectionSendReceive: Boolean
         get() = config.getBool("app", "auto_answer_video_send_receive", false)
         set(value) {
@@ -192,13 +192,14 @@ class CorePreferences
 
     // Conversation related
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var markConversationAsReadWhenDismissingMessageNotification: Boolean
         get() = config.getBool("app", "mark_as_read_notif_dismissal", false)
         set(value) {
             config.setBool("app", "mark_as_read_notif_dismissal", value)
         }
 
+    @get:AnyThread @set:WorkerThread
     var makePublicMediaFilesDownloaded: Boolean
         // Keep old name for backward compatibility
         get() = config.getBool("app", "make_downloaded_images_public_in_gallery", false)
@@ -208,7 +209,7 @@ class CorePreferences
 
     // Conference related
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var createEndToEndEncryptedMeetingsAndGroupCalls: Boolean
         get() = config.getBool("app", "create_e2e_encrypted_conferences", false)
         set(value) {
@@ -217,35 +218,35 @@ class CorePreferences
 
     // Contacts related
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var sortContactsByFirstName: Boolean
         get() = config.getBool("ui", "sort_contacts_by_first_name", true) // If disabled, last name will be used
         set(value) {
             config.setBool("ui", "sort_contacts_by_first_name", value)
         }
 
-    @get:WorkerThread
+    @get:AnyThread
     var hideContactsWithoutPhoneNumberOrSipAddress: Boolean
         get() = config.getBool("ui", "hide_contacts_without_phone_number_or_sip_address", false)
         set(value) {
             config.setBool("ui", "hide_contacts_without_phone_number_or_sip_address", value)
         }
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var contactsFilter: String
         get() = config.getString("ui", "contacts_filter", "")!! // Default value must be empty!
         set(value) {
             config.setString("ui", "contacts_filter", value)
         }
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var showFavoriteContacts: Boolean
         get() = config.getBool("ui", "show_favorites_contacts", true)
         set(value) {
             config.setBool("ui", "show_favorites_contacts", value)
         }
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var friendListInWhichStoreNewlyCreatedFriends: String
         get() = config.getString(
             "app",
@@ -258,7 +259,7 @@ class CorePreferences
 
     // Voice recordings related
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var voiceRecordingMaxDuration: Int
         get() = config.getInt("app", "voice_recording_max_duration", 600000) // in ms
         set(value) = config.setInt("app", "voice_recording_max_duration", value)
@@ -266,7 +267,7 @@ class CorePreferences
     // User interface related
 
     // -1 means auto, 0 no, 1 yes
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var darkMode: Int
         get() {
             if (!darkModeAllowed) return 0
@@ -277,21 +278,21 @@ class CorePreferences
         }
 
     // Allows to make screenshots
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var enableSecureMode: Boolean
         get() = config.getBool("ui", "enable_secure_mode", true)
         set(value) {
             config.setBool("ui", "enable_secure_mode", value)
         }
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var automaticallyShowDialpad: Boolean
         get() = config.getBool("ui", "automatically_show_dialpad", false)
         set(value) {
             config.setBool("ui", "automatically_show_dialpad", value)
         }
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var themeMainColor: String
         get() = config.getString("ui", "theme_main_color", "orange")!!
         set(value) {
@@ -300,109 +301,109 @@ class CorePreferences
 
     // Customization options
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var showMicrophoneAndSpeakerVuMeters: Boolean
         get() = config.getBool("ui", "show_mic_speaker_vu_meter", false)
         set(value) {
             config.setBool("ui", "show_mic_speaker_vu_meter", value)
         }
 
-    @get:WorkerThread @set:WorkerThread
+    @get:AnyThread @set:WorkerThread
     var pushNotificationCompatibleDomains: Array<String>
         get() = config.getStringList("app", "push_notification_domains", arrayOf("sip.linphone.org"))
         set(value) {
             config.setStringList("app", "push_notification_domains", value)
         }
 
-    @get:WorkerThread
+    @get:AnyThread
     val defaultDomain: String
         get() = config.getString("app", "default_domain", "sip.linphone.org")!!
 
-    @get:WorkerThread
+    @get:AnyThread
     val darkModeAllowed: Boolean
         get() = config.getBool("ui", "dark_mode_allowed", true)
 
-    @get:WorkerThread
+    @get:AnyThread
     val changeMainColorAllowed: Boolean
         get() = config.getBool("ui", "change_main_color_allowed", false)
 
-    @get:WorkerThread
+    @get:AnyThread
     val onlyDisplaySipUriUsername: Boolean
         get() = config.getBool("ui", "only_display_sip_uri_username", false)
 
-    @get:WorkerThread
+    @get:AnyThread
     val hideSipAddresses: Boolean
         get() = config.getBool("ui", "hide_sip_addresses", false)
 
-    @get:WorkerThread
+    @get:AnyThread
     val disableChat: Boolean
         get() = config.getBool("ui", "disable_chat_feature", false)
 
-    @get:WorkerThread
+    @get:AnyThread
     val disableMeetings: Boolean
         get() = config.getBool("ui", "disable_meetings_feature", false)
 
-    @get:WorkerThread
+    @get:AnyThread
     val disableBroadcasts: Boolean
         get() = config.getBool("ui", "disable_broadcast_feature", true) // TODO FIXME: not implemented yet
 
-    @get:WorkerThread
+    @get:AnyThread
     val disableCallRecordings: Boolean
         get() = config.getBool("ui", "disable_call_recordings_feature", false)
 
-    @get:WorkerThread
+    @get:AnyThread
     val maxAccountsCount: Int
         get() = config.getInt("ui", "max_account", 0) // 0 means no max
 
-    @get:WorkerThread
+    @get:AnyThread
     val hidePhoneNumbers: Boolean
         get() = config.getBool("ui", "hide_phone_numbers", false)
 
-    @get:WorkerThread
+    @get:AnyThread
     val hideSettings: Boolean
         get() = config.getBool("ui", "hide_settings", false)
 
-    @get:WorkerThread
+    @get:AnyThread
     val hideAccountSettings: Boolean
         get() = config.getBool("ui", "hide_account_settings", false)
 
-    @get:WorkerThread
+    @get:AnyThread
     val hideAdvancedSettings: Boolean
         get() = config.getBool("ui", "hide_advanced_settings", false)
 
-    @get:WorkerThread
+    @get:AnyThread
     val hideAssistantCreateAccount: Boolean
         get() = config.getBool("ui", "assistant_hide_create_account", false)
 
-    @get:WorkerThread
+    @get:AnyThread
     val hideAssistantScanQrCode: Boolean
         get() = config.getBool("ui", "assistant_disable_qr_code", false)
 
-    @get:WorkerThread
+    @get:AnyThread
     val hideAssistantThirdPartySipAccount: Boolean
         get() = config.getBool("ui", "assistant_hide_third_party_account", false)
 
-    @get:WorkerThread
+    @get:AnyThread
     val magicSearchResultsLimit: Int
         get() = config.getInt("ui", "max_number_of_magic_search_results", 300)
 
-    @get:WorkerThread
+    @get:AnyThread
     val singleSignOnClientId: String
         get() = config.getString("app", "oidc_client_id", "linphone")!!
 
-    @get:WorkerThread
+    @get:AnyThread
     val useUsernameAsSingleSignOnLoginHint: Boolean
         get() = config.getBool("ui", "use_username_as_sso_login_hint", false)
 
-    @get:WorkerThread
+    @get:AnyThread
     val thirdPartySipAccountDefaultTransport: String
         get() = config.getString("ui", "assistant_third_party_sip_account_transport", "tls")!!
 
-    @get:WorkerThread
+    @get:AnyThread
     val thirdPartySipAccountDefaultDomain: String
         get() = config.getString("ui", "assistant_third_party_sip_account_domain", "")!!
 
-    @get:WorkerThread
+    @get:AnyThread
     val assistantDirectlyGoToThirdPartySipAccountLogin: Boolean
         get() = config.getBool(
             "ui",
@@ -410,11 +411,11 @@ class CorePreferences
             false
         )
 
-    @get:WorkerThread
+    @get:AnyThread
     val fetchContactsFromDefaultDirectory: Boolean
         get() = config.getBool("app", "fetch_contacts_from_default_directory", true)
 
-    @get:WorkerThread
+    @get:AnyThread
     val showLettersOnDialpad: Boolean
         get() = config.getBool("ui", "show_letters_on_dialpad", true)
 

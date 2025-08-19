@@ -32,6 +32,7 @@ import org.linphone.R
 import org.linphone.core.Address
 import org.linphone.core.Conference
 import org.linphone.core.ConferenceListenerStub
+import org.linphone.core.Friend
 import org.linphone.core.MediaDirection
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.history.model.NumpadModel
@@ -172,6 +173,12 @@ class StartCallViewModel
         }
 
         updateGroupCallButtonVisibility()
+    }
+
+    @WorkerThread
+    override fun onSingleAddressSelected(address: Address, friend: Friend?) {
+        coreContext.startAudioCall(address)
+        leaveFragmentEvent.postValue(Event(true))
     }
 
     @UiThread

@@ -20,10 +20,12 @@
 package org.linphone.ui.main.viewmodel
 
 import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Address
+import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.model.SelectedAddressModel
 import org.linphone.utils.AppUtils
@@ -41,6 +43,11 @@ class AddParticipantsViewModel
     init {
         Log.i("$TAG Forcing multiple selection mode")
         switchToMultipleSelectionMode()
+    }
+
+    @WorkerThread
+    override fun onSingleAddressSelected(address: Address, friend: Friend?) {
+        Log.e("$TAG This shouldn't happen as we should always be in multiple selection mode here!")
     }
 
     @UiThread

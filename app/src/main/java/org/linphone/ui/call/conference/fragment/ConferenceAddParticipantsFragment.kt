@@ -24,12 +24,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
-import androidx.annotation.WorkerThread
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import org.linphone.core.Address
-import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.databinding.GenericAddParticipantsFragmentBinding
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
@@ -64,11 +61,6 @@ class ConferenceAddParticipantsFragment : GenericAddressPickerFragment() {
             Log.e("$TAG Can't go back popping back stack: $ise")
         }
         return false
-    }
-
-    @WorkerThread
-    override fun onSingleAddressSelected(address: Address, friend: Friend) {
-        Log.e("$TAG This shouldn't happen as we should always be in multiple selection mode here!")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

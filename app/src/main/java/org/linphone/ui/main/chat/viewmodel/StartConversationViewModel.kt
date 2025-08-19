@@ -30,6 +30,7 @@ import org.linphone.core.Address
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomListenerStub
 import org.linphone.core.Conference
+import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.viewmodel.AddressSelectionViewModel
 import org.linphone.utils.AppUtils
@@ -91,6 +92,11 @@ class StartConversationViewModel
         }
 
         updateGroupChatButtonVisibility()
+    }
+
+    @WorkerThread
+    override fun onSingleAddressSelected(address: Address, friend: Friend?) {
+        createOneToOneChatRoomWith(address)
     }
 
     @UiThread

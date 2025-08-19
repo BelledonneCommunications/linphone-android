@@ -24,12 +24,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
-import androidx.annotation.WorkerThread
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
-import org.linphone.core.Address
-import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.databinding.StartChatFragmentBinding
 import org.linphone.ui.GenericActivity
@@ -117,11 +114,6 @@ class StartConversationFragment : GenericAddressPickerFragment() {
                 viewModel.updateGroupChatButtonVisibility()
             }
         }
-    }
-
-    @WorkerThread
-    override fun onSingleAddressSelected(address: Address, friend: Friend) {
-        viewModel.createOneToOneChatRoomWith(address)
     }
 
     private fun showGroupConversationSubjectDialog() {

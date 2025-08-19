@@ -30,9 +30,8 @@ import org.linphone.core.Address
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomListenerStub
 import org.linphone.core.Conference
+import org.linphone.core.Friend
 import org.linphone.core.tools.Log
-import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
-import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
 import org.linphone.ui.main.model.ConversationContactOrSuggestionModel
 import org.linphone.ui.main.viewmodel.AddressSelectionViewModel
 import org.linphone.utils.AppUtils
@@ -50,31 +49,6 @@ class ConversationForwardMessageViewModel
 
     val chatRoomCreatedEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
-    }
-
-    val showNumberOrAddressPickerDialogEvent: MutableLiveData<Event<ArrayList<ContactNumberOrAddressModel>>> by lazy {
-        MutableLiveData<Event<ArrayList<ContactNumberOrAddressModel>>>()
-    }
-
-    val hideNumberOrAddressPickerDialogEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
-    }
-
-    private val listener = object : ContactNumberOrAddressClickListener {
-        @UiThread
-        override fun onClicked(model: ContactNumberOrAddressModel) {
-            val address = model.address
-            coreContext.postOnCoreThread {
-                if (address != null) {
-                    Log.i("$TAG Selected address is [${model.address.asStringUriOnly()}]")
-                    onAddressSelected(model.address)
-                }
-            }
-        }
-
-        @UiThread
-        override fun onLongPress(model: ContactNumberOrAddressModel) {
-        }
     }
 
     private val chatRoomListener = object : ChatRoomListenerStub() {
@@ -105,8 +79,8 @@ class ConversationForwardMessageViewModel
     }
 
     @WorkerThread
-    private fun onAddressSelected(address: Address) {
-        hideNumberOrAddressPickerDialogEvent.postValue(Event(true))
+    override fun onSingleAddressSelected(address: Address, friend: Friend?) {
+        dismissNumberOrAddressPickerDialogEvent.postValue(Event(true))
 
         createOneToOneChatRoomWith(address)
 
@@ -136,7 +110,7 @@ class ConversationForwardMessageViewModel
             val friend = model.friend
             if (friend == null) {
                 Log.i("$TAG Friend is null, using address [${model.address.asStringUriOnly()}]")
-                onAddressSelected(model.address)
+                onSingleAddressSelected(model.address, null)
                 return@postOnCoreThread
             }
 
@@ -145,9 +119,9 @@ class ConversationForwardMessageViewModel
                 Log.i(
                     "$TAG Only 1 SIP address or phone number found for contact [${friend.name}], using it"
                 )
-                onAddressSelected(singleAvailableAddress)
+                onSingleAddressSelected(singleAvailableAddress, friend)
             } else {
-                val list = friend.getListOfSipAddressesAndPhoneNumbers(listener)
+                val list = friend.getListOfSipAddressesAndPhoneNumbers(numberOrAddressClickListener)
                 Log.i(
                     "$TAG [${list.size}] numbers or addresses found for contact [${friend.name}], showing selection dialog"
                 )
