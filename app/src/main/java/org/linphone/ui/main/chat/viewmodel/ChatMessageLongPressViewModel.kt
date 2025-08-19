@@ -58,6 +58,8 @@ class ChatMessageLongPressViewModel : GenericViewModel() {
 
     val isMessageInError = MutableLiveData<Boolean>()
 
+    val hasBeenRetracted = MutableLiveData<Boolean>()
+
     val showImdnInfoEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -97,14 +99,14 @@ class ChatMessageLongPressViewModel : GenericViewModel() {
 
     @UiThread
     fun setMessage(model: MessageModel) {
-        canBeEdited.postValue(model.chatMessage.isEditable)
-        canBeRemotelyDeleted.postValue(model.chatMessage.isRetractable)
-
         hideCopyTextToClipboard.value = model.text.value.isNullOrEmpty()
         isChatRoomReadOnly.value = model.chatRoomIsReadOnly
         isMessageOutgoing.value = model.isOutgoing
         isMessageInError.value = model.isInError.value == true
         horizontalBias.value = if (model.isOutgoing) 1f else 0f
+        canBeEdited.value = model.chatMessage.isEditable
+        canBeRemotelyDeleted.value = model.chatMessage.isRetractable
+        hasBeenRetracted.value = model.hasBeenRetracted.value == true
         messageModel.value = model
 
         emojiBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN

@@ -154,7 +154,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/menu_reply_to_chat_message"
                     android:background="@drawable/action_background_middle"
-                    android:visibility="@{viewModel.isChatRoomReadOnly ? View.GONE : View.VISIBLE}"
+                    android:visibility="@{viewModel.isChatRoomReadOnly || viewModel.hasBeenRetracted ? View.GONE : View.VISIBLE}"
                     android:drawableEnd="@drawable/reply" />
 
                 <View
@@ -162,7 +162,7 @@
                     android:layout_height="1dp"
                     android:background="?attr/color_separator"
                     android:importantForAccessibility="no"
-                    android:visibility="@{viewModel.isChatRoomReadOnly ? View.GONE : View.VISIBLE}" />
+                    android:visibility="@{viewModel.isChatRoomReadOnly || viewModel.hasBeenRetracted ? View.GONE : View.VISIBLE}" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/chat_bubble_popup_menu_style"
@@ -191,14 +191,14 @@
                     android:text="@string/menu_forward_chat_message"
                     android:background="@drawable/action_background_middle"
                     android:drawableEnd="@drawable/forward"
-                    android:visibility="@{viewModel.hideForward ? View.GONE : View.VISIBLE}" />
+                    android:visibility="@{viewModel.hideForward || viewModel.hasBeenRetracted ? View.GONE : View.VISIBLE}" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="?attr/color_separator"
                     android:importantForAccessibility="no"
-                    android:visibility="@{viewModel.hideForward ? View.GONE : View.VISIBLE}" />
+                    android:visibility="@{viewModel.hideForward || viewModel.hasBeenRetracted ? View.GONE : View.VISIBLE}" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/chat_bubble_popup_menu_style"
