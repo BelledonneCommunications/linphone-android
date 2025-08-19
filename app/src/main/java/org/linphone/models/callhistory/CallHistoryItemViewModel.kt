@@ -26,8 +26,8 @@ class CallHistoryItemViewModel(
     private val formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).withLocale(
         Locale.getDefault()
     )
-    private val zonedDateTime = call.startTime.withZoneSameInstant(ZoneId.systemDefault())
-    val time: String = zonedDateTime.format(formatter)
+    private val zonedDateTime = if (call.startTime == null) null else call.startTime.withZoneSameInstant(ZoneId.systemDefault())
+    val time: String = if (zonedDateTime == null) "" else zonedDateTime.format(formatter)
 
     var contactName: String = ""
     private var contactLabel: String = buildContactMatchLabel()
@@ -205,7 +205,7 @@ class CallHistoryItemViewModel(
     }
 
     override fun getStartDate(): Long {
-        return call.startTime.toInstant().toEpochMilli()
+        return if (call.startTime == null) 0 else call.startTime.toInstant().toEpochMilli()
     }
 
     override fun getStatus(): Call.Status {
