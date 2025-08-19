@@ -25,6 +25,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -91,6 +92,7 @@ class AddParticipantsFragment : GenericAddressPickerFragment() {
         return false
     }
 
+    @WorkerThread
     override fun onSingleAddressSelected(address: Address, friend: Friend) {
         Log.e("$TAG This shouldn't happen as we should always be in multiple selection mode here!")
     }

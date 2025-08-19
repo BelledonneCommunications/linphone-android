@@ -35,6 +35,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import androidx.slidingpanelayout.widget.SlidingPaneLayout.PanelSlideListener
 import com.google.android.material.textfield.TextInputLayout
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.tools.Log
@@ -192,7 +193,9 @@ abstract class AbstractMainFragment : GenericMainFragment() {
 
         sharedViewModel.forceUpdateAvailableNavigationItems.observe(viewLifecycleOwner) {
             it.consume {
-                viewModel.updateAvailableMenus()
+                coreContext.postOnCoreThread {
+                    viewModel.updateAvailableMenus()
+                }
             }
         }
     }

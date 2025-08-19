@@ -187,7 +187,7 @@ class MeetingsListFragment : AbstractMainFragment() {
 
         adapter.meetingLongClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
-                val isUserOrganizer = model.isOrganizer() && !model.isCancelled
+                val isUserOrganizer = model.isMyselfOrganizer && !model.isCancelled
                 val modalBottomSheet = MeetingsMenuDialogFragment(
                     isUserOrganizer,
                     { // onDismiss

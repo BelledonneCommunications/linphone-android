@@ -311,7 +311,6 @@ class SendMessageInConversationViewModel
                         voiceMessage.send()
                     } else {
                         message.addContent(content)
-                        contentAdded = true
                     }
                 } else {
                     Log.e("$TAG Voice recording content couldn't be created!")

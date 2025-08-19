@@ -175,7 +175,7 @@ class VFS {
             val cipher = Cipher.getInstance(TRANSFORMATION)
             cipher.init(Cipher.ENCRYPT_MODE, getSecretKey())
             val iv = cipher.iv
-            return Pair<ByteArray, ByteArray>(
+            return Pair(
                 iv,
                 cipher.doFinal(textToEncrypt.toByteArray(StandardCharsets.UTF_8))
             )
@@ -193,7 +193,7 @@ class VFS {
         @Throws(java.lang.Exception::class)
         private fun encryptToken(token: String): Pair<String?, String?> {
             val encryptedData = encryptData(token)
-            return Pair<String?, String?>(
+            return Pair(
                 Base64.encodeToString(encryptedData.first, Base64.DEFAULT),
                 Base64.encodeToString(encryptedData.second, Base64.DEFAULT)
             )

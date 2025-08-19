@@ -47,7 +47,6 @@ import org.linphone.ui.main.history.viewmodel.StartCallViewModel
 import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
-import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.RecyclerViewHeaderDecoration
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.setKeyboardInsetListener
@@ -233,8 +232,10 @@ class TransferCallFragment : GenericCallFragment() {
         }
 
         viewModel.initiateBlindTransferEvent.observe(viewLifecycleOwner) {
-            it.consume { address ->
-                showConfirmBlindTransferDialog(address, LinphoneUtils.getDisplayName(address))
+            it.consume { pair ->
+                val address = pair.first
+                val displayName = pair.second
+                showConfirmBlindTransferDialog(address, displayName)
             }
         }
 

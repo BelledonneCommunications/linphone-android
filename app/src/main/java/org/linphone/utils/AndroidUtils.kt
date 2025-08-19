@@ -160,8 +160,8 @@ class AppUtils {
 
             var textToCheck = text
             do {
-                var firstSymbol = extractFirstSymbol(textToCheck)
-                var symbolLength = firstSymbol.length
+                val firstSymbol = extractFirstSymbol(textToCheck)
+                val symbolLength = firstSymbol.length
                 if (symbolLength <= 1) return false
                 textToCheck = textToCheck.substring(symbolLength)
             }  while (textToCheck.isNotEmpty())

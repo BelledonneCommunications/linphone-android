@@ -197,7 +197,7 @@ class ContactsListViewModel
             corePreferences.contactsFilter = domainFilter
             Log.i("$TAG Newly set filter is [${corePreferences.contactsFilter}]")
 
-            coreContext.postOnMainThread {
+            coreContext.postOnCoreThread {
                 applyFilter(currentFilter, domainFilter, filterChanged = true)
             }
         }
@@ -207,7 +207,10 @@ class ContactsListViewModel
     fun toggleFavouritesVisibility() {
         val show = showFavourites.value == false
         showFavourites.value = show
-        corePreferences.showFavoriteContacts = show
+        
+        coreContext.postOnCoreThread {
+            corePreferences.showFavoriteContacts = show
+        }
     }
 
     @UiThread

@@ -477,7 +477,7 @@ class LinphoneUtils {
                 return Pair(0, "")
             }
 
-            var icon = R.drawable.chat_teardrop_dots
+            val icon = R.drawable.chat_teardrop_dots
             val composingFriends = arrayListOf<String>()
             var label = ""
             for (participant in chatRoom.composingParticipants) {

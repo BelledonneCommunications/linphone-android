@@ -82,7 +82,7 @@ class VuMeterView : View {
     }
 
     private fun createShader(): Shader {
-        val level = (height - height * vuMeterPercentage).toFloat()
+        val level = (height - height * vuMeterPercentage)
 
         val bitmap = createBitmap(width, height)
         val canvas = Canvas(bitmap)

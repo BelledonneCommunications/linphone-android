@@ -80,8 +80,8 @@ class StartCallViewModel
         MutableLiveData<Event<Boolean>>()
     }
 
-    val initiateBlindTransferEvent: MutableLiveData<Event<Address>> by lazy {
-        MutableLiveData<Event<Address>>()
+    val initiateBlindTransferEvent: MutableLiveData<Event<Pair<Address, String>>> by lazy {
+        MutableLiveData<Event<Pair<Address, String>>>()
     }
 
     private val conferenceListener = object : ConferenceListenerStub() {
@@ -153,7 +153,7 @@ class StartCallViewModel
                             LinphoneUtils.applyInternationalPrefix()
                         )
                         if (address != null) {
-                            initiateBlindTransferEvent.postValue(Event(address))
+                            initiateBlindTransferEvent.postValue(Event(Pair(address, LinphoneUtils.getDisplayName(address))))
                             leaveFragmentEvent.postValue(Event(true))
                         } else {
                             Log.e("$TAG Failed to parse [$suggestion] as SIP address")

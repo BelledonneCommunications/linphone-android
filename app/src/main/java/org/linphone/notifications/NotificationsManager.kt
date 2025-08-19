@@ -1987,7 +1987,7 @@ class NotificationsManager
 
     @AnyThread
     fun foregroundServiceTypeMaskToString(mask: Int): String {
-        var stringBuilder = StringBuilder()
+        val stringBuilder = StringBuilder()
         val values = hashMapOf(
             "PHONE_CALL" to Compatibility.FOREGROUND_SERVICE_TYPE_PHONE_CALL,
             "MICROPHONE" to Compatibility.FOREGROUND_SERVICE_TYPE_MICROPHONE,
