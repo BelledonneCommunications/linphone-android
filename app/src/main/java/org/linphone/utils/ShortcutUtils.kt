@@ -52,6 +52,40 @@ class ShortcutUtils {
         }
 
         @WorkerThread
+        fun removeLegacyShortcuts(context: Context) {
+            val dynamicShortcutsToRemove = arrayListOf<String>()
+            for (shortcut in ShortcutManagerCompat.getDynamicShortcuts(context)) {
+                val id = shortcut.id
+                Log.d("$TAG Found dynamic shortcut with ID [$id]")
+                if (id.contains("#~#")) {
+                    Log.w("$TAG Found legacy dynamic shortcut with ID [$id] detected, removing it")
+                    dynamicShortcutsToRemove.add(id)
+                }
+            }
+            if (dynamicShortcutsToRemove.isNotEmpty()) {
+                ShortcutManagerCompat.removeDynamicShortcuts(context, dynamicShortcutsToRemove)
+            }
+
+            // Check for non-dynamic cached legacy shortcuts
+            // Warning: on Android >= 10 dynamic shortcuts will still be returned!
+            val flags = ShortcutManagerCompat.FLAG_MATCH_MANIFEST or ShortcutManagerCompat.FLAG_MATCH_PINNED or ShortcutManagerCompat.FLAG_MATCH_CACHED
+            val cachedShortcutsToRemove = arrayListOf<String>()
+            for (shortcut in ShortcutManagerCompat.getShortcuts(context, flags)) {
+                val id = shortcut.id
+                val dynamic = shortcut.isDynamic
+                val cached = shortcut.isCached
+                if (!dynamic && cached && id.contains("#~#")) {
+                    Log.i("$TAG Found cached legacy shortcut with ID [$id], removing it")
+                    cachedShortcutsToRemove.add(id)
+                }
+            }
+            if (cachedShortcutsToRemove.isNotEmpty()) {
+                ShortcutManagerCompat.removeLongLivedShortcuts(context, cachedShortcutsToRemove)
+            }
+        }
+
+        /*
+        @WorkerThread
         fun createShortcutsToChatRooms(context: Context) {
             if (ShortcutManagerCompat.isRateLimitingActive(context)) {
                 Log.e("$TAG Rate limiting is active, aborting")
@@ -100,11 +134,26 @@ class ShortcutUtils {
             }
             Log.i("$TAG Created $count dynamic shortcuts")
         }
+        */
+
+        @WorkerThread
+        fun createDynamicShortcutToChatRoom(context: Context, chatRoom: ChatRoom) {
+            val shortcut: ShortcutInfoCompat? = createChatRoomShortcut(context, chatRoom)
+            if (shortcut != null) {
+                Log.i("$TAG Created dynamic shortcut for ${shortcut.shortLabel}, pushing it")
+                try {
+                    ShortcutManagerCompat.pushDynamicShortcut(context, shortcut)
+                } catch (e: Exception) {
+                    Log.e("$TAG Failed to push dynamic shortcut for ${shortcut.shortLabel}: $e")
+                }
+            }
+        }
 
         @WorkerThread
         private fun createChatRoomShortcut(context: Context, chatRoom: ChatRoom): ShortcutInfoCompat? {
             val peerAddress = chatRoom.peerAddress
             val id = LinphoneUtils.getConversationId(chatRoom)
+            Log.i("$TAG Creating dynamic shortcut for chat room [$id]")
 
             try {
                 val categories: ArraySet<String> = ArraySet()
@@ -112,6 +161,7 @@ class ShortcutUtils {
 
                 val personsList = arrayListOf<Person>()
                 val subject: String
+                var isGroup = false
                 val icon: IconCompat = if (chatRoom.hasCapability(
                         ChatRoom.Capabilities.Basic.toInt()
                     )
@@ -141,6 +191,7 @@ class ShortcutUtils {
                         AppUtils.getInitials(subject)
                     ).buildIcon()
                 } else {
+                    isGroup = true
                     subject = chatRoom.subject.orEmpty()
                     AvatarGenerator(context).setInitials(AppUtils.getInitials(subject)).buildIcon()
                 }
@@ -157,15 +208,25 @@ class ShortcutUtils {
                 intent.putExtra(ARGUMENTS_CHAT, true)
                 intent.putExtra(ARGUMENTS_CONVERSATION_ID, id)
 
-                return ShortcutInfoCompat.Builder(context, id)
+                val builder = ShortcutInfoCompat.Builder(context, id)
                     .setShortLabel(subject)
                     .setIcon(icon)
                     .setPersons(persons)
                     .setCategories(categories)
                     .setIntent(intent)
+                    .setIsConversation()
                     .setLongLived(Version.sdkAboveOrEqual(Version.API30_ANDROID_11))
                     .setLocusId(LocusIdCompat(id))
-                    .build()
+                    // See https://developer.android.com/training/sharing/direct-share-targets#track-shortcut-usage-comms-apps
+                    if (isGroup) {
+                        builder.addCapabilityBinding("actions.intent.SEND_MESSAGE", "message.recipient.@type", listOf("Audience"))
+                        builder.addCapabilityBinding("actions.intent.RECEIVE_MESSAGE", "message.sender.@type", listOf("Audience"))
+                    } else {
+                        builder.addCapabilityBinding("actions.intent.SEND_MESSAGE")
+                        builder.addCapabilityBinding("actions.intent.RECEIVE_MESSAGE")
+                    }
+
+                return builder.build()
             } catch (e: NumberFormatException) {
                 Log.e("$TAG createChatRoomShortcut for id [$id] exception: $e")
             }
@@ -179,6 +240,7 @@ class ShortcutUtils {
             val found = ShortcutManagerCompat.getDynamicShortcuts(context).find {
                 it.id == id
             }
+            Log.d("$TAG Dynamic shortcut for chat room with ID [$id] ${if (found != null) "exists" else "doesn't exists"}")
             return found != null
         }
     }

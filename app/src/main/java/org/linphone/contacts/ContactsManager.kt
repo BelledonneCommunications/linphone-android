@@ -19,9 +19,7 @@
  */
 package org.linphone.contacts
 
-import android.Manifest
 import android.content.ContentUris
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
@@ -29,7 +27,6 @@ import android.provider.ContactsContract
 import androidx.annotation.MainThread
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
-import androidx.core.app.ActivityCompat
 import androidx.core.app.Person
 import androidx.core.graphics.drawable.IconCompat
 import androidx.core.text.isDigitsOnly
@@ -390,8 +387,9 @@ class ContactsManager
 
         notifyContactsListChanged()
 
-        Log.i("$TAG Native contacts have been loaded, creating chat rooms shortcuts")
-        ShortcutUtils.createShortcutsToChatRooms(coreContext.context)
+        Log.i("$TAG Native contacts have been loaded")
+        // No longer create chat room shortcuts depending on most recents ones, create it when a message is sent or received instead
+        // ShortcutUtils.createShortcutsToChatRooms(coreContext.context)
     }
 
     @WorkerThread
@@ -572,14 +570,16 @@ class ContactsManager
         }
 
         val context = coreContext.context
-        if (ActivityCompat.checkSelfPermission(
+        ShortcutUtils.removeLegacyShortcuts(context)
+        // No longer create chat room shortcuts depending on most recents ones, create it when a message is sent or received instead
+        /*if (ActivityCompat.checkSelfPermission(
                 context,
                 Manifest.permission.READ_CONTACTS
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            Log.w("$TAG READ_CONTACTS permission was denied, creating chat rooms shortcuts")
+            Log.w("$TAG READ_CONTACTS permission was denied, creating chat rooms shortcuts now")
             ShortcutUtils.createShortcutsToChatRooms(context)
-        }
+        }*/
 
         for (list in core.friendsLists) {
             if (list.type == FriendList.Type.CardDAV && !list.uri.isNullOrEmpty()) {

@@ -318,6 +318,11 @@ class NotificationsManager
             Log.i("$TAG Received ${messages.size} aggregated messages")
             if (corePreferences.disableChat) return
 
+            if (!ShortcutUtils.isShortcutToChatRoomAlreadyCreated(context, chatRoom)) {
+                Log.i("$TAG A message was received in a chat room for which there is no dynamic shortcut, let's create it")
+                ShortcutUtils.createDynamicShortcutToChatRoom(context, chatRoom)
+            }
+
             val id = LinphoneUtils.getConversationId(chatRoom)
             if (currentlyDisplayedChatRoomId.isNotEmpty() && id == currentlyDisplayedChatRoomId) {
                 Log.i(
@@ -342,15 +347,14 @@ class NotificationsManager
                 return
             }
 
-            if (ShortcutUtils.isShortcutToChatRoomAlreadyCreated(context, chatRoom)) {
-                Log.i("$TAG Conversation shortcut already exists")
-                showChatRoomNotification(chatRoom, messages)
-            } else {
-                Log.i(
-                    "$TAG Ensure conversation shortcut exists for notification"
-                )
-                ShortcutUtils.createShortcutsToChatRooms(context)
-                showChatRoomNotification(chatRoom, messages)
+            showChatRoomNotification(chatRoom, messages)
+        }
+
+        @WorkerThread
+        override fun onMessageSent(core: Core, chatRoom: ChatRoom, message: ChatMessage) {
+            if (!ShortcutUtils.isShortcutToChatRoomAlreadyCreated(context, chatRoom)) {
+                Log.i("$TAG A message was sent in a chat room for which there is no dynamic shortcut, let's create it")
+                ShortcutUtils.createDynamicShortcutToChatRoom(context, chatRoom)
             }
         }
 
