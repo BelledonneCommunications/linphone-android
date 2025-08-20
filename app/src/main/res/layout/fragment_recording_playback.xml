@@ -72,7 +72,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="3sp"
-                android:text="@{viewModel.call.time, default=`Monday`}" />
+                android:text="@{viewModel.call.date, default=`Monday`}" />
 
             <TextView
                 android:layout_width="wrap_content"
