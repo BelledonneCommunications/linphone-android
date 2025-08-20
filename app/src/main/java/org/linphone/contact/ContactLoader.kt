@@ -101,6 +101,10 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
             Log.e("[Contacts Loader] Cursor is null!")
             return
         }
+        if (cursor.isClosed) {
+            Log.i("[Contacts Loader] Cursor has closed")
+            return
+        }
         Log.i("[Contacts Loader] Load finished, found ${cursor.count} entries in cursor")
 
         val core = coreContext.core
