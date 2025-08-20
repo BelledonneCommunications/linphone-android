@@ -8,5 +8,6 @@ data class EnvironmentOverride(
     var name: String?,
     var isDefault: Boolean = false,
     var isHidden: Boolean = false,
-    var defaultTenantId: String?
+    var defaultTenantId: String?,
+    var documentationUri: String?
 )

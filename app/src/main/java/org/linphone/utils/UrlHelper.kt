@@ -7,7 +7,6 @@ import androidx.core.net.toUri
 import java.util.Locale
 import org.linphone.authentication.AuthStateManager
 import org.linphone.environment.DimensionsEnvironmentService
-import org.linphone.models.TenantBrandingDefinition
 import org.linphone.services.BrandingService
 
 class UrlHelper {
@@ -18,11 +17,12 @@ class UrlHelper {
             val deployment = DimensionsEnvironmentService.getInstance(context).getCurrentEnvironment()
             var lang = Locale.getDefault().toString().lowercase()
 
-            var defaultBrand = TenantBrandingDefinition()
-            defaultBrand.brandName = "Default"
             val brand = BrandingService.getInstance(context).brand
                 .blockingFirst()
                 .getOrNull()
+
+            if (brand == null) Log.w("User brand returned null.")
+            else Log.d("Brand loaded: ${brand.brandName}. Docs URL: ${brand.documentationRootUrl}")
 
             val validLocales: ArrayList<String> = arrayListOf("en-us", "en-gb")
             if (!validLocales.contains(lang)) {
@@ -30,7 +30,6 @@ class UrlHelper {
             }
 
             val brandingDocumentUri = if (brand?.documentationRootUrl.isNullOrBlank()) deployment?.documentationUri else brand?.documentationRootUrl
-
             val subPath = if (path == null) "" else "$path/"
             val tenantId = if (user == null) "" else "?tenantId=${user.tenantId}"
 

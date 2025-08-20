@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="voip_numpad_button_max_size">96dp</dimen>
+    <dimen name="voip_numpad_button_digit_size">44sp</dimen>
+    <dimen name="voip_numpad_button_text_size">14sp</dimen>
+</resources>

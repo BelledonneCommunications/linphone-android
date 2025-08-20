@@ -102,7 +102,7 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
         .switchMap {
             val arr = callHistorySubject.value ?: emptyList()
             val maxStartTime = arr.maxOfOrNull {
-                it.startTime.toInstant().toEpochMilli()
+                if (it.startTime == null) 0 else it.startTime.toInstant().toEpochMilli()
             } ?: 0L
 
             val fromDate = if (maxStartTime > 0) {
@@ -189,7 +189,7 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
         { history, timestamp ->
             try {
                 history.filter {
-                    it.missedCall && it.startTime > timestamp
+                    it.missedCall && it.startTime != null && it.startTime > timestamp
                 }.size
             } catch (e: Exception) {
                 Log.e("missedCallCount", e)

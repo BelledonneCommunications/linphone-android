@@ -86,7 +86,7 @@
 
             <RelativeLayout
                 android:id="@+id/relAvatarLayout"
-                android:visibility="@{viewModel.userImageUrl == null ? View.GONE : View.VISIBLE, default=gone}"
+                android:visibility="@{viewModel.userImageUrl == null ? View.GONE : View.VISIBLE, default=visible}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -115,19 +115,20 @@
                     android:adjustViewBounds="true"
                     android:contentDescription="@null"
                     android:src="@drawable/avatar_border"
-                    android:visibility="@{viewModel.userImageUrl == null ? View.GONE : View.VISIBLE, default=gone}"
+                    android:visibility="@{viewModel.userImageUrl == null ? View.GONE : View.VISIBLE, default=visible}"
                     />
 
                 <ImageView
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:layout_alignBottom="@id/avatar"
                     android:layout_alignEnd="@id/avatar"
-                    android:layout_marginStart="45dp"
+                    android:layout_marginEnd="-3dp"
+                    android:layout_marginBottom="-3dp"
                     android:adjustViewBounds="true"
                     android:background="@drawable/led_background"
                     app:presenceIcon="@{viewModel.dimensionsPresenceStatus}"
-                    android:padding="@dimen/contact_presence_badge_padding"
+                    android:padding="1dp"
                     tools:ignore="ContentDescription" />
 
                 <!--            android:visibility="@{!viewModel.defaultAccountFound || viewModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE, default=gone}"-->

@@ -16,7 +16,7 @@ data class CallHistoryItem(
     val hasRecording: Boolean,
 
     @SerializedName("startTime")
-    val startTime: ZonedDateTime,
+    val startTime: ZonedDateTime?,
 
     @SerializedName("connectionId")
     val connectionId: String,

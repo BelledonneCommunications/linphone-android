@@ -86,9 +86,10 @@ class CallLogsListViewModel : ViewModel() {
         coreContext.core.addListener(listener)
         coreContext.contactsManager.addListener(contactsUpdatedListener)
 
-        val callHistorySubscription = callHistoryService.formattedHistory.subscribe {
-            updateCallLogs()
-        }
+        val callHistorySubscription = callHistoryService.formattedHistory.subscribe(
+            { updateCallLogs() },
+            { error -> Log.e(error, "Failed to update call history.") }
+        )
     }
 
     override fun onCleared() {

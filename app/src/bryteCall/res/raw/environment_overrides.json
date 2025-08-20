@@ -2,6 +2,7 @@
   {
     "id": "NA",
     "isDefault": true,
-    "defaultTenantId": "616b1978-e9a7-4fab-a645-874998f43134"
+    "defaultTenantId": "616b1978-e9a7-4fab-a645-874998f43134",
+    "documentationUri": "https://docs.brytecall.com"
   }
 ]
