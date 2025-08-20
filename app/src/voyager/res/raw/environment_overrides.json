@@ -2,10 +2,12 @@
   {
     "id": "AU",
     "isDefault": true,
-    "defaultTenantId": "4b373e08-eae3-44ec-857f-08dc694c19ea"
+    "defaultTenantId": "4b373e08-eae3-44ec-857f-08dc694c19ea",
+    "documentationUri": "https://docs.voice.voyager.nz"
   },
   {
     "id": "Stg",
-    "defaultTenantId": "3f9b5490-bf9d-498e-8cb1-7bdba1c013ea"
+    "defaultTenantId": "3f9b5490-bf9d-498e-8cb1-7bdba1c013ea",
+    "documentationUri": "https://docs.voice.voyager.nz"
   }
 ]

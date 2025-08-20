@@ -89,29 +89,30 @@ class DimensionsEnvironmentService(context: Context) {
 
     private fun addEnvironmentOverrides() {
         // Read any environment overrides for the current build variant:
-        var overrides: Array<EnvironmentOverride>
+        var overrideList: Array<EnvironmentOverride>
 
         mResources.openRawResource(R.raw.environment_overrides)
             .bufferedReader().use {
                 val jsonStr = it.readText()
-                overrides = Gson().fromJson(jsonStr, Array<EnvironmentOverride>::class.java)
+                overrideList = Gson().fromJson(jsonStr, Array<EnvironmentOverride>::class.java)
             }
 
         var defaultId: String? = null
 
         // For each override, take any non-null properties
-        for (x in overrides) {
-            val env = environments.firstOrNull { e -> e.id == x.id }
+        for (override in overrideList) {
+            val env = environments.firstOrNull { e -> e.id == override.id }
             if (env != null) {
-                env.name = x.name ?: env.name
-                env.defaultTenantId = x.defaultTenantId ?: env.defaultTenantId
-                if (x.isDefault) defaultId = x.id
+                env.name = override.name ?: env.name
+                env.defaultTenantId = override.defaultTenantId ?: env.defaultTenantId
+                env.documentationUri = override.documentationUri ?: env.documentationUri
+                if (override.isDefault) defaultId = override.id
             }
         }
 
         // If necessary, override the default environment
         if (defaultId != null) {
-            environments.forEach { x -> x.isDefault = x.id == defaultId }
+            environments.forEach { env -> env.isDefault = env.id == defaultId }
         }
     }
 
