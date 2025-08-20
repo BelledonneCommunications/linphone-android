@@ -140,7 +140,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
             )
         }
         permissionSubscription = hasPlaybackPermission.subscribe(
-            { hasPermission -> listViewModel.hasPlaybackPermission.value = hasPermission },
+            { hasPermission -> listViewModel.hasPlaybackPermission.postValue(hasPermission) },
             { error -> Log.e(error) }
         )
 
@@ -222,7 +222,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         adapter.showCallLogContextMenuEvent.observe(viewLifecycleOwner) {
             it.consume { call ->
                 binding.contextItemViewModel = call
-                sharedViewModel.selectedHistoryItem.value = call
+                sharedViewModel.selectedHistoryItem.postValue(call)
                 listViewModel.showContextMenu(call)
             }
         }
