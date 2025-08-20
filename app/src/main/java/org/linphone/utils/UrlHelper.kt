@@ -7,7 +7,6 @@ import androidx.core.net.toUri
 import java.util.Locale
 import org.linphone.authentication.AuthStateManager
 import org.linphone.environment.DimensionsEnvironmentService
-import org.linphone.models.TenantBrandingDefinition
 import org.linphone.services.BrandingService
 
 class UrlHelper {
@@ -18,8 +17,6 @@ class UrlHelper {
             val deployment = DimensionsEnvironmentService.getInstance(context).getCurrentEnvironment()
             var lang = Locale.getDefault().toString().lowercase()
 
-            var defaultBrand = TenantBrandingDefinition()
-            defaultBrand.brandName = "Default"
             val brand = BrandingService.getInstance(context).brand
                 .blockingFirst()
                 .getOrNull()
