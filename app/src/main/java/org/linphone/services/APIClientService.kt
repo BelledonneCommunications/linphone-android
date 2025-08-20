@@ -19,6 +19,7 @@ import org.threeten.bp.ZonedDateTime
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 class APIClientService(val context: Context) {
 
@@ -71,6 +72,9 @@ class APIClientService(val context: Context) {
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
 
         return OkHttpClient.Builder()
+            .connectTimeout(15, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
             .addInterceptor(interceptor)
             .authenticator(AuthAuthenticator(authService, asm))
             .build()
