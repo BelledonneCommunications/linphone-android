@@ -26,7 +26,13 @@ class CallHistoryItemViewModel(
     private val formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).withLocale(
         Locale.getDefault()
     )
-    private val zonedDateTime = if (call.startTime == null) null else call.startTime.withZoneSameInstant(ZoneId.systemDefault())
+    private val zonedDateTime = if (call.startTime == null) {
+        null
+    } else {
+        call.startTime.withZoneSameInstant(
+            ZoneId.systemDefault()
+        )
+    }
     val time: String = if (zonedDateTime == null) "" else zonedDateTime.format(formatter)
 
     var contactName: String = ""
