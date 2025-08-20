@@ -21,13 +21,15 @@ class UrlHelper {
                 .blockingFirst()
                 .getOrNull()
 
+            if (brand == null) Log.w("User brand returned null.")
+            else Log.d("Brand loaded: ${brand.brandName}. Docs URL: ${brand.documentationRootUrl}")
+
             val validLocales: ArrayList<String> = arrayListOf("en-us", "en-gb")
             if (!validLocales.contains(lang)) {
                 lang = "en-us"
             }
 
             val brandingDocumentUri = if (brand?.documentationRootUrl.isNullOrBlank()) deployment?.documentationUri else brand?.documentationRootUrl
-
             val subPath = if (path == null) "" else "$path/"
             val tenantId = if (user == null) "" else "?tenantId=${user.tenantId}"
 
