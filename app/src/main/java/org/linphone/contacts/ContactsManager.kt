@@ -162,6 +162,19 @@ class ContactsManager
         override fun onPresenceReceived(friendList: FriendList, friends: Array<out Friend?>) {
             if (friendList.isSubscriptionBodyless) {
                 Log.i("$TAG Bodyless friendlist [${friendList.displayName}] presence received")
+
+                for (friend in friends) {
+                    if (friend != null) {
+                        val address = friend.address
+                        if (address != null) {
+                            Log.d(
+                                "$TAG Newly discovered SIP Address [${address.asStringUriOnly()}] for friend [${friend.name}] in bodyless list [${friendList.displayName}]"
+                            )
+                            newContactAddedWithSipUri(friend, address)
+                        }
+                    }
+                }
+
                 notifyContactsListChanged()
             }
         }
@@ -183,7 +196,7 @@ class ContactsManager
                 friend.addAddress(address)
                 friend.done()
 
-                newContactAddedWithSipUri(friend, sipUri)
+                newContactAddedWithSipUri(friend, address)
             } else {
                 Log.e("$TAG Failed to parse SIP URI [$sipUri] as Address!")
             }
@@ -321,7 +334,8 @@ class ContactsManager
     }
 
     @WorkerThread
-    private fun newContactAddedWithSipUri(friend: Friend, sipUri: String) {
+    private fun newContactAddedWithSipUri(friend: Friend, address: Address) {
+        val sipUri = address.asStringUriOnly()
         if (unknownContactsAvatarsMap.keys.contains(sipUri)) {
             Log.d("$TAG Found SIP URI [$sipUri] in unknownContactsAvatarsMap, removing it")
             val oldModel = unknownContactsAvatarsMap[sipUri]
@@ -332,7 +346,6 @@ class ContactsManager
                 "$TAG Found SIP URI [$sipUri] in knownContactsAvatarsMap, forcing presence update"
             )
             val oldModel = knownContactsAvatarsMap[sipUri]
-            val address = Factory.instance().createAddress(sipUri)
             oldModel?.update(address)
         } else {
             Log.i(
@@ -346,7 +359,7 @@ class ContactsManager
     @WorkerThread
     fun newContactAdded(friend: Friend) {
         for (sipAddress in friend.addresses) {
-            newContactAddedWithSipUri(friend, sipAddress.asStringUriOnly())
+            newContactAddedWithSipUri(friend, sipAddress)
         }
     }
 
