@@ -142,7 +142,7 @@
                     android:singleLine="true"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="@{viewModel.dimensionsContactName, default=`Jebediah Springfield`}" />
+                    android:text='@{ viewModel.hasContactName ? viewModel.dimensionsContactName : viewModel.dimensionsContactNumber, default=`Jebediah Springfield`}' />
 
                 <TextView
                     android:id="@+id/contact_number"
@@ -153,6 +153,7 @@
                     android:singleLine="true"
                     android:ellipsize="end"
                     android:maxLines="1"
+                    android:visibility='@{viewModel.hasContactName ? View.VISIBLE : View.GONE}'
                     android:text="@{viewModel.dimensionsContactNumber, default=`07987 123 4567`}"
                     />
 

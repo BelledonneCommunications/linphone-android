@@ -20,6 +20,7 @@
 package org.linphone.activities.main.history.viewmodels
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -50,6 +51,8 @@ class CallLogViewModel(val callLog: CallLog, private val isRelated: Boolean = fa
     val dimensionsContactNumberForegroundStyle = MutableLiveData<Int>()
     var dimensionsContactNameForegroundStyle = MutableLiveData<Int>()
     var dimensionsAttrTintColor = MutableLiveData<Int>()
+
+    val hasContactName = dimensionsContactName.map { x -> !x.isNullOrEmpty() }
 
     val statusIconResource: Int by lazy {
         if (callLog is CallHistoryItemViewModel) {
