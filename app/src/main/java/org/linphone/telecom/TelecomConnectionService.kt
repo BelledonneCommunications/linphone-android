@@ -257,7 +257,7 @@ class TelecomConnectionService : ConnectionService() {
         val callId = call.callLog.callId
         val connection = TelecomHelper.get().findConnectionForCallId(callId.orEmpty())
         if (connection == null) {
-            Log.e("[Telecom Connection Service] Failed to find connection for call id: $callId")
+            Log.w("[Telecom Connection Service] Failed to find connection for call id: $callId")
             return
         }
 
