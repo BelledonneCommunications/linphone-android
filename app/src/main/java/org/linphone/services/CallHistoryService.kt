@@ -86,16 +86,14 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
 
     private val userId: Observable<String> = authStateManager.user
         .filter { u -> u.id != null && u.id != AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER }
-        .distinctUntilChanged { user -> user.id ?: "" }
-        .map { user ->
-            user.id.toString()
-        }
+        .map { user -> user.id.toString() }
+        .distinctUntilChanged()
         .takeUntil(destroy)
 
-    private val historyRequest: Observable<ReportRequest> = Observable.merge(
+    private val historyRequest: Observable<ReportRequest> = Observable.combineLatest(
         userId,
         newReportRequest
-    )
+    ) { _, _ -> }
         .doOnNext {
             statusQueryAttempts = 0
         }
