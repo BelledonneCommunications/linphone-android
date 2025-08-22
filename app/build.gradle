@@ -295,6 +295,7 @@ dependencies {
     implementation 'net.openid:appauth:0.11.1'
     implementation "io.reactivex.rxjava3:rxjava:3.1.9"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-rx3:1.9.0"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0'
 
     //https://github.com/square/retrofit/blob/trunk/LICENSE.txt
     implementation 'com.squareup.retrofit2:retrofit:2.11.0'

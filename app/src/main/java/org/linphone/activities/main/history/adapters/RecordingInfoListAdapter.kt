@@ -53,7 +53,7 @@ class RecordingInfoListAdapter(
                 lifecycleOwner = viewLifecycleOwner
 
                 setClickListener {
-                    recordingSelected.value = Event(viewModel!!)
+                    recordingSelected.postValue(Event(viewModel!!))
                 }
 
                 executePendingBindings()
@@ -61,8 +61,7 @@ class RecordingInfoListAdapter(
         }
     }
 
-    private fun setClickListener(function: () -> Unit) {
-    }
+    private fun setClickListener(function: () -> Unit) { }
 
     override fun displayHeaderForPosition(position: Int): Boolean {
         return false

@@ -21,15 +21,15 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="52dp"
-        android:paddingHorizontal="15dp"
-        tools:background="@color/white_color">
+        android:onClick="@{clickListener}"
+        tools:background="?attr/backgroundColor">
 
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="@{ viewModel.isPlaying ? View.VISIBLE : View.GONE, default=gone }"
-            android:background="@color/voip_light_gray">
+            android:background="@color/voip_numpad_background">
         </FrameLayout>
 
         <ImageView
@@ -37,18 +37,20 @@
             android:visibility="@{ viewModel.isPlaying ? View.INVISIBLE : View.VISIBLE, default=visible }"
             android:layout_width="18dp"
             android:layout_height="match_parent"
-            android:layout_marginHorizontal="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="25dp"
             android:src="@drawable/recording_play_pause"
             app:layout_constraintStart_toStartOf="parent">
         </ImageView>
 
         <ImageView
-            android:id="@+id/stop_button"
+            android:id="@+id/playing_icon"
             android:visibility="@{ viewModel.isPlaying ? View.VISIBLE : View.INVISIBLE, default=invisible }"
-            android:layout_width="18dp"
+            android:layout_width="22dp"
             android:layout_height="match_parent"
-            android:layout_marginHorizontal="10dp"
-            android:src="@drawable/record_pause_default"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="25dp"
+            android:src="@drawable/speaker_announce"
             app:tint="@color/primary_color"
             app:layout_constraintStart_toStartOf="parent">
         </ImageView>
@@ -59,7 +61,7 @@
             android:orientation="vertical"
             android:paddingVertical="8dp"
             android:paddingHorizontal="10dp"
-            android:onClick="@{clickListener}"
+            android:layout_marginEnd="25dp"
             app:layout_constraintStart_toEndOf="@id/play_button"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent">

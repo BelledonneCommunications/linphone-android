@@ -69,4 +69,9 @@
     <color name="led_registration_in_progress">#ffa645</color>
     <color name="led_not_registered">#e1e1e1</color>
     <color name="led_error">#ff0000</color>
+
+
+    <color name="media_player_track_color">#96A5B1</color>
+    <color name="media_player_buffered_color">#475663</color>
+
 </resources>

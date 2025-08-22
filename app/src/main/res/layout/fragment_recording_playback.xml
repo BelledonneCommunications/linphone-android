@@ -49,7 +49,7 @@
                 android:singleLine="true"
                 android:ellipsize="end"
                 android:layout_margin="0dp"
-                android:text="Call Recordings"
+                android:text="Call Playback"
                 app:layout_constraintStart_toStartOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -67,6 +67,7 @@
             />
 
         <LinearLayout
+            android:id="@+id/session_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/session_title"
@@ -87,70 +88,46 @@
         </LinearLayout>
 
 
+        <TextView
+            android:id="@+id/recordings_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginStart="15dp"
+            app:layout_constraintTop_toBottomOf="@id/session_time"
+            android:textColor="@color/voip_gray"
+            android:text="Select a segment below to play"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recordingsList"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="15dp"
             android:layout_marginBottom="25dp"
-            app:layout_constraintBottom_toTopOf="@id/seek_bar" />
-
-        <SeekBar
-            android:id="@+id/seek_bar"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginHorizontal="25dp"
-            app:layout_constraintBottom_toTopOf="@id/play_pause_button">
-        </SeekBar>
-
-        <FrameLayout
-            android:id="@+id/play_pause_button"
-            android:layout_width="68dp"
-            android:layout_height="68dp"
-
-            android:layout_marginBottom="25dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_gravity="center"
-            android:background="@drawable/button_numpad_background">
-
-            <ImageView
-                android:id="@+id/play_button"
-                android:layout_width="28dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/recording_play_pause"
-                android:layout_gravity="center"
-                android:layout_marginStart="2dp"
-                app:layout_constraintStart_toStartOf="parent">
-            </ImageView>
-
-            <ImageView
-                android:id="@+id/pause_button"
-                android:layout_width="28dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/record_pause_default"
-                android:layout_gravity="center"
-                android:visibility="invisible"
-                app:tint="@color/primary_color">
-            </ImageView>
-        </FrameLayout>
+            app:layout_constraintTop_toBottomOf="@id/recordings_title"
+            app:layout_constraintBottom_toTopOf="@id/mediaPlayerView" />
 
 
         <androidx.media3.ui.PlayerView
             android:id="@+id/mediaPlayerView"
             android:layout_width="match_parent"
-            android:layout_height="160dp"
-            android:layout_marginVertical="20dp"
-            app:layout_constraintTop_toBottomOf="@id/session_title"
+            android:layout_height="120dp"
+            android:layout_margin="20dp"
+            android:layout_marginBottom="24dp"
             android:keepScreenOn="true"
             android:visibility="visible"
-            app:surface_type="texture_view"
-            app:player_layout_id="@layout/media_player_view"
             app:controller_layout_id="@layout/media_player_controls"
+            app:player_layout_id="@layout/media_player_view"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:show_timeout="0"
+            app:surface_type="texture_view"
             app:time_bar_scrubbing_enabled="true"
             app:use_controller="true"
-            bind:layout_editor_absoluteX="0dp"
-            bind:layout_editor_absoluteY="-1dp"/>
+            app:hide_on_touch="false"
+            app:hide_during_ads="false"
+            app:auto_show="true"
+            app:secondaryProgressTint="@color/primary_color"
+            bind:layout_editor_absoluteX="25dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -10,8 +10,8 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import java.io.File
+import kotlinx.coroutines.*
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.history.adapters.RecordingInfoListAdapter
@@ -33,26 +33,23 @@ class RecordingPlaybackFragment : GenericFragment<FragmentRecordingPlaybackBindi
 
     override fun getLayoutId(): Int = R.layout.fragment_recording_playback
 
+    @UnstableApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        mediaPlayer = ExoPlayer.Builder(requireContext()).build()
+
+        val playerView = view.findViewById<PlayerView>(R.id.mediaPlayerView)
+        playerView.player = mediaPlayer
+        playerView.showController()
 
         recordingsService = RecordingsService.getInstance(requireContext())
 
         binding.lifecycleOwner = viewLifecycleOwner
-
         binding.sharedMainViewModel = sharedViewModel
 
         viewModel = ViewModelProvider(this)[RecordingPlaybackViewModel::class.java]
         binding.viewModel = viewModel
-
-        val callLogViewModel = sharedViewModel.selectedHistoryItem.value
-        if (callLogViewModel != null) {
-            viewModel?.call?.value = callLogViewModel
-
-            if (callLogViewModel.callId != null) {
-                populateRecordingList(callLogViewModel.callId!!)
-            }
-        }
 
         adapter = RecordingInfoListAdapter(viewLifecycleOwner)
         binding.recordingsList.setHasFixedSize(true)
@@ -61,44 +58,56 @@ class RecordingPlaybackFragment : GenericFragment<FragmentRecordingPlaybackBindi
         val layoutManager = LinearLayoutManager(requireContext())
         binding.recordingsList.layoutManager = layoutManager
 
+        sharedViewModel.selectedHistoryItem.observe(viewLifecycleOwner) {
+                item ->
+            if (item == null) stopPlayback()
+        }
+
+        val callLogViewModel = sharedViewModel.selectedHistoryItem.value
+        if (callLogViewModel != null) {
+            viewModel.call.value = callLogViewModel
+
+            if (callLogViewModel.callId != null) {
+                runBlocking { populateRecordingList(callLogViewModel.callId!!) }
+            }
+        }
+
         viewModel.recordings.observe(viewLifecycleOwner) { recordings ->
-            adapter.submitList(recordings.map { r -> RecordingInfoViewModel(r) })
+            val viewModels = recordings.map { r -> RecordingInfoViewModel(r) }
+
+            if (viewModels.size == 1) playRecording(viewModels[0])
+
+            adapter.submitList(viewModels)
         }
 
         adapter.recordingSelected.observe(viewLifecycleOwner) { it ->
             it.consume { item -> playRecording(item) }
         }
-
-        mediaPlayer = ExoPlayer.Builder(requireContext()).build()
-
-        val playerView = view.findViewById<PlayerView>(R.id.mediaPlayerView)
-        playerView.player = mediaPlayer
     }
 
-    private fun populateRecordingList(sessionId: String) {
+    private suspend fun populateRecordingList(sessionId: String) {
         Log.d("Fetching recordings for $sessionId...")
 
-        runBlocking {
-            launch {
-                val recs = recordingsService.getRecordingInfoList(sessionId)
-                Log.d("Got ${recs.size} recordings.")
+        withContext(Dispatchers.IO) {
+            val recs = recordingsService.getRecordingInfoList(sessionId)
+            Log.d("Got ${recs.size} recordings.")
 
-                viewModel.recordings.value = recs
-            }
+            viewModel.recordings.postValue(recs)
         }
     }
 
     @OptIn(UnstableApi::class)
     private fun playRecording(item: RecordingInfoViewModel) {
         Log.d("Recording selected: $item")
-        viewModel.currentRecording.value = item
+
+        viewModel.currentRecording.postValue(item)
 
         // Mark the item as playing
         val recordings = adapter.currentList
         for (r in recordings) {
-            r.isPlaying.value = false
+            r.isPlaying.postValue(false)
         }
-        item.isPlaying.value = true
+        item.isPlaying.postValue(true)
 
         mediaPlayer.stop()
 
@@ -106,25 +115,56 @@ class RecordingPlaybackFragment : GenericFragment<FragmentRecordingPlaybackBindi
 
         if (sessionId == null || item.info.id == null) {
             Log.e("Unable to play recording - info is incomplete.")
-            viewModel.currentRecording.value = null
+            viewModel.currentRecording.postValue(null)
         } else {
-            try {
-                runBlocking {
-                    launch {
-                        val file = recordingsService.getRecordingAudio(sessionId, item.info.id)
+            GlobalScope.launch(Dispatchers.IO) {
+                try {
+                    val file = getAudio(sessionId, item.info.id)
 
+                    launch(Dispatchers.Main) {
                         val uri = file.toUri()
-                        // val sourceUri = RawResourceDataSource.buildRawResourceUri(R.raw.example)
                         val mediaItem = MediaItem.fromUri(uri)
                         mediaPlayer.setMediaItem(mediaItem)
                         mediaPlayer.prepare()
                         mediaPlayer.play()
                     }
+                } catch (ex: Exception) {
+                    Log.e(ex, "Failed to retrieve recording audio.")
+                    viewModel.currentRecording.postValue(null)
                 }
-            } catch (e: Exception) {
-                Log.e("Failed to retrieve recording audio.")
-                viewModel.currentRecording.value = null
             }
         }
+    }
+
+    private suspend fun getAudio(sessionId: String, recId: String): File {
+        return withContext(Dispatchers.IO) {
+            recordingsService.getRecordingAudio(sessionId, recId)
+        }
+    }
+
+    override fun onDetach() {
+        Log.d("[RecordingPlaybackFragment] onDetach")
+        super.onDetach()
+    }
+
+    override fun onPause() {
+        Log.d("[RecordingPlaybackFragment] onPause")
+        super.onPause()
+    }
+
+    override fun onStop() {
+        Log.d("[RecordingPlaybackFragment] onStop")
+        super.onStop()
+    }
+
+    override fun onDestroyView() {
+        Log.d("[RecordingPlaybackFragment] onDestroyView")
+        stopPlayback()
+        super.onDestroyView()
+    }
+
+    fun stopPlayback() {
+        mediaPlayer.stop()
+        mediaPlayer.release()
     }
 }

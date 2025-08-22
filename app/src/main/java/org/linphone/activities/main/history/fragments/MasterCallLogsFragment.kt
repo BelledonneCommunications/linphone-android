@@ -296,6 +296,10 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
 
         coreContext.core.resetMissedCallsCount()
         coreContext.notificationsManager.dismissMissedCallNotification()
+
+        onChildPanelClosed.observe(viewLifecycleOwner) {
+            sharedViewModel.selectedHistoryItem.postValue(null)
+        }
     }
 
     override fun onResume() {

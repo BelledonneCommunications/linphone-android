@@ -25,6 +25,7 @@ import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.doOnPreDraw
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import org.linphone.R
@@ -117,7 +118,7 @@ abstract class MasterFragment<T : ViewDataBinding, U : SelectionListAdapter<*, *
 
             requireActivity().onBackPressedDispatcher.addCallback(
                 viewLifecycleOwner,
-                SlidingPaneBackPressedCallback(slidingPane)
+                SlidingPaneBackPressedCallback(slidingPane, onChildPanelClosed)
             )
         }
 
@@ -133,9 +134,14 @@ abstract class MasterFragment<T : ViewDataBinding, U : SelectionListAdapter<*, *
         return adapter.itemCount
     }
 
+    val onChildPanelClosed = MutableLiveData<Unit>()
+
     abstract fun deleteItems(indexesOfItemToDelete: ArrayList<Int>)
 
-    class SlidingPaneBackPressedCallback(private val slidingPaneLayout: SlidingPaneLayout) :
+    class SlidingPaneBackPressedCallback(
+        private val slidingPaneLayout: SlidingPaneLayout,
+        private val onClosed: MutableLiveData<Unit>? = null
+    ) :
         OnBackPressedCallback(
             slidingPaneLayout.isSlideable && slidingPaneLayout.isOpen
         ),
@@ -162,6 +168,8 @@ abstract class MasterFragment<T : ViewDataBinding, U : SelectionListAdapter<*, *
         override fun onPanelClosed(panel: View) {
             Log.d("[Master Fragment] onPanelClosed")
             isEnabled = false
+
+            onClosed?.postValue(Unit)
         }
 
         override fun onPanelSlide(panel: View, slideOffset: Float) { }
