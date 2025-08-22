@@ -39,7 +39,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="52sp"
+        android:layout_height="wrap_content"
         android:background="?attr/backgroundColor"
         android:gravity="center_vertical"
         android:onClick="@{clickListener}"
