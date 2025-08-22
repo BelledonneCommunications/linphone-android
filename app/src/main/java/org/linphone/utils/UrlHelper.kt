@@ -21,8 +21,11 @@ class UrlHelper {
                 .blockingFirst()
                 .getOrNull()
 
-            if (brand == null) Log.w("User brand returned null.")
-            else Log.d("Brand loaded: ${brand.brandName}. Docs URL: ${brand.documentationRootUrl}")
+            if (brand == null) {
+                Log.w("User brand returned null.")
+            } else {
+                Log.d("Brand loaded: ${brand.brandName}. Docs URL: ${brand.documentationRootUrl}")
+            }
 
             val validLocales: ArrayList<String> = arrayListOf("en-us", "en-gb")
             if (!validLocales.contains(lang)) {

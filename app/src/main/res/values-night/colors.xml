@@ -2,4 +2,7 @@
 <resources>
     <color name="voip_numpad_background">#3F4656</color>
 
+
+    <color name="media_player_track_color">#475663</color>
+    <color name="media_player_buffered_color">#FFFFFF</color>
 </resources>
