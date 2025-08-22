@@ -6,6 +6,7 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.util.Calendar
 import java.util.Locale
 import java.util.concurrent.TimeUnit
+import org.threeten.bp.DayOfWeek
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZonedDateTime
@@ -61,7 +62,7 @@ class DateUtils {
                 return when {
                     midnightDate == midnightToday -> ""
                     midnightDate == yesterday -> "Yesterday"
-                    midnightDate > aWeekAgo -> getDayName(dateTime.dayOfWeek.value)
+                    midnightDate > aWeekAgo -> getDayName(dateTime.dayOfWeek)
                     useLastWeek && midnightDate > twoWeeksAgo -> "Last week"
                     else -> dateTime.format(formatter)
                 }
@@ -88,15 +89,15 @@ class DateUtils {
             }
         }
 
-        private fun getDayName(dayIndex: Int): String {
+        private fun getDayName(dayIndex: DayOfWeek): String {
             return when (dayIndex) {
-                0 -> "Sunday"
-                1 -> "Monday"
-                2 -> "Tuesday"
-                3 -> "Wednesday"
-                4 -> "Thursday"
-                5 -> "Friday"
-                6 -> "Saturday"
+                DayOfWeek.SUNDAY -> "Sunday"
+                DayOfWeek.MONDAY -> "Monday"
+                DayOfWeek.TUESDAY -> "Tuesday"
+                DayOfWeek.WEDNESDAY -> "Wednesday"
+                DayOfWeek.THURSDAY -> "Thursday"
+                DayOfWeek.FRIDAY -> "Friday"
+                DayOfWeek.SATURDAY -> "Saturday"
                 else -> throw IllegalArgumentException("Invalid day index")
             }
         }
