@@ -26,7 +26,6 @@ Group changes to describe their impact on the project, as follows:
   - one to hide contacts that have neither a SIP address nor a phone number
   - one to let app auto-answer call with video sending already enabled
 - Added a vu meter for recording & playback volumes (must be enabled in developer settings)
-- Added a way to go to Help & Troubleshooting pages from Assistant
 - Added support for HDMI audio devices
 
 ### Changed
@@ -36,6 +35,17 @@ Group changes to describe their impact on the project, as follows:
 - Reworked some settings (moved calls related ones from advanced settings to advanced calls settings)
 - Increased shared media preview size in chat
 - Un-encrypted conversation warning will be more visible for accounts that support end-to-end encrypted conversations
+
+## [6.0.16] - 2025-08-25
+
+## Added
+- Access to Help/Troubleshooting pages from Assistant
+
+## Fixed
+- Some Core methods being called from UI thread causing either a crash or a deadlock sometimes
+- Scrolling issue when doing a search in a conversation with only one result
+- Contacts not updated after body less presence notify was received
+- VFS issue due to encrypted.pref file being backed up by Android OS
 
 ## [6.0.15] - 2025-08-11
 
