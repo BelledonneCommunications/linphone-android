@@ -10,6 +10,17 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [6.0.16] - 2025-08-25
+
+## Added
+- Access to Help/Troubleshooting pages from Assistant
+
+## Fixed
+- Some Core methods being called from UI thread causing either a crash or a deadlock sometimes
+- Scrolling issue when doing a search in a conversation with only one result
+- Contacts not updated after body less presence notify was received
+- VFS issue due to encrypted.pref file being backed up by Android OS
+
 ## [6.0.15] - 2025-08-11
 
 ### Fixed
