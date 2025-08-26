@@ -322,13 +322,13 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
             Log.i("[Dialer] Creating Telecom Helper")
             if (Compatibility.hasTelecomManagerFeature(requireContext())) {
                 TelecomHelper.create(requireContext())
-            }
-            else {
-                Log.w("[Dialer] Telecom Helper can't be created, device doesn't support connection service!")
+            } else {
+                Log.w(
+                    "[Dialer] Telecom Helper can't be created, device doesn't support connection service!"
+                )
                 return
             }
-        }
-        else {
+        } else {
             Log.e("[Dialer] Telecom Manager was already created ?!")
         }
         corePreferences.useTelecomManager = true
