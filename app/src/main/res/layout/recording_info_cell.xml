@@ -20,10 +20,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="wrap_content"
         android:onClick="@{clickListener}"
         tools:background="?attr/backgroundColor">
-
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -36,33 +35,39 @@
             android:id="@+id/play_button"
             android:visibility="@{ viewModel.isPlaying ? View.INVISIBLE : View.VISIBLE, default=visible }"
             android:layout_width="18dp"
-            android:layout_height="match_parent"
+            android:layout_height="18dp"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="25dp"
             android:src="@drawable/recording_play_pause"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
         </ImageView>
 
         <ImageView
             android:id="@+id/playing_icon"
             android:visibility="@{ viewModel.isPlaying ? View.VISIBLE : View.INVISIBLE, default=invisible }"
             android:layout_width="22dp"
-            android:layout_height="match_parent"
+            android:layout_height="22dp"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="25dp"
             android:src="@drawable/speaker_announce"
             app:tint="@color/primary_color"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
         </ImageView>
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="52sp"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingVertical="8dp"
             android:paddingHorizontal="10dp"
             android:layout_marginEnd="25dp"
+            android:layout_marginVertical="0dp"
             app:layout_constraintStart_toEndOf="@id/play_button"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
