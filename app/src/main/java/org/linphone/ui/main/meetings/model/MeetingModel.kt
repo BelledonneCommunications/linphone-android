@@ -49,6 +49,8 @@ class MeetingModel
 
     val isAfterToday = TimestampUtils.isAfterToday(timestamp)
 
+    val hasNotStartedYet = timestamp * 1000 > System.currentTimeMillis()
+
     private val startTime = TimestampUtils.timeToString(timestamp)
 
     private val endTime = TimestampUtils.timeToString(timestamp + (conferenceInfo.duration * 60))

@@ -103,7 +103,7 @@
 
             <include
                 layout="@layout/operation_in_progress"
-                bind:visibility="@{viewModel.operationInProgress}" />
+                bind:visibility="@{viewModel.cancelMeetingViewModel.operationInProgress}" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

@@ -42,6 +42,7 @@
     <string name="dialog_remove">Retirer</string>
     <string name="dialog_confirm">Confirmer</string>
     <string name="dialog_understood">J\'ai compris</string>
+    <string name="dialog_do_not_cancel">Ne pas annuler</string>
 
     <!-- Related to Android notifications -->
     <string name="notification_channel_call_name">Notifications d\'appels en cours</string>
@@ -643,8 +644,8 @@
     <string name="meeting_info_not_found_toast">Réunion introuvable !</string>
     <string name="meeting_schedule_description_title">Description</string>
     <string name="meeting_schedule_edit_title">Modifier la réunion</string>
-    <string name="meeting_schedule_cancel_dialog_title">Annuler la réunion?</string>
-    <string name="meeting_schedule_cancel_dialog_message">Voulez-vous annuler la réunion et envoyer une notification aux participants ?</string>
+    <string name="meeting_schedule_notify_cancel_dialog_title">La réunion va être annulée</string>
+    <string name="meeting_schedule_notify_cancel_dialog_message">Voulez-vous envoyer une notification aux participants ?</string>
     <string name="meeting_cancel_action_label">Annuler la réunion</string>
     <string name="meeting_schedule_delete_dialog_title">Supprimer la réunion ?</string>
     <string name="meeting_schedule_delete_dialog_message">Voulez-vous supprimer la réunion ?</string>

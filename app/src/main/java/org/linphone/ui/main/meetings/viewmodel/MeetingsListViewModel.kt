@@ -23,21 +23,15 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.Account
 import org.linphone.core.AccountListenerStub
-import org.linphone.core.Address
 import org.linphone.core.ConferenceInfo
-import org.linphone.core.ConferenceScheduler
-import org.linphone.core.ConferenceSchedulerListenerStub
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.meetings.model.MeetingListItemModel
 import org.linphone.ui.main.meetings.model.MeetingModel
 import org.linphone.ui.main.viewmodel.AbstractMainViewModel
-import org.linphone.utils.Event
-import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
 
 class MeetingsListViewModel
@@ -51,11 +45,7 @@ class MeetingsListViewModel
 
     val fetchInProgress = MutableLiveData<Boolean>()
 
-    val operationInProgress = MutableLiveData<Boolean>()
-
-    val conferenceCancelledEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
-    }
+    val cancelMeetingViewModel = CancelMeetingViewModel()
 
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
@@ -78,51 +68,7 @@ class MeetingsListViewModel
         }
     }
 
-    private val conferenceSchedulerListener = object : ConferenceSchedulerListenerStub() {
-        override fun onStateChanged(
-            conferenceScheduler: ConferenceScheduler,
-            state: ConferenceScheduler.State?
-        ) {
-            Log.i("$TAG Conference scheduler state is $state")
-            if (state == ConferenceScheduler.State.Ready) {
-                Log.i(
-                    "$TAG Conference ${conferenceScheduler.info?.subject} cancelled"
-                )
-                val params = LinphoneUtils.getChatRoomParamsToCancelMeeting()
-                if (params != null && !corePreferences.disableChat) {
-                    conferenceScheduler.sendInvitations(params)
-                } else {
-                    operationInProgress.postValue(false)
-                }
-            } else if (state == ConferenceScheduler.State.Error) {
-                operationInProgress.postValue(false)
-            }
-        }
-
-        override fun onInvitationsSent(
-            conferenceScheduler: ConferenceScheduler,
-            failedInvitations: Array<out Address>?
-        ) {
-            if (failedInvitations?.isNotEmpty() == true) {
-                for (address in failedInvitations) {
-                    Log.e(
-                        "$TAG Conference cancelled ICS wasn't sent to participant ${address.asStringUriOnly()}"
-                    )
-                }
-            } else {
-                Log.i(
-                    "$TAG Conference cancelled ICS successfully sent to all participants"
-                )
-            }
-            conferenceScheduler.removeListener(this)
-
-            operationInProgress.postValue(false)
-            conferenceCancelledEvent.postValue(Event(true))
-        }
-    }
-
     init {
-        operationInProgress.value = false
         fetchInProgress.value = true
 
         coreContext.postOnCoreThread { core ->
@@ -147,19 +93,6 @@ class MeetingsListViewModel
     override fun filter() {
         coreContext.postOnCoreThread {
             computeMeetingsListFromLocallyStoredInfo()
-        }
-    }
-
-    @UiThread
-    fun cancelMeeting(conferenceInfo: ConferenceInfo) {
-        coreContext.postOnCoreThread { core ->
-            Log.w("$TAG Cancelling conference info [${conferenceInfo.uri?.asStringUriOnly()}]")
-            operationInProgress.postValue(true)
-            val conferenceScheduler = LinphoneUtils.createConferenceScheduler(
-                LinphoneUtils.getDefaultAccount()
-            )
-            conferenceScheduler.addListener(conferenceSchedulerListener)
-            conferenceScheduler.cancelConference(conferenceInfo)
         }
     }
 

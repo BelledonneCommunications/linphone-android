@@ -223,14 +223,16 @@ class MeetingFragment : SlidingPaneChildFragment() {
         )
 
         val isUserOrganizer = viewModel.isEditable.value == true && viewModel.isCancelled.value == false
-        popupView.cancelInsteadOfDelete = isUserOrganizer
+        val hasNotStartedYet = viewModel.hasNotStartedYet.value == true
+        val showCancelActionInsteadOfDelete = isUserOrganizer && hasNotStartedYet
+        popupView.cancelInsteadOfDelete = showCancelActionInsteadOfDelete
         popupView.setDeleteClickListener {
-            if (isUserOrganizer) {
-                // In case we are organizer of the meeting, ask user confirmation before cancelling it
+            if (isUserOrganizer && hasNotStartedYet) {
+                Log.i("$TAG Meeting start hasn't started yet and we are the organizer, asking user if it should be cancelled")
                 showCancelMeetingDialog()
             } else {
-                // If we're not organizer, ask user confirmation of removing itself from participants & deleting it locally
-                showDeleteMeetingDialog()
+                Log.i("$TAG Deleting meeting [${viewModel.sipUri}]")
+                viewModel.delete()
             }
             popupWindow.dismiss()
         }
@@ -299,28 +301,16 @@ class MeetingFragment : SlidingPaneChildFragment() {
 
         model.confirmEvent.observe(viewLifecycleOwner) {
             it.consume {
-                viewModel.cancel()
+                Log.i("$TAG Cancelling meeting [${viewModel.sipUri}] and sending notification to participants")
+                viewModel.cancel(true)
                 dialog.dismiss()
             }
         }
 
-        dialog.show()
-    }
-
-    private fun showDeleteMeetingDialog() {
-        Log.i("$TAG Meeting is not editable or already cancelled, asking whether to delete it or not")
-        val model = ConfirmationDialogModel()
-        val dialog = DialogUtils.getDeleteMeetingDialog(requireContext(), model)
-
-        model.dismissEvent.observe(viewLifecycleOwner) {
+        model.alternativeChoiceEvent.observe(viewLifecycleOwner) {
             it.consume {
-                dialog.dismiss()
-            }
-        }
-
-        model.confirmEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                viewModel.delete()
+                Log.i("$TAG Cancelling meeting [${viewModel.sipUri}] without notifying participants")
+                viewModel.cancel(false)
                 dialog.dismiss()
             }
         }

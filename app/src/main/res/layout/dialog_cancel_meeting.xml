@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:paddingTop="@dimen/dialog_top_bottom_margin"
-            android:text="@string/meeting_schedule_cancel_dialog_title"
+            android:text="@string/meeting_schedule_notify_cancel_dialog_title"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintBottom_toTopOf="@id/message"
             app:layout_constraintStart_toStartOf="@id/dialog_background"
@@ -52,7 +52,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
             android:layout_marginTop="10dp"
-            android:text="@string/meeting_schedule_cancel_dialog_message"
+            android:text="@string/meeting_schedule_notify_cancel_dialog_message"
             android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@id/cancel"
             app:layout_constraintStart_toStartOf="@id/dialog_background"
@@ -62,7 +62,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{() -> viewModel.confirm()}"
             style="@style/primary_dialog_button_label_style"
-            android:id="@+id/confirm"
+            android:id="@+id/send_notification"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
@@ -72,9 +72,25 @@
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="@id/dialog_background"
-            app:layout_constraintEnd_toStartOf="@id/cancel"
+            app:layout_constraintEnd_toStartOf="@id/dont_send_notification"
             app:layout_constraintTop_toTopOf="@id/cancel"
             app:layout_constraintBottom_toBottomOf="@id/cancel"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{() -> viewModel.alternativeChoice()}"
+            style="@style/secondary_dialog_button_label_style"
+            android:id="@+id/dont_send_notification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:text="@string/dialog_no"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintStart_toEndOf="@id/send_notification"
+            app:layout_constraintEnd_toStartOf="@id/cancel"
+            app:layout_constraintTop_toBottomOf="@id/message"
+            app:layout_constraintBottom_toTopOf="@id/anchor"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{() -> viewModel.dismiss()}"
@@ -85,9 +101,9 @@
             android:layout_marginTop="32dp"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
-            android:text="@string/dialog_no"
+            android:text="@string/dialog_do_not_cancel"
             app:layout_constrainedWidth="true"
-            app:layout_constraintStart_toEndOf="@id/confirm"
+            app:layout_constraintStart_toEndOf="@id/dont_send_notification"
             app:layout_constraintEnd_toEndOf="@id/dialog_background"
             app:layout_constraintTop_toBottomOf="@id/message"
             app:layout_constraintBottom_toTopOf="@id/anchor"/>

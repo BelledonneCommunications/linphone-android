@@ -24,24 +24,18 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import java.util.TimeZone
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.LinphoneApplication.Companion.corePreferences
-import org.linphone.core.Address
 import org.linphone.core.ConferenceInfo
-import org.linphone.core.ConferenceScheduler
-import org.linphone.core.ConferenceSchedulerListenerStub
 import org.linphone.core.Factory
 import org.linphone.core.Participant
 import org.linphone.core.tools.Log
-import org.linphone.ui.GenericViewModel
 import org.linphone.ui.main.meetings.model.ParticipantModel
 import org.linphone.ui.main.meetings.model.TimeZoneModel
 import org.linphone.utils.Event
-import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
 
 class MeetingViewModel
     @UiThread
-    constructor() : GenericViewModel() {
+    constructor() : CancelMeetingViewModel() {
     companion object {
         private const val TAG = "[Meeting ViewModel]"
     }
@@ -60,6 +54,8 @@ class MeetingViewModel
 
     val timezone = MutableLiveData<String>()
 
+    val hasNotStartedYet = MutableLiveData<Boolean>()
+
     val description = MutableLiveData<String>()
 
     val speakers = MutableLiveData<ArrayList<ParticipantModel>>()
@@ -73,64 +69,11 @@ class MeetingViewModel
     val startTimeStamp = MutableLiveData<Long>()
     val endTimeStamp = MutableLiveData<Long>()
 
-    val operationInProgress = MutableLiveData<Boolean>()
-
-    val conferenceCancelledEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
-    }
-
     val conferenceInfoDeletedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
 
-    private val conferenceSchedulerListener = object : ConferenceSchedulerListenerStub() {
-        override fun onStateChanged(
-            conferenceScheduler: ConferenceScheduler,
-            state: ConferenceScheduler.State?
-        ) {
-            Log.i("$TAG Conference scheduler state is $state")
-            if (state == ConferenceScheduler.State.Ready) {
-                Log.i(
-                    "$TAG Conference ${conferenceScheduler.info?.subject} cancelled"
-                )
-                val params = LinphoneUtils.getChatRoomParamsToCancelMeeting()
-                if (params != null && !corePreferences.disableChat) {
-                    conferenceScheduler.sendInvitations(params)
-                } else {
-                    operationInProgress.postValue(false)
-                }
-            } else if (state == ConferenceScheduler.State.Error) {
-                operationInProgress.postValue(false)
-            }
-        }
-
-        override fun onInvitationsSent(
-            conferenceScheduler: ConferenceScheduler,
-            failedInvitations: Array<out Address>?
-        ) {
-            if (failedInvitations?.isNotEmpty() == true) {
-                for (address in failedInvitations) {
-                    Log.e(
-                        "$TAG Conference cancelled ICS wasn't sent to participant ${address.asStringUriOnly()}"
-                    )
-                }
-            } else {
-                Log.i(
-                    "$TAG Conference cancelled ICS successfully sent to all participants"
-                )
-            }
-            conferenceScheduler.removeListener(this)
-
-            operationInProgress.postValue(false)
-            conferenceCancelledEvent.postValue(Event(true))
-        }
-    }
-
     private lateinit var conferenceInfo: ConferenceInfo
-
-    init {
-        operationInProgress.value = false
-    }
 
     @UiThread
     fun findConferenceInfo(meeting: ConferenceInfo?, uri: String) {
@@ -183,21 +126,6 @@ class MeetingViewModel
     }
 
     @UiThread
-    fun cancel() {
-        coreContext.postOnCoreThread { core ->
-            if (::conferenceInfo.isInitialized) {
-                Log.i("$TAG Cancelling conference information [$conferenceInfo]")
-                operationInProgress.postValue(true)
-                val conferenceScheduler = LinphoneUtils.createConferenceScheduler(
-                    LinphoneUtils.getDefaultAccount()
-                )
-                conferenceScheduler.addListener(conferenceSchedulerListener)
-                conferenceScheduler.cancelConference(conferenceInfo)
-            }
-        }
-    }
-
-    @UiThread
     fun refreshInfo(uri: String) {
         coreContext.postOnCoreThread { core ->
             Log.i("$TAG Looking for conference info with URI [$uri]")
@@ -243,6 +171,7 @@ class MeetingViewModel
             endTimeStamp.postValue(end * 1000)
             val displayedTimestamp = "$date | $startTime - $endTime"
             dateTime.postValue(displayedTimestamp)
+            hasNotStartedYet.postValue(timestamp * 1000 > System.currentTimeMillis())
             Log.i("$TAG Conference is scheduled for [$displayedTimestamp]")
 
             timezone.postValue(TimeZoneModel(TimeZone.getDefault()).toString())
@@ -310,5 +239,12 @@ class MeetingViewModel
         isBroadcast.postValue(!allSpeaker)
         speakers.postValue(speakersList)
         participants.postValue(participantsList)
+    }
+
+    @UiThread
+    fun cancel(sendNotification: Boolean) {
+        if (::conferenceInfo.isInitialized) {
+            cancelMeeting(conferenceInfo, sendNotification)
+        }
     }
 }
