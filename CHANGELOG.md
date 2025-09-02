@@ -18,7 +18,8 @@ Group changes to describe their impact on the project, as follows:
 - Support right click on some items to open bottom sheet/menu
 - Added toggle speaker action in active call notification
 - Increased text size for chat messages that only contains emoji(s)
-- Handle read-only CardDAV address books, disable edit/delete menus for contacts in read-only FriendList.
+- Handle read-only CardDAV address books, disable edit/delete menus for contacts in read-only FriendList
+- Added swipe/pull to refresh on contacts list of a CardDAV addressbook has been configured to force the synchronization
 - Show information to user when filtering contacts doesn't show them all and user may have to refine it's search
 - Show Android notification when an account goes to failed registration state (only when background mode is enabled)
 - New settings:
@@ -35,6 +36,15 @@ Group changes to describe their impact on the project, as follows:
 - Reworked some settings (moved calls related ones from advanced settings to advanced calls settings)
 - Increased shared media preview size in chat
 - Un-encrypted conversation warning will be more visible for accounts that support end-to-end encrypted conversations
+
+## [6.0.17] - 2025-09-02
+
+### Changed
+- Portuguese translation updated from Weblate (still not complete)
+
+### Fixed
+- Vibrator not stopped when call is terminated sometimes (SDK fix)
+- Chat conversation not visible sometimes (SDK fix)
 
 ## [6.0.16] - 2025-08-25
 
