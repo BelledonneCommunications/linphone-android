@@ -10,6 +10,15 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [6.0.17] - 2025-09-02
+
+### Changed
+- Portuguese translation updated from Weblate (still not complete)
+
+### Fixed
+- Vibrator not stopped when call is terminated sometimes (SDK fix)
+- Chat conversation not visible sometimes (SDK fix)
+
 ## [6.0.16] - 2025-08-25
 
 ## Added
