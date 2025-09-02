@@ -33,6 +33,8 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.contacts.ContactsManager.ContactsListener
 import org.linphone.core.Friend
+import org.linphone.core.FriendList
+import org.linphone.core.FriendListListenerStub
 import org.linphone.core.MagicSearch
 import org.linphone.core.MagicSearchListenerStub
 import org.linphone.core.SearchResult
@@ -73,6 +75,10 @@ class ContactsListViewModel
         MutableLiveData<Event<Pair<String, File>>>()
     }
 
+    val cardDavSynchronizationCompletedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     private var previousFilter = "NotSet"
     private var domainFilter = ""
 
@@ -103,6 +109,22 @@ class ContactsListViewModel
         override fun onSearchResultsReceived(magicSearch: MagicSearch) {
             Log.i("$TAG Magic search favourites contacts available")
             processMagicSearchResults(magicSearch.lastSearch, favourites = true)
+        }
+    }
+
+    private val friendListListener = object : FriendListListenerStub() {
+        @WorkerThread
+        override fun onSyncStatusChanged(
+            friendList: FriendList,
+            status: FriendList.SyncStatus?,
+            message: String?
+        ) {
+            Log.i("$TAG Synchronization status changed to [$status] for friend list [${friendList.displayName}] with message [$message]")
+            if (status == FriendList.SyncStatus.Successful || status == FriendList.SyncStatus.Failure) {
+                friendList.removeListener(this)
+                cardDavSynchronizationCompletedEvent.postValue(Event(true))
+            }
+            // TODO FIXME: alert user when failure ?
         }
     }
 
@@ -262,6 +284,19 @@ class ContactsListViewModel
             contactModel.friend.remove()
             coreContext.contactsManager.notifyContactsListChanged()
             showGreenToast(R.string.contact_deleted_toast, R.drawable.warning_circle)
+        }
+    }
+
+    @UiThread
+    fun refreshCardDavContacts() {
+        coreContext.postOnCoreThread { core ->
+            for (friendList in core.friendsLists) {
+                if (friendList.type == FriendList.Type.CardDAV) {
+                    Log.i("$TAG Found CardDAV friend list [${friendList.displayName}], starting update")
+                    friendList.addListener(friendListListener)
+                    friendList.synchronizeFriendsFromServer()
+                }
+            }
         }
     }
 

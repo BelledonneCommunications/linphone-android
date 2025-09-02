@@ -220,6 +220,7 @@ dependencies {
     implementation(libs.androidx.telecom)
     implementation(libs.androidx.media)
     implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.swiperefreshlayout)
     implementation(libs.androidx.slidingpanelayout)
     implementation(libs.androidx.window)
     implementation(libs.androidx.gridlayout)

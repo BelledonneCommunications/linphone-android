@@ -16,6 +16,7 @@ splashscreen = "1.2.0-rc01"
 telecom = "1.0.1"
 media = "1.7.1"
 recyclerview = "1.4.0"
+swipeRefreshLayout = "1.1.0"
 slidingpanelayout = "1.2.0"
 window = "1.4.0"
 gridlayout = "1.1.0"
@@ -43,6 +44,7 @@ androidx-splashscreen = { group = "androidx.core", name = "core-splashscreen", v
 androidx-telecom = { group = "androidx.core", name = "core-telecom", version.ref = "telecom" }
 androidx-media = { group = "androidx.media", name = "media", version.ref = "media" }
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swipeRefreshLayout" }
 androidx-slidingpanelayout = { group = "androidx.slidingpanelayout", name = "slidingpanelayout", version.ref = "slidingpanelayout" }
 androidx-window = { group = "androidx.window", name = "window", version.ref = "window" }
 androidx-gridlayout = { group = "androidx.gridlayout", name = "gridlayout", version.ref = "gridlayout" }

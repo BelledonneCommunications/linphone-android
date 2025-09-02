@@ -40,9 +40,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import org.linphone.LinphoneApplication.Companion.coreContext
 import java.io.File
 import org.linphone.R
+import org.linphone.core.FriendList
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactsListFilterPopupMenuBinding
 import org.linphone.databinding.ContactsListFragmentBinding
@@ -79,6 +82,11 @@ class ContactsListFragment : AbstractMainFragment() {
         } else {
             Log.w("$TAG READ_CONTACTS permission has been denied")
         }
+    }
+
+    private val swipeToRefreshListener = SwipeRefreshLayout.OnRefreshListener {
+        Log.i("$TAG Swipe to refresh triggered, updating CardDAV friend lists")
+        listViewModel.refreshCardDavContacts()
     }
 
     override fun onDefaultAccountChanged() {
@@ -121,6 +129,10 @@ class ContactsListFragment : AbstractMainFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = listViewModel
         observeToastEvents(listViewModel)
+
+        // Disabled by default, may be enabled in onResume()
+        binding.contactsListSwipeRefresh.isEnabled = false
+        binding.contactsListSwipeRefresh.setOnRefreshListener(swipeToRefreshListener)
 
         binding.contactsList.setHasFixedSize(true)
         binding.contactsList.layoutManager = LinearLayoutManager(requireContext())
@@ -170,6 +182,13 @@ class ContactsListFragment : AbstractMainFragment() {
                     "$TAG Friend [$contactName] was exported as vCard file [${file.absolutePath}], sharing it"
                 )
                 shareContact(contactName, file)
+            }
+        }
+
+        listViewModel.cardDavSynchronizationCompletedEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG CardDAV synchronization has completed")
+                binding.contactsListSwipeRefresh.isRefreshing = false
             }
         }
 
@@ -235,6 +254,25 @@ class ContactsListFragment : AbstractMainFragment() {
 
         bottomSheetDialog?.dismiss()
         bottomSheetDialog = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        coreContext.postOnCoreThread { core ->
+            val cardDavFriendList = core.friendsLists.find {
+                it.type == FriendList.Type.CardDAV
+            }
+            val cardDavFriendListFound = cardDavFriendList != null
+            if (cardDavFriendListFound) {
+                Log.i("$TAG CardDAV friend list [${cardDavFriendList.displayName}] found, enabling swipe to refresh")
+            } else {
+                Log.i("$TAG No CardDAV friend list was found, disabling swipe to refresh")
+            }
+            coreContext.postOnMainThread {
+                binding.contactsListSwipeRefresh.isEnabled = cardDavFriendListFound
+            }
+        }
     }
 
     private fun configureAdapter(adapter: ContactsListAdapter) {

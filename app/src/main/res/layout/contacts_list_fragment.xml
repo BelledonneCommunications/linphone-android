@@ -118,11 +118,18 @@
                         android:gravity="center"
                         android:visibility="@{viewModel.showResultsLimitReached ? View.VISIBLE : View.GONE, default=gone}"/>
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/contactsList"
+                    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                        android:id="@+id/contactsListSwipeRefresh"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginTop="4dp" />
+                        android:layout_marginTop="4dp">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/contactsList"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+
+                    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
                 </LinearLayout>
 
