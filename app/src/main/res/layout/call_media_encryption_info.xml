@@ -145,7 +145,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:text="@{viewModel.isZrtp ? @string/call_zrtp_end_to_end_encrypted : @string/call_srtp_point_to_point_encrypted, default=@string/call_zrtp_end_to_end_encrypted}"
+            android:text="@{viewModel.isZrtp ? (viewModel.conferenceModel.isCurrentCallInConference ? @string/call_zrtp_point_to_point_encrypted : @string/call_zrtp_end_to_end_encrypted) : @string/call_srtp_point_to_point_encrypted, default=@string/call_zrtp_end_to_end_encrypted}"
             android:textSize="12sp"
             android:textColor="@color/blue_info_500"
             android:maxLines="1"

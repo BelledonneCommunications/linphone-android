@@ -746,6 +746,7 @@
     <string name="call_state_ended">Ended</string>
     <string name="call_waiting_for_encryption_info">Waiting for encryption…</string>
     <string name="call_zrtp_end_to_end_encrypted">End-to-end encrypted by ZRTP</string>
+    <string name="call_zrtp_point_to_point_encrypted">Point-to-point encrypted by ZRTP</string>
     <string name="call_do_zrtp_sas_validation_again">Validate ZRTP SAS again</string>
     <string name="call_zrtp_sas_validation_required">Validation required</string>
     <string name="call_srtp_point_to_point_encrypted">Point-to-point encrypted by SRTP</string>
