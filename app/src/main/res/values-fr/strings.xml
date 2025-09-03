@@ -638,6 +638,7 @@
     <string name="call_state_ended">Terminé</string>
     <string name="call_waiting_for_encryption_info">En attente du chiffrement…</string>
     <string name="call_zrtp_end_to_end_encrypted">Appel chiffré de bout en bout</string>
+    <string name="call_zrtp_point_to_point_encrypted">Appel chiffré de point à point</string>
     <string name="call_do_zrtp_sas_validation_again">Faire la vérification à nouveau</string>
     <string name="call_zrtp_sas_validation_required">Vérification nécessaire</string>
     <string name="call_srtp_point_to_point_encrypted">Appel chiffré de point à point</string>
