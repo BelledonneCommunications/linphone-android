@@ -235,4 +235,8 @@
         <item name="android:autoSizeMinTextSize">8sp</item>
         <item name="android:autoSizeStepGranularity">1sp</item>
     </style>
+    <style name="numpad_button_style">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">@dimen/call_dtmf_button_size</item>
+    </style>
 </resources>

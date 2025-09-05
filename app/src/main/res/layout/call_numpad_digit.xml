@@ -15,7 +15,7 @@
         android:onClick="@{() -> model.onDigitClicked(digit)}"
         android:layout_width="@dimen/call_dtmf_button_size"
         android:layout_height="@dimen/call_dtmf_button_size"
-        android:background="@drawable/in_call_button_background_red">
+        android:background="@drawable/in_call_numpad_button_background">
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"

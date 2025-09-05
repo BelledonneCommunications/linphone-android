@@ -68,6 +68,7 @@
     <dimen name="sliding_accept_decline_call_margin">10dp</dimen>
     <dimen name="call_button_icon_padding">15dp</dimen>
     <dimen name="call_dtmf_button_size">65dp</dimen>
+    <dimen name="call_dtmf_button_max_width">120dp</dimen>
     <dimen name="call_extra_button_top_margin">30dp</dimen>
 
     <dimen name="call_video_preview_max_size">200dp</dimen>
