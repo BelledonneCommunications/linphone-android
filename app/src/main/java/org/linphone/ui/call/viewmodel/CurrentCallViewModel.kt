@@ -617,6 +617,7 @@ class CurrentCallViewModel
                 coreContext.answerCall(call)
             } else {
                 Log.e("$TAG No call found in incoming state, can't answer any!")
+                finishActivityEvent.postValue(Event(true))
             }
         }
     }
@@ -628,6 +629,9 @@ class CurrentCallViewModel
                 Log.i("$TAG Terminating call [${currentCall.remoteAddress.asStringUriOnly()}]")
                 terminatedByUser = true
                 coreContext.terminateCall(currentCall)
+            } else {
+                Log.e("$TAG No call to decline!")
+                finishActivityEvent.postValue(Event(true))
             }
         }
     }
