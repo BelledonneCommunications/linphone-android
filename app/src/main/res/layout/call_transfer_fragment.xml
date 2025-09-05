@@ -214,6 +214,22 @@
                 app:layout_constraintTop_toBottomOf="@id/search_bar"
                 app:layout_constraintBottom_toBottomOf="parent" />
 
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/show_numpad"
+                android:onClick="@{() -> viewModel.switchBetweenKeyboardAndNumpad()}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
+                android:layout_margin="16dp"
+                android:src="@drawable/numpad"
+                android:contentDescription="@string/content_description_show_numpad"
+                android:visibility="@{viewModel.isNumpadVisible || viewModel.multipleSelectionMode ? View.GONE : View.VISIBLE}"
+                app:tint="?attr/color_on_main"
+                app:backgroundTint="?attr/color_main1_500"
+                app:shapeAppearanceOverlay="@style/rounded"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <include
