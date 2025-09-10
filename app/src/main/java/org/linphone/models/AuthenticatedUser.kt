@@ -37,4 +37,10 @@ class AuthenticatedUser(
             )
         }
     }
+
+    fun hasValidId(): Boolean {
+        return id != "" &&
+            id != UNINTIALIZED_AUTHENTICATEDUSER &&
+            id != UNINTIALIZED_ACCESS_TOKEN
+    }
 }
