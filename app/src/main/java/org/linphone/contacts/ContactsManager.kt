@@ -163,19 +163,25 @@ class ContactsManager
             if (friendList.isSubscriptionBodyless) {
                 Log.i("$TAG Bodyless friendlist [${friendList.displayName}] presence received")
 
+                var atLeastOneFriendAdded = false
                 for (friend in friends) {
                     if (friend != null) {
                         val address = friend.address
                         if (address != null) {
-                            Log.d(
+                            Log.i(
                                 "$TAG Newly discovered SIP Address [${address.asStringUriOnly()}] for friend [${friend.name}] in bodyless list [${friendList.displayName}]"
                             )
                             newContactAddedWithSipUri(friend, address)
+                            atLeastOneFriendAdded = true
                         }
                     }
                 }
 
-                notifyContactsListChanged()
+                if (atLeastOneFriendAdded) {
+                    notifyContactsListChanged()
+                } else {
+                    Log.w("$TAG No new friend detected in the received bodyless friendlist, not refreshing contacts in app")
+                }
             }
         }
 
