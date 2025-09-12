@@ -193,6 +193,7 @@
     <!-- Side menu -->
     <string name="drawer_menu_manage_account">Manage the profile</string>
     <string name="drawer_menu_account_connection_status_connected">Connected</string>
+    <string name="drawer_menu_account_connection_status_disconnected">Disconnected</string>
     <string name="drawer_menu_account_connection_status_refreshing">Refreshing</string>
     <string name="drawer_menu_account_connection_status_cleared">Disabled</string>
     <string name="drawer_menu_account_connection_status_progress">Connecting…</string>
@@ -373,6 +374,7 @@
     <string name="manage_account_edit_picture">Edit picture</string>
     <string name="manage_account_remove_picture">Remove picture</string>
     <string name="manage_account_status_connected_summary">This account in online, everybody can call you.</string>
+    <string name="manage_account_status_disconnected_summary">This account in offline, probably because you aren\'t connected to internet right now.</string>
     <string name="manage_account_status_cleared_summary">Account has been disabled, you won\'t receive any call or message.</string>
     <string name="manage_account_status_progress_summary">Account is connecting to the server, please wait…</string>
     <string name="manage_account_status_failed_summary">Account connection failed, check your settings.</string>

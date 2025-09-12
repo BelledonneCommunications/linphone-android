@@ -184,6 +184,81 @@ class AccountModel
     }
 
     @WorkerThread
+    fun computeNotificationsCount() {
+        notificationsCount.postValue(account.unreadChatMessageCount + account.missedCallsCount)
+    }
+
+    @WorkerThread
+    fun updateRegistrationState() {
+        val state = if (account.state == RegistrationState.None) {
+            // If the account has been disabled manually, use the Cleared status instead of None
+            if (!account.params.isRegisterEnabled) {
+                Log.w(
+                    "$TAG Account real registration state is None but using Cleared instead as it was manually disabled by the user"
+                )
+                RegistrationState.Cleared
+            } else {
+                account.state
+            }
+        } else {
+            account.state
+        }
+        registrationState.postValue(state)
+
+        val label = when (state) {
+            RegistrationState.Cleared -> {
+                AppUtils.getString(
+                    R.string.drawer_menu_account_connection_status_cleared
+                )
+            }
+            RegistrationState.Progress -> AppUtils.getString(
+                R.string.drawer_menu_account_connection_status_progress
+            )
+            RegistrationState.Failed -> {
+                AppUtils.getString(
+                    R.string.drawer_menu_account_connection_status_failed
+                )
+            }
+            RegistrationState.Ok -> {
+                AppUtils.getString(
+                    R.string.drawer_menu_account_connection_status_connected
+                )
+            }
+            RegistrationState.None -> {
+                AppUtils.getString(
+                    R.string.drawer_menu_account_connection_status_disconnected
+                )
+            }
+            RegistrationState.Refreshing -> AppUtils.getString(
+                R.string.drawer_menu_account_connection_status_refreshing
+            )
+            else -> "$state"
+        }
+        registrationStateLabel.postValue(label)
+        Log.i("$TAG Account registration state is [$state]")
+
+        val summary = when (state) {
+            RegistrationState.Cleared -> AppUtils.getString(
+                R.string.manage_account_status_cleared_summary
+            )
+            RegistrationState.Refreshing, RegistrationState.Progress -> AppUtils.getString(
+                R.string.manage_account_status_progress_summary
+            )
+            RegistrationState.Failed -> AppUtils.getString(
+                R.string.manage_account_status_failed_summary
+            )
+            RegistrationState.Ok -> AppUtils.getString(
+                R.string.manage_account_status_connected_summary
+            )
+            RegistrationState.None -> AppUtils.getString(
+                R.string.manage_account_status_disconnected_summary
+            )
+            else -> "$state"
+        }
+        registrationStateSummary.postValue(summary)
+    }
+
+    @WorkerThread
     private fun update() {
         Log.i(
             "$TAG Refreshing info for account [${account.params.identityAddress?.asStringUriOnly()}]"
@@ -206,56 +281,7 @@ class AccountModel
         isDefault.postValue(coreContext.core.defaultAccount == account)
         computeNotificationsCount()
 
-        val state = account.state
-        registrationState.postValue(state)
-
-        val label = when (state) {
-            RegistrationState.None, RegistrationState.Cleared -> {
-                AppUtils.getString(
-                    R.string.drawer_menu_account_connection_status_cleared
-                )
-            }
-            RegistrationState.Progress -> AppUtils.getString(
-                R.string.drawer_menu_account_connection_status_progress
-            )
-            RegistrationState.Failed -> {
-                AppUtils.getString(
-                    R.string.drawer_menu_account_connection_status_failed
-                )
-            }
-            RegistrationState.Ok -> {
-                AppUtils.getString(
-                    R.string.drawer_menu_account_connection_status_connected
-                )
-            }
-            RegistrationState.Refreshing -> AppUtils.getString(
-                R.string.drawer_menu_account_connection_status_refreshing
-            )
-            else -> "${account.state}"
-        }
-        registrationStateLabel.postValue(label)
-
-        val summary = when (account.state) {
-            RegistrationState.None, RegistrationState.Cleared -> AppUtils.getString(
-                R.string.manage_account_status_cleared_summary
-            )
-            RegistrationState.Refreshing, RegistrationState.Progress -> AppUtils.getString(
-                R.string.manage_account_status_progress_summary
-            )
-            RegistrationState.Failed -> AppUtils.getString(
-                R.string.manage_account_status_failed_summary
-            )
-            RegistrationState.Ok -> AppUtils.getString(
-                R.string.manage_account_status_connected_summary
-            )
-            else -> "${account.state}"
-        }
-        registrationStateSummary.postValue(summary)
-    }
-
-    @WorkerThread
-    fun computeNotificationsCount() {
-        notificationsCount.postValue(account.unreadChatMessageCount + account.missedCallsCount)
+        updateRegistrationState()
     }
 }
 

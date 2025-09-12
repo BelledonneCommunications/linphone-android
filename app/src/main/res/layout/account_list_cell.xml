@@ -71,7 +71,7 @@
             android:background="@drawable/shape_squircle_main2_200_background"
             android:gravity="center"
             android:text="@{model.registrationStateLabel, default=@string/drawer_menu_account_connection_status_connected}"
-            android:textColor="@{model.registrationState == RegistrationState.Ok ? @color/success_500 : model.registrationState == RegistrationState.Failed ? @color/danger_500 : model.registrationState == RegistrationState.Cleared || model.registrationState == RegistrationState.None ? @color/warning_600 : @color/main2_500, default=@color/success_500}"
+            android:textColor="@{model.registrationState == RegistrationState.Ok ? @color/success_500 : model.registrationState == RegistrationState.Failed ? @color/danger_500 : model.registrationState == RegistrationState.Cleared ? @color/warning_600 : @color/main2_500, default=@color/success_500}"
             android:textSize="12sp"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="@id/name"
