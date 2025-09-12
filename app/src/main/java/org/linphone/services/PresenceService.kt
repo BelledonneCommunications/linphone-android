@@ -75,7 +75,8 @@ class PresenceService(val context: Context) : DefaultLifecycleObserver {
         .autoConnect()
 
     init {
-        realtimeUserService.hubConnection?.on(RealtimeEventType.PresenceEvent.eventName, { event: RealtimeEventPresence ->
+
+        realtimeUserService.presenceEvent.observeForever { event: RealtimeEventPresence ->
             try {
                 Log.d(RealtimeEventType.PresenceEvent.eventName, event)
 
@@ -84,7 +85,7 @@ class PresenceService(val context: Context) : DefaultLifecycleObserver {
             } catch (e: Exception) {
                 Log.e(RealtimeEventType.PresenceEvent.eventName, e)
             }
-        }, RealtimeEventPresence::class.java)
+        }
     }
 
     fun setPresenceState(userId: String, presence: SetPresenceModel) {

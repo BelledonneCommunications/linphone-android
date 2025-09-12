@@ -7,6 +7,7 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
 import com.microsoft.signalr.HubConnection
 import com.microsoft.signalr.HubConnectionBuilder
 import com.microsoft.signalr.HubConnectionState
@@ -31,6 +32,7 @@ import org.linphone.environment.DimensionsEnvironmentService
 import org.linphone.models.AuthenticatedUser
 import org.linphone.models.DimensionsEnvironment
 import org.linphone.models.realtime.EventSubscription
+import org.linphone.models.realtime.RealtimeEventPresence
 import org.linphone.models.realtime.RealtimeEventType
 import org.linphone.models.realtime.SubscriptionData
 import org.linphone.models.realtime.SubscriptionRequest
@@ -45,7 +47,7 @@ open class RealtimeBaseService(private val context: Context, private val hubSuff
     private val authStateManager = AuthStateManager.getInstance(context)
     private val destroy = PublishSubject.create<Unit>()
 
-    var hubConnection: HubConnection? = null
+    private var hubConnection: HubConnection? = null
 
     /** Emits each time the environment changes, once the SignalR hub has been configured for that environment */
     private val environmentConfigured = BehaviorSubject.createDefault(false)
@@ -110,6 +112,10 @@ open class RealtimeBaseService(private val context: Context, private val hubSuff
 
     private var reconnectContext: ReconnectContext? = null
 
+    // Events
+    val callHistoryEvent: MutableLiveData<Any> by lazy { MutableLiveData<Any>() }
+    val presenceEvent: MutableLiveData<RealtimeEventPresence> by lazy { MutableLiveData<RealtimeEventPresence>() }
+
     init {
         Log.i("RealtimeBaseService: Monitor network...")
 
@@ -133,6 +139,8 @@ open class RealtimeBaseService(private val context: Context, private val hubSuff
     }
 
     private fun createHubConnection(environment: DimensionsEnvironment) {
+        Log.d("RealtimeBaseService.createHubConnection for ${environment.name}")
+
         val connection = HubConnectionBuilder.create(
             "${environment.realtimeApiUri}/$hubSuffix"
         )
@@ -151,7 +159,7 @@ open class RealtimeBaseService(private val context: Context, private val hubSuff
 
         connection.on(RealtimeEventType.ConnectEvent.eventName, { message: Any ->
             try {
-                Log.d("RealtimeBaseService." + RealtimeEventType.ConnectEvent.eventName, message)
+                Log.d("RealtimeBaseService.${RealtimeEventType.ConnectEvent.eventName}: $message")
 
                 runBlocking {
                     delay(1)
@@ -166,35 +174,20 @@ open class RealtimeBaseService(private val context: Context, private val hubSuff
         }, Any::class.java)
 
         connection.on(RealtimeEventType.SubscribeResponse.eventName, { message: Any ->
-            try {
-                Log.d(
-                    "RealtimeBaseService." + RealtimeEventType.SubscribeResponse.eventName,
-                    message
-                )
-            } catch (e: Exception) {
-                Log.e(e, "RealtimeBaseService." + RealtimeEventType.SubscribeResponse.eventName)
-            }
+            Log.d("RealtimeBaseService.${RealtimeEventType.SubscribeResponse.eventName}: $message")
         }, Any::class.java)
 
         connection.on(RealtimeEventType.UnSubscribeResponse.eventName, { message: Any ->
-            try {
-                Log.d(
-                    "RealtimeBaseService." + RealtimeEventType.UnSubscribeResponse.eventName,
-                    message
-                )
-            } catch (e: Exception) {
-                Log.e(e, "RealtimeBaseService." + RealtimeEventType.UnSubscribeResponse.eventName)
-            }
+            Log.d(
+                "RealtimeBaseService.${RealtimeEventType.UnSubscribeResponse.eventName}: $message"
+            )
         }, Any::class.java)
 
         connection.onClosed {
-            Log.w("RealtimeBaseService.connection closed")
-
             try {
+                Log.w("RealtimeBaseService.connection closed")
                 onDisconnected()
-
                 // TODO Add warning notification
-
                 CoroutineScope(Dispatchers.IO).launch {
                     tryReconnect()
                 }
@@ -202,6 +195,24 @@ open class RealtimeBaseService(private val context: Context, private val hubSuff
                 Log.w("RealtimeBaseService.onClosed ${e.message}")
             }
         }
+
+        connection.on(
+            RealtimeEventType.CallHistoryEvent.eventName,
+            { data: Any ->
+                Log.d("RealtimeBaseService.callHistoryEvent: $data")
+                callHistoryEvent.postValue(data)
+            },
+            Any::class.java
+        )
+
+        connection.on(
+            RealtimeEventType.PresenceEvent.eventName,
+            { data: RealtimeEventPresence ->
+                Log.d("RealtimeBaseService.presenceEvent: ${data.data.stateName} ${data.data.availability}")
+                presenceEvent.postValue(data)
+            },
+            RealtimeEventPresence::class.java
+        )
 
         hubConnection = connection
 
@@ -314,9 +325,7 @@ open class RealtimeBaseService(private val context: Context, private val hubSuff
 
     private suspend fun invokePendingHubRequests() = runBlocking {
         Log.d("RealtimeBaseService.invokePendingHubRequests Un/subscribe all pending.")
-        Log.d(
-            "RealtimeBaseService.invokePendingHubRequests State: ${hubConnection?.connectionState}"
-        )
+        Log.d("RealtimeBaseService.invokePendingHubRequests State: ${hubConnection?.connectionState}")
         Log.d("RealtimeBaseService.invokePendingHubRequests Subscriptions: $subscriptions")
 
         // When SignalR connects, invoke any pending tasks to subscribe to/unsubscribe from events.
@@ -337,37 +346,16 @@ open class RealtimeBaseService(private val context: Context, private val hubSuff
         }
     }
 
-    private fun <T : Any> Observable<T>.pairwise(): Observable<Pair<T, T>> {
-        return Observable.defer {
-            val subject = PublishSubject.create<T>()
-            Observable.zip(
-                this,
-                subject
-            ) { current, previous -> Pair(previous, current) }.doOnNext { pair ->
-                subject.onNext(
-                    pair.second
-                )
-            }
-        }
-    }
 
     /** Creates a flow that watches for changes to the current user and maintains
      * a realtime event subscription filtered to that user. */
     fun subscribeForCurrentUser(eventType: RealtimeEventType): Observable<Any> {
         return authStateManager.user
-            .startWithItem(
-                AuthenticatedUser(
-                    AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null
-                )
-            )
+            .startWithItem(AuthenticatedUser(AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER))
             .map { it.id.toString() }
-            .pairwise()
+            .buffer(2, 1)
             .map { (prevUserId, currentUserId) ->
+                Log.d("RealtimeBaseService: User changed from $prevUserId to $currentUserId")
                 runBlocking {
                     if (prevUserId != AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER && prevUserId != currentUserId) {
                         removeSubscription(eventType, prevUserId)
@@ -410,13 +398,13 @@ open class RealtimeBaseService(private val context: Context, private val hubSuff
             if (hubConnection?.connectionState == HubConnectionState.CONNECTED) {
                 updateState(key, SubscriptionState.Subscribing)
 
-                println("Subscribing $key")
+                Log.d("Subscribing $key")
 
                 invoke("subscribe", subscription.requestInfo)
 
                 updateState(key, SubscriptionState.Subscribed)
 
-                println("Subscription $key subscribed.")
+                Log.d("Subscription $key subscribed.")
             }
         } catch (e: Exception) {
             if (subscription.subscriptionState == SubscriptionState.Subscribing) {
@@ -453,7 +441,7 @@ open class RealtimeBaseService(private val context: Context, private val hubSuff
         delayMilliseconds: Long? = null
     ) {
         val key = subscriptionKey(eventType, id)
-        println("removeSubscription $key ${subscriptions[key]}")
+        Log.d("removeSubscription $key ${subscriptions[key]}")
 
         // Only need to act if a matching subscription entry exists and is subscribed/subscribing
         if (isState(
@@ -469,7 +457,7 @@ open class RealtimeBaseService(private val context: Context, private val hubSuff
                 EventSubscription(request, SubscriptionState.FlaggedForUnsubscription)
             subscriptions[key] = subscription
 
-            println("Queued unsubscribe $key")
+            Log.d("Queued unsubscribe $key")
 
             // If desired, delay the unsubscribe by a few seconds to prevent unnecessary un/resubscribe
             // in the event we rapidly remove then re-add a subscription
@@ -482,7 +470,7 @@ open class RealtimeBaseService(private val context: Context, private val hubSuff
             if (isState(key, SubscriptionState.FlaggedForUnsubscription)) {
                 unsubscribe(key, subscription)
             } else {
-                println("Unsubscribe for $key no longer relevant ${subscription.subscriptionState}")
+                Log.d("Unsubscribe for $key no longer relevant ${subscription.subscriptionState}")
             }
         }
     }
@@ -492,13 +480,13 @@ open class RealtimeBaseService(private val context: Context, private val hubSuff
             if (hubConnection?.connectionState == HubConnectionState.CONNECTED) {
                 updateState(key, SubscriptionState.Unsubscribing)
 
-                println("Unsubscribing $key...")
+                Log.d("Unsubscribing $key...")
 
                 invoke("unSubscribe", subscription.requestInfo)
 
                 subscriptions.remove(key)
 
-                println("Unsubscribed $key.")
+                Log.d("Unsubscribed $key.")
             }
         } catch (e: Exception) {
             if (isState(key, SubscriptionState.Unsubscribing)) {
@@ -513,9 +501,7 @@ open class RealtimeBaseService(private val context: Context, private val hubSuff
 
     private fun updateState(key: String, state: SubscriptionState) {
         val subscription = subscriptions[key]
-            ?: throw IllegalArgumentException(
-                "Subscription $key not found attempting to update to $state"
-            )
+            ?: throw IllegalArgumentException("Subscription $key not found attempting to update to $state" )
 
         subscriptions[key] = subscription.copy(subscriptionState = state)
     }

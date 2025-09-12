@@ -7,7 +7,6 @@ import android.database.Cursor
 import android.util.Base64
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
@@ -40,6 +39,7 @@ import org.linphone.models.realtime.RealtimeEventType
 import org.linphone.services.realtime.RealtimeUserService
 import org.linphone.utils.CallHistoryDatabaseHelper
 import org.linphone.utils.DateUtils
+import org.linphone.utils.GsonUtils
 import org.linphone.utils.Log
 import org.linphone.utils.Optional
 import org.threeten.bp.LocalDateTime
@@ -65,7 +65,7 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
 
     /** Each time a value is emitted and new attempt will be made to query the current report result. */
     private val queryStatusSubject = BehaviorSubject.createDefault(0)
-    private val queryStatus = queryStatusSubject.map { x -> x }
+    val queryStatus = queryStatusSubject.map { x -> x }
         .replay(1)
         .autoConnect()
 
@@ -85,8 +85,8 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
         }
 
     private val userId: Observable<String> = authStateManager.user
-        .filter { u -> u.id != null && u.id != AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER }
-        .map { user -> user.id.toString() }
+        .filter { u -> u.hasValidId() }
+        .map { user -> user.id ?: "" }
         .distinctUntilChanged()
         .takeUntil(destroy)
 
@@ -122,12 +122,12 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
                             .postReportRequest(
                                 mapOf(
                                     "fromDate" to fromDate,
-                                    "timeZoneId" to "UTC"
+                                    "timeZoneId" to TimeZone.getDefault().id
                                 )
                             )
                     }
-                } catch (throwable: Throwable) {
-                    Log.e("historyRequest", throwable)
+                } catch (e: Throwable) {
+                    Log.e(e, "historyRequest")
                     ReportRequest(ReportStates.Failed.value, "") // Provide a fallback ReportResult
                 }
             }.toObservable()
@@ -147,12 +147,8 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
     private val reportQuery: Observable<ReportResult> = Observable.combineLatest(
         queryStatus,
         historyRequest
-    ) { _, request ->
-        request
-    }
-        .switchMap { request ->
-            backoffQuery(request)
-        }
+    ) { _, request -> request }
+        .switchMap { request -> backoffQuery(request) }
         .doOnNext { r ->
             statusQueryAttempts++
             if (!ReportStates.isDone(r.status)) queueNextQuery(r.status)
@@ -164,22 +160,14 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
     val appendHistoryObservable = Observable.merge(
         startCache,
         reportQuery
-            .filter { r ->
-                ReportStates.isDone(r.status)
-            }
-            .map
-            {
-                    r ->
-                r.data ?: listOf()
-            }
+            .filter { r -> ReportStates.isDone(r.status) }
+            .map { r -> r.data ?: listOf() }
             .doOnNext {
                     data ->
                 Log.d("History report returned item count ${data.size}")
             }
     )
-        .subscribe { data ->
-            appendToHistory(data)
-        }
+        .subscribe { data -> appendToHistory(data) }
 
     val missedCallCount: Observable<Int> = Observable.combineLatest(
         history,
@@ -190,7 +178,7 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
                     it.missedCall && it.startTime != null && it.startTime > timestamp
                 }.size
             } catch (e: Exception) {
-                Log.e("missedCallCount", e)
+                Log.e(e, "missedCallCount")
                 0
             }
         }
@@ -199,9 +187,7 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
     val formattedHistory: Observable<List<CallHistoryItemViewModel>> = Observable.combineLatest(
         history,
         DateUtils.todaysDate,
-        { history, date ->
-            transformData(history, date)
-        }
+        { history, date -> transformData(history, date) }
     )
         .replay(1)
         .autoConnect()
@@ -211,11 +197,14 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
         callHistorySubject
     ) { query, history ->
         when {
-            !ReportStates.isDone(query.status) && history.isEmpty() -> "Loading call history..."
-            history.isEmpty() -> "No calls"
-            else -> ""
+            query.status == ReportStates.Failed.value -> "Error loading call history"
+            query.status == ReportStates.Timeout.value -> "Call history query timed out"
+            query.status == ReportStates.Complete.value && history.isEmpty() -> "No calls"
+            query.status == ReportStates.Complete.value && history.isNotEmpty() -> ""
+            else -> "Loading call history..."
         }
     }
+        .startWithItem("Loading call history...")
 
     val selectedCallSessionIdSubject: BehaviorSubject<String> = BehaviorSubject.createDefault("")
 
@@ -237,7 +226,7 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
 
     companion object {
         private const val TAG: String = "CallHistoryService"
-        private const val CACHEVERSION = 1
+        private const val CACHE_VERSION = 1
 
         private val instance: AtomicReference<CallHistoryService> =
             AtomicReference<CallHistoryService>()
@@ -274,9 +263,11 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
     init {
         Log.d("Created CallHistoryService")
 
-        realtimeUserService.hubConnection?.on(RealtimeEventType.CallHistoryEvent.eventName, { event ->
+        realtimeUserService.subscribeForCurrentUser(RealtimeEventType.CallHistoryEvent).subscribe()
+
+        realtimeUserService.callHistoryEvent.observeForever { event ->
             try {
-                Log.d(RealtimeEventType.CallHistoryEvent.eventName, event)
+                Log.d("${RealtimeEventType.CallHistoryEvent.eventName} | $event")
 
                 CoroutineScope(Dispatchers.IO).launch {
                     getMissedCallTimestamp()
@@ -284,17 +275,7 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
                     newReportRequest.onNext(Unit)
                 }
             } catch (e: Exception) {
-                Log.e(RealtimeEventType.CallHistoryEvent.eventName, e)
-            }
-        }, Any::class.java)
-
-        runBlocking {
-            authStateManager.getUser().id?.let {
-                realtimeUserService.addSubscription(
-                    RealtimeEventType.CallHistoryEvent,
-                    it,
-                    null
-                )
+                Log.e(e, RealtimeEventType.CallHistoryEvent.eventName)
             }
         }
 
@@ -378,19 +359,24 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
                 cacheCallHistory(newArr, authStateManager.getUser().id!!)
             }
         } catch (e: Exception) {
-            Log.e("appendToHistory", e)
+            Log.e(e, "$TAG: appendToHistory error")
         }
     }
 
-    private fun cacheCallHistory(data: Any, currentUserId: String) {
+    private fun cacheCallHistory(data: List<CallHistoryItem>, currentUserId: String) {
         try {
+            Log.d("$TAG: caching ${data.size} call history items")
+
             // Compress the data to reduce storage size.
-            val compressedData = compressString(Gson().toJson(data))
+            val typeHint = object : TypeToken<List<CallHistoryItem>>() {}.type
+            val compressedData = compressString(
+                GsonUtils.defaultGsonInstance.toJson(data, typeHint)
+            )
 
             // Add metadata to the history so we can choose whether to use it later
             val cacheObj = CallHistoryCache(
                 userId = currentUserId,
-                version = CACHEVERSION,
+                version = CACHE_VERSION,
                 data = compressedData
             )
 
@@ -408,11 +394,12 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
             db.close()
         } catch (e: Exception) {
             // May not have access - this is OK
-            Log.e("CallHistoryService", "Failed to cache call history.", e)
+            Log.e(e, "$TAG: Failed to cache call history.")
         }
     }
 
     private fun getCachedCallHistory(currentUserId: String): List<CallHistoryItem> {
+        Log.d("$TAG: Get history from cache...")
         val dbHelper = CallHistoryDatabaseHelper(context)
         val db = dbHelper.readableDatabase
 
@@ -420,7 +407,8 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
             val cursor: Cursor = db.query(
                 "CallHistoryCache",
                 arrayOf("userId", "version", "data"),
-                null,
+                "userId=?",
+                arrayOf(currentUserId),
                 null,
                 null,
                 null,
@@ -437,37 +425,35 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
             cursor.close()
 
             if (cacheObj == null) {
-                Log.d("CallHistoryService", "No cached history found.")
+                Log.d("$TAG: No cached history found.")
                 return listOf()
             }
 
             val decompressedData = decompressString(cacheObj.data)
-            val data = Gson().fromJson<List<CallHistoryItem>>(
+
+            val typeHint = object : TypeToken<List<CallHistoryItem>>() {}.type
+            val data = GsonUtils.defaultGsonInstance.fromJson<List<CallHistoryItem>>(
                 decompressedData,
-                object : TypeToken<List<CallHistoryItem>>() {}.type
+                typeHint
             )
 
-            Log.d("CallHistoryService", "Got ${data.size} results from history cache.")
+            Log.d("$TAG: Got ${data.size} results from history cache.")
 
             if (cacheObj.userId != currentUserId) {
-                Log.d(
-                    "CallHistoryService",
-                    "Cached history is for a different user. Current user: $currentUserId"
-                )
+                Log.d("$TAG: Cached history is for a different user. Current user: $currentUserId")
                 return listOf()
             }
 
-            if (cacheObj.version < CACHEVERSION) {
+            if (cacheObj.version < CACHE_VERSION) {
                 Log.w(
-                    "CallHistoryService",
-                    "Cached history version (${cacheObj.version}) does not match current version ($CACHEVERSION) - discarding."
+                    "$TAG: Cached history version (${cacheObj.version}) does not match current version ($CACHE_VERSION) - discarding."
                 )
                 return listOf()
             }
 
             return data ?: listOf()
         } catch (e: Exception) {
-            Log.w("CallHistoryService", "Failed to load call history cache.", e)
+            Log.e(e, "$TAG: Failed to load call history cache.")
             listOf()
         } finally {
             db.close()
@@ -522,9 +508,14 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
         callHistoryData: List<CallHistoryItem>,
         localDateTime: LocalDateTime
     ): List<CallHistoryItemViewModel> {
-        return callHistoryData.map { call ->
+        val start = Date()
+        val formatted = callHistoryData.map { call ->
             CallHistoryItemViewModel(call, localDateTime)
         }
+        val end = Date()
+        val dt = end.time - start.time
+        Log.i("$TAG: formatting took ${dt}ms")
+        return formatted
     }
 
     private fun compressString(data: String): String {
