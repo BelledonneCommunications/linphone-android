@@ -32,7 +32,7 @@
             android:onClick="@{() -> historyViewModel.makeCall(callViewModel)}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{historyViewModel.trasferState == org.linphone.activities.voip.TransferState.PENDING_BLIND ? `Transfer` : `Call back`, default=`Call back`}"
+            android:text="@{historyViewModel.transferState == org.linphone.activities.voip.TransferState.PENDING_BLIND ? `Transfer` : `Call back`, default=`Call back`}"
             android:textColor="@color/primary_color"
             android:textSize="22sp"
             android:gravity="center"

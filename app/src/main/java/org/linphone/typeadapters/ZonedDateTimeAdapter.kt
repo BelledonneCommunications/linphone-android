@@ -28,10 +28,11 @@ class ZonedDateTimeAdapter : TypeAdapter<ZonedDateTime>() {
                 reader.nextNull()
                 null
             } else {
+                val str = reader.nextString()
                 try {
-                    ZonedDateTime.parse(reader.nextString())
+                    ZonedDateTime.parse(str)
                 } catch (e: DateTimeParseException) {
-                    LocalDateTime.parse(reader.nextString()).atZone(ZoneId.of("UTC"))
+                    LocalDateTime.parse(str).atZone(ZoneId.systemDefault())
                 }
             }
         } catch (e: Exception) {

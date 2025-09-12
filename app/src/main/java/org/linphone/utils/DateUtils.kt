@@ -22,6 +22,10 @@ class DateUtils {
             return LocalDate.now().atStartOfDay()
         }
 
+        init {
+            checkDate()
+        }
+
         @SuppressLint("CheckResult")
         private fun checkDate() {
             // If necessary, update today's date.
@@ -42,8 +46,6 @@ class DateUtils {
         ): String {
             try {
                 if (dateTime == null) return ""
-
-                checkDate()
 
                 val midnightDate = dateTime.toLocalDateTime().toLocalDate().atStartOfDay()
                 val midnightToday = localDateTime.toLocalDate().atStartOfDay()

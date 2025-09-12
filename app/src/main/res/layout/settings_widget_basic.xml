@@ -44,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="25dp"
             android:gravity="center_vertical"
-            android:text="@{title}"
+            android:text="@{title, default=`Item title`}"
             android:enabled="@{enabled ?? true}"
             android:visibility="@{title.length() > 0 ? View.VISIBLE : View.GONE}"
             android:maxLines="2"
@@ -60,7 +60,7 @@
 
         <TextView
             android:id="@+id/settings_subtitle"
-            android:text="@{subtitle}"
+            android:text="@{subtitle, default=`Item subtitle`}"
             android:enabled="@{enabled ?? true}"
             android:layout_width="match_parent"
             android:layout_height="20dp"

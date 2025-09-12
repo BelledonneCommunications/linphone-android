@@ -136,13 +136,20 @@
                     android:layout_alignTop="@id/top_bar"
                     tools:layout="@layout/list_edit_top_bar_fragment" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="@{ viewModel.message, default=`Loading call history...`}"
+                    style="@style/empty_list_font" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/callLogsList"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@id/top_bar"
-                    android:layout_marginTop="-1dp" />
-
+                    android:layout_marginTop="-1dp"/>
+<!--
                 <TextView
                     style="@style/empty_list_font"
                     android:layout_width="wrap_content"
@@ -158,14 +165,7 @@
                     android:layout_centerInParent="true"
                     android:text="@string/no_missed_call_history"
                     android:visibility="@{viewModel.callLogs.empty &amp;&amp; viewModel.filter == CallLogsFilter.MISSED ? View.VISIBLE : View.GONE}" />
-
-                <TextView
-                    style="@style/empty_list_font"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="@string/no_conference_call_history"
-                    android:visibility="@{viewModel.callLogs.empty &amp;&amp; viewModel.filter == CallLogsFilter.CONFERENCE ? View.VISIBLE : View.GONE}" />
+-->
 
                 <View
                     android:layout_width="1dp"

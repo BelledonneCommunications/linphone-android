@@ -23,6 +23,7 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import io.reactivex.rxjava3.subjects.AsyncSubject
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -38,9 +39,11 @@ import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.Log
 
 class CallLogsListViewModel : ViewModel() {
-    val callHistoryService = CallHistoryService.getInstance(coreContext.context)
+    private val callHistoryService = CallHistoryService.getInstance(coreContext.context)
 
     val callLogs = MutableLiveData<List<GroupedCallLogData>>()
+
+    val message = MutableLiveData<String>("Loading call history...")
 
     val filter = MutableLiveData<CallLogsFilter>()
 
@@ -60,9 +63,11 @@ class CallLogsListViewModel : ViewModel() {
         MutableLiveData<Event<CallHistoryItemViewModel>>()
     }
 
-    val trasferState = TransferService.getInstance().transferState
+    val transferState = TransferService.getInstance().transferState
 
     val hasPlaybackPermission = MutableLiveData<Boolean>(false)
+
+    val destroy = AsyncSubject.create<Unit>()
 
     private val listener: CoreListenerStub = object : CoreListenerStub() {
         override fun onCallLogUpdated(core: Core, log: CallLog) {
@@ -86,10 +91,16 @@ class CallLogsListViewModel : ViewModel() {
         coreContext.core.addListener(listener)
         coreContext.contactsManager.addListener(contactsUpdatedListener)
 
-        val callHistorySubscription = callHistoryService.formattedHistory.subscribe(
-            { updateCallLogs() },
-            { error -> Log.e(error, "Failed to update call history.") }
-        )
+        val callHistorySubscription = callHistoryService.formattedHistory
+            .takeUntil(destroy)
+            .subscribe(
+                { updateCallLogs() },
+                { error -> Log.e(error, "Failed to update call history.") }
+            )
+
+        val msgSubscription = callHistoryService.historyMessage
+            .takeUntil(destroy)
+            .subscribe { msg -> message.postValue(msg) }
     }
 
     override fun onCleared() {
@@ -97,6 +108,9 @@ class CallLogsListViewModel : ViewModel() {
 
         coreContext.contactsManager.removeListener(contactsUpdatedListener)
         coreContext.core.removeListener(listener)
+
+        destroy.onNext(Unit)
+        destroy.onComplete()
 
         super.onCleared()
     }
