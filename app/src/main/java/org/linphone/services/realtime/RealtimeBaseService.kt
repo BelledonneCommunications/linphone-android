@@ -208,7 +208,9 @@ open class RealtimeBaseService(private val context: Context, private val hubSuff
         connection.on(
             RealtimeEventType.PresenceEvent.eventName,
             { data: RealtimeEventPresence ->
-                Log.d("RealtimeBaseService.presenceEvent: ${data.data.stateName} ${data.data.availability}")
+                Log.d(
+                    "RealtimeBaseService.presenceEvent: ${data.data.stateName} ${data.data.availability}"
+                )
                 presenceEvent.postValue(data)
             },
             RealtimeEventPresence::class.java
@@ -325,7 +327,9 @@ open class RealtimeBaseService(private val context: Context, private val hubSuff
 
     private suspend fun invokePendingHubRequests() = runBlocking {
         Log.d("RealtimeBaseService.invokePendingHubRequests Un/subscribe all pending.")
-        Log.d("RealtimeBaseService.invokePendingHubRequests State: ${hubConnection?.connectionState}")
+        Log.d(
+            "RealtimeBaseService.invokePendingHubRequests State: ${hubConnection?.connectionState}"
+        )
         Log.d("RealtimeBaseService.invokePendingHubRequests Subscriptions: $subscriptions")
 
         // When SignalR connects, invoke any pending tasks to subscribe to/unsubscribe from events.
@@ -345,7 +349,6 @@ open class RealtimeBaseService(private val context: Context, private val hubSuff
             deferredCollection.awaitAll()
         }
     }
-
 
     /** Creates a flow that watches for changes to the current user and maintains
      * a realtime event subscription filtered to that user. */
@@ -501,7 +504,9 @@ open class RealtimeBaseService(private val context: Context, private val hubSuff
 
     private fun updateState(key: String, state: SubscriptionState) {
         val subscription = subscriptions[key]
-            ?: throw IllegalArgumentException("Subscription $key not found attempting to update to $state" )
+            ?: throw IllegalArgumentException(
+                "Subscription $key not found attempting to update to $state"
+            )
 
         subscriptions[key] = subscription.copy(subscriptionState = state)
     }

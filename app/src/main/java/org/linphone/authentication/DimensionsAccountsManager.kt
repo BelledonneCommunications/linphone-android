@@ -5,7 +5,6 @@ import androidx.annotation.AnyThread
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicReference
-import org.linphone.models.AuthenticatedUser
 import org.linphone.models.SubscribableUserDeviceList
 import org.linphone.models.UserDevice
 import org.linphone.services.APIClientService
@@ -41,19 +40,15 @@ class DimensionsAccountsManager(context: Context) {
     init {
         val asm = AuthStateManager.getInstance(context)
         val sub = asm.user
-            .filter { u -> u.id != null && u.id != AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER }
-            .map { it.id ?: "" }
-            .distinctUntilChanged()
+            .distinctUntilChanged { user -> user.id ?: "" }
             .subscribe(
                 {
                     try {
-                        Log.i("AUTH user ID : $it")
-                        when (it) {
-                            AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER -> Log.w(
-                                "DimensionsAccountManager subscription triggered with initial AuthenticatedUser"
-                            )
-                            "" -> clear()
-                            else -> load(it)
+                        Log.i("AUTH user ID : ${it.id}")
+                        if (it.hasValidId()) {
+                            load(it.id!!)
+                        } else {
+                            clear()
                         }
                     } catch (e: Exception) {
                         Log.e(e)
