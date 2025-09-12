@@ -70,6 +70,7 @@
                     android:layout_height="wrap_content"/>
 
                 <include
+                    android:visibility="gone"
                     layout="@layout/settings_widget_switch"
                     linphone:enabled="@{viewModel.backgroundModeEnabled}"
                     linphone:title="@{@string/advanced_settings_background_mode_title}"
@@ -78,6 +79,7 @@
                     linphone:checked="@={viewModel.backgroundMode}"/>
 
                 <include
+                    android:visibility="gone"
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/advanced_settings_auto_start_title}"
                     linphone:listener="@{viewModel.autoStartListener}"
@@ -91,12 +93,14 @@
                     linphone:labels="@{viewModel.darkModeLabels}"/>
 
                 <include
+                    android:visibility="gone"
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/advanced_settings_animations_title}"
                     linphone:listener="@{viewModel.animationsListener}"
                     linphone:checked="@={viewModel.animations}"/>
 
                 <include
+                    android:visibility="gone"
                     layout="@layout/settings_widget_text"
                     linphone:title="@{@string/advanced_settings_device_name_title}"
                     linphone:subtitle="@{@string/advanced_settings_device_name_summary}"
@@ -104,6 +108,7 @@
                     linphone:defaultValue="@{viewModel.deviceName}"/>
 
                 <include
+                    android:visibility="gone"
                     layout="@layout/settings_widget_text"
                     linphone:title="@{@string/advanced_settings_remote_provisioning_url_title}"
                     linphone:listener="@{viewModel.remoteProvisioningUrlListener}"
@@ -111,6 +116,7 @@
                     linphone:inputType="@{InputType.TYPE_TEXT_VARIATION_URI}"/>
 
                 <include
+                    android:visibility="gone"
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/advanced_settings_vfs_title}"
                     linphone:subtitle="@{@string/advanced_settings_vfs_summary}"
