@@ -143,6 +143,7 @@
     <!-- Side menu -->
     <string name="drawer_menu_manage_account">Mon compte</string>
     <string name="drawer_menu_account_connection_status_connected">Connecté</string>
+    <string name="drawer_menu_account_connection_status_disconnected">Déconnecté</string>
     <string name="drawer_menu_account_connection_status_refreshing">Rafraîchissement…</string>
     <string name="drawer_menu_account_connection_status_cleared">Désactivé</string>
     <string name="drawer_menu_account_connection_status_progress">Connexion…</string>
@@ -305,6 +306,7 @@
     <string name="manage_account_edit_picture">Modifier </string>
     <string name="manage_account_remove_picture">Supprimer</string>
     <string name="manage_account_status_connected_summary">Vous êtes en ligne, on peut vous joindre.</string>
+    <string name="manage_account_status_disconnected_summary">Vous êtes hors ligne, probablement car vous n\'êtes pas actuellement connecté à internet.</string>
     <string name="manage_account_status_cleared_summary">Compte désactivé, vous ne recevrez ni appel ni message.</string>
     <string name="manage_account_status_progress_summary">Connexion en cours, merci de patienter…</string>
     <string name="manage_account_status_failed_summary">Erreur de connexion, vérifiez vos paramètres.</string>

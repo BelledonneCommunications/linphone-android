@@ -375,7 +375,7 @@ class AccountProfileViewModel
 
     @UiThread
     fun toggleRegister() {
-        coreContext.postOnCoreThread {
+        coreContext.postOnCoreThread { core ->
             val params = account.params
             val copy = params.clone()
             copy.isRegisterEnabled = !params.isRegisterEnabled
@@ -384,6 +384,11 @@ class AccountProfileViewModel
             )
             account.params = copy
             registerEnabled.postValue(account.params.isRegisterEnabled)
+
+            if (!core.isNetworkReachable) {
+                // To reflect the difference between Disabled & Disconnected
+                accountModel.value?.updateRegistrationState()
+            }
         }
     }
 
