@@ -3,7 +3,7 @@ package org.linphone.models
 import com.auth0.android.jwt.JWT
 
 class AuthenticatedUser(
-    var id: String? = null,
+    var id: String,
     var name: String? = null,
     var email: String? = null,
     var tenantName: String? = null,

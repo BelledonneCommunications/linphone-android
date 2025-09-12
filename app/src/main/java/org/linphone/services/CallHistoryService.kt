@@ -75,8 +75,8 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
     private val missedCallTimestamp: Observable<ZonedDateTime> = missedCallTimestampSubject.hide()
 
     private val authSubscription: Disposable = authStateManager.user
-        .filter { u -> u.id != null && u.id != AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER }
-        .distinctUntilChanged { user -> user.id ?: "" }
+        .filter { u -> u.id != AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER }
+        .distinctUntilChanged { user -> user.id }
         .takeUntil(destroy)
         .subscribe {
             CoroutineScope(Dispatchers.IO).launch {
@@ -84,19 +84,8 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
             }
         }
 
-    private val userId: Observable<String> = authStateManager.user
-        .filter { u -> u.hasValidId() }
-        .map { user -> user.id ?: "" }
-        .distinctUntilChanged()
-        .takeUntil(destroy)
-
-    private val historyRequest: Observable<ReportRequest> = Observable.combineLatest(
-        userId,
-        newReportRequest
-    ) { _, _ -> }
-        .doOnNext {
-            statusQueryAttempts = 0
-        }
+    private val historyRequest: Observable<ReportRequest> = newReportRequest
+        .doOnNext { statusQueryAttempts = 0 }
         .switchMap {
             val arr = callHistorySubject.value ?: emptyList()
             val maxStartTime = arr.maxOfOrNull {
@@ -136,14 +125,6 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
         .replay(1)
         .autoConnect()
 
-    private val startCache = authStateManager.user
-        .filter { u -> u.id != null && u.id != AuthenticatedUser.UNINTIALIZED_AUTHENTICATEDUSER }
-        .distinctUntilChanged { user -> user.id ?: "" }
-        .map { user ->
-            getCachedCallHistory(user.id ?: "")
-        }
-        .takeUntil(destroy)
-
     private val reportQuery: Observable<ReportResult> = Observable.combineLatest(
         queryStatus,
         historyRequest
@@ -157,16 +138,10 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
         .replay(1)
         .autoConnect()
 
-    val appendHistoryObservable = Observable.merge(
-        startCache,
-        reportQuery
-            .filter { r -> ReportStates.isDone(r.status) }
-            .map { r -> r.data ?: listOf() }
-            .doOnNext {
-                    data ->
-                Log.d("History report returned item count ${data.size}")
-            }
-    )
+    val appendHistoryObservable = reportQuery
+        .filter { r -> ReportStates.isDone(r.status) }
+        .map { r -> r.data ?: listOf() }
+        .doOnNext { data -> Log.d("History report returned ${data.size} items") }
         .subscribe { data -> appendToHistory(data) }
 
     val missedCallCount: Observable<Int> = Observable.combineLatest(
@@ -263,6 +238,21 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
     init {
         Log.d("Created CallHistoryService")
 
+        val sub = authStateManager.user
+            .distinctUntilChanged { user -> user.id }
+            .takeUntil(destroy)
+            .subscribe { user ->
+                Log.d("User changed ($user.id) - update history from cache.")
+                // Replace history list
+                val list = if (user.hasValidId()) listOf() else getCachedCallHistory(user.id)
+                callHistorySubject.onNext(list)
+
+                // If we have a valid user, queue a new report query
+                if (user.hasValidId()) {
+                    newReportRequest.onNext(Unit)
+                }
+            }
+
         realtimeUserService.subscribeForCurrentUser(RealtimeEventType.CallHistoryEvent).subscribe()
 
         realtimeUserService.callHistoryEvent.observeForever { event ->
@@ -278,8 +268,6 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
                 Log.e(e, RealtimeEventType.CallHistoryEvent.eventName)
             }
         }
-
-        newReportRequest.onNext(Unit)
     }
 
     private fun queueNextQuery(status: Int) {
@@ -345,10 +333,7 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
 
             if (arr != null && items.isNotEmpty()) {
                 // Insert any new items at the beginning
-                arr.addAll(
-                    0,
-                    items
-                )
+                arr.addAll(0, items)
 
                 // Take the first 200, removing any duplicates
                 val newArr: List<CallHistoryItem> = arr.distinctBy { it.connectionId }
@@ -356,7 +341,7 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
 
                 callHistorySubject.onNext(newArr)
 
-                cacheCallHistory(newArr, authStateManager.getUser().id!!)
+                cacheCallHistory(newArr, authStateManager.getUser().id)
             }
         } catch (e: Exception) {
             Log.e(e, "$TAG: appendToHistory error")
@@ -400,6 +385,7 @@ class CallHistoryService(val context: Context) : DefaultLifecycleObserver {
 
     private fun getCachedCallHistory(currentUserId: String): List<CallHistoryItem> {
         Log.d("$TAG: Get history from cache...")
+
         val dbHelper = CallHistoryDatabaseHelper(context)
         val db = dbHelper.readableDatabase
 
