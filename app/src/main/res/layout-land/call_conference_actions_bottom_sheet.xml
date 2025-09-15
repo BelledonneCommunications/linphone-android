@@ -107,7 +107,7 @@
             android:layout_marginTop="@dimen/call_extra_button_top_margin"
             android:padding="@dimen/call_button_icon_padding"
             android:background="@drawable/in_call_button_background_red"
-            android:src="@drawable/notebook"
+            android:src="@drawable/layout"
             android:contentDescription="@string/call_action_change_layout"
             app:tint="@color/in_call_button_tint_color"
             app:layout_constraintDimensionRatio="1:1"

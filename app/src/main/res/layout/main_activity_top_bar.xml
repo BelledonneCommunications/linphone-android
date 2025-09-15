@@ -30,7 +30,7 @@
         <androidx.constraintlayout.widget.Group
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="avatar, title, search_toggle"
+            app:constraint_referenced_ids="drawer_menu, avatar, title, search_toggle"
             android:visibility="@{viewModel.searchBarVisible ? View.GONE : View.VISIBLE}" />
 
         <androidx.constraintlayout.widget.Group
@@ -46,15 +46,29 @@
             app:constraint_referenced_ids="title, search"
             app:barrierDirection="bottom" />
 
+        <ImageView
+            android:id="@+id/drawer_menu"
+            android:onClick="@{() -> viewModel.openDrawerMenu()}"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:src="@drawable/list"
+            android:contentDescription="@string/content_description_open_filter"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/avatar"
+            app:layout_constraintBottom_toBottomOf="@id/avatar"
+            app:tint="?attr/color_on_main" />
+
         <include
             android:id="@+id/avatar"
             android:onClick="@{() -> viewModel.openDrawerMenu()}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
             layout="@layout/contact_avatar"
             bind:model="@{viewModel.account}"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/drawer_menu"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
