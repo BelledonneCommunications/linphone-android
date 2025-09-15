@@ -24,13 +24,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.databinding.EmptyFragmentBinding
 import org.linphone.ui.GenericFragment
+import org.linphone.ui.main.viewmodel.SharedMainViewModel
+import org.linphone.utils.Event
 
 @UiThread
 class EmptyFragment : GenericFragment() {
     private lateinit var binding: EmptyFragmentBinding
+
+    protected lateinit var sharedViewModel: SharedMainViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,11 +50,19 @@ class EmptyFragment : GenericFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
+
+        sharedViewModel = requireActivity().run {
+            ViewModelProvider(this)[SharedMainViewModel::class.java]
+        }
     }
 
     override fun onResume() {
         super.onResume()
 
         findNavController().popBackStack()
+
+        // This should prevent empty fragment from staying visible
+        // after the device rotated if user touched the empty fragment on the right
+        sharedViewModel.closeSlidingPaneEvent.postValue(Event(true))
     }
 }
