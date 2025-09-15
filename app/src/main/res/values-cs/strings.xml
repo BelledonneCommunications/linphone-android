@@ -856,4 +856,5 @@
     <string name="help_troubleshooting_subtitle">Předejte své diagnostické protokoly, abyste usnadnili řešení chyb.</string>
     <string name="content_description_cancel_files_or_text_pending_sharing">Kliknutím zrušíte soubory nebo text čekající na sdílení</string>
     <string name="settings_contacts_ldap_enabled_title">Zapnuto</string>
+    <string name="call_zrtp_point_to_point_encrypted">Koncové šifrování pomocí ZRTP</string>
 </resources>

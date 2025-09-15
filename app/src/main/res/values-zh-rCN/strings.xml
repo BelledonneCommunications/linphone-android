@@ -838,4 +838,5 @@
     <string name="help_troubleshooting_subtitle">传输您的诊断日志以促进错误解决。</string>
     <string name="content_description_cancel_files_or_text_pending_sharing">单击可取消待共享的文件或文本</string>
     <string name="settings_contacts_ldap_enabled_title">已启用</string>
+    <string name="call_zrtp_point_to_point_encrypted">ZRTP点对点加密</string>
 </resources>
