@@ -29,7 +29,7 @@
         <androidx.constraintlayout.widget.Group
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="title, search_toggle"
+            app:constraint_referenced_ids="drawer_menu, title, search_toggle"
             android:visibility="@{viewModel.searchBarVisible ? View.GONE : View.VISIBLE}" />
 
         <androidx.constraintlayout.widget.Group
@@ -45,19 +45,33 @@
             app:constraint_referenced_ids="title, search"
             app:barrierDirection="bottom" />
 
+        <ImageView
+            style="@style/icon_top_bar_button_style"
+            android:id="@+id/drawer_menu"
+            android:onClick="@{() -> viewModel.openDrawerMenu()}"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:src="@drawable/list"
+            android:contentDescription="@string/content_description_open_filter"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/title"
+            app:layout_constraintBottom_toBottomOf="@id/title"
+            app:tint="?attr/color_main2_600" />
+
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_800"
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="15dp"
+            android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:gravity="center_vertical"
             android:text="@{viewModel.title, default=`Title`}"
             android:textColor="?attr/color_text"
             android:textSize="28sp"
             app:layout_constraintEnd_toStartOf="@id/search_toggle"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/drawer_menu"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
