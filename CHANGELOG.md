@@ -36,6 +36,22 @@ Group changes to describe their impact on the project, as follows:
 - Reworked some settings (moved calls related ones from advanced settings to advanced calls settings)
 - Increased shared media preview size in chat
 - Un-encrypted conversation warning will be more visible for accounts that support end-to-end encrypted conversations
+- Made numpad buttons larger by changing their shape
+
+## [6.0.18] - 2025-09-15
+
+### Added
+- Added menu icon next to currently selected account avatar to make the drawer menu easier to understand
+- Added missing dialpad floating action button in the call transfer fragment
+
+### Changed
+- Improved bodyless friendlist presence process when it's received
+
+### Fixed
+- Fixed "End-to-end encrypted call" label while in conference, the call may be end-to-end encrypted but only to the conference server, not to all participants
+- Fixed missing meeting subject when calling the conference SIP URI if the conference info doesn't exist yet
+- Finish CallActivity if no call is found when trying to answer/decline a call from the IncomingCallFragment
+- Prevent empty screen when rotating the device and clicking on the empty part next to the list while in landscape and then rotating the device back to portrait
 
 ## [6.0.17] - 2025-09-02
 
