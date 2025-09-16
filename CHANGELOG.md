@@ -33,6 +33,7 @@ Group changes to describe their impact on the project, as follows:
 ### Changed
 - Hide SIP address/phone number picker dialog if contact has exactly one SIP address matching both the app default domain & the currently selected account domain
 - Improved UI on tablets with screen sw600dp and higher, will look more like our desktop app
+- Now loading media/documents contents in conversation by chunks (instead of all of them at once)
 - Simplified audio device name in settings
 - Reworked some settings (moved calls related ones from advanced settings to advanced calls settings)
 - Increased shared media preview size in chat

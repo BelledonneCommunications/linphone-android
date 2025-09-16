@@ -69,7 +69,7 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatConversationFragmentBinding
 import org.linphone.databinding.ChatConversationPopupMenuBinding
 import org.linphone.ui.GenericActivity
-import org.linphone.ui.main.chat.ConversationScrollListener
+import org.linphone.ui.main.chat.RecyclerViewScrollListener
 import org.linphone.ui.main.chat.adapter.ConversationEventAdapter
 import org.linphone.ui.main.chat.adapter.MessageBottomSheetAdapter
 import org.linphone.ui.main.chat.model.FileModel
@@ -298,7 +298,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         }
     }
 
-    private lateinit var scrollListener: ConversationScrollListener
+    private lateinit var scrollListener: RecyclerViewScrollListener
 
     private lateinit var headerItemDecoration: RecyclerViewHeaderDecoration
 
@@ -1005,7 +1005,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
 
         binding.sendArea.messageToSend.addTextChangedListener(textObserver)
 
-        scrollListener = object : ConversationScrollListener(layoutManager) {
+        scrollListener = object : RecyclerViewScrollListener(layoutManager, 5, false) {
             @UiThread
             override fun onLoadMore(totalItemsCount: Int) {
                 if (viewModel.searchInProgress.value == false) {

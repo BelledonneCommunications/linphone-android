@@ -22,16 +22,21 @@ package org.linphone.ui.main.chat.viewmodel
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
+import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.Content
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.chat.model.FileModel
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
+import kotlin.math.min
 
 class ConversationMediaListViewModel
     @UiThread
     constructor() : AbstractConversationViewModel() {
     companion object {
         private const val TAG = "[Conversation Media List ViewModel]"
+
+        private const val CONTENTS_PER_PAGE = 50
     }
 
     val mediaList = MutableLiveData<List<FileModel>>()
@@ -41,6 +46,8 @@ class ConversationMediaListViewModel
     val openMediaEvent: MutableLiveData<Event<FileModel>> by lazy {
         MutableLiveData<Event<FileModel>>()
     }
+
+    private var totalMediaCount: Int = -1
 
     @WorkerThread
     override fun afterNotifyingChatRoomFound(sameOne: Boolean) {
@@ -56,16 +63,48 @@ class ConversationMediaListViewModel
     @WorkerThread
     private fun loadMediaList() {
         operationInProgress.postValue(true)
-
-        val list = arrayListOf<FileModel>()
         Log.i(
             "$TAG Loading media contents for conversation [${LinphoneUtils.getConversationId(
                 chatRoom
             )}]"
         )
-        val media = chatRoom.mediaContents
-        Log.i("$TAG [${media.size}] media have been fetched")
-        for (mediaContent in media) {
+
+        totalMediaCount = chatRoom.mediaContentsSize
+        Log.i("$TAG Media contents size is [$totalMediaCount]")
+
+        val contentsToLoad = min(totalMediaCount, CONTENTS_PER_PAGE)
+        val contents = chatRoom.getMediaContentsRange(0, contentsToLoad)
+        Log.i("$TAG [${contents.size}] media have been fetched")
+
+        mediaList.postValue(getFileModelsListFromContents(contents))
+        operationInProgress.postValue(false)
+    }
+
+    @UiThread
+    fun loadMoreData(totalItemsCount: Int) {
+        coreContext.postOnCoreThread {
+            Log.i("$TAG Loading more data, current total is $totalItemsCount, max size is $totalMediaCount")
+
+            if (totalItemsCount < totalMediaCount) {
+                var upperBound: Int = totalItemsCount + CONTENTS_PER_PAGE
+                if (upperBound > totalMediaCount) {
+                    upperBound = totalMediaCount
+                }
+                val contents = chatRoom.getMediaContentsRange(totalItemsCount, upperBound)
+                Log.i("$TAG [${contents.size}] contents loaded, adding them to list")
+
+                val list = arrayListOf<FileModel>()
+                list.addAll(mediaList.value.orEmpty())
+                list.addAll(getFileModelsListFromContents(contents))
+                mediaList.postValue(list)
+            }
+        }
+    }
+
+    @WorkerThread
+    private fun getFileModelsListFromContents(contents: Array<Content>): ArrayList<FileModel> {
+        val list = arrayListOf<FileModel>()
+        for (mediaContent in contents) {
             // Do not display voice recordings here, even if they are media file
             if (mediaContent.isVoiceRecording) continue
 
@@ -85,14 +124,11 @@ class ConversationMediaListViewModel
             if (path.isNotEmpty() && name.isNotEmpty()) {
                 val model =
                     FileModel(path, name, size, timestamp, isEncrypted, originalPath, chatRoom.isEphemeralEnabled) {
-                    openMediaEvent.postValue(Event(it))
-                }
+                        openMediaEvent.postValue(Event(it))
+                    }
                 list.add(model)
             }
         }
-
-        Log.i("$TAG [${media.size}] media have been processed")
-        mediaList.postValue(list)
-        operationInProgress.postValue(false)
+        return list
     }
 }

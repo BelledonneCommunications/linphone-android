@@ -36,6 +36,7 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatMediaFragmentBinding
 import org.linphone.ui.GenericActivity
+import org.linphone.ui.main.chat.RecyclerViewScrollListener
 import org.linphone.ui.main.chat.adapter.ConversationsFilesAdapter
 import org.linphone.ui.main.chat.model.FileModel
 import org.linphone.ui.main.chat.viewmodel.ConversationMediaListViewModel
@@ -57,6 +58,8 @@ class ConversationMediaListFragment : SlidingPaneChildFragment() {
     private lateinit var adapter: ConversationsFilesAdapter
 
     private val args: ConversationMediaListFragmentArgs by navArgs()
+
+    private lateinit var scrollListener: RecyclerViewScrollListener
 
     override fun goBack(): Boolean {
         try {
@@ -158,6 +161,40 @@ class ConversationMediaListFragment : SlidingPaneChildFragment() {
                 Log.i("$TAG User clicked on file [${model.path}], let's display it in file viewer")
                 goToFileViewer(model)
             }
+        }
+
+        scrollListener = object : RecyclerViewScrollListener(layoutManager, spanCount, true) {
+            @UiThread
+            override fun onLoadMore(totalItemsCount: Int) {
+                Log.i("$TAG Asking for more data to display, currently displayed items count is [$totalItemsCount]")
+                viewModel.loadMoreData(totalItemsCount)
+            }
+
+            @UiThread
+            override fun onScrolledUp() {
+
+            }
+
+            @UiThread
+            override fun onScrolledToEnd() {
+
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (::scrollListener.isInitialized) {
+            binding.mediaList.addOnScrollListener(scrollListener)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        if (::scrollListener.isInitialized) {
+            binding.mediaList.removeOnScrollListener(scrollListener)
         }
     }
 

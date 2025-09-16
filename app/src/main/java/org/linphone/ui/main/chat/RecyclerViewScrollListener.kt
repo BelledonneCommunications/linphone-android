@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2020 Belledonne Communications SARL.
+ * Copyright (c) 2010-2025 Belledonne Communications SARL.
  *
  * This file is part of linphone-android
  * (see https://www.linphone.org).
@@ -21,13 +21,12 @@ package org.linphone.ui.main.chat
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import org.linphone.core.tools.Log
 
-internal abstract class ConversationScrollListener(private val mLayoutManager: LinearLayoutManager) :
+internal abstract class RecyclerViewScrollListener(private val layoutManager: LinearLayoutManager, private val visibleThreshold: Int, private val scrollingTopToBottom: Boolean) :
     RecyclerView.OnScrollListener() {
     companion object {
-        // The minimum amount of items to have below your current scroll position
-        // before loading more.
-        private const val VISIBLE_THRESHOLD = 5
+        private const val TAG = "[RecyclerView Scroll Listener]"
     }
 
     // The total number of items in the data set after the last load
@@ -40,9 +39,9 @@ internal abstract class ConversationScrollListener(private val mLayoutManager: L
     // We are given a few useful parameters to help us work out if we need to load some more data,
     // but first we check if we are waiting for the previous load to finish.
     override fun onScrolled(view: RecyclerView, dx: Int, dy: Int) {
-        val totalItemCount = mLayoutManager.itemCount
-        val firstVisibleItemPosition: Int = mLayoutManager.findFirstVisibleItemPosition()
-        val lastVisibleItemPosition: Int = mLayoutManager.findLastVisibleItemPosition()
+        val totalItemCount = layoutManager.itemCount
+        val firstVisibleItemPosition: Int = layoutManager.findFirstVisibleItemPosition()
+        val lastVisibleItemPosition: Int = layoutManager.findLastVisibleItemPosition()
 
         // If the total item count is zero and the previous isn't, assume the
         // list is invalidated and should be reset back to initial state
@@ -64,21 +63,34 @@ internal abstract class ConversationScrollListener(private val mLayoutManager: L
         val userHasScrolledUp = lastVisibleItemPosition != totalItemCount - 1
         if (userHasScrolledUp) {
             onScrolledUp()
+            Log.d("$TAG Scrolled up")
         } else {
             onScrolledToEnd()
+            Log.d("$TAG Scrolled to end")
         }
 
         // If it isn’t currently loading, we check to see if we have breached
-        // the mVisibleThreshold and need to reload more data.
+        // the visibleThreshold and need to reload more data.
         // If we do need to reload some more data, we execute onLoadMore to fetch the data.
         // threshold should reflect how many total columns there are too
-        if (!loading &&
-            firstVisibleItemPosition < VISIBLE_THRESHOLD &&
-            firstVisibleItemPosition >= 0 &&
-            lastVisibleItemPosition < totalItemCount - VISIBLE_THRESHOLD
-        ) {
-            onLoadMore(totalItemCount)
-            loading = true
+        if (!loading) {
+            if (scrollingTopToBottom) {
+                if (lastVisibleItemPosition >= totalItemCount - visibleThreshold) {
+                    Log.d(
+                        "$TAG Last visible item position [$lastVisibleItemPosition] reached [${totalItemCount - visibleThreshold}], loading more (current total items is [$totalItemCount])"
+                    )
+                    loading = true
+                    onLoadMore(totalItemCount)
+                }
+            } else {
+                if (firstVisibleItemPosition < visibleThreshold) {
+                    Log.d(
+                        "$TAG First visible item position [$firstVisibleItemPosition] < visibleThreshold [$visibleThreshold], loading more (current total items is [$totalItemCount])"
+                    )
+                    loading = true
+                    onLoadMore(totalItemCount)
+                }
+            }
         }
     }
 
