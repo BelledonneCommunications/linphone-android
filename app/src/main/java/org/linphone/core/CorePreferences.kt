@@ -106,13 +106,14 @@ class CorePreferences constructor(private val context: Context) {
         }
 
     var autoStart: Boolean
-        get() = config.getBool("app", "auto_start", true)
+        get() = false   //get() = config.getBool("app", "auto_start", true)
         set(value) {
             config.setBool("app", "auto_start", value)
         }
 
     var keepServiceAlive: Boolean
-        get() = config.getBool("app", "keep_service_alive", false)
+        get() = false
+        //get() = config.getBool("app", "keep_service_alive", false)
         set(value) {
             config.setBool("app", "keep_service_alive", value)
         }
