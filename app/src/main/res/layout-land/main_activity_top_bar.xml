@@ -82,6 +82,7 @@
             android:text="@{viewModel.title, default=`Title`}"
             android:textColor="?attr/color_on_main"
             android:textSize="20sp"
+            android:includeFontPadding="false"
             app:layout_constraintEnd_toStartOf="@id/search_toggle"
             app:layout_constraintStart_toEndOf="@id/avatar"
             app:layout_constraintTop_toTopOf="@id/avatar"
