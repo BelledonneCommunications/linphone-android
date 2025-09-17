@@ -106,7 +106,7 @@ class CorePreferences constructor(private val context: Context) {
         }
 
     var autoStart: Boolean
-        get() = false   //get() = config.getBool("app", "auto_start", true)
+        get() = true   //get() = config.getBool("app", "auto_start", true)
         set(value) {
             config.setBool("app", "auto_start", value)
         }
