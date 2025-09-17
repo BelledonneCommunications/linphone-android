@@ -291,7 +291,12 @@ class FileViewModel
                     Log.e("$TAG Can't open PDF, probably protected by a password: $se")
                     pdfCurrentPage.postValue("0")
                     pdfPages.postValue("0")
-                    showRedToast(R.string.conversation_pdf_file_cant_be_opened_error_toast, R.drawable.warning_circle)
+                    showRedToast(R.string.conversation_pdf_password_protected_file_cant_be_opened_error_toast, R.drawable.warning_circle)
+                } catch (e: Exception) {
+                    Log.e("$TAG Can't open PDF, it may be corrupted: $e")
+                    pdfCurrentPage.postValue("0")
+                    pdfPages.postValue("0")
+                    showRedToast(R.string.conversation_pdf_file_error_toast, R.drawable.warning_circle)
                 }
             }
         }

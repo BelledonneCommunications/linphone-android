@@ -595,7 +595,8 @@
     <string name="conversation_pick_file_from_gallery_label">Open gallery</string>
     <string name="conversation_pick_any_file_label">Pick file</string>
     <string name="conversation_file_cant_be_opened_error_toast">File can\'t be opened!</string>
-    <string name="conversation_pdf_file_cant_be_opened_error_toast">Can\'t open password protected PDFs yet</string>
+    <string name="conversation_pdf_password_protected_file_cant_be_opened_error_toast">Can\'t open password protected PDFs yet</string>
+    <string name="conversation_pdf_file_error_toast">Can\'t open this PDF, file may be corrupted</string>
     <string name="conversation_editing_message_title">Message being edited</string>
     <string name="conversation_message_edited_label">Edited</string>
     <string name="conversation_dialog_delete_chat_message_title">Delete this message?</string>

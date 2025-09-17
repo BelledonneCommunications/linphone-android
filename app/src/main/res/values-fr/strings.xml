@@ -552,7 +552,8 @@
     <string name="conversation_pick_file_from_gallery_label">Ouvrir la galerie</string>
     <string name="conversation_pick_any_file_label">Choisir un fichier</string>
     <string name="conversation_file_cant_be_opened_error_toast">Impossible d\'ouvrir le fichier !</string>
-    <string name="conversation_pdf_file_cant_be_opened_error_toast">Impossible d\'ouvrir un PDF protégé par mot de passe</string>
+    <string name="conversation_pdf_password_protected_file_cant_be_opened_error_toast">Impossible d\'ouvrir un PDF protégé par mot de passe</string>
+    <string name="conversation_pdf_file_error_toast">Impossible d\'ouvrir ce PDF, le fichier est peut-être corrompu</string>
     <string name="conversation_editing_message_title">Modification du message</string>
     <string name="conversation_message_edited_label">Modifié</string>
     <string name="conversation_dialog_delete_chat_message_title">Supprimer le message ?</string>
