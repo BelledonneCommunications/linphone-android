@@ -14,6 +14,7 @@ Group changes to describe their impact on the project, as follows:
 
 ### Added
 - Added the ability to edit/delete chat messages sent less than 24 hours ago.
+- Added PDF preview in conversation (message bubble & documents list)
 - Added hover effect when using a mouse (useful for tablets or devices with desktop mode)
 - Support right click on some items to open bottom sheet/menu
 - Added toggle speaker action in active call notification

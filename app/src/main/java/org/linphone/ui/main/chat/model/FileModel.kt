@@ -19,9 +19,11 @@
  */
 package org.linphone.ui.main.chat.model
 
+import android.graphics.pdf.PdfRenderer
 import android.media.MediaMetadataRetriever
 import android.media.MediaMetadataRetriever.METADATA_KEY_DURATION
 import android.media.ThumbnailUtils
+import android.os.ParcelFileDescriptor
 import android.provider.MediaStore
 import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
@@ -35,6 +37,9 @@ import org.linphone.core.tools.Log
 import org.linphone.utils.FileUtils
 import org.linphone.utils.TimestampUtils
 import androidx.core.net.toUri
+import androidx.core.graphics.createBitmap
+import kotlinx.coroutines.withContext
+import java.io.File
 
 class FileModel
     @AnyThread
@@ -97,6 +102,9 @@ class FileModel
         if (!isWaitingToBeDownloaded) {
             val extension = FileUtils.getExtensionFromFileName(path)
             isPdf = extension == "pdf"
+            if (isPdf) {
+                loadPdfPreview()
+            }
 
             val mime = FileUtils.getMimeTypeFromExtension(extension)
             mimeTypeString = mime
@@ -168,21 +176,65 @@ class FileModel
     }
 
     @AnyThread
-    private fun loadVideoPreview() {
-        try {
-            Log.i("$TAG Try to create an image preview of video file [$path]")
-            val previewBitmap = ThumbnailUtils.createVideoThumbnail(
-                path,
-                MediaStore.Images.Thumbnails.MINI_KIND
-            )
-            if (previewBitmap != null) {
-                val previewPath = FileUtils.storeBitmap(previewBitmap, fileName)
-                Log.i("$TAG Preview of video file [$path] available at [$previewPath]")
-                mediaPreview.postValue(previewPath)
-                mediaPreviewAvailable.postValue(true)
+    private fun loadPdfPreview() {
+        scope.launch {
+            withContext(Dispatchers.IO) {
+                try {
+                    val pdfFileDescriptor = ParcelFileDescriptor.open(
+                        File(path),
+                        ParcelFileDescriptor.MODE_READ_ONLY
+                    )
+                    if (pdfFileDescriptor == null) {
+                        Log.e("$TAG Failed to get a file descriptor for PDF at [$path]")
+                        return@withContext
+                    }
+
+                    val pdfRenderer = PdfRenderer(pdfFileDescriptor)
+                    val pdfFirstPage = pdfRenderer.openPage(0)
+                    val previewBitmap = createBitmap(pdfFirstPage.width, pdfFirstPage.height)
+                    pdfFirstPage.render(
+                        previewBitmap,
+                        null,
+                        null,
+                        PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY
+                    )
+
+                    val previewPath = FileUtils.storeBitmap(previewBitmap, fileName)
+                    Log.i("$TAG Preview of PDF file [$path] available at [$previewPath]")
+                    mediaPreview.postValue(previewPath)
+                    mediaPreviewAvailable.postValue(true)
+
+                    previewBitmap.recycle()
+                    pdfFirstPage.close()
+                    pdfRenderer.close()
+                    pdfFileDescriptor.close()
+                } catch (e: Exception) {
+                    Log.e("$TAG Failed to get image preview for PDF file [$path]: $e")
+                }
             }
-        } catch (e: Exception) {
-            Log.e("$TAG Failed to get image preview for file [$path]: $e")
+        }
+    }
+
+    @AnyThread
+    private fun loadVideoPreview() {
+        scope.launch {
+            withContext(Dispatchers.IO) {
+                try {
+                    Log.i("$TAG Try to create an image preview of video file [$path]")
+                    val previewBitmap = ThumbnailUtils.createVideoThumbnail(
+                        path,
+                        MediaStore.Images.Thumbnails.MINI_KIND
+                    )
+                    if (previewBitmap != null) {
+                        val previewPath = FileUtils.storeBitmap(previewBitmap, fileName)
+                        Log.i("$TAG Preview of video file [$path] available at [$previewPath]")
+                        mediaPreview.postValue(previewPath)
+                        mediaPreviewAvailable.postValue(true)
+                    }
+                } catch (e: Exception) {
+                    Log.e("$TAG Failed to get image preview for file [$path]: $e")
+                }
+            }
         }
     }
 

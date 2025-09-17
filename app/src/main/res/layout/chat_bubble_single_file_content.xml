@@ -64,6 +64,21 @@
             app:layout_constraintEnd_toEndOf="@id/left_background"
             app:tint="?attr/color_main2_600" />
 
+        <ImageView
+            android:id="@+id/file_pdf_preview"
+            android:layout_width="@dimen/chat_bubble_grid_file_size"
+            android:layout_height="@dimen/chat_bubble_grid_file_size"
+            android:onClick="@{() -> model.onClick()}"
+            android:onLongClick="@{onLongClickListener}"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/content_description_chat_bubble_file"
+            android:visibility="@{model.isPdf &amp;&amp; model.mediaPreviewAvailable ? View.VISIBLE : View.GONE, default=gone}"
+            coilBubbleGrid="@{model.mediaPreview}"
+            coilBubbleFallback="@{fileIcon}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_600"
             android:id="@+id/audio_duration"
