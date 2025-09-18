@@ -62,7 +62,7 @@ class PushTokenService(val context: Context) {
         if (token == null) {
             token = FirebaseMessaging.getInstance().token.await()
 
-            Log.i("{}: deviceId={}, token={}", "getToken", getDeviceId(), token)
+            Log.i("getToken: $token, deviceId=${getDeviceId()}")
         }
 
         return token!!

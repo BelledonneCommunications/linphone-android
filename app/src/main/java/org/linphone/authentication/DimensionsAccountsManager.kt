@@ -40,13 +40,14 @@ class DimensionsAccountsManager(context: Context) {
     init {
         val asm = AuthStateManager.getInstance(context)
         val sub = asm.user
+            .skipWhile { u -> !u.hasValidId() } // Only skip initial unknown user. Allow logging out to cause clear() to be called.
             .distinctUntilChanged { user -> user.id ?: "" }
             .subscribe(
                 {
                     try {
-                        Log.i("AUTH user ID : ${it.id}")
+                        Log.i("AUTH user ID: ${it.id}")
                         if (it.hasValidId()) {
-                            load(it.id!!)
+                            load(it.id)
                         } else {
                             clear()
                         }
@@ -54,7 +55,7 @@ class DimensionsAccountsManager(context: Context) {
                         Log.e(e)
                     }
                 },
-                { Log.e("User ID error: " + it.message) }
+                { Log.e("User ID error: ${it.message}") }
             )
     }
 

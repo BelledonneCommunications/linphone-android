@@ -442,6 +442,8 @@ class CoreContext(
     }
 
     private fun clearAccounts() {
+        Log.i("[Context] Clearing SIP registrations...")
+
         setAudioPayloadTypes(null)
         setVideoPayloadTypes(null)
 
@@ -449,6 +451,8 @@ class CoreContext(
         core.clearAccounts()
         core.clearAllAuthInfo()
         core.clearProxyConfig()
+
+        Log.i("[Context] Cleared SIP registrations")
     }
 
     private fun registerSipEndpoints(userDeviceList: List<UserDevice>?) {
@@ -465,7 +469,7 @@ class CoreContext(
                 core.refreshRegisters()
 
                 Log.i(
-                    "RegisterSipEndpoints::${core.defaultAccount!!.params.identityAddress?.username}::Default=True"
+                    "[Context] RegisterSipEndpoints::${core.defaultAccount!!.params.identityAddress?.username}::Default=True"
                 )
             }
         }
