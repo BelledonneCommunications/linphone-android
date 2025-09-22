@@ -112,7 +112,7 @@
                 android:drawablePadding="10dp"
                 android:drawableTint="?attr/color_main2_600"
                 android:hint="@string/new_conversation_search_bar_filter_hint"
-                android:inputType="textPersonName|textNoSuggestions"
+                android:inputType="text|textPersonName|textNoSuggestions"
                 android:paddingStart="15dp"
                 android:paddingTop="10dp"
                 android:paddingEnd="15dp"
