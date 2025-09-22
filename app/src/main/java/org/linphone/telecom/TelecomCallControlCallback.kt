@@ -260,13 +260,14 @@ class TelecomCallControlCallback(
                     continue
                 }
 
+                var success = false
                 scope.launch {
                     Log.i("$TAG Requesting audio endpoint change to [${endpoint.name}] with type [${endpointTypeToString(endpoint.type)}]")
                     endpointUpdateRequestFromLinphone = true
                     latestLinphoneRequestedEndpoint = endpoint
                     var result: CallControlResult = callControl.requestEndpointChange(endpoint)
                     var attempts = 1
-                    while (result is CallControlResult.Error && attempts <= 10) {
+                    while (result is CallControlResult.Error && attempts <= 2) {
                         delay(100)
                         Log.i(
                             "$TAG Previous attempt failed [$result], requesting again audio endpoint change to [${endpoint.name}] with type [${endpointTypeToString(endpoint.type)}]"
@@ -282,10 +283,11 @@ class TelecomCallControlCallback(
                             "$TAG It took [$attempts] attempt(s) to change endpoint audio device..."
                         )
                         currentEndpoint = endpoint.type
+                        success = true
                     }
                 }
 
-                return true
+                return success
             }
         }
 
