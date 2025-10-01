@@ -119,6 +119,8 @@ class SettingsViewModel
 
     val cardDavFriendsLists = MutableLiveData<List<CardDavLdapModel>>()
 
+    val presenceSubscribe = MutableLiveData<Boolean>()
+
     val addLdapServerEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -342,6 +344,7 @@ class SettingsViewModel
 
             sortContactsBy.postValue(if (corePreferences.sortContactsByFirstName) 0 else 1)
             hideEmptyContacts.postValue(corePreferences.hideContactsWithoutPhoneNumberOrSipAddress)
+            presenceSubscribe.postValue(core.isFriendListSubscriptionEnabled)
 
             defaultLayout.postValue(core.defaultConferenceLayout.toInt())
 
@@ -640,6 +643,15 @@ class SettingsViewModel
             }
 
             cardDavFriendsLists.postValue(list)
+        }
+    }
+
+    @UiThread
+    fun togglePresenceSubscribe() {
+        val newValue = presenceSubscribe.value == false
+        coreContext.postOnCoreThread { core ->
+            core.isFriendListSubscriptionEnabled = newValue
+            presenceSubscribe.postValue(newValue)
         }
     }
 

@@ -227,6 +227,7 @@
     <string name="settings_contacts_title">Contacts</string>
     <string name="settings_contacts_sort_by_first_name_title">Trier les contacts par</string>
     <string name="settings_contacts_hide_empty_contacts_title">Masquer les contacts sans adresse SIP ni numéro de téléphone</string>
+    <string name="settings_contacts_presence_subscribe_title">Souscrire aux informations de présence</string>
     <string name="settings_contacts_add_ldap_server_title">Ajouter un serveur LDAP</string>
     <string name="settings_contacts_edit_ldap_server_title">Editer le serveur LDAP</string>
     <string name="settings_contacts_add_carddav_server_title">Ajouter un carnet d\'adresse CardDAV</string>
