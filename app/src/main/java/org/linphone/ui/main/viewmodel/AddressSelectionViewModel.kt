@@ -267,6 +267,7 @@ abstract class AddressSelectionViewModel
             arrayListOf()
         }
 
+        val defaultAccountDomain = LinphoneUtils.getDefaultAccount()?.params?.domain
         val favoritesList = arrayListOf<ConversationContactOrSuggestionModel>()
         val domain = corePreferences.contactsFilter
         // Make a quick synchronous search for favorites (in case of total results exceed magic search limit to prevent missing ones)
@@ -321,6 +322,8 @@ abstract class AddressSelectionViewModel
                     val model = ConversationContactOrSuggestionModel(address) {
                         coreContext.startAudioCall(address)
                     }
+                    val avatarModel = getContactAvatarModelForAddress(address)
+                    model.avatarModel.postValue(avatarModel)
                     suggestionsList.add(model)
                     continue
                 }
@@ -331,10 +334,11 @@ abstract class AddressSelectionViewModel
                     continue
                 }
 
-                val model = ConversationContactOrSuggestionModel(address) {
+                val model = ConversationContactOrSuggestionModel(address, defaultAccountDomain = defaultAccountDomain) {
                     coreContext.startAudioCall(address)
                 }
-
+                val avatarModel = getContactAvatarModelForAddress(address)
+                model.avatarModel.postValue(avatarModel)
                 suggestionsList.add(model)
             }
         }
@@ -459,5 +463,13 @@ abstract class AddressSelectionViewModel
             }
         }
         return conversationsList
+    }
+
+    @WorkerThread
+    private fun getContactAvatarModelForAddress(address: Address): ContactAvatarModel {
+        val fakeFriend = coreContext.core.createFriend()
+        fakeFriend.name = LinphoneUtils.getDisplayName(address)
+        fakeFriend.address = address
+        return ContactAvatarModel(fakeFriend)
     }
 }
