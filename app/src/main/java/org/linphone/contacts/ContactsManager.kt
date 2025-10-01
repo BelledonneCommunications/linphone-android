@@ -789,6 +789,7 @@ fun Friend.getPerson(): Person {
 @WorkerThread
 fun Friend.getListOfSipAddresses(): ArrayList<Address> {
     val addressesList = arrayListOf<Address>()
+    if (corePreferences.hideSipAddresses) return addressesList
 
     for (address in addresses) {
         if (addressesList.find { it.weakEqual(address) } == null) {
@@ -803,19 +804,19 @@ fun Friend.getListOfSipAddresses(): ArrayList<Address> {
 fun Friend.getListOfSipAddressesAndPhoneNumbers(listener: ContactNumberOrAddressClickListener): ArrayList<ContactNumberOrAddressModel> {
     val addressesAndNumbers = arrayListOf<ContactNumberOrAddressModel>()
 
-    if (!corePreferences.hideSipAddresses) {
-        for (address in getListOfSipAddresses()) {
-            val data = ContactNumberOrAddressModel(
-                this,
-                address,
-                address.asStringUriOnly(),
-                true, // SIP addresses are always enabled
-                listener,
-                true
-            )
-            addressesAndNumbers.add(data)
-        }
+    // Will return an empty list if corePreferences.hideSipAddresses == true
+    for (address in getListOfSipAddresses()) {
+        val data = ContactNumberOrAddressModel(
+            this,
+            address,
+            address.asStringUriOnly(),
+            true, // SIP addresses are always enabled
+            listener,
+            true
+        )
+        addressesAndNumbers.add(data)
     }
+
     if (corePreferences.hidePhoneNumbers) {
         return addressesAndNumbers
     }

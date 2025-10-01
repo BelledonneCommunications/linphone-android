@@ -52,10 +52,6 @@ class StartConversationViewModel
 
     val operationInProgress = MutableLiveData<Boolean>()
 
-    val chatRoomCreationErrorEvent: MutableLiveData<Event<Int>> by lazy {
-        MutableLiveData<Event<Int>>()
-    }
-
     val chatRoomCreatedEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
     }
@@ -78,9 +74,7 @@ class StartConversationViewModel
                 Log.e("$TAG Conversation [$id] creation has failed!")
                 chatRoom.removeListener(this)
                 operationInProgress.postValue(false)
-                chatRoomCreationErrorEvent.postValue(
-                    Event(R.string.conversation_failed_to_create_toast)
-                )
+                showRedToast(R.string.conversation_failed_to_create_toast, R.drawable.warning_circle)
             }
         }
     }
@@ -159,9 +153,7 @@ class StartConversationViewModel
             } else {
                 Log.e("$TAG Failed to create group conversation [$groupChatRoomSubject]!")
                 operationInProgress.postValue(false)
-                chatRoomCreationErrorEvent.postValue(
-                    Event(R.string.conversation_failed_to_create_toast)
-                )
+                showRedToast(R.string.conversation_failed_to_create_toast, R.drawable.warning_circle)
             }
         }
     }
@@ -212,9 +204,7 @@ class StartConversationViewModel
                 "$TAG Account is in secure mode, can't chat with SIP address of different domain [${remote.asStringUriOnly()}]"
             )
             operationInProgress.postValue(false)
-            chatRoomCreationErrorEvent.postValue(
-                Event(R.string.conversation_invalid_participant_due_to_security_mode_toast)
-            )
+            showRedToast(R.string.conversation_invalid_participant_due_to_security_mode_toast, R.drawable.warning_circle)
             return
         }
 
@@ -247,9 +237,7 @@ class StartConversationViewModel
             } else {
                 Log.e("$TAG Failed to create 1-1 conversation with [${remote.asStringUriOnly()}]!")
                 operationInProgress.postValue(false)
-                chatRoomCreationErrorEvent.postValue(
-                    Event(R.string.conversation_failed_to_create_toast)
-                )
+                showRedToast(R.string.conversation_failed_to_create_toast, R.drawable.warning_circle)
             }
         } else {
             Log.w(

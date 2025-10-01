@@ -66,6 +66,8 @@ class ContactNewOrEditViewModel
 
     val sipAddresses = ArrayList<NewOrEditNumberOrAddressModel>()
 
+    val hideSipAddresses = MutableLiveData<Boolean>()
+
     val phoneNumbers = ArrayList<NewOrEditNumberOrAddressModel>()
 
     val company = MutableLiveData<String>()
@@ -81,6 +83,10 @@ class ContactNewOrEditViewModel
     val addNewNumberOrAddressFieldEvent = MutableLiveData<Event<NewOrEditNumberOrAddressModel>>()
 
     val removeNewNumberOrAddressFieldEvent = MutableLiveData<Event<NewOrEditNumberOrAddressModel>>()
+
+    init {
+        hideSipAddresses.postValue(corePreferences.hideSipAddresses)
+    }
 
     @UiThread
     fun findFriendByRefKey(refKey: String?) {

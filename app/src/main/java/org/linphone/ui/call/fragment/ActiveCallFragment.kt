@@ -361,15 +361,6 @@ class ActiveCallFragment : GenericCallFragment() {
             }
         }
 
-        callViewModel.chatRoomCreationErrorEvent.observe(viewLifecycleOwner) {
-            it.consume { error ->
-                (requireActivity() as GenericActivity).showRedToast(
-                    getString(error),
-                    R.drawable.warning_circle
-                )
-            }
-        }
-
         callViewModel.goToConversationEvent.observe(viewLifecycleOwner) {
             it.consume { conversationId ->
                 if (findNavController().currentDestination?.id == R.id.activeCallFragment) {

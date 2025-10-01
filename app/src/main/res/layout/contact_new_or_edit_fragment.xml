@@ -224,6 +224,7 @@
                     android:layout_marginTop="30dp"
                     android:layout_marginEnd="16dp"
                     android:text="@string/sip_address"
+                    android:visibility="@{viewModel.hideSipAddresses ? View.GONE : View.VISIBLE}"
                     app:layout_constraintTop_toBottomOf="@id/last_name"
                     app:layout_constraintStart_toStartOf="@id/sip_addresses"/>
 
@@ -234,6 +235,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:orientation="vertical"
+                    android:visibility="@{viewModel.hideSipAddresses ? View.GONE : View.VISIBLE}"
                     app:layout_constraintWidth_max="@dimen/text_input_max_width"
                     app:layout_constraintTop_toBottomOf="@id/sip_addresses_label"
                     app:layout_constraintStart_toStartOf="parent"

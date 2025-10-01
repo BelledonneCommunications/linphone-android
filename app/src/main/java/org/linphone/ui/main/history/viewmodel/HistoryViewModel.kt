@@ -67,10 +67,6 @@ class HistoryViewModel
 
     val callLogFoundEvent = MutableLiveData<Event<Boolean>>()
 
-    val chatRoomCreationErrorEvent: MutableLiveData<Event<Int>> by lazy {
-        MutableLiveData<Event<Int>>()
-    }
-
     val goToMeetingConversationEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
     }
@@ -125,9 +121,7 @@ class HistoryViewModel
                 Log.e("$TAG Conversation [$id] creation has failed!")
                 chatRoom.removeListener(this)
                 operationInProgress.postValue(false)
-                chatRoomCreationErrorEvent.postValue(
-                    Event(R.string.conversation_failed_to_create_toast)
-                )
+                showRedToast(R.string.conversation_failed_to_create_toast, R.drawable.warning_circle)
             }
         }
     }
@@ -307,9 +301,7 @@ class HistoryViewModel
                             "$TAG Failed to create 1-1 conversation with [${remote.asStringUriOnly()}]!"
                         )
                         operationInProgress.postValue(false)
-                        chatRoomCreationErrorEvent.postValue(
-                            Event(R.string.conversation_failed_to_create_toast)
-                        )
+                        showRedToast(R.string.conversation_failed_to_create_toast, R.drawable.warning_circle)
                     }
                 }
             }

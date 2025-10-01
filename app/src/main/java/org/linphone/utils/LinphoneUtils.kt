@@ -142,7 +142,7 @@ class LinphoneUtils {
             }
 
             val defaultDomain = corePreferences.defaultDomain
-            val currentDomain = friend.core.defaultAccount?.params?.identityAddress?.domain
+            val currentDomain = getDefaultAccount()?.params?.identityAddress?.domain
             if (defaultDomain != currentDomain) return null
 
             var defaultDomainAddressesCount = 0

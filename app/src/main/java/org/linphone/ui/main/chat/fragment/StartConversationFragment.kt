@@ -99,16 +99,6 @@ class StartConversationFragment : GenericAddressPickerFragment() {
             }
         }
 
-        viewModel.chatRoomCreationErrorEvent.observe(viewLifecycleOwner) {
-            it.consume { error ->
-                Log.i("$TAG Conversation creation error, showing red toast")
-                (requireActivity() as GenericActivity).showRedToast(
-                    getString(error),
-                    R.drawable.warning_circle
-                )
-            }
-        }
-
         viewModel.defaultAccountChangedEvent.observe(viewLifecycleOwner) {
             it.consume {
                 viewModel.updateGroupChatButtonVisibility()

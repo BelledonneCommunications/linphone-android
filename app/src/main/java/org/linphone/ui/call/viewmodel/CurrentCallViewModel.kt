@@ -220,10 +220,6 @@ class CurrentCallViewModel
         MutableLiveData<Event<String>>()
     }
 
-    val chatRoomCreationErrorEvent: MutableLiveData<Event<Int>> by lazy {
-        MutableLiveData<Event<Int>>()
-    }
-
     // Conference
 
     val conferenceModel = ConferenceViewModel()
@@ -429,9 +425,7 @@ class CurrentCallViewModel
                 Log.e("$TAG Conversation [$id] creation has failed!")
                 chatRoom.removeListener(this)
                 operationInProgress.postValue(false)
-                chatRoomCreationErrorEvent.postValue(
-                    Event(R.string.conversation_failed_to_create_toast)
-                )
+                showRedToast(R.string.conversation_failed_to_create_toast, R.drawable.warning_circle)
             }
         }
     }
@@ -1434,9 +1428,7 @@ class CurrentCallViewModel
                 "$TAG Failed to create 1-1 conversation with [${remoteAddress.asStringUriOnly()}]!"
             )
             operationInProgress.postValue(false)
-            chatRoomCreationErrorEvent.postValue(
-                Event(R.string.conversation_failed_to_create_toast)
-            )
+            showRedToast(R.string.conversation_failed_to_create_toast, R.drawable.warning_circle)
         }
     }
 
