@@ -82,9 +82,38 @@
             app:entries="@{viewModel.cardDavFriendsLists}"
             app:layout="@{@layout/settings_contacts_carddav_ldap_list_cell}"
             app:layout_constraintTop_toBottomOf="@id/add_carddav_server"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/settings_title_style"
+            android:onClick="@{() -> viewModel.togglePresenceSubscribe()}"
+            android:id="@+id/presence_subscribe_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/settings_contacts_presence_subscribe_title"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:labelFor="@id/presence_subscribe_switch"
+            app:layout_constraintTop_toTopOf="@id/presence_subscribe_switch"
+            app:layout_constraintBottom_toBottomOf="@id/presence_subscribe_switch"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/presence_subscribe_switch"/>
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            style="@style/material_switch_style"
+            android:id="@+id/presence_subscribe_switch"
+            android:onClick="@{() -> viewModel.togglePresenceSubscribe()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:checked="@{viewModel.presenceSubscribe}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/existing_carddav_servers"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

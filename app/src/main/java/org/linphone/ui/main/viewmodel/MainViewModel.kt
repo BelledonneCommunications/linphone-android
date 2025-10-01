@@ -282,7 +282,6 @@ class MainViewModel
                 Log.i(
                     "$TAG Default account changed, now is [${account.params.identityAddress?.asStringUriOnly()}]"
                 )
-                coreContext.updateFriendListsSubscriptionDependingOnDefaultAccount()
 
                 removeAlert(DEFAULT_ACCOUNT_DISABLED)
                 removeAlert(NON_DEFAULT_ACCOUNT_NOT_CONNECTED)

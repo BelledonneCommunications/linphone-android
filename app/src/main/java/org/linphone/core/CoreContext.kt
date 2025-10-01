@@ -606,7 +606,6 @@ class CoreContext
     @WorkerThread
     fun startCore() {
         Log.i("$TAG Starting Core")
-        updateFriendListsSubscriptionDependingOnDefaultAccount()
 
         val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         audioManager.registerAudioDeviceCallback(audioDeviceCallback, coreThread)
@@ -1036,22 +1035,6 @@ class CoreContext
         )
         context.stopService(serviceIntent)
         keepAliveServiceStarted = false
-    }
-
-    @WorkerThread
-    fun updateFriendListsSubscriptionDependingOnDefaultAccount() {
-        val account = core.defaultAccount
-        if (account != null) {
-            val enabled = account.params.domain == corePreferences.defaultDomain
-            if (enabled != core.isFriendListSubscriptionEnabled) {
-                core.isFriendListSubscriptionEnabled = enabled
-                Log.i(
-                    "$TAG Friend list(s) subscription are now ${if (enabled) "enabled" else "disabled"}"
-                )
-            }
-        } else {
-            Log.e("$TAG Default account is null, do not touch friend lists subscription")
-        }
     }
 
     @WorkerThread
