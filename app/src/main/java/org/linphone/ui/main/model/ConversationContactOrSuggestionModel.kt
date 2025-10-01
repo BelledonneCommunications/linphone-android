@@ -36,6 +36,7 @@ class ConversationContactOrSuggestionModel
     val conversationId: String = "",
     conversationSubject: String? = null,
     val friend: Friend? = null,
+    val defaultAccountDomain: String? = null,
     private val onClicked: ((Address) -> Unit)? = null
 ) {
     val id = friend?.refKey ?: address.asStringUriOnly().hashCode()
@@ -50,7 +51,13 @@ class ConversationContactOrSuggestionModel
         }
 
     val sipUri = if (!corePreferences.hideSipAddresses) {
-        address.asStringUriOnly()
+        // Hide SIP address and only show username for suggestions
+        // on the same domain as the currently selected account
+        if (!defaultAccountDomain.isNullOrEmpty() && defaultAccountDomain == address.domain) {
+            address.username
+        } else {
+            address.asStringUriOnly()
+        }
     } else {
         address.username
     }

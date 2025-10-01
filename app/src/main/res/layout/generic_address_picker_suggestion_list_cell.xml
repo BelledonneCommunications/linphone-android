@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
@@ -23,15 +23,14 @@
         android:paddingBottom="5dp"
         android:background="@drawable/primary_cell_background">
 
-        <ImageView
-            style="@style/avatar_imageview"
+        <include
             android:id="@+id/avatar"
-            android:layout_width="@dimen/avatar_list_cell_size"
-            android:layout_height="@dimen/avatar_list_cell_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:contentDescription="@null"
-            coilInitials="@{model.initials, default=`JD`}"
+            layout="@layout/contact_avatar"
+            bind:model="@{model.avatarModel}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
