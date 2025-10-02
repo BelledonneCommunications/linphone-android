@@ -399,13 +399,15 @@
     <string name="manage_account_device_last_connection">Last connection:</string>
     <string name="manage_account_dialog_remove_account_title">Sign out of your account?</string>
     <string name="manage_account_dialog_remove_account_message">If you wish to delete your account permanently, go to: https://sip.linphone.org</string>
+    <string name="manage_account_outbound_proxy">Outbound SIP Proxy</string>
+    <string name="manage_account_dialog_outbound_proxy_help_message">If this field is filled, the outbound proxy will be enabled automatically. Leave it empty to disable it.</string>
 
     <string name="account_settings_title">Account settings</string>
     <string name="account_settings_push_notification_title">Allow push notifications</string>
     <string name="account_settings_push_notification_not_available_title">Push notifications aren\'t available!</string>
     <string name="account_settings_im_encryption_mandatory_title">IM encryption mandatory</string>
-    <string name="account_settings_sip_proxy_url_title">SIP proxy server URL</string>
-    <string name="account_settings_outbound_proxy_title">Outbound proxy</string>
+    <string name="account_settings_sip_proxy_url_title">Registrar URI</string>
+    <string name="account_settings_outbound_proxy_title">Outbound SIP Proxy URI</string>
     <string name="account_settings_nat_policy_title">NAT policy settings</string>
     <string name="account_settings_stun_server_url_title">STUN/TURN server URL</string>
     <string name="account_settings_enable_ice_title">Enable ICE</string>

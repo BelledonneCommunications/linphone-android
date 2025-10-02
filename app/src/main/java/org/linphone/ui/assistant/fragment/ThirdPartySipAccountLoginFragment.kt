@@ -41,6 +41,7 @@ import org.linphone.ui.GenericActivity
 import org.linphone.ui.GenericFragment
 import org.linphone.ui.assistant.viewmodel.ThirdPartySipAccountLoginViewModel
 import org.linphone.ui.main.sso.fragment.SingleSignOnFragmentDirections
+import org.linphone.utils.DialogUtils
 import org.linphone.utils.PhoneNumberUtils
 
 @UiThread
@@ -96,6 +97,10 @@ class ThirdPartySipAccountLoginFragment : GenericFragment() {
 
         binding.setBackClickListener {
             goBack()
+        }
+
+        binding.setOutboundProxyTooltipClickListener {
+            showOutboundProxyInfoDialog()
         }
 
         viewModel.showPassword.observe(viewLifecycleOwner) {
@@ -158,5 +163,10 @@ class ThirdPartySipAccountLoginFragment : GenericFragment() {
 
     private fun goBack() {
         findNavController().popBackStack()
+    }
+
+    private fun showOutboundProxyInfoDialog() {
+        val dialog = DialogUtils.getAccountOutboundProxyHelpDialog(requireActivity())
+        dialog.show()
     }
 }

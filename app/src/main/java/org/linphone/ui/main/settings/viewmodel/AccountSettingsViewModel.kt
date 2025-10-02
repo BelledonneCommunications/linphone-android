@@ -62,7 +62,7 @@ class AccountSettingsViewModel
 
     val sipProxyServer = MutableLiveData<String>()
 
-    val outboundProxyEnabled = MutableLiveData<Boolean>()
+    val outboundProxyServer = MutableLiveData<String>()
 
     val stunServer = MutableLiveData<String>()
 
@@ -155,7 +155,7 @@ class AccountSettingsViewModel
                 selectedTransport.postValue(transportType)
 
                 sipProxyServer.postValue(params.serverAddress?.asStringUriOnly())
-                outboundProxyEnabled.postValue(params.isOutboundProxyEnabled)
+                outboundProxyServer.postValue(params.routesAddresses.first().asStringUriOnly())
 
                 natPolicy = params.natPolicy ?: core.createNatPolicy()
                 stunServer.postValue(natPolicy.stunServer)
@@ -222,13 +222,28 @@ class AccountSettingsViewModel
 
                 val server = sipProxyServer.value.orEmpty()
                 if (server.isNotEmpty()) {
+                    Log.i("$TAG Proxy server set to [$server]")
                     val serverAddress = core.interpretUrl(server, false)
                     if (serverAddress != null) {
                         serverAddress.transport = selectedTransport.value
                         newParams.serverAddress = serverAddress
+                    } else {
+                        Log.e("$TAG Failed to parse proxy server!")
                     }
                 }
-                newParams.isOutboundProxyEnabled = outboundProxyEnabled.value == true
+                val outboundProxy = outboundProxyServer.value.orEmpty()
+                if (outboundProxy.isNotEmpty()) {
+                    Log.i("$TAG Outbound proxy server set to [$outboundProxy]")
+                    val outboundProxyAddress = core.interpretUrl(outboundProxy, false)
+                    if (outboundProxyAddress != null) {
+                        outboundProxyAddress.transport = selectedTransport.value
+                        newParams.setRoutesAddresses(arrayOf(outboundProxyAddress))
+                    } else {
+                        Log.e("$TAG Failed to parse outbound proxy server!")
+                    }
+                } else {
+                    newParams.setRoutesAddresses(null)
+                }
 
                 if (::natPolicy.isInitialized) {
                     Log.i("$TAG Also applying changes to NAT policy")

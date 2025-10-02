@@ -9,6 +9,9 @@
             name="updatePasswordClickListener"
             type="View.OnClickListener" />
         <variable
+            name="outboundProxyTooltipClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.main.settings.viewmodel.AccountSettingsViewModel" />
     </data>
@@ -17,55 +20,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/shape_squircle_white_background">
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/settings_title_padding_style"
-            android:id="@+id/transport_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@string/assistant_sip_account_transport_protocol"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:labelFor="@id/transport_spinner"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <androidx.appcompat.widget.AppCompatSpinner
-            style="@style/default_text_style"
-            android:id="@+id/transport_spinner"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:textSize="14sp"
-            android:textColor="@color/gray_main2_600"
-            android:gravity="center_vertical"
-            android:overlapAnchor="false"
-            android:dropDownVerticalOffset="25dp"
-            android:spinnerMode="dropdown"
-            android:popupBackground="@drawable/shape_squircle_white_background"
-            android:background="@drawable/edit_text_background"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintWidth_max="@dimen/text_input_max_width"
-            app:layout_constraintTop_toBottomOf="@id/transport_title"
-            app:layout_constraintStart_toStartOf="@id/transport_title"
-            app:layout_constraintEnd_toEndOf="@id/transport_title" />
-
-        <ImageView
-            android:id="@+id/transport_spinner_caret"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/spinner_caret_end_margin"
-            android:src="@drawable/caret_down"
-            android:contentDescription="@null"
-            app:tint="?attr/color_main2_600"
-            app:layout_constraintTop_toTopOf="@id/transport_spinner"
-            app:layout_constraintBottom_toBottomOf="@id/transport_spinner"
-            app:layout_constraintEnd_toEndOf="@id/transport_spinner"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/settings_title_padding_style"
@@ -79,7 +33,7 @@
             android:maxLines="2"
             android:ellipsize="end"
             android:labelFor="@id/sip_proxy"
-            app:layout_constraintTop_toBottomOf="@id/transport_spinner"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -102,32 +56,53 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/sip_proxy_title"/>
 
-        <com.google.android.material.materialswitch.MaterialSwitch
-            style="@style/material_switch_style"
-            android:id="@+id/outbound_proxy_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="16dp"
-            android:checked="@={viewModel.outboundProxyEnabled}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/sip_proxy" />
-
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/settings_title_style"
+            style="@style/settings_title_padding_style"
             android:id="@+id/outbound_proxy_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="16dp"
             android:text="@string/account_settings_outbound_proxy_title"
             android:maxLines="2"
             android:ellipsize="end"
-            android:labelFor="@id/outbound_proxy_switch"
-            app:layout_constraintTop_toTopOf="@id/outbound_proxy_switch"
-            app:layout_constraintBottom_toBottomOf="@id/outbound_proxy_switch"
+            android:labelFor="@id/sip_proxy"
+            app:layout_constraintTop_toBottomOf="@id/sip_proxy"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/outbound_proxy_switch"/>
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <ImageView
+            android:id="@+id/outbound_proxy_tooltip"
+            android:onClick="@{outboundProxyTooltipClickListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/info"
+            android:contentDescription="@string/content_description_click_for_more_info"
+            app:tint="?attr/color_main2_600"
+            app:layout_constraintTop_toTopOf="@id/outbound_proxy_title"
+            app:layout_constraintBottom_toBottomOf="@id/outbound_proxy_title"
+            app:layout_constraintEnd_toEndOf="@id/outbound_proxy_title" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            style="@style/default_text_style"
+            android:id="@+id/outbound_proxy"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:background="@drawable/edit_text_background"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@={viewModel.outboundProxyServer}"
+            android:inputType="text|textUri"
+            android:hint="@string/account_settings_outbound_proxy_title"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintWidth_max="@dimen/text_input_max_width"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/outbound_proxy_title"/>
 
         <com.google.android.material.materialswitch.MaterialSwitch
             style="@style/material_switch_style"
@@ -138,7 +113,7 @@
             android:layout_marginEnd="16dp"
             android:checked="@={viewModel.avpfEnabled}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/outbound_proxy_switch" />
+            app:layout_constraintTop_toBottomOf="@id/outbound_proxy" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/settings_title_style"

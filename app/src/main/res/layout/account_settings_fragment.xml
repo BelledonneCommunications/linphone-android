@@ -12,6 +12,9 @@
             name="updatePasswordClickListener"
             type="View.OnClickListener" />
         <variable
+            name="outboundProxyTooltipClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.main.settings.viewmodel.AccountSettingsViewModel" />
     </data>
@@ -310,6 +313,7 @@
                         android:visibility="@{viewModel.expandAdvancedSettings ? View.VISIBLE : View.GONE}"
                         layout="@layout/account_advanced_settings"
                         bind:updatePasswordClickListener="@{updatePasswordClickListener}"
+                        bind:outboundProxyTooltipClickListener="@{outboundProxyTooltipClickListener}"
                         bind:viewModel="@{viewModel}"/>
 
                 </LinearLayout>

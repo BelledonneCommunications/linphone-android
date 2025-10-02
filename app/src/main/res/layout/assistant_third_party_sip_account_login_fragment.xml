@@ -10,6 +10,9 @@
             name="backClickListener"
             type="View.OnClickListener" />
         <variable
+            name="outboundProxyTooltipClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.assistant.viewmodel.ThirdPartySipAccountLoginViewModel" />
     </data>
@@ -261,7 +264,7 @@
                     android:id="@+id/advanced_settings_group"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:constraint_referenced_ids="authentication_id_label, authentication_id, outbound_proxy_label, outbound_proxy"
+                    app:constraint_referenced_ids="authentication_id_label, authentication_id, proxy_label, proxy, outbound_proxy_label, outbound_proxy, outbound_proxy_tooltip"
                     android:visibility="@{viewModel.expandAdvancedSettings ? View.VISIBLE : View.GONE, default=gone}" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -299,7 +302,7 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/header_style"
-                    android:id="@+id/outbound_proxy_label"
+                    android:id="@+id/proxy_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="18dp"
@@ -308,7 +311,53 @@
                     android:labelFor="@id/outbound_proxy"
                     android:text="@string/account_settings_sip_proxy_url_title"
                     app:layout_constraintTop_toBottomOf="@id/authentication_id"
+                    app:layout_constraintStart_toStartOf="@id/proxy"/>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    style="@style/default_text_style"
+                    android:id="@+id/proxy"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:text="@={viewModel.proxy, default=`sip.example.net`}"
+                    android:textSize="14sp"
+                    android:textColor="?attr/color_main2_600"
+                    android:background="@drawable/edit_text_background"
+                    android:inputType="text|textUri"
+                    android:hint="@string/account_settings_sip_proxy_url_title"
+                    app:layout_constraintWidth_max="@dimen/text_input_max_width"
+                    app:layout_constraintTop_toBottomOf="@id/proxy_label"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/header_style"
+                    android:id="@+id/outbound_proxy_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:labelFor="@id/outbound_proxy"
+                    android:text="@string/account_settings_outbound_proxy_title"
+                    app:layout_constraintTop_toBottomOf="@id/proxy"
                     app:layout_constraintStart_toStartOf="@id/outbound_proxy"/>
+
+                <ImageView
+                    android:id="@+id/outbound_proxy_tooltip"
+                    android:onClick="@{outboundProxyTooltipClickListener}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:src="@drawable/info"
+                    android:contentDescription="@string/content_description_click_for_more_info"
+                    app:tint="?attr/color_main2_600"
+                    app:layout_constraintTop_toTopOf="@id/outbound_proxy_label"
+                    app:layout_constraintBottom_toBottomOf="@id/outbound_proxy_label"
+                    app:layout_constraintEnd_toEndOf="@id/outbound_proxy" />
 
                 <androidx.appcompat.widget.AppCompatEditText
                     style="@style/default_text_style"
@@ -324,7 +373,7 @@
                     android:textColor="?attr/color_main2_600"
                     android:background="@drawable/edit_text_background"
                     android:inputType="text|textUri"
-                    android:hint="@string/account_settings_sip_proxy_url_title"
+                    android:hint="@string/account_settings_outbound_proxy_title"
                     app:layout_constraintWidth_max="@dimen/text_input_max_width"
                     app:layout_constraintTop_toBottomOf="@id/outbound_proxy_label"
                     app:layout_constraintStart_toStartOf="parent"

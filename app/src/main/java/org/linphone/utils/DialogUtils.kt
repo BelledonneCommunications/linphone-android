@@ -68,6 +68,7 @@ import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.model.GroupSetOrEditSubjectDialogModel
 import androidx.core.graphics.drawable.toDrawable
 import org.linphone.databinding.DialogDeleteChatMessageBinding
+import org.linphone.databinding.DialogManageAccountOutboundProxyHelpBinding
 import org.linphone.ui.main.chat.model.MessageDeleteDialogModel
 
 class DialogUtils {
@@ -110,6 +111,23 @@ class DialogUtils {
             val binding: DialogManageAccountInternationalPrefixHelpBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
                 R.layout.dialog_manage_account_international_prefix_help,
+                null,
+                false
+            )
+            val dialog = getDialog(context, binding)
+
+            binding.setDismissClickListener {
+                dialog.dismiss()
+            }
+
+            return dialog
+        }
+
+        @UiThread
+        fun getAccountOutboundProxyHelpDialog(context: Context): Dialog {
+            val binding: DialogManageAccountOutboundProxyHelpBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_manage_account_outbound_proxy_help,
                 null,
                 false
             )
