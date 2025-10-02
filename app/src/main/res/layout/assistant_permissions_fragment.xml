@@ -26,6 +26,9 @@
         <variable
             name="grantAllClickListener"
             type="View.OnClickListener" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.assistant.viewmodel.PermissionsViewModel" />
     </data>
 
     <ScrollView
@@ -86,6 +89,7 @@
                 android:padding="12dp"
                 android:src="@drawable/bell_ringing"
                 android:contentDescription="@null"
+                android:visibility="@{viewModel.postNotificationsPermissionGranted ? View.GONE : View.VISIBLE}"
                 app:tint="?attr/color_main2_500"
                 app:layout_constraintTop_toBottomOf="@id/subtitle"
                 app:layout_constraintStart_toStartOf="parent"/>
@@ -100,6 +104,7 @@
                 android:text="@string/assistant_permissions_post_notifications_title"
                 android:maxLines="2"
                 android:ellipsize="end"
+                android:visibility="@{viewModel.postNotificationsPermissionGranted ? View.GONE : View.VISIBLE}"
                 app:layout_constraintTop_toTopOf="@id/post_notifications_icon"
                 app:layout_constraintStart_toEndOf="@id/post_notifications_icon"
                 app:layout_constraintBottom_toBottomOf="@id/post_notifications_icon"
@@ -115,6 +120,7 @@
                 android:padding="12dp"
                 android:src="@drawable/address_book"
                 android:contentDescription="@null"
+                android:visibility="@{viewModel.readContactsPermissionGranted ? View.GONE : View.VISIBLE}"
                 app:tint="?attr/color_main2_500"
                 app:layout_constraintTop_toBottomOf="@id/post_notifications_icon"
                 app:layout_constraintStart_toStartOf="parent"/>
@@ -129,6 +135,7 @@
                 android:text="@string/assistant_permissions_read_contacts_title"
                 android:maxLines="2"
                 android:ellipsize="end"
+                android:visibility="@{viewModel.readContactsPermissionGranted ? View.GONE : View.VISIBLE}"
                 app:layout_constraintTop_toTopOf="@id/read_contacts_icon"
                 app:layout_constraintStart_toEndOf="@id/read_contacts_icon"
                 app:layout_constraintBottom_toBottomOf="@id/read_contacts_icon"
@@ -144,6 +151,7 @@
                 android:padding="12dp"
                 android:src="@drawable/microphone"
                 android:contentDescription="@null"
+                android:visibility="@{viewModel.recordAudioPermissionGranted ? View.GONE : View.VISIBLE}"
                 app:tint="?attr/color_main2_500"
                 app:layout_constraintTop_toBottomOf="@id/read_contacts_icon"
                 app:layout_constraintStart_toStartOf="parent"/>
@@ -158,6 +166,7 @@
                 android:text="@string/assistant_permissions_record_audio_title"
                 android:maxLines="2"
                 android:ellipsize="end"
+                android:visibility="@{viewModel.recordAudioPermissionGranted ? View.GONE : View.VISIBLE}"
                 app:layout_constraintTop_toTopOf="@id/record_audio_icon"
                 app:layout_constraintStart_toEndOf="@id/record_audio_icon"
                 app:layout_constraintBottom_toBottomOf="@id/record_audio_icon"
@@ -173,6 +182,7 @@
                 android:padding="12dp"
                 android:src="@drawable/video_camera"
                 android:contentDescription="@null"
+                android:visibility="@{viewModel.cameraPermissionGranted ? View.GONE : View.VISIBLE}"
                 app:tint="?attr/color_main2_500"
                 app:layout_constraintTop_toBottomOf="@id/record_audio_icon"
                 app:layout_constraintStart_toStartOf="parent"/>
@@ -187,6 +197,7 @@
                 android:text="@string/assistant_permissions_access_camera_title"
                 android:maxLines="2"
                 android:ellipsize="end"
+                android:visibility="@{viewModel.cameraPermissionGranted ? View.GONE : View.VISIBLE}"
                 app:layout_constraintTop_toTopOf="@id/access_camera_icon"
                 app:layout_constraintStart_toEndOf="@id/access_camera_icon"
                 app:layout_constraintBottom_toBottomOf="@id/access_camera_icon"

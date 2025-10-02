@@ -29,6 +29,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.compatibility.Compatibility
@@ -36,6 +37,8 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantPermissionsFragmentBinding
 import org.linphone.ui.GenericFragment
 import org.linphone.ui.assistant.AssistantActivity
+import org.linphone.ui.assistant.viewmodel.PermissionsViewModel
+import kotlin.getValue
 
 @UiThread
 class PermissionsFragment : GenericFragment() {
@@ -44,6 +47,10 @@ class PermissionsFragment : GenericFragment() {
     }
 
     private lateinit var binding: AssistantPermissionsFragmentBinding
+
+    private val viewModel: PermissionsViewModel by navGraphViewModels(
+        R.id.assistant_nav_graph
+    )
 
     private var leaving = false
 
@@ -93,6 +100,7 @@ class PermissionsFragment : GenericFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
 
         binding.setBackClickListener {
             findNavController().popBackStack()
@@ -180,10 +188,13 @@ class PermissionsFragment : GenericFragment() {
 
     private fun areAllPermissionsGranted(): Boolean {
         for (permission in Compatibility.getAllRequiredPermissionsArray()) {
-            if (ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED) {
+            val granted = ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED
+            viewModel.setPermissionGranted(permission, granted)
+            if (!granted) {
                 Log.w("$TAG Permission [$permission] hasn't been granted yet!")
                 return false
             }
+
         }
         return Compatibility.hasFullScreenIntentPermission(requireContext())
     }
