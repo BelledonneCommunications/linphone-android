@@ -125,10 +125,13 @@ class ConferenceViewModel
             conference: Conference,
             device: ParticipantDevice
         ) {
-            if (conference.isMe(device.address)) {
+            if (device.isMe) {
+                Log.i("$TAG Our device media capability changed")
                 val direction = device.getStreamCapability(StreamType.Video)
                 val sendingVideo = direction == MediaDirection.SendRecv || direction == MediaDirection.SendOnly
                 localVideoStreamToggled(sendingVideo)
+            } else {
+                Log.i("$TAG Participant [${device.address.asStringUriOnly()}] device media capability changed")
             }
         }
 
