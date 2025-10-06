@@ -192,7 +192,14 @@ class ConferenceParticipantDeviceModel
 
     @WorkerThread
     fun destroy() {
+        clearWindowId()
         device.removeListener(deviceListener)
+    }
+
+    @WorkerThread
+    fun clearWindowId() {
+        Log.i("$TAG Clearing participant [${device.address.asStringUriOnly()}] device window ID")
+        device.nativeVideoWindowId = null
     }
 
     @UiThread
