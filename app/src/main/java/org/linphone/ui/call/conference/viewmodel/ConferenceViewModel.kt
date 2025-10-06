@@ -463,6 +463,9 @@ class ConferenceViewModel
                             }
                         }
 
+                        Log.i("$TAG Clearing participant devices window IDs")
+                        participantDevices.value.orEmpty().forEach(ConferenceParticipantDeviceModel::clearWindowId)
+
                         if (currentLayout == AUDIO_ONLY_LAYOUT) {
                             // Previous layout was audio only, make sure video isn't sent without user consent when switching layout
                             Log.i(
