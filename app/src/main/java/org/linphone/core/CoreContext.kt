@@ -22,6 +22,7 @@ package org.linphone.core
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import android.content.Context.POWER_SERVICE
 import android.content.Intent
 import android.media.AudioDeviceCallback
 import android.media.AudioDeviceInfo
@@ -29,6 +30,7 @@ import android.media.AudioManager
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
+import android.os.PowerManager
 import android.provider.Settings
 import android.provider.Settings.SettingNotFoundException
 import androidx.annotation.AnyThread
@@ -129,6 +131,8 @@ class CoreContext
     }
 
     private var keepAliveServiceStarted = false
+
+    private lateinit var proximityWakeLock: PowerManager.WakeLock
 
     @SuppressLint("HandlerLeak")
     private lateinit var coreThread: Handler
@@ -356,6 +360,15 @@ class CoreContext
                                 call.startRecording()
                             }
                         }
+
+                        if (core.isInBackground) {
+                            // App is in background which means user likely answered the call from the notification
+                            // In this case start proximity sensor, otherwise CallActivity will handle it
+                            postOnMainThread {
+                                Log.i("$TAG App is in background, start proximity sensor")
+                                enableProximitySensor(true)
+                            }
+                        }
                     }
                 }
                 Call.State.Error -> {
@@ -405,6 +418,11 @@ class CoreContext
                     Log.i("$TAG Last call ended, setting [$frontFacing] as the default one")
                     core.videoDevice = frontFacing
                 }
+            }
+
+            postOnMainThread {
+                Log.i("$TAG Releasing proximity sensor if it was enabled")
+                enableProximitySensor(false)
             }
         }
 
@@ -668,6 +686,16 @@ class CoreContext
             } else {
                 Log.w("$TAG Keep alive service is enabled but auto start isn't and app is not in foreground, not starting it")
             }
+        }
+
+        val powerManager = context.getSystemService(POWER_SERVICE) as PowerManager
+        if (!powerManager.isWakeLockLevelSupported(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK)) {
+            Log.w("$TAG PROXIMITY_SCREEN_OFF_WAKE_LOCK isn't supported on this device!")
+        } else {
+            proximityWakeLock = powerManager.newWakeLock(
+                PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
+                "${context.packageName};proximity_sensor"
+            )
         }
     }
 
@@ -1187,5 +1215,18 @@ class CoreContext
     @WorkerThread
     fun updateCrashlyticsEnabledSetting(enabled: Boolean) {
         crashlyticsEnabled = enabled
+    }
+
+    @UiThread
+    fun enableProximitySensor(enable: Boolean) {
+        if (::proximityWakeLock.isInitialized) {
+            if (enable && !proximityWakeLock.isHeld) {
+                Log.i("$TAG Acquiring proximity sensor wake lock for 2 hours")
+                proximityWakeLock.acquire(7200 * 1000L) // 2 hours
+            } else if (!enable && proximityWakeLock.isHeld) {
+                Log.i("$TAG Releasing proximity sensor wake lock")
+                proximityWakeLock.release(PowerManager.RELEASE_FLAG_WAIT_FOR_NO_PROXIMITY)
+            }
+        }
     }
 }
