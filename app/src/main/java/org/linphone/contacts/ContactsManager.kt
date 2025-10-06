@@ -434,8 +434,10 @@ class ContactsManager
 
     @WorkerThread
     fun findContactByAddress(address: Address): Friend? {
+        Log.i("$TAG Looking for friend matching SIP address [${address.asStringUriOnly()}]")
         val found = coreContext.core.findFriend(address)
         if (found != null) {
+            Log.i("$TAG Found friend [${found.name}] matching SIP address [${address.asStringUriOnly()}]")
             return found
         }
 
@@ -464,8 +466,11 @@ class ContactsManager
         }
 
         return if (!username.isNullOrEmpty() && (username.startsWith("+") || username.isDigitsOnly())) {
-            Log.d("$TAG Looking for friend with phone number [$username]")
+            Log.i("$TAG Looking for friend using phone number [$username]")
             val foundUsingPhoneNumber = coreContext.core.findFriendByPhoneNumber(username)
+            if (foundUsingPhoneNumber != null) {
+                Log.i("$TAG Found friend [${foundUsingPhoneNumber.name}] matching phone number [$username]")
+            }
             foundUsingPhoneNumber
         } else {
             null
