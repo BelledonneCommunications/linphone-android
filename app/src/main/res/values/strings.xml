@@ -281,8 +281,8 @@
     <string name="settings_contacts_ldap_bind_dn_title">Bind DN</string>
     <string name="settings_contacts_ldap_password_title">Password</string>
     <string name="settings_contacts_ldap_use_tls_title">Use TLS</string>
-    <string name="settings_contacts_ldap_search_base_title">Search</string>
-    <string name="settings_contacts_ldap_search_filter_title">Search base (can\'t be empty)</string>
+    <string name="settings_contacts_ldap_search_base_title">Search base (can\'t be empty)</string>
+    <string name="settings_contacts_ldap_search_filter_title">Filter</string>
     <string name="settings_contacts_ldap_max_results_title">Max results</string>
     <string name="settings_contacts_ldap_request_timeout_title">Timeout (in seconds)</string>
     <string name="settings_contacts_ldap_request_delay_title">Delay between two queries (in milliseconds)</string>
