@@ -21,7 +21,7 @@
     <string name="assistant_login_address_without_username_toast">SIP adrese neobsahuje uživatelské jméno!</string>
     <string name="help_about_contribute_translations_title">Příspět do překladu &appName;</string>
     <string name="help_troubleshooting_print_logs_in_logcat">Zapisovat logy do Logcatu</string>
-    <string name="settings_security_enable_vfs_dialog_confirmation_message">o aktivaci bude nutné aplikaci restartovat.\nPoté budou všechna data aplikace šifrována a přístupná pouze přes aplikaci.\n\nBuďte opatrní, tento krok je nevratný!</string>
+    <string name="settings_security_enable_vfs_dialog_confirmation_message">Po aktivaci bude nutné aplikaci restartovat.\nPoté budou všechna data aplikace šifrována a přístupná pouze přes aplikaci.\n\nBuďte opatrní, tento krok je nevratný!</string>
     <string name="conversation_ephemeral_messages_duration_one_week">1 týden</string>
     <string name="new_group_conversation_title">Nová skupinová konverzace</string>
     <string name="contact_dialog_increase_trust_level_message">Chystáte se volat na zařízení %2$s uživatele %1$s.\nPřejete si hovor opravdu zahájit?</string>
@@ -120,7 +120,7 @@
     <string name="manage_account_dialog_remove_account_message">Pokud si přejete nevratně smazat svůj účet, navštivte: https://sip.linphone.org</string>
     <string name="account_settings_conference_factory_uri_title">URI konfiguračního serveru konference</string>
     <string name="account_settings_cpim_in_basic_conversations_title">Použít CPIM v \"základních\" konverzacích</string>
-    <string name="account_settings_replace_plus_by_00_title">Při formátování telfonních čísel nahradit \"+\" za \"00\"</string>
+    <string name="account_settings_replace_plus_by_00_title">Při formátování telefonních čísel nahradit \"+\" za \"00\"</string>
     <string name="manage_account_empty_devices_label">Zařízení nebylo nalezeno…</string>
     <string name="conversation_event_device_added">nové zařízení pro %s</string>
     <string name="conversation_event_ephemeral_messages_disabled">Mizející zprávy byly zakázány</string>
@@ -512,7 +512,7 @@
     <string name="conversation_warning_disabled_because_not_secured_title">Tato konverzace není šifrována!</string>
     <string name="conversation_warning_disabled_encrypted_bottom_sheet_title">Povinné šifrování</string>
     <string name="conversation_warning_disabled_encrypted_bottom_sheet_message">Zapnuli jste povinné šifrování. Nešifrované konverzace jsou z bezpečnostních důvodů zakázány. Tuto konverzaci můžete znovu vytvořit, nebo v nastavení účtu vypnout povinné šifrování.</string>
-    <string name="conversation_maximum_number_of_attachments_reached">Ddsažen maximální možný počet příloh!</string>
+    <string name="conversation_maximum_number_of_attachments_reached">Dosažen maximální možný počet příloh!</string>
     <string name="conversation_dialog_open_or_export_file_title">Otevřít nebo exportovat soubor?</string>
     <string name="conversation_dialog_open_file_label">Otevřít soubor</string>
     <string name="conversation_dialog_export_file_label">Exportovat soubor</string>
@@ -741,7 +741,7 @@
     <string name="red">Červená</string>
     <string name="pink">Růžová</string>
     <string name="purple">Fialová</string>
-    <string name="multiple_participants_selection_placeholder">Zde se zobrazí vxbraní účastnící</string>
+    <string name="multiple_participants_selection_placeholder">Zde se zobrazí vybraní účastnící</string>
     <string name="connection_error_for_non_default_account">Chyba při připojení účtu(ů)</string>
     <string name="default_account_disabled">Zvolený účet je momentálně zákázán</string>
     <string name="network_not_reachable">Nejste připojen(a) k internetu</string>

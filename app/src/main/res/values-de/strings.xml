@@ -852,4 +852,5 @@
     <string name="contact_sms_invite_content">Hallo, komm mit zu &appName;! Du kannst es hier %s kostenlos herunterladen</string>
     <string name="settings_contacts_ldap_enabled_title">Aktiviert</string>
     <string name="assistant_forgotten_password_subtitle">Wähle wie Sie Ihr Konto wiederherstellen.</string>
+    <string name="call_zrtp_point_to_point_encrypted">Ende-zu-Ende verschlüsselt durch ZRTP</string>
 </resources>
