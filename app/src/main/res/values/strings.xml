@@ -419,7 +419,7 @@
     <string name="account_settings_conference_factory_uri_title">Conference factory URI</string>
     <string name="account_settings_audio_video_conference_factory_uri_title">Audio/video conference factory URI</string>
     <string name="account_settings_ccmp_server_url_title">CCMP server URL</string>
-    <string name="account_settings_lime_server_url_title">E2E encryption keys server URL</string>
+    <string name="account_settings_lime_server_url_title">End-to-end encryption keys server URL</string>
     <string name="account_settings_bundle_mode_title">Bundle mode</string>
     <string name="account_settings_cpim_in_basic_conversations_title">Use CPIM in \"basic\" conversations</string>
     <string name="account_settings_voicemail_uri_title">Voicemail URI</string>
@@ -561,10 +561,10 @@
     <string name="conversation_no_media_found">No media found…</string>
     <string name="conversation_no_document_found">No document found…</string>
     <string name="conversation_end_to_end_encrypted_event_title">End-to-end encrypted conversation</string>
-    <string name="conversation_end_to_end_encrypted_event_subtitle">Messages in this conversation are e2e encrypted. Only your correspondent can decrypt them.</string>
+    <string name="conversation_end_to_end_encrypted_event_subtitle">Messages in this conversation are end-to-end encrypted. Only your correspondent can decrypt them.</string>
     <string name="conversation_end_to_end_encrypted_bottom_sheet_title">Guaranteed confidentiality</string>
     <string name="conversation_end_to_end_encrypted_bottom_sheet_message">Thanks to end-to-end encryption technology in &appName;, messages, calls and meetings confidentiality are guaranteed. No-one can decrypt exchanged data, not even ourselves.</string>
-    <string name="conversation_warning_unsafe_event_subtitle">Messages aren\'t encrypted, make sure you don\'t share sensitive information!</string>
+    <string name="conversation_warning_unsafe_event_subtitle">Messages aren\'t end-to-end encrypted, make sure you don\'t share sensitive information!</string>
     <string name="conversation_warning_unsafe_bottom_sheet_title">Unencrypted conversation</string>
     <string name="conversation_warning_unsafe_bottom_sheet_message">Messages exchanged in this conversation can be intercepted and read by other people than your correspondent, confidentiality is not guaranteed!</string>
     <string name="conversation_warning_disabled_because_not_secured_title">This conversation is not encrypted!</string>

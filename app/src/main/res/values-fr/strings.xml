@@ -521,7 +521,7 @@
     <string name="conversation_end_to_end_encrypted_event_subtitle">Les messages de cette conversation sont chiffrés de bout en bout. Seul votre correspondant peut les déchiffrer.</string>
     <string name="conversation_end_to_end_encrypted_bottom_sheet_title">La confidentialité de vos échanges garantie</string>
     <string name="conversation_end_to_end_encrypted_bottom_sheet_message">Grâce à la technologie de chiffrement de bout en bout de &appName;, la confidentialité de vos messages, appels et réunions avec vos correspondants est garantie. Personne ne pourra déchiffrer vos conversations, pas même &appName;.</string>
-    <string name="conversation_warning_unsafe_event_subtitle">Les messages ne sont pas chiffrés, assurez-vous de ne pas partager d\'informations sensibles !</string>
+    <string name="conversation_warning_unsafe_event_subtitle">Les messages ne sont pas chiffrés de bout en bout, assurez-vous de ne pas partager d\'informations sensibles !</string>
     <string name="conversation_warning_unsafe_bottom_sheet_title">Conversation non chiffrée</string>
     <string name="conversation_warning_unsafe_bottom_sheet_message">Les messages échangés dans cette conversation peuvent être interceptés et consultés par des personnes autres que le destinataire désiré, la confidentialité n\'est pas garantie !</string>
     <string name="conversation_warning_disabled_because_not_secured_title">Cette conversation n\'est pas chiffrée !</string>
