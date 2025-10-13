@@ -48,6 +48,7 @@
         <attr name="color_info_500" format="color"/>
 
         <attr name="color_warning_600" format="color"/>
+        <attr name="color_plain_text_security_warning_600" format="color"/>
 
         <attr name="color_on_main" format="color"/>
         <attr name="color_background_contrast_in_dark_mode" format="color"/>

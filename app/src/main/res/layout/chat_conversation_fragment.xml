@@ -146,7 +146,7 @@
                     app:layout_constraintEnd_toStartOf="@id/unsecure_label"
                     app:layout_constraintTop_toBottomOf="@id/title"
                     app:layout_constraintBottom_toBottomOf="@id/avatar"
-                    app:tint="?attr/color_warning_600"/>
+                    app:tint="?attr/color_plain_text_security_warning_600"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/default_text_style"
@@ -158,7 +158,7 @@
                     android:paddingBottom="2dp"
                     android:text="@string/conversation_warning_unsafe_bottom_sheet_title"
                     android:textSize="12sp"
-                    android:textColor="?attr/color_warning_600"
+                    android:textColor="?attr/color_plain_text_security_warning_600"
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:visibility="@{!viewModel.isEndToEndEncrypted &amp;&amp; viewModel.isEndToEndEncryptionAvailable ? View.VISIBLE : View.GONE, default=gone}"

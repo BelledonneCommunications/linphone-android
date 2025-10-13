@@ -34,7 +34,7 @@
             android:adjustViewBounds="true"
             android:contentDescription="@null"
             android:src="@drawable/lock_simple_open"
-            app:tint="@color/orange_warning_600"
+            app:tint="?attr/color_plain_text_security_warning_600"
             app:layout_constraintTop_toTopOf="@id/unsafe_title"
             app:layout_constraintBottom_toBottomOf="@id/unsafe_subtitle"
             app:layout_constraintStart_toStartOf="@id/unsafe_background"/>
@@ -49,7 +49,7 @@
             android:layout_marginEnd="15dp"
             android:text="@string/conversation_warning_disabled_because_not_secured_title"
             android:textSize="12sp"
-            android:textColor="@color/orange_warning_600"
+            android:textColor="?attr/color_plain_text_security_warning_600"
             app:layout_constraintStart_toEndOf="@id/unsafe_icon"
             app:layout_constraintEnd_toEndOf="@id/unsafe_background"
             app:layout_constraintTop_toTopOf="parent"/>

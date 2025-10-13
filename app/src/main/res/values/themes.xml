@@ -51,6 +51,7 @@
         <item name="color_info_500">@color/blue_info_500</item>
 
         <item name="color_warning_600">@color/orange_warning_600</item>
+        <item name="color_plain_text_security_warning_600">@color/orange_plain_text_security_warning_600</item>
 
         <item name="color_on_main">@color/bc_white</item>
         <item name="color_background_contrast_in_dark_mode">@color/bc_white</item>

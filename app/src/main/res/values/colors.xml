@@ -54,6 +54,7 @@
     <color name="blue_info_500">#4AA8FF</color>
     <color name="blue_info_500_night">#64B4FF</color>
 
+    <color name="orange_plain_text_security_warning_600">#AF9308</color>
     <color name="orange_warning_600">#DBB820</color>
     <color name="orange_warning_600_night">#E1C133</color>
 
