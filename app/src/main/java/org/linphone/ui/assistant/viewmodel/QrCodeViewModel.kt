@@ -118,6 +118,10 @@ class QrCodeViewModel
     @UiThread
     fun setBackCamera() {
         coreContext.postOnCoreThread { core ->
+            // Just in case, on some devices such as Xiaomi Redmi Note 5
+            // this is required right after granting the CAMERA permission
+            core.reloadVideoDevices()
+
             for (camera in core.videoDevicesList) {
                 if (camera.contains("Back")) {
                     Log.i("$TAG Found back facing camera [$camera], using it")
