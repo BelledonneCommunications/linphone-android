@@ -110,7 +110,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginBottom="10dp"
-            android:text="@{conferenceViewModel.activeSpeaker.name, default=`John Doe`}"
+            android:text="@{conferenceViewModel.isScreenSharing ? conferenceViewModel.screenSharingParticipantName : conferenceViewModel.activeSpeaker.name, default=`John Doe`}"
             android:textColor="@color/bc_white"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
