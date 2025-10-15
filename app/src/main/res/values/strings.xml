@@ -290,6 +290,7 @@
     <string name="settings_contacts_ldap_bind_dn_title">Bind DN</string>
     <string name="settings_contacts_ldap_password_title">Password</string>
     <string name="settings_contacts_ldap_use_tls_title">Use TLS</string>
+    <string name="settings_contacts_ldap_verbose_mode_title">Add LDAP logs to &appName; ones</string>
     <string name="settings_contacts_ldap_search_base_title">Search base (can\'t be empty)</string>
     <string name="settings_contacts_ldap_search_filter_title">Filter</string>
     <string name="settings_contacts_ldap_max_results_title">Max results</string>
@@ -300,7 +301,7 @@
     <string name="settings_contacts_ldap_sip_attributes_title">SIP attributes</string>
     <string name="settings_contacts_ldap_sip_domain_title">SIP domain</string>
     <string name="settings_contacts_ldap_error_toast">A error occurred, LDAP server not saved!</string>
-    <string name="settings_contacts_ldap_empty_server_error_toast">Server URL can\'t be empty</string>
+    <string name="settings_contacts_ldap_empty_field_error_toast">All fields must be filled</string>
     <string name="settings_meetings_title">Meetings</string>
     <string name="settings_meetings_default_layout_title">Default layout</string>
     <string name="settings_meetings_layout_active_speaker_label">Active speaker</string>

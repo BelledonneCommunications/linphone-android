@@ -65,6 +65,8 @@ class LdapViewModel : GenericViewModel() {
 
     val sipDomain = MutableLiveData<String>()
 
+    val verboseMode = MutableLiveData<Boolean>()
+
     val ldapServerOperationSuccessfulEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -80,6 +82,7 @@ class LdapViewModel : GenericViewModel() {
         minCharacters.value = "3"
         requestTimeout.value = "5"
         requestDelay.value = "2000"
+        verboseMode.value = true
     }
 
     @UiThread
@@ -110,6 +113,7 @@ class LdapViewModel : GenericViewModel() {
             nameAttributes.postValue(ldapParams.nameAttribute.orEmpty())
             sipAttributes.postValue(ldapParams.sipAttribute.orEmpty())
             sipDomain.postValue(ldapParams.sipDomain.orEmpty())
+            verboseMode.postValue(ldapParams.debugLevel == Ldap.DebugLevel.Verbose)
             Log.i("$TAG Existing LDAP server values loaded")
         }
     }
@@ -142,35 +146,58 @@ class LdapViewModel : GenericViewModel() {
     }
 
     @UiThread
+    fun toggleDebug() {
+        verboseMode.value = verboseMode.value == false
+    }
+
+    @UiThread
     fun addServer() {
         coreContext.postOnCoreThread { core ->
             try {
                 val server = serverUrl.value.orEmpty().trim()
-                if (server.isEmpty()) {
-                    Log.e("$TAG Server field can't be empty!")
-                    showRedToast(R.string.settings_contacts_ldap_empty_server_error_toast, R.drawable.warning_circle)
+                val bindDn = bindDn.value.orEmpty().trim()
+                val base = searchBase.value.orEmpty().trim()
+                val filter = searchFilter.value.orEmpty().trim()
+                val maxResults = maxResults.value.orEmpty().trim()
+                val timeout = requestTimeout.value.orEmpty().trim()
+                val delay = requestDelay.value.orEmpty().trim()
+                val minChars = minCharacters.value.orEmpty().trim()
+                val nameAttrs = nameAttributes.value.orEmpty().trim()
+                val sipAttrs = sipAttributes.value.orEmpty().trim()
+                val sipDomain = sipDomain.value.orEmpty().trim()
+                if (
+                    server.isEmpty() || bindDn.isEmpty() || base.isEmpty() || filter.isEmpty() ||
+                    maxResults.isEmpty() || timeout.isEmpty() || delay.isEmpty() ||
+                    minChars.isEmpty() || nameAttrs.isEmpty() || sipAttrs.isEmpty() ||
+                    sipDomain.isEmpty()
+                ) {
+                    Log.e("$TAG All fields must be filled!")
+                    showRedToast(R.string.settings_contacts_ldap_empty_field_error_toast, R.drawable.warning_circle)
                     return@postOnCoreThread
                 }
 
                 val ldapParams = core.createLdapParams()
-
                 ldapParams.enabled = isEnabled.value == true
                 ldapParams.server = server
-                ldapParams.bindDn = bindDn.value.orEmpty().trim()
+                ldapParams.bindDn = bindDn
                 ldapParams.password = password.value.orEmpty().trim()
                 ldapParams.authMethod = Ldap.AuthMethod.Simple
                 ldapParams.isTlsEnabled = useTls.value == true
                 ldapParams.serverCertificatesVerificationMode = Ldap.CertVerificationMode.Default
-                ldapParams.baseObject = searchBase.value.orEmpty().trim()
-                ldapParams.filter = searchFilter.value.orEmpty().trim()
-                ldapParams.maxResults = maxResults.value.orEmpty().trim().toInt()
-                ldapParams.timeout = requestTimeout.value.orEmpty().trim().toInt()
-                ldapParams.delay = requestDelay.value.orEmpty().trim().toInt()
-                ldapParams.minChars = minCharacters.value.orEmpty().trim().toInt()
-                ldapParams.nameAttribute = nameAttributes.value.orEmpty().trim()
-                ldapParams.sipAttribute = sipAttributes.value.orEmpty().trim()
-                ldapParams.sipDomain = sipDomain.value.orEmpty().trim()
-                ldapParams.debugLevel = Ldap.DebugLevel.Verbose
+                ldapParams.baseObject = base
+                ldapParams.filter = filter
+                ldapParams.maxResults = maxResults.toInt()
+                ldapParams.timeout = timeout.toInt()
+                ldapParams.delay = delay.toInt()
+                ldapParams.minChars = minChars.toInt()
+                ldapParams.nameAttribute = nameAttrs
+                ldapParams.sipAttribute = sipAttrs
+                ldapParams.sipDomain = sipDomain
+                ldapParams.debugLevel = if (verboseMode.value == true) {
+                    Ldap.DebugLevel.Verbose
+                } else {
+                    Ldap.DebugLevel.Off
+                }
 
                 if (isEdit.value == true && ::ldapToEdit.isInitialized) {
                     ldapToEdit.params = ldapParams
