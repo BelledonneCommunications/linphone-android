@@ -68,6 +68,8 @@ class ConferenceViewModel
 
     val conferenceLayout = MutableLiveData<Int>()
 
+    val screenSharingParticipantName = MutableLiveData<String>()
+
     val isScreenSharing = MutableLiveData<Boolean>()
 
     val isPaused = MutableLiveData<Boolean>()
@@ -237,7 +239,17 @@ class ConferenceViewModel
                 "$TAG Participant device [${device.address.asStringUriOnly()}] is ${if (enabled) "sharing it's screen" else "no longer sharing it's screen"}"
             )
             isScreenSharing.postValue(enabled)
+
             if (enabled) {
+                val deviceModel = participantDevices.value.orEmpty().find {
+                    it.device == device || device.address.weakEqual(it.device.address)
+                }
+                if (deviceModel != null) {
+                    screenSharingParticipantName.postValue(deviceModel.name)
+                } else {
+                    Log.w("$TAG Failed to find screen sharing participant device model!")
+                }
+
                 val call = conference.call
                 if (call != null) {
                     val currentLayout = getCurrentLayout(call)
@@ -250,6 +262,8 @@ class ConferenceViewModel
                 } else {
                     Log.e("$TAG Screen sharing was enabled but conference's call is null!")
                 }
+            } else {
+                screenSharingParticipantName.postValue("")
             }
         }
 
@@ -573,6 +587,10 @@ class ConferenceViewModel
                         model.isActiveSpeaker.postValue(true)
                         activeSpeaker.postValue(model)
                         activeSpeakerParticipantDeviceFound = true
+                    }
+                    if (device == conference.screenSharingParticipantDevice) {
+                        Log.i("$TAG Using participant is [${model.name}] as current screen sharing sender")
+                        screenSharingParticipantName.postValue(model.name)
                     }
                 }
             }
