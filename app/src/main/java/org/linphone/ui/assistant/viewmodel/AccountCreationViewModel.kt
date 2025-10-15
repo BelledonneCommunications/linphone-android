@@ -308,7 +308,7 @@ class AccountCreationViewModel
     }
 
     @UiThread
-    fun phoneNumberConfirmedByUser() {
+    fun askUserToConfirmPhoneNumber() {
         coreContext.postOnCoreThread {
             if (::accountManagerServices.isInitialized) {
                 val dialPlan = selectedDialPlan.value
