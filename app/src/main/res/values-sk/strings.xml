@@ -204,7 +204,7 @@
     <string name="settings_contacts_ldap_bind_dn_title">Bind DN (pripájací identifikátor)</string>
     <string name="settings_contacts_ldap_password_title">Heslo</string>
     <string name="settings_contacts_ldap_use_tls_title">Použiť TLS</string>
-    <string name="settings_contacts_ldap_search_base_title">Hľadať</string>
+    <string name="settings_contacts_ldap_search_base_title">Počiatočný bod hľadania (nesmie byť prázdne)</string>
     <string name="settings_contacts_ldap_server_url_title">URL adresa servera (nesmie byť prázdne)</string>
     <string name="settings_contacts_ldap_search_filter_title">Počiatočný bod hľadania (nesmie byť prázdne)</string>
     <string name="settings_contacts_ldap_max_results_title">Maximálny počet výsledkov</string>

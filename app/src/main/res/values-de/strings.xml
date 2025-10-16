@@ -203,8 +203,8 @@
     <string name="settings_contacts_ldap_bind_dn_title">DN binden</string>
     <string name="settings_contacts_ldap_password_title">Passwort</string>
     <string name="settings_contacts_ldap_use_tls_title">TLS verwenden</string>
-    <string name="settings_contacts_ldap_search_base_title">Suchbasis (darf nicht leer sein)</string>
-    <string name="settings_contacts_ldap_search_filter_title">Filter</string>
+    <string name="settings_contacts_ldap_search_base_title">Filter</string>
+    <string name="settings_contacts_ldap_search_filter_title">Filtern</string>
     <string name="settings_contacts_ldap_max_results_title">Maximale Ergebnisse</string>
     <string name="settings_contacts_ldap_request_timeout_title">Timeout (in Sekunden)</string>
     <string name="settings_contacts_ldap_request_delay_title">Verzögerung zwischen zwei Abfragen (in Millisekunden)</string>
@@ -666,7 +666,7 @@
     <string name="menu_delete_selected_item">Löschen</string>
     <string name="menu_invite">Einladen</string>
     <string name="menu_resend_chat_message">Erneut senden</string>
-    <string name="menu_show_imdn">Lieferstatus</string>
+    <string name="menu_show_imdn">Zustelldetails</string>
     <string name="menu_reply_to_chat_message">Antworten</string>
     <string name="menu_forward_chat_message">Weiterleiten</string>
     <string name="menu_copy_chat_message">Kopieren</string>
@@ -752,7 +752,7 @@
     <string name="content_description_chat_bubble_file">Datei an Nachricht angehängt</string>
     <string name="content_description_chat_bubble_reply">Diese Nachricht ist eine Antwort auf eine vorherige Nachricht</string>
     <string name="content_description_chat_bubble_forward">Diese Nachricht wurde aus einer anderen Konversation weitergeleitet</string>
-    <string name="content_description_chat_bubble_delivery_status">Klicken Sie hier, um den Lieferstatus anzuzeigen</string>
+    <string name="content_description_chat_bubble_delivery_status">Klicken Sie hier, um die Zustelldetails anzuzeigen</string>
     <string name="content_description_chat_bubble_toggle_voice_message_play_pause">Spielt/pausiert die Wiedergabe der Sprachnachricht</string>
     <string name="content_description_chat_remove_attachment">Diese Datei aus Anhängen entfernen</string>
     <string name="content_description_chat_remove_attachments">Anhänge schließen</string>

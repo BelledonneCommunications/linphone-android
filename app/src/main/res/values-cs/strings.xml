@@ -309,8 +309,8 @@
     <string name="settings_contacts_ldap_bind_dn_title">Bind DN (identifikátor pro připojení)</string>
     <string name="settings_contacts_ldap_password_title">Heslo</string>
     <string name="settings_contacts_ldap_use_tls_title">Použít TLS</string>
-    <string name="settings_contacts_ldap_search_base_title">Hledat</string>
-    <string name="settings_contacts_ldap_search_filter_title">Výchozí místo hledání (nesmí být prázdné)</string>
+    <string name="settings_contacts_ldap_search_base_title">Výchozí místo hledání (nesmí být prázdné)</string>
+    <string name="settings_contacts_ldap_search_filter_title">Filtr</string>
     <string name="settings_contacts_ldap_max_results_title">Maximální počet výsledků</string>
     <string name="settings_contacts_ldap_request_timeout_title">Časový limit (v sekundách)</string>
     <string name="settings_contacts_ldap_min_characters_title">Minimální počet znaků pro započetí dotazu</string>

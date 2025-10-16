@@ -232,7 +232,7 @@
     <string name="settings_contacts_ldap_bind_dn_title">绑定DN</string>
     <string name="settings_contacts_ldap_password_title">密码</string>
     <string name="settings_contacts_ldap_use_tls_title">使用TLS</string>
-    <string name="settings_contacts_ldap_search_base_title">搜索</string>
+    <string name="settings_contacts_ldap_search_base_title">搜索base（不能为空）</string>
     <string name="settings_contacts_ldap_search_filter_title">搜索base（不能为空）</string>
     <string name="settings_contacts_ldap_max_results_title">最大结果数</string>
     <string name="settings_contacts_ldap_request_timeout_title">超时（秒）</string>

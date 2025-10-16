@@ -127,7 +127,7 @@
     <string name="settings_contacts_ldap_server_url_title">URL-адрес сервера (не может быть пустым)</string>
     <string name="settings_contacts_ldap_bind_dn_title">Привязать DN</string>
     <string name="settings_contacts_ldap_password_title">Пароль</string>
-    <string name="settings_contacts_ldap_search_base_title">Поиск</string>
+    <string name="settings_contacts_ldap_search_base_title">База поиска (не может быть пустой)</string>
     <string name="settings_contacts_ldap_search_filter_title">База поиска (не может быть пустой)</string>
     <string name="settings_contacts_ldap_max_results_title">Максимальное количество результатов</string>
     <string name="settings_contacts_ldap_request_delay_title">Задержка между двумя запросами (в миллисекундах)</string>

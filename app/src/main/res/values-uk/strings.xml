@@ -315,8 +315,8 @@
     <string name="settings_contacts_ldap_bind_dn_title">Прив\'язати DN</string>
     <string name="settings_contacts_ldap_password_title">Пароль</string>
     <string name="settings_contacts_ldap_use_tls_title">Використовувати TLS</string>
-    <string name="settings_contacts_ldap_search_base_title">Пошук</string>
-    <string name="settings_contacts_ldap_search_filter_title">База пошуку (не може бути порожньою)</string>
+    <string name="settings_contacts_ldap_search_base_title">База пошуку (не може бути порожньою)</string>
+    <string name="settings_contacts_ldap_search_filter_title">Фільтр</string>
     <string name="settings_contacts_ldap_max_results_title">Максимальна кількість для відображення</string>
     <string name="settings_contacts_ldap_request_timeout_title">Тайм-аут (у секундах)</string>
     <string name="settings_contacts_ldap_request_delay_title">Затримка між двома запитами (у мілісекундах)</string>
