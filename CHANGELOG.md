@@ -10,6 +10,26 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [6.0.19] - 2025-10-16
+
+### Added
+- Spanish and Slovakian translations thanks to Weblate contributors
+
+### Changed
+- SIP addresses domain hidden in Suggestions if it matches the currently selected account SIP identity domain
+- Start proximity sensor when an incoming call is answered from the notification (disabling screen when device is near)
+
+### Fixed
+- Black screen when trying to scan a QR Code right after granting CAMERA permission (only happened on some devices)
+- Possible crash due to ConcurrentModificationException
+- Camera preview in conference that was black sometimes after switching layout
+- Possibly wrong screen sharing participant name in conference
+- Presence SUBSCRIBE that was only sent for sip.linphone.org accounts
+- Keyboard suggestions in participant picker textfield
+- Account labelled as Disabled instead of Disconnected when network isn't reachable
+- Suggestions generated avatar if username starts with '+'
+- Two LDAP fields label where swapped
+
 ## [6.0.18] - 2025-09-15
 
 ### Added
