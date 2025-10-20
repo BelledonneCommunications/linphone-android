@@ -157,7 +157,12 @@ class LdapViewModel : GenericViewModel() {
                 ldapParams.enabled = isEnabled.value == true
                 ldapParams.server = server
                 ldapParams.bindDn = bindDn.value.orEmpty().trim()
-                ldapParams.password = password.value.orEmpty().trim()
+                val pwd = password.value.orEmpty().trim()
+                if (!pwd.isEmpty()) {
+                    ldapParams.password = pwd
+                } else if (::ldapToEdit.isInitialized) {
+                    ldapParams.password = ldapToEdit.params.password
+                }
                 ldapParams.authMethod = Ldap.AuthMethod.Simple
                 ldapParams.isTlsEnabled = useTls.value == true
                 ldapParams.serverCertificatesVerificationMode = Ldap.CertVerificationMode.Default
