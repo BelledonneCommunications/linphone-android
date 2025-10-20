@@ -165,6 +165,7 @@ class LdapViewModel : GenericViewModel() {
                 val nameAttrs = nameAttributes.value.orEmpty().trim()
                 val sipAttrs = sipAttributes.value.orEmpty().trim()
                 val sipDomain = sipDomain.value.orEmpty().trim()
+                val pwd = password.value.orEmpty().trim()
                 if (
                     server.isEmpty() || bindDn.isEmpty() || base.isEmpty() || filter.isEmpty() ||
                     maxResults.isEmpty() || timeout.isEmpty() || delay.isEmpty() ||
@@ -180,7 +181,11 @@ class LdapViewModel : GenericViewModel() {
                 ldapParams.enabled = isEnabled.value == true
                 ldapParams.server = server
                 ldapParams.bindDn = bindDn
-                ldapParams.password = password.value.orEmpty().trim()
+                if (!pwd.isEmpty()) {
+                    ldapParams.password = pwd
+                } else if (::ldapToEdit.isInitialized) {
+                    ldapParams.password = ldapToEdit.params.password
+                }
                 ldapParams.authMethod = Ldap.AuthMethod.Simple
                 ldapParams.isTlsEnabled = useTls.value == true
                 ldapParams.serverCertificatesVerificationMode = Ldap.CertVerificationMode.Default
