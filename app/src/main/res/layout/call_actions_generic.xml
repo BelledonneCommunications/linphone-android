@@ -4,6 +4,7 @@
 
     <data>
         <import type="android.view.View" />
+        <import type="org.linphone.ui.call.conference.viewmodel.ConferenceViewModel" />
         <variable
             name="viewModel"
             type="org.linphone.ui.call.viewmodel.CurrentCallViewModel" />
@@ -52,7 +53,7 @@
             android:layout_height="@dimen/call_button_size"
             android:layout_marginEnd="16dp"
             android:padding="@dimen/call_button_icon_padding"
-            android:enabled="@{!viewModel.isPaused &amp;&amp; !viewModel.isPausedByRemote &amp;&amp; !viewModel.videoUpdateInProgress}"
+            android:enabled="@{!viewModel.isPaused &amp;&amp; !viewModel.isPausedByRemote &amp;&amp; !viewModel.videoUpdateInProgress &amp;&amp; (!viewModel.conferenceModel.isCurrentCallInConference || viewModel.conferenceModel.conferenceLayout != ConferenceViewModel.AUDIO_ONLY_LAYOUT)}"
             android:visibility="@{viewModel.hideVideo ? View.GONE : View.VISIBLE}"
             android:src="@{viewModel.isSendingVideo ? @drawable/video_camera : @drawable/video_camera_slash, default=@drawable/video_camera}"
             android:background="@drawable/in_call_button_background_red"
