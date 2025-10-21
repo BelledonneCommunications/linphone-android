@@ -129,8 +129,9 @@ class ContactNewOrEditViewModel
 
     @AnyThread
     fun getPictureFileName(): String {
-        val name = id.value?.replace(" ", "_") ?: "${firstName.value.orEmpty().trim()}_${lastName.value.orEmpty().trim()}"
-        return "$name.jpg"
+        val name = id.value ?: "${firstName.value.orEmpty().trim()}_${lastName.value.orEmpty().trim()}"
+        val flattenedName = name.replace(" ", "_").replace(":", "")
+        return "$flattenedName.jpg"
     }
 
     @UiThread
