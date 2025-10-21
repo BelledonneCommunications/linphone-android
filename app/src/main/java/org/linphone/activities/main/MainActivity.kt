@@ -32,8 +32,10 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.StringRes
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.doOnAttach
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.MutableLiveData
@@ -87,6 +89,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
     private lateinit var tabsFragment: FragmentContainerView
     private lateinit var statusFragment: FragmentContainerView
+    private var api35filler: View? = null
 
     private var overlayX = 0f
     private var overlayY = 0f
@@ -185,6 +188,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
         tabsFragment = findViewById(R.id.tabs_fragment)
         statusFragment = findViewById(R.id.status_fragment)
+        api35filler = findViewById<View>(R.id.api35filler)
 
         binding.root.doOnAttach {
             Log.i("[Main Activity] Report UI has been fully drawn (TTFD)")
@@ -314,6 +318,14 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
     private fun updateTabsFragmentVisibility() {
         tabsFragment.visibility = if (shouldTabsBeVisibleDependingOnDestination && shouldTabsBeVisibleDueToOrientationAndKeyboard) View.VISIBLE else View.GONE
+        api35filler?.background = if (tabsFragment.isVisible) {
+            AppCompatResources.getDrawable(
+                coreContext.context,
+                R.drawable.footer_button
+            )
+        } else {
+            null
+        }
     }
 
     private fun handleIntentParams(intent: Intent) {

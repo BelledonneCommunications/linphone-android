@@ -86,10 +86,10 @@ android {
         jvmTarget = '17'
     }
 
-    compileSdkVersion 34
+    compileSdk 35
     defaultConfig {
         minSdkVersion 23
-        targetSdkVersion 34
+        targetSdkVersion 35
         versionCode appVersionCode
         versionName "${project.version}"
         applicationId packageName

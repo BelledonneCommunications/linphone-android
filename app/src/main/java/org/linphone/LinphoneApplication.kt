@@ -31,6 +31,7 @@ import coil.decode.SvgDecoder
 import coil.decode.VideoFrameDecoder
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
+import org.linphone.compatibility.Compatibility
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.mediastream.Version
@@ -83,6 +84,7 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
 
             Log.i("[Application] Core config & preferences created")
             wakeLock.release()
+            Compatibility.setupAppStartupListener(context)
         }
 
         fun ensureCoreExists(

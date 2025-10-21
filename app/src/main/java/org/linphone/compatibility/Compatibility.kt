@@ -19,6 +19,7 @@
  */
 package org.linphone.compatibility
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Notification
 import android.app.PendingIntent
@@ -48,8 +49,17 @@ import org.linphone.notifications.NotificationsManager
 import org.linphone.telecom.NativeCallWrapper
 
 @Suppress("DEPRECATION")
+@SuppressLint("NewApi")
 class Compatibility {
     companion object {
+        const val BLUETOOTH_CONNECT = "android.permission.BLUETOOTH_CONNECT"
+
+        fun setupAppStartupListener(context: Context) {
+            if (Version.sdkAboveOrEqual(Version.API35_ANDROID_15_VANILLA_ICE_CREAM)) {
+                Api35Compatibility.setupAppStartupListener(context)
+            }
+        }
+
         fun hasPermission(context: Context, permission: String): Boolean {
             return Api23Compatibility.hasPermission(context, permission)
         }

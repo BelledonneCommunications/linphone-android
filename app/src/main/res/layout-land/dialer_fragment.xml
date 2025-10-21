@@ -131,7 +131,7 @@
             android:layout_height="match_parent"
             android:layout_below="@id/address_bar"
             android:layout_above="@id/controls"
-            android:padding="30dp"
+            android:padding="80dp"
             android:layout_centerHorizontal="true"
             android:contentDescription="@null"
             android:src="@drawable/dialer_background" />
