@@ -27,7 +27,6 @@ import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.Rect
-import android.graphics.drawable.BitmapDrawable
 import androidx.annotation.AnyThread
 import androidx.annotation.WorkerThread
 import java.io.FileNotFoundException
@@ -41,7 +40,13 @@ class ImageUtils {
         private const val TAG = "[Image Utils]"
 
         @AnyThread
-        fun getGeneratedAvatar(context: Context, size: Int = 0, textSize: Int = 0, initials: String): BitmapDrawable {
+        fun generatedAvatarIfNeededAndReturnPath(context: Context, size: Int = 0, textSize: Int = 0, initials: String): String {
+            val generatedAvatarPath = FileUtils.getFileStorageCacheDir("$initials.png", overrideExisting = true)
+            if (generatedAvatarPath.exists()) {
+                val path = generatedAvatarPath.absolutePath
+                return path
+            }
+
             val builder = AvatarGenerator(context)
             builder.setInitials(initials)
             if (size > 0) {
@@ -52,7 +57,9 @@ class ImageUtils {
             if (textSize > 0) {
                 builder.setTextSize(AppUtils.getDimension(textSize))
             }
-            return builder.buildDrawable()
+            val bitmap = builder.buildBitmap(true)
+            val path = FileUtils.storeBitmap(bitmap, generatedAvatarPath)
+            return path
         }
 
         @WorkerThread

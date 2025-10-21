@@ -64,7 +64,6 @@ import com.google.android.flexbox.FlexboxLayout
 import org.linphone.BR
 import org.linphone.R
 import org.linphone.contacts.AbstractAvatarModel
-import org.linphone.contacts.AvatarGenerator
 import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.tools.Log
 import org.linphone.ui.NotoSansFont
@@ -449,14 +448,6 @@ fun ImageView.loadCallAvatarWithCoil(model: AbstractAvatarModel?) {
     loadContactPictureWithCoil(this, model, size = size, textSize = initialsSize)
 }
 
-@UiThread
-@BindingAdapter("coilInitials")
-fun ImageView.loadInitialsAvatarWithCoil(initials: String?) {
-    val builder = AvatarGenerator(context)
-    builder.setInitials(initials.orEmpty())
-    load(builder.buildDrawable())
-}
-
 @SuppressLint("ResourceType")
 private fun loadContactPictureWithCoil(
     imageView: ImageView,
@@ -508,7 +499,7 @@ private fun getErrorImageLoader(
             R.drawable.inset_user_circle
         }
     } else {
-        ImageUtils.getGeneratedAvatar(context, size, textSize, initials)
+        ImageUtils.generatedAvatarIfNeededAndReturnPath(context, size, textSize, initials)
     }
 }
 

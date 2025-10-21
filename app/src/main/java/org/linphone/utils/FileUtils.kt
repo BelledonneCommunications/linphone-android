@@ -413,16 +413,20 @@ class FileUtils {
         }
 
         @AnyThread
-        fun storeBitmap(bitmap: Bitmap, fileName: String): String {
-            val path = getFileStorageCacheDir("$fileName.jpg", true)
-            FileOutputStream(path).use { outputStream ->
+        fun storeBitmap(bitmap: Bitmap, file: File): String {
+            val format = if (file.absolutePath.endsWith(".png")) {
+                Bitmap.CompressFormat.PNG
+            } else {
+                Bitmap.CompressFormat.JPEG
+            }
+            FileOutputStream(file).use { outputStream ->
                 bitmap.compress(
-                    Bitmap.CompressFormat.JPEG,
+                    format,
                     100,
                     outputStream
                 )
             }
-            return path.absolutePath
+            return file.absolutePath
         }
 
         @AnyThread

@@ -39,6 +39,7 @@ import org.linphone.utils.TimestampUtils
 import androidx.core.net.toUri
 import androidx.core.graphics.createBitmap
 import kotlinx.coroutines.withContext
+import org.linphone.utils.FileUtils.Companion.getFileStorageCacheDir
 import java.io.File
 
 class FileModel
@@ -199,7 +200,8 @@ class FileModel
                         PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY
                     )
 
-                    val previewPath = FileUtils.storeBitmap(previewBitmap, fileName)
+                    val file = getFileStorageCacheDir("$fileName.jpg", true)
+                    val previewPath = FileUtils.storeBitmap(previewBitmap, file)
                     Log.i("$TAG Preview of PDF file [$path] available at [$previewPath]")
                     mediaPreview.postValue(previewPath)
                     mediaPreviewAvailable.postValue(true)
@@ -226,7 +228,8 @@ class FileModel
                         MediaStore.Images.Thumbnails.MINI_KIND
                     )
                     if (previewBitmap != null) {
-                        val previewPath = FileUtils.storeBitmap(previewBitmap, fileName)
+                        val file = getFileStorageCacheDir("$fileName.jpg", true)
+                        val previewPath = FileUtils.storeBitmap(previewBitmap, file)
                         Log.i("$TAG Preview of video file [$path] available at [$previewPath]")
                         mediaPreview.postValue(previewPath)
                         mediaPreviewAvailable.postValue(true)
