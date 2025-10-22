@@ -160,7 +160,7 @@ class ContactsListAdapter(
         }
 
         override fun areContentsTheSame(oldItem: ContactAvatarModel, newItem: ContactAvatarModel): Boolean {
-            return false // oldItem & newItem are always the same because fetched from cache, so return false to force refresh
+            return newItem.compare(oldItem)
         }
     }
 }
