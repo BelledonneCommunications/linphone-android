@@ -159,6 +159,7 @@ class ConversationInfoViewModel
             showGreenToast(R.string.conversation_subject_changed_toast, R.drawable.check)
 
             subject.postValue(chatRoom.subject)
+            computeParticipantsList()
             infoChangedEvent.postValue(Event(true))
         }
 
@@ -562,7 +563,9 @@ class ConversationInfoViewModel
         } else {
             participantsList.first().avatarModel
         }
-        avatarModel.postValue(avatar)
+        if (!avatar.compare(avatarModel.value)) {
+            avatarModel.postValue(avatar)
+        }
 
         participants.postValue(participantsList)
         participantsLabel.postValue(
