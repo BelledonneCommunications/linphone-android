@@ -5,10 +5,10 @@ contact_links:
     about: Please post issues about the SDK here.
   - name: Desktop issues
     url: https://github.com/BelledonneCommunications/linphone-desktop/issues
-    about: Please post issues about the Desktop (Linux, MacOSX, Windows) application here.
+    about: Please post issues about the Desktop (Linux, macOS, Windows) application here.
   - name: iOS issues
     url: https://github.com/BelledonneCommunications/linphone-iphone/issues
     about: Please post issues about the iPhone application here.
   - name: Contacts
     url: https://www.linphone.org/contact
-    about: For any contacts like commercial, licensing, mailing-lists
+    about: For any contacts like commercial, licensing, mailing-lists.
