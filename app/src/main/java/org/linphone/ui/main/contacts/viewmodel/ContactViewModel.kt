@@ -93,6 +93,8 @@ class ContactViewModel
 
     val isReadOnly = MutableLiveData<Boolean>()
 
+    val isNative = MutableLiveData<Boolean>()
+
     val chatDisabled = MutableLiveData<Boolean>()
 
     val videoCallDisabled = MutableLiveData<Boolean>()
@@ -236,6 +238,7 @@ class ContactViewModel
     init {
         isStored.value = false
         isReadOnly.value = false
+        isNative.value = false
 
         expandNumbersAndAddresses.value = true
         trustedDevicesPercentage.value = 0
@@ -312,6 +315,7 @@ class ContactViewModel
         // if they are in a temporary one (for example if they are from a remote directory such as LDAP or CardDAV)
         isStored.postValue(!coreContext.contactsManager.isContactTemporary(friend))
         isReadOnly.postValue(friend.isReadOnly)
+        isNative.postValue(!friend.nativeUri.isNullOrEmpty())
 
         contact.value?.destroy()
         contact.postValue(ContactAvatarModel(friend))

@@ -25,6 +25,9 @@
         <variable
             name="isReadOnly"
             type="Boolean" />
+        <variable
+            name="isNative"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -69,7 +72,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/contact_details_delete"
-            android:visibility="@{isStored &amp;&amp; !isReadOnly ? View.VISIBLE : View.GONE}"
+            android:visibility="@{isStored &amp;&amp; !isReadOnly &amp;&amp; !isNative ? View.VISIBLE : View.GONE}"
             android:background="@drawable/menu_item_background"
             android:layout_marginBottom="1dp"
             android:drawableStart="@drawable/trash_simple"

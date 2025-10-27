@@ -282,6 +282,7 @@ class ContactsListFragment : AbstractMainFragment() {
                     model.isFavourite.value == true,
                     model.isStored,
                     isReadOnly = model.isReadOnly,
+                    isNative = model.isNative,
                     { // onDismiss
                         adapter.resetSelection()
                     },

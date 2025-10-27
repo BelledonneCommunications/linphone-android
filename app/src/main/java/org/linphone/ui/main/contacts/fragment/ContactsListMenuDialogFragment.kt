@@ -36,6 +36,7 @@ class ContactsListMenuDialogFragment(
     private val isFavourite: Boolean,
     private val isStored: Boolean,
     private val isReadOnly: Boolean,
+    private val isNative: Boolean,
     private val onDismiss: (() -> Unit)? = null,
     private val onFavourite: (() -> Unit)? = null,
     private val onShare: (() -> Unit)? = null,
@@ -72,6 +73,7 @@ class ContactsListMenuDialogFragment(
         view.isFavourite = isFavourite
         view.isStored = isStored
         view.isReadOnly = isReadOnly
+        view.isNative = isNative
 
         view.setFavoriteClickListener {
             onFavourite?.invoke()
