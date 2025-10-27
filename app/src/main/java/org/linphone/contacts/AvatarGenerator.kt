@@ -25,7 +25,6 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.RectF
-import android.graphics.drawable.BitmapDrawable
 import android.text.TextPaint
 import android.util.TypedValue
 import androidx.core.content.ContextCompat
@@ -34,7 +33,6 @@ import androidx.core.graphics.drawable.IconCompat
 import org.linphone.R
 import org.linphone.utils.AppUtils
 import androidx.core.graphics.createBitmap
-import androidx.core.graphics.drawable.toDrawable
 
 class AvatarGenerator(private val context: Context) {
     private var textSize: Float = AppUtils.getDimension(R.dimen.avatar_initials_text_size)
@@ -90,10 +88,6 @@ class AvatarGenerator(private val context: Context) {
         canvas.drawText(initials, bounds.left, bounds.top - textPainter.ascent(), textPainter)
 
         return bitmap
-    }
-
-    fun buildDrawable(): BitmapDrawable {
-        return buildBitmap(true).toDrawable(context.resources)
     }
 
     fun buildIcon(): IconCompat {
