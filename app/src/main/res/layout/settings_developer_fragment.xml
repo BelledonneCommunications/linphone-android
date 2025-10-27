@@ -297,11 +297,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="@dimen/screen_bottom_margin"
                     android:maxLines="3"
                     android:text="@string/settings_developer_clear_native_friends_in_database_subtitle"
+                    app:layout_constraintVertical_bias="0"
                     app:layout_constraintTop_toBottomOf="@id/clear_friends_db_label"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
