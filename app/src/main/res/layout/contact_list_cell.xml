@@ -25,8 +25,8 @@
         android:onContextClick="@{onLongClickListener}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="16dp"
+        android:paddingStart="4dp"
+        android:paddingEnd="16dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:background="@drawable/primary_cell_background">

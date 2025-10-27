@@ -81,6 +81,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:layout_marginTop="10dp"
+                        android:layout_marginBottom="4dp"
                         android:text="@string/contacts_list_favourites_title"
                         android:drawableEnd="@{viewModel.showFavourites ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
                         android:drawableTint="?attr/color_main2_600" />
@@ -89,8 +90,7 @@
                         android:id="@+id/favourites_contacts_list"
                         android:visibility="@{viewModel.showFavourites &amp;&amp; !viewModel.isListFiltered &amp;&amp; viewModel.favouritesList.size() > 0 ? View.VISIBLE : View.GONE}"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp" />
+                        android:layout_height="wrap_content" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/section_header_style"
@@ -102,6 +102,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:layout_marginTop="16dp"
+                        android:layout_marginBottom="4dp"
                         android:text="@string/contacts_list_all_contacts_title" />
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -121,8 +122,7 @@
                     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                         android:id="@+id/contactsListSwipeRefresh"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="4dp">
+                        android:layout_height="match_parent">
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/contactsList"
