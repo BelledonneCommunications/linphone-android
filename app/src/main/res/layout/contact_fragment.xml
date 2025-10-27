@@ -543,7 +543,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:background="@{viewModel.isStored &amp;&amp; !viewModel.isReadOnly ? @drawable/action_background_middle : @drawable/action_background_full, default=@drawable/action_background_middle}"
+                        android:background="@{viewModel.isStored &amp;&amp; !viewModel.isReadOnly ? (viewModel.isNative ? @drawable/action_background_bottom : @drawable/action_background_middle) : @drawable/action_background_full, default=@drawable/action_background_middle}"
                         android:text="@string/contact_details_share"
                         android:drawableStart="@drawable/share_network"
                         app:layout_constraintStart_toStartOf="parent"
@@ -573,7 +573,7 @@
                         android:layout_marginEnd="16dp"
                         android:background="?attr/color_separator"
                         android:importantForAccessibility="no"
-                        android:visibility="@{viewModel.isStored &amp;&amp; !viewModel.isReadOnly &amp;&amp; !viewModel.isNative ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{viewModel.isStored &amp;&amp; !viewModel.isReadOnly ? View.VISIBLE : View.GONE}"
                         app:layout_constraintEnd_toEndOf="@id/action_edit"
                         app:layout_constraintStart_toStartOf="@id/action_edit"
                         app:layout_constraintTop_toBottomOf="@+id/action_edit"/>
@@ -597,7 +597,7 @@
                         android:layout_marginEnd="16dp"
                         android:background="?attr/color_separator"
                         android:importantForAccessibility="no"
-                        android:visibility="@{viewModel.isStored &amp;&amp; !viewModel.isReadOnly ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{viewModel.isStored &amp;&amp; !viewModel.isReadOnly &amp;&amp; !viewModel.isNative() ? View.VISIBLE : View.GONE}"
                         app:layout_constraintEnd_toEndOf="@id/action_share"
                         app:layout_constraintStart_toStartOf="@id/action_share"
                         app:layout_constraintTop_toBottomOf="@+id/action_share"/>
