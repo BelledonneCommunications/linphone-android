@@ -25,7 +25,7 @@
                 android:id="@+id/emojis"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:visibility="@{viewModel.isChatRoomReadOnly ? View.GONE : View.VISIBLE}"
@@ -33,7 +33,10 @@
                 bind:model="@{viewModel.messageModel}"
                 bind:pickEmojiClickListener="@{() -> viewModel.pickEmoji()}"
                 app:layout_constraintHorizontal_bias="@{viewModel.horizontalBias, default=0}"
+                app:layout_constraintVertical_bias="1"
                 app:layout_constraintWidth_max="@dimen/emoji_list_max_width"
+                app:layout_constraintVertical_chainStyle="packed"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/bubbles"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
@@ -45,8 +48,10 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="5dp"
+                app:layout_constrainedHeight="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/emojis"
                 app:layout_constraintBottom_toTopOf="@id/actions">
 
                 <ViewStub
@@ -61,8 +66,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHeight_max="@dimen/chat_bubble_max_height_long_press"/>
+                    app:layout_constraintEnd_toEndOf="parent"/>
 
                 <ViewStub
                     android:id="@+id/incoming_bubble"
@@ -76,8 +80,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHeight_max="@dimen/chat_bubble_max_height_long_press"/>
+                    app:layout_constraintEnd_toEndOf="parent"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
