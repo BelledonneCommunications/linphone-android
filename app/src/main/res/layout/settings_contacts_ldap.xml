@@ -255,7 +255,8 @@
                     android:text="@string/settings_contacts_ldap_verbose_mode_title"
                     android:maxLines="2"
                     android:ellipsize="end"
-                    android:labelFor="@id/tls_switch"
+                    android:labelFor="@id/debug_switch"
+                    android:visibility="gone"
                     app:layout_constraintTop_toTopOf="@id/debug_switch"
                     app:layout_constraintBottom_toBottomOf="@id/debug_switch"
                     app:layout_constraintStart_toStartOf="parent"
@@ -270,6 +271,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginEnd="16dp"
                     android:checked="@{viewModel.verboseMode}"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tls_switch" />
 
