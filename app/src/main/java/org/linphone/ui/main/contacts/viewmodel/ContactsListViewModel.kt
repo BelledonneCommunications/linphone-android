@@ -137,7 +137,8 @@ class ContactsListViewModel
 
             applyFilter(
                 currentFilter,
-                domainFilter
+                domainFilter,
+                true
             )
         }
 

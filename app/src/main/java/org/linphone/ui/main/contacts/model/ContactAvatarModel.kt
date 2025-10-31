@@ -105,6 +105,10 @@ class ContactAvatarModel
             return false
         }
 
+        if (isFavourite.value != other.isFavourite.value) {
+            return false
+        }
+
         return true
     }
 
