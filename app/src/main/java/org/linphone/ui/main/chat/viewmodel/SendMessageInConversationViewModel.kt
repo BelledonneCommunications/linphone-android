@@ -236,6 +236,10 @@ class SendMessageInConversationViewModel
 
     @UiThread
     fun editMessage(model: MessageModel) {
+        if (isReplying.value == true) {
+            cancelReply()
+        }
+
         val newValue = model.text.value?.toString() ?: ""
         textToSend.value = newValue
 
@@ -258,6 +262,10 @@ class SendMessageInConversationViewModel
 
     @UiThread
     fun replyToMessage(model: MessageModel) {
+        if (isEditing.value == true) {
+            cancelEdit()
+        }
+
         coreContext.postOnCoreThread {
             val message = model.chatMessage
             Log.i("$TAG Pending reply to message [${message.messageId}]")
