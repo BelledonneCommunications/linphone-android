@@ -26,13 +26,11 @@ import androidx.core.telecom.CallControlResult
 import androidx.core.telecom.CallControlScope
 import androidx.core.telecom.CallEndpointCompat
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
-import org.linphone.core.AudioDevice
 import org.linphone.core.Call
 import org.linphone.core.CallListenerStub
 import org.linphone.core.Reason
@@ -125,75 +123,11 @@ class TelecomCallControlCallback(
         }
 
         callControl.availableEndpoints.onEach { list ->
-            Log.i("$TAG New available audio endpoints list")
-            if (availableEndpoints != list) {
-                Log.i(
-                    "$TAG List size of available audio endpoints has changed, reload sound devices in SDK in [$DELAY_BEFORE_RELOADING_SOUND_DEVICES_MS] ms"
-                )
-                coreContext.postOnCoreThreadDelayed({ core ->
-                    core.reloadSoundDevices()
-                    Log.i("$TAG Sound devices reloaded")
-                }, DELAY_BEFORE_RELOADING_SOUND_DEVICES_MS)
-            }
-
-            availableEndpoints = list
-            for (endpoint in list) {
-                Log.i("$TAG Available audio endpoint [${endpoint.name}]")
-            }
+            Log.i("$TAG New available audio endpoints list but ignoring it")
         }.launchIn(scope)
 
         callControl.currentCallEndpoint.onEach { endpoint ->
-            var newEndpointToUse = endpoint
-            if (endpointUpdateRequestFromLinphone) {
-                Log.i("$TAG Linphone requests to use [${endpoint.name}] audio endpoint with type [${endpointTypeToString(endpoint.type)}]")
-            } else {
-                Log.i("$TAG Android requests us to use [${endpoint.name}] audio endpoint with type [${endpointTypeToString(endpoint.type)}]")
-            }
-
-            val requestedEndpoint = latestLinphoneRequestedEndpoint
-            if (endpointUpdateRequestFromLinphone && requestedEndpoint != null && requestedEndpoint != endpoint) {
-                Log.w("$TAG WARNING: Linphone requested endpoint [${requestedEndpoint.name}] but Telecom Manager notified endpoint [${endpoint.name}], trying to use the one we requested anyway")
-                newEndpointToUse = requestedEndpoint
-            }
-
-            val type = newEndpointToUse.type
-            currentEndpoint = type
-            if (!endpointUpdateRequestFromLinphone && !coreContext.isConnectedToAndroidAuto && (type == CallEndpointCompat.Companion.TYPE_EARPIECE || type == CallEndpointCompat.Companion.TYPE_SPEAKER)) {
-                endpointUpdateRequestFromLinphone = false
-                Log.w("$TAG Device isn't connected to Android Auto, do not follow system request to change audio endpoint to [${newEndpointToUse.name}] with type [${endpointTypeToString(type)}]")
-                return@onEach
-            }
-            endpointUpdateRequestFromLinphone = false
-
-            // Change audio route in SDK, this way the usual listener will trigger
-            // and we'll be able to update the UI accordingly
-            val route = arrayListOf<AudioDevice.Type>()
-            when (type) {
-                CallEndpointCompat.Companion.TYPE_EARPIECE -> {
-                    route.add(AudioDevice.Type.Earpiece)
-                }
-                CallEndpointCompat.Companion.TYPE_SPEAKER -> {
-                    route.add(AudioDevice.Type.Speaker)
-                }
-                CallEndpointCompat.Companion.TYPE_BLUETOOTH -> {
-                    route.add(AudioDevice.Type.Bluetooth)
-                    route.add(AudioDevice.Type.HearingAid)
-                }
-                CallEndpointCompat.Companion.TYPE_WIRED_HEADSET -> {
-                    route.add(AudioDevice.Type.Headphones)
-                    route.add(AudioDevice.Type.Headset)
-                }
-            }
-            if (route.isNotEmpty()) {
-                coreContext.postOnCoreThread {
-                    if (!AudioUtils.applyAudioRouteChangeInLinphone(call, route)) {
-                        Log.w("$TAG Failed to apply audio route change, trying again in 200ms")
-                        coreContext.postOnCoreThreadDelayed({
-                            AudioUtils.applyAudioRouteChangeInLinphone(call, route)
-                        }, 200)
-                    }
-                }
-            }
+            Log.i("$TAG Android requests us to use [${endpoint.name}] audio endpoint with type [${endpointTypeToString(endpoint.type)}], ignoring it")
         }.launchIn(scope)
 
         callControl.isMuted.onEach { muted ->
@@ -224,89 +158,12 @@ class TelecomCallControlCallback(
         }.launchIn(scope)
     }
 
-    fun applyAudioRouteToCallWithId(routes: List<AudioDevice.Type>): Boolean {
-        Log.i("$TAG Looking for audio endpoint with type [${routes.first()}]")
-
-        var wiredHeadsetFound = false
-        var skippedBecauseAlreadyInUse = false
-        for (endpoint in availableEndpoints) {
-            Log.i(
-                "$TAG Found audio endpoint [${endpoint.name}] with type [${endpointTypeToString(endpoint.type)}]"
-            )
-            val matches = when (endpoint.type) {
-                CallEndpointCompat.Companion.TYPE_EARPIECE -> {
-                    routes.find { it == AudioDevice.Type.Earpiece }
-                }
-                CallEndpointCompat.Companion.TYPE_SPEAKER -> {
-                    routes.find { it == AudioDevice.Type.Speaker }
-                }
-                CallEndpointCompat.Companion.TYPE_BLUETOOTH -> {
-                    routes.find { it == AudioDevice.Type.Bluetooth || it == AudioDevice.Type.HearingAid }
-                }
-                CallEndpointCompat.Companion.TYPE_WIRED_HEADSET -> {
-                    wiredHeadsetFound = true
-                    routes.find { it == AudioDevice.Type.Headset || it == AudioDevice.Type.Headphones }
-                }
-                else -> null
-            }
-
-            if (matches != null) {
-                Log.i(
-                    "$TAG Found matching audio endpoint [${endpoint.name}] with type [${endpointTypeToString(endpoint.type)}], trying to use it"
-                )
-                if (currentEndpoint == endpoint.type) {
-                    Log.w("$TAG Endpoint already in use, skipping")
-                    skippedBecauseAlreadyInUse = true
-                    continue
-                }
-
-                var success = false
-                scope.launch {
-                    Log.i("$TAG Requesting audio endpoint change to [${endpoint.name}] with type [${endpointTypeToString(endpoint.type)}]")
-                    endpointUpdateRequestFromLinphone = true
-                    latestLinphoneRequestedEndpoint = endpoint
-                    var result: CallControlResult = callControl.requestEndpointChange(endpoint)
-                    var attempts = 1
-                    while (result is CallControlResult.Error && attempts <= 2) {
-                        delay(100)
-                        Log.i(
-                            "$TAG Previous attempt failed [$result], requesting again audio endpoint change to [${endpoint.name}] with type [${endpointTypeToString(endpoint.type)}]"
-                        )
-                        result = callControl.requestEndpointChange(endpoint)
-                        attempts += 1
-                    }
-
-                    if (result is CallControlResult.Error) {
-                        Log.e("$TAG Failed to change endpoint audio device, error [$result]")
-                    } else {
-                        Log.i(
-                            "$TAG It took [$attempts] attempt(s) to change endpoint audio device..."
-                        )
-                        currentEndpoint = endpoint.type
-                        success = true
-                    }
-                }
-
-                return success
-            }
-        }
-
-        if (routes.size == 1 && routes[0] == AudioDevice.Type.Earpiece && wiredHeadsetFound) {
-            Log.e("$TAG User asked for earpiece but endpoint doesn't exists!")
-        } else if (skippedBecauseAlreadyInUse) {
-            Log.w("$TAG This endpoint was already in use (according to Telecom Manager), force changing the device in Linphone just in case")
-        } else {
-            Log.e("$TAG No matching endpoint found")
-        }
-        return false
-    }
-
     private fun answerCall() {
         val isVideo = LinphoneUtils.isVideoEnabled(call)
         val type = if (isVideo) {
-            CallAttributesCompat.Companion.CALL_TYPE_VIDEO_CALL
+            CallAttributesCompat.CALL_TYPE_VIDEO_CALL
         } else {
-            CallAttributesCompat.Companion.CALL_TYPE_AUDIO_CALL
+            CallAttributesCompat.CALL_TYPE_AUDIO_CALL
         }
         scope.launch {
             Log.i("$TAG Answering [${if (isVideo) "video" else "audio"}] call")
@@ -389,12 +246,12 @@ class TelecomCallControlCallback(
 
     private fun endpointTypeToString(type: Int): String {
         return when (type) {
-            CallEndpointCompat.Companion.TYPE_UNKNOWN -> "UNKNOWN"
-            CallEndpointCompat.Companion.TYPE_EARPIECE -> "EARPIECE"
-            CallEndpointCompat.Companion.TYPE_BLUETOOTH -> "BLUETOOTH"
-            CallEndpointCompat.Companion.TYPE_WIRED_HEADSET -> "WIRED HEADSET"
-            CallEndpointCompat.Companion.TYPE_SPEAKER -> "SPEAKER"
-            CallEndpointCompat.Companion.TYPE_STREAMING -> "STREAMING"
+            CallEndpointCompat.TYPE_UNKNOWN -> "UNKNOWN"
+            CallEndpointCompat.TYPE_EARPIECE -> "EARPIECE"
+            CallEndpointCompat.TYPE_BLUETOOTH -> "BLUETOOTH"
+            CallEndpointCompat.TYPE_WIRED_HEADSET -> "WIRED HEADSET"
+            CallEndpointCompat.TYPE_SPEAKER -> "SPEAKER"
+            CallEndpointCompat.TYPE_STREAMING -> "STREAMING"
             else -> "UNEXPECTED: $type"
         }
     }

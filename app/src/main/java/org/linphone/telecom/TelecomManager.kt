@@ -29,7 +29,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.core.AudioDevice
 import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
@@ -87,11 +86,6 @@ class TelecomManager
         } catch (e: Exception) {
             Log.e("$TAG Can't init TelecomManager: $e")
         }
-    }
-
-    @WorkerThread
-    fun getCurrentlyFollowedCalls(): Int {
-        return currentlyFollowedCalls
     }
 
     @WorkerThread
@@ -207,19 +201,5 @@ class TelecomManager
     fun onCoreStopped(core: Core) {
         Log.i("$TAG Core is being stopped")
         core.removeListener(coreListener)
-    }
-
-    @WorkerThread
-    fun applyAudioRouteToCallWithId(routes: List<AudioDevice.Type>, callId: String): Boolean {
-        Log.i(
-            "$TAG Looking for audio endpoint with type [${routes.first()}] for call with ID [$callId]"
-        )
-        val callControlCallback = map[callId]
-        if (callControlCallback == null) {
-            Log.w("$TAG Failed to find callbacks for call with ID [$callId]")
-            return false
-        }
-
-        return callControlCallback.applyAudioRouteToCallWithId(routes)
     }
 }

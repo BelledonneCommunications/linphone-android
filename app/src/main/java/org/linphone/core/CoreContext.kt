@@ -52,6 +52,7 @@ import org.linphone.telecom.TelecomManager
 import org.linphone.ui.call.CallActivity
 import org.linphone.utils.ActivityMonitor
 import org.linphone.utils.AppUtils
+import org.linphone.utils.AudioUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
@@ -143,20 +144,29 @@ class CoreContext
         override fun onAudioDevicesAdded(addedDevices: Array<out AudioDeviceInfo>?) {
             if (!addedDevices.isNullOrEmpty()) {
                 Log.i("$TAG [${addedDevices.size}] new device(s) have been added:")
+                var atLeastOneNewDeviceIsBluetooth = false
                 for (device in addedDevices) {
                     Log.i(
                         "$TAG Added device [${device.productName}] with ID [${device.id}] and type [${device.type}]"
                     )
+
+                    when (device.type) {
+                        AudioDeviceInfo.TYPE_BLUETOOTH_SCO, AudioDeviceInfo.TYPE_BLE_HEADSET, AudioDeviceInfo.TYPE_BLE_SPEAKER, AudioDeviceInfo.TYPE_HEARING_AID -> {
+                            atLeastOneNewDeviceIsBluetooth = true
+                        }
+                    }
                 }
 
-                if (telecomManager.getCurrentlyFollowedCalls() <= 0) {
-                    Log.i("$TAG No call found in Telecom's CallsManager, reloading sound devices in 500ms")
-                    postOnCoreThreadDelayed({ core.reloadSoundDevices() }, 500)
-                }  else {
-                    Log.i(
-                        "$TAG At least one active call in Telecom's CallsManager, let it handle the added device(s)"
-                    )
-                }
+                Log.i("$TAG Reloading sound devices in 500ms")
+                postOnCoreThreadDelayed({
+                    Log.i("$TAG Reloading sound devices")
+                    core.reloadSoundDevices()
+
+                    if (atLeastOneNewDeviceIsBluetooth && core.callsNb > 0 && corePreferences.routeAudioToBluetoothWhenPossible) {
+                        Log.i("$TAG It seems a bluetooth device is now available, trying to route audio to it")
+                        AudioUtils.routeAudioToEitherBluetoothOrHearingAid()
+                    }
+                }, 500)
             }
         }
 
@@ -169,14 +179,12 @@ class CoreContext
                         "$TAG Removed device [${device.id}][${device.productName}][${device.type}]"
                     )
                 }
-                if (telecomManager.getCurrentlyFollowedCalls() <= 0) {
-                    Log.i("$TAG No call found in Telecom's CallsManager, reloading sound devices in 500ms")
-                    postOnCoreThreadDelayed({ core.reloadSoundDevices() }, 500)
-                } else {
-                    Log.i(
-                        "$TAG At least one active call in Telecom's CallsManager, let it handle the removed device(s)"
-                    )
-                }
+
+                Log.i("$TAG Reloading sound devices in 500ms")
+                postOnCoreThreadDelayed({
+                    Log.i("$TAG Reloading sound devices")
+                    core.reloadSoundDevices()
+                }, 500)
             }
         }
     }
@@ -348,9 +356,19 @@ class CoreContext
                         )
                     }
                 }
+                Call.State.OutgoingRinging, Call.State.OutgoingEarlyMedia -> {
+                    if (corePreferences.routeAudioToBluetoothWhenPossible) {
+                        Log.i("$TAG Trying to route audio to either bluetooth or hearing aid if available")
+                        AudioUtils.routeAudioToEitherBluetoothOrHearingAid(call)
+                    }
+                }
                 Call.State.Connected -> {
                     postOnMainThread {
                         showCallActivity()
+                    }
+                    if (corePreferences.routeAudioToBluetoothWhenPossible) {
+                        Log.i("$TAG Call is connected, trying to route audio to either bluetooth or hearing aid if available")
+                        AudioUtils.routeAudioToEitherBluetoothOrHearingAid(call)
                     }
                 }
                 Call.State.StreamsRunning -> {
@@ -405,6 +423,11 @@ class CoreContext
         @WorkerThread
         override fun onAudioDevicesListUpdated(core: Core) {
             Log.i("$TAG Available audio devices list was updated")
+        }
+
+        @WorkerThread
+        override fun onFirstCallStarted(core: Core) {
+            Log.i("$TAG First call started")
         }
 
         @WorkerThread

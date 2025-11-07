@@ -56,6 +56,11 @@ class AudioUtils {
         }
 
         @WorkerThread
+        fun routeAudioToEitherBluetoothOrHearingAid(call: Call? = null) {
+            routeAudioTo(call, arrayListOf(AudioDevice.Type.Bluetooth, AudioDevice.Type.HearingAid))
+        }
+
+        @WorkerThread
         fun routeAudioToHeadset(call: Call? = null) {
             routeAudioTo(
                 call,
@@ -85,8 +90,7 @@ class AudioUtils {
         private fun applyAudioRouteChange(
             call: Call?,
             types: List<AudioDevice.Type>,
-            output: Boolean = true,
-            skipTelecom: Boolean = false
+            output: Boolean = true
         ) {
             val currentCall = if (coreContext.core.callsNb > 0) {
                 call ?: coreContext.core.currentCall ?: coreContext.core.calls[0]
@@ -94,22 +98,7 @@ class AudioUtils {
                 Log.w("$TAG No call found, setting audio route on Core")
                 null
             }
-
-            if (!skipTelecom) {
-                val callId = currentCall?.callLog?.callId.orEmpty()
-                Log.i("$TAG Trying to change audio endpoint using Telecom Manager APIs")
-                val success = coreContext.telecomManager.applyAudioRouteToCallWithId(types, callId)
-                if (!success) {
-                    Log.w("$TAG Failed to change audio endpoint to [$types] for call ID [$callId]")
-                    applyAudioRouteChange(currentCall, types, output, skipTelecom = true)
-                } else {
-                    Log.i("$TAG It seems audio endpoint update using Telecom Manager was successful")
-                    return
-                }
-            } else {
-                Log.i("$TAG Trying to change audio endpoint directly in Linphone SDK")
-                applyAudioRouteChangeInLinphone(currentCall, types, output)
-            }
+            applyAudioRouteChangeInLinphone(currentCall, types, output)
         }
 
         fun applyAudioRouteChangeInLinphone(
