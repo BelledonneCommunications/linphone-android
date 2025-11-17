@@ -30,8 +30,8 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.annotation.UiThread
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import org.linphone.R
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
@@ -54,7 +54,9 @@ class SettingsFragment : GenericMainFragment() {
 
     private lateinit var binding: SettingsFragmentBinding
 
-    private lateinit var viewModel: SettingsViewModel
+    private val viewModel: SettingsViewModel by navGraphViewModels(
+        R.id.main_nav_graph
+    )
 
     private val sortContactsByListener = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -138,8 +140,6 @@ class SettingsFragment : GenericMainFragment() {
         postponeEnterTransition()
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(this)[SettingsViewModel::class.java]
-
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
         observeToastEvents(viewModel)
@@ -179,17 +179,6 @@ class SettingsFragment : GenericMainFragment() {
         viewModel.goToIncomingCallNotificationChannelSettingsEvent.observe(viewLifecycleOwner) {
             it.consume { currentRingtone ->
                 try {
-                    /*
-                    Log.w("$TAG Going to incoming call channel settings")
-                    val intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).apply {
-                        putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
-                        putExtra(
-                            Settings.EXTRA_CHANNEL_ID,
-                            getString(R.string.notification_channel_without_ringtone_incoming_call_id)
-                        )
-                    }
-                    startActivity(intent)
-                    */
                     val intent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER).apply {
                         putExtra(
                             RingtoneManager.EXTRA_RINGTONE_TYPE,
