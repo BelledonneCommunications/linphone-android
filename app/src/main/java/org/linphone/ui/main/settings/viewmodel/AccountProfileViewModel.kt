@@ -23,10 +23,7 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import java.io.File
 import java.util.Locale
-import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -45,7 +42,6 @@ import org.linphone.ui.main.model.AccountModel
 import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.ui.main.settings.model.AccountDeviceModel
 import org.linphone.utils.Event
-import org.linphone.utils.FileUtils
 
 class AccountProfileViewModel
     @UiThread
@@ -268,41 +264,9 @@ class AccountProfileViewModel
     fun deleteAccount() {
         coreContext.postOnCoreThread { core ->
             if (::account.isInitialized) {
-                Log.i("$TAG Removing call logs, conversations & meetings related to account being removed")
-                account.clearCallLogs()
-
-                // Wait for a better API in the SDK, deleteChatRoom will cause user to leave the groups,
-                // which will cause issues in case of multi device
-                /*
-                for (conversation in account.chatRooms) {
-                    core.deleteChatRoom(conversation)
-                }
-                */
-                for (meeting in account.conferenceInformationList) {
-                    core.deleteConferenceInformation(meeting)
-                }
-
                 val identity = account.params.identityAddress?.asStringUriOnly()
-                val authInfo = account.findAuthInfo()
-                if (authInfo != null) {
-                    Log.i("$TAG Found auth info for account [$identity], removing it")
-                    if (authInfo.password.isNullOrEmpty() && authInfo.ha1.isNullOrEmpty() && authInfo.accessToken != null) {
-                        Log.i("$TAG Auth info was using bearer token instead of password")
-                        val ssoCache = File(corePreferences.ssoCacheFile)
-                        if (ssoCache.exists()) {
-                            Log.i("$TAG Found auth_state.json file, deleting it")
-                            viewModelScope.launch {
-                                FileUtils.deleteFile(ssoCache.absolutePath)
-                            }
-                        }
-                    }
-                    core.removeAuthInfo(authInfo)
-                } else {
-                    Log.w("$TAG Failed to find matching auth info for account [$identity]")
-                }
-
-                core.removeAccount(account)
-                Log.i("$TAG Account [$identity] has been removed")
+                Log.w("$TAG Removing account [$identity] and all related data (auth info, conferences, conversations, call logs)")
+                core.removeAccountWithData(account)
                 accountRemovedEvent.postValue(Event(true))
             }
         }
