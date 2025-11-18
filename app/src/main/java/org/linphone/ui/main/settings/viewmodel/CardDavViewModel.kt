@@ -26,6 +26,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.contacts.ContactLoader.Companion.LINPHONE_ADDRESS_BOOK_FRIEND_LIST
+import org.linphone.core.AuthInfo
 import org.linphone.core.Factory
 import org.linphone.core.FriendList
 import org.linphone.core.FriendListListenerStub
@@ -57,6 +58,8 @@ class CardDavViewModel
     val syncInProgress = MutableLiveData<Boolean>()
 
     val storeNewContactsInIt = MutableLiveData<Boolean>()
+
+    var pendingAuthInfo: AuthInfo? = null
 
     val syncSuccessfulEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
@@ -92,9 +95,16 @@ class CardDavViewModel
                     syncInProgress.postValue(false)
                     showRedToast(R.string.settings_contacts_carddav_sync_error_toast, R.drawable.warning_circle)
                     if (isEdit.value == false) {
-                        Log.e("$TAG Synchronization failed, removing Friend list from Core")
+                        Log.e("$TAG Synchronization failed, removing Friend list & AuthInfo from Core")
                         friendList.removeListener(this)
                         coreContext.core.removeFriendList(friendList)
+
+                        val authInfo = pendingAuthInfo
+                        if (authInfo != null) {
+                            Log.i("$TAG Removing pending auth info [${authInfo.username}] with realm [${authInfo.realm}]")
+                            coreContext.core.removeAuthInfo(authInfo)
+                            pendingAuthInfo = null
+                        }
                     }
                 }
                 else -> {}
@@ -129,6 +139,7 @@ class CardDavViewModel
             isEdit.postValue(true)
             friendList = found
             friendList.addListener(friendListListener)
+            pendingAuthInfo = null
 
             displayName.postValue(name)
             storeNewContactsInIt.postValue(
@@ -150,6 +161,14 @@ class CardDavViewModel
                     )
                     corePreferences.friendListInWhichStoreNewlyCreatedFriends = LINPHONE_ADDRESS_BOOK_FRIEND_LIST
                 }
+
+                val authInfo = pendingAuthInfo
+                if (authInfo != null) {
+                    Log.i("$TAG Removing pending auth info [${authInfo.username}] with realm [${authInfo.realm}]")
+                    core.removeAuthInfo(authInfo)
+                    pendingAuthInfo = null
+                }
+
                 core.removeFriendList(friendList)
                 Log.i("$TAG Removed friends list with display name [$name]")
                 showGreenToast(R.string.settings_contacts_carddav_deleted_toast, R.drawable.trash_simple)
@@ -206,6 +225,7 @@ class CardDavViewModel
                     authRealm,
                     null
                 )
+                pendingAuthInfo = authInfo
                 core.addAuthInfo(authInfo)
             }
 
