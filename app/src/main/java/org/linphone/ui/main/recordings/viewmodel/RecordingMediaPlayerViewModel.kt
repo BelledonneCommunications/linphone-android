@@ -59,6 +59,14 @@ class RecordingMediaPlayerViewModel
 
     val isUsingSmffFileFormat = MutableLiveData<Boolean>()
 
+    val formattedDuration = MutableLiveData<String>()
+
+    val duration = MutableLiveData<Int>()
+
+    val displayName = MutableLiveData<String>()
+
+    val dateTime = MutableLiveData<String>()
+
     private var audioFocusRequest: AudioFocusRequestCompat? = null
 
     private val playerListener = PlayerListener {
@@ -89,6 +97,11 @@ class RecordingMediaPlayerViewModel
     @UiThread
     fun loadRecording(model: RecordingModel) {
         recordingModel = model
+
+        formattedDuration.postValue(model.formattedDuration)
+        duration.postValue(model.duration)
+        displayName.postValue(model.displayName)
+        dateTime.postValue(model.dateTime)
 
         coreContext.postOnCoreThread { core ->
             isUsingSmffFileFormat.postValue(model.filePath.endsWith(LinphoneUtils.RECORDING_SMFF_FILE_EXTENSION))
