@@ -28,6 +28,8 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Address
 import org.linphone.core.ChatRoom
+import org.linphone.core.Conference
+import org.linphone.core.ConferenceListenerStub
 import org.linphone.core.MediaDirection
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
@@ -50,6 +52,23 @@ abstract class AbstractConversationViewModel : GenericViewModel() {
     lateinit var chatRoom: ChatRoom
 
     lateinit var conversationId: String
+
+    private val conferenceListener = object : ConferenceListenerStub() {
+        @WorkerThread
+        override fun onStateChanged(conference: Conference, newState: Conference.State?) {
+            Log.i("$TAG Conference state changed [$newState]")
+            when (newState) {
+                Conference.State.CreationFailed -> {
+                    showRedToast(R.string.conference_failed_to_create_group_call_toast, R.drawable.warning_circle)
+                    conference.removeListener(this)
+                }
+                Conference.State.Created -> {
+                    conference.removeListener(this)
+                }
+                else -> {}
+            }
+        }
+    }
 
     fun isChatRoomInitialized(): Boolean {
         return ::chatRoom.isInitialized
@@ -173,6 +192,8 @@ abstract class AbstractConversationViewModel : GenericViewModel() {
             if (conference.inviteParticipants(participants, callParams) != 0) {
                 Log.e("$TAG Failed to invite participants into group call!")
                 showRedToast(R.string.conference_failed_to_create_group_call_toast, R.drawable.warning_circle)
+            } else {
+                conference.addListener(conferenceListener)
             }
         }
     }
