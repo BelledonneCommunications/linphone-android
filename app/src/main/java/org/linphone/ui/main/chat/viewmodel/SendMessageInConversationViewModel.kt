@@ -239,6 +239,9 @@ class SendMessageInConversationViewModel
         if (isReplying.value == true) {
             cancelReply()
         }
+        if (isVoiceRecording.value == true) {
+            cancelVoiceMessageRecording()
+        }
 
         val newValue = model.text.value?.toString() ?: ""
         textToSend.value = newValue
