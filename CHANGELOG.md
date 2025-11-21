@@ -31,6 +31,8 @@ Group changes to describe their impact on the project, as follows:
 - Added support for HDMI audio devices
 
 ### Changed
+- No longer follow TelecomManager audio endpoint during calls, using our own routing policy
+- Removing an account will also remove all related data in the local database (auth info, call logs, conversations, meetings, etc...)
 - Hide SIP address/phone number picker dialog if contact has exactly one SIP address matching both the app default domain & the currently selected account domain
 - Improved UI on tablets with screen sw600dp and higher, will look more like our desktop app
 - Now loading media/documents contents in conversation by chunks (instead of all of them at once)
@@ -39,8 +41,18 @@ Group changes to describe their impact on the project, as follows:
 - Increased shared media preview size in chat
 - Un-encrypted conversation warning will be more visible for accounts that support end-to-end encrypted conversations
 - Made numpad buttons larger by changing their shape
-- All LDAP fields are mandatory now, added toggle to choose wether or not to print LDAP logs
+- All LDAP fields are mandatory now
 - Permission fragment will only show missing ones
+
+## [6.0.20] - 2025-11-21
+
+### Changed
+- Added shrink resources to release config in gradle
+
+### Fixed
+- Remove AuthInfo when configuring a CardDAV friend list if synchronization fails
+- Added missing toast when starting a group call or meeting if there's an issue
+- Fixed crash in RecordingPlayerFragment due to used lateinit property before it's initialized
 
 ## [6.0.19] - 2025-10-16
 
