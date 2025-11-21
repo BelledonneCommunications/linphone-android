@@ -1,5 +1,6 @@
 package org.linphone.ui.fileviewer
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -269,7 +270,11 @@ class MediaViewerActivity : GenericActivity() {
                     }
 
                     val shareIntent = Intent.createChooser(sendIntent, null)
-                    startActivity(shareIntent)
+                    try {
+                        startActivity(shareIntent)
+                    } catch (anfe: ActivityNotFoundException) {
+                        Log.e("$TAG Failed to start intent chooser: $anfe")
+                    }
                 } else {
                     Log.e(
                         "$TAG Failed to copy file [$filePath] to share!"

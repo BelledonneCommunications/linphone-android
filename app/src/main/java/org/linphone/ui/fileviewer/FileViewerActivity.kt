@@ -197,7 +197,11 @@ class FileViewerActivity : GenericActivity() {
                 }
 
                 val shareIntent = Intent.createChooser(sendIntent, null)
-                startActivity(shareIntent)
+                try {
+                    startActivity(shareIntent)
+                } catch (anfe: ActivityNotFoundException) {
+                    Log.e("$TAG Failed to start intent chooser: $anfe")
+                }
             } else {
                 Log.e("$TAG Failed to copy file [$filePath] to share!")
             }
