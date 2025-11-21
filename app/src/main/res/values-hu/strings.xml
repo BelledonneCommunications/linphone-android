@@ -138,4 +138,26 @@
         <item quantity="one">%s kiválasztva</item>
         <item quantity="other">%s kiválasztva</item>
     </plurals>
+    <string name="settings_calls_title">Hívások</string>
+    <string name="settings_conversations_title">Üzenetek</string>
+    <string name="settings_contacts_title">Névjegyek</string>
+    <string name="settings_contacts_carddav_name_title">Megjelenített név</string>
+    <string name="settings_contacts_carddav_username_title">Felhasználónév</string>
+    <string name="settings_contacts_carddav_password_title">Jelszó</string>
+    <string name="settings_contacts_ldap_password_title">Jelszó</string>
+    <string name="settings_meetings_title">Meetingek</string>
+    <string name="settings_tunnel_mode_disabled_label">Letiltva</string>
+    <string name="settings_advanced_device_id">Eszköz ID</string>
+    <string name="manage_account_device_remove">Eltávolít</string>
+    <string name="account_settings_dialog_invalid_password_hint">Jelszó</string>
+    <string name="contact_details_delete">Törlés</string>
+    <string name="contact_call_action">Hívás</string>
+    <string name="conversation_action_mark_as_read">Jelölés olvasottnak</string>
+    <string name="conversation_action_call">Hívás</string>
+    <string name="conversation_ephemeral_messages_duration_disabled">Letiltva</string>
+    <string name="meeting_waiting_room_cancel">Mégse</string>
+    <string name="menu_delete_selected_item">Törlés</string>
+    <string name="menu_reply_to_chat_message">Válasz</string>
+    <string name="generic_address_picker_conversations_list_title">Üzenetek</string>
+    <string name="generic_address_picker_contacts_list_title">Névjegyek</string>
 </resources>

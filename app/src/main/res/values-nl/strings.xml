@@ -455,7 +455,7 @@
     <string name="call_audio_incoming">Inkomende oproep</string>
     <string name="call_video_incoming_for_account">Inkomende video-oproep voor %s</string>
     <string name="account_settings_dialog_invalid_password_message">Verbinding mislukt omdat de authenticatie ontbreekt of ongeldig is voor account \n%s.\n\nJe kunt het wachtwoord opnieuw invoeren of je accountconfiguratie controleren in de instellingen.</string>
-    <string name="account_settings_dialog_invalid_password_hint">Nieuw wachtwoord</string>
+    <string name="account_settings_dialog_invalid_password_hint">Wachtwoord</string>
     <string name="account_failed_to_find_identity_toast">Kan overeenkomend account niet vinden!</string>
     <string name="history_call_start_no_suggestion_nor_contact">Geen suggestie en geen contact op dit moment…</string>
     <string name="history_group_call_start_dialog_subject_hint">Onderwerp groepsoproep</string>

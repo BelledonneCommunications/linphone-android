@@ -233,7 +233,7 @@
     <string name="settings_contacts_ldap_password_title">密码</string>
     <string name="settings_contacts_ldap_use_tls_title">使用TLS</string>
     <string name="settings_contacts_ldap_search_base_title">搜索base（不能为空）</string>
-    <string name="settings_contacts_ldap_search_filter_title">搜索base（不能为空）</string>
+    <string name="settings_contacts_ldap_search_filter_title">搜索base（不能为空） 过滤</string>
     <string name="settings_contacts_ldap_max_results_title">最大结果数</string>
     <string name="settings_contacts_ldap_request_timeout_title">超时（秒）</string>
     <string name="settings_contacts_ldap_min_characters_title">开始查询的最小字符数</string>
@@ -839,4 +839,7 @@
     <string name="content_description_cancel_files_or_text_pending_sharing">单击可取消待共享的文件或文本</string>
     <string name="settings_contacts_ldap_enabled_title">已启用</string>
     <string name="call_zrtp_point_to_point_encrypted">ZRTP点对点加密</string>
+    <string name="drawer_menu_account_connection_status_disconnected">连接已断开</string>
+    <string name="settings_contacts_presence_subscribe_title">订阅在线状态信息</string>
+    <string name="manage_account_status_disconnected_summary">该账户处于离线状态，可能是由于您当前未连接到互联网。</string>
 </resources>
