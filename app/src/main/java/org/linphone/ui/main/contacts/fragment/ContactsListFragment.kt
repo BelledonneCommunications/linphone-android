@@ -20,6 +20,7 @@
 package org.linphone.ui.main.contacts.fragment
 
 import android.Manifest
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -286,7 +287,11 @@ class ContactsListFragment : AbstractMainFragment() {
         }
 
         val shareIntent = Intent.createChooser(sendIntent, null)
-        startActivity(shareIntent)
+        try {
+            startActivity(shareIntent)
+        } catch (anfe: ActivityNotFoundException) {
+            Log.e("$TAG Failed to start intent chooser: $anfe")
+        }
     }
 
     private fun showFilterPopupMenu(view: View) {

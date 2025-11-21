@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.recordings.fragment
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.SurfaceTexture
 import android.os.Bundle
@@ -194,7 +195,11 @@ class RecordingMediaPlayerFragment : GenericMainFragment() {
             }
 
             val shareIntent = Intent.createChooser(sendIntent, null)
-            startActivity(shareIntent)
+            try {
+                startActivity(shareIntent)
+            } catch (anfe: ActivityNotFoundException) {
+                Log.e("$TAG Failed to start intent chooser: $anfe")
+            }
         }
     }
 }

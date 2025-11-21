@@ -283,7 +283,11 @@ class ContactFragment : SlidingPaneChildFragment() {
         }
 
         val shareIntent = Intent.createChooser(sendIntent, null)
-        startActivity(shareIntent)
+        try {
+            startActivity(shareIntent)
+        } catch (anfe: ActivityNotFoundException) {
+            Log.e("$TAG Failed to start intent chooser: $anfe")
+        }
     }
 
     private fun inviteContactBySms(number: String) {
@@ -299,7 +303,11 @@ class ContactFragment : SlidingPaneChildFragment() {
             putExtra("address", number)
             putExtra("sms_body", smsBody)
         }
-        startActivity(smsIntent)
+        try {
+            startActivity(smsIntent)
+        } catch (anfe: ActivityNotFoundException) {
+            Log.e("$TAG Failed to start SMS intent: $anfe")
+        }
     }
 
     private fun showTrustProcessDialog() {

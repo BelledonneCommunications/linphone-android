@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.recordings.fragment
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -227,7 +228,11 @@ class RecordingsListFragment : GenericMainFragment() {
             }
 
             val shareIntent = Intent.createChooser(sendIntent, null)
-            startActivity(shareIntent)
+            try {
+                startActivity(shareIntent)
+            } catch (anfe: ActivityNotFoundException) {
+                Log.e("$TAG Failed to start intent chooser: $anfe")
+            }
         }
     }
 }
