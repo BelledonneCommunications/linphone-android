@@ -10,6 +10,16 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [6.0.20] - 2025-11-21
+
+### Changed
+- Added shrink resources to release config in gradle
+
+### Fixed
+- Remove AuthInfo when configuring a CardDAV friend list if synchronization fails
+- Added missing toast when starting a group call or meeting if there's an issue
+- Fixed crash in RecordingPlayerFragment due to used lateinit property before it's initialized
+
 ## [6.0.19] - 2025-10-16
 
 ### Added
