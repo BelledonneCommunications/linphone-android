@@ -243,7 +243,7 @@
                 bind:viewModel="@{viewModel}"
                 bind:callMediaEncryptionStatisticsClickListener="@{callMediaEncryptionStatisticsClickListener}"
                 app:layout_constraintTop_toBottomOf="@id/name"
-                app:layout_constraintStart_toEndOf="@id/back"
+                app:layout_constraintStart_toStartOf="@id/name"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
             <org.linphone.ui.call.view.RoundCornersTextureView
