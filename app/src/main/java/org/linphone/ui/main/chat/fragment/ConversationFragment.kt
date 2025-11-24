@@ -474,9 +474,13 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                 val chatMessageEventLog = adapter.currentList[index]
                 val chatMessageModel = (chatMessageEventLog.model as? MessageModel)
                 if (chatMessageModel != null) {
-                    sendMessageViewModel.replyToMessage(chatMessageModel)
-                    // Open keyboard & focus edit text
-                    binding.sendArea.messageToSend.showKeyboard()
+                    if (chatMessageModel.hasBeenRetracted.value == true) { // Don't allow to reply to retracted messages
+                        // TODO: notify user?
+                    } else {
+                        sendMessageViewModel.replyToMessage(chatMessageModel)
+                        // Open keyboard & focus edit text
+                        binding.sendArea.messageToSend.showKeyboard()
+                    }
                 } else {
                     Log.e(
                         "$TAG Can't reply, failed to get a ChatMessageModel from adapter item #[$index]"
