@@ -39,15 +39,39 @@ class Api35Compatibility {
                     Executors.newSingleThreadExecutor()
                 ) { info ->
                     Log.i("==== Current startup information dump ====")
-                    Log.i("TYPE = ${startupTypeToString(info.startType)}")
-                    Log.i("STATE = ${startupStateToString(info.startupState)}")
-                    Log.i("REASON = ${startupReasonToString(info.reason)}")
-                    Log.i("FORCE STOPPED = ${if (info.wasForceStopped()) "yes" else "no"}")
-                    Log.i("PROCESS NAME = ${info.processName}")
-                    Log.i("=========================================")
+                    logAppStartupInfo(info)
+                }
+
+                Log.i("==== Fetching last three startup reasons if available ====")
+                val lastStartupInfo = activityManager.getHistoricalProcessStartReasons(3)
+                for (info in lastStartupInfo) {
+                    Log.i("==== Previous startup information dump ====")
+                    logAppStartupInfo(info)
                 }
             } catch (iae: IllegalArgumentException) {
                 Log.e("$TAG Can't add application start info completion listener: $iae")
+            }
+        }
+
+        private fun logAppStartupInfo(info: ApplicationStartInfo) {
+            Log.i("TYPE = ${startupTypeToString(info.startType)}")
+            Log.i("STATE = ${startupStateToString(info.startupState)}")
+            Log.i("REASON = ${startupReasonToString(info.reason)}")
+            Log.i("START COMPONENT = ${startComponentToString(info.launchMode)}")
+            Log.i("INTENT = ${info.intent}")
+            Log.i("FORCE STOPPED = ${if (info.wasForceStopped()) "yes" else "no"}")
+            Log.i("PROCESS NAME = ${info.processName}")
+            Log.i("=========================================")
+        }
+
+        private fun startComponentToString(component: Int): String {
+            return when (component) {
+                ApplicationStartInfo.START_COMPONENT_ACTIVITY -> "Activity"
+                ApplicationStartInfo.START_COMPONENT_BROADCAST -> "Broadcast"
+                ApplicationStartInfo.START_COMPONENT_CONTENT_PROVIDER -> "Content Provider"
+                ApplicationStartInfo.START_COMPONENT_SERVICE -> "Service"
+                ApplicationStartInfo.START_COMPONENT_OTHER -> "Other"
+                else -> "Unexpected ($component)"
             }
         }
 
