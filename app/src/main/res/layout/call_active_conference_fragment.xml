@@ -194,7 +194,7 @@
                 bind:viewModel="@{viewModel}"
                 bind:callMediaEncryptionStatisticsClickListener="@{callMediaEncryptionStatisticsClickListener}"
                 app:layout_constraintTop_toBottomOf="@id/conference_subject"
-                app:layout_constraintStart_toEndOf="@id/back"
+                app:layout_constraintStart_toStartOf="@id/conference_subject"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
             <androidx.appcompat.widget.AppCompatTextView
