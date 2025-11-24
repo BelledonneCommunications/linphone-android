@@ -308,12 +308,7 @@ class ConversationViewModel
 
         @WorkerThread
         override fun onMessageRetracted(chatRoom: ChatRoom, message: ChatMessage) {
-            for (model in eventsList.reversed()) {
-                if (model.model is MessageModel && model.model.replyToMessageId == message.messageId) {
-                    model.model.computeReplyInfo()
-                    break
-                }
-            }
+            updateRepliesUpTo(message)
 
             if (message.isOutgoing) {
                 messageDeletedEvent.postValue(Event(true))
@@ -322,12 +317,7 @@ class ConversationViewModel
 
         @WorkerThread
         override fun onMessageContentEdited(chatRoom: ChatRoom, message: ChatMessage) {
-            for (model in eventsList.reversed()) {
-                if (model.model is MessageModel && model.model.replyToMessageId == message.messageId) {
-                    model.model.computeReplyInfo()
-                    break
-                }
-            }
+            updateRepliesUpTo(message)
         }
     }
 
@@ -464,7 +454,9 @@ class ConversationViewModel
 
                 Log.i("$TAG Removing chat message id [${chatMessageModel.id}] from events list")
                 list.remove(found)
+
                 eventsList = list
+
                 updateEvents.postValue(Event(true))
                 isEmpty.postValue(eventsList.isEmpty())
             } else {
@@ -476,6 +468,8 @@ class ConversationViewModel
             Log.i("$TAG Deleting message id [${chatMessageModel.id}] from database")
             chatRoom.deleteMessage(chatMessageModel.chatMessage)
             messageDeletedEvent.postValue(Event(true))
+
+            updateRepliesUpTo(chatMessageModel.chatMessage)
         }
     }
 
@@ -932,6 +926,21 @@ class ConversationViewModel
                         next.model.groupedWithPreviousMessage.postValue(false)
                         Log.i("$TAG Next message at [${index + 1}] was updated")
                     }
+                }
+            }
+        }
+    }
+
+    @WorkerThread
+    private fun updateRepliesUpTo(chatMessage: ChatMessage) {
+        for (model in eventsList.reversed()) {
+            if (model.model is MessageModel) {
+                if (model.model.replyToMessageId == chatMessage.messageId) {
+                    model.model.computeReplyInfo()
+                }
+
+                if (model.model.timestamp < chatMessage.time) {
+                    break
                 }
             }
         }
