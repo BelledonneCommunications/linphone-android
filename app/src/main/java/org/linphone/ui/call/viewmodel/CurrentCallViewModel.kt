@@ -855,15 +855,16 @@ class CurrentCallViewModel
     fun toggleRecording() {
         coreContext.postOnCoreThread {
             if (::currentCall.isInitialized) {
-                if (currentCall.params.isRecording) {
+                val recording = if (currentCall.params.isRecording) {
                     Log.i("$TAG Stopping call recording")
                     currentCall.stopRecording()
+                    false
                 } else {
                     Log.i("$TAG Starting call recording")
                     currentCall.startRecording()
+                    true
                 }
 
-                val recording = currentCall.params.isRecording
                 isRecording.postValue(recording)
                 if (recording) {
                     showRecordingToast()
