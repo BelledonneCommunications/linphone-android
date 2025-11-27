@@ -66,6 +66,10 @@ class CoreContext
 
     lateinit var core: Core
 
+    private val audioManager: AudioManager by lazy {
+        context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+    }
+
     fun isCoreAvailable(): Boolean {
         return ::core.isInitialized
     }
@@ -303,6 +307,13 @@ class CoreContext
             }
         }
 
+        private fun setAudioMode(mode: Int) {
+            if (audioManager.mode != mode) {
+                audioManager.mode = mode
+                Log.i("$TAG Audio manager mode set to $mode")
+            }
+        }
+        
         @WorkerThread
         override fun onCallStateChanged(
             core: Core,
@@ -316,6 +327,7 @@ class CoreContext
             )
             when (currentState) {
                 Call.State.IncomingReceived -> {
+                    setAudioMode(AudioManager.MODE_RINGTONE)
                     if (corePreferences.autoAnswerEnabled) {
                         val autoAnswerDelay = corePreferences.autoAnswerDelay
                         if (autoAnswerDelay == 0) {
@@ -331,6 +343,7 @@ class CoreContext
                     }
                 }
                 Call.State.IncomingEarlyMedia -> {
+                    setAudioMode(AudioManager.MODE_RINGTONE)
                     if (core.ringDuringIncomingEarlyMedia) {
                         val speaker = core.audioDevices.find {
                             it.type == AudioDevice.Type.Speaker
@@ -344,6 +357,7 @@ class CoreContext
                     }
                 }
                 Call.State.OutgoingInit -> {
+                    setAudioMode(AudioManager.MODE_IN_COMMUNICATION)
                     val conferenceInfo = core.findConferenceInformationFromUri(call.remoteAddress)
                     // Do not show outgoing call view for conference calls, wait for connected state
                     if (conferenceInfo == null) {
@@ -363,6 +377,7 @@ class CoreContext
                     }
                 }
                 Call.State.Connected -> {
+                    setAudioMode(AudioManager.MODE_IN_COMMUNICATION)
                     postOnMainThread {
                         showCallActivity()
                     }
@@ -372,6 +387,7 @@ class CoreContext
                     }
                 }
                 Call.State.StreamsRunning -> {
+                    setAudioMode(AudioManager.MODE_IN_COMMUNICATION)
                     if (previousCallState == Call.State.Connected) {
                         if (corePreferences.automaticallyStartCallRecording && !call.params.isRecording) {
                             if (call.conference == null) { // TODO: FIXME: Conference recordings are currently disabled
@@ -390,7 +406,14 @@ class CoreContext
                         }
                     }
                 }
+                Call.State.Paused,
+                Call.State.PausedByRemote,
+                Call.State.Pausing,
+                Call.State.Resuming -> {
+                    setAudioMode(AudioManager.MODE_IN_COMMUNICATION)
+                }
                 Call.State.Error -> {
+                    setAudioMode(AudioManager.MODE_NORMAL)
                     val errorInfo = call.errorInfo
                     Log.w(
                         "$TAG Call error reason is [${errorInfo.reason}](${errorInfo.protocolCode}): ${errorInfo.phrase}"
@@ -399,6 +422,10 @@ class CoreContext
                     showFormattedRedToastEvent.postValue(
                         Event(Pair(text, org.linphone.R.drawable.warning_circle))
                     )
+                }
+                Call.State.End,
+                Call.State.Released -> {
+                    setAudioMode(AudioManager.MODE_NORMAL)
                 }
                 else -> {
                 }
@@ -649,7 +676,6 @@ class CoreContext
     fun startCore() {
         Log.i("$TAG Starting Core")
 
-        val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         audioManager.registerAudioDeviceCallback(audioDeviceCallback, coreThread)
 
         val accounts = core.accountList
