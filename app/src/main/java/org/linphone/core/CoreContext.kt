@@ -39,6 +39,7 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.MutableLiveData
+import androidx.media.AudioFocusRequestCompat
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import kotlin.system.exitProcess
 import org.linphone.BuildConfig
@@ -87,6 +88,8 @@ class CoreContext
     private val activityMonitor = ActivityMonitor()
 
     private val mainThread = Handler(Looper.getMainLooper())
+
+    private var audioFocusRequest: AudioFocusRequestCompat? = null
 
     var defaultAccountHasVideoConferenceFactoryUri: Boolean = false
 
@@ -303,6 +306,29 @@ class CoreContext
             }
         }
 
+
+        private fun acquireAudioFocus() {
+            val request = audioFocusRequest
+            if (request == null) {
+                Log.i("$TAG Acquire audio focus")
+                audioFocusRequest = AudioUtils.acquireAudioFocusForVoiceRecordingOrPlayback(
+                    coreContext.context
+                )
+            }
+        }
+
+        private fun releaseAudioFocus() {
+            val request = audioFocusRequest
+            if (request != null) {
+                Log.i("$TAG Release audio focus")
+                AudioUtils.releaseAudioFocusForVoiceRecordingOrPlayback(
+                    coreContext.context,
+                    request
+                )
+                audioFocusRequest = null
+            }
+        }
+
         @WorkerThread
         override fun onCallStateChanged(
             core: Core,
@@ -316,6 +342,7 @@ class CoreContext
             )
             when (currentState) {
                 Call.State.IncomingReceived -> {
+                    acquireAudioFocus()
                     if (corePreferences.autoAnswerEnabled) {
                         val autoAnswerDelay = corePreferences.autoAnswerDelay
                         if (autoAnswerDelay == 0) {
@@ -331,6 +358,7 @@ class CoreContext
                     }
                 }
                 Call.State.IncomingEarlyMedia -> {
+                    acquireAudioFocus()
                     if (core.ringDuringIncomingEarlyMedia) {
                         val speaker = core.audioDevices.find {
                             it.type == AudioDevice.Type.Speaker
@@ -344,6 +372,7 @@ class CoreContext
                     }
                 }
                 Call.State.OutgoingInit -> {
+                    acquireAudioFocus()
                     val conferenceInfo = core.findConferenceInformationFromUri(call.remoteAddress)
                     // Do not show outgoing call view for conference calls, wait for connected state
                     if (conferenceInfo == null) {
@@ -363,6 +392,7 @@ class CoreContext
                     }
                 }
                 Call.State.Connected -> {
+                    acquireAudioFocus()
                     postOnMainThread {
                         showCallActivity()
                     }
@@ -372,6 +402,7 @@ class CoreContext
                     }
                 }
                 Call.State.StreamsRunning -> {
+                    acquireAudioFocus()
                     if (previousCallState == Call.State.Connected) {
                         if (corePreferences.automaticallyStartCallRecording && !call.params.isRecording) {
                             if (call.conference == null) { // TODO: FIXME: Conference recordings are currently disabled
@@ -390,7 +421,14 @@ class CoreContext
                         }
                     }
                 }
+                Call.State.Paused,
+                Call.State.PausedByRemote,
+                Call.State.Pausing,
+                Call.State.Resuming -> {
+                    acquireAudioFocus()
+                }
                 Call.State.Error -> {
+                    releaseAudioFocus()
                     val errorInfo = call.errorInfo
                     Log.w(
                         "$TAG Call error reason is [${errorInfo.reason}](${errorInfo.protocolCode}): ${errorInfo.phrase}"
@@ -399,6 +437,10 @@ class CoreContext
                     showFormattedRedToastEvent.postValue(
                         Event(Pair(text, org.linphone.R.drawable.warning_circle))
                     )
+                }
+                Call.State.End,
+                Call.State.Released -> {
+                    releaseAudioFocus()
                 }
                 else -> {
                 }
