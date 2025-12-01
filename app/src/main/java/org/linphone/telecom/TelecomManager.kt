@@ -69,15 +69,14 @@ class TelecomManager
         }
     }
 
+    private val hasTelecomFeature = context.packageManager.hasSystemFeature("android.software.telecom")
+
     private var currentlyFollowedCalls: Int = 0
 
     init {
-        val hasTelecomFeature =
-            context.packageManager.hasSystemFeature("android.software.telecom")
         Log.i(
             "$TAG android.software.telecom feature is [${if (hasTelecomFeature) "available" else "not available"}]"
         )
-
         try {
             callsManager.registerAppWithTelecom(
                 CallsManager.CAPABILITY_BASELINE or
@@ -200,13 +199,22 @@ class TelecomManager
     @WorkerThread
     fun onCoreStarted(core: Core) {
         Log.i("$TAG Core has been started")
-        core.addListener(coreListener)
+        if (hasTelecomFeature) {
+            core.addListener(coreListener)
+        } else {
+            Log.w(
+                "$TAG android.software.telecom feature is not available, enable audio focus requests in Linphone SDK"
+            )
+            coreContext.core.config.setBool("audio", "android_disable_audio_focus_requests", false)
+        }
     }
 
     @WorkerThread
     fun onCoreStopped(core: Core) {
         Log.i("$TAG Core is being stopped")
-        core.removeListener(coreListener)
+        if (hasTelecomFeature) {
+            core.removeListener(coreListener)
+        }
     }
 
     @WorkerThread
