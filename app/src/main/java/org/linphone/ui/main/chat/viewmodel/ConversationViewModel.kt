@@ -313,6 +313,8 @@ class ConversationViewModel
             if (message.isOutgoing) {
                 messageDeletedEvent.postValue(Event(true))
             }
+
+            unreadMessagesCount.postValue(chatRoom.unreadMessagesCount)
         }
 
         @WorkerThread

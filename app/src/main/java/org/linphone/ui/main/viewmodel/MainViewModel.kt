@@ -198,6 +198,14 @@ class MainViewModel
         }
 
         @WorkerThread
+        override fun onMessageRetracted(core: Core, chatRoom: ChatRoom, message: ChatMessage) {
+            val account = LinphoneUtils.getAccountForAddress(chatRoom.localAddress)
+            if (account != null && account != core.defaultAccount) {
+                computeNonDefaultAccountNotificationsCount()
+            }
+        }
+
+        @WorkerThread
         override fun onNetworkReachable(core: Core, reachable: Boolean) {
             Log.i(
                 "$TAG According to SDK, network is ${if (reachable) "reachable" else "not reachable"}"

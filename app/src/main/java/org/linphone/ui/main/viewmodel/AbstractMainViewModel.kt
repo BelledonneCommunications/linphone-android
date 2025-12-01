@@ -141,6 +141,11 @@ open class AbstractMainViewModel
         }
 
         @WorkerThread
+        override fun onMessageRetracted(core: Core, chatRoom: ChatRoom, message: ChatMessage) {
+            computeUnreadMessagesCount()
+        }
+
+        @WorkerThread
         override fun onGlobalStateChanged(core: Core, state: GlobalState?, message: String) {
             if (core.globalState == GlobalState.On) {
                 Log.i("$TAG Global state is [${core.globalState}], reload account info")
