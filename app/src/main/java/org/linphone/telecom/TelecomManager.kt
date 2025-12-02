@@ -80,7 +80,7 @@ class TelecomManager
         try {
             callsManager.registerAppWithTelecom(
                 CallsManager.CAPABILITY_BASELINE or
-                    CallsManager.Companion.CAPABILITY_SUPPORTS_VIDEO_CALLING
+                    CallsManager.CAPABILITY_SUPPORTS_VIDEO_CALLING
             )
             Log.i("$TAG App has been registered with Telecom")
         } catch (e: Exception) {
@@ -118,9 +118,9 @@ class TelecomManager
 
         val isVideo = LinphoneUtils.isVideoEnabled(call)
         val type = if (isVideo) {
-            CallAttributesCompat.Companion.CALL_TYPE_VIDEO_CALL
+            CallAttributesCompat.CALL_TYPE_VIDEO_CALL
         } else {
-            CallAttributesCompat.Companion.CALL_TYPE_AUDIO_CALL
+            CallAttributesCompat.CALL_TYPE_AUDIO_CALL
         }
 
         scope.launch {
