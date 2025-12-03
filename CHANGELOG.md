@@ -14,6 +14,7 @@ Group changes to describe their impact on the project, as follows:
 
 ### Added
 - Added the ability to edit/delete chat messages sent less than 24 hours ago.
+- Added keyboard shortcuts on IncomingCallFragment: Ctrl + Shift + A to answer the call, Ctrl + Shift + D to decline it
 - Added PDF preview in conversation (message bubble & documents list)
 - Added hover effect when using a mouse (useful for tablets or devices with desktop mode)
 - Support right click on some items to open bottom sheet/menu
@@ -35,6 +36,7 @@ Group changes to describe their impact on the project, as follows:
 - Removing an account will also remove all related data in the local database (auth info, call logs, conversations, meetings, etc...)
 - Hide SIP address/phone number picker dialog if contact has exactly one SIP address matching both the app default domain & the currently selected account domain
 - Improved UI on tablets with screen sw600dp and higher, will look more like our desktop app
+- Improved navigation within app when using a keyboard
 - Now loading media/documents contents in conversation by chunks (instead of all of them at once)
 - Simplified audio device name in settings
 - Reworked some settings (moved calls related ones from advanced settings to advanced calls settings)
@@ -43,6 +45,10 @@ Group changes to describe their impact on the project, as follows:
 - Made numpad buttons larger by changing their shape
 - All LDAP fields are mandatory now
 - Permission fragment will only show missing ones
+- Added more info into StartupListener logs
+
+### Fixed
+- No audio focus & wrong audio manager mode when TelecomManager isn't supported by device
 
 ## [6.0.20] - 2025-11-21
 
