@@ -1269,4 +1269,26 @@ class CoreContext
             }
         }
     }
+
+    fun setBackCamera(): Boolean {
+        for (camera in core.videoDevicesList) {
+            if (camera.contains("Back")) {
+                Log.i("TAG Found back facing camera [$camera], using it")
+                coreContext.core.videoDevice = camera
+                return true
+            }
+        }
+        return false
+    }
+
+    fun setFrontCamera(): Boolean {
+        for (camera in core.videoDevicesList) {
+            if (camera.contains("Front")) {
+                Log.i("$TAG Found front facing camera [$camera], using it")
+                coreContext.core.videoDevice = camera
+                return true
+            }
+        }
+        return false
+    }
 }

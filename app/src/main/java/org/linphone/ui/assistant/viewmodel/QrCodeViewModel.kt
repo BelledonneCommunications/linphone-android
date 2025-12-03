@@ -122,23 +122,17 @@ class QrCodeViewModel
             // this is required right after granting the CAMERA permission
             core.reloadVideoDevices()
 
-            for (camera in core.videoDevicesList) {
-                if (camera.contains("Back")) {
-                    Log.i("$TAG Found back facing camera [$camera], using it")
-                    coreContext.core.videoDevice = camera
-                    return@postOnCoreThread
+            if (!coreContext.setBackCamera()) {
+                for (camera in core.videoDevicesList) {
+                    if (camera != "StaticImage: Static picture") {
+                        Log.w("$TAG No back facing camera found, using first one available [$camera]")
+                        coreContext.core.videoDevice = camera
+                        return@postOnCoreThread
+                    }
                 }
-            }
 
-            for (camera in core.videoDevicesList) {
-                if (camera != "StaticImage: Static picture") {
-                    Log.w("$TAG No back facing camera found, using first one available [$camera]")
-                    coreContext.core.videoDevice = camera
-                    return@postOnCoreThread
-                }
+                Log.e("$TAG No camera device found!")
             }
-
-            Log.e("$TAG No camera device found!")
         }
     }
 }

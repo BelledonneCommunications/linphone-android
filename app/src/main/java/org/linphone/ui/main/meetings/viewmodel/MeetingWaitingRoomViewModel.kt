@@ -212,18 +212,16 @@ class MeetingWaitingRoomViewModel
     @UiThread
     fun setFrontCamera() {
         coreContext.postOnCoreThread { core ->
-            for (camera in core.videoDevicesList) {
-                if (camera.contains("Front")) {
-                    Log.i("$TAG Found front facing camera [$camera], using it")
-                    coreContext.core.videoDevice = camera
-                    return@postOnCoreThread
+            if (!coreContext.setFrontCamera()) {
+                for (camera in core.videoDevicesList) {
+                    if (camera != "StaticImage: Static picture") {
+                        Log.w("$TAG No front facing camera found, using first one available [$camera]")
+                        coreContext.core.videoDevice = camera
+                        return@postOnCoreThread
+                    }
                 }
-            }
 
-            val first = core.videoDevicesList.firstOrNull()
-            if (first != null) {
-                Log.w("$TAG No front facing camera found, using first one available [$first]")
-                coreContext.core.videoDevice = first
+                Log.e("$TAG No camera device found!")
             }
         }
     }
