@@ -3,12 +3,11 @@ agp = "8.13.1"
 kotlin = "2.2.21"
 gmsGoogleServices = "4.4.4"
 firebaseCrashlytics = "3.0.6"
-firebaseBomVersion = "34.5.0"
+firebaseBomVersion = "34.6.0"
 #noinspection NewerVersionAvailable
 ktlint = "12.3.0"
 
 annotations = "1.9.1"
-activity = "1.11.0"
 appcompat = "1.7.1"
 constraintLayout = "2.2.1"
 coreKtx = "1.17.0"
@@ -16,9 +15,9 @@ splashscreen = "1.2.0"
 telecom = "1.0.1"
 media = "1.7.1"
 recyclerview = "1.4.0"
-swipeRefreshLayout = "1.1.0"
+swipeRefreshLayout = "1.2.0"
 slidingpanelayout = "1.2.0"
-window = "1.5.0"
+window = "1.5.1"
 gridlayout = "1.1.0"
 securityCryptoKtx = "1.1.0"
 navigation = "2.9.6"
@@ -36,7 +35,6 @@ linphone = "5.5.+"
 
 [libraries]
 androidx-annotations = { group = "androidx.annotation", name = "annotation", version.ref = "annotations" }
-androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-constraint-layout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintLayout" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }

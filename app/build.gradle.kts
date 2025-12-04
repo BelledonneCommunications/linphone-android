@@ -213,7 +213,6 @@ android {
 
 dependencies {
     implementation(libs.androidx.annotations)
-    implementation(libs.androidx.activity)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraint.layout)
     implementation(libs.androidx.core.ktx)
