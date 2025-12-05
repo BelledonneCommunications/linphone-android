@@ -27,6 +27,7 @@ import android.view.LayoutInflater
 import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -51,6 +52,21 @@ class RecordingMediaPlayerFragment : GenericMainFragment() {
     private lateinit var binding: RecordingPlayerFragmentBinding
 
     private lateinit var viewModel: RecordingMediaPlayerViewModel
+
+    private val seekBarListener = object : SeekBar.OnSeekBarChangeListener {
+        override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+
+        }
+
+        override fun onStartTrackingTouch(seekBar: SeekBar) {
+            viewModel.pause()
+        }
+
+        override fun onStopTrackingTouch(seekBar: SeekBar) {
+            val newPosition = seekBar.progress
+            viewModel.seekTo(newPosition)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -83,6 +99,8 @@ class RecordingMediaPlayerFragment : GenericMainFragment() {
             Log.i("$TAG Saving call recording [${viewModel.recordingModel.filePath}]")
             exportFile(viewModel.recordingModel.filePath)
         }
+
+        binding.setSeekBarListener(seekBarListener)
 
         val model = sharedViewModel.playingRecording
         if (model != null) {

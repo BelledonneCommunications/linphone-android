@@ -162,6 +162,14 @@ class MediaViewModel
     }
 
     @UiThread
+    fun seekTo(position: Int) {
+        if (::mediaPlayer.isInitialized) {
+            mediaPlayer.seekTo(position)
+            play()
+        }
+    }
+
+    @UiThread
     private fun initMediaPlayer() {
         isMediaPlaying.value = false
 

@@ -32,6 +32,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.SeekBar
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
@@ -631,6 +632,11 @@ fun setFlexboxLayoutWrapBefore(view: View, wrap: Boolean = false) {
     val params = view.layoutParams as FlexboxLayout.LayoutParams
     params.isWrapBefore = wrap
     view.layoutParams = params
+}
+
+@BindingAdapter("seekBarListener")
+fun setSeekBarListener(seekBar: SeekBar, listener: SeekBar.OnSeekBarChangeListener) {
+    seekBar.setOnSeekBarChangeListener(listener)
 }
 
 @BindingAdapter("emojiPickedListener")

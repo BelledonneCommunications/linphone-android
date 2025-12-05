@@ -15,6 +15,7 @@ Group changes to describe their impact on the project, as follows:
 ### Added
 - Added the ability to edit/delete chat messages sent less than 24 hours ago.
 - Added keyboard shortcuts on IncomingCallFragment: Ctrl + Shift + A to answer the call, Ctrl + Shift + D to decline it
+- Added seeking feature to recordings & media player within app
 - Added PDF preview in conversation (message bubble & documents list)
 - Added hover effect when using a mouse (useful for tablets or devices with desktop mode)
 - Support right click on some items to open bottom sheet/menu
