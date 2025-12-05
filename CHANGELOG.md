@@ -45,8 +45,11 @@ Group changes to describe their impact on the project, as follows:
 - Un-encrypted conversation warning will be more visible for accounts that support end-to-end encrypted conversations
 - Made numpad buttons larger by changing their shape
 - All LDAP fields are mandatory now
+- Improved how Android shortcuts are created
 - Permission fragment will only show missing ones
 - Added more info into StartupListener logs
+- Updated password forgotten procedure, will use online account manager platform
+- Added back "large heap" to AndroidManifest
 
 ### Fixed
 - No audio focus & wrong audio manager mode when TelecomManager isn't supported by device

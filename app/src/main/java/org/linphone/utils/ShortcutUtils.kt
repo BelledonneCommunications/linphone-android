@@ -84,58 +84,6 @@ class ShortcutUtils {
             }
         }
 
-        /*
-        @WorkerThread
-        fun createShortcutsToChatRooms(context: Context) {
-            if (ShortcutManagerCompat.isRateLimitingActive(context)) {
-                Log.e("$TAG Rate limiting is active, aborting")
-                return
-            }
-
-            Log.i("$TAG Creating dynamic shortcuts for conversations")
-            val defaultAccount = coreContext.core.defaultAccount
-            if (defaultAccount == null) {
-                Log.w("$TAG No default account found, skipping...")
-                return
-            }
-
-            var count = 0
-            for (chatRoom in defaultAccount.chatRooms) {
-                if (defaultAccount.params.instantMessagingEncryptionMandatory &&
-                    !chatRoom.hasCapability(ChatRoom.Capabilities.Encrypted.toInt())
-                ) {
-                    Log.w(
-                        "$TAG Account is in secure mode, skipping not encrypted conversation [${LinphoneUtils.getConversationId(
-                            chatRoom
-                        )}]"
-                    )
-                    continue
-                }
-
-                if (count >= 4) {
-                    Log.i("$TAG We already created [$count] shortcuts, stopping here")
-                    break
-                }
-
-                val shortcut: ShortcutInfoCompat? = createChatRoomShortcut(context, chatRoom)
-                if (shortcut != null) {
-                    Log.i("$TAG Created dynamic shortcut for ${shortcut.shortLabel}")
-                    try {
-                        val keepGoing = ShortcutManagerCompat.pushDynamicShortcut(context, shortcut)
-                        if (keepGoing) {
-                            count += 1
-                        } else {
-                            break
-                        }
-                    } catch (e: Exception) {
-                        Log.e("$TAG Failed to push dynamic shortcut for ${shortcut.shortLabel}: $e")
-                    }
-                }
-            }
-            Log.i("$TAG Created $count dynamic shortcuts")
-        }
-        */
-
         @WorkerThread
         fun createDynamicShortcutToChatRoom(context: Context, chatRoom: ChatRoom) {
             val shortcut: ShortcutInfoCompat? = createChatRoomShortcut(context, chatRoom)
