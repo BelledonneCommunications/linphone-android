@@ -46,14 +46,7 @@ class TelecomCallControlCallback(
 ) {
     companion object {
         private const val TAG = "[Telecom Call Control Callback]"
-
-        private const val DELAY_BEFORE_RELOADING_SOUND_DEVICES_MS = 100L
     }
-
-    private var availableEndpoints: List<CallEndpointCompat> = arrayListOf()
-    private var currentEndpoint = CallEndpointCompat.TYPE_UNKNOWN
-    private var endpointUpdateRequestFromLinphone: Boolean = false
-    private var latestLinphoneRequestedEndpoint: CallEndpointCompat? = null
 
     private var mutedByTelecomManager = false
 

@@ -165,14 +165,15 @@ class ShortcutUtils {
                     .setIsConversation()
                     .setLongLived(Version.sdkAboveOrEqual(Version.API30_ANDROID_11))
                     .setLocusId(LocusIdCompat(id))
-                    // See https://developer.android.com/training/sharing/direct-share-targets#track-shortcut-usage-comms-apps
-                    if (isGroup) {
-                        builder.addCapabilityBinding("actions.intent.SEND_MESSAGE", "message.recipient.@type", listOf("Audience"))
-                        builder.addCapabilityBinding("actions.intent.RECEIVE_MESSAGE", "message.sender.@type", listOf("Audience"))
-                    } else {
-                        builder.addCapabilityBinding("actions.intent.SEND_MESSAGE")
-                        builder.addCapabilityBinding("actions.intent.RECEIVE_MESSAGE")
-                    }
+
+                // See https://developer.android.com/training/sharing/direct-share-targets#track-shortcut-usage-comms-apps
+                if (isGroup) {
+                    builder.addCapabilityBinding("actions.intent.SEND_MESSAGE", "message.recipient.@type", listOf("Audience"))
+                    builder.addCapabilityBinding("actions.intent.RECEIVE_MESSAGE", "message.sender.@type", listOf("Audience"))
+                } else {
+                    builder.addCapabilityBinding("actions.intent.SEND_MESSAGE")
+                    builder.addCapabilityBinding("actions.intent.RECEIVE_MESSAGE")
+                }
 
                 return builder.build()
             } catch (e: NumberFormatException) {

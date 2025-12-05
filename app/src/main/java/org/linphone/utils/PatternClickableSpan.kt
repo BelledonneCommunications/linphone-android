@@ -32,7 +32,7 @@ import java.util.regex.Pattern
 class PatternClickableSpan {
     private var patterns: ArrayList<SpannablePatternItem> = ArrayList()
 
-    inner class SpannablePatternItem(
+    class SpannablePatternItem(
         var pattern: Pattern,
         var listener: SpannableClickedListener
     )

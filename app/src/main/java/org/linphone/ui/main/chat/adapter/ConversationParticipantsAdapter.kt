@@ -50,7 +50,7 @@ class ConversationParticipantsAdapter : ListAdapter<ParticipantModel, RecyclerVi
         (holder as ViewHolder).bind(getItem(position))
     }
 
-    inner class ViewHolder(
+    class ViewHolder(
         val binding: ChatParticipantListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         @UiThread

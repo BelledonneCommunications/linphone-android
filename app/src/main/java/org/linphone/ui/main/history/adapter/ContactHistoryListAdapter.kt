@@ -49,7 +49,7 @@ class ContactHistoryListAdapter : ListAdapter<CallLogHistoryModel, RecyclerView.
         (holder as ViewHolder).bind(getItem(position))
     }
 
-    inner class ViewHolder(
+    class ViewHolder(
         val binding: HistoryCallListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         @UiThread

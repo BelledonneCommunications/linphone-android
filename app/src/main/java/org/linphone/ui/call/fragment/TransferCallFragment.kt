@@ -332,9 +332,8 @@ class TransferCallFragment : GenericCallFragment() {
         model.confirmEvent.observe(viewLifecycleOwner) {
             it.consume {
                 coreContext.postOnCoreThread {
-                    val address = toAddress
-                    Log.i("$TAG Transferring (blind) call to [${address.asStringUriOnly()}]")
-                    callViewModel.blindTransferCallTo(address)
+                    Log.i("$TAG Transferring (blind) call to [${toAddress.asStringUriOnly()}]")
+                    callViewModel.blindTransferCallTo(toAddress)
                 }
 
                 dialog.dismiss()

@@ -130,8 +130,7 @@ class FileViewModel
         val extension = FileUtils.getExtensionFromFileName(file)
         val mime = FileUtils.getMimeTypeFromExtension(extension)
         mimeType.postValue(mime)
-        val mimeType = FileUtils.getMimeType(mime)
-        when (mimeType) {
+        when (val mimeType = FileUtils.getMimeType(mime)) {
             FileUtils.MimeType.Pdf -> {
                 Log.d("$TAG File [$file] seems to be a PDF")
                 loadPdf()

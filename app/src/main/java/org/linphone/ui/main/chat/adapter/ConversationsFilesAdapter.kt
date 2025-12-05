@@ -115,7 +115,7 @@ class ConversationsFilesAdapter :
         }
     }
 
-    inner class MediaFileViewHolder(
+    class MediaFileViewHolder(
         val binding: ChatMediaContentGridCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         @UiThread
@@ -127,7 +127,7 @@ class ConversationsFilesAdapter :
         }
     }
 
-    inner class DocumentFileViewHolder(
+    class DocumentFileViewHolder(
         val binding: ChatBubbleSingleFileContentBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         @UiThread

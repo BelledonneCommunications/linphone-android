@@ -161,7 +161,7 @@ class ConversationsContactsAndSuggestionsListAdapter :
         }
     }
 
-    inner class ConversationViewHolder(
+    class ConversationViewHolder(
         val binding: GenericAddressPickerConversationListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         @UiThread
@@ -198,7 +198,7 @@ class ConversationsContactsAndSuggestionsListAdapter :
         }
     }
 
-    inner class SuggestionViewHolder(
+    class SuggestionViewHolder(
         val binding: GenericAddressPickerSuggestionListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         @UiThread

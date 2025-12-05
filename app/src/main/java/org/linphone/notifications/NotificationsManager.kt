@@ -1209,7 +1209,7 @@ class NotificationsManager
                 .setContentIntent(pendingIntent)
                 .build()
 
-            accountsErrorNotificationsMap.put(identity, notificationId)
+            accountsErrorNotificationsMap[identity] = notificationId
             Log.i("$TAG Showing account registration error notification with ID [$notificationId] for [$identity]")
             notify(notificationId, notification, ACCOUNT_ERROR_TAG)
         }
