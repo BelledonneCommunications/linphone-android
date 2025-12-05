@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="device_id">Gailuaren IDa</string>
+    <string name="sip_address_display_name">Erakusteko izena</string>
+    <string name="sip_address_domain">Domeinua</string>
+    <string name="username">Erabiltzaile izena</string>
+    <string name="password">Pasahitza</string>
+    <string name="phone_number">Telefono zenbakia</string>
+    <string name="or">edo</string>
+    <string name="next">Hurrengoa</string>
+    <string name="today">Gaur</string>
+    <string name="yesterday">Atzo</string>
+    <plurals name="days">
+        <item quantity="one">egun %s</item>
+        <item quantity="other">%s egun</item>
+    </plurals>
+    <plurals name="selection_count_label">
+        <item quantity="one">%s aukeratuta</item>
+        <item quantity="other">%s aukeratuta</item>
+    </plurals>
+    <string name="dialog_deny">Ukatu</string>
+    <string name="dialog_accept">Onartu</string>
+    <string name="sip_address">SIP helbidea</string>
+    <string name="start">Hasi</string>
+</resources>

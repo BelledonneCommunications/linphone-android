@@ -505,10 +505,6 @@
         <item quantity="one">%s est en train d\'écrire…</item>
         <item quantity="other">%s sont en train d\'écrire…</item>
     </plurals>
-    <plurals name="conversation_composing_voice_message_label">
-        <item quantity="one">%s est en train d\'enregistrer un message vocal…</item>
-        <item quantity="other">%s sont en train d\'enregistrer un message vocal…</item>
-    </plurals>
     <string name="conversation_add_participants_title">Ajouter des participants</string>
     <string name="conversation_reply_to_message_title">En réponse à :</string>
     <string name="conversation_menu_search_in_messages">Chercher</string>
@@ -527,8 +523,6 @@
     <string name="conversation_warning_unsafe_bottom_sheet_message">Les messages échangés dans cette conversation peuvent être interceptés et consultés par des personnes autres que le destinataire désiré, la confidentialité n\'est pas garantie !</string>
     <string name="conversation_warning_disabled_because_not_secured_title">Cette conversation n\'est pas chiffrée !</string>
     <string name="conversation_warning_disabled_because_not_secured_subtitle">Cette conversation a été désactivée pour garantir votre sécurité.</string>
-    <string name="conversation_warning_disabled_encrypted_bottom_sheet_title">Chiffrement obligatoire</string>
-    <string name="conversation_warning_disabled_encrypted_bottom_sheet_message">Vous avez activé le chiffrement obligatoire. Vos conversations non chiffrées sont désactivées pour garantir votre sécurité. Vous pouvez recréer cette conversation ou bien désactiver le chiffrement obligatoire dans vos paramètres de compte.</string>
     <string name="conversation_maximum_number_of_attachments_reached">Nombre maximum de fichiers atteint !</string>
     <string name="conversation_dialog_set_subject">Nommer la conversation</string>
     <string name="conversation_dialog_edit_subject">Renommer la conversation</string>
