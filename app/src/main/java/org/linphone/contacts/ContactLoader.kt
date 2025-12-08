@@ -99,8 +99,10 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
             ContactsContract.Data.CONTACT_ID + " ASC"
         )
 
-        // Update at most once every X (see variable value for actual duration)
-        loader.setUpdateThrottle(MIN_INTERVAL_TO_WAIT_BEFORE_REFRESH)
+        // WARNING: this doesn't prevent to be called again in onLoadFinished,
+        // it will only have for effect that the notified cursor will be the same as before
+        // instead of a new one with updated content!
+        // loader.setUpdateThrottle(MIN_INTERVAL_TO_WAIT_BEFORE_REFRESH)
 
         return loader
     }
@@ -110,8 +112,16 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
         if (cursor == null) {
             Log.e("$TAG Cursor is null!")
             return
+        } else if (cursor.isClosed) {
+            Log.e("$TAG Cursor is closed!")
+            return
         }
+
         Log.i("$TAG Load finished, found ${cursor.count} entries in cursor")
+        if (cursor.isAfterLast) {
+            Log.w("$TAG Cursor position is after last, it was probably already used, nothing to do")
+            return
+        }
 
         coreContext.postOnCoreThread {
             val core = coreContext.core
