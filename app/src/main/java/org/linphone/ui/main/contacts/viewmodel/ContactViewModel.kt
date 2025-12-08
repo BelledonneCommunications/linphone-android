@@ -181,7 +181,7 @@ class ContactViewModel
             if (!::friend.isInitialized) return
 
             val found = coreContext.contactsManager.findContactById(refKey)
-            if (found != null && found != friend) {
+            if (found != null) {
                 Log.i(
                     "$TAG Found contact [${found.name}] matching ref key [$refKey] after contacts have been loaded/updated"
                 )
