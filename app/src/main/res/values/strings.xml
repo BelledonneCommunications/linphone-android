@@ -901,6 +901,15 @@
     <string name="red">Red</string>
     <string name="pink">Pink</string>
     <string name="purple">Purple</string>
+    <string name="terracotta">Terracotta</string>
+    <string name="lavender">Lavender</string>
+    <string name="honey">Honey</string>
+    <string name="burgundy">Burgundy</string>
+    <string name="mint">Mint</string>
+    <string name="coral">Coral</string>
+    <string name="plum">Plum</string>
+    <string name="titanium">Titanium</string>
+    <string name="mineral_blue">Mineral Blue</string>
 
     <!-- Misc -->
     <string name="list_filter_no_result_found">No result found…</string>

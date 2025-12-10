@@ -43,6 +43,9 @@
     <dimen name="selected_participant_cell_height">90dp</dimen>
 
     <dimen name="primary_secondary_buttons_label_padding">11dp</dimen>
+    <dimen name="primary_secondary_buttons_label_start_end_padding">20dp</dimen>
+    <dimen name="tertiary_buttons_label_top_bottom_padding">6dp</dimen>
+    <dimen name="tertiary_buttons_label_start_end_padding">12dp</dimen>
     <dimen name="dialog_top_bottom_margin">20dp</dimen>
 
     <dimen name="top_bar_rounded_corner_radius">20dp</dimen>

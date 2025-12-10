@@ -115,12 +115,15 @@ class CallActivity : GenericActivity() {
         val mainColor = corePreferences.themeMainColor
         val theme = super.getTheme()
         when (mainColor) {
-            "yellow" -> theme.applyStyle(R.style.Theme_LinphoneInCallYellow, true)
-            "green" -> theme.applyStyle(R.style.Theme_LinphoneInCallGreen, true)
-            "blue" -> theme.applyStyle(R.style.Theme_LinphoneInCallBlue, true)
-            "red" -> theme.applyStyle(R.style.Theme_LinphoneInCallRed, true)
-            "pink" -> theme.applyStyle(R.style.Theme_LinphoneInCallPink, true)
-            "purple" -> theme.applyStyle(R.style.Theme_LinphoneInCallPurple, true)
+            "terracotta" -> theme.applyStyle(R.style.Theme_LinphoneInCallTerracotta, true)
+            "lavender" -> theme.applyStyle(R.style.Theme_LinphoneInCallLavender, true)
+            "honey" -> theme.applyStyle(R.style.Theme_LinphoneInCallHoney, true)
+            "burgundy" -> theme.applyStyle(R.style.Theme_LinphoneInCallBurgundy, true)
+            "mint" -> theme.applyStyle(R.style.Theme_LinphoneInCallMint, true)
+            "coral" -> theme.applyStyle(R.style.Theme_LinphoneInCallCoral, true)
+            "plum" -> theme.applyStyle(R.style.Theme_LinphoneInCallPlum, true)
+            "titanium" -> theme.applyStyle(R.style.Theme_LinphoneInCallTitanium, true)
+            "mineral_blue" -> theme.applyStyle(R.style.Theme_LinphoneInCallMineralBlue, true)
             else -> theme.applyStyle(R.style.Theme_LinphoneInCall, true)
         }
         return theme

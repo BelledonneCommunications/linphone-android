@@ -858,6 +858,15 @@
     <string name="red">Rouge</string>
     <string name="pink">Rose</string>
     <string name="purple">Violet</string>
+    <string name="terracotta">Terracotta</string>
+    <string name="lavender">Lavande</string>
+    <string name="honey">Miel</string>
+    <string name="burgundy">Bordeaux</string>
+    <string name="mint">Menthe</string>
+    <string name="coral">Corail</string>
+    <string name="plum">Prune</string>
+    <string name="titanium">Titane</string>
+    <string name="mineral_blue">Bleu Minéral</string>
 
     <!-- Misc -->
     <string name="list_filter_no_result_found">Aucun résultat…</string>

@@ -131,8 +131,6 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="15dp"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
                 android:text="@string/drawer_menu_add_account"
                 android:drawableStart="@drawable/plus_circle"
                 android:drawablePadding="8dp"

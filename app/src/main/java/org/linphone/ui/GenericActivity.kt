@@ -59,12 +59,15 @@ open class GenericActivity : AppCompatActivity() {
         mainColor = corePreferences.themeMainColor
         val theme = super.theme
         when (mainColor) {
-            "yellow" -> theme.applyStyle(R.style.Theme_LinphoneYellow, true)
-            "green" -> theme.applyStyle(R.style.Theme_LinphoneGreen, true)
-            "blue" -> theme.applyStyle(R.style.Theme_LinphoneBlue, true)
-            "red" -> theme.applyStyle(R.style.Theme_LinphoneRed, true)
-            "pink" -> theme.applyStyle(R.style.Theme_LinphonePink, true)
-            "purple" -> theme.applyStyle(R.style.Theme_LinphonePurple, true)
+            "terracotta" -> theme.applyStyle(R.style.Theme_LinphoneTerracotta, true)
+            "lavender" -> theme.applyStyle(R.style.Theme_LinphoneLavender, true)
+            "honey" -> theme.applyStyle(R.style.Theme_LinphoneHoney, true)
+            "burgundy" -> theme.applyStyle(R.style.Theme_LinphoneBurgundy, true)
+            "mint" -> theme.applyStyle(R.style.Theme_LinphoneMint, true)
+            "coral" -> theme.applyStyle(R.style.Theme_LinphoneCoral, true)
+            "plum" -> theme.applyStyle(R.style.Theme_LinphonePlum, true)
+            "titanium" -> theme.applyStyle(R.style.Theme_LinphoneTitanium, true)
+            "mineral_blue" -> theme.applyStyle(R.style.Theme_LinphoneMineralBlue, true)
             else -> theme.applyStyle(R.style.Theme_Linphone, true)
         }
         return theme

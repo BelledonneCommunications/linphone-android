@@ -177,21 +177,27 @@ class SettingsViewModel
     val color = MutableLiveData<String>()
     val availableColorsNames = arrayListOf(
         AppUtils.getString(R.string.orange),
-        AppUtils.getString(R.string.yellow),
-        AppUtils.getString(R.string.green),
-        AppUtils.getString(R.string.blue),
-        AppUtils.getString(R.string.red),
-        AppUtils.getString(R.string.pink),
-        AppUtils.getString(R.string.purple)
+        AppUtils.getString(R.string.terracotta),
+        AppUtils.getString(R.string.lavender),
+        AppUtils.getString(R.string.honey),
+        AppUtils.getString(R.string.burgundy),
+        AppUtils.getString(R.string.mint),
+        AppUtils.getString(R.string.coral),
+        AppUtils.getString(R.string.plum),
+        AppUtils.getString(R.string.titanium),
+        AppUtils.getString(R.string.mineral_blue),
     )
     val availableColorsValues = arrayListOf(
         "orange",
-        "yellow",
-        "green",
-        "blue",
-        "red",
-        "pink",
-        "purple"
+        "terracotta",
+        "lavender",
+        "honey",
+        "burgundy",
+        "mint",
+        "coral",
+        "plum",
+        "titanium",
+        "mineral_blue"
     )
 
     // Tunnel settings

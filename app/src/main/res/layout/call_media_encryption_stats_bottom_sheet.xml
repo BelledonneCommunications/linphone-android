@@ -134,8 +134,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
                 android:text="@string/call_do_zrtp_sas_validation_again"
                 android:layout_gravity="center_horizontal"
                 android:visibility="@{model.isMediaEncryptionZrtp ? View.VISIBLE : View.GONE}"/>

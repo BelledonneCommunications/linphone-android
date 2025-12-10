@@ -140,8 +140,6 @@
                 android:onClick="@{() -> model.showSasValidationDialog()}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
                 android:layout_margin="15dp"
                 android:text="@string/call_do_zrtp_sas_validation_again"
                 android:visibility="@{model.isMediaEncryptionZrtp ? View.VISIBLE : View.GONE}"

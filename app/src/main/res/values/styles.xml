@@ -88,6 +88,8 @@
         <item name="android:background">@drawable/primary_button_background</item>
         <item name="android:paddingTop">@dimen/primary_secondary_buttons_label_padding</item>
         <item name="android:paddingBottom">@dimen/primary_secondary_buttons_label_padding</item>
+        <item name="android:paddingStart">@dimen/primary_secondary_buttons_label_start_end_padding</item>
+        <item name="android:paddingEnd">@dimen/primary_secondary_buttons_label_start_end_padding</item>
     </style>
     <style name="secondary_button_label_style">
         <item name="android:fontFamily">@font/noto_sans_600</item>
@@ -97,11 +99,19 @@
         <item name="android:background">@drawable/secondary_button_background</item>
         <item name="android:paddingTop">@dimen/primary_secondary_buttons_label_padding</item>
         <item name="android:paddingBottom">@dimen/primary_secondary_buttons_label_padding</item>
+        <item name="android:paddingStart">@dimen/primary_secondary_buttons_label_start_end_padding</item>
+        <item name="android:paddingEnd">@dimen/primary_secondary_buttons_label_start_end_padding</item>
     </style>
     <style name="tertiary_button_label_style">
         <item name="android:fontFamily">@font/noto_sans_600</item>
         <item name="android:textColor">@color/tertiary_button_label_color</item>
         <item name="android:textSize">13sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/tertiary_button_background</item>
+        <item name="android:paddingTop">@dimen/tertiary_buttons_label_top_bottom_padding</item>
+        <item name="android:paddingBottom">@dimen/tertiary_buttons_label_top_bottom_padding</item>
+        <item name="android:paddingStart">@dimen/tertiary_buttons_label_start_end_padding</item>
+        <item name="android:paddingEnd">@dimen/tertiary_buttons_label_start_end_padding</item>
     </style>
     <style name="primary_dialog_button_label_style">
         <item name="android:fontFamily">@font/noto_sans_600</item>

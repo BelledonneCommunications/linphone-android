@@ -15,10 +15,7 @@
         <item name="android:statusBarColor">?attr/color_main1_500</item>
 
         <item name="color_main1_100">@color/orange_main_100</item>
-        <item name="color_main1_100_alpha_50">@color/orange_main_100_alpha_50</item>
-        <item name="color_main1_300">@color/orange_main_300</item>
         <item name="color_main1_500">@color/orange_main_500</item>
-        <item name="color_main1_700">@color/orange_main_700</item>
 
         <item name="color_main2_000">@color/bc_white</item>
         <item name="color_main2_100">@color/gray_main2_100</item>
@@ -87,58 +84,58 @@
         <item name="color_bottom_sheet_disabled_menu">@color/gray_200</item>
     </style>
 
-    <style name="Theme.LinphoneYellow" parent="Theme.Linphone">
-        <item name="color_main1_100">@color/yellow_main_100</item>
-        <item name="color_main1_100_alpha_50">@color/yellow_main_100_alpha_50</item>
-        <item name="color_main1_300">@color/yellow_main_300</item>
-        <item name="color_main1_500">@color/yellow_main_500</item>
-        <item name="color_main1_700">@color/yellow_main_700</item>
-        <item name="color_chat_bubble_outgoing">@color/yellow_main_100</item>
+    <style name="Theme.LinphoneTerracotta" parent="Theme.Linphone">
+        <item name="color_main1_100">@color/terracotta_main_100</item>
+        <item name="color_main1_500">@color/terracotta_main_500</item>
+        <item name="color_chat_bubble_outgoing">@color/terracotta_main_100</item>
     </style>
 
-    <style name="Theme.LinphoneGreen" parent="Theme.Linphone">
-        <item name="color_main1_100">@color/green_main_100</item>
-        <item name="color_main1_100_alpha_50">@color/green_main_100_alpha_50</item>
-        <item name="color_main1_300">@color/green_main_300</item>
-        <item name="color_main1_500">@color/green_main_500</item>
-        <item name="color_main1_700">@color/green_main_700</item>
-        <item name="color_chat_bubble_outgoing">@color/green_main_100</item>
+    <style name="Theme.LinphoneLavender" parent="Theme.Linphone">
+        <item name="color_main1_100">@color/lavender_main_100</item>
+        <item name="color_main1_500">@color/lavender_main_500</item>
+        <item name="color_chat_bubble_outgoing">@color/lavender_main_100</item>
     </style>
 
-    <style name="Theme.LinphoneBlue" parent="Theme.Linphone">
-        <item name="color_main1_100">@color/blue_main_100</item>
-        <item name="color_main1_100_alpha_50">@color/blue_main_100_alpha_50</item>
-        <item name="color_main1_300">@color/blue_main_300</item>
-        <item name="color_main1_500">@color/blue_main_500</item>
-        <item name="color_main1_700">@color/blue_main_700</item>
-        <item name="color_chat_bubble_outgoing">@color/blue_main_100</item>
+    <style name="Theme.LinphoneHoney" parent="Theme.Linphone">
+        <item name="color_main1_100">@color/honey_main_100</item>
+        <item name="color_main1_500">@color/honey_main_500</item>
+        <item name="color_chat_bubble_outgoing">@color/honey_main_100</item>
     </style>
 
-    <style name="Theme.LinphoneRed" parent="Theme.Linphone">
-        <item name="color_main1_100">@color/red_main_100</item>
-        <item name="color_main1_100_alpha_50">@color/red_main_100_alpha_50</item>
-        <item name="color_main1_300">@color/red_main_300</item>
-        <item name="color_main1_500">@color/red_main_500</item>
-        <item name="color_main1_700">@color/red_main_700</item>
-        <item name="color_chat_bubble_outgoing">@color/red_main_100</item>
+    <style name="Theme.LinphoneBurgundy" parent="Theme.Linphone">
+        <item name="color_main1_100">@color/burgundy_main_100</item>
+        <item name="color_main1_500">@color/burgundy_main_500</item>
+        <item name="color_chat_bubble_outgoing">@color/burgundy_main_100</item>
     </style>
 
-    <style name="Theme.LinphonePink" parent="Theme.Linphone">
-        <item name="color_main1_100">@color/pink_main_100</item>
-        <item name="color_main1_100_alpha_50">@color/pink_main_100_alpha_50</item>
-        <item name="color_main1_300">@color/pink_main_300</item>
-        <item name="color_main1_500">@color/pink_main_500</item>
-        <item name="color_main1_700">@color/pink_main_700</item>
-        <item name="color_chat_bubble_outgoing">@color/pink_main_100</item>
+    <style name="Theme.LinphoneMint" parent="Theme.Linphone">
+        <item name="color_main1_100">@color/mint_main_100</item>
+        <item name="color_main1_500">@color/mint_main_500</item>
+        <item name="color_chat_bubble_outgoing">@color/mint_main_100</item>
     </style>
 
-    <style name="Theme.LinphonePurple" parent="Theme.Linphone">
-        <item name="color_main1_100">@color/purple_main_100</item>
-        <item name="color_main1_100_alpha_50">@color/purple_main_100_alpha_50</item>
-        <item name="color_main1_300">@color/purple_main_300</item>
-        <item name="color_main1_500">@color/purple_main_500</item>
-        <item name="color_main1_700">@color/purple_main_700</item>
-        <item name="color_chat_bubble_outgoing">@color/purple_main_100</item>
+    <style name="Theme.LinphoneCoral" parent="Theme.Linphone">
+        <item name="color_main1_100">@color/coral_main_100</item>
+        <item name="color_main1_500">@color/coral_main_500</item>
+        <item name="color_chat_bubble_outgoing">@color/coral_main_100</item>
+    </style>
+
+    <style name="Theme.LinphonePlum" parent="Theme.Linphone">
+        <item name="color_main1_100">@color/plum_main_100</item>
+        <item name="color_main1_500">@color/plum_main_500</item>
+        <item name="color_chat_bubble_outgoing">@color/plum_main_100</item>
+    </style>
+
+    <style name="Theme.LinphoneTitanium" parent="Theme.Linphone">
+        <item name="color_main1_100">@color/titanium_main_100</item>
+        <item name="color_main1_500">@color/titanium_main_500</item>
+        <item name="color_chat_bubble_outgoing">@color/titanium_main_100</item>
+    </style>
+
+    <style name="Theme.LinphoneMineralBlue" parent="Theme.Linphone">
+        <item name="color_main1_100">@color/mineral_blue_main_100</item>
+        <item name="color_main1_500">@color/mineral_blue_main_500</item>
+        <item name="color_chat_bubble_outgoing">@color/mineral_blue_main_100</item>
     </style>
 
     <!-- In-call application theme. -->
@@ -146,27 +143,39 @@
         <item name="android:windowBackground">@color/gray_600</item>
     </style>
 
-    <style name="Theme.LinphoneInCallYellow" parent="Theme.LinphoneYellow">
+    <style name="Theme.LinphoneInCallTerracotta" parent="Theme.LinphoneTerracotta">
         <item name="android:windowBackground">@color/gray_600</item>
     </style>
 
-    <style name="Theme.LinphoneInCallGreen" parent="Theme.LinphoneGreen">
+    <style name="Theme.LinphoneInCallLavender" parent="Theme.LinphoneLavender">
         <item name="android:windowBackground">@color/gray_600</item>
     </style>
 
-    <style name="Theme.LinphoneInCallBlue" parent="Theme.LinphoneBlue">
+    <style name="Theme.LinphoneInCallHoney" parent="Theme.LinphoneHoney">
         <item name="android:windowBackground">@color/gray_600</item>
     </style>
 
-    <style name="Theme.LinphoneInCallRed" parent="Theme.LinphoneRed">
+    <style name="Theme.LinphoneInCallBurgundy" parent="Theme.LinphoneBurgundy">
         <item name="android:windowBackground">@color/gray_600</item>
     </style>
 
-    <style name="Theme.LinphoneInCallPink" parent="Theme.LinphonePink">
+    <style name="Theme.LinphoneInCallMint" parent="Theme.LinphoneMint">
         <item name="android:windowBackground">@color/gray_600</item>
     </style>
 
-    <style name="Theme.LinphoneInCallPurple" parent="Theme.LinphonePurple">
+    <style name="Theme.LinphoneInCallCoral" parent="Theme.LinphoneCoral">
+        <item name="android:windowBackground">@color/gray_600</item>
+    </style>
+
+    <style name="Theme.LinphoneInCallPlum" parent="Theme.LinphonePlum">
+        <item name="android:windowBackground">@color/gray_600</item>
+    </style>
+
+    <style name="Theme.LinphoneInCallTitanium" parent="Theme.LinphoneTitanium">
+        <item name="android:windowBackground">@color/gray_600</item>
+    </style>
+
+    <style name="Theme.LinphoneInCallMineralBlue" parent="Theme.LinphoneMineralBlue">
         <item name="android:windowBackground">@color/gray_600</item>
     </style>
 

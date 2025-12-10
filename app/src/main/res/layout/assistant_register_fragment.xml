@@ -377,8 +377,6 @@
                     android:layout_marginTop="34dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginBottom="@dimen/screen_bottom_margin"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
                     android:text="@string/assistant_account_login"
                     app:layout_constraintVertical_bias="1"
                     app:layout_constraintEnd_toEndOf="parent"
