@@ -74,6 +74,7 @@ class LinphoneUtils {
                 val url = when {
                     remoteConfigUri.startsWith("http://") || remoteConfigUri.startsWith("https://") -> remoteConfigUri
                     remoteConfigUri.startsWith("file://") -> remoteConfigUri
+                    remoteConfigUri.startsWith("//") -> "https:$remoteConfigUri"
                     else -> "https://$remoteConfigUri"
                 }
                 url
