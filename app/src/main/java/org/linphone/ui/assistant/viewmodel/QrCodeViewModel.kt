@@ -19,7 +19,6 @@
  */
 package org.linphone.ui.assistant.viewmodel
 
-import android.util.Patterns
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
@@ -32,6 +31,7 @@ import org.linphone.ui.GenericViewModel
 import org.linphone.utils.Event
 import org.linphone.R
 import org.linphone.core.GlobalState
+import org.linphone.utils.LinphoneUtils
 
 class QrCodeViewModel
     @UiThread
@@ -76,26 +76,27 @@ class QrCodeViewModel
             if (result == null) {
                 showRedToast(R.string.assistant_qr_code_invalid_toast, R.drawable.warning_circle)
             } else {
-                val isValidUrl = Patterns.WEB_URL.matcher(result).matches()
-                if (!isValidUrl) {
-                    Log.e("$TAG The content of the QR Code doesn't seem to be a valid web URL")
+                val url = LinphoneUtils.getRemoteProvisioningUrlFromUri(result)
+                if (url == null) {
+                    Log.e("$TAG The content of the QR Code [$result] doesn't seem to be a valid web URL")
                     showRedToast(R.string.assistant_qr_code_invalid_toast, R.drawable.warning_circle)
-                } else {
-                    Log.i(
-                        "$TAG QR code URL set, restarting the Core outside of iterate() loop to apply configuration changes"
-                    )
-                    core.nativePreviewWindowId = null
-                    core.isVideoPreviewEnabled = false
-                    core.isQrcodeVideoPreviewEnabled = false
-                    core.provisioningUri = result
+                    return
+                }
 
-                    coreContext.postOnCoreThread { core ->
-                        Log.i("$TAG Stopping Core")
-                        coreContext.core.stop()
-                        Log.i("$TAG Core has been stopped, restarting it")
-                        coreContext.core.start()
-                        Log.i("$TAG Core has been restarted")
-                    }
+                Log.i(
+                    "$TAG Setting QR code URL [$url], restarting the Core outside of iterate() loop to apply configuration changes"
+                )
+                core.nativePreviewWindowId = null
+                core.isVideoPreviewEnabled = false
+                core.isQrcodeVideoPreviewEnabled = false
+                core.provisioningUri = url
+
+                coreContext.postOnCoreThread { core ->
+                    Log.i("$TAG Stopping Core")
+                    core.stop()
+                    Log.i("$TAG Core has been stopped, restarting it")
+                    core.start()
+                    Log.i("$TAG Core has been restarted")
                 }
             }
         }

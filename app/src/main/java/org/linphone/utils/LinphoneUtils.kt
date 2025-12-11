@@ -23,6 +23,7 @@ import android.graphics.Typeface
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
+import android.util.Patterns
 import androidx.annotation.AnyThread
 import androidx.annotation.DrawableRes
 import androidx.annotation.IntegerRes
@@ -64,6 +65,26 @@ class LinphoneUtils {
         const val RECORDING_FILE_NAME_URI_TIMESTAMP_SEPARATOR = "_on_"
         const val RECORDING_MKV_FILE_EXTENSION = ".mkv"
         const val RECORDING_SMFF_FILE_EXTENSION = ".smff"
+
+        @AnyThread
+        fun getRemoteProvisioningUrlFromUri(uri: String): String? {
+            val linphoneScheme = "linphone-config:"
+            return if (uri.startsWith(linphoneScheme)) {
+                val remoteConfigUri = uri.substring(linphoneScheme.length)
+                val url = when {
+                    remoteConfigUri.startsWith("http://") || remoteConfigUri.startsWith("https://") -> remoteConfigUri
+                    remoteConfigUri.startsWith("file://") -> remoteConfigUri
+                    else -> "https://$remoteConfigUri"
+                }
+                url
+            } else {
+                val isValidUrl = Patterns.WEB_URL.matcher(uri).matches()
+                if (!isValidUrl) {
+                    return null
+                }
+                uri
+            }
+        }
 
         @WorkerThread
         fun getDefaultAccount(): Account? {
