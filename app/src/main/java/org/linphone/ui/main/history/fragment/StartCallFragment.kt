@@ -209,7 +209,13 @@ class StartCallFragment : GenericAddressPickerFragment() {
         super.onResume()
 
         if (corePreferences.automaticallyShowDialpad) {
-            viewModel.isNumpadVisible.value = true
+            coreContext.postOnMainThread {
+                binding.searchBar.hideKeyboard()
+                binding.searchBar.clearFocus()
+                coreContext.postOnCoreThread {
+                    viewModel.isNumpadVisible.postValue(true)
+                }
+            }
         }
     }
 
