@@ -61,6 +61,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.compatibility.Compatibility
+import org.linphone.core.Call
 import org.linphone.core.tools.Log
 import org.linphone.databinding.MainActivityBinding
 import org.linphone.ui.GenericActivity
@@ -91,6 +92,9 @@ class MainActivity : GenericActivity() {
 
         const val ARGUMENTS_CHAT = "Chat"
         const val ARGUMENTS_CONVERSATION_ID = "ConversationId"
+
+        const val INTENT_ACTION_ANSWER: String = "org.linphone.intent.action.HOOK_ANSWER"
+        const val INTENT_ACTION_HANGUP: String = "org.linphone.intent.action.HOOK_HANGUP"
     }
 
     private lateinit var binding: MainActivityBinding
@@ -555,6 +559,14 @@ class MainActivity : GenericActivity() {
             Intent.ACTION_DIAL, Intent.ACTION_CALL -> {
                 handleCallIntent(intent)
             }
+            INTENT_ACTION_ANSWER -> {
+                val incoming = getCurrentIncomingCall()
+                incoming?.accept()
+            }
+            INTENT_ACTION_HANGUP -> {
+                val active = getCurrentActiveCall()
+                active?.terminate()
+            }
             Intent.ACTION_VIEW_LOCUS -> {
                 val locus = Compatibility.extractLocusIdFromIntent(intent)
                 if (locus != null) {
@@ -565,6 +577,20 @@ class MainActivity : GenericActivity() {
             else -> {
                 handleMainIntent(intent)
             }
+        }
+    }
+
+    private fun getCurrentIncomingCall(): Call? {
+        return coreContext.core.calls.firstOrNull {
+            it.state == Call.State.IncomingReceived ||
+                    it.state == Call.State.IncomingEarlyMedia
+        }
+    }
+
+    private fun getCurrentActiveCall(): Call? {
+        return coreContext.core.calls.firstOrNull {
+            it.state == Call.State.Connected ||
+            it.state == Call.State.StreamsRunning
         }
     }
 
