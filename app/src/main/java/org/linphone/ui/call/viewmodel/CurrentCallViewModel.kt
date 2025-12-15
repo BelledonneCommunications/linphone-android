@@ -1193,7 +1193,8 @@ class CurrentCallViewModel
         val model = if (conferenceInfo != null) {
             coreContext.contactsManager.getContactAvatarModelForConferenceInfo(conferenceInfo)
         } else {
-            // Do not use contact avatar model from ContactsManager
+            // Do not use contact avatar model from ContactsManager to be able to show
+            // ZRTP verification status with the device that will answer the call
             val friend = coreContext.contactsManager.findContactByAddress(address)
             if (friend != null) {
                 ContactAvatarModel(friend, address)
@@ -1201,6 +1202,12 @@ class CurrentCallViewModel
                 val fakeFriend = coreContext.core.createFriend()
                 fakeFriend.name = LinphoneUtils.getDisplayName(address)
                 fakeFriend.address = address
+                val localAccount = coreContext.core.accountList.find {
+                    it.params.identityAddress?.weakEqual(address) == true
+                }
+                if (localAccount != null) {
+                    fakeFriend.photo = localAccount.params.pictureUri
+                }
                 ContactAvatarModel(fakeFriend, address)
             }
         }
