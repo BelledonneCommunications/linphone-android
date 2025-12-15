@@ -27,6 +27,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.AVPFMode
 import org.linphone.core.Account
+import org.linphone.core.Address
 import org.linphone.core.AuthInfo
 import org.linphone.core.Factory
 import org.linphone.core.NatPolicy
@@ -155,7 +156,9 @@ class AccountSettingsViewModel
                 selectedTransport.postValue(transportType)
 
                 sipProxyServer.postValue(params.serverAddress?.asStringUriOnly())
-                outboundProxyServer.postValue(params.routesAddresses.first().asStringUriOnly())
+                if (params.routesAddresses.isNotEmpty()) {
+                    outboundProxyServer.postValue(params.routesAddresses.first().asStringUriOnly())
+                }
 
                 natPolicy = params.natPolicy ?: core.createNatPolicy()
                 stunServer.postValue(natPolicy.stunServer)
@@ -242,7 +245,7 @@ class AccountSettingsViewModel
                         Log.e("$TAG Failed to parse outbound proxy server!")
                     }
                 } else {
-                    newParams.setRoutesAddresses(null)
+                    newParams.setRoutesAddresses(arrayOf<Address>())
                 }
 
                 if (::natPolicy.isInitialized) {
