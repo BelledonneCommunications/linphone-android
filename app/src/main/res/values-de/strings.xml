@@ -467,7 +467,7 @@
     <string name="conversation_info_participant_no_longer_has_admin_rights_toast">%s ist nicht mehr Administrator</string>
     <string name="conversation_info_cant_find_contact_to_display_toast">Kontakt wurde nicht gefunden</string>
     <string name="conversation_info_no_address_to_add_to_contact_toast">Keine Adresse zum Hinzufügen zum Kontakt</string>
-    <string name="conversation_info_confirm_start_group_call_dialog_title">Einen Gruppenanruf starten?</string>
+    <string name="conversation_info_confirm_start_group_call_dialog_title">Gruppenanruf starten?</string>
     <string name="conversation_info_confirm_start_group_call_dialog_message">Alle Teilnehmer werden angerufen.</string>
     <string name="conversation_event_conference_created">Sie sind der Gruppe beigetreten</string>
     <string name="conversation_event_conference_destroyed">Sie haben der Gruppe verlassen</string>
