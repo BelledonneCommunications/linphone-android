@@ -10,6 +10,25 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [6.0.21] - 2025-12-16
+
+### Added
+- Allow linphone-config: scheme URIs in in-app QR code scanner
+
+### Changed
+- Workaround for audio focus & audio manager mode on devices that do not support TelecomManager APIs
+- Set front camera as default after using back camera when scanning a QR code
+- Added back largeHeap flag in AndroidManifest.xml
+
+### Fixed
+- Fixed call recording indicator not showing local record in progress in case UPDATE isn't answered
+- Fixed native addressbook reload when a contact is updated in the OS default app
+- Fixed issue with linphone-config scheme URIs if scheme is followed by "//"
+- Fixed Job & Company contact field not updated if field content was removed
+- Fixed local avatar not displayed when calling ourselves
+- Prevent crashes due to some ActivityNotFound exceptions
+- Prevent crash due to empty clipboard on some devices
+
 ## [6.0.20] - 2025-11-21
 
 ### Changed
