@@ -229,6 +229,78 @@ class LinphoneUtils {
             }
         }
 
+        /**
+         * Returns the current incoming call (including push incoming),
+         * or null if there is no incoming call.
+         */
+        @WorkerThread
+        fun getCurrentIncomingCall(): Call? {
+            val core = coreContext.core
+
+            return core.calls.firstOrNull { call ->
+                // Use Linphone's own helper for incoming states,
+                // and also consider PushIncomingReceived
+                LinphoneUtils.isCallIncoming(call.state) ||
+                        call.state == Call.State.PushIncomingReceived
+            }
+        }
+
+        /**
+         * Helper: returns true if this call state should be considered as
+         * an ongoing/active call that the user can interact with.
+         *
+         * It excludes:
+         *  - ending/error/released states
+         *  - idle
+         *  - incoming states (those are handled separately as "incoming call")
+         */
+        @WorkerThread
+        fun isCallOngoing(state: Call.State): Boolean {
+            // Anything that Linphone considers as "ending" is no longer relevant
+            if (LinphoneUtils.isCallEnding(state, /* considerReleasedAsEnding = */ true)) {
+                return false
+            }
+
+            return when (state) {
+                // Not considered active/ongoing:
+                Call.State.Idle,
+                Call.State.IncomingReceived,
+                Call.State.IncomingEarlyMedia,
+                Call.State.PushIncomingReceived -> false
+
+                // Everything else is treated as an ongoing call:
+                // - OutgoingInit, OutgoingProgress, OutgoingRinging, OutgoingEarlyMedia
+                // - Connected, StreamsRunning
+                // - Pausing, Paused, Resuming, PausedByRemote
+                // - UpdatedByRemote, Updating, EarlyUpdatedByRemote, EarlyUpdating
+                // - Referred, etc.
+                else -> true
+            }
+        }
+
+        /**
+         * Returns the current active/ongoing call:
+         * - outgoing call in progress (Init/Progress/Ringing/EarlyMedia)
+         * - connected call (Connected/StreamsRunning)
+         * - paused/resuming/updating calls
+         *
+         * Or null if there is no such call.
+         */
+        @WorkerThread
+        fun getCurrentOngoingCall(): Call? {
+            val core = coreContext.core
+
+            val current = core.currentCall
+            if (current != null && isCallOngoing(current.state)) {
+                return current
+            }
+
+            // Otherwise, fallback to any other ongoing call in the list
+            return core.calls.firstOrNull { call ->
+                isCallOngoing(call.state)
+            }
+        }
+
         @WorkerThread
         fun getCallErrorInfoToast(call: Call): String {
             val errorInfo = call.errorInfo
