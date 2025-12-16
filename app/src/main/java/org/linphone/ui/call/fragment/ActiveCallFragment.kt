@@ -51,6 +51,7 @@ import org.linphone.utils.Event
 import org.linphone.utils.addCharacterAtPosition
 import org.linphone.utils.removeCharacterAtPosition
 import org.linphone.utils.startAnimatedDrawable
+import android.view.KeyEvent
 
 @UiThread
 class ActiveCallFragment : GenericCallFragment() {
@@ -65,6 +66,8 @@ class ActiveCallFragment : GenericCallFragment() {
     private lateinit var callsViewModel: CallsViewModel
 
     private var zrtpSasDialog: Dialog? = null
+
+    private var lastPressedNumpadView: View? = null
 
     private val actionsBottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -413,6 +416,96 @@ class ActiveCallFragment : GenericCallFragment() {
         zrtpSasDialog = null
 
         cleanVideoPreview(binding.localPreviewVideoSurface)
+    }
+
+    fun handleHardwareDialpadKeyEvent(event: KeyEvent): Boolean {
+        val digit = mapKeyCodeToDigit(event.keyCode) ?: return false
+
+        // Show Numpad-BottomSheet if hidden/needed
+        val numpadBottomSheetBehavior = BottomSheetBehavior.from(binding.callNumpad.root)
+        if (numpadBottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
+            // Expand flyout (same as with ui button)
+            callViewModel.showNumpad()
+            // we continue here and send the number,
+            // so DTMF will be immediately sent.
+        }
+
+        when (event.action) {
+            KeyEvent.ACTION_DOWN -> {
+                // ignore auto-repeat from held down keys
+                if (event.repeatCount > 0) return true
+
+                val view = getNumpadButtonForDigit(digit) ?: return false
+
+                // reset old pressed state
+                lastPressedNumpadView?.let {
+                    it.isPressed = false
+                    it.refreshDrawableState()
+                }
+
+                // mark new button visually pressed
+                view.isPressed = true
+                view.refreshDrawableState()
+
+                // simulate click -> play dtmf...
+                view.performClick()
+
+                lastPressedNumpadView = view
+                return true
+            }
+
+            KeyEvent.ACTION_UP -> {
+                val view = getNumpadButtonForDigit(digit) ?: lastPressedNumpadView
+                view?.let {
+                    it.isPressed = false
+                    it.refreshDrawableState()
+                }
+                if (lastPressedNumpadView === view) {
+                    lastPressedNumpadView = null
+                }
+                return true
+            }
+        }
+
+        return false
+    }
+
+    private fun mapKeyCodeToDigit(keyCode: Int): Char? {
+        return when (keyCode) {
+            KeyEvent.KEYCODE_0, KeyEvent.KEYCODE_NUMPAD_0 -> '0'
+            KeyEvent.KEYCODE_1, KeyEvent.KEYCODE_NUMPAD_1 -> '1'
+            KeyEvent.KEYCODE_2, KeyEvent.KEYCODE_NUMPAD_2 -> '2'
+            KeyEvent.KEYCODE_3, KeyEvent.KEYCODE_NUMPAD_3 -> '3'
+            KeyEvent.KEYCODE_4, KeyEvent.KEYCODE_NUMPAD_4 -> '4'
+            KeyEvent.KEYCODE_5, KeyEvent.KEYCODE_NUMPAD_5 -> '5'
+            KeyEvent.KEYCODE_6, KeyEvent.KEYCODE_NUMPAD_6 -> '6'
+            KeyEvent.KEYCODE_7, KeyEvent.KEYCODE_NUMPAD_7 -> '7'
+            KeyEvent.KEYCODE_8, KeyEvent.KEYCODE_NUMPAD_8 -> '8'
+            KeyEvent.KEYCODE_9, KeyEvent.KEYCODE_NUMPAD_9 -> '9'
+            KeyEvent.KEYCODE_NUMPAD_MULTIPLY              -> '*'
+            KeyEvent.KEYCODE_BACKSLASH                    -> '#'
+            else -> null
+        }
+    }
+
+    private fun getNumpadButtonForDigit(digit: Char): View? {
+        val root = binding.callNumpad.root
+        val id = when (digit) {
+            '0' -> R.id.digit_0
+            '1' -> R.id.digit_1
+            '2' -> R.id.digit_2
+            '3' -> R.id.digit_3
+            '4' -> R.id.digit_4
+            '5' -> R.id.digit_5
+            '6' -> R.id.digit_6
+            '7' -> R.id.digit_7
+            '8' -> R.id.digit_8
+            '9' -> R.id.digit_9
+            '*' -> R.id.digit_star
+            '#' -> R.id.digit_sharp
+            else -> null
+        }
+        return id?.let { root.findViewById<View>(it) }
     }
 
     private fun updateHingeRelatedConstraints(feature: FoldingFeature) {

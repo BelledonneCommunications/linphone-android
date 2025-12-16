@@ -44,6 +44,7 @@ import org.linphone.utils.hideKeyboard
 import org.linphone.utils.removeCharacterAtPosition
 import org.linphone.utils.setKeyboardInsetListener
 import org.linphone.utils.showKeyboard
+import android.view.KeyEvent
 
 @UiThread
 class StartCallFragment : GenericAddressPickerFragment() {
@@ -82,6 +83,8 @@ class StartCallFragment : GenericAddressPickerFragment() {
             }
         }
     }
+
+    private var lastPressedNumpadView: View? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -209,7 +212,23 @@ class StartCallFragment : GenericAddressPickerFragment() {
         super.onResume()
 
         if (corePreferences.automaticallyShowDialpad) {
-            viewModel.isNumpadVisible.value = true
+            showNumpad()
+        }
+    }
+
+    fun showNumpad() {
+        coreContext.postOnMainThread {
+            // hide android IME
+            binding.searchBar.hideKeyboard()
+            binding.searchBar.clearFocus()
+
+            // give hiding a little bit time, before we show our dialpad
+            binding.root.postDelayed({
+                // show dialpad
+                coreContext.postOnCoreThread {
+                    viewModel.isNumpadVisible.postValue(true)
+                }
+            }, 150) // 150ms seems to be a good value
         }
     }
 
@@ -217,6 +236,92 @@ class StartCallFragment : GenericAddressPickerFragment() {
         super.onPause()
 
         viewModel.isNumpadVisible.value = false
+    }
+
+    fun handleHardwareDialpadKeyEvent(event: KeyEvent): Boolean {
+        val digit = mapKeyCodeToDigit(event.keyCode) ?: return false
+
+        // if numpad is hidden, show it
+        if (viewModel.isNumpadVisible.value != true) {
+            showNumpad()
+        }
+
+        when (event.action) {
+            KeyEvent.ACTION_DOWN -> {
+                // ignore auto-repeat from held down keys
+                if (event.repeatCount > 0) return true
+
+                val view = getNumpadButtonForDigit(digit) ?: return false
+
+                // reset old pressed state
+                lastPressedNumpadView?.let {
+                    it.isPressed = false
+                    it.refreshDrawableState()
+                }
+
+                // mark new button visually pressed
+                view.isPressed = true
+                view.refreshDrawableState()
+
+                // simulate click -> play dtmf...
+                view.performClick()
+
+                lastPressedNumpadView = view
+                return true
+            }
+
+            KeyEvent.ACTION_UP -> {
+                val view = getNumpadButtonForDigit(digit) ?: lastPressedNumpadView
+                view?.let {
+                    it.isPressed = false
+                    it.refreshDrawableState()
+                }
+                if (lastPressedNumpadView === view) {
+                    lastPressedNumpadView = null
+                }
+                return true
+            }
+        }
+
+        return false
+    }
+
+    private fun mapKeyCodeToDigit(keyCode: Int): Char? {
+        return when (keyCode) {
+            KeyEvent.KEYCODE_0, KeyEvent.KEYCODE_NUMPAD_0 -> '0'
+            KeyEvent.KEYCODE_1, KeyEvent.KEYCODE_NUMPAD_1 -> '1'
+            KeyEvent.KEYCODE_2, KeyEvent.KEYCODE_NUMPAD_2 -> '2'
+            KeyEvent.KEYCODE_3, KeyEvent.KEYCODE_NUMPAD_3 -> '3'
+            KeyEvent.KEYCODE_4, KeyEvent.KEYCODE_NUMPAD_4 -> '4'
+            KeyEvent.KEYCODE_5, KeyEvent.KEYCODE_NUMPAD_5 -> '5'
+            KeyEvent.KEYCODE_6, KeyEvent.KEYCODE_NUMPAD_6 -> '6'
+            KeyEvent.KEYCODE_7, KeyEvent.KEYCODE_NUMPAD_7 -> '7'
+            KeyEvent.KEYCODE_8, KeyEvent.KEYCODE_NUMPAD_8 -> '8'
+            KeyEvent.KEYCODE_9, KeyEvent.KEYCODE_NUMPAD_9 -> '9'
+            KeyEvent.KEYCODE_NUMPAD_MULTIPLY              -> '*'
+            KeyEvent.KEYCODE_BACKSLASH                    -> '#'
+            else -> null
+        }
+    }
+
+    private fun getNumpadButtonForDigit(digit: Char): View? {
+        val root = binding.numpadLayout.root
+        val id = when (digit) {
+            '0' -> R.id.digit_0
+            '1' -> R.id.digit_1
+            '2' -> R.id.digit_2
+            '3' -> R.id.digit_3
+            '4' -> R.id.digit_4
+            '5' -> R.id.digit_5
+            '6' -> R.id.digit_6
+            '7' -> R.id.digit_7
+            '8' -> R.id.digit_8
+            '9' -> R.id.digit_9
+            '*' -> R.id.digit_star
+            '#' -> R.id.digit_sharp
+            else -> null
+        }
+        return id?.let { root.findViewById<View>(it) }
     }
 
     private fun showGroupCallSubjectDialog() {
@@ -256,5 +361,23 @@ class StartCallFragment : GenericAddressPickerFragment() {
 
         Log.i("$TAG Showing dialog to set group call subject")
         dialog.show()
+    }
+
+    fun hasSearchText(): Boolean {
+        return !binding.searchBar.text?.toString().isNullOrEmpty()
+    }
+
+    fun onHardwareCallKeyPressed() {
+        // simulate press of green call button
+        viewModel.numpadModel.onCallClicked()
+    }
+
+    fun onHardwareHangupKeyPressed() {
+        // is there an text in sarch field
+        val currentText = binding.searchBar.text?.toString().orEmpty()
+        if (currentText.isNotEmpty()) {
+            // simulate "backspace long press" -> clear complete input
+            viewModel.numpadModel.onBackspaceLongClicked()
+        }
     }
 }

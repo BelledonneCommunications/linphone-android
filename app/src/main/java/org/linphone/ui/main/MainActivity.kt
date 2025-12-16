@@ -77,6 +77,9 @@ import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
 import androidx.core.content.edit
+import androidx.navigation.fragment.NavHostFragment
+import org.linphone.ui.main.history.fragment.StartCallFragment
+import android.view.KeyEvent
 
 @UiThread
 class MainActivity : GenericActivity() {
@@ -436,6 +439,27 @@ class MainActivity : GenericActivity() {
         super.onNewIntent(intent)
         Log.d("$TAG Handling new intent")
         handleIntent(intent)
+    }
+
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        // check if StartCallFragment is visible
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.main_nav_container) as? NavHostFragment
+        val startCallFragment = navHostFragment
+            ?.childFragmentManager
+            ?.fragments
+            ?.filterIsInstance<StartCallFragment>()
+            ?.firstOrNull { it.isVisible }
+
+        if (startCallFragment != null) {
+            // StartCallFragment is visible, forward keys to it, so it can decide to consume it
+            if (startCallFragment.handleHardwareDialpadKeyEvent(event)) {
+                return true // event consumed
+            }
+        }
+
+        // otherwise return false if no other object consumes it
+        return super.dispatchKeyEvent(event)
     }
 
     @SuppressLint("RtlHardcoded")
