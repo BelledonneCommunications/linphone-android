@@ -34,6 +34,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatInfoFragmentBinding
@@ -367,6 +368,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
         popupView.isMeAdmin = participantModel.isMyselfAdmin
         val friendRefKey = participantModel.refKey
         popupView.isParticipantContact = participantModel.friendAvailable
+        popupView.disableAddContact = corePreferences.disableAddContact
 
         popupView.setRemoveParticipantClickListener {
             Log.i("$TAG Trying to remove participant [$address]")

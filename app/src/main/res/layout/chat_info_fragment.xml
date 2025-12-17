@@ -469,7 +469,7 @@
                     android:drawableStart="@drawable/user_plus"
                     android:onClick="@{addToContactsClickListener}"
                     android:text="@string/conversation_info_menu_add_to_contacts"
-                    android:visibility="@{!viewModel.isGroup &amp;&amp; !viewModel.friendAvailable ? View.VISIBLE : View.GONE, default=gone}"
+                    android:visibility="@{!viewModel.isGroup &amp;&amp; !viewModel.friendAvailable &amp;&amp; !viewModel.disableAddContact ? View.VISIBLE : View.GONE, default=gone}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/action_see_contact" />
@@ -481,7 +481,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:background="@{!viewModel.isGroup ? @drawable/action_background_middle : @drawable/action_background_top, default=@drawable/action_background_top}"
+                    android:background="@{viewModel.disableAddContact ? @drawable/action_background_top : !viewModel.isGroup ? @drawable/action_background_middle : @drawable/action_background_top, default=@drawable/action_background_top}"
                     android:drawableStart="@drawable/clock_countdown"
                     android:onClick="@{configureEphemeralMessagesClickListener}"
                     android:text="@string/conversation_action_configure_ephemeral_messages"

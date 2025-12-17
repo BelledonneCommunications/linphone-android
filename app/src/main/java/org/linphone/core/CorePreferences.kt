@@ -264,6 +264,13 @@ class CorePreferences
             config.setString("app", "friend_list_to_store_newly_created_contacts", value)
         }
 
+    @get:AnyThread @set:WorkerThread
+    var disableAddContact: Boolean
+        get() = config.getBool("ui", "disable_add_contact", false)
+        set(value) {
+            config.setBool("ui", "disable_add_contact", value)
+        }
+
     // Voice recordings related
 
     @get:AnyThread @set:WorkerThread

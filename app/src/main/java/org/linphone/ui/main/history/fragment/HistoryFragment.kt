@@ -34,6 +34,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.HistoryFragmentBinding
@@ -216,6 +217,7 @@ class HistoryFragment : SlidingPaneChildFragment() {
 
         popupView.contactExists = viewModel.callLogModel.value?.friendExists == true
         popupView.isConferenceCallLog = viewModel.isConferenceCallLog.value == true
+        popupView.disableAddContact = corePreferences.disableAddContact
 
         popupView.setAddToContactsListener {
             sharedViewModel.sipAddressToAddToNewContact = viewModel.callLogModel.value?.displayedAddress.orEmpty()

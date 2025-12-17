@@ -201,6 +201,7 @@
                     android:layout_margin="16dp"
                     android:src="@drawable/user_plus"
                     android:contentDescription="@string/content_description_contact_create"
+                    android:visibility="@{viewModel.disableAddContact ? View.GONE : View.VISIBLE}"
                     app:tint="?attr/color_on_main"
                     app:backgroundTint="?attr/color_main1_500"
                     app:shapeAppearanceOverlay="@style/rounded"

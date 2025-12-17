@@ -32,4 +32,7 @@
     <entry name="media_encryption">srtp</entry>
     <entry name="media_encryption_mandatory" overwrite="true">0</entry>
   </section>
+  <section name="ui">
+    <entry name="automatically_show_dialpad" overwrite="true">1</entry>
+  </section>
 </config>

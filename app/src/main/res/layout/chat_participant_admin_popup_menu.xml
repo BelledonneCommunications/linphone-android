@@ -32,6 +32,9 @@
         <variable
             name="isMeAdmin"
             type="Boolean" />
+        <variable
+            name="disableAddContact"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -62,7 +65,7 @@
             android:onClick="@{addToContactsClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:visibility="@{isParticipantContact ? View.GONE : View.VISIBLE, default=gone}"
+            android:visibility="@{isParticipantContact || disableAddContact ? View.GONE : View.VISIBLE, default=gone}"
             android:text="@string/conversation_info_menu_add_to_contacts"
             android:drawableStart="@drawable/user_plus"
             app:layout_constraintHorizontal_bias="0"

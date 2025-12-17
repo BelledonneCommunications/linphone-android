@@ -29,6 +29,7 @@ import androidx.annotation.UiThread
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.databinding.HistoryListLongPressMenuBinding
 
 @UiThread
@@ -69,6 +70,7 @@ class HistoryMenuDialogFragment(
     ): View {
         val view = HistoryListLongPressMenuBinding.inflate(layoutInflater)
         view.contactExists = contactExists
+        view.disableAddContact = corePreferences.disableAddContact
 
         view.setCopyNumberClickListener {
             onCopyNumberOrAddressToClipboard?.invoke()

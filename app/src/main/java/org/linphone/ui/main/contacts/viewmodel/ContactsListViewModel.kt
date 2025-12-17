@@ -71,6 +71,8 @@ class ContactsListViewModel
 
     val showResultsLimitReached = MutableLiveData<Boolean>()
 
+    val disableAddContact = MutableLiveData<Boolean>()
+
     val vCardTerminatedEvent: MutableLiveData<Event<Pair<String, File>>> by lazy {
         MutableLiveData<Event<Pair<String, File>>>()
     }
@@ -150,6 +152,7 @@ class ContactsListViewModel
         fetchInProgress.value = true
         showFavourites.value = corePreferences.showFavoriteContacts
         showFilter.value = !corePreferences.hidePhoneNumbers && !corePreferences.hideSipAddresses
+        disableAddContact.value = corePreferences.disableAddContact
 
         coreContext.postOnCoreThread { core ->
             domainFilter = corePreferences.contactsFilter
