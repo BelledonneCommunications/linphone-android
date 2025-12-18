@@ -44,6 +44,8 @@ import org.linphone.utils.hideKeyboard
 import org.linphone.utils.removeCharacterAtPosition
 import org.linphone.utils.setKeyboardInsetListener
 import org.linphone.utils.showKeyboard
+import android.view.accessibility.AccessibilityEvent
+import android.view.accessibility.AccessibilityManager
 
 @UiThread
 class StartCallFragment : GenericAddressPickerFragment() {
@@ -211,12 +213,30 @@ class StartCallFragment : GenericAddressPickerFragment() {
         if (corePreferences.automaticallyShowDialpad) {
             viewModel.isNumpadVisible.value = true
         }
+
+        val am = requireContext().getSystemService(AccessibilityManager::class.java)
+        if (am?.isEnabled == true) {
+            val ev = AccessibilityEvent.obtain(AccessibilityEvent.TYPE_ANNOUNCEMENT)
+            ev.packageName = requireContext().packageName
+            ev.className = javaClass.name
+            ev.text.add("StartCallFragmentVisible")
+            am.sendAccessibilityEvent(ev)
+        }
     }
 
     override fun onPause() {
         super.onPause()
 
         viewModel.isNumpadVisible.value = false
+
+        val am = requireContext().getSystemService(AccessibilityManager::class.java)
+        if (am?.isEnabled == true) {
+            val ev = AccessibilityEvent.obtain(AccessibilityEvent.TYPE_ANNOUNCEMENT)
+            ev.packageName = requireContext().packageName
+            ev.className = javaClass.name
+            ev.text.add("StartCallFragmentHidden")
+            am.sendAccessibilityEvent(ev)
+        }
     }
 
     private fun showGroupCallSubjectDialog() {

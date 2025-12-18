@@ -66,6 +66,8 @@ import org.linphone.ui.call.viewmodel.CallsViewModel
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
 import org.linphone.ui.call.viewmodel.SharedCallViewModel
 import org.linphone.ui.main.MainActivity
+import android.view.accessibility.AccessibilityEvent
+import android.view.accessibility.AccessibilityManager
 
 @UiThread
 class CallActivity : GenericActivity() {
@@ -357,6 +359,15 @@ class CallActivity : GenericActivity() {
         Log.i("$TAG onResume: is in PiP mode? [$isInPipMode]")
         if (::callViewModel.isInitialized) {
             callViewModel.pipMode.value = isInPipMode
+        }
+
+        val am = getSystemService(AccessibilityManager::class.java)
+        if (am?.isEnabled == true) {
+            val ev = AccessibilityEvent.obtain(AccessibilityEvent.TYPE_ANNOUNCEMENT)
+            ev.packageName = packageName
+            ev.className = javaClass.name
+            ev.text.add("CallActivityVisible")
+            am.sendAccessibilityEvent(ev)
         }
     }
 

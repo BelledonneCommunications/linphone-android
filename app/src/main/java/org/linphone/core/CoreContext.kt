@@ -56,6 +56,8 @@ import org.linphone.utils.AudioUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
+import android.view.accessibility.AccessibilityEvent
+import android.view.accessibility.AccessibilityManager
 
 class CoreContext
     @UiThread
@@ -87,6 +89,7 @@ class CoreContext
     private val activityMonitor = ActivityMonitor()
 
     private val mainThread = Handler(Looper.getMainLooper())
+    private var hasOngoingCallsForAccessibility = false
 
     var defaultAccountHasVideoConferenceFactoryUri: Boolean = false
 
@@ -404,7 +407,31 @@ class CoreContext
                 }
             }
 
+            notifyAccessibilityCallStateIfNeeded(core)
             previousCallState = currentState
+        }
+
+        @WorkerThread
+        private fun notifyAccessibilityCallStateIfNeeded(core: Core) {
+            // includes incoming, outgoing, connected, paused, etc.
+            val hasOngoingNow = core.calls.any { call ->
+                LinphoneUtils.isCallOngoingAndRinging(call.state)
+            }
+
+            if (hasOngoingNow == hasOngoingCallsForAccessibility) {
+                return // no change
+            }
+
+            hasOngoingCallsForAccessibility = hasOngoingNow
+
+            val am = context.getSystemService(AccessibilityManager::class.java)
+            if (am?.isEnabled == true) {
+                val ev = AccessibilityEvent.obtain(AccessibilityEvent.TYPE_ANNOUNCEMENT)
+                ev.packageName = context.packageName
+                ev.className = CoreContext::class.java.name
+                ev.text.add(if (hasOngoingNow) "CallOngoing" else "CallEnded")
+                am.sendAccessibilityEvent(ev)
+            }
         }
 
         @WorkerThread

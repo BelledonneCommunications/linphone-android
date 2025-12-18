@@ -229,6 +229,29 @@ class LinphoneUtils {
             }
         }
 
+        /**
+         * Returns true if this call state should be considered as an
+         * ongoing/active call for your logic (including incoming).
+         *
+         * Excludes:
+         *  - ending/error/released states
+         *  - idle
+         *
+         * Includes:
+         *  - incoming (IncomingReceived, IncomingEarlyMedia, PushIncomingReceived)
+         *  - all outgoing / connected / paused / updating states
+         */
+        @WorkerThread
+        fun isCallOngoingAndRinging(state: Call.State): Boolean {
+            // Anything that Linphone considers "ending" is no longer active
+            if (LinphoneUtils.isCallEnding(state, /* considerReleasedAsEnding = */ true)) {
+                return false
+            }
+
+            // Everything except Idle is treated as ongoing/active, including incoming
+            return state != Call.State.Idle
+        }
+        
         @WorkerThread
         fun getCallErrorInfoToast(call: Call): String {
             val errorInfo = call.errorInfo
