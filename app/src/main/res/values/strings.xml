@@ -268,6 +268,7 @@
     <string name="settings_conversations_mark_as_read_when_dismissing_notif_title">Mark conversation as read when dismissing message notification</string>
     <string name="settings_contacts_title">Contacts</string>
     <string name="settings_contacts_sort_by_first_name_title">Sort contacts by</string>
+    <string name="settings_contacts_edit_native_contacts_in_linphone_title">Use &appName; contact editor for native contacts</string>
     <string name="settings_contacts_hide_empty_contacts_title">Hide contacts without SIP address nor phone number</string>
     <string name="settings_contacts_presence_subscribe_title">Subscribe to presence info</string>
     <string name="settings_contacts_add_ldap_server_title">Add LDAP server</string>

@@ -265,6 +265,13 @@ class CorePreferences
         }
 
     @get:AnyThread @set:WorkerThread
+    var editNativeContactsInLinphone: Boolean
+        get() = config.getBool("ui", "edit_native_contact_in_linphone", false)
+        set(value) {
+            config.setBool("ui", "edit_native_contact_in_linphone", value)
+        }
+
+    @get:AnyThread @set:WorkerThread
     var disableAddContact: Boolean
         get() = config.getBool("ui", "disable_add_contact", false)
         set(value) {

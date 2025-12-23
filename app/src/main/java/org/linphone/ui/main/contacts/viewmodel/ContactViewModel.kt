@@ -352,7 +352,7 @@ class ContactViewModel
         coreContext.postOnCoreThread {
             if (::friend.isInitialized) {
                 val uri = friend.nativeUri
-                if (uri != null) {
+                if (uri != null && !corePreferences.editNativeContactsInLinphone) {
                     Log.i(
                         "$TAG Contact [${friend.name}] is a native contact, opening native contact editor using URI [$uri]"
                     )

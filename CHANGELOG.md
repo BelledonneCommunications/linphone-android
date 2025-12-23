@@ -29,6 +29,7 @@ Group changes to describe their impact on the project, as follows:
   - one for user to choose whether to sort contacts by first name or last name
   - one to hide contacts that have neither a SIP address nor a phone number
   - one to let app auto-answer call with video sending already enabled
+  - one to let edit native contacts Linphone copy in-app instead of opening native addressbook third party app
 - Added a vu meter for recording & playback volumes (must be enabled in developer settings)
 - Added support for HDMI audio devices
 

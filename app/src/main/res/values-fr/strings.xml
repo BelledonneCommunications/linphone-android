@@ -226,6 +226,7 @@
     <string name="settings_conversations_mark_as_read_when_dismissing_notif_title">Marquer la conversation comme lue lorsqu\'une notification de message est supprimée</string>
     <string name="settings_contacts_title">Contacts</string>
     <string name="settings_contacts_sort_by_first_name_title">Trier les contacts par</string>
+    <string name="settings_contacts_edit_native_contacts_in_linphone_title">Editer les contacts natifs dans &appName;</string>
     <string name="settings_contacts_hide_empty_contacts_title">Masquer les contacts sans adresse SIP ni numéro de téléphone</string>
     <string name="settings_contacts_presence_subscribe_title">Souscrire aux informations de présence</string>
     <string name="settings_contacts_add_ldap_server_title">Ajouter un serveur LDAP</string>
