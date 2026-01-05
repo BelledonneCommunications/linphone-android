@@ -593,7 +593,7 @@ class SendMessageInConversationViewModel
             participantsListFilter = filter
             val currentList = participants.value.orEmpty()
             val newList = currentList.filter {
-                it.address.asStringUriOnly().contains(filter) || it.avatarModel.contactName?.contains(filter) == true
+                it.address.username.orEmpty().contains(filter) || it.avatarModel.contactName?.contains(filter) == true
             }
             participants.postValue(newList as ArrayList<ParticipantModel>)
             isComputingParticipantsList.postValue(false)

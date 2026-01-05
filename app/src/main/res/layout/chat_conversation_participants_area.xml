@@ -31,27 +31,19 @@
             android:text="@string/conversation_participants_list_header"
             android:textSize="12sp"
             android:textColor="?attr/color_main2_500"
-            app:layout_constraintTop_toBottomOf="@id/participants_separator"
+            app:layout_constraintTop_toTopOf="@id/participants_close"
+            app:layout_constraintBottom_toBottomOf="@id/participants_close"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <androidx.core.widget.NestedScrollView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/participants"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintHeight_max="@dimen/chat_room_participants_list_max_height"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chat_room_participants_list_max_height"
+            android:layout_marginTop="5dp"
+            android:scrollbars="vertical"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/participants_header">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:orientation="vertical"
-                entries="@{viewModel.participants}"
-                layout="@{@layout/chat_participant_list_cell}"/>
-
-        </androidx.core.widget.NestedScrollView>
+            app:layout_constraintTop_toBottomOf="@id/participants_close" />
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/fetch_in_progress"

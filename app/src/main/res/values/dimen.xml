@@ -102,7 +102,7 @@
     <dimen name="chat_documents_list_padding_start_end">10dp</dimen>
 
     <dimen name="chat_room_emoji_picker_height">300dp</dimen>
-    <dimen name="chat_room_participants_list_max_height">300dp</dimen>
+    <dimen name="chat_room_participants_list_max_height">200dp</dimen>
     <dimen name="chat_bubble_emoji_picker_height">425dp</dimen>
 
     <dimen name="spinner_start_padding">15dp</dimen>

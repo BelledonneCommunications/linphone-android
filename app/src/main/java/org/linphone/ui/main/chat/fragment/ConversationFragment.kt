@@ -94,6 +94,7 @@ import org.linphone.utils.hideKeyboard
 import org.linphone.utils.setKeyboardInsetListener
 import org.linphone.utils.showKeyboard
 import androidx.core.net.toUri
+import org.linphone.ui.main.chat.adapter.ConversationParticipantsAdapter
 import org.linphone.ui.main.chat.model.MessageDeleteDialogModel
 
 @UiThread
@@ -113,6 +114,8 @@ open class ConversationFragment : SlidingPaneChildFragment() {
     private lateinit var messageLongPressViewModel: ChatMessageLongPressViewModel
 
     private lateinit var adapter: ConversationEventAdapter
+
+    private lateinit var participantsAdapter: ConversationParticipantsAdapter
 
     private lateinit var bottomSheetAdapter: MessageBottomSheetAdapter
 
@@ -395,6 +398,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         super.onCreate(savedInstanceState)
 
         adapter = ConversationEventAdapter()
+        participantsAdapter = ConversationParticipantsAdapter()
         headerItemDecoration = RecyclerViewHeaderDecoration(
             requireContext(),
             adapter,
@@ -465,6 +469,10 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         val layoutManager = LinearLayoutManager(requireContext())
         layoutManager.stackFromEnd = true
         binding.eventsList.layoutManager = layoutManager
+
+        binding.sendArea.participants.participants.setHasFixedSize(true)
+        val participantsLayoutManager = LinearLayoutManager(requireContext())
+        binding.sendArea.participants.participants.layoutManager = participantsLayoutManager
 
         val callbacks = RecyclerViewSwipeUtilsCallback(
             R.drawable.reply,
@@ -761,6 +769,14 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                     Log.i("$TAG Permission request for RECORD_AUDIO will be automatically denied, go to android app settings instead")
                     (requireActivity() as GenericActivity).goToAndroidPermissionSettings()
                 }
+            }
+        }
+
+        sendMessageViewModel.participants.observe(viewLifecycleOwner) {
+            participantsAdapter.submitList(it)
+
+            if (binding.sendArea.participants.participants.adapter != participantsAdapter) {
+                binding.sendArea.participants.participants.adapter = participantsAdapter
             }
         }
 
