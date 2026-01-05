@@ -217,6 +217,21 @@ class LinphoneUtils {
             return null
         }
 
+        @WorkerThread
+        fun isSipAddressLinkedToPhoneNumberByPresence(friend: Friend, sipAddress: String): Boolean {
+            for (phoneNumber in friend.phoneNumbers) {
+                val presenceModel = friend.getPresenceModelForUriOrTel(phoneNumber)
+                if (presenceModel != null) {
+                    val contact = presenceModel.contact
+                    if (contact == sipAddress) {
+                        Log.i("$TAG SIP address [$sipAddress] is presence contact address for phone number [$phoneNumber]")
+                        return true
+                    }
+                }
+            }
+            return false
+        }
+
         @AnyThread
         fun isCallIncoming(callState: Call.State): Boolean {
             return when (callState) {

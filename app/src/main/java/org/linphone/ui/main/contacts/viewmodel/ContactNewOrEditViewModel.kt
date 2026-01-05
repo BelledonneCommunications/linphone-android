@@ -42,6 +42,7 @@ import org.linphone.ui.main.contacts.model.NewOrEditNumberOrAddressModel
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import androidx.core.net.toUri
+import org.linphone.utils.LinphoneUtils
 
 class ContactNewOrEditViewModel
     @UiThread
@@ -114,8 +115,13 @@ class ContactNewOrEditViewModel
                 }
 
                 for (address in friend.addresses) {
-                    addSipAddress(address.asStringUriOnly())
+                    val sipAddress = address.asStringUriOnly()
+                    // Prevents showing presence address as editable when in fact it's not
+                    if (!LinphoneUtils.isSipAddressLinkedToPhoneNumberByPresence(friend, sipAddress)) {
+                        addSipAddress(sipAddress)
+                    }
                 }
+
                 for (number in friend.phoneNumbersWithLabel) {
                     addPhoneNumber(number.phoneNumber, number.label)
                 }
@@ -341,16 +347,20 @@ class ContactNewOrEditViewModel
             if (jobTitle.value.orEmpty() != friend.jobTitle.orEmpty()) return true
 
             for (address in friend.addresses) {
+                val sipAddress = address.asStringUriOnly()
+                if (LinphoneUtils.isSipAddressLinkedToPhoneNumberByPresence(friend, sipAddress)) continue
+
                 val found = sipAddresses.find {
-                    it.isSip && it.value.value.orEmpty() == address.asStringUriOnly()
+                    it.isSip && it.value.value.orEmpty() == sipAddress
                 }
                 if (found == null) return true
             }
             for (address in sipAddresses) {
-                if (address.value.value.orEmpty().isEmpty()) continue
+                val sipAddress = address.value.value.orEmpty()
+                if (sipAddress.isEmpty()) continue
 
                 val found = friend.addresses.find {
-                    it.asStringUriOnly() == address.value.value.orEmpty()
+                    it.asStringUriOnly() == sipAddress
                 }
                 if (found == null) return true
             }

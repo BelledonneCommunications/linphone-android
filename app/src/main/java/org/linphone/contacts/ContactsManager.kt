@@ -817,6 +817,10 @@ fun Friend.getListOfSipAddressesAndPhoneNumbers(listener: ContactNumberOrAddress
 
     // Will return an empty list if corePreferences.hideSipAddresses == true
     for (address in getListOfSipAddresses()) {
+        if (LinphoneUtils.isSipAddressLinkedToPhoneNumberByPresence(this, address.asStringUriOnly())) {
+            continue
+        }
+
         val data = ContactNumberOrAddressModel(
             this,
             address,
@@ -832,7 +836,6 @@ fun Friend.getListOfSipAddressesAndPhoneNumbers(listener: ContactNumberOrAddress
         return addressesAndNumbers
     }
 
-    val indexOfLastSipAddress = addressesAndNumbers.count()
     for (number in phoneNumbersWithLabel) {
         val phoneNumber = number.phoneNumber
         val presenceModel = getPresenceModelForUriOrTel(phoneNumber)
@@ -840,25 +843,12 @@ fun Friend.getListOfSipAddressesAndPhoneNumbers(listener: ContactNumberOrAddress
         var presenceAddress: Address? = null
 
         if (presenceModel != null && hasPresenceInfo) {
-            // Show linked SIP address if not already stored as-is
             val contact = presenceModel.contact
             if (!contact.isNullOrEmpty()) {
                 val address = core.interpretUrl(contact, false)
                 if (address != null) {
                     address.clean() // To remove ;user=phone
                     presenceAddress = address
-                    if (!corePreferences.hideSipAddresses && addressesAndNumbers.find { it.address?.weakEqual(address) == true } == null) {
-                        val data = ContactNumberOrAddressModel(
-                            this,
-                            address,
-                            address.asStringUriOnly(),
-                            true, // SIP addresses are always enabled
-                            listener,
-                            true,
-                            hasPresence = true
-                        )
-                        addressesAndNumbers.add(indexOfLastSipAddress, data)
-                    }
                 } else {
                     Log.e("[Contacts Manager] Failed to parse phone number [$phoneNumber] contact address [$contact] from presence model!")
                 }
