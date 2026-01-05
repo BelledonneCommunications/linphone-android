@@ -609,6 +609,7 @@
     <string name="conversation_dialog_delete_for_everyone_label">For everyone</string>
     <string name="conversation_message_content_deleted_label"><i>This message has been deleted</i></string>
     <string name="conversation_message_content_deleted_by_us_label"><i>You have deleted this message</i></string>
+    <string name="conversation_participants_list_header">Participants</string>
 
     <string name="conversation_info_participants_list_title">Group members (%s)</string>
     <string name="conversation_info_add_participants_label">Add participants</string>

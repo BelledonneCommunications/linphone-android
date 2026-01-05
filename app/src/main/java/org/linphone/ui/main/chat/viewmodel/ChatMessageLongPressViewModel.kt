@@ -150,7 +150,7 @@ class ChatMessageLongPressViewModel : GenericViewModel() {
     fun copyClickListener() {
         Log.i("$TAG Copying message text into clipboard")
 
-        val text = messageModel.value?.text?.value?.toString()
+        val text = messageModel.value?.getRawTextContent()
         val clipboard = coreContext.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val label = "Message"
         clipboard.setPrimaryClip(ClipData.newPlainText(label, text))

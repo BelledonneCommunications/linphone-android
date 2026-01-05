@@ -21,6 +21,7 @@ Group changes to describe their impact on the project, as follows:
 - Support right click on some items to open bottom sheet/menu
 - Added toggle speaker action in active call notification
 - Increased text size for chat messages that only contains emoji(s)
+- Use user-input to filter participants list after typing "@" in conversation send area
 - Handle read-only CardDAV address books, disable edit/delete menus for contacts in read-only FriendList
 - Added swipe/pull to refresh on contacts list of a CardDAV addressbook has been configured to force the synchronization
 - Show information to user when filtering contacts doesn't show them all and user may have to refine it's search
@@ -51,6 +52,9 @@ Group changes to describe their impact on the project, as follows:
 - Permission fragment will only show missing ones
 - Added more info into StartupListener logs
 - Updated password forgotten procedure, will use online account manager platform
+
+### Fixed
+- Copy raw message content instead of modified one when it contains a participant mention ("@username")
 
 ## [6.0.21] - 2025-12-16
 

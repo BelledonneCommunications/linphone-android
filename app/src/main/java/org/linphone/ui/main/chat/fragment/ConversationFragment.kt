@@ -283,13 +283,22 @@ open class ConversationFragment : SlidingPaneChildFragment() {
 
         override fun afterTextChanged(editable: Editable?) {
             if (viewModel.isGroup.value == true) {
-                sendMessageViewModel.closeParticipantsList()
-
                 val split = editable.toString().split(" ")
-                for (part in split) {
-                    if (part == "@") {
-                        Log.i("$TAG '@' found, opening participants list")
-                        sendMessageViewModel.openParticipantsList()
+                if (split.isNotEmpty()) {
+                    val lastPart = split.last()
+                    if (lastPart.isNotEmpty() && lastPart.startsWith("@")) {
+                        coreContext.postOnCoreThread {
+                            val filter = if (lastPart.length > 1) lastPart.substring(1) else ""
+                            sendMessageViewModel.filterParticipantsList(filter)
+                        }
+
+                        if (sendMessageViewModel.isParticipantsListOpen.value == false) {
+                            Log.i("$TAG '@' found, opening participants list")
+                            sendMessageViewModel.openParticipantsList()
+                        }
+                    } else if (sendMessageViewModel.isParticipantsListOpen.value == true) {
+                        Log.i("$TAG Closing participants list")
+                        sendMessageViewModel.closeParticipantsList()
                     }
                 }
             }

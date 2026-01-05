@@ -25,6 +25,7 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.StyleSpan
+import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MediatorLiveData
@@ -150,6 +151,8 @@ class MessageModel
     val hasBeenRetracted = MutableLiveData<Boolean>()
 
     val isSelected = MutableLiveData<Boolean>()
+
+    private var rawTextContent: String = ""
 
     // Below are for conferences info
     val meetingFound = MutableLiveData<Boolean>()
@@ -436,6 +439,11 @@ class MessageModel
         avatarModel.postValue(avatar)
     }
 
+    @AnyThread
+    fun getRawTextContent(): String {
+        return rawTextContent
+    }
+
     @WorkerThread
     private fun computeContentsList() {
         Log.d("$TAG Computing message contents list")
@@ -686,10 +694,10 @@ class MessageModel
 
     @WorkerThread
     private fun computeTextContent(content: Content, highlight: String) {
-        val textContent = content.utf8Text.orEmpty().trim()
-        val spannableBuilder = SpannableStringBuilder(textContent)
+        rawTextContent = content.utf8Text.orEmpty().trim()
+        val spannableBuilder = SpannableStringBuilder(rawTextContent)
 
-        val emojiOnly = AppUtils.isTextOnlyContainsEmoji(textContent)
+        val emojiOnly = AppUtils.isTextOnlyContainsEmoji(rawTextContent)
         isTextEmoji.postValue(emojiOnly)
         if (emojiOnly) {
             text.postValue(spannableBuilder)
@@ -698,7 +706,7 @@ class MessageModel
 
         // Check for search
         if (highlight.isNotEmpty()) {
-            val indexStart = textContent.indexOf(highlight, 0, ignoreCase = true)
+            val indexStart = rawTextContent.indexOf(highlight, 0, ignoreCase = true)
             if (indexStart >= 0) {
                 isTextHighlighted = true
                 val indexEnd = indexStart + highlight.length
@@ -713,12 +721,12 @@ class MessageModel
 
         // Check for mentions
         val chatRoom = chatMessage.chatRoom
-        val matcher = Pattern.compile(MENTION_REGEXP).matcher(textContent)
+        val matcher = Pattern.compile(MENTION_REGEXP).matcher(rawTextContent)
         var offset = 0
         while (matcher.find()) {
             val start = matcher.start()
             val end = matcher.end()
-            val source = textContent.subSequence(start + 1, end) // +1 to remove @
+            val source = rawTextContent.subSequence(start + 1, end) // +1 to remove @
             Log.d("$TAG Found mention [$source]")
 
             // Find address matching username

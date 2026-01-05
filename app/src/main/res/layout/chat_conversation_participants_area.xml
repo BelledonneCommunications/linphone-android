@@ -22,6 +22,18 @@
             android:importantForAccessibility="no"
             app:layout_constraintTop_toTopOf="parent"/>
 
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/participants_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/conversation_participants_list_header"
+            android:textSize="12sp"
+            android:textColor="?attr/color_main2_500"
+            app:layout_constraintTop_toBottomOf="@id/participants_separator"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <androidx.core.widget.NestedScrollView
             android:id="@+id/participants"
             android:layout_width="0dp"
@@ -29,7 +41,7 @@
             app:layout_constraintHeight_max="@dimen/chat_room_participants_list_max_height"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/participants_separator">
+            app:layout_constraintTop_toBottomOf="@id/participants_header">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -40,6 +52,18 @@
                 layout="@{@layout/chat_participant_list_cell}"/>
 
         </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/fetch_in_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="@{viewModel.isComputingParticipantsList ? View.VISIBLE : View.GONE}"
+            app:indicatorColor="?attr/color_main1_500"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/participants"
+            app:layout_constraintBottom_toBottomOf="@id/participants" />
 
         <ImageView
             android:id="@+id/participants_close"
