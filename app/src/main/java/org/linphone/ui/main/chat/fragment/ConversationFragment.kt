@@ -509,6 +509,8 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                         )
                     }
                 } else {
+                    sharedViewModel.displayedChatRoom = viewModel.chatRoom
+
                     sendMessageViewModel.configureChatRoom(viewModel.chatRoom)
                     adapter.setIsConversationSecured(viewModel.isEndToEndEncrypted.value == true)
 
