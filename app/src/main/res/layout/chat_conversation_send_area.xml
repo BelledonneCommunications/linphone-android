@@ -35,6 +35,8 @@
         <include
             android:id="@+id/reply_area"
             layout="@layout/chat_conversation_reply_area"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             bind:viewModel="@{viewModel}"
             android:visibility="@{viewModel.isReplying ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintTop_toTopOf="parent" />
@@ -42,6 +44,8 @@
         <include
             android:id="@+id/edit_area"
             layout="@layout/chat_conversation_edit_area"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             bind:viewModel="@{viewModel}"
             android:visibility="@{viewModel.isEditing ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintTop_toBottomOf="@id/reply_area" />

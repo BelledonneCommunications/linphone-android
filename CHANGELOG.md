@@ -76,7 +76,7 @@ Group changes to describe their impact on the project, as follows:
 ### Changed
 - Added shrink resources to release config in gradle
 
-### Fixed
+### Fixed
 - Remove AuthInfo when configuring a CardDAV friend list if synchronization fails
 - Added missing toast when starting a group call or meeting if there's an issue
 - Fixed crash in RecordingPlayerFragment due to used lateinit property before it's initialized
@@ -357,7 +357,7 @@ Group changes to describe their impact on the project, as follows:
 - Reverted the way of playing incoming call ringone (you may have to configure your own ringtone again), was causing various issues depending on devices/firmwares
 - Show all call history entries if only one account is configured (workaround for missing history for now until a proper fix will be done in SDK)
 
-### Fixed
+### Fixed
 - Issue preventing bluetooth Hearing Aids from working properly (and fixed earpiece/hearing aids icon)
 - Prevent Qr Code scanner to use static picture camera
 - Prevent user from connecting the same account multiple times
