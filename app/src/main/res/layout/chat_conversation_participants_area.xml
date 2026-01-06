@@ -36,7 +36,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/participants"
+            android:id="@+id/participants_list"
             android:layout_width="match_parent"
             android:layout_height="@dimen/chat_room_participants_list_max_height"
             android:layout_marginTop="5dp"

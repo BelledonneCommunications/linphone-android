@@ -470,9 +470,9 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         layoutManager.stackFromEnd = true
         binding.eventsList.layoutManager = layoutManager
 
-        binding.sendArea.participants.participants.setHasFixedSize(true)
+        binding.sendArea.participants.participantsList.setHasFixedSize(true)
         val participantsLayoutManager = LinearLayoutManager(requireContext())
-        binding.sendArea.participants.participants.layoutManager = participantsLayoutManager
+        binding.sendArea.participants.participantsList.layoutManager = participantsLayoutManager
 
         val callbacks = RecyclerViewSwipeUtilsCallback(
             R.drawable.reply,
@@ -494,6 +494,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                     if (chatMessageModel.hasBeenRetracted.value == true) { // Don't allow to reply to retracted messages
                         // TODO: notify user?
                     } else {
+                        viewModel.closeSearchBar()
                         sendMessageViewModel.replyToMessage(chatMessageModel)
                         // Open keyboard & focus edit text
                         binding.sendArea.messageToSend.showKeyboard()
@@ -775,8 +776,8 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         sendMessageViewModel.participants.observe(viewLifecycleOwner) {
             participantsAdapter.submitList(it)
 
-            if (binding.sendArea.participants.participants.adapter != participantsAdapter) {
-                binding.sendArea.participants.participants.adapter = participantsAdapter
+            if (binding.sendArea.participants.participantsList.adapter != participantsAdapter) {
+                binding.sendArea.participants.participantsList.adapter = participantsAdapter
             }
         }
 
@@ -896,6 +897,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             it.consume {
                 val model = messageLongPressViewModel.messageModel.value
                 if (model != null) {
+                    viewModel.closeSearchBar()
                     sendMessageViewModel.editMessage(model)
 
                     // Open keyboard & focus edit text
@@ -912,6 +914,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             it.consume {
                 val model = messageLongPressViewModel.messageModel.value
                 if (model != null) {
+                    viewModel.closeSearchBar()
                     sendMessageViewModel.replyToMessage(model)
                     // Open keyboard & focus edit text
                     binding.sendArea.messageToSend.showKeyboard()
@@ -938,6 +941,9 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             it.consume {
                 val model = messageLongPressViewModel.messageModel.value
                 if (model != null) {
+                    viewModel.closeSearchBar()
+                    sendMessageViewModel.cancelReply()
+
                     // Remove observer before setting the message to forward
                     // as we don't want to forward it in this chat room
                     sharedViewModel.messageToForwardEvent.removeObservers(viewLifecycleOwner)
