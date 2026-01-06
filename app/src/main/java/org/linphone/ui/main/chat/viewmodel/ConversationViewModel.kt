@@ -98,6 +98,8 @@ class ConversationViewModel
 
     val canSearchDown = MutableLiveData<Boolean>()
 
+    val canSearchUp = MutableLiveData<Boolean>()
+
     val itemToScrollTo = MutableLiveData<Int>()
 
     val isUserScrollingUp = MutableLiveData<Boolean>()
@@ -351,6 +353,7 @@ class ConversationViewModel
         isDisabledBecauseNotSecured.value = false
         searchInProgress.value = false
         canSearchDown.value = false
+        canSearchUp.value = false
         itemToScrollTo.value = -1
     }
 
@@ -382,6 +385,7 @@ class ConversationViewModel
 
     @UiThread
     fun openSearchBar() {
+        canSearchUp.value = true
         searchBarVisible.value = true
         focusSearchBarEvent.value = Event(true)
     }
@@ -393,6 +397,7 @@ class ConversationViewModel
         focusSearchBarEvent.value = Event(false)
         latestMatch = null
         canSearchDown.value = false
+        canSearchUp.value = false
 
         coreContext.postOnCoreThread {
             for (eventLog in eventsList) {
@@ -405,15 +410,19 @@ class ConversationViewModel
 
     @UiThread
     fun searchUp() {
-        coreContext.postOnCoreThread {
-            searchChatMessage(SearchDirection.Up)
+        if (canSearchUp.value == true) {
+            coreContext.postOnCoreThread {
+                searchChatMessage(SearchDirection.Up)
+            }
         }
     }
 
     @UiThread
     fun searchDown() {
-        coreContext.postOnCoreThread {
-            searchChatMessage(SearchDirection.Down)
+        if (canSearchDown.value == true) {
+            coreContext.postOnCoreThread {
+                searchChatMessage(SearchDirection.Down)
+            }
         }
     }
 
@@ -1007,10 +1016,19 @@ class ConversationViewModel
                     val index = eventsList.indexOf(found)
                     itemToScrollTo.postValue(index)
                 }
+                // Disable button as latest result has been reached
+                if (direction == SearchDirection.Down) {
+                    canSearchDown.postValue(false)
+                } else {
+                    canSearchUp.postValue(false)
+                }
                 R.string.conversation_search_no_more_match
             }
             showRedToast(message, R.drawable.magnifying_glass)
         } else {
+            canSearchDown.postValue(true)
+            canSearchUp.postValue(true)
+
             Log.i(
                 "$TAG Found result [${match.chatMessage?.messageId}] while looking up for message with text [$textToSearch] in direction [$direction] starting from message [${latestMatch?.chatMessage?.messageId}]"
             )
@@ -1029,8 +1047,6 @@ class ConversationViewModel
                 itemToScrollTo.postValue(index)
                 searchInProgress.postValue(false)
             }
-
-            canSearchDown.postValue(true)
         }
     }
 
