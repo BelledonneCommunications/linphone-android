@@ -55,10 +55,10 @@
             android:textSize="14sp"
             android:textColor="?attr/color_main2_500"
             android:visibility="@{viewModel.participants.empty ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintTop_toTopOf="@id/participants"
-            app:layout_constraintBottom_toBottomOf="@id/participants"
-            app:layout_constraintStart_toStartOf="@id/participants"
-            app:layout_constraintEnd_toEndOf="@id/participants"/>
+            app:layout_constraintTop_toTopOf="@id/participants_list"
+            app:layout_constraintBottom_toBottomOf="@id/participants_list"
+            app:layout_constraintStart_toStartOf="@id/participants_list"
+            app:layout_constraintEnd_toEndOf="@id/participants_list"/>
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/fetch_in_progress"
@@ -69,8 +69,8 @@
             app:indicatorColor="?attr/color_main1_500"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/participants"
-            app:layout_constraintBottom_toBottomOf="@id/participants" />
+            app:layout_constraintTop_toTopOf="@id/participants_list"
+            app:layout_constraintBottom_toBottomOf="@id/participants_list" />
 
         <ImageView
             android:id="@+id/participants_close"
