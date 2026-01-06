@@ -567,6 +567,7 @@
     <string name="conversation_message_content_deleted_label"><i>Le message a été supprimé</i></string>
     <string name="conversation_message_content_deleted_by_us_label"><i>Vous avez supprimé le message</i></string>
     <string name="conversation_participants_list_header">Participants</string>
+    <string name="conversation_participants_list_empty">Aucun participant trouvé</string>
 
     <string name="conversation_info_participants_list_title">Participants (%s)</string>
     <string name="conversation_info_add_participants_label">Ajouter des participants</string>
