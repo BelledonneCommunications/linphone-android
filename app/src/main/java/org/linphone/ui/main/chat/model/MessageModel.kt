@@ -676,21 +676,6 @@ class MessageModel
             return
         }
 
-        // Check for search
-        if (highlight.isNotEmpty()) {
-            val indexStart = rawTextContent.indexOf(highlight, 0, ignoreCase = true)
-            if (indexStart >= 0) {
-                isTextHighlighted = true
-                val indexEnd = indexStart + highlight.length
-                spannableBuilder.setSpan(
-                    StyleSpan(Typeface.BOLD),
-                    indexStart,
-                    indexEnd,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                )
-            }
-        }
-
         // Check for mentions
         val chatRoom = chatMessage.chatRoom
         val matcher = Pattern.compile(MENTION_REGEXP).matcher(rawTextContent)
@@ -787,6 +772,21 @@ class MessageModel
                 )
                 .build(spannableBuilder)
         )
+
+        // Check for search
+        if (highlight.isNotEmpty()) {
+            val indexStart = rawTextContent.indexOf(highlight, 0, ignoreCase = true)
+            if (indexStart >= 0) {
+                isTextHighlighted = true
+                val indexEnd = indexStart + highlight.length
+                spannableBuilder.setSpan(
+                    StyleSpan(Typeface.BOLD),
+                    indexStart,
+                    indexEnd,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
+        }
     }
 
     @WorkerThread
