@@ -647,6 +647,7 @@ class MessageModel
         if (textContent != null) {
             computeTextContent(textContent, highlight)
         }
+        isSelected.postValue(highlight.isNotEmpty())
     }
 
     @WorkerThread

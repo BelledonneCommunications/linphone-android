@@ -790,6 +790,9 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         viewModel.focusSearchBarEvent.observe(viewLifecycleOwner) {
             it.consume { show ->
                 if (show) {
+                    val bottomSheetBehavior = BottomSheetBehavior.from(binding.messageBottomSheet.root)
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+
                     // To automatically open keyboard
                     binding.search.showKeyboard()
                 } else {
@@ -1346,6 +1349,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         showDelivery: Boolean = false,
         showReactions: Boolean = false
     ) {
+        viewModel.closeSearchBar()
         binding.sendArea.messageToSend.hideKeyboard()
         backPressedCallback.isEnabled = true
 
