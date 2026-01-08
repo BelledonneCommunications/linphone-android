@@ -24,6 +24,7 @@ import android.os.CountDownTimer
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
@@ -740,6 +741,13 @@ class MessageModel
                 )
                 spannableBuilder.setSpan(
                     span,
+                    start + offset,
+                    start + offset + displayName.length + 1,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                // Change color
+                spannableBuilder.setSpan(
+                    ForegroundColorSpan(AppUtils.getColorInt(R.color.orange_main_500)),
                     start + offset,
                     start + offset + displayName.length + 1,
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE

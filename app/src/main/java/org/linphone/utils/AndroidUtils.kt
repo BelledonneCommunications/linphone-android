@@ -27,11 +27,13 @@ import android.util.DisplayMetrics
 import android.util.Rational
 import android.view.View
 import androidx.annotation.AnyThread
+import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
 import androidx.annotation.MainThread
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import androidx.annotation.UiThread
+import androidx.core.content.ContextCompat
 import androidx.core.view.SoftwareKeyboardControllerCompat
 import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -82,6 +84,11 @@ class AppUtils {
         @AnyThread
         fun getStringWithPlural(@PluralsRes id: Int, count: Int, value: String): String {
             return coreContext.context.resources.getQuantityString(id, count, value)
+        }
+
+        @AnyThread
+        fun getColorInt(@ColorRes id: Int): Int {
+            return ContextCompat.getColor(coreContext.context, id)
         }
 
         @MainThread
