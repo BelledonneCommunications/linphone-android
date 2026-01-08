@@ -197,17 +197,6 @@ class ConversationViewModel
         }
 
         @WorkerThread
-        override fun onChatMessageSending(chatRoom: ChatRoom, eventLog: EventLog) {
-            val message = eventLog.chatMessage
-            Log.i("$TAG Message [$message] is being sent, marking conversation as read")
-
-            // Prevents auto scroll to go to latest received message
-            chatRoom.markAsRead()
-
-            addEvents(arrayOf(eventLog))
-        }
-
-        @WorkerThread
         override fun onChatMessagesReceived(chatRoom: ChatRoom, eventLogs: Array<EventLog>) {
             Log.i("$TAG Received [${eventLogs.size}] new message(s)")
             computeComposingLabel()
@@ -622,6 +611,19 @@ class ConversationViewModel
         }
     }
 
+    @UiThread
+    fun addSentMessageToEventsList(message: ChatMessage) {
+        coreContext.postOnCoreThread {
+            val eventLog = message.eventLog
+            if (eventLog != null) {
+                Log.i("$TAG Adding sent message with ID [${message.messageId}] to events list")
+                addEvents(arrayOf(eventLog))
+            } else {
+                Log.e("$TAG Failed to get event log for sent message with ID [${message.messageId}]")
+            }
+        }
+    }
+
     @WorkerThread
     private fun configureChatRoom() {
         if (!isChatRoomInitialized()) return
@@ -718,7 +720,7 @@ class ConversationViewModel
 
     @WorkerThread
     private fun addEvents(eventLogs: Array<EventLog>) {
-        Log.i("$TAG Adding [${eventLogs.size}] events")
+        Log.i("$TAG Adding [${eventLogs.size}] event(s)")
         // Need to use a new list, otherwise ConversationFragment's dataObserver isn't triggered...
         val list = arrayListOf<EventLogModel>()
         list.addAll(eventsList)

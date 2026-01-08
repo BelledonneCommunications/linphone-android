@@ -740,6 +740,12 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             false
         }
 
+        sendMessageViewModel.messageSentEvent.observe(viewLifecycleOwner) {
+            it.consume { message ->
+                viewModel.addSentMessageToEventsList(message)
+            }
+        }
+
         sendMessageViewModel.emojiToAddEvent.observe(viewLifecycleOwner) {
             it.consume { emoji ->
                 binding.sendArea.messageToSend.addCharacterAtPosition(emoji)

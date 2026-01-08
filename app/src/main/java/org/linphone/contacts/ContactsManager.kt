@@ -63,6 +63,7 @@ import org.linphone.utils.ImageUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.PhoneNumberUtils
 import org.linphone.utils.ShortcutUtils
+import java.io.FileNotFoundException
 
 class ContactsManager
     @UiThread
@@ -741,6 +742,8 @@ fun Friend.getNativeContactPictureUri(): Uri? {
                     fd.close()
                     return pictureUri
                 }
+            } catch (fnfe: FileNotFoundException) {
+                Log.w("[Contacts Manager] Can't open [$pictureUri] for contact [$name]: $fnfe")
             } catch (e: Exception) {
                 Log.e("[Contacts Manager] Can't open [$pictureUri] for contact [$name]: $e")
             }

@@ -135,6 +135,10 @@ class SendMessageInConversationViewModel
         MutableLiveData<Event<Boolean>>()
     }
 
+    val messageSentEvent: MutableLiveData<Event<ChatMessage>> by lazy {
+        MutableLiveData<Event<ChatMessage>>()
+    }
+
     lateinit var chatRoom: ChatRoom
 
     private var chatMessageToReplyTo: ChatMessage? = null
@@ -325,6 +329,7 @@ class SendMessageInConversationViewModel
                         val voiceMessage = chatRoom.createEmptyMessage()
                         voiceMessage.addContent(content)
                         voiceMessage.send()
+                        messageSentEvent.postValue(Event(voiceMessage))
                     } else {
                         message.addContent(content)
                     }
@@ -356,6 +361,7 @@ class SendMessageInConversationViewModel
                         val fileMessage = chatRoom.createEmptyMessage()
                         fileMessage.addFileContent(content)
                         fileMessage.send()
+                        messageSentEvent.postValue(Event(fileMessage))
                     } else {
                         message.addFileContent(content)
                         contentAdded = true
@@ -366,6 +372,7 @@ class SendMessageInConversationViewModel
             if (message.contents.isNotEmpty()) {
                 Log.i("$TAG Sending message")
                 message.send()
+                messageSentEvent.postValue(Event(message))
             }
 
             Log.i("$TAG Message sent, re-setting defaults")
