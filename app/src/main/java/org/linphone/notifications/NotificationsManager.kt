@@ -570,25 +570,20 @@ class NotificationsManager
         Log.i("$TAG Service has been started")
         inCallService = service
 
+        if (waitForInCallServiceForegroundToStopIt) {
+            Log.w("$TAG Service wasn't started as foreground yet, doing it now using a dummy notification")
+            showDummyNotificationForCallService()
+        }
+        if (inCallServiceForegroundNotificationPublished) {
+            stopInCallForegroundService()
+        }
+
         coreContext.postOnCoreThread { core ->
-            if (core.callsNb == 0) {
-                Log.w("$TAG No call anymore, stopping service")
-                if (waitForInCallServiceForegroundToStopIt) {
-                    Log.w("$TAG Service wasn't started as foreground yet, doing it now using a dummy notification")
-                    showDummyNotificationForCallService()
-                }
-                if (inCallServiceForegroundNotificationPublished) {
-                    stopInCallForegroundService()
-                } else {
-                    Log.w("$TAG Foreground service notification wasn't published, shouldn't happen")
-                }
-            } else if (currentInCallServiceNotificationId == -1) {
+            if (core.callsNb >= 1 && currentInCallServiceNotificationId == -1) {
                 val call = core.currentCall ?: core.calls.first()
                 Log.i(
                     "$TAG At least one call is running and no foreground Service notification was found, starting it using call [${call.remoteAddress.asStringUriOnly()}]"
                 )
-
-                Log.i("$TAG No notification found for this call, creating one now")
                 showCallNotification(call, LinphoneUtils.isCallIncoming(call.state))
             }
         }
