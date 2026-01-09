@@ -51,11 +51,11 @@ class MessageDeliveryModel
 
     val displayedModels = arrayListOf<MessageBottomSheetParticipantModel>()
 
-    private val deliveredModels = arrayListOf<MessageBottomSheetParticipantModel>()
+    val deliveredModels = arrayListOf<MessageBottomSheetParticipantModel>()
 
-    private val sentModels = arrayListOf<MessageBottomSheetParticipantModel>()
+    val sentModels = arrayListOf<MessageBottomSheetParticipantModel>()
 
-    private val errorModels = arrayListOf<MessageBottomSheetParticipantModel>()
+    val errorModels = arrayListOf<MessageBottomSheetParticipantModel>()
 
     private val chatMessageListener = object : ChatMessageListenerStub() {
         @WorkerThread
@@ -63,7 +63,7 @@ class MessageDeliveryModel
             message: ChatMessage,
             state: ParticipantImdnState
         ) {
-            Log.i("$TAG Participant IMDN state changed [${state.state}], updating delivery status")
+            Log.i("$TAG Participant IMDN state changed [${state.state}] for message with ID [${message.messageId}], updating delivery status")
             computeDeliveryStatus()
         }
     }
@@ -79,7 +79,7 @@ class MessageDeliveryModel
     }
 
     @UiThread
-    fun computeListForState(state: State): ArrayList<MessageBottomSheetParticipantModel> {
+    fun getListForState(state: State): ArrayList<MessageBottomSheetParticipantModel> {
         return when (state) {
             State.DeliveredToUser -> {
                 deliveredModels
@@ -98,6 +98,8 @@ class MessageDeliveryModel
 
     @WorkerThread
     private fun computeDeliveryStatus() {
+        Log.i("$TAG Message ID [${chatMessage.messageId}] is in state [${chatMessage.state}]")
+
         displayedModels.clear()
         deliveredModels.clear()
         sentModels.clear()
@@ -175,12 +177,15 @@ class MessageDeliveryModel
             )
         )
 
+        if (displayedModels.isEmpty() && deliveredModels.isEmpty() && sentModels.isEmpty() && errorModels.isEmpty()) {
+            Log.e("$TAG No participant found in state Displayed, DeliveredToUser, Delivered or Error for message ID [${chatMessage.messageId}]")
+        }
+
         displayedModels.sortBy { it.timestamp }
         deliveredModels.sortBy { it.timestamp }
         sentModels.sortBy { it.timestamp }
         errorModels.sortBy { it.timestamp }
 
-        Log.i("$TAG Message ID [${chatMessage.messageId}] is in state [${chatMessage.state}]")
         Log.i(
             "$TAG There are [$readCount] that have read this message, [$receivedCount] that have received it, [$sentCount] that haven't received it yet and [$errorCount] that probably won't receive it due to an error"
         )
