@@ -500,7 +500,7 @@ private fun getErrorImageLoader(
             R.drawable.inset_user_circle
         }
     } else {
-        ImageUtils.generatedAvatarIfNeededAndReturnPath(context, size, textSize, initials)
+        ImageUtils.generatedAvatarIfNeededAndReturnPath(context, initials)
     }
 }
 
