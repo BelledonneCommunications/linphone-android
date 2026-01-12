@@ -96,8 +96,6 @@ class ContactsManager
     private val magicSearchListener = object : MagicSearchListenerStub() {
         @WorkerThread
         override fun onSearchResultsReceived(magicSearch: MagicSearch) {
-            reloadRemoteContactsJob?.cancel()
-
             var queriedSipUri = ""
             for ((key, value) in magicSearchMap.entries) {
                 if (value == magicSearch) {
@@ -121,6 +119,7 @@ class ContactsManager
                         Log.w("$TAG Received friend [${friend.name}] with SIP URI [$address] doesn't match queried SIP URI [$queriedSipUri]")
                     } else {
                         found = true
+                        reloadRemoteContactsJob?.cancel()
 
                         // Store friend in app's cache to be re-used in call history, conversations, etc...
                         val temporaryFriendList = getRemoteContactDirectoriesCacheFriendList()
