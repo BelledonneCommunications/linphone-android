@@ -77,12 +77,13 @@
                         onClickListener="@{() -> viewModel.toggleFavouritesVisibility()}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginTop="10dp"
+                        android:padding="10dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginTop="5dp"
                         android:layout_marginBottom="4dp"
                         android:text="@string/contacts_list_favourites_title"
+                        android:background="@drawable/squircle_transparent_button_background"
                         android:drawableEnd="@{viewModel.showFavourites ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
                         android:drawableTint="?attr/color_main2_600" />
 

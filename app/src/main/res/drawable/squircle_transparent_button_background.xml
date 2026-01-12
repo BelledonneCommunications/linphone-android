@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true"
+        android:drawable="@drawable/shape_squircle_light_blue_background" />
+    <item android:state_hovered="true"
+        android:drawable="@drawable/shape_squircle_light_blue_background" />
+    <item
+        android:drawable="@drawable/shape_squircle_transparent_background" />
+</selector>

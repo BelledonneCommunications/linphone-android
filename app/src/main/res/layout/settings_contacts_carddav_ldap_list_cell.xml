@@ -24,6 +24,7 @@
         android:ellipsize="end"
         android:drawableEnd="@drawable/pencil_simple"
         android:drawableTint="?attr/color_main2_600"
+        android:background="@drawable/squircle_transparent_button_background"
         app:layout_constraintStart_toEndOf="@id/avatar"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>

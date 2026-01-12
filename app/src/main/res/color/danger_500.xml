@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_hovered="true" android:color="?attr/color_danger_700"/>
+    <item android:state_pressed="true" android:color="?attr/color_danger_700"/>
     <item android:color="?attr/color_danger_500"/>
 </selector>

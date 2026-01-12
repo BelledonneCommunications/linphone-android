@@ -134,6 +134,7 @@
             android:ellipsize="end"
             android:drawableEnd="@drawable/caret_right"
             android:drawableTint="?attr/color_main2_600"
+            android:background="@drawable/squircle_transparent_button_background"
             android:visibility="@{viewModel.ldapAvailable ? View.VISIBLE : View.GONE}"
             app:layout_constraintTop_toBottomOf="@id/hide_empty_contacts_switch"
             app:layout_constraintBottom_toTopOf="@id/existing_ldap_servers"
@@ -170,6 +171,7 @@
             android:ellipsize="end"
             android:drawableEnd="@drawable/caret_right"
             android:drawableTint="?attr/color_main2_600"
+            android:background="@drawable/squircle_transparent_button_background"
             app:layout_constraintTop_toBottomOf="@id/existing_ldap_servers"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>

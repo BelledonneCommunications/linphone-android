@@ -34,7 +34,7 @@
             android:layout_height="@dimen/icon_size"
             android:src="@drawable/x"
             android:padding="5dp"
-            android:background="@drawable/shape_circle_gray_100_background"
+            android:background="@drawable/shape_circle_background"
             android:contentDescription="@string/content_description_click_to_remove_participant"
             app:tint="?attr/color_main2_500"
             app:layout_constraintTop_toTopOf="@id/avatar"

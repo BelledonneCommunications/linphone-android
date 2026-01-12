@@ -73,14 +73,15 @@
                     style="@style/icon_top_bar_button_style"
                     android:id="@+id/back"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/top_bar_height"
+                    android:layout_height="0dp"
                     android:onClick="@{backClickListener}"
                     android:visibility="@{viewModel.isCallConversation || viewModel.showBackButton &amp;&amp; !viewModel.searchBarVisible ? View.VISIBLE : View.GONE}"
                     android:src="@drawable/caret_left"
                     android:contentDescription="@string/content_description_go_back_icon"
                     app:tint="?attr/color_main1_500"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/events_list"/>
 
                 <include
                     android:id="@+id/avatar"
@@ -203,12 +204,13 @@
                     android:id="@+id/show_menu"
                     android:onClick="@{showMenuClickListener}"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/top_bar_height"
+                    android:layout_height="0dp"
                     android:src="@drawable/dots_three_vertical"
                     android:contentDescription="@string/content_description_show_popup_menu"
                     android:visibility="@{viewModel.isCallConversation ? View.GONE : View.VISIBLE}"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/events_list"
                     app:tint="?attr/color_main2_500"/>
 
                 <ImageView
@@ -216,12 +218,13 @@
                     android:id="@+id/start_call"
                     android:onClick="@{() -> viewModel.startCall()}"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/top_bar_height"
+                    android:layout_height="0dp"
                     android:src="@drawable/phone"
                     android:contentDescription="@string/content_description_call_start"
                     android:visibility="@{viewModel.isCallConversation || viewModel.isReadOnly || viewModel.searchBarVisible ? View.GONE : View.VISIBLE}"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/show_menu"
+                    app:layout_constraintBottom_toTopOf="@id/events_list"
                     app:tint="?attr/color_main2_500" />
 
                 <ImageView
@@ -299,18 +302,17 @@
                     android:id="@+id/background"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_marginTop="@dimen/top_bar_height"
                     android:background="?attr/color_main2_000"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="@id/events_list" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/events_list"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_marginTop="55dp"
+                    android:layout_marginTop="@dimen/top_bar_height"
                     android:paddingBottom="5dp"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/composing"/>

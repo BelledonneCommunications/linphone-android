@@ -86,7 +86,7 @@
         <View
             android:id="@+id/top_bar_background"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="@dimen/top_bar_height"
             android:background="@color/bc_white"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/top_bar_barrier"
@@ -98,12 +98,13 @@
             android:id="@+id/back"
             android:onClick="@{backClickListener}"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/top_bar_height"
+            android:layout_height="0dp"
             android:src="@drawable/caret_left"
             android:contentDescription="@string/content_description_go_back_icon"
             app:tint="?attr/color_main1_500"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/top_bar_barrier" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_700"
@@ -145,26 +146,28 @@
             android:id="@+id/share"
             android:onClick="@{shareClickListener}"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/top_bar_height"
+            android:layout_height="0dp"
             android:src="@drawable/share_network"
             android:contentDescription="@string/content_description_share_file"
             android:visibility="@{viewModel.fullScreenMode || viewModel.isFromEphemeralMessage ? View.GONE : View.VISIBLE}"
-            app:tint="@color/gray_main2_500"
+            app:tint="@color/file_viewer_main2_500"
             app:layout_constraintEnd_toStartOf="@id/save"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/top_bar_barrier" />
 
         <ImageView
             style="@style/icon_top_bar_button_style"
             android:id="@+id/save"
             android:onClick="@{() -> viewModel.exportToMediaStore()}"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/top_bar_height"
+            android:layout_height="0dp"
             android:src="@drawable/download_simple"
             android:contentDescription="@string/content_description_save_file"
             android:visibility="@{viewModel.fullScreenMode || viewModel.isFromEphemeralMessage ? View.GONE : View.VISIBLE}"
-            app:tint="@color/gray_main2_500"
+            app:tint="@color/file_viewer_main2_500"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/top_bar_barrier" />
 
         <LinearLayout
             android:id="@+id/toasts_area"

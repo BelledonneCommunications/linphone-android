@@ -35,6 +35,7 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
+                    style="@style/icon_top_bar_button_style"
                     android:onClick="@{backClickListener}"
                     android:id="@+id/back"
                     android:layout_width="@dimen/top_bar_height"

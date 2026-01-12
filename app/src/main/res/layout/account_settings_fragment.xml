@@ -268,14 +268,15 @@
                         android:onClick="@{() -> viewModel.toggleNatPolicySettingsExpand()}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:layout_marginStart="26dp"
-                        android:layout_marginEnd="26dp"
+                        android:padding="10dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
                         android:layout_marginTop="20dp"
                         android:layout_marginBottom="10dp"
                         android:text="@string/account_settings_nat_policy_title"
                         android:drawableEnd="@{viewModel.expandNatPolicySettings ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
-                        android:drawableTint="?attr/color_main2_600"/>
+                        android:drawableTint="?attr/color_main2_600"
+                        android:background="@drawable/squircle_transparent_button_background" />
 
                     <include
                         android:id="@+id/nat_policy_settings"
@@ -294,14 +295,15 @@
                         android:onClick="@{() -> viewModel.toggleAdvancedSettingsExpand()}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:layout_marginStart="26dp"
-                        android:layout_marginEnd="26dp"
+                        android:padding="10dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
                         android:layout_marginTop="16dp"
                         android:layout_marginBottom="10dp"
                         android:text="@string/settings_advanced_title"
                         android:drawableEnd="@{viewModel.expandAdvancedSettings ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
-                        android:drawableTint="?attr/color_main2_600"/>
+                        android:drawableTint="?attr/color_main2_600"
+                        android:background="@drawable/squircle_transparent_button_background" />
 
                     <include
                         android:id="@+id/account_advanced_settings"

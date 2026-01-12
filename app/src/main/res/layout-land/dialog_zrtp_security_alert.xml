@@ -122,7 +122,7 @@
                 android:paddingBottom="@dimen/primary_secondary_buttons_label_padding"
                 android:paddingTop="@dimen/primary_secondary_buttons_label_padding"
                 android:gravity="center"
-                android:background="@drawable/shape_red_button_background"
+                android:background="@drawable/squircle_red_button_background"
                 android:text="@string/call_action_hang_up"
                 android:textSize="13sp"
                 android:textColor="@color/bc_white"

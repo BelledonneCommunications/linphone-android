@@ -11,6 +11,7 @@
 
     <dimen name="small_icon_size">14dp</dimen>
     <dimen name="icon_size">24dp</dimen>
+    <dimen name="large_icon_size">32dp</dimen>
     <dimen name="big_icon_size">48dp</dimen>
     <dimen name="welcome_icon_size">100dp</dimen>
     <dimen name="assistant_title_top_margin">30dp</dimen>
