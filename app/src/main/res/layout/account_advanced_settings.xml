@@ -423,6 +423,8 @@
             android:text="@string/account_settings_update_password_title"
             android:maxLines="1"
             android:ellipsize="end"
+            android:drawableEnd="@drawable/pencil_simple"
+            android:background="@drawable/squircle_transparent_button_background"
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
