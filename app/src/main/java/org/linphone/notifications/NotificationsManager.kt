@@ -318,11 +318,6 @@ class NotificationsManager
             Log.i("$TAG Received ${messages.size} aggregated messages")
             if (corePreferences.disableChat) return
 
-            if (!ShortcutUtils.isShortcutToChatRoomAlreadyCreated(context, chatRoom)) {
-                Log.i("$TAG A message was received in a chat room for which there is no dynamic shortcut, let's create it")
-                ShortcutUtils.createDynamicShortcutToChatRoom(context, chatRoom)
-            }
-
             val id = LinphoneUtils.getConversationId(chatRoom)
             if (currentlyDisplayedChatRoomId.isNotEmpty() && id == currentlyDisplayedChatRoomId) {
                 Log.i(
@@ -1057,6 +1052,12 @@ class NotificationsManager
             }
         }
 
+        if (notifiable.messages.count() == messages.size) {
+            Log.i("$TAG Creating or updating chat room shortcut")
+            // Only do it the first time we create the notification
+            ShortcutUtils.createOrUpdateChatRoomShortcut(context, chatRoom)
+        }
+
         if (notifiable.messages.isNotEmpty()) {
             val me = coreContext.contactsManager.getMePerson(chatRoom.localAddress)
             val pendingIntent = getChatRoomPendingIntent(chatRoom, notifiable.notificationId)
@@ -1124,6 +1125,11 @@ class NotificationsManager
         notifiable.messages.add(notifiableMessage)
 
         if (notifiable.messages.isNotEmpty()) {
+            if (notifiable.messages.count() == 1) {
+                // Only do it the first time we create the notification
+                ShortcutUtils.createOrUpdateChatRoomShortcut(context, chatRoom)
+            }
+
             val me = coreContext.contactsManager.getMePerson(chatRoom.localAddress)
             val pendingIntent = getChatRoomPendingIntent(chatRoom, notifiable.notificationId)
             val notification = createMessageNotification(

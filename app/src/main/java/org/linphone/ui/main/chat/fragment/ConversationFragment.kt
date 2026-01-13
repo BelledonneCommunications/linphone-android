@@ -96,6 +96,7 @@ import org.linphone.utils.showKeyboard
 import androidx.core.net.toUri
 import org.linphone.ui.main.chat.adapter.ConversationParticipantsAdapter
 import org.linphone.ui.main.chat.model.MessageDeleteDialogModel
+import org.linphone.utils.ShortcutUtils
 import kotlin.collections.arrayListOf
 
 @UiThread
@@ -529,6 +530,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                     }
                 } else {
                     sharedViewModel.displayedChatRoom = viewModel.chatRoom
+                    ShortcutUtils.reportChatRoomShortcutHasBeenUsed(requireContext(), viewModel.conversationId)
 
                     sendMessageViewModel.configureChatRoom(viewModel.chatRoom)
                     adapter.setIsConversationSecured(viewModel.isEndToEndEncrypted.value == true)

@@ -23,6 +23,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ShortcutInfo
 import android.os.Bundle
+import androidx.annotation.AnyThread
 import androidx.annotation.WorkerThread
 import androidx.collection.ArraySet
 import androidx.core.app.Person
@@ -101,7 +102,6 @@ class ShortcutUtils {
         private fun createChatRoomShortcut(context: Context, chatRoom: ChatRoom): ShortcutInfoCompat? {
             val peerAddress = chatRoom.peerAddress
             val id = LinphoneUtils.getConversationId(chatRoom)
-            Log.i("$TAG Creating dynamic shortcut for chat room [$id]")
 
             try {
                 val categories: ArraySet<String> = ArraySet()
@@ -191,6 +191,48 @@ class ShortcutUtils {
             }
             Log.d("$TAG Dynamic shortcut for chat room with ID [$id] ${if (found != null) "exists" else "doesn't exists"}")
             return found != null
+        }
+
+        @WorkerThread
+        fun createOrUpdateChatRoomShortcut(context: Context, chatRoom: ChatRoom) {
+            val id = LinphoneUtils.getConversationId(chatRoom)
+            val found = ShortcutManagerCompat.getDynamicShortcuts(context).find {
+                it.id == id
+            }
+            val shortcut: ShortcutInfoCompat? = createChatRoomShortcut(context, chatRoom)
+            if (shortcut == null) {
+                Log.e("$TAG Failed to create shortcut info for chat room [$id]")
+                return
+            }
+
+            if (found == null) {
+                Log.i("$TAG Created dynamic shortcut for ${shortcut.shortLabel}, pushing it")
+                try {
+                    ShortcutManagerCompat.pushDynamicShortcut(context, shortcut)
+                } catch (e: Exception) {
+                    Log.e("$TAG Failed to push dynamic shortcut for ${shortcut.shortLabel}: $e")
+                }
+            } else {
+                Log.i("$TAG Updating dynamic shortcut for ${shortcut.shortLabel}")
+                try {
+                    ShortcutManagerCompat.updateShortcuts(context, listOf(shortcut))
+                } catch (e: Exception) {
+                    Log.e("$TAG Failed to update dynamic shortcut for ${shortcut.shortLabel}: $e")
+                }
+            }
+        }
+
+        @AnyThread
+        fun reportChatRoomShortcutHasBeenUsed(context: Context, chatRoomId: String) {
+            val found = ShortcutManagerCompat.getDynamicShortcuts(context).find {
+                it.id == chatRoomId
+            }
+            if (found != null) {
+                Log.i("$TAG Reporting shortcut for chat room [$chatRoomId] was used")
+                ShortcutManagerCompat.reportShortcutUsed(context, chatRoomId)
+            } else {
+                Log.w("$TAG No shortcut was found for chat room [$chatRoomId]")
+            }
         }
     }
 }
