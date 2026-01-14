@@ -21,10 +21,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
             android:text="@{viewModel.terminatedByUser ? @string/call_locally_ended : @string/call_remotely_ended, default=@string/call_locally_ended}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/call_media_encryption_info" />
 
         <include
             android:id="@+id/call_media_encryption_info"
