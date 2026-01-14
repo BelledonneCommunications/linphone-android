@@ -19,9 +19,6 @@
  */
 package org.linphone.ui.main.chat.fragment
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -46,6 +43,7 @@ import org.linphone.ui.main.chat.viewmodel.ConversationInfoViewModel
 import org.linphone.ui.main.fragment.SlidingPaneChildFragment
 import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.ui.main.model.GroupSetOrEditSubjectDialogModel
+import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 
@@ -428,14 +426,13 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
 
         popupView.setCopySipUriClickListener {
             val sipUri = participantModel.sipUri
-            val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            clipboard.setPrimaryClip(ClipData.newPlainText("SIP address", sipUri))
-
-            val message = getString(R.string.sip_address_copied_to_clipboard_toast)
-            (requireActivity() as GenericActivity).showGreenToast(
-                message,
-                R.drawable.check
-            )
+            if (AppUtils.copyToClipboard(requireContext(), "SIP address", sipUri)) {
+                val message = getString(R.string.sip_address_copied_to_clipboard_toast)
+                (requireActivity() as GenericActivity).showGreenToast(
+                    message,
+                    R.drawable.check
+                )
+            }
         }
 
         // Elevation is for showing a shadow around the popup
@@ -490,12 +487,9 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
     }
 
     private fun copyAddressToClipboard(value: String) {
-        val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        clipboard.setPrimaryClip(ClipData.newPlainText("SIP address", value))
-        val message = getString(R.string.sip_address_copied_to_clipboard_toast)
-        (requireActivity() as GenericActivity).showGreenToast(
-            message,
-            R.drawable.check
-        )
+        if (AppUtils.copyToClipboard(requireContext(), "SIP address", value)) {
+            val message = getString(R.string.sip_address_copied_to_clipboard_toast)
+            (requireActivity() as GenericActivity).showGreenToast(message, R.drawable.check)
+        }
     }
 }

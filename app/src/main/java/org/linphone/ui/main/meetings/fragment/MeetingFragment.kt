@@ -20,9 +20,6 @@
 package org.linphone.ui.main.meetings.fragment
 
 import android.content.ActivityNotFoundException
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.CalendarContract
@@ -47,6 +44,7 @@ import org.linphone.ui.main.fragment.SlidingPaneChildFragment
 import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.ui.main.meetings.adapter.MeetingParticipantsAdapter
 import org.linphone.ui.main.meetings.viewmodel.MeetingViewModel
+import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 
@@ -136,7 +134,7 @@ class MeetingFragment : SlidingPaneChildFragment() {
             }
         }
 
-        binding.setShareClickListener {
+        binding.setCopyUriToClipboardClickListener {
             copyMeetingAddressIntoClipboard(uri)
         }
 
@@ -249,15 +247,12 @@ class MeetingFragment : SlidingPaneChildFragment() {
 
     private fun copyMeetingAddressIntoClipboard(meetingSipUri: String) {
         Log.i("$TAG Copying conference SIP URI [$meetingSipUri] into clipboard")
-
-        val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val label = "Meeting SIP address"
-        clipboard.setPrimaryClip(ClipData.newPlainText(label, meetingSipUri))
-
-        (requireActivity() as GenericActivity).showGreenToast(
-            getString(R.string.meeting_address_copied_to_clipboard_toast),
-            R.drawable.check
-        )
+        if (AppUtils.copyToClipboard(requireContext(), "Meeting SIP address", meetingSipUri)) {
+            (requireActivity() as GenericActivity).showGreenToast(
+                getString(R.string.meeting_address_copied_to_clipboard_toast),
+                R.drawable.check
+            )
+        }
     }
 
     private fun shareMeetingInfoAsCalendarEvent() {

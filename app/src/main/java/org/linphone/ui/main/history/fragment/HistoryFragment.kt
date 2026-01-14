@@ -19,9 +19,6 @@
  */
 package org.linphone.ui.main.history.fragment
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -44,6 +41,7 @@ import org.linphone.ui.main.fragment.SlidingPaneChildFragment
 import org.linphone.ui.main.history.adapter.ContactHistoryListAdapter
 import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.ui.main.history.viewmodel.HistoryViewModel
+import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 
@@ -190,14 +188,12 @@ class HistoryFragment : SlidingPaneChildFragment() {
     }
 
     private fun copyNumberOrAddressToClipboard(value: String) {
-        val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val label = "SIP address"
-        clipboard.setPrimaryClip(ClipData.newPlainText(label, value))
-
-        (requireActivity() as GenericActivity).showGreenToast(
-            getString(R.string.sip_address_copied_to_clipboard_toast),
-            R.drawable.check
-        )
+        if (AppUtils.copyToClipboard(requireContext(), "SIP address", value)) {
+            (requireActivity() as GenericActivity).showGreenToast(
+                getString(R.string.sip_address_copied_to_clipboard_toast),
+                R.drawable.check
+            )
+        }
     }
 
     private fun showPopupMenu() {

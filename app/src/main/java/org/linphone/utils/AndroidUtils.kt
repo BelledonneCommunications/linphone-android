@@ -20,6 +20,8 @@
 package org.linphone.utils
 
 import android.app.Activity
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.os.Build
 import android.provider.Settings
@@ -203,6 +205,18 @@ class AppUtils {
             // Some VoIP providers such as voip.ms seem to not like apostrophe in user-agent
             name = name.replace("'", "")
             return name
+        }
+
+        @AnyThread
+        fun copyToClipboard(context: Context, label: String, value: String): Boolean {
+            try {
+                val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                clipboard.setPrimaryClip(ClipData.newPlainText(label, value))
+                return true
+            } catch (e: Exception) {
+                Log.e("$TAG Failed to copy text [$value] with label [$label] to clipboard: $e")
+            }
+            return false
         }
 
         @AnyThread

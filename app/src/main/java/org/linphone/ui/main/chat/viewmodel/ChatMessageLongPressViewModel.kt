@@ -19,9 +19,6 @@
  */
 package org.linphone.ui.main.chat.viewmodel
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.view.View
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
@@ -31,6 +28,7 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatBubbleEmojiPickerBottomSheetBinding
 import org.linphone.ui.GenericViewModel
 import org.linphone.ui.main.chat.model.MessageModel
+import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
 class ChatMessageLongPressViewModel : GenericViewModel() {
@@ -148,12 +146,12 @@ class ChatMessageLongPressViewModel : GenericViewModel() {
 
     @UiThread
     fun copyClickListener() {
-        Log.i("$TAG Copying message text into clipboard")
-
-        val text = messageModel.value?.getRawTextContent()
-        val clipboard = coreContext.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val label = "Message"
-        clipboard.setPrimaryClip(ClipData.newPlainText(label, text))
+        val text = messageModel.value?.getRawTextContent().orEmpty()
+        if (text.isNotEmpty()) {
+            Log.i("$TAG Copying message text into clipboard")
+            val label = "Message"
+            AppUtils.copyToClipboard(coreContext.context, label, text)
+        }
 
         dismiss()
     }

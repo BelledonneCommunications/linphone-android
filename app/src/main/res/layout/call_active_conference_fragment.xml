@@ -10,7 +10,7 @@
             name="backClickListener"
             type="View.OnClickListener" />
         <variable
-            name="shareConferenceClickListener"
+            name="copyConferenceUriToClipboardClickListener"
             type="View.OnClickListener" />
         <variable
             name="callsListClickListener"
@@ -219,7 +219,7 @@
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style_600"
                 android:id="@+id/share_conference_link"
-                android:onClick="@{shareConferenceClickListener}"
+                android:onClick="@{copyConferenceUriToClipboardClickListener}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"

@@ -20,9 +20,6 @@
 package org.linphone.ui.main.help.fragment
 
 import android.content.ActivityNotFoundException
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -39,6 +36,7 @@ import org.linphone.ui.fileviewer.FileViewerActivity
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.help.viewmodel.HelpViewModel
+import org.linphone.utils.AppUtils
 
 class DebugFragment : GenericMainFragment() {
     private lateinit var binding: HelpDebugFragmentBinding
@@ -69,19 +67,15 @@ class DebugFragment : GenericMainFragment() {
         }
 
         binding.setAppVersionClickListener {
-            val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val label = getString(R.string.help_troubleshooting_app_version_title)
-            clipboard.setPrimaryClip(
-                ClipData.newPlainText(label, viewModel.appVersion.value.orEmpty())
-            )
+            val value = viewModel.appVersion.value.orEmpty()
+            AppUtils.copyToClipboard(requireContext(), label, value)
         }
 
         binding.setSdkVersionClickListener {
-            val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val label = getString(R.string.help_troubleshooting_sdk_version_title)
-            clipboard.setPrimaryClip(
-                ClipData.newPlainText(label, viewModel.sdkVersion.value.orEmpty())
-            )
+            val value = viewModel.sdkVersion.value.orEmpty()
+            AppUtils.copyToClipboard(requireContext(), label, value)
         }
 
         viewModel.debugLogsCleanedEvent.observe(viewLifecycleOwner) {
@@ -96,9 +90,7 @@ class DebugFragment : GenericMainFragment() {
         viewModel.uploadDebugLogsFinishedEvent.observe(viewLifecycleOwner) {
             it.consume { url ->
                 if (requireActivity() is AssistantActivity) {
-                    val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                    val label = "Logs upload URL"
-                    clipboard.setPrimaryClip(ClipData.newPlainText(label, url))
+                    AppUtils.copyToClipboard(requireContext(), "Logs upload URL", url)
                     return@consume
                 }
 
