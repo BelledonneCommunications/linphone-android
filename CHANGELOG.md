@@ -36,6 +36,7 @@ Group changes to describe their impact on the project, as follows:
 
 ### Changed
 - No longer follow TelecomManager audio endpoint during calls, using our own routing policy
+- Join a conference using default layout instead of audio only when clicking on a meeting SIP URI
 - Removing an account will also remove all related data in the local database (auth info, call logs, conversations, meetings, etc...)
 - Hide SIP address/phone number picker dialog if contact has exactly one SIP address matching both the app default domain & the currently selected account domain
 - Hide SIP address associated to phone number through presence mecanism in contact details & editor views.
