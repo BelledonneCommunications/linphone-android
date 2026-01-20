@@ -10,6 +10,15 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [6.0.22] - 2026-01-20
+
+### Changed
+- Close search bar when opening bottom sheet and vice versa
+
+### Fixed
+- Sending a file from another app using Android shortcut not working if conversation was already opened
+- Trying to workaround an issue where ForegroundService notification isn't displayed in the allowed timeframe, causing an Exception
+
 ## [6.0.21] - 2025-12-16
 
 ### Added
