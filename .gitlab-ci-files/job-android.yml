@@ -2,7 +2,7 @@ job-android:
 
   stage: build
   tags: [ "docker-android" ]
-  image: gitlab.linphone.org:4567/bc/public/linphone-android/bc-dev-android:20230414_bullseye_jdk_17_cleaned
+  image: gitlab.linphone.org:4567/bc/public/linphone-android/bc-dev-android-36:20260120_trixie_java21_android36_gradle9
 
   before_script:
     - if ! [ -z ${SCP_PRIVATE_KEY+x} ]; then eval $(ssh-agent -s); fi

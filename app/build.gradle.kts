@@ -150,7 +150,7 @@ android {
 
             val appVersion = gitVersion
             val appBranch = gitBranch
-            println("Setting app version [$appVersion] app branch [$appBranch]")
+            println("Debug flavor app version is [$appVersion], app branch is [$appBranch]")
             resValue("string", "linphone_app_version", appVersion)
             resValue("string", "linphone_app_branch", appBranch)
             if (useDifferentPackageNameForDebugBuild) {
@@ -181,7 +181,7 @@ android {
 
             val appVersion = gitVersion
             val appBranch = gitBranch
-            println("Setting app version [$appVersion] app branch [$appBranch]")
+            println("Release flavor app version is [$appVersion], app branch is [$appBranch]")
             resValue("string", "linphone_app_version", appVersion)
             resValue("string", "linphone_app_branch", appBranch)
             resValue("string", "file_provider", "$packageName.fileprovider")
@@ -199,13 +199,14 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 
     buildFeatures {
         dataBinding = true
         buildConfig = true
+        resValues = true
     }
 
     lint {
