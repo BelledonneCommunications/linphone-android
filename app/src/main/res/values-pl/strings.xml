@@ -150,4 +150,18 @@
     <string name="settings_meetings_title">Spotkania</string>
     <string name="generic_address_picker_conversations_list_title">Rozmowy</string>
     <string name="generic_address_picker_contacts_list_title">Kontakty</string>
+    <string name="settings_contacts_carddav_password_title">Hasło</string>
+    <string name="settings_advanced_device_id">ID urządzenia</string>
+    <string name="contact_details_delete">Usuń</string>
+    <string name="contact_call_action">Zadzwoń</string>
+    <string name="meeting_waiting_room_cancel">Anuluj</string>
+    <string name="settings_contacts_carddav_name_title">Nazwa wyświetlana</string>
+    <string name="settings_contacts_carddav_username_title">Nazwa użytkownika</string>
+    <string name="settings_contacts_ldap_password_title">Hasło</string>
+    <string name="manage_account_device_remove">Usuń</string>
+    <string name="account_settings_dialog_invalid_password_hint">Hasło</string>
+    <string name="conversation_action_mark_as_read">Zaznacz jako odczytane</string>
+    <string name="conversation_action_call">Zadzwoń</string>
+    <string name="menu_delete_selected_item">Usuń</string>
+    <string name="menu_reply_to_chat_message">Odpowiedz</string>
 </resources>
