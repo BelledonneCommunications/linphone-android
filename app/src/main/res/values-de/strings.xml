@@ -71,7 +71,7 @@
     <string name="welcome_page_subtitle">in &appName;</string>
     <string name="welcome_page_1_message">Eine <b>sichere</b>, <b>Open Source</b> und <b>französische</b> Kommunikations-App.</string>
     <string name="welcome_page_2_title">Gesichert</string>
-    <string name="welcome_page_2_message">Ihre Kommunikation ist dank unserer <b>Ende-zu-Ende-Verschlüsselung</b> sicher.</string>
+    <string name="welcome_page_2_message">Dank unserer <b>Ende-zu-Ende-Verschlüsselung</b> ist Ihre Verbindung sicher.</string>
     <string name="welcome_page_3_title">Open source</string>
     <string name="welcome_page_3_message">Eine <b>kostenlose</b> Open-Source-Anwendung seit <b>2001</b>.</string>
     <string name="sip_address_copied_to_clipboard_toast">SIP-Adresse in die Zwischenablage kopiert</string>
@@ -97,8 +97,8 @@
     <string name="assistant_login_third_party_sip_account">Drittanbieter-SIP-Konto verwenden</string>
     <string name="assistant_login_third_party_sip_account_title">Drittanbieter-SIP-Konto</string>
     <string name="assistant_login_using_single_sign_on">Single Sign-on</string>
-    <string name="assistant_login_cant_parse_address_toast">SIP Adresse ist ungültig!</string>
-    <string name="assistant_login_address_without_username_toast">SIP Adresse enthält keinen Benutzernamen!</string>
+    <string name="assistant_login_cant_parse_address_toast">SIP-Adresse ist ungültig!</string>
+    <string name="assistant_login_address_without_username_toast">SIP-Adresse enthält keinen Benutzernamen!</string>
     <string name="assistant_account_login_already_connected_error">Das Konto ist bereits vorhanden</string>
     <string name="assistant_no_account_yet">Noch kein Konto?</string>
     <string name="assistant_account_register">Registrieren</string>
@@ -321,9 +321,9 @@
     <string name="contacts_list_empty">Im Moment kein Kontakt…</string>
     <string name="contacts_list_favourites_title">Favoriten</string>
     <string name="contacts_list_all_contacts_title">Alle Kontakte</string>
-    <string name="contacts_list_filter_popup_see_all">Alles sehen</string>
+    <string name="contacts_list_filter_popup_see_all">Alle Kontakte</string>
     <string name="contacts_list_filter_popup_see_linphone_only">&appName; Kontakte</string>
-    <string name="contacts_list_filter_popup_see_sip_only">SIP Kontakte</string>
+    <string name="contacts_list_filter_popup_see_sip_only">SIP-Kontakte</string>
     <string name="contact_new_title">Neuer Kontakt</string>
     <string name="contact_edit_title">Kontakt bearbeiten</string>
     <string name="contact_editor_first_name">Vorname</string>
@@ -337,7 +337,7 @@
     <string name="contact_editor_dialog_abort_confirmation_title">Änderungen nicht speichern?</string>
     <string name="contact_editor_dialog_abort_confirmation_message">Alle Änderungen werden verloren</string>
     <string name="contact_editor_mandatory_field_not_filled_toast">Mindestens ein Pflichtfeld wurde nicht ausgefüllt</string>
-    <string name="contact_details_numbers_and_addresses_title">Telefonnummern &amp; SIP Adressen</string>
+    <string name="contact_details_numbers_and_addresses_title">Telefonnummern &amp; SIP-Adressen</string>
     <string name="contact_details_company_name">Unternehmen:</string>
     <string name="contact_details_job_title">Berufsbezeichnung:</string>
     <string name="contact_details_trust_title">Vertrauen</string>
@@ -357,7 +357,7 @@
     <string name="contact_dialog_devices_trust_help_message">Überprüfen Sie alle Ihre Kontaktgeräte, um sicherzustellen, dass Ihre Kommunikation geschützt und unverändert bleibt.\nWenn alles verifiziert ist, erreichen Sie das maximale Vertrauensniveau.</string>
     <string name="contact_dialog_delete_title">%s löschen?</string>
     <string name="contact_dialog_delete_message">Dieser Kontakt wird endgültig entfernt.</string>
-    <string name="contact_dialog_pick_phone_number_or_sip_address_title">Eine Nummer oder SIP Adresse wählen</string>
+    <string name="contact_dialog_pick_phone_number_or_sip_address_title">Eine Nummer oder SIP-Adresse wählen</string>
     <string name="contact_presence_status_online">Verfügbar</string>
     <string name="contact_presence_status_was_online_on">Online um %s</string>
     <string name="contact_presence_status_was_online_today_at">Online Heute um %s</string>
@@ -645,7 +645,7 @@
     <string name="conference_participant_joining_text">Beitritt…</string>
     <string name="conference_participant_paused_text">Pausiert</string>
     <string name="conference_active_speaker_is_screen_sharing">gibt seinen Bildschirm frei</string>
-    <string name="conference_failed_to_add_participant_invalid_address_toast">Ungültige SIP Adresse, kann nicht zur Konferenz hinzugefügt werden</string>
+    <string name="conference_failed_to_add_participant_invalid_address_toast">Ungültige SIP-Adresse, kann nicht zur Konferenz hinzugefügt werden</string>
     <string name="conference_layout_grid">Mosaik</string>
     <string name="conference_layout_active_speaker">Lautsprecher</string>
     <string name="conference_layout_audio_only">Nur Audio</string>
@@ -794,9 +794,9 @@
     <string name="settings_calls_change_ringtone_pick_title">Klingelton auswählen</string>
     <string name="web_platform_register_email_url">TURN aktivieren</string>
     <string name="account_settings_enable_turn_title">TURN aktivieren</string>
-    <string name="settings_advanced_accept_early_media_title">Frühe Medienübertragung erlauben</string>
-    <string name="settings_advanced_ring_during_early_media_title">Rufsignal bei früher Medienübertragung</string>
-    <string name="settings_advanced_allow_outgoing_early_media_title">Ausgehende frühe Medianübertragung erlauben</string>
+    <string name="settings_advanced_accept_early_media_title">Early Media erlauben</string>
+    <string name="settings_advanced_ring_during_early_media_title">Rufsignal bei Early Media Ansage</string>
+    <string name="settings_advanced_allow_outgoing_early_media_title">Ausgehendes Early Media erlauben</string>
     <string name="settings_advanced_device_id_hint">Nur alpha-numerische Zeichen</string>
     <string name="settings_advanced_upload_server_url">Datei-Upload-URL</string>
     <string name="account_settings_apply_international_prefix_title">Telefonnummern mit internationaler Vorwahl formatieren</string>

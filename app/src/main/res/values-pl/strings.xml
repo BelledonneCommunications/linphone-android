@@ -15,7 +15,7 @@
     <string name="today">Dziś</string>
     <plurals name="selection_count_label">
         <item quantity="one">%s wybrany</item>
-        <item quantity="few"></item>
+        <item quantity="few"/>
         <item quantity="many">%s wybranych</item>
         <item quantity="other">%s wybranych</item>
     </plurals>
@@ -47,13 +47,13 @@
     <string name="notification_file_transfer_startup_message">Trwa przesyłanie plików</string>
     <plurals name="notification_file_transfer_upload">
         <item quantity="one">%s plik jest przesyłany</item>
-        <item quantity="few"></item>
+        <item quantity="few"/>
         <item quantity="many">%s plików jest przesyłanych</item>
         <item quantity="other">%s plików jest przesyłanych</item>
     </plurals>
     <plurals name="notification_file_transfer_download">
         <item quantity="one">%s plik jest pobierany</item>
-        <item quantity="few"></item>
+        <item quantity="few"/>
         <item quantity="many">%s plików jest pobieranych</item>
         <item quantity="other">%s plików jest pobieranych</item>
     </plurals>
@@ -109,7 +109,7 @@
     <string name="drawer_menu_account_connection_status_disconnected">Rozłączono</string>
     <plurals name="days">
         <item quantity="one">%s dzień</item>
-        <item quantity="few"></item>
+        <item quantity="few"/>
         <item quantity="many">%s dni</item>
         <item quantity="other">%s dni</item>
     </plurals>
@@ -144,4 +144,10 @@
     <string name="sip_address_copied_to_clipboard_toast">Adres SIP został skopiowany do schowka</string>
     <string name="assistant_login_third_party_sip_account_title">Konto SIP innej firmy</string>
     <string name="assistant_account_register_unexpected_error">Wystąpił nieoczekiwany błąd, spróbuj ponownie później</string>
+    <string name="settings_calls_title">Połączenia</string>
+    <string name="settings_conversations_title">Rozmowy</string>
+    <string name="settings_contacts_title">Kontakty</string>
+    <string name="settings_meetings_title">Spotkania</string>
+    <string name="generic_address_picker_conversations_list_title">Rozmowy</string>
+    <string name="generic_address_picker_contacts_list_title">Kontakty</string>
 </resources>
