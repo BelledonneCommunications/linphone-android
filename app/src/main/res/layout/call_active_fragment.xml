@@ -301,6 +301,7 @@
         <include
             android:id="@+id/call_numpad"
             layout="@layout/call_numpad_bottom_sheet"
+            bind:viewModel="@{viewModel}"
             bind:model="@{numpadModel}"/>
 
         <include
