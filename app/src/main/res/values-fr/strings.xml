@@ -327,6 +327,7 @@
     <string name="settings_developer_enabled_toast">Paramètres développeurs activés</string>
     <string name="settings_developer_already_enabled_toast">Paramètres développeurs déjà activés</string>
     <string name="settings_developer_enable_vu_meters_title">Activer l\'indicateur des volumes d\'enregistrement et de lecture</string>
+    <string name="settings_developer_enable_advanced_call_stats_title">Afficher plus de statistiques d\'appel</string>
     <string name="settings_developer_push_compatible_domains_list_title">Liste des domaines qui supportent les notifications poussées (séparés par des virgules)</string>
     <string name="settings_developer_clear_native_friends_in_database_title">Supprimer les contacts natifs importés</string>
     <string name="settings_developer_clear_native_friends_in_database_subtitle">Ils seront synchronisés à nouveau au prochain démarrage de l\'application sauf si vous retirez la permission de lire les contacts</string>
@@ -752,6 +753,8 @@
     <string name="call_stats_bandwidth_label">Bande passante : %s</string>
     <string name="call_stats_loss_rate_label">Taux de perte : %s</string>
     <string name="call_stats_jitter_buffer_label">Tampon de gigue : %s</string>
+    <string name="call_stats_ice_label">ICE : %s</string>
+    <string name="call_stats_ip_family_label">Famille IP : %s</string>
     <string name="call_stats_video_title">Vidéo</string>
     <string name="call_stats_resolution_label">Définition : %s</string>
     <string name="call_stats_fps_label">FPS : %s</string>

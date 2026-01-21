@@ -369,6 +369,7 @@
     <string name="settings_developer_enabled_toast">Developer settings enabled</string>
     <string name="settings_developer_already_enabled_toast">Developer settings already enabled</string>
     <string name="settings_developer_enable_vu_meters_title">Enable record/playback volume vu meters while in call</string>
+    <string name="settings_developer_enable_advanced_call_stats_title">Show advanced call statistics</string>
     <string name="settings_developer_push_compatible_domains_list_title">List of push notifications compatible domains (comma separated)</string>
     <string name="settings_developer_clear_native_friends_in_database_title">Clear imported contacts from native address book</string>
     <string name="settings_developer_clear_native_friends_in_database_subtitle">They will be imported again the next time the app starts unless you remove the contacts permission</string>
@@ -795,6 +796,8 @@
     <string name="call_stats_bandwidth_label">Bandwidth: %s</string>
     <string name="call_stats_loss_rate_label">Loss rate: %s</string>
     <string name="call_stats_jitter_buffer_label">Jitter buffer: %s</string>
+    <string name="call_stats_ice_label">ICE: %s</string>
+    <string name="call_stats_ip_family_label">IP Family: %s</string>
     <string name="call_stats_video_title">Video</string>
     <string name="call_stats_resolution_label">Resolution: %s</string>
     <string name="call_stats_fps_label">FPS: %s</string>

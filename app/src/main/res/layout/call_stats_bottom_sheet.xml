@@ -84,6 +84,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:text="@{model.audioIce, default=@string/call_stats_ice_label}"
+                android:textColor="@color/bc_white"
+                android:visibility="@{model.showAdvancedStats ? View.VISIBLE : View.GONE, default=gone}"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:gravity="center" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@{model.audioIpFamily, default=@string/call_stats_ip_family_label}"
+                android:textColor="@color/bc_white"
+                android:visibility="@{model.showAdvancedStats ? View.VISIBLE : View.GONE, default=gone}"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:gravity="center" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="@{model.lossRate, default=@string/call_stats_loss_rate_label}"
                 android:textColor="@color/bc_white"
                 android:maxLines="1"
@@ -147,6 +171,30 @@
                 android:layout_marginTop="10dp"
                 android:text="@{model.videoBandwidth, default=@string/call_stats_bandwidth_label}"
                 android:textColor="@color/bc_white"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:gravity="center" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@{model.videoIce, default=@string/call_stats_ice_label}"
+                android:textColor="@color/bc_white"
+                android:visibility="@{model.showAdvancedStats ? View.VISIBLE : View.GONE, default=gone}"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:gravity="center" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@{model.videoIpFamily, default=@string/call_stats_ip_family_label}"
+                android:textColor="@color/bc_white"
+                android:visibility="@{model.showAdvancedStats ? View.VISIBLE : View.GONE, default=gone}"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:gravity="center" />

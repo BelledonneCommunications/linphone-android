@@ -249,6 +249,7 @@ class SettingsViewModel
     val logsSharingServerUrl = MutableLiveData<String>()
     val createEndToEndEncryptedConferences = MutableLiveData<Boolean>()
     val enableVuMeters = MutableLiveData<Boolean>()
+    val enableAdvancedCallStats = MutableLiveData<Boolean>()
     val pushCompatibleDomainsList = MutableLiveData<String>()
 
     private val coreListener = object : CoreListenerStub() {
@@ -382,6 +383,7 @@ class SettingsViewModel
             logsSharingServerUrl.postValue(core.logCollectionUploadServerUrl)
             createEndToEndEncryptedConferences.postValue(corePreferences.createEndToEndEncryptedMeetingsAndGroupCalls)
             enableVuMeters.postValue(corePreferences.showMicrophoneAndSpeakerVuMeters)
+            enableAdvancedCallStats.postValue(corePreferences.showAdvancedCallStats)
 
             val domainsListBuilder = StringBuilder()
             val domainsArray = corePreferences.pushNotificationCompatibleDomains
@@ -1194,6 +1196,16 @@ class SettingsViewModel
         coreContext.postOnCoreThread { core ->
             corePreferences.showMicrophoneAndSpeakerVuMeters = newValue
             enableVuMeters.postValue(newValue)
+        }
+    }
+
+    @UiThread
+    fun toggleEnableAdvancedCallStats() {
+        val newValue = enableAdvancedCallStats.value == false
+
+        coreContext.postOnCoreThread { core ->
+            corePreferences.showAdvancedCallStats = newValue
+            enableAdvancedCallStats.postValue(newValue)
         }
     }
 

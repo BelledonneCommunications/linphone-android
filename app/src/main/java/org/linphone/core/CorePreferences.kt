@@ -197,6 +197,13 @@ class CorePreferences
             config.setBool("app", "auto_answer_video_send_receive", value)
         }
 
+    @get:AnyThread @set:WorkerThread
+    var showAdvancedCallStats: Boolean
+        get() = config.getBool("ui", "show_advanced_call_stats", false)
+        set(value) {
+            config.setBool("ui", "show_advanced_call_stats", value)
+        }
+
     // Conversation related
 
     @get:AnyThread @set:WorkerThread

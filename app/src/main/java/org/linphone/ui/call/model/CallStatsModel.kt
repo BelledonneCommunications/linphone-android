@@ -21,8 +21,10 @@ package org.linphone.ui.call.model
 
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import kotlin.math.roundToInt
 import org.linphone.R
+import org.linphone.core.Address
 import org.linphone.core.Call
 import org.linphone.core.CallStats
 import org.linphone.core.MediaDirection
@@ -36,6 +38,8 @@ class CallStatsModel
     val audioBandwidth = MutableLiveData<String>()
     val lossRate = MutableLiveData<String>()
     val jitterBuffer = MutableLiveData<String>()
+    val audioIce = MutableLiveData<String>()
+    val audioIpFamily = MutableLiveData<String>()
 
     val isVideoEnabled = MutableLiveData<Boolean>()
     val videoCodec = MutableLiveData<String>()
@@ -43,11 +47,19 @@ class CallStatsModel
     val videoLossRate = MutableLiveData<String>()
     val videoResolution = MutableLiveData<String>()
     val videoFps = MutableLiveData<String>()
+    val videoIce = MutableLiveData<String>()
+    val videoIpFamily = MutableLiveData<String>()
 
     val fecEnabled = MutableLiveData<Boolean>()
     val lostPackets = MutableLiveData<String>()
     val repairedPackets = MutableLiveData<String>()
     val fecBandwidth = MutableLiveData<String>()
+
+    val showAdvancedStats = MutableLiveData<Boolean>()
+
+    init {
+        showAdvancedStats.postValue(corePreferences.showAdvancedCallStats)
+    }
 
     @WorkerThread
     fun update(call: Call, stats: CallStats?) {
@@ -96,6 +108,18 @@ class CallStatsModel
                     "$jitterBufferSize ms"
                 )
                 jitterBuffer.postValue(jitterBufferLabel)
+
+                val iceLabel = AppUtils.getFormattedString(
+                    R.string.call_stats_ice_label,
+                    stats.iceState
+                )
+                audioIce.postValue(iceLabel)
+
+                val ipLabel = AppUtils.getFormattedString(
+                    R.string.call_stats_ip_family_label,
+                    if (stats.ipFamilyOfRemote == Address.Family.Inet6) "IPv6" else "IPv4"
+                )
+                audioIpFamily.postValue(ipLabel)
             }
             StreamType.Video -> {
                 val payloadType = call.currentParams.usedVideoPayloadType
@@ -137,6 +161,18 @@ class CallStatsModel
                     "↑ $sentFps ↓ $receivedFps"
                 )
                 videoFps.postValue(fpsLabel)
+
+                val iceLabel = AppUtils.getFormattedString(
+                    R.string.call_stats_ice_label,
+                    stats.iceState
+                )
+                videoIce.postValue(iceLabel)
+
+                val ipLabel = AppUtils.getFormattedString(
+                    R.string.call_stats_ip_family_label,
+                    if (stats.ipFamilyOfRemote == Address.Family.Inet6) "IPv6" else "IPv4"
+                )
+                videoIpFamily.postValue(ipLabel)
 
                 if (isFecEnabled) {
                     val lostPacketsValue = stats.fecCumulativeLostPacketsNumber
