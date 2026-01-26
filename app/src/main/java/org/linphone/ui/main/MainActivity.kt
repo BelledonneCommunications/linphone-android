@@ -77,6 +77,8 @@ import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
 import androidx.core.content.edit
+import androidx.navigation.fragment.NavHostFragment
+import org.linphone.ui.main.history.fragment.StartCallFragment
 
 @UiThread
 class MainActivity : GenericActivity() {
@@ -91,6 +93,9 @@ class MainActivity : GenericActivity() {
 
         const val ARGUMENTS_CHAT = "Chat"
         const val ARGUMENTS_CONVERSATION_ID = "ConversationId"
+
+        const val INTENT_ACTION_ANSWER: String = "org.linphone.intent.action.HOOK_ANSWER"
+        const val INTENT_ACTION_HANGUP: String = "org.linphone.intent.action.HOOK_HANGUP"
     }
 
     private lateinit var binding: MainActivityBinding
@@ -555,6 +560,12 @@ class MainActivity : GenericActivity() {
             Intent.ACTION_DIAL, Intent.ACTION_CALL -> {
                 handleCallIntent(intent)
             }
+            INTENT_ACTION_ANSWER -> {
+                handleAnswerIntent(intent)
+            }
+            INTENT_ACTION_HANGUP -> {
+                handleHangupIntent(intent)
+            }
             Intent.ACTION_VIEW_LOCUS -> {
                 val locus = Compatibility.extractLocusIdFromIntent(intent)
                 if (locus != null) {
@@ -564,6 +575,100 @@ class MainActivity : GenericActivity() {
             }
             else -> {
                 handleMainIntent(intent)
+            }
+        }
+    }
+
+    private fun getVisibleStartCallFragment(): StartCallFragment? {
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.main_nav_container) as? NavHostFragment
+        return navHostFragment
+            ?.childFragmentManager
+            ?.fragments
+            ?.filterIsInstance<StartCallFragment>()
+            ?.firstOrNull { it.isVisible }
+    }
+
+    private fun handleAnswerIntent(intent: Intent) {
+        val incoming = LinphoneUtils.getCurrentIncomingCall()
+        if (incoming != null) {
+            Log.i("$TAG Accepting current incoming call.")
+            incoming.accept()
+            return
+        }
+
+        val active = LinphoneUtils.getCurrentOngoingCall()
+        if (active != null) {
+            Log.i("$TAG Show call activity of ongoing call.")
+            coreContext.showCallActivity()
+            return
+        }
+
+        // no incoming or active call
+        val startCallFragment = getVisibleStartCallFragment()
+        if (startCallFragment != null) {
+            val hasNumber = startCallFragment.hasSearchText()
+
+            if (hasNumber && hasWindowFocus()) {
+
+                // app in background & dialer has number -> dial
+                Log.i("$TAG No active or incoming call, but StartCallFragment visible, triggering numpad call button.")
+                startCallFragment.onHardwareCallKeyPressed()
+            }
+            return
+        }
+
+        // Otherwise navigate to dialer
+        val navController = findNavController()
+        Log.i("$TAG No incoming or active call & not in StartCallFragment -> Navigating to start call fragment.")
+        try {
+            navController.navigate(R.id.startCallFragment)
+        } catch (ise: IllegalStateException) {
+            Log.e("$TAG Can't navigate to startCallFragment from current destination: $ise")
+        }
+    }
+
+    private fun handleHangupIntent(intent: Intent) {
+        val incoming = LinphoneUtils.getCurrentIncomingCall()
+        if (incoming != null) {
+            Log.i("$TAG Terminate current incoming call.")
+            incoming.terminate()
+            return
+        }
+
+        val active = LinphoneUtils.getCurrentOngoingCall()
+        if (active != null) {
+            Log.i("$TAG Terminate current ongoing call.")
+            active.terminate()
+            return
+        }
+
+        // no active call and StartCallFragment is visible -> first clear text
+        val startCallFragment = getVisibleStartCallFragment()
+        if (startCallFragment != null) {
+            Log.i("$TAG No active call, delegating hangup HW key to StartCallFragment (clear input).")
+            startCallFragment.onHardwareHangupKeyPressed()
+        }
+
+        val navController = findNavController()
+        val currentDestinationId = navController.currentDestination?.id
+
+        // id on any root fragment of main activity (History, Contacts, Chat, Meetings)
+        val isOnMainRoot = currentDestinationId == R.id.historyListFragment ||
+                currentDestinationId == R.id.contactsListFragment ||
+                currentDestinationId == R.id.conversationsListFragment ||
+                currentDestinationId == R.id.meetingsListFragment
+
+        if (hasWindowFocus())
+        {
+            if (isOnMainRoot) {
+                // we are on an main fragment -> send linphone to background
+                Log.i("$TAG No active call & at main root fragment -> onBackPressedDispatcher.onBackPressed()")
+                moveTaskToBack(true)
+            } else {
+                // Any other fragment is on nav stack (incl. StartCallFragment) -> go an step back in the stack
+                Log.i("$TAG No active call & not at main root fragment -> popBackStack()")
+                navController.popBackStack()
             }
         }
     }
