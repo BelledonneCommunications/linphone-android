@@ -10,7 +10,7 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
-## [6.1.0] - Unreleased
+## [6.2.0] - Unreleased
 
 ### Added
 - Added the ability to edit/delete chat messages sent less than 24 hours ago.
@@ -56,6 +56,7 @@ Group changes to describe their impact on the project, as follows:
 
 ### Fixed
 - Copy raw message content instead of modified one when it contains a participant mention ("@username")
+- Do not apply Crashlytics plugin if it's not enabled
 
 ## [6.0.22] - 2026-01-20
 
