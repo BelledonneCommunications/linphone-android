@@ -1,5 +1,6 @@
 import com.android.build.gradle.internal.tasks.factory.dependsOn
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
+import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsPlugin
 import com.google.gms.googleservices.GoogleServicesPlugin
 import java.io.BufferedReader
 import java.io.FileInputStream
@@ -11,7 +12,6 @@ plugins {
     alias(libs.plugins.ktlint)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.navigation)
-    alias(libs.plugins.crashlytics)
 }
 
 val packageName = "org.linphone"
@@ -25,10 +25,16 @@ val firebaseCloudMessagingAvailable = googleServices.exists()
 val crashlyticsAvailable = googleServices.exists() && linphoneLibs.exists() && linphoneDebugLibs.exists()
 
 if (firebaseCloudMessagingAvailable) {
-    println("google-services.json found, enabling CloudMessaging feature")
+    println("google-services.json found, enabling Firebase CloudMessaging feature")
     apply<GoogleServicesPlugin>()
 } else {
-    println("google-services.json not found, disabling CloudMessaging feature")
+    println("google-services.json not found, disabling Firebase CloudMessaging feature")
+}
+if (crashlyticsAvailable) {
+    println("google-services.json found and Linphone SDK libs-debug folder found, enabling Crashlytics feature")
+    apply<CrashlyticsPlugin>()
+} else {
+    println("Crashlytics has been disabled because either google-services.json file wasn't found or local Linphone SDK build folder isn't configured")
 }
 
 var gitVersion = "6.1.0-alpha"
