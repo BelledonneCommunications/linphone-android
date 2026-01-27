@@ -306,4 +306,5 @@
     <string name="menu_reply_to_chat_message">Responder</string>
     <string name="generic_address_picker_conversations_list_title">Conversaciones</string>
     <string name="generic_address_picker_contacts_list_title">Contactos</string>
+    <string name="settings_developer_clear_native_friends_in_database_title">Borrar contactos importados de la libreta de direcciones nativa</string>
 </resources>

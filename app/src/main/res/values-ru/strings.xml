@@ -853,4 +853,9 @@
     <string name="help_about_user_guide_title">&amp;appname; Руководство пользователя</string>
     <string name="help_about_user_guide_subtitle">Узнайте, как освоить все функции приложения, шаг за шагом.</string>
     <string name="help_about_contribute_translations_subtitle">Помогите сделать приложение доступным как можно большим количеством людей.</string>
+    <string name="menu_edit_chat_message">Изменить</string>
+    <string name="search">Найти</string>
+    <string name="settings_developer_clear_native_friends_in_database_title">Очистить импортированные контакты из встроенной адресной книги</string>
+    <string name="conversation_pdf_password_protected_file_cant_be_opened_error_toast">Пока не удается открыть PDF-файлы защищенные паролем</string>
+    <string name="conversation_participants_list_header">Участники</string>
 </resources>

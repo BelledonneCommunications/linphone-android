@@ -845,4 +845,9 @@
     <string name="content_description_chat_edit_conversation_subject">Kliknutím upraviť názov konverzácie</string>
     <string name="content_description_contact_create">Vytvoriť kontakt</string>
     <string name="content_description_call_voicemail">Podržaním tlačidla volanie hlasovej schránky</string>
+    <string name="conversation_pdf_password_protected_file_cant_be_opened_error_toast">Heslom chránené PDF zatiaľ nie je možné otvoriť</string>
+    <string name="conversation_participants_list_header">Účastníci</string>
+    <string name="search">Hľadať</string>
+    <string name="settings_developer_clear_native_friends_in_database_title">Vymazať importované kontakty zo systémového adresára</string>
+    <string name="menu_edit_chat_message">Upraviť</string>
 </resources>

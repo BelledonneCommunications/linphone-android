@@ -853,4 +853,9 @@
     <string name="help_troubleshooting_subtitle">Надсилайте свої діагностичні журнали для полегшення вирішення помилок.</string>
     <string name="content_description_cancel_files_or_text_pending_sharing">Натисніть, щоб скасувати обмін файлами або текстом, що очікує надсилання</string>
     <string name="settings_contacts_ldap_enabled_title">Увімкнуто</string>
+    <string name="search">Пошук</string>
+    <string name="conversation_pdf_password_protected_file_cant_be_opened_error_toast">Поки що не вдається відкрити PDF-файли, захищені паролем</string>
+    <string name="conversation_participants_list_header">Учасники</string>
+    <string name="settings_developer_clear_native_friends_in_database_title">Очистити імпортовані контакти з власної адресної книги</string>
+    <string name="menu_edit_chat_message">Редагувати</string>
 </resources>

@@ -848,4 +848,9 @@
     <string name="content_description_voicemail_available">Mensagens de voz estão disponíveis</string>
     <string name="content_description_call_voicemail">Pressione e segure para ligar para o correio de voz</string>
     <string name="manage_account_delete">Sair</string>
+    <string name="search">Pesquisar</string>
+    <string name="conversation_participants_list_header">Participantes</string>
+    <string name="settings_developer_clear_native_friends_in_database_title">Limpar contatos importados da agenda nativa</string>
+    <string name="conversation_pdf_password_protected_file_cant_be_opened_error_toast">Não é possível abrir PDFs protegidos por senha ainda</string>
+    <string name="menu_edit_chat_message">Editar</string>
 </resources>

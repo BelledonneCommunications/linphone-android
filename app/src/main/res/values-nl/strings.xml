@@ -829,4 +829,19 @@
     <string name="content_description_toggle_microphone">Dempen/dempen opheffen microfoon</string>
     <string name="content_description_change_output_audio_device">Wijzigt het uitvoerapparaat voor audio</string>
     <string name="content_description_merge_calls_into_conference">Voegt oproepen samen in een groepsgesprek</string>
+    <string name="search">Zoeken</string>
+    <string name="menu_edit_chat_message">Bewerken</string>
+    <string name="drawer_menu_account_connection_status_disconnected">Verbinding verbroken</string>
+    <string name="help_about_user_guide_title">&appName; gebruikershandleiding</string>
+    <string name="help_about_user_guide_subtitle">Leer alle functies van de app te beheersen, stap voor stap.</string>
+    <string name="help_about_contribute_translations_subtitle">Help mee de app toegankelijk te maken aan zoveel mogelijk personen.</string>
+    <string name="help_troubleshooting_subtitle">Verstuur uw diagnostische logs om het oplossen van fouten te vergemakkelijken.</string>
+    <string name="settings_contacts_presence_subscribe_title">Abboneer op aanwezigheidsinformatie</string>
+    <string name="settings_contacts_ldap_enabled_title">Is ingeschakeld</string>
+    <string name="settings_developer_clear_native_friends_in_database_title">Geïmporteerde contacten uit het lokale adresboek verwijderen</string>
+    <string name="manage_account_status_disconnected_summary">Dit account is offline, waarschijnlijk omdat u momenteel niet met internet bent verbonden.</string>
+    <string name="conversation_pdf_password_protected_file_cant_be_opened_error_toast">Wachtwoord beveiligde Pdf\'s kunnen nog niet worden geopend</string>
+    <string name="conversation_participants_list_header">Deelnemers</string>
+    <string name="call_zrtp_point_to_point_encrypted">Punt-naar-puntversleuteling door ZRTP</string>
+    <string name="content_description_cancel_files_or_text_pending_sharing">Klik om vrijgeven van bestanden of teksten te annuleren.</string>
 </resources>
