@@ -425,7 +425,7 @@ class CorePreferences
 
     @get:AnyThread
     val thirdPartySipAccountDefaultTransport: String
-        get() = config.getString("ui", "assistant_third_party_sip_account_transport", "tls")!!
+        get() = config.getString("ui", "assistant_third_party_sip_account_transport", "udp")!!
 
     @get:AnyThread
     val thirdPartySipAccountDefaultDomain: String

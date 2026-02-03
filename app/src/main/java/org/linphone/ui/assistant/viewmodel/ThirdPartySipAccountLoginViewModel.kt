@@ -150,8 +150,8 @@ class ThirdPartySipAccountLoginViewModel
         // TODO: handle formatting errors ?
 
         availableTransports.add(TransportType.Udp.name.uppercase(Locale.getDefault()))
-        availableTransports.add(TransportType.Tcp.name.uppercase(Locale.getDefault()))
-        availableTransports.add(TransportType.Tls.name.uppercase(Locale.getDefault()))
+//        availableTransports.add(TransportType.Tcp.name.uppercase(Locale.getDefault()))
+//        availableTransports.add(TransportType.Tls.name.uppercase(Locale.getDefault()))
 
         coreContext.postOnCoreThread {
             domain.postValue(corePreferences.thirdPartySipAccountDefaultDomain)
