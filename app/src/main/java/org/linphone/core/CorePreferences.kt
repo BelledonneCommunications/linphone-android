@@ -429,7 +429,7 @@ class CorePreferences
 
     @get:AnyThread
     val thirdPartySipAccountDefaultDomain: String
-        get() = config.getString("ui", "assistant_third_party_sip_account_domain", "")!!
+        get() = config.getString("ui", "assistant_third_party_sip_account_domain", BuildConfig.DEFAULT_3RD_DOMAIN)!!
 
     @get:AnyThread
     val assistantDirectlyGoToThirdPartySipAccountLogin: Boolean

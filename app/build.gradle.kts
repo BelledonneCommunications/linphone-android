@@ -176,6 +176,7 @@ android {
                 resValue("string", "com.crashlytics.android.build_id", "none")
             }
             buildConfigField("Boolean", "CRASHLYTICS_ENABLED", crashlyticsAvailable.toString())
+            buildConfigField("String", "DEFAULT_3RD_DOMAIN", "\"192.168.100.187\"")
         }
 
         getByName("release") {
@@ -205,6 +206,7 @@ android {
                 resValue("string", "com.crashlytics.android.build_id", "none")
             }
             buildConfigField("Boolean", "CRASHLYTICS_ENABLED", crashlyticsAvailable.toString())
+            buildConfigField("String", "DEFAULT_3RD_DOMAIN", "\"192.168.100.187\"")
         }
     }
 
