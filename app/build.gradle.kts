@@ -213,6 +213,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_21
     }
 
+    kotlin {
+        jvmToolchain(21)
+    }
+
     buildFeatures {
         dataBinding = true
         buildConfig = true
