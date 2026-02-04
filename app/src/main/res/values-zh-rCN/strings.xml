@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE resources [
-<!ENTITY appName "Linphone">
+<!ENTITY appName "SipPhone">
 ]>
 <resources>
     <string name="content_description_schedule_meeting">安排会议</string>

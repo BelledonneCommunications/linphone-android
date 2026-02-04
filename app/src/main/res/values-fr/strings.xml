@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 
-<!DOCTYPE resources [<!ENTITY appName "Linphone">]>
+<!DOCTYPE resources [<!ENTITY appName "SipPhone">]>
 
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Common words -->

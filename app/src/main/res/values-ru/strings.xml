@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE resources [
-<!ENTITY appName "Linphone">
+<!ENTITY appName "SipPhone">
 ]>
 <resources>
     <string name="sip_address_display_name">Отображаемое имя</string>
