@@ -381,7 +381,7 @@ class CorePreferences
 
     @get:AnyThread
     val maxAccountsCount: Int
-        get() = config.getInt("ui", "max_account", 0) // 0 means no max
+        get() = config.getInt("ui", "max_account", 1) // 0 means no max
 
     @get:AnyThread
     val hidePhoneNumbers: Boolean

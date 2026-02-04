@@ -44,7 +44,7 @@ class DrawerMenuViewModel
 
     val accounts = MutableLiveData<ArrayList<AccountModel>>()
 
-    val hideAddAccount = MutableLiveData<Boolean>()
+    val hideAddAccount = MutableLiveData<Boolean>(true)
 
     val hideRecordings = MutableLiveData<Boolean>()
 
