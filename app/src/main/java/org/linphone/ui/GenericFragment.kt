@@ -19,11 +19,20 @@
  */
 package org.linphone.ui
 
+import android.os.Bundle
+import android.view.View
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
+import org.linphone.core.tools.Log
 
 @UiThread
 abstract class GenericFragment : Fragment() {
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Log.i("onViewCreated: ${this.javaClass.simpleName}")
+    }
+
     protected fun observeToastEvents(viewModel: GenericViewModel) {
         viewModel.showRedToastEvent.observe(viewLifecycleOwner) {
             it.consume { pair ->

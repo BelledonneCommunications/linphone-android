@@ -14,11 +14,11 @@
         <item name="android:windowBackground">@color/bc_white</item>
         <item name="android:statusBarColor">?attr/color_main1_500</item>
 
-        <item name="color_main1_100">@color/orange_main_100</item>
-        <item name="color_main1_100_alpha_50">@color/orange_main_100_alpha_50</item>
-        <item name="color_main1_300">@color/orange_main_300</item>
-        <item name="color_main1_500">@color/orange_main_500</item>
-        <item name="color_main1_700">@color/orange_main_700</item>
+        <item name="color_main1_100">@color/blue_main_100</item>
+        <item name="color_main1_100_alpha_50">@color/blue_main_100_alpha_50</item>
+        <item name="color_main1_300">@color/blue_main_300</item>
+        <item name="color_main1_500">@color/blue_main_500</item>
+        <item name="color_main1_700">@color/blue_main_700</item>
 
         <item name="color_main2_000">@color/bc_white</item>
         <item name="color_main2_100">@color/gray_main2_100</item>
@@ -64,7 +64,7 @@
         <item name="color_avatar_text">@color/gray_main2_600</item>
 
         <item name="color_chat_bubble_incoming">@color/gray_main2_100</item>
-        <item name="color_chat_bubble_outgoing">@color/orange_main_100</item>
+        <item name="color_chat_bubble_outgoing">@color/blue_main_100</item>
         <item name="color_chat_bubble_reply">@color/gray_200</item>
         <item name="color_chat_bubble_file">@color/gray_main2_200</item>
 
