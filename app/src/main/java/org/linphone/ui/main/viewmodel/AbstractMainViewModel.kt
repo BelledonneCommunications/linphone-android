@@ -24,6 +24,7 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.constants.DEFAULT_HIDE_CONVERSATION
 import org.linphone.core.Account
 import org.linphone.core.Call
 import org.linphone.core.ChatMessage
@@ -60,7 +61,7 @@ open class AbstractMainViewModel
 
     val meetingsSelected = MutableLiveData<Boolean>()
 
-    val hideConversations = MutableLiveData<Boolean>()
+    val hideConversations = MutableLiveData<Boolean>(DEFAULT_HIDE_CONVERSATION)
 
     val hideMeetings = MutableLiveData<Boolean>()
 

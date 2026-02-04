@@ -27,6 +27,7 @@ import org.linphone.BuildConfig
 import java.io.File
 import java.io.FileOutputStream
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.constants.DEFAULT_HIDE_CONVERSATION
 import org.linphone.contacts.ContactLoader.Companion.LINPHONE_ADDRESS_BOOK_FRIEND_LIST
 
 class CorePreferences
@@ -365,7 +366,7 @@ class CorePreferences
 
     @get:AnyThread
     val disableChat: Boolean
-        get() = config.getBool("ui", "disable_chat_feature", false)
+        get() = config.getBool("ui", "disable_chat_feature", DEFAULT_HIDE_CONVERSATION)
 
     @get:AnyThread
     val disableMeetings: Boolean
