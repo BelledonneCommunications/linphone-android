@@ -12,6 +12,7 @@ plugins {
     alias(libs.plugins.ktlint)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.navigation)
+    alias(libs.plugins.crashlytics)
 }
 
 val packageName = "com.hansol.sipphone"
