@@ -39,6 +39,7 @@ import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import com.hansol.siphone.R
+import org.linphone.constants.DISABLE_VIDEO_CALL
 import org.linphone.contacts.ContactsManager.ContactsListener
 import org.linphone.core.Address
 import org.linphone.core.AudioDevice
@@ -142,7 +143,7 @@ class CurrentCallViewModel
 
     val isMediaEncrypted = MutableLiveData<Boolean>()
 
-    val hideVideo = MutableLiveData<Boolean>()
+    val hideVideo = MutableLiveData<Boolean>(DISABLE_VIDEO_CALL)
 
     val callStatsModel = CallStatsModel()
 
@@ -536,7 +537,7 @@ class CurrentCallViewModel
             core.addListener(coreListener)
 
             isRecordingEnabled.postValue(!corePreferences.disableCallRecordings)
-            hideVideo.postValue(!core.isVideoEnabled)
+//            hideVideo.postValue(!core.isVideoEnabled)
             showSwitchCamera.postValue(coreContext.showSwitchCameraButton())
 
             val call = core.currentCall ?: core.calls.firstOrNull()

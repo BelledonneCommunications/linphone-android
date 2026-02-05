@@ -25,6 +25,7 @@ import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import com.hansol.siphone.R
+import org.linphone.constants.DISABLE_VIDEO_CALL
 import org.linphone.core.Address
 import org.linphone.core.CallLog
 import org.linphone.core.ChatRoom
@@ -55,7 +56,7 @@ class HistoryViewModel
 
     val chatDisabled = MutableLiveData<Boolean>()
 
-    val videoCallDisabled = MutableLiveData<Boolean>()
+    val videoCallDisabled = MutableLiveData<Boolean>(DISABLE_VIDEO_CALL)
 
     val operationInProgress = MutableLiveData<Boolean>()
 
@@ -130,7 +131,7 @@ class HistoryViewModel
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
             chatDisabled.postValue(corePreferences.disableChat)
-            videoCallDisabled.postValue(!core.isVideoEnabled)
+//            videoCallDisabled.postValue(!core.isVideoEnabled)
             hideSipAddresses.postValue(corePreferences.hideSipAddresses)
         }
     }
