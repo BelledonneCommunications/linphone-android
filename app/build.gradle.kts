@@ -107,8 +107,8 @@ android {
         applicationId = packageName
         minSdk = 28
         targetSdk = 36
-        versionCode = 601002 // 6.01.002
-        versionName = "6.1.0-alpha"
+        versionCode = 1
+        versionName = "1.0.0"
 
         manifestPlaceholders["appAuthRedirectScheme"] = packageName
 
@@ -123,7 +123,7 @@ android {
         variant.outputs
             .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
             .forEach { output ->
-                output.outputFileName = "linphone-android-${variant.buildType.name}-${project.version}.apk"
+                output.outputFileName = "Softphone-${variant.buildType.name}-$versionName.apk"
             }
     }
 
