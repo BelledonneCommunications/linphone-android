@@ -22,7 +22,7 @@ package org.linphone.ui.main.chat.model
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessage.State
 import org.linphone.core.ChatMessageListenerStub

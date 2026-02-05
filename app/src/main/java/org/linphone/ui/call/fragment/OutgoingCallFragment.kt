@@ -30,7 +30,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Call
 import org.linphone.core.tools.Log
-import org.linphone.databinding.CallOutgoingFragmentBinding
+import com.hansol.siphone.databinding.CallOutgoingFragmentBinding
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
 import org.linphone.utils.LinphoneUtils
 

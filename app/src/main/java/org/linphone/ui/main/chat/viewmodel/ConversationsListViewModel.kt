@@ -23,7 +23,7 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.contacts.ContactsManager
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatRoom

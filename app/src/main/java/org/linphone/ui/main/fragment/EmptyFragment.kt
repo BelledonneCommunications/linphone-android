@@ -26,7 +26,7 @@ import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import org.linphone.databinding.EmptyFragmentBinding
+import com.hansol.siphone.databinding.EmptyFragmentBinding
 import org.linphone.ui.GenericFragment
 import org.linphone.ui.main.viewmodel.SharedMainViewModel
 import org.linphone.utils.Event

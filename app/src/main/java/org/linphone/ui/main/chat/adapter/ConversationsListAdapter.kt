@@ -29,8 +29,8 @@ import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import org.linphone.R
-import org.linphone.databinding.ChatListCellBinding
+import com.hansol.siphone.R
+import com.hansol.siphone.databinding.ChatListCellBinding
 import org.linphone.ui.main.chat.model.ConversationModel
 import org.linphone.utils.Event
 import org.linphone.utils.startAnimatedDrawable

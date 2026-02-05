@@ -27,7 +27,7 @@ import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import java.util.regex.Pattern
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event

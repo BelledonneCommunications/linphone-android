@@ -24,7 +24,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.ui.fileviewer.viewmodel.FileViewModel
 
 class PdfPagesListAdapter(private val viewModel: FileViewModel) : RecyclerView.Adapter<PdfPagesListAdapter.PdfPageViewHolder>() {

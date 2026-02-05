@@ -28,7 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.contacts.ContactsManager
 import org.linphone.core.Address
 import org.linphone.core.ChatMessage

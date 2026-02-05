@@ -30,10 +30,10 @@ import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import org.linphone.R
-import org.linphone.databinding.MeetingListCellBinding
-import org.linphone.databinding.MeetingListTodayIndicatorBinding
-import org.linphone.databinding.MeetingsListDecorationBinding
+import com.hansol.siphone.R
+import com.hansol.siphone.databinding.MeetingListCellBinding
+import com.hansol.siphone.databinding.MeetingListTodayIndicatorBinding
+import com.hansol.siphone.databinding.MeetingsListDecorationBinding
 import org.linphone.ui.main.meetings.model.MeetingListItemModel
 import org.linphone.ui.main.meetings.model.MeetingModel
 import org.linphone.utils.Event

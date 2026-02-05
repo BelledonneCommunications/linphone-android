@@ -32,7 +32,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.core.tools.Log
-import org.linphone.databinding.ChatDocumentsFragmentBinding
+import com.hansol.siphone.databinding.ChatDocumentsFragmentBinding
 import org.linphone.ui.main.chat.RecyclerViewScrollListener
 import org.linphone.ui.main.chat.adapter.ConversationsFilesAdapter
 import org.linphone.ui.main.chat.model.FileModel

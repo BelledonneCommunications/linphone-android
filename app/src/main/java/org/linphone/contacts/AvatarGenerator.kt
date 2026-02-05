@@ -30,9 +30,9 @@ import android.util.TypedValue
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.IconCompat
-import org.linphone.R
 import org.linphone.utils.AppUtils
 import androidx.core.graphics.createBitmap
+import com.hansol.siphone.R
 
 class AvatarGenerator(private val context: Context) {
     private var textSize: Float = AppUtils.getDimension(R.dimen.avatar_initials_text_size)

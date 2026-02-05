@@ -27,7 +27,7 @@ import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import org.linphone.core.tools.Log
-import org.linphone.databinding.SettingsContactsLdapBinding
+import com.hansol.siphone.databinding.SettingsContactsLdapBinding
 import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.settings.viewmodel.LdapViewModel
 

@@ -34,10 +34,10 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlin.getValue
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.core.Address
 import org.linphone.core.tools.Log
-import org.linphone.databinding.CallTransferFragmentBinding
+import com.hansol.siphone.databinding.CallTransferFragmentBinding
 import org.linphone.ui.call.adapter.CallsListAdapter
 import org.linphone.ui.call.model.CallModel
 import org.linphone.ui.call.viewmodel.CallsViewModel

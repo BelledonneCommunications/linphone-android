@@ -34,7 +34,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.core.Account
 import org.linphone.core.AccountManagerServices
 import org.linphone.core.AccountManagerServicesRequest

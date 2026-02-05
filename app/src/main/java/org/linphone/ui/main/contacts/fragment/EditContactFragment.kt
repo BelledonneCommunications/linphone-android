@@ -35,10 +35,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import kotlinx.coroutines.launch
-import org.linphone.BR
-import org.linphone.R
+import com.hansol.siphone.BR
+import com.hansol.siphone.R
 import org.linphone.core.tools.Log
-import org.linphone.databinding.ContactNewOrEditFragmentBinding
+import com.hansol.siphone.databinding.ContactNewOrEditFragmentBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.contacts.model.NewOrEditNumberOrAddressModel

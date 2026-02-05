@@ -25,7 +25,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.tools.Log
-import org.linphone.databinding.ChatBubbleEmojiPickerBottomSheetBinding
+import com.hansol.siphone.databinding.ChatBubbleEmojiPickerBottomSheetBinding
 import org.linphone.ui.GenericViewModel
 import org.linphone.ui.main.chat.model.MessageModel
 import org.linphone.utils.AppUtils

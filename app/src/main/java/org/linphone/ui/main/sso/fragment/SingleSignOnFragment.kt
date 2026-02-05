@@ -29,9 +29,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationResponse
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.core.tools.Log
-import org.linphone.databinding.SingleSignOnFragmentBinding
+import com.hansol.siphone.databinding.SingleSignOnFragmentBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.sso.viewmodel.SingleSignOnViewModel

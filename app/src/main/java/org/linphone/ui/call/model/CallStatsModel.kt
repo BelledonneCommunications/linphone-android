@@ -23,7 +23,7 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import kotlin.math.roundToInt
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.core.Address
 import org.linphone.core.Call
 import org.linphone.core.CallStats

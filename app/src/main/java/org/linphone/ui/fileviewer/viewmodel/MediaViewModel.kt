@@ -35,7 +35,7 @@ import org.linphone.ui.GenericViewModel
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.TimestampUtils
-import org.linphone.R
+import com.hansol.siphone.R
 
 class MediaViewModel
     @UiThread

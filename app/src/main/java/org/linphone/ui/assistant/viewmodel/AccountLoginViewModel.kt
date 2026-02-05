@@ -25,7 +25,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.core.Account
 import org.linphone.core.AuthInfo
 import org.linphone.core.Core

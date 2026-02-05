@@ -27,7 +27,7 @@ import android.view.View
 import android.view.ViewOutlineProvider
 import androidx.annotation.UiThread
 import java.lang.NumberFormatException
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.mediastream.video.capture.CaptureTextureView
 
 @UiThread

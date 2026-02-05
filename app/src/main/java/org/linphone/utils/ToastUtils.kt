@@ -32,12 +32,12 @@ import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.transition.Slide
 import androidx.transition.Transition
 import androidx.transition.TransitionManager
+import com.hansol.siphone.R
+import com.hansol.siphone.databinding.ToastBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.linphone.R
-import org.linphone.databinding.ToastBinding
 
 @UiThread
 fun View.slideInToastFromTop(

@@ -22,7 +22,7 @@ package org.linphone.ui.main.settings.viewmodel
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.core.Ldap
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel

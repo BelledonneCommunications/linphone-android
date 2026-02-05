@@ -35,10 +35,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.core.tools.Log
-import org.linphone.databinding.MeetingFragmentBinding
-import org.linphone.databinding.MeetingPopupMenuBinding
+import com.hansol.siphone.databinding.MeetingFragmentBinding
+import com.hansol.siphone.databinding.MeetingPopupMenuBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.fragment.SlidingPaneChildFragment
 import org.linphone.utils.ConfirmationDialogModel

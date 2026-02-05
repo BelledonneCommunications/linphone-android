@@ -27,9 +27,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.navigation.fragment.findNavController
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.core.tools.Log
-import org.linphone.databinding.HelpFragmentBinding
+import com.hansol.siphone.databinding.HelpFragmentBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.help.viewmodel.HelpViewModel

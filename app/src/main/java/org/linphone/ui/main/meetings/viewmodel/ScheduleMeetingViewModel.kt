@@ -27,7 +27,7 @@ import java.util.Calendar
 import java.util.TimeZone
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.core.Address
 import org.linphone.core.ChatRoom
 import org.linphone.core.Conference

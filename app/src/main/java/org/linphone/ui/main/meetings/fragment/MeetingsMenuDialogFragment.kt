@@ -29,7 +29,7 @@ import androidx.annotation.UiThread
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import org.linphone.databinding.MeetingsListLongPressMenuBinding
+import com.hansol.siphone.databinding.MeetingsListLongPressMenuBinding
 
 @UiThread
 class MeetingsMenuDialogFragment(

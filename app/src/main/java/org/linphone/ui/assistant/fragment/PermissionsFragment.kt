@@ -31,10 +31,10 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
-import org.linphone.databinding.AssistantPermissionsFragmentBinding
+import com.hansol.siphone.databinding.AssistantPermissionsFragmentBinding
 import org.linphone.ui.GenericFragment
 import org.linphone.ui.assistant.AssistantActivity
 import org.linphone.ui.assistant.viewmodel.PermissionsViewModel

@@ -30,7 +30,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import org.linphone.core.tools.Log
-import org.linphone.databinding.GenericAddParticipantsFragmentBinding
+import com.hansol.siphone.databinding.GenericAddParticipantsFragmentBinding
 import org.linphone.ui.main.viewmodel.AddParticipantsViewModel
 import org.linphone.utils.Event
 

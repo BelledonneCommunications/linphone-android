@@ -27,8 +27,8 @@ import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import org.linphone.R
-import org.linphone.databinding.ChatMessageBottomSheetListCellBinding
+import com.hansol.siphone.R
+import com.hansol.siphone.databinding.ChatMessageBottomSheetListCellBinding
 import org.linphone.ui.main.chat.model.MessageBottomSheetParticipantModel
 
 class MessageBottomSheetAdapter : ListAdapter<MessageBottomSheetParticipantModel, RecyclerView.ViewHolder>(

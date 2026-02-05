@@ -28,7 +28,7 @@ import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.core.tools.Log
-import org.linphone.databinding.GenericAddParticipantsFragmentBinding
+import com.hansol.siphone.databinding.GenericAddParticipantsFragmentBinding
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
 import org.linphone.ui.main.fragment.GenericAddressPickerFragment
 import org.linphone.ui.main.viewmodel.AddParticipantsViewModel

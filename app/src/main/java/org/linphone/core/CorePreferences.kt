@@ -23,7 +23,7 @@ import android.content.Context
 import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
-import org.linphone.BuildConfig
+import com.hansol.siphone.BuildConfig
 import java.io.File
 import java.io.FileOutputStream
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -534,14 +534,14 @@ class CorePreferences
         if (outFile.exists()) {
             if (!overrideIfExists) {
                 android.util.Log.i(
-                    context.getString(org.linphone.R.string.app_name),
+                    context.getString(com.hansol.siphone.R.string.app_name),
                     "$TAG File $to already exists"
                 )
                 return
             }
         }
         android.util.Log.i(
-            context.getString(org.linphone.R.string.app_name),
+            context.getString(com.hansol.siphone.R.string.app_name),
             "$TAG Overriding $to by $from asset"
         )
 

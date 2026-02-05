@@ -35,7 +35,7 @@ import org.linphone.contacts.AvatarGenerator
 import org.linphone.core.tools.Log
 import androidx.core.net.toUri
 import androidx.core.graphics.createBitmap
-import org.linphone.R
+import com.hansol.siphone.R
 
 class ImageUtils {
     companion object {

@@ -30,7 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.tools.Log
-import org.linphone.databinding.CallsListFragmentBinding
+import com.hansol.siphone.databinding.CallsListFragmentBinding
 import org.linphone.ui.call.adapter.CallsListAdapter
 import org.linphone.ui.call.viewmodel.CallsViewModel
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel

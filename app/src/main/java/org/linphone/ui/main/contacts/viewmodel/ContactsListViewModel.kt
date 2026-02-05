@@ -30,7 +30,7 @@ import java.util.Locale
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.contacts.ContactsManager.ContactsListener
 import org.linphone.core.Friend
 import org.linphone.core.FriendList

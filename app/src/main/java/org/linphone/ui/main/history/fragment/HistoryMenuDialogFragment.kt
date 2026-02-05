@@ -30,7 +30,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.linphone.LinphoneApplication.Companion.corePreferences
-import org.linphone.databinding.HistoryListLongPressMenuBinding
+import com.hansol.siphone.databinding.HistoryListLongPressMenuBinding
 
 @UiThread
 class HistoryMenuDialogFragment(

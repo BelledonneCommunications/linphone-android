@@ -29,10 +29,10 @@ import androidx.annotation.UiThread
 import androidx.core.net.toUri
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericFragment
-import org.linphone.databinding.AssistantRecoverAccountFragmentBinding
+import com.hansol.siphone.databinding.AssistantRecoverAccountFragmentBinding
 import org.linphone.ui.assistant.viewmodel.AccountCreationViewModel
 import kotlin.getValue
 

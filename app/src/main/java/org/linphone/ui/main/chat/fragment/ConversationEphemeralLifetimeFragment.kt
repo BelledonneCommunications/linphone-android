@@ -28,7 +28,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import org.linphone.core.tools.Log
-import org.linphone.databinding.ChatEphemeralLifetimeFragmentBinding
+import com.hansol.siphone.databinding.ChatEphemeralLifetimeFragmentBinding
 import org.linphone.ui.main.chat.viewmodel.ConversationEphemeralLifetimeViewModel
 import org.linphone.ui.main.fragment.SlidingPaneChildFragment
 import org.linphone.utils.Event

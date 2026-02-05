@@ -37,9 +37,9 @@ import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import androidx.window.layout.FoldingFeature
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.core.tools.Log
-import org.linphone.databinding.CallActiveFragmentBinding
+import com.hansol.siphone.databinding.CallActiveFragmentBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.call.CallActivity
 import org.linphone.ui.call.model.ZrtpAlertDialogModel

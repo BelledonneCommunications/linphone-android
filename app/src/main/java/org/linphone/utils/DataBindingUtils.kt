@@ -62,8 +62,8 @@ import coil3.transform.CircleCropTransformation
 import coil3.transform.RoundedCornersTransformation
 import coil3.video.videoFrameMillis
 import com.google.android.flexbox.FlexboxLayout
-import org.linphone.BR
-import org.linphone.R
+import com.hansol.siphone.BR
+import com.hansol.siphone.R
 import org.linphone.contacts.AbstractAvatarModel
 import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.tools.Log

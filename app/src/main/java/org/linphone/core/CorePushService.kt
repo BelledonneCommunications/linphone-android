@@ -24,7 +24,7 @@ import android.content.Intent
 import android.os.IBinder
 import androidx.annotation.MainThread
 import androidx.core.app.NotificationCompat
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.core.tools.Log
 import org.linphone.core.tools.service.PushService
 import org.linphone.ui.main.MainActivity

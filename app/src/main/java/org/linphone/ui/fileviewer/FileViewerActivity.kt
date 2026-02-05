@@ -16,9 +16,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import java.io.File
 import kotlinx.coroutines.launch
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.core.tools.Log
-import org.linphone.databinding.FileViewerActivityBinding
+import com.hansol.siphone.databinding.FileViewerActivityBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.fileviewer.adapter.PdfPagesListAdapter
 import org.linphone.ui.fileviewer.viewmodel.FileViewModel

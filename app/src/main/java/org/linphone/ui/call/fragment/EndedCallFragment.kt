@@ -32,7 +32,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.linphone.core.tools.Log
-import org.linphone.databinding.CallEndedFragmentBinding
+import com.hansol.siphone.databinding.CallEndedFragmentBinding
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
 
 @UiThread

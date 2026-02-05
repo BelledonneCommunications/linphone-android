@@ -27,8 +27,8 @@ import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import org.linphone.R
-import org.linphone.databinding.MeetingParticipantListCellBinding
+import com.hansol.siphone.R
+import com.hansol.siphone.databinding.MeetingParticipantListCellBinding
 import org.linphone.ui.main.meetings.model.ParticipantModel
 
 class MeetingParticipantsAdapter : ListAdapter<ParticipantModel, RecyclerView.ViewHolder>(

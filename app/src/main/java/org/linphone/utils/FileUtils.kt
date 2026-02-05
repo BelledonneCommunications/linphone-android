@@ -45,7 +45,7 @@ import java.util.Locale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 import androidx.core.net.toUri

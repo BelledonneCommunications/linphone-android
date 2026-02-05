@@ -34,9 +34,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.core.tools.Log
-import org.linphone.databinding.MeetingWaitingRoomFragmentBinding
+import com.hansol.siphone.databinding.MeetingWaitingRoomFragmentBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.call.fragment.AudioDevicesMenuDialogFragment
 import org.linphone.ui.call.model.AudioDeviceModel

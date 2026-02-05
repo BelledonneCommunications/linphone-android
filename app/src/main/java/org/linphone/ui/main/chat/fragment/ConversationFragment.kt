@@ -62,12 +62,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.ChatMessage
 import org.linphone.core.tools.Log
-import org.linphone.databinding.ChatConversationFragmentBinding
-import org.linphone.databinding.ChatConversationPopupMenuBinding
+import com.hansol.siphone.databinding.ChatConversationFragmentBinding
+import com.hansol.siphone.databinding.ChatConversationPopupMenuBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.chat.RecyclerViewScrollListener
 import org.linphone.ui.main.chat.adapter.ConversationEventAdapter

@@ -29,7 +29,7 @@ import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
 import org.linphone.utils.Event
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.core.GlobalState
 import org.linphone.utils.LinphoneUtils
 

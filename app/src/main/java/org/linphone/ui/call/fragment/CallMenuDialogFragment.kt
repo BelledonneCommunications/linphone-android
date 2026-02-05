@@ -28,7 +28,7 @@ import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import org.linphone.databinding.CallsListLongPressMenuBinding
+import com.hansol.siphone.databinding.CallsListLongPressMenuBinding
 import org.linphone.ui.call.model.CallModel
 
 class CallMenuDialogFragment(

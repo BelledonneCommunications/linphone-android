@@ -30,7 +30,7 @@ import androidx.car.app.model.ItemList
 import androidx.car.app.model.Template
 import androidx.core.graphics.drawable.IconCompat
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.contacts.AvatarGenerator
 import org.linphone.contacts.getAvatarBitmap
 import org.linphone.core.MagicSearch

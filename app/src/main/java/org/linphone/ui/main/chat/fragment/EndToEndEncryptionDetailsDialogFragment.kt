@@ -29,7 +29,7 @@ import androidx.annotation.UiThread
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import org.linphone.databinding.ChatConversationE2eEncryptedDetailsBottomSheetBinding
+import com.hansol.siphone.databinding.ChatConversationE2eEncryptedDetailsBottomSheetBinding
 
 @UiThread
 class EndToEndEncryptionDetailsDialogFragment(

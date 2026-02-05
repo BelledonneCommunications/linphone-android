@@ -24,7 +24,7 @@ import androidx.annotation.WorkerThread
 import androidx.core.content.res.ResourcesCompat
 import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.core.EventLog
 import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils

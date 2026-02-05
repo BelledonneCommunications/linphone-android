@@ -52,11 +52,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.compatibility.Api28Compatibility
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
-import org.linphone.databinding.CallActivityBinding
+import com.hansol.siphone.databinding.CallActivityBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.call.conference.fragment.ActiveConferenceCallFragmentDirections
 import org.linphone.ui.call.conference.fragment.ConferenceLayoutMenuDialogFragment

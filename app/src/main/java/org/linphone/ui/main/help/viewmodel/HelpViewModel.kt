@@ -25,10 +25,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.FirebaseApp
 import kotlinx.coroutines.launch
-import org.linphone.BuildConfig
+import com.hansol.siphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.VersionUpdateCheckResult

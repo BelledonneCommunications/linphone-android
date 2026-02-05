@@ -29,10 +29,10 @@ import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import org.linphone.R
-import org.linphone.databinding.ChatBubbleSingleFileContentBinding
-import org.linphone.databinding.ChatMediaContentGridCellBinding
-import org.linphone.databinding.MeetingsListDecorationBinding
+import com.hansol.siphone.R
+import com.hansol.siphone.databinding.ChatBubbleSingleFileContentBinding
+import com.hansol.siphone.databinding.ChatMediaContentGridCellBinding
+import com.hansol.siphone.databinding.MeetingsListDecorationBinding
 import org.linphone.ui.main.chat.model.FileModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.HeaderAdapter

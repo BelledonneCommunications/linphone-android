@@ -20,7 +20,7 @@
 package org.linphone.ui
 
 import androidx.annotation.FontRes
-import org.linphone.R
+import com.hansol.siphone.R
 
 enum class NotoSansFont(@FontRes val fontRes: Int) {
     // NotoSansLight(R.font.noto_sans_light), // 300

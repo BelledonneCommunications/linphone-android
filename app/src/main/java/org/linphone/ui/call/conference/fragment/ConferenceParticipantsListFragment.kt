@@ -33,11 +33,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.core.Participant
 import org.linphone.core.tools.Log
-import org.linphone.databinding.CallConferenceParticipantsListFragmentBinding
-import org.linphone.databinding.CallConferenceParticipantsListPopupMenuBinding
+import com.hansol.siphone.databinding.CallConferenceParticipantsListFragmentBinding
+import com.hansol.siphone.databinding.CallConferenceParticipantsListPopupMenuBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.call.adapter.ConferenceParticipantsListAdapter
 import org.linphone.ui.call.fragment.GenericCallFragment

@@ -28,9 +28,9 @@ import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.core.tools.Log
-import org.linphone.databinding.AssistantRegisterConfirmSmsCodeFragmentBinding
+import com.hansol.siphone.databinding.AssistantRegisterConfirmSmsCodeFragmentBinding
 import org.linphone.ui.GenericFragment
 import org.linphone.ui.assistant.viewmodel.AccountCreationViewModel
 

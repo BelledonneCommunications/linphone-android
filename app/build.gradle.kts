@@ -99,7 +99,7 @@ tasks.register("linphoneSdkSource") {
 project.tasks.preBuild.dependsOn("linphoneSdkSource")
 
 android {
-    namespace = "org.linphone"
+    namespace = "com.hansol.siphone"
     compileSdk = 36
 
     defaultConfig {

@@ -43,7 +43,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
-        android:name=".LinphoneApplication"
+        android:name="org.linphone.LinphoneApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -67,7 +67,7 @@
             android:value="1"/>-->
 
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name="org.linphone.ui.main.MainActivity"
             android:theme="@style/AppSplashScreenTheme"
             android:windowSoftInputMode="adjustResize"
             android:exported="true"
@@ -125,31 +125,31 @@
         </activity>
 
         <activity
-            android:name=".ui.welcome.WelcomeActivity"
+            android:name="org.linphone.ui.welcome.WelcomeActivity"
             android:windowSoftInputMode="adjustResize"
             android:launchMode="singleTask"
             android:resizeableActivity="true" />
 
         <activity
-            android:name=".ui.assistant.AssistantActivity"
+            android:name="org.linphone.ui.assistant.AssistantActivity"
             android:windowSoftInputMode="adjustResize"
             android:launchMode="singleTask"
             android:resizeableActivity="true" />
 
         <activity
-            android:name=".ui.fileviewer.MediaViewerActivity"
+            android:name="org.linphone.ui.fileviewer.MediaViewerActivity"
             android:windowSoftInputMode="adjustResize"
             android:launchMode="singleTask"
             android:resizeableActivity="true" />
 
         <activity
-            android:name=".ui.fileviewer.FileViewerActivity"
+            android:name="org.linphone.ui.fileviewer.FileViewerActivity"
             android:windowSoftInputMode="adjustResize"
             android:launchMode="singleTask"
             android:resizeableActivity="true" />
 
         <activity
-            android:name=".ui.call.CallActivity"
+            android:name="org.linphone.ui.call.CallActivity"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.LinphoneInCall"
             android:launchMode="singleInstance"
@@ -161,21 +161,21 @@
         <!-- Services -->
 
         <service
-            android:name=".core.CoreInCallService"
+            android:name="org.linphone.core.CoreInCallService"
             android:exported="false"
             android:foregroundServiceType="phoneCall|camera|microphone"
             android:stopWithTask="false"
             android:label="@string/app_name" />
 
         <service
-            android:name=".core.CorePushService"
+            android:name="org.linphone.core.CorePushService"
             android:exported="false"
             android:foregroundServiceType="dataSync"
             android:stopWithTask="false"
             android:label="@string/app_name" />
 
         <service
-            android:name=".core.CoreFileTransferService"
+            android:name="org.linphone.core.CoreFileTransferService"
             android:exported="false"
             android:foregroundServiceType="dataSync"
             android:stopWithTask="false"
@@ -190,7 +190,7 @@
         </service>
 
         <service
-            android:name=".core.CoreKeepAliveThirdPartyAccountsService"
+            android:name="org.linphone.core.CoreKeepAliveThirdPartyAccountsService"
             android:exported="false"
             android:foregroundServiceType="specialUse"
             android:stopWithTask="false"
@@ -211,7 +211,7 @@
 
         <!-- Receivers -->
 
-        <receiver android:name=".core.CorePushReceiver"
+        <receiver android:name="org.linphone.core.CorePushReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="org.linphone.core.action.PUSH_RECEIVED"/>
@@ -219,11 +219,11 @@
         </receiver>
 
         <receiver
-            android:name=".notifications.NotificationBroadcastReceiver"
+            android:name="org.linphone.notifications.NotificationBroadcastReceiver"
             android:enabled="true"
             android:exported="false" />
 
-        <receiver android:name=".core.BootReceiver"
+        <receiver android:name="org.linphone.core.BootReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

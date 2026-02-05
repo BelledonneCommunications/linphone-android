@@ -41,7 +41,7 @@ import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import kotlin.system.exitProcess
-import org.linphone.BuildConfig
+import com.hansol.siphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.compatibility.Compatibility
@@ -286,8 +286,8 @@ class CoreContext
                 showGreenToastEvent.postValue(
                     Event(
                         Pair(
-                            org.linphone.R.string.remote_provisioning_config_applied_toast,
-                            org.linphone.R.drawable.smiley
+                            com.hansol.siphone.R.string.remote_provisioning_config_applied_toast,
+                            com.hansol.siphone.R.drawable.smiley
                         )
                     )
                 )
@@ -295,8 +295,8 @@ class CoreContext
                 showRedToastEvent.postValue(
                     Event(
                         Pair(
-                            org.linphone.R.string.remote_provisioning_config_failed_toast,
-                            org.linphone.R.drawable.warning_circle
+                            com.hansol.siphone.R.string.remote_provisioning_config_failed_toast,
+                            com.hansol.siphone.R.drawable.warning_circle
                         )
                     )
                 )
@@ -397,7 +397,7 @@ class CoreContext
                     )
                     val text = LinphoneUtils.getCallErrorInfoToast(call)
                     showFormattedRedToastEvent.postValue(
-                        Event(Pair(text, org.linphone.R.drawable.warning_circle))
+                        Event(Pair(text, com.hansol.siphone.R.drawable.warning_circle))
                     )
                 }
                 else -> {
@@ -413,9 +413,9 @@ class CoreContext
                 "$TAG Transferred call [${transfered.remoteAddress.asStringUriOnly()}] state changed [$state]"
             )
             if (state == Call.State.Connected) {
-                val icon = org.linphone.R.drawable.phone_transfer
+                val icon = com.hansol.siphone.R.drawable.phone_transfer
                 showGreenToastEvent.postValue(
-                    Event(Pair(org.linphone.R.string.call_transfer_successful_toast, icon))
+                    Event(Pair(com.hansol.siphone.R.string.call_transfer_successful_toast, icon))
                 )
             }
         }
@@ -614,8 +614,8 @@ class CoreContext
         }
         Log.i("=========================================")
         Log.i("==== Linphone-android information dump ====")
-        val gitVersion = AppUtils.getString(org.linphone.R.string.linphone_app_version)
-        val gitBranch = AppUtils.getString(org.linphone.R.string.linphone_app_branch)
+        val gitVersion = AppUtils.getString(com.hansol.siphone.R.string.linphone_app_version)
+        val gitBranch = AppUtils.getString(com.hansol.siphone.R.string.linphone_app_branch)
         Log.i("VERSION=${BuildConfig.VERSION_NAME} / ${BuildConfig.VERSION_CODE} ($gitVersion from $gitBranch branch)")
         Log.i("PACKAGE=${BuildConfig.APPLICATION_ID}")
         Log.i("BUILD TYPE=${BuildConfig.BUILD_TYPE}")
@@ -1141,7 +1141,7 @@ class CoreContext
         }
         Log.i("$TAG Device name for user-agent is [$deviceName]")
 
-        val appName = context.getString(org.linphone.R.string.app_name)
+        val appName = context.getString(com.hansol.siphone.R.string.app_name)
         val androidVersion = BuildConfig.VERSION_NAME
         val userAgent = "${appName}Android/$androidVersion ($deviceName) LinphoneSDK"
         val sdkVersion = context.getString(R.string.linphone_sdk_version)

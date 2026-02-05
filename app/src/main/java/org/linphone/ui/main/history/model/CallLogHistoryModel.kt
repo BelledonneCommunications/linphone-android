@@ -22,7 +22,7 @@ package org.linphone.ui.main.history.model
 import androidx.annotation.IntegerRes
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.core.Call
 import org.linphone.core.Call.Dir
 import org.linphone.core.CallLog

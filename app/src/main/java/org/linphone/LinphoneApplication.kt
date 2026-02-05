@@ -35,6 +35,7 @@ import coil3.request.crossfade
 import coil3.svg.SvgDecoder
 import coil3.video.VideoFrameDecoder
 import com.google.android.material.color.DynamicColors
+import com.hansol.siphone.R
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.CoreContext
 import org.linphone.core.CorePreferences

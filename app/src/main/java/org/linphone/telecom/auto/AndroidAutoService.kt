@@ -23,7 +23,7 @@ import android.content.pm.ApplicationInfo
 import androidx.car.app.CarAppService
 import androidx.car.app.Session
 import androidx.car.app.validation.HostValidator
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.core.tools.Log
 
 class AndroidAutoService : CarAppService() {

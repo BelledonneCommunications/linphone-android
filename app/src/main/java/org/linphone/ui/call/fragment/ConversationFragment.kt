@@ -23,7 +23,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.findNavController
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.core.tools.Log
 import org.linphone.ui.fileviewer.FileViewerActivity
 import org.linphone.ui.fileviewer.MediaViewerActivity

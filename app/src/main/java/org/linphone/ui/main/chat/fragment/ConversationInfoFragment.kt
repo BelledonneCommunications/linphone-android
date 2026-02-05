@@ -32,10 +32,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.LinphoneApplication.Companion.corePreferences
-import org.linphone.R
+import com.hansol.siphone.R
 import org.linphone.core.tools.Log
-import org.linphone.databinding.ChatInfoFragmentBinding
-import org.linphone.databinding.ChatParticipantAdminPopupMenuBinding
+import com.hansol.siphone.databinding.ChatInfoFragmentBinding
+import com.hansol.siphone.databinding.ChatParticipantAdminPopupMenuBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.chat.adapter.ConversationParticipantsAdapter
 import org.linphone.ui.main.chat.model.ParticipantModel
