@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE resources [
-<!ENTITY appName "SipPhone">
+<!ENTITY appName "Soft Phone">
 ]>
 <resources>
     <string name="sip_address">SIP adresa</string>

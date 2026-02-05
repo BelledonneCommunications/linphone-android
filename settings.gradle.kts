@@ -46,5 +46,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Sipphone"
+rootProject.name = "Soft Phone"
 include(":app")

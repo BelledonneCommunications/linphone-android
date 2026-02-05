@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 
-<!DOCTYPE resources [<!ENTITY appName "SipPhone">]>
+<!DOCTYPE resources [<!ENTITY appName "Soft Phone">]>
 
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Common words -->
