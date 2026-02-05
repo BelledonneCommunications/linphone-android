@@ -133,7 +133,7 @@ android {
     signingConfigs {
         create("release") {
             val keyStorePath = keystoreProperties["storeFile"] as String
-            val keyStore = project.file(keyStorePath)
+            val keyStore = rootProject.file(keyStorePath)
             if (keyStore.exists()) {
                 storeFile = keyStore
                 storePassword = keystoreProperties["storePassword"] as String
