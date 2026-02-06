@@ -131,6 +131,7 @@
             android:contentDescription="@string/call_action_show_messages"
             android:background="@drawable/in_call_button_background_red"
             android:enabled="@{!viewModel.operationInProgress}"
+            android:visibility="gone"
             app:tint="@color/in_call_button_tint_color"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toBottomOf="@id/transfer_label"
@@ -158,7 +159,7 @@
             android:layout_marginStart="40dp"
             android:layout_marginTop="25dp"
             android:text="@{String.valueOf(viewModel.unreadMessagesCount), default=`1`}"
-            android:visibility="@{viewModel.unreadMessagesCount > 0 ? View.VISIBLE : View.GONE}"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/transfer_label"
             app:layout_constraintStart_toStartOf="@id/chat"
             app:layout_constraintEnd_toEndOf="@id/chat"/>
@@ -172,6 +173,7 @@
             android:layout_height="@dimen/call_button_size"
             android:layout_marginTop="@dimen/call_extra_button_top_margin"
             android:padding="@dimen/call_button_icon_padding"
+            android:visibility="gone"
             android:background="@drawable/in_call_button_background_green"
             android:contentDescription="@{viewModel.isPaused ? @string/call_action_resume_call : @string/call_action_pause_call}"
             android:src="@{viewModel.isPaused ? @drawable/play : @drawable/pause, default=@drawable/pause}"
@@ -196,8 +198,8 @@
             app:tint="@color/in_call_button_tint_color"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toBottomOf="@id/calls_list_label"
-            app:layout_constraintStart_toStartOf="@id/calls_list"
-            app:layout_constraintEnd_toEndOf="@id/calls_list" />
+            app:layout_constraintStart_toStartOf="@id/transfer"
+            app:layout_constraintEnd_toEndOf="@id/transfer" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/in_call_extra_action_label_style"
@@ -256,6 +258,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
             android:text="@string/call_action_show_messages"
+            android:visibility="gone"
             android:labelFor="@id/chat"
             android:enabled="@{!viewModel.operationInProgress}"
             app:layout_constraintTop_toBottomOf="@id/chat"
@@ -271,6 +274,7 @@
             android:paddingBottom="15dp"
             android:enabled="@{viewModel.canBePaused}"
             android:selected="@{viewModel.isPaused}"
+            android:visibility="gone"
             android:text="@{viewModel.isPaused ? @string/call_action_resume_call : @string/call_action_pause_call, default=@string/call_action_pause_call}"
             android:labelFor="@id/pause_call"
             app:layout_constraintTop_toBottomOf="@id/pause_call"
@@ -288,8 +292,8 @@
             android:text="@string/call_action_record_call"
             android:labelFor="@id/record_call"
             app:layout_constraintTop_toBottomOf="@id/record_call"
-            app:layout_constraintStart_toStartOf="@id/calls_list_label"
-            app:layout_constraintEnd_toEndOf="@id/calls_list_label" />
+            app:layout_constraintStart_toStartOf="@id/record_call"
+            app:layout_constraintEnd_toEndOf="@id/record_call" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
