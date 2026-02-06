@@ -49,7 +49,7 @@
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/hansol_sipphone"
+                    android:text="@string/app_name"
                     android:textColor="?attr/color_text"
                     app:layout_constraintTop_toTopOf="@id/back"
                     app:layout_constraintBottom_toBottomOf="@id/back"
