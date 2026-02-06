@@ -25,7 +25,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/call_all_actions_menu_height"
-        android:clickable="true"
+        android:clickable="false"
         android:focusable="true"
         android:background="@drawable/shape_call_bottom_sheet_background"
         android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode ? View.INVISIBLE : View.VISIBLE}"
@@ -44,7 +44,6 @@
 
         <ImageView
             android:id="@+id/transfer"
-            android:onClick="@{transferCallClickListener}"
             android:layout_width="0dp"
             android:layout_height="@dimen/call_button_size"
             android:layout_marginTop="@dimen/call_extra_button_top_margin"
@@ -60,7 +59,6 @@
 
         <ImageView
             android:id="@+id/new_call"
-            android:onClick="@{newCallClickListener}"
             android:layout_width="0dp"
             android:layout_height="@dimen/call_button_size"
             android:layout_marginTop="@dimen/call_extra_button_top_margin"
@@ -76,7 +74,6 @@
 
         <ImageView
             android:id="@+id/calls_list"
-            android:onClick="@{callsListClickListener}"
             android:layout_width="0dp"
             android:layout_height="@dimen/call_button_size"
             android:layout_marginTop="@dimen/call_extra_button_top_margin"
@@ -105,7 +102,6 @@
 
         <ImageView
             android:id="@+id/numpad"
-            android:onClick="@{() -> viewModel.showNumpad()}"
             android:enabled="@{!viewModel.isPaused &amp;&amp; !viewModel.isPausedByRemote}"
             android:layout_width="0dp"
             android:layout_height="@dimen/call_button_size"
@@ -185,7 +181,6 @@
 
         <ImageView
             android:id="@+id/record_call"
-            android:onClick="@{() -> viewModel.toggleRecording()}"
             android:enabled="@{viewModel.isRecordingEnabled &amp;&amp; !viewModel.isPaused &amp;&amp; !viewModel.isPausedByRemote}"
             android:layout_width="0dp"
             android:layout_height="@dimen/call_button_size"
@@ -204,7 +199,6 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/in_call_extra_action_label_style"
             android:id="@+id/transfer_label"
-            android:onClick="@{transferCallClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/call_action_transfer"
@@ -216,7 +210,6 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/in_call_extra_action_label_style"
             android:id="@+id/new_call_label"
-            android:onClick="@{newCallClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/call_action_start_new_call"
@@ -228,7 +221,6 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/in_call_extra_action_label_style"
             android:id="@+id/calls_list_label"
-            android:onClick="@{callsListClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/call_action_go_to_calls_list"
@@ -240,7 +232,6 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/in_call_extra_action_label_style"
             android:id="@+id/layout_label"
-            android:onClick="@{() -> viewModel.showNumpad()}"
             android:enabled="@{!viewModel.isPaused &amp;&amp; !viewModel.isPausedByRemote}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -284,7 +275,6 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/in_call_extra_action_label_style"
             android:id="@+id/record_call_label"
-            android:onClick="@{() -> viewModel.toggleRecording()}"
             android:enabled="@{viewModel.isRecordingEnabled &amp;&amp; !viewModel.isPaused &amp;&amp; !viewModel.isPausedByRemote}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
