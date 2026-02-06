@@ -204,6 +204,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{helpClickedListener}"
             style="@style/header_style"
+            android:visibility="gone"
             android:id="@+id/help"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

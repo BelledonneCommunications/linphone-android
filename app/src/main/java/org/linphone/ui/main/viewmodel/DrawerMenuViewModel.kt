@@ -25,6 +25,7 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.constants.DISABLE_RECORDING
 import org.linphone.core.Account
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
@@ -46,7 +47,7 @@ class DrawerMenuViewModel
 
     val hideAddAccount = MutableLiveData<Boolean>(true)
 
-    val hideRecordings = MutableLiveData<Boolean>()
+    val hideRecordings = MutableLiveData<Boolean>(DISABLE_RECORDING)
 
     val hideSettings = MutableLiveData<Boolean>()
 
@@ -124,7 +125,7 @@ class DrawerMenuViewModel
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
 
-            hideRecordings.postValue(corePreferences.disableCallRecordings)
+//            hideRecordings.postValue(corePreferences.disableCallRecordings)
             hideSettings.postValue(corePreferences.hideSettings)
 
             checkIfKeepAliveServiceIsEnabled()

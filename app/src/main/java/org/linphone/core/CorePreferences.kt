@@ -28,6 +28,7 @@ import java.io.File
 import java.io.FileOutputStream
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.constants.DEFAULT_HIDE_CONVERSATION
+import org.linphone.constants.DISABLE_SETTINGS
 import org.linphone.contacts.ContactLoader.Companion.LINPHONE_ADDRESS_BOOK_FRIEND_LIST
 
 class CorePreferences
@@ -390,7 +391,7 @@ class CorePreferences
 
     @get:AnyThread
     val hideSettings: Boolean
-        get() = config.getBool("ui", "hide_settings", false)
+        get() = config.getBool("ui", "hide_settings", DISABLE_SETTINGS)
 
     @get:AnyThread
     val hideAccountSettings: Boolean
