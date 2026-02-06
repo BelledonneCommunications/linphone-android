@@ -111,6 +111,10 @@ class PermissionsFragment : GenericFragment() {
             leave()
         }
 
+        requestPermissionLauncher.launch(
+            Compatibility.getAllRequiredPermissionsArray()
+        )
+
         binding.setGrantAllClickListener {
             Log.i("$TAG Requesting all permissions")
             requestPermissionLauncher.launch(

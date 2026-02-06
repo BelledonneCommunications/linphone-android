@@ -35,6 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
+        android:visibility="gone"
         android:background="?attr/color_main2_000">
 
         <androidx.constraintlayout.widget.ConstraintLayout
