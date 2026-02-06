@@ -316,7 +316,7 @@
     <string name="contacts_list_all_contacts_title">Alle Kontakte</string>
     <string name="contacts_list_filter_popup_see_all">Alles sehen</string>
     <string name="contacts_list_filter_popup_see_linphone_only">&appName; Kontakte</string>
-    <string name="contacts_list_filter_popup_see_sip_only">SIP Kontakte</string>
+    <string name="contacts_list_filter_popup_see_sip_only">Kontakte</string>
     <string name="contact_new_title">Neuer Kontakt</string>
     <string name="contact_edit_title">Kontakt bearbeiten</string>
     <string name="contact_editor_first_name">Vorname</string>
@@ -644,7 +644,7 @@
     <string name="recordings_list_empty">Keine Aufnahme im Moment…</string>
     <string name="car_favorites_contacts_title">Favoriten</string>
     <string name="car_favorites_contacts_list_empty">Noch kein Favoritenkontakt</string>
-    <string name="contacts_list_sip_empty">Kein SIP-Kontakt im Moment…</string>
+    <string name="contacts_list_sip_empty">Kein Kontakt im Moment…</string>
     <string name="contacts_change_filter_label">Filter ändern</string>
     <string name="menu_add_address_to_contacts">Zu Kontakte hinzufügen</string>
     <string name="menu_see_existing_contact">Siehe Kontakt</string>

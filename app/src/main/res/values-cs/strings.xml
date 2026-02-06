@@ -417,7 +417,7 @@
     <string name="contacts_list_all_contacts_title">Všechny kontakty</string>
     <string name="contacts_list_filter_popup_see_all">Zobrazit vše</string>
     <string name="contacts_list_filter_popup_see_linphone_only">Zobrazit &appName; kontakty</string>
-    <string name="contacts_list_filter_popup_see_sip_only">Zobrazit SIP kontakty</string>
+    <string name="contacts_list_filter_popup_see_sip_only">Zobrazit kontakty</string>
     <string name="contact_new_title">Nový kontakt</string>
     <string name="contact_edit_title">Upravit kontakt</string>
     <string name="contact_editor_last_name">Příjmení</string>
@@ -836,7 +836,7 @@
     <string name="meeting_failed_to_edit_schedule_toast">Úprava schůzky selhala!</string>
     <string name="settings_advanced_print_logs_crashlytics_title">Pomozte vývojářům řešit problémy odesláním protokolů do Crashlytics po pádu</string>
     <string name="settings_advanced_logs_upload_server_url">Adresa URL serveru pro sdílení logů</string>
-    <string name="contacts_list_sip_empty">Momentálně žádný SIP kontakt…</string>
+    <string name="contacts_list_sip_empty">Momentálně žádný kontakt…</string>
     <string name="contacts_change_filter_label">Změnit filtr</string>
     <string name="help_about_contribute_translations_subtitle">Pomozte zpřístupnit aplikaci co největšímu počtu lidí.</string>
     <string name="help_about_user_guide_title">Průvodce &appName;</string>

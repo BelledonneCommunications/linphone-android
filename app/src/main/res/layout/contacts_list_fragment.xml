@@ -160,7 +160,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/no_contacts_image" />
 
-                <androidx.appcompat.widget.AppCompatTextView
+                <!--<androidx.appcompat.widget.AppCompatTextView
                     style="@style/default_text_style_600"
                     android:id="@+id/show_contacts_filter"
                     android:onClick="@{filterClickListener}"
@@ -179,7 +179,7 @@
                     android:visibility="@{viewModel.contactsList.empty &amp;&amp; !viewModel.areAllContactsDisplayed ? View.VISIBLE : View.GONE}"
                     app:layout_constraintTop_toBottomOf="@id/no_contacts_label"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"/>-->
 
                 <com.google.android.material.progressindicator.CircularProgressIndicator
                     android:id="@+id/fetch_in_progress"

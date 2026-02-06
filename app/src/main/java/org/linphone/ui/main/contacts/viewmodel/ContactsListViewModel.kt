@@ -31,6 +31,7 @@ import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import com.hansol.siphone.R
+import org.linphone.constants.SHOW_CONTACTS_FILTER
 import org.linphone.contacts.ContactsManager.ContactsListener
 import org.linphone.core.Friend
 import org.linphone.core.FriendList
@@ -59,7 +60,7 @@ class ContactsListViewModel
 
     val showFavourites = MutableLiveData<Boolean>()
 
-    val showFilter = MutableLiveData<Boolean>()
+    val showFilter = MutableLiveData<Boolean>(SHOW_CONTACTS_FILTER)
 
     val isListFiltered = MutableLiveData<Boolean>()
 
@@ -151,7 +152,7 @@ class ContactsListViewModel
     init {
         fetchInProgress.value = true
         showFavourites.value = corePreferences.showFavoriteContacts
-        showFilter.value = !corePreferences.hidePhoneNumbers && !corePreferences.hideSipAddresses
+//        showFilter.value = !corePreferences.hidePhoneNumbers && !corePreferences.hideSipAddresses
         disableAddContact.value = corePreferences.disableAddContact
 
         coreContext.postOnCoreThread { core ->

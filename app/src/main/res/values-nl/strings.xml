@@ -360,12 +360,12 @@
     <string name="history_dialog_delete_all_call_logs_message">Alle oproepen worden uit de geschiedenis verwijderd</string>
     <string name="history_dialog_delete_call_logs_message">Alle oproepen worden uit de geschiedenis verwijderd</string>
     <string name="contacts_list_empty">Geen contact op dit moment…</string>
-    <string name="contacts_list_sip_empty">Geen SIP-contact op dit moment…</string>
+    <string name="contacts_list_sip_empty">Geen contact op dit moment…</string>
     <string name="contacts_list_favourites_title">Favorieten</string>
     <string name="contacts_list_all_contacts_title">Alle contacten</string>
     <string name="contacts_list_filter_popup_see_all">Zie alles</string>
     <string name="contacts_list_filter_popup_see_linphone_only">Bekijk &appName; contacten</string>
-    <string name="contacts_list_filter_popup_see_sip_only">Bekijk SIP-contacten</string>
+    <string name="contacts_list_filter_popup_see_sip_only">Bekijk contacten</string>
     <string name="contact_new_title">Nieuw contact</string>
     <string name="contact_edit_title">Bewerk contact</string>
     <string name="contact_editor_first_name">Voornaam</string>

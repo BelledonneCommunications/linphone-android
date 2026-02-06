@@ -343,7 +343,7 @@
     <string name="settings_advanced_ring_during_early_media_title">Vyzváňať počas prichádzajúceho hovoru (early media)</string>
     <string name="settings_advanced_input_audio_device_title">Predvolené vstupné zvukové zariadenie</string>
     <string name="settings_advanced_output_audio_device_title">Predvolené výstupné zvukové zariadenie</string>
-    <string name="contacts_list_sip_empty">Momentálne žiadny SIP kontakt…</string>
+    <string name="contacts_list_sip_empty">Momentálne žiadny kontakt…</string>
     <string name="settings_contacts_carddav_mandatory_field_not_filled_toast">Vyplňte, prosím, aspoň zobrazované meno a URL adresu servera</string>
     <string name="settings_contacts_ldap_request_delay_title">Oneskorenie medzi dvomi dotazmi (v milisekundách)</string>
     <string name="settings_meetings_default_layout_title">Predvolené rozloženie</string>
@@ -359,7 +359,7 @@
     <string name="account_settings_conference_factory_uri_title">URI adresa pre vytváranie konferencií</string>
     <string name="contacts_list_filter_popup_see_all">Zobraziť všetko</string>
     <string name="contacts_list_filter_popup_see_linphone_only">Zobraziť &appName; kontakty</string>
-    <string name="contacts_list_filter_popup_see_sip_only">Zobraziť SIP kontakty</string>
+    <string name="contacts_list_filter_popup_see_sip_only">Zobraziť kontakty</string>
     <string name="contact_new_title">Nový kontakt</string>
     <string name="contact_edit_title">Upraviť kontakt</string>
     <string name="contact_editor_last_name">Priezvisko</string>

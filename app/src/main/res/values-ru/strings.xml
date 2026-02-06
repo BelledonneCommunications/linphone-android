@@ -326,7 +326,7 @@
     <string name="contacts_list_all_contacts_title">Все контакты</string>
     <string name="contacts_list_filter_popup_see_all">Смотреть все</string>
     <string name="contacts_list_filter_popup_see_linphone_only">Смотреть контакты &appName;</string>
-    <string name="contacts_list_filter_popup_see_sip_only">Смотреть контакты SIP</string>
+    <string name="contacts_list_filter_popup_see_sip_only">Смотреть контакты</string>
     <string name="contact_new_title">Новый контакт</string>
     <string name="contact_edit_title">Изменить контакт</string>
     <string name="contact_editor_last_name">Фамилия</string>
@@ -747,7 +747,7 @@
     <string name="call_audio_record_permission_not_granted_toast">Доступ к аудиозаписи отклонён!</string>
     <string name="call_dialog_zrtp_validate_trust_message">Для вашей безопасности нам необходимо аутентифицировать ваше устройство.\nПожалуйста, обменяйтесь кодами:</string>
     <string name="history_dialog_delete_all_call_logs_message">Все звонки будут удалены из истории</string>
-    <string name="contacts_list_sip_empty">На данный момент нет SIP-контактов…</string>
+    <string name="contacts_list_sip_empty">На данный момент нет контактов…</string>
     <string name="contact_details_actions_title">Другие действия</string>
     <string name="contact_sms_invite_content">Привет, присоединяйся ко мне на &appName;! Ты можешь скачать его бесплатно на %s</string>
     <string name="conversation_action_mark_as_read">Отметить как прочитанное</string>

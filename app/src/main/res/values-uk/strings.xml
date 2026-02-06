@@ -420,13 +420,13 @@
     <string name="history_dialog_delete_all_call_logs_message">Усі дзвінки будуть видалені з історії</string>
     <string name="history_dialog_delete_call_logs_title">Ви справді хочете видалити історію спілкування з цим контактом?</string>
     <string name="contacts_list_empty">Наразі контакти відсутні…</string>
-    <string name="contacts_list_sip_empty">Наразі SIP-контакти відсутні…</string>
+    <string name="contacts_list_sip_empty">Наразі контакти відсутні…</string>
     <string name="contacts_change_filter_label">Змінити фільтр</string>
     <string name="contacts_list_favourites_title">Обрані контакти</string>
     <string name="contacts_list_all_contacts_title">Усі контакти</string>
     <string name="contacts_list_filter_popup_see_all">Переглянути усі</string>
     <string name="contacts_list_filter_popup_see_linphone_only">Переглянути контакти &appName;</string>
-    <string name="contacts_list_filter_popup_see_sip_only">Переглянути SIP-контакти</string>
+    <string name="contacts_list_filter_popup_see_sip_only">Переглянути контакти</string>
     <string name="contact_new_title">Новий контакт</string>
     <string name="contact_editor_first_name">Ім\'я</string>
     <string name="contact_editor_last_name">Прізвище</string>

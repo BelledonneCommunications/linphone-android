@@ -298,13 +298,13 @@
     <string name="history_dialog_delete_all_call_logs_message">Todas as chamadas serão removidas do histórico</string>
     <string name="history_dialog_delete_call_logs_message">Todas as chamadas serão removidas do histórico</string>
     <string name="contacts_list_empty">Nenhum contato no momento…</string>
-    <string name="contacts_list_sip_empty">Nenhum contato SIP no momento…</string>
+    <string name="contacts_list_sip_empty">Nenhum contato no momento…</string>
     <string name="contacts_change_filter_label">Alterar filtro</string>
     <string name="contacts_list_favourites_title">Favoritos</string>
     <string name="contacts_list_all_contacts_title">Todos os contatos</string>
     <string name="contacts_list_filter_popup_see_all">Ver todos</string>
     <string name="contacts_list_filter_popup_see_linphone_only">Ver contatos &appName;</string>
-    <string name="contacts_list_filter_popup_see_sip_only">Ver contatos SIP</string>
+    <string name="contacts_list_filter_popup_see_sip_only">Ver contatos</string>
     <string name="contact_new_title">Novo contato</string>
     <string name="contact_edit_title">Editar contato</string>
     <string name="contact_editor_first_name">Nome</string>

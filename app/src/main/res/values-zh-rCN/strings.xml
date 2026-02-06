@@ -345,11 +345,11 @@
     <string name="history_dialog_delete_all_call_logs_message">所有通话都将从历史记录中删除</string>
     <string name="history_dialog_delete_call_logs_message">所有通话都将从历史记录中删除</string>
     <string name="contacts_list_empty">暂时没有联系人…</string>
-    <string name="contacts_list_sip_empty">目前没有SIP联系人…</string>
+    <string name="contacts_list_sip_empty">目前没有联系人…</string>
     <string name="contacts_change_filter_label">修改过滤器</string>
     <string name="contacts_list_all_contacts_title">所有联系人</string>
     <string name="contacts_list_filter_popup_see_all">查看所有</string>
-    <string name="contacts_list_filter_popup_see_sip_only">查看SIP联系人</string>
+    <string name="contacts_list_filter_popup_see_sip_only">查看联系人</string>
     <string name="contact_new_title">新建联系人</string>
     <string name="contact_editor_first_name">名</string>
     <string name="contact_editor_last_name">姓</string>
