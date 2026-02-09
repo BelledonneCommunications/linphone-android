@@ -23,6 +23,7 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import com.hansol.siphone.BuildConfig
 import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -69,7 +70,7 @@ class ThirdPartySipAccountLoginViewModel
 
     val proxy = MutableLiveData<String>()
 
-    val outboundProxy = MutableLiveData<String>()
+    val outboundProxy = MutableLiveData<String>(BuildConfig.OUTBOUND_PROXY_URI)
 
     val loginEnabled = MediatorLiveData<Boolean>()
 
