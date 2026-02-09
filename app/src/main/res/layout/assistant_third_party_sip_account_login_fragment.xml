@@ -254,6 +254,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
+                    android:visibility="gone"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginTop="20dp"
@@ -269,7 +270,7 @@
                     android:id="@+id/advanced_settings_group"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:constraint_referenced_ids="authentication_id_label, authentication_id, proxy_label, proxy, outbound_proxy_label, outbound_proxy, outbound_proxy_tooltip"
+                    app:constraint_referenced_ids="authentication_id_label, authentication_id, proxy_label, proxy, outbound_proxy_tooltip"
                     android:visibility="@{viewModel.expandAdvancedSettings ? View.VISIBLE : View.GONE, default=gone}" />
 
                 <androidx.appcompat.widget.AppCompatTextView

@@ -410,7 +410,7 @@
     <string name="account_settings_push_notification_not_available_title">Push notifications aren\'t available!</string>
     <string name="account_settings_im_encryption_mandatory_title">IM encryption mandatory</string>
     <string name="account_settings_sip_proxy_url_title">Registrar URI</string>
-    <string name="account_settings_outbound_proxy_title">Outbound SIP Proxy URI</string>
+    <string name="account_settings_outbound_proxy_title">SIP Server</string>
     <string name="account_settings_nat_policy_title">NAT policy settings</string>
     <string name="account_settings_stun_server_url_title">STUN/TURN server URL</string>
     <string name="account_settings_enable_ice_title">Enable ICE</string>
