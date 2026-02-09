@@ -251,7 +251,6 @@
                     style="@style/section_header_style"
                     android:onClick="@{() -> viewModel.toggleAdvancedSettingsExpand()}"
                     android:id="@+id/advanced_settings"
-                    android:visibility="gone"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
