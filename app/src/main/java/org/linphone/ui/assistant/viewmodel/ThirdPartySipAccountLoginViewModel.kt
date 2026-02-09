@@ -256,7 +256,6 @@ class ThirdPartySipAccountLoginViewModel
                 else -> TransportType.Udp
             }
             Log.i("$TAG Created proxy server SIP address [${proxyServerAddress?.asStringUriOnly()}]")
-            accountParams.serverAddress = proxyServerAddress
 
             val outboundProxyValue = outboundProxy.value.orEmpty().trim()
             val outboundProxyAddress = if (outboundProxyValue.isNotEmpty()) {
@@ -269,6 +268,7 @@ class ThirdPartySipAccountLoginViewModel
             } else {
                 null
             }
+            accountParams.serverAddress = outboundProxyAddress
             if (outboundProxyAddress != null) {
                 outboundProxyAddress.transport = when (transport.value.orEmpty().trim()) {
                     TransportType.Tcp.name.uppercase(Locale.getDefault()) -> TransportType.Tcp
