@@ -954,6 +954,10 @@ class CoreContext
         val username = address.username.orEmpty()
         val domain = address.domain.orEmpty()
         val account = params.account ?: core.defaultAccount
+        
+        // Apply X-Headers if enabled
+        applyCustomSipHeaders(params, address, username)
+        
         if (account != null && Compatibility.isIpAddress(domain)) {
             Log.i("$TAG SIP URI [${address.asStringUriOnly()}] seems to have an IP address as domain")
             if (username.isNotEmpty() && (username.startsWith("+") || username.isDigitsOnly())) {
@@ -972,6 +976,62 @@ class CoreContext
 
         core.inviteAddressWithParams(address, params)
         Log.i("$TAG Starting call to [${address.asStringUriOnly()}]")
+    }
+
+    @WorkerThread
+    private fun applyCustomSipHeaders(params: CallParams, address: Address, username: String) {
+        try {
+            val sipHeadersPrefs = corePreferences.sipHeaders()
+            
+            if (!sipHeadersPrefs.xHeadersEnabled) {
+                Log.d("$TAG X-Headers are disabled, skipping header application")
+                return
+            }
+
+            // Check if this is a PSTN call (phone number pattern)
+            val isPstnCall = username.isNotEmpty() && 
+                (username.startsWith("+") || username.all { it.isDigit() || it == '-' || it == ' ' })
+
+            if (sipHeadersPrefs.desktopPBXMode) {
+                val sessionId = if (sipHeadersPrefs.enableSessionTracking) {
+                    SipHeadersUtils.generateSessionId()
+                } else {
+                    null
+                }
+
+                if (isPstnCall) {
+                    // Apply PSTN-specific headers
+                    Log.i("$TAG Detected PSTN call, applying PSTN headers")
+                    SipHeadersUtils.addDesktopPBXPstnHeaders(
+                        params,
+                        pstnGateway = sipHeadersPrefs.pstnGatewayAddress,
+                        sessionId = sessionId,
+                        dialNumber = username
+                    )
+                } else {
+                    // Apply SIP-to-SIP headers
+                    Log.i("$TAG Detected SIP call, applying SIP-to-SIP headers")
+                    SipHeadersUtils.addDesktopPBXSipToSipHeaders(
+                        params,
+                        sourceDevice = sipHeadersPrefs.sourceDeviceId,
+                        sessionId = sessionId
+                    )
+                }
+            }
+
+            // Add custom user-defined headers
+            if (sipHeadersPrefs.autoAddHeaders) {
+                val customHeaders = sipHeadersPrefs.parseCustomHeaders()
+                if (customHeaders.isNotEmpty()) {
+                    Log.i("$TAG Adding ${customHeaders.size} custom user-defined headers")
+                    for ((name, value) in customHeaders) {
+                        SipHeadersUtils.addCustomHeader(params, name, value)
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("$TAG Error applying custom SIP headers: ${e.message}")
+        }
     }
 
     @WorkerThread

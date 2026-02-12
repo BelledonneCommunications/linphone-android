@@ -267,6 +267,11 @@ dependencies {
     implementation(libs.openid.appauth)
 
     implementation(libs.linphone)
+
+    // Unit test libraries for JVM unit tests
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.mockito:mockito-core:4.11.0")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.8.22")
 }
 
 configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
