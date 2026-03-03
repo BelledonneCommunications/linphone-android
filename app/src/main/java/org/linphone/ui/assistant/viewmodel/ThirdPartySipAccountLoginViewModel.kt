@@ -266,7 +266,7 @@ class ThirdPartySipAccountLoginViewModel
                 }
                 Factory.instance().createAddress(server)
             } else {
-                null
+                domainAddress ?: Factory.instance().createAddress("sip:$domainWithoutSip")
             }
             accountParams.serverAddress = outboundProxyAddress
             if (outboundProxyAddress != null) {
