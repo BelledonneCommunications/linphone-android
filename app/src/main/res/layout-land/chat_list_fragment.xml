@@ -71,7 +71,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:src="@drawable/illu"
                     android:contentDescription="@null"
                     app:layout_constraintHeight_max="200dp"
                     app:layout_constraintDimensionRatio="1:1"

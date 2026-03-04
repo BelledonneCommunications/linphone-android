@@ -247,7 +247,6 @@
                 android:id="@+id/mountains"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:src="@drawable/mountains"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
                 android:contentDescription="@null"

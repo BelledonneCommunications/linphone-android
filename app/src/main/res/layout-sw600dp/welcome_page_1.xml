@@ -14,7 +14,6 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/welcome_icon_size"
             android:layout_marginStart="32dp"
-            android:src="@drawable/welcome_linphone_logo"
             android:contentDescription="@null"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintDimensionRatio="1:1"
