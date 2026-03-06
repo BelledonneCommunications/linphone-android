@@ -133,6 +133,7 @@
                 android:layout_margin="10dp"
                 android:contentDescription="@null"
                 android:visibility="@{viewModel.isEmpty ? View.VISIBLE : View.GONE}"
+                android:src="@drawable/illus_empty"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHeight_max="200dp"

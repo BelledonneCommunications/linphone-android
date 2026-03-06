@@ -138,6 +138,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:contentDescription="@null"
+                    android:src="@drawable/illus_empty"
                     app:layout_constraintHeight_max="200dp"
                     app:layout_constraintBottom_toTopOf="@id/no_contacts_label"
                     app:layout_constraintDimensionRatio="1:1"
