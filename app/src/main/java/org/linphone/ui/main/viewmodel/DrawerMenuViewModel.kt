@@ -125,7 +125,7 @@ class DrawerMenuViewModel
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
 
-//            hideRecordings.postValue(corePreferences.disableCallRecordings)
+            hideRecordings.postValue(corePreferences.disableCallRecordings)
             hideSettings.postValue(corePreferences.hideSettings)
 
             checkIfKeepAliveServiceIsEnabled()
