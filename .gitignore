@@ -12,3 +12,4 @@ app/release/
 .idea/
 app/bc-android.keystore
 .kotlin/
+/gradle
