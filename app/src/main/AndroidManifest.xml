@@ -42,6 +42,10 @@
     <!-- Needed for auto start at boot if keep alive service is enabled -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+    <queries>
+        <package android:name="com.hansol.hantalk" />
+    </queries>
+
     <application
         android:name="org.linphone.LinphoneApplication"
         android:allowBackup="true"

@@ -43,6 +43,8 @@ import org.linphone.core.CoreListenerStub
 import org.linphone.core.Friend
 import org.linphone.core.SecurityLevel
 import org.linphone.core.tools.Log
+import org.linphone.extensions.isHanTalkAppInstalled
+import org.linphone.extensions.openHanTalkChat
 import org.linphone.ui.GenericViewModel
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.contacts.model.ContactDeviceModel
@@ -251,7 +253,7 @@ class ContactViewModel
 
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
-            chatDisabled.postValue(corePreferences.disableChat)
+            chatDisabled.postValue(coreContext.context.isHanTalkAppInstalled().not())
             videoCallDisabled.postValue(DISABLE_VIDEO_CALL)
 
             val defaultDomain = LinphoneUtils.getDefaultAccount()?.params?.domain == corePreferences.defaultDomain
@@ -470,22 +472,7 @@ class ContactViewModel
 
     @UiThread
     fun goToConversation() {
-        coreContext.postOnCoreThread {
-            val singleAvailableAddress = LinphoneUtils.getSingleAvailableAddressForFriend(friend)
-            if (singleAvailableAddress != null) {
-                Log.i(
-                    "$TAG Only 1 SIP address or phone number found for contact [${friend.name}], sending message directly"
-                )
-                goToConversation(singleAvailableAddress)
-            } else {
-                expectedAction = START_CONVERSATION
-                val list = sipAddressesAndPhoneNumbers.value.orEmpty()
-                Log.i(
-                    "$TAG [${list.size}] numbers or addresses found for contact [${friend.name}], showing selection dialog"
-                )
-                showNumberOrAddressPickerDialogEvent.postValue(Event(true))
-            }
-        }
+        coreContext.context.openHanTalkChat()
     }
 
     @WorkerThread
