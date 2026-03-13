@@ -34,6 +34,7 @@ import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import com.hansol.siphone.R
+import org.linphone.constants.DISABLE_VIDEO_CALL
 import org.linphone.contacts.getListOfSipAddresses
 import org.linphone.core.Account
 import org.linphone.core.Address
@@ -316,7 +317,7 @@ class LinphoneUtils {
 
         @WorkerThread
         fun isVideoEnabled(call: Call): Boolean {
-            if (!call.core.isVideoEnabled) {
+            if (DISABLE_VIDEO_CALL) {
                 Log.w("$TAG Video is disabled in Core, assume call is audio only")
                 return false
             }

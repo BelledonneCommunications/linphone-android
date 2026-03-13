@@ -35,6 +35,7 @@ import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
 import androidx.core.net.toUri
+import org.linphone.constants.DISABLE_VIDEO_CALL
 
 class TelecomManager
     @WorkerThread
@@ -109,7 +110,7 @@ class TelecomManager
 
         // Always set type to video (if enabled in Core) as it indicates that video is supported, not that it's being used at the time
         // https://developer.android.com/reference/kotlin/androidx/core/telecom/CallAttributesCompat#CALL_TYPE_VIDEO_CALL()
-        val type = if (!call.core.isVideoEnabled) {
+        val type = if (DISABLE_VIDEO_CALL) {
             CallAttributesCompat.CALL_TYPE_AUDIO_CALL
         } else {
             CallAttributesCompat.CALL_TYPE_VIDEO_CALL

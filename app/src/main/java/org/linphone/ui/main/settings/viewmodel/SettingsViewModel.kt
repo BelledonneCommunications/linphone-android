@@ -29,6 +29,7 @@ import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import com.hansol.siphone.R
+import org.linphone.constants.DISABLE_VIDEO_CALL
 import org.linphone.contacts.ContactLoader.Companion.NATIVE_ADDRESS_BOOK_FRIEND_LIST
 import org.linphone.core.AudioDevice
 import org.linphone.core.Conference
@@ -330,7 +331,7 @@ class SettingsViewModel
 
             adaptiveRateControlEnabled.postValue(core.isAdaptiveRateControlEnabled)
 
-            videoEnabled.postValue(core.isVideoEnabled)
+            videoEnabled.postValue(DISABLE_VIDEO_CALL.not())
             videoFecEnabled.postValue(core.isFecEnabled)
             vibrateDuringIncomingCall.postValue(core.isVibrationOnIncomingCallEnabled)
             autoRecordCalls.postValue(corePreferences.automaticallyStartCallRecording)

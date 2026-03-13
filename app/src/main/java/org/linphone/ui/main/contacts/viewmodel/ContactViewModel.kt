@@ -30,6 +30,7 @@ import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import com.hansol.siphone.R
+import org.linphone.constants.DISABLE_VIDEO_CALL
 import org.linphone.contacts.ContactsManager
 import org.linphone.contacts.getListOfSipAddressesAndPhoneNumbers
 import org.linphone.core.Address
@@ -251,7 +252,7 @@ class ContactViewModel
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
             chatDisabled.postValue(corePreferences.disableChat)
-            videoCallDisabled.postValue(!core.isVideoEnabled)
+            videoCallDisabled.postValue(DISABLE_VIDEO_CALL)
 
             val defaultDomain = LinphoneUtils.getDefaultAccount()?.params?.domain == corePreferences.defaultDomain
             // Only show contact's devices for Linphone accounts

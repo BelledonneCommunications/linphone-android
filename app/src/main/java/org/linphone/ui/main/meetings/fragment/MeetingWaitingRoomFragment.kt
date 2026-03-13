@@ -37,6 +37,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import com.hansol.siphone.R
 import org.linphone.core.tools.Log
 import com.hansol.siphone.databinding.MeetingWaitingRoomFragmentBinding
+import org.linphone.constants.DISABLE_VIDEO_CALL
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.call.fragment.AudioDevicesMenuDialogFragment
 import org.linphone.ui.call.model.AudioDeviceModel
@@ -191,7 +192,7 @@ class MeetingWaitingRoomFragment : GenericMainFragment() {
 
     private fun enableVideoPreview() {
         coreContext.postOnCoreThread { core ->
-            if (core.isVideoEnabled) {
+            if (DISABLE_VIDEO_CALL.not()) {
                 viewModel.isVideoAvailable.postValue(true)
                 core.nativePreviewWindowId = binding.videoPreview
                 core.isVideoPreviewEnabled = true

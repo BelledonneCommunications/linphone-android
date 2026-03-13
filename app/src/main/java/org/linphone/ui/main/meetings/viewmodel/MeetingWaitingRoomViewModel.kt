@@ -28,6 +28,7 @@ import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import com.hansol.siphone.R
+import org.linphone.constants.DISABLE_VIDEO_CALL
 import org.linphone.core.Address
 import org.linphone.core.AudioDevice
 import org.linphone.core.Call
@@ -159,7 +160,7 @@ class MeetingWaitingRoomViewModel
                 ) && (it.type == AudioDevice.Type.Bluetooth || it.type == AudioDevice.Type.HearingAid)
             }
 
-            hideVideo.postValue(!core.isVideoEnabled)
+            hideVideo.postValue(DISABLE_VIDEO_CALL)
         }
     }
 
@@ -405,7 +406,7 @@ class MeetingWaitingRoomViewModel
             coreContext.context,
             Manifest.permission.CAMERA
         ) == PackageManager.PERMISSION_GRANTED
-        val videoEnabled = core.isVideoEnabled && cameraPermissionGranted
+        val videoEnabled = DISABLE_VIDEO_CALL.not() && cameraPermissionGranted
         isVideoEnabled.postValue(videoEnabled)
 
         isSwitchCameraAvailable.postValue(coreContext.showSwitchCameraButton())
