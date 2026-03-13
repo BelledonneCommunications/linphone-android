@@ -889,9 +889,6 @@
     <string name="conversation_pdf_file_error_toast">Tento PDF soubor nelze otevřít, může být poškozen</string>
     <string name="conversation_editing_message_title">Zpráva se upravuje</string>
     <string name="conversation_message_edited_label">Upraveno</string>
-    <string name="conversation_dialog_delete_chat_message_title">Smazat tuto zprávu?</string>
-    <string name="conversation_dialog_delete_locally_label">Pro mě</string>
-    <string name="conversation_dialog_delete_for_everyone_label">Pro všechny</string>
     <string name="conversation_message_content_deleted_label"><i>Tato zpráva bude smazána</i></string>
     <string name="conversation_message_content_deleted_by_us_label"><i>Tuto zprávu jste smazali</i></string>
     <string name="conversation_participants_list_empty">Nenalezeni žádní účastníci</string>

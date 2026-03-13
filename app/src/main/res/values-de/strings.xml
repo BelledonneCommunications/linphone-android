@@ -883,9 +883,6 @@
     <string name="conversation_pdf_file_error_toast">PDF-Datei kann nicht geöffnet werden, möglicherweise ist sie beschädigt</string>
     <string name="conversation_editing_message_title">Nachricht wird bearbeitet</string>
     <string name="conversation_message_edited_label">Bearbeitet</string>
-    <string name="conversation_dialog_delete_chat_message_title">Nachricht löschen?</string>
-    <string name="conversation_dialog_delete_locally_label">Für mich</string>
-    <string name="conversation_dialog_delete_for_everyone_label">Für alle</string>
     <string name="conversation_message_content_deleted_label"><i>Diese Nachricht wurde gelöscht</i></string>
     <string name="conversation_message_content_deleted_by_us_label"><i>Sie haben diese Nachricht gelöscht</i></string>
     <string name="conversation_participants_list_empty">Keine Teilnehmer gefunden</string>

@@ -47,7 +47,6 @@ import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.fragment.AbstractMainFragment
-import org.linphone.ui.main.history.fragment.HistoryMenuDialogFragment
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
@@ -177,7 +176,7 @@ class ConversationsListFragment : AbstractMainFragment() {
                         model.leaveGroup()
                     }
                 )
-                modalBottomSheet.show(parentFragmentManager, HistoryMenuDialogFragment.TAG)
+                modalBottomSheet.show(parentFragmentManager, ConversationDialogFragment.TAG)
                 bottomSheetDialog = modalBottomSheet
             }
         }

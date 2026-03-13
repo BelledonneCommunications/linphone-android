@@ -578,9 +578,8 @@
     <string name="conversation_pdf_file_error_toast">Impossible d\'ouvrir ce PDF, le fichier est peut-être corrompu</string>
     <string name="conversation_editing_message_title">Modification du message</string>
     <string name="conversation_message_edited_label">Modifié</string>
-    <string name="conversation_dialog_delete_chat_message_title">Supprimer le message ?</string>
-    <string name="conversation_dialog_delete_locally_label">Pour moi</string>
-    <string name="conversation_dialog_delete_for_everyone_label">Pour tout le monde</string>
+    <string name="conversation_delete_locally_label">Supprimer pour moi</string>
+    <string name="conversation_delete_for_everyone_label">Supprimer pour tout le monde</string>
     <string name="conversation_message_content_deleted_label"><i>Le message a été supprimé</i></string>
     <string name="conversation_message_content_deleted_by_us_label"><i>Vous avez supprimé le message</i></string>
     <string name="conversation_participants_list_header">Participants</string>

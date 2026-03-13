@@ -80,5 +80,6 @@
 
         <attr name="color_bottom_sheet_handle" format="color"/>
         <attr name="color_bottom_sheet_background" format="color"/>
+        <attr name="color_bottom_sheet_disabled_menu" format="color" />
     </declare-styleable>
 </resources>

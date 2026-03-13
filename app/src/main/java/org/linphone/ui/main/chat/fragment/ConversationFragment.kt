@@ -95,7 +95,6 @@ import org.linphone.utils.setKeyboardInsetListener
 import org.linphone.utils.showKeyboard
 import androidx.core.net.toUri
 import org.linphone.ui.main.chat.adapter.ConversationParticipantsAdapter
-import org.linphone.ui.main.chat.model.MessageDeleteDialogModel
 import org.linphone.utils.ShortcutUtils
 import kotlin.collections.arrayListOf
 
@@ -940,7 +939,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                 if (model != null) {
                     if (model.isOutgoing && !(model.hasBeenRetracted.value ?: false)) {
                         // For sent messages let user choose between delete locally / delete for everyone
-                        showHowToDeleteMessageDialog(model)
+                        showHowToDeleteMessageMenu(model)
                     } else {
                         // For received messages or retracted sent ones you can only delete locally
                         viewModel.deleteChatMessage(model)
@@ -1657,43 +1656,23 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         }
     }
 
-    private fun showHowToDeleteMessageDialog(model: MessageModel) {
+    private fun showHowToDeleteMessageMenu(model: MessageModel) {
         val canBeRetracted = messageLongPressViewModel.canBeRemotelyDeleted.value == true
-        val dialogModel = MessageDeleteDialogModel(canBeRetracted)
+        val modalBottomSheet = MessageDialogFragment(
+            canBeRetracted,
+            { // onDismiss
 
-        val dialog = DialogUtils.getHowToDeleteMessageDialog(
-            requireActivity(),
-            dialogModel
-        )
-
-        dialogModel.dismissEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                dialog.dismiss()
-            }
-        }
-
-        dialogModel.cancelEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                dialog.dismiss()
-            }
-        }
-
-        dialogModel.deleteLocallyEvent.observe(viewLifecycleOwner) {
-            it.consume {
+            },
+            { // onMarkConversationAsRead
                 Log.i("$TAG Deleting chat message locally")
                 viewModel.deleteChatMessage(model)
-                dialog.dismiss()
-            }
-        }
-
-        dialogModel.deleteForEveryoneEvent.observe(viewLifecycleOwner) {
-            it.consume {
+            },
+            { // onToggleMute
                 Log.i("$TAG Deleting chat message (content) for everyone")
                 viewModel.deleteChatMessageForEveryone(model)
-                dialog.dismiss()
             }
-        }
-
-        dialog.show()
+        )
+        modalBottomSheet.show(parentFragmentManager, MessageDialogFragment.TAG)
+        bottomSheetDialog = modalBottomSheet
     }
 }

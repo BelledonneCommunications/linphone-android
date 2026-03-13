@@ -164,10 +164,10 @@
     <style name="context_menu_danger_action_label_style">
         <item name="android:fontFamily">@font/noto_sans</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">?attr/color_danger_500</item>
+        <item name="android:textColor">@color/danger_500</item>
         <item name="android:gravity">start</item>
         <item name="android:padding">20dp</item>
-        <item name="android:drawableTint">?attr/color_danger_500</item>
+        <item name="android:drawableTint">@color/danger_500</item>
         <item name="android:drawablePadding">8dp</item>
     </style>
     <style name="popup_menu_item">

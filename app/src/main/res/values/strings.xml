@@ -621,9 +621,8 @@
     <string name="conversation_pdf_file_error_toast">Can\'t open this PDF, file may be corrupted</string>
     <string name="conversation_editing_message_title">Message being edited</string>
     <string name="conversation_message_edited_label">Edited</string>
-    <string name="conversation_dialog_delete_chat_message_title">Delete this message?</string>
-    <string name="conversation_dialog_delete_locally_label">For me</string>
-    <string name="conversation_dialog_delete_for_everyone_label">For everyone</string>
+    <string name="conversation_delete_locally_label">Delete for me</string>
+    <string name="conversation_delete_for_everyone_label">Delete for everyone</string>
     <string name="conversation_message_content_deleted_label"><i>This message has been deleted</i></string>
     <string name="conversation_message_content_deleted_by_us_label"><i>You have deleted this message</i></string>
     <string name="conversation_participants_list_header">Participants</string>
