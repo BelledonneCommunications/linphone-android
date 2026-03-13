@@ -13,6 +13,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.navigation)
     alias(libs.plugins.crashlytics)
+    alias(libs.plugins.kotlinSerialization)
 }
 
 val packageName = "com.hansol.sipphone"
@@ -179,6 +180,7 @@ android {
             buildConfigField("Boolean", "CRASHLYTICS_ENABLED", crashlyticsAvailable.toString())
             buildConfigField("String", "DEFAULT_3RD_DOMAIN", "\"192.168.100.187\"")
             buildConfigField("String", "OUTBOUND_PROXY_URI", "\"\"")
+            buildConfigField("String", "NOTIFICATION_API_BASE_URL", "\"http://localhost:8080\"")
         }
 
         getByName("release") {
@@ -210,6 +212,7 @@ android {
             buildConfigField("Boolean", "CRASHLYTICS_ENABLED", crashlyticsAvailable.toString())
             buildConfigField("String", "DEFAULT_3RD_DOMAIN", "\"hcloud.inticube.com\"")
             buildConfigField("String", "OUTBOUND_PROXY_URI", "\"sip:175.45.194.49:5090\"")
+            buildConfigField("String", "NOTIFICATION_API_BASE_URL", "\"http://hcloud.inticube.com:8080\"")
         }
     }
 
@@ -276,6 +279,17 @@ dependencies {
     implementation(libs.openid.appauth)
 
     implementation(libs.linphone)
+
+    implementation(libs.kotlinx.coroutines.play.services)
+
+    // Ktor
+    implementation(libs.ktor.client.android)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.kotlinx.serialization.json)
+
+    // Koin
+    implementation(libs.koin.android)
 }
 
 configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {

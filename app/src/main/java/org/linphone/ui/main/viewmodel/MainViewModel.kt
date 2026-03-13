@@ -26,10 +26,16 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.messaging.FirebaseMessaging
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import com.hansol.siphone.R
+import org.linphone.api.NotificationApiService
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.Account
 import org.linphone.core.Call
@@ -50,7 +56,14 @@ import org.linphone.utils.LinphoneUtils
 
 class MainViewModel
     @UiThread
-    constructor() : ViewModel() {
+    constructor() : ViewModel(), KoinComponent {
+
+    private val notificationApiService: NotificationApiService by inject()
+
+    // Tracks accounts that have already called registerDevice this session.
+    // Cleared on Failed/Cleared so reconnects trigger a new registration.
+    private val registeredDeviceAccounts = mutableSetOf<String>()
+
     companion object {
         private const val TAG = "[Main ViewModel]"
 
@@ -226,6 +239,7 @@ class MainViewModel
 
             when (state) {
                 RegistrationState.Failed -> {
+                    account.params.identityAddress?.username?.let { registeredDeviceAccounts.remove(it) }
                     if (account == core.defaultAccount) {
                         Log.e("$TAG Default account registration failed!")
                         val label = AppUtils.getString(
@@ -259,6 +273,19 @@ class MainViewModel
                             removeAlert(NON_DEFAULT_ACCOUNT_NOT_CONNECTED)
                         }
                     }
+
+                    val username = account.params.identityAddress?.username
+                    if (username != null && registeredDeviceAccounts.add(username)) {
+                        viewModelScope.launch(Dispatchers.IO) {
+                            try {
+                                val token = FirebaseMessaging.getInstance().token.await()
+                                notificationApiService.registerDevice(username, token)
+                                Log.i("$TAG registerDevice main username=$username, token=$token")
+                            } catch (e: Exception) {
+                                Log.w("$TAG Failed to register device for user [$username]: ${e.message}")
+                            }
+                        }
+                    }
                 }
                 RegistrationState.Progress, RegistrationState.Refreshing -> {
                     if (account == core.defaultAccount) {
@@ -269,6 +296,7 @@ class MainViewModel
                     }
                 }
                 RegistrationState.Cleared -> {
+                    account.params.identityAddress?.username?.let { registeredDeviceAccounts.remove(it) }
                     if (account == core.defaultAccount) {
                         Log.w("$TAG Default account is now disabled")
                         val label = AppUtils.getString(

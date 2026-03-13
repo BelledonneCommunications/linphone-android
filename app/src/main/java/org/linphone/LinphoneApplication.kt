@@ -36,7 +36,11 @@ import coil3.svg.SvgDecoder
 import coil3.video.VideoFrameDecoder
 import com.google.android.material.color.DynamicColors
 import com.hansol.siphone.R
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 import org.linphone.compatibility.Compatibility
+import org.linphone.di.appModule
 import org.linphone.core.CoreContext
 import org.linphone.core.CorePreferences
 import org.linphone.core.Factory
@@ -93,6 +97,12 @@ class LinphoneApplication : Application(), SingletonImageLoader.Factory {
 
         Log.i("$TAG Report Core preferences initialized")
         Compatibility.setupAppStartupListener(context)
+
+        startKoin {
+            androidLogger()
+            androidContext(this@LinphoneApplication)
+            modules(appModule)
+        }
 
         coreContext = CoreContext(context)
         coreContext.start()

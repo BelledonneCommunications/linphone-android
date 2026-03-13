@@ -32,6 +32,10 @@ dotsIndicator = "5.1.0"
 photoview = "2.3.0"
 openidAppauth = "0.11.1"
 linphone = "5.5.+"
+ktor = "3.1.3"
+koin = "4.0.4"
+kotlinxSerializationJson = "1.7.3"
+kotlinxCoroutinesPlayServices = "1.10.2"
 
 [libraries]
 androidx-annotations = { group = "androidx.annotation", name = "annotation", version.ref = "annotations" }
@@ -69,6 +73,15 @@ openid-appauth = { group = "net.openid", name = "appauth", version.ref = "openid
 
 linphone = { group = "org.linphone", name = "linphone-sdk-android", version.ref = "linphone" }
 
+ktor-client-android = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktor" }
+ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+
+koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
+
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+kotlinx-coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "kotlinxCoroutinesPlayServices" }
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
@@ -77,3 +90,4 @@ navigation = { id = "androidx.navigation.safeargs.kotlin", version.ref = "naviga
 crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlytics" }
 googleGmsServices = { id = "com.google.gms.google-services", version.ref = "gmsGoogleServices" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

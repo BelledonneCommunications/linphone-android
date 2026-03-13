@@ -23,11 +23,19 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.hansol.siphone.BuildConfig
 import java.util.Locale
+import com.google.firebase.messaging.FirebaseMessaging
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import com.hansol.siphone.R
+import org.linphone.api.NotificationApiService
 import org.linphone.core.Account
 import org.linphone.core.AuthInfo
 import org.linphone.core.Core
@@ -43,7 +51,10 @@ import org.linphone.utils.Event
 
 class ThirdPartySipAccountLoginViewModel
     @UiThread
-    constructor() : GenericViewModel() {
+    constructor() : GenericViewModel(), KoinComponent {
+
+    private val notificationApiService: NotificationApiService by inject()
+
     companion object {
         private const val TAG = "[Third Party SIP Account Login ViewModel]"
     }
@@ -111,6 +122,19 @@ class ThirdPartySipAccountLoginViewModel
                     // Set new account as default
                     core.defaultAccount = newlyCreatedAccount
                     accountLoggedInEvent.postValue(Event(true))
+
+                    val username = newlyCreatedAccount.params.identityAddress?.username
+                    if (username != null) {
+                        viewModelScope.launch(Dispatchers.IO) {
+                            try {
+                                val token = FirebaseMessaging.getInstance().token.await()
+                                notificationApiService.registerDevice(username, token)
+                                Log.i("$TAG registerDevice username=$username, token=$token")
+                            } catch (e: Exception) {
+                                Log.w("$TAG Failed to register device for user [$username]: ${e.message}")
+                            }
+                        }
+                    }
                 } else if (state == RegistrationState.Failed) {
                     registrationInProgress.postValue(false)
                     core.removeListener(this)
