@@ -77,6 +77,7 @@
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             android:text="@string/settings_calls_calibrate_echo_canceller_title"
+            android:visibility="gone"
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/calibrated_echo_canceller"
@@ -91,6 +92,7 @@
             android:layout_marginEnd="16dp"
             android:gravity="center"
             android:text="@{viewModel.calibratedEchoCancellerValue, default=`0ms`}"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/calibrate_echo_canceller"
             app:layout_constraintBottom_toBottomOf="@id/calibrate_echo_canceller"/>
@@ -107,6 +109,7 @@
             android:maxLines="2"
             android:ellipsize="end"
             android:labelFor="@id/adaptive_rate_control_switch"
+            android:visibility="gone"
             app:layout_constraintTop_toTopOf="@id/adaptive_rate_control_switch"
             app:layout_constraintBottom_toBottomOf="@id/adaptive_rate_control_switch"
             app:layout_constraintStart_toStartOf="parent"
@@ -121,6 +124,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginEnd="16dp"
             android:checked="@{viewModel.adaptiveRateControlEnabled}"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/calibrate_echo_canceller" />
 
@@ -136,6 +140,7 @@
             android:maxLines="2"
             android:ellipsize="end"
             android:labelFor="@id/enable_video_switch"
+            android:visibility="gone"
             app:layout_constraintTop_toTopOf="@id/enable_video_switch"
             app:layout_constraintBottom_toBottomOf="@id/enable_video_switch"
             app:layout_constraintStart_toStartOf="parent"
@@ -150,6 +155,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginEnd="16dp"
             android:checked="@{viewModel.videoEnabled}"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/adaptive_rate_control_switch" />
 
@@ -157,7 +163,7 @@
             style="@style/settings_title_style"
             android:onClick="@{() -> viewModel.toggleVibrateOnIncomingCalls()}"
             android:id="@+id/vibrate_title"
-            android:visibility="@{viewModel.isVibrationAvailable ? View.VISIBLE : View.GONE}"
+            android:visibility="gone"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -175,7 +181,7 @@
             style="@style/material_switch_style"
             android:id="@+id/vibrate_switch"
             android:onClick="@{() -> viewModel.toggleVibrateOnIncomingCalls()}"
-            android:visibility="@{viewModel.isVibrationAvailable ? View.VISIBLE : View.GONE}"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -211,7 +217,7 @@
             android:layout_marginEnd="16dp"
             android:checked="@{viewModel.autoRecordCalls}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/vibrate_switch" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/settings_title_style"
@@ -228,6 +234,7 @@
             android:drawableEnd="@drawable/arrow_square_out"
             android:drawableTint="?attr/color_main2_600"
             android:background="@drawable/squircle_transparent_button_background"
+            android:visibility="gone"
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -248,6 +255,7 @@
             android:drawableEnd="@drawable/caret_right"
             android:drawableTint="?attr/color_main2_600"
             android:background="@drawable/squircle_transparent_button_background"
+            android:visibility="gone"
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -83,6 +83,7 @@
                     android:drawableEnd="@{viewModel.expandSecurity ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
                     android:drawableTint="?attr/color_main2_600"
                     android:background="@drawable/squircle_transparent_button_background"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"/>
@@ -95,7 +96,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:visibility="@{viewModel.expandSecurity ? View.VISIBLE : View.GONE, default=gone}"
+                    android:visibility="gone"
                     app:layout_constraintTop_toBottomOf="@id/security"
                     bind:turnOnVfsClickListener="@{turnOnVfsClickListener}"
                     bind:viewModel="@{viewModel}"/>
@@ -114,6 +115,7 @@
                     android:drawableEnd="@{viewModel.expandCalls ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
                     android:drawableTint="?attr/color_main2_600"
                     android:background="@drawable/squircle_transparent_button_background"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/security_settings"/>
@@ -122,11 +124,11 @@
                     android:id="@+id/calls_settings"
                     layout="@layout/settings_calls"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE, default=gone}"
+                    android:visibility="visible"
                     app:layout_constraintTop_toBottomOf="@id/calls"
                     bind:advancedCallSettingsClickListener="@{advancedCallSettingsClickListener}"
                     bind:viewModel="@{viewModel}"/>
@@ -145,7 +147,7 @@
                     android:drawableEnd="@{viewModel.expandConversations ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
                     android:drawableTint="?attr/color_main2_600"
                     android:background="@drawable/squircle_transparent_button_background"
-                    android:visibility="@{viewModel.showConversationsSettings ? View.VISIBLE : View.GONE}"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/calls_settings"/>
@@ -158,7 +160,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:visibility="@{viewModel.expandConversations &amp;&amp; viewModel.showConversationsSettings ? View.VISIBLE : View.GONE, default=gone}"
+                    android:visibility="gone"
                     app:layout_constraintTop_toBottomOf="@id/chat"
                     bind:viewModel="@{viewModel}"/>
 
@@ -176,7 +178,7 @@
                     android:drawableEnd="@{viewModel.expandContacts ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
                     android:drawableTint="?attr/color_main2_600"
                     android:background="@drawable/squircle_transparent_button_background"
-                    android:visibility="@{viewModel.showContactsSettings ? View.VISIBLE : View.GONE}"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/conversation_settings"/>
@@ -189,7 +191,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:visibility="@{viewModel.expandContacts &amp;&amp; viewModel.showContactsSettings ? View.VISIBLE : View.GONE, default=gone}"
+                    android:visibility="gone"
                     app:layout_constraintTop_toBottomOf="@id/contacts"
                     bind:viewModel="@{viewModel}"/>
 
@@ -207,7 +209,7 @@
                     android:drawableEnd="@{viewModel.expandMeetings ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
                     android:drawableTint="?attr/color_main2_600"
                     android:background="@drawable/squircle_transparent_button_background"
-                    android:visibility="@{viewModel.showMeetingsSettings ? View.VISIBLE : View.GONE}"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/contacts_settings"/>
@@ -220,7 +222,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:visibility="@{viewModel.expandMeetings &amp;&amp; viewModel.showMeetingsSettings ? View.VISIBLE : View.GONE, default=gone}"
+                    android:visibility="gone"
                     app:layout_constraintTop_toBottomOf="@id/meetings"
                     bind:viewModel="@{viewModel}"/>
 
@@ -238,6 +240,7 @@
                     android:drawableEnd="@{viewModel.expandNetwork ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
                     android:drawableTint="?attr/color_main2_600"
                     android:background="@drawable/squircle_transparent_button_background"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/meetings_settings"/>
@@ -250,7 +253,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:visibility="@{viewModel.expandNetwork ? View.VISIBLE : View.GONE, default=gone}"
+                    android:visibility="gone"
                     app:layout_constraintTop_toBottomOf="@id/network"
                     bind:viewModel="@{viewModel}"/>
 
@@ -268,6 +271,7 @@
                     android:drawableEnd="@{viewModel.expandUserInterface ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
                     android:drawableTint="?attr/color_main2_600"
                     android:background="@drawable/squircle_transparent_button_background"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/network_settings"/>
@@ -280,7 +284,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:visibility="@{viewModel.expandUserInterface ? View.VISIBLE : View.GONE, default=gone}"
+                    android:visibility="gone"
                     app:layout_constraintTop_toBottomOf="@id/user_interface"
                     bind:viewModel="@{viewModel}"/>
 
@@ -295,7 +299,7 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginTop="10dp"
                     android:text="@string/settings_tunnel_title"
-                    android:visibility="@{viewModel.isTunnelAvailable ? View.VISIBLE : View.GONE}"
+                    android:visibility="gone"
                     android:drawableEnd="@{viewModel.expandTunnel ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
                     android:drawableTint="?attr/color_main2_600"
                     android:background="@drawable/squircle_transparent_button_background"
@@ -311,7 +315,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:visibility="@{viewModel.isTunnelAvailable &amp;&amp; viewModel.expandTunnel ? View.VISIBLE : View.GONE, default=gone}"
+                    android:visibility="gone"
                     app:layout_constraintTop_toBottomOf="@id/tunnel"
                     bind:viewModel="@{viewModel}"/>
 
@@ -330,7 +334,7 @@
                     android:drawableEnd="@drawable/caret_right"
                     android:drawableTint="?attr/color_main2_600"
                     android:background="@drawable/squircle_transparent_button_background"
-                    android:visibility="@{viewModel.showAdvancedSettings ? View.VISIBLE : View.GONE}"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tunnel_settings"/>
@@ -350,7 +354,7 @@
                     android:drawableEnd="@drawable/caret_right"
                     android:drawableTint="?attr/color_main2_600"
                     android:background="@drawable/squircle_transparent_button_background"
-                    android:visibility="@{viewModel.showDeveloperSettings ? View.VISIBLE : View.GONE, default=gone}"
+                    android:visibility="gone"
                     app:layout_constraintVertical_bias="0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
