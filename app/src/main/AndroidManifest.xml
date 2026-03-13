@@ -124,6 +124,11 @@
                 <data android:scheme="linphone-sip" />
                 <data android:scheme="linphone-sips" />
                 <data android:scheme="linphone-config" />
+                <data
+                    android:host="call"
+                    android:pathPrefix="/"
+                    android:scheme="softphone"
+                    tools:ignore="IntentFilterUniqueDataAttributes" />
             </intent-filter>
 
         </activity>

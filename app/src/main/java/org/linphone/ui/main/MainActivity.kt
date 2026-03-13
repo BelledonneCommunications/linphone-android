@@ -773,6 +773,7 @@ class MainActivity : GenericActivity() {
             uri.startsWith("linphone-sip:") -> uri.replace("linphone-sip:", "sip:")
             uri.startsWith("sips-linphone:") -> uri.replace("sips-linphone:", "sips:")
             uri.startsWith("linphone-sips:") -> uri.replace("linphone-sips:", "sips:")
+            uri.startsWith("softphone://call/") -> uri.substring("softphone://call/".length)
             else -> uri.replace("%40", "@") // Unescape @ character if needed
         }
 
