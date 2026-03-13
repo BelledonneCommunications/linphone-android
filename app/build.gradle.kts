@@ -124,7 +124,7 @@ android {
         variant.outputs
             .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
             .forEach { output ->
-                output.outputFileName = "Softphone-${variant.buildType.name}-$versionName.apk"
+                output.outputFileName = "Softphone-${variant.buildType.name}-$versionName($versionCode).apk"
             }
     }
 
