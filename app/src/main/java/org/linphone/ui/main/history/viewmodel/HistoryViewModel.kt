@@ -214,7 +214,11 @@ class HistoryViewModel
 
     @UiThread
     fun goToConversation() {
-        coreContext.context.openHanTalkChat()
+        coreContext.postOnCoreThread {
+            if (!::address.isInitialized) return@postOnCoreThread
+            val username = address.username.orEmpty()
+            coreContext.context.openHanTalkChat(username)
+        }
     }
 
     @UiThread

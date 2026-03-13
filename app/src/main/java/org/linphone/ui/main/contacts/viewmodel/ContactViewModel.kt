@@ -472,7 +472,11 @@ class ContactViewModel
 
     @UiThread
     fun goToConversation() {
-        coreContext.context.openHanTalkChat()
+        coreContext.postOnCoreThread {
+            if (!::friend.isInitialized) return@postOnCoreThread
+            val username = friend.addresses.firstOrNull()?.username.orEmpty()
+            coreContext.context.openHanTalkChat(username)
+        }
     }
 
     @WorkerThread

@@ -6,7 +6,7 @@ import android.content.pm.PackageManager
 import androidx.core.net.toUri
 import org.linphone.core.tools.Log
 
-fun Context.openHanTalkChat(chatId: String = "123") {
+fun Context.openHanTalkChat(chatId: String) {
     val uri = "hantalk_scheme://hantalk_host?chatId=$chatId".toUri()
     val intent = Intent(Intent.ACTION_VIEW, uri).apply {
         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
