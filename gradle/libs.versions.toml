@@ -32,9 +32,9 @@ dotsIndicator = "5.1.0"
 photoview = "2.3.0"
 openidAppauth = "0.11.1"
 linphone = "5.5.+"
-ktor = "3.1.3"
-koin = "4.0.4"
-kotlinxSerializationJson = "1.7.3"
+ktor = "3.4.1"
+koin = "4.1.1"
+kotlinxSerializationJson = "1.10.0"
 kotlinxCoroutinesPlayServices = "1.10.2"
 
 [libraries]
