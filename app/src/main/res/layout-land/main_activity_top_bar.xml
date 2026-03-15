@@ -47,24 +47,23 @@
             app:barrierDirection="bottom" />
 
         <ImageView
-            style="@style/icon_top_bar_button_style"
+            style="@style/icon_main_top_bar_button_style"
             android:id="@+id/drawer_menu"
             android:onClick="@{() -> viewModel.openDrawerMenu()}"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:src="@drawable/list"
             android:contentDescription="@string/content_description_open_filter"
-            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/avatar"
-            app:layout_constraintBottom_toBottomOf="@id/avatar"
-            app:tint="?attr/color_on_main" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
         <include
             android:id="@+id/avatar"
             android:onClick="@{() -> viewModel.openDrawerMenu()}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
             layout="@layout/contact_avatar"
             bind:model="@{viewModel.account}"
             app:layout_constraintStart_toEndOf="@id/drawer_menu"
@@ -89,21 +88,19 @@
             app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
         <ImageView
-            style="@style/icon_top_bar_button_style"
+            style="@style/icon_main_top_bar_button_style"
             android:id="@+id/search_toggle"
             android:onClick="@{() -> viewModel.openSearchBar()}"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:src="@drawable/magnifying_glass"
             android:contentDescription="@string/content_description_open_filter"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintEnd_toStartOf="@id/extra_action"
-            app:layout_constraintTop_toTopOf="@id/title"
-            app:tint="?attr/color_on_main" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
         <ImageView
-            style="@style/icon_top_bar_button_style"
+            style="@style/icon_main_top_bar_button_style"
             android:id="@+id/extra_action"
             android:onClick="@{extraActionClickListener}"
             android:layout_width="wrap_content"
@@ -111,25 +108,21 @@
             android:src="@{extraActionIcon, default=@drawable/dots_three_vertical}"
             android:contentDescription="@{extraActionContentDescription}"
             android:visibility="@{!viewModel.searchBarVisible &amp;&amp; enableExtraAction ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/title"
-            app:tint="?attr/color_on_main" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
         <ImageView
-            style="@style/icon_top_bar_button_style"
+            style="@style/icon_main_top_bar_button_style"
             android:id="@+id/cancel_search"
             android:onClick="@{() -> viewModel.closeSearchBar()}"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:src="@drawable/caret_left"
             android:contentDescription="@string/content_description_cancel_filter"
-            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintBottom_toBottomOf="@id/search"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/search"
-            app:tint="?attr/color_on_main" />
+            app:layout_constraintTop_toTopOf="@id/search" />
 
         <com.google.android.material.textfield.TextInputLayout
             style="?attr/textInputFilledStyle"
@@ -164,18 +157,16 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <ImageView
-            style="@style/icon_top_bar_button_style"
+            style="@style/icon_main_top_bar_button_style"
             android:id="@+id/clear_field"
             android:onClick="@{() -> viewModel.clearFilter()}"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:src="@drawable/x"
             android:contentDescription="@string/content_description_clear_filter"
-            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintBottom_toBottomOf="@id/search"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/search"
-            app:tint="?attr/color_on_main" />
+            app:layout_constraintTop_toTopOf="@id/search" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

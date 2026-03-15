@@ -14,11 +14,14 @@ Group changes to describe their impact on the project, as follows:
 
 ### Added
 - Added the ability to edit/delete chat messages sent less than 24 hours ago.
+- Added keyboard shortcuts on IncomingCallFragment: Ctrl + Shift + A to answer the call, Ctrl + Shift + D to decline it
+- Added seeking feature to recordings & media player within app
 - Added PDF preview in conversation (message bubble & documents list)
 - Added hover effect when using a mouse (useful for tablets or devices with desktop mode)
 - Support right click on some items to open bottom sheet/menu
 - Added toggle speaker action in active call notification
 - Increased text size for chat messages that only contains emoji(s)
+- Use user-input to filter participants list after typing "@" in conversation send area
 - Handle read-only CardDAV address books, disable edit/delete menus for contacts in read-only FriendList
 - Added swipe/pull to refresh on contacts list of a CardDAV addressbook has been configured to force the synchronization
 - Show information to user when filtering contacts doesn't show them all and user may have to refine it's search
@@ -27,14 +30,18 @@ Group changes to describe their impact on the project, as follows:
   - one for user to choose whether to sort contacts by first name or last name
   - one to hide contacts that have neither a SIP address nor a phone number
   - one to let app auto-answer call with video sending already enabled
+  - one to let edit native contacts Linphone copy in-app instead of opening native addressbook third party app
 - Added a vu meter for recording & playback volumes (must be enabled in developer settings)
 - Added support for HDMI audio devices
 
 ### Changed
 - No longer follow TelecomManager audio endpoint during calls, using our own routing policy
+- Join a conference using default layout instead of audio only when clicking on a meeting SIP URI
 - Removing an account will also remove all related data in the local database (auth info, call logs, conversations, meetings, etc...)
 - Hide SIP address/phone number picker dialog if contact has exactly one SIP address matching both the app default domain & the currently selected account domain
+- Hide SIP address associated to phone number through presence mecanism in contact details & editor views.
 - Improved UI on tablets with screen sw600dp and higher, will look more like our desktop app
+- Improved navigation within app when using a keyboard
 - Now loading media/documents contents in conversation by chunks (instead of all of them at once)
 - Simplified audio device name in settings
 - Reworked some settings (moved calls related ones from advanced settings to advanced calls settings)
@@ -42,14 +49,48 @@ Group changes to describe their impact on the project, as follows:
 - Un-encrypted conversation warning will be more visible for accounts that support end-to-end encrypted conversations
 - Made numpad buttons larger by changing their shape
 - All LDAP fields are mandatory now
+- Improved how Android shortcuts are created
 - Permission fragment will only show missing ones
+- Added more info into StartupListener logs
+- Updated password forgotten procedure, will use online account manager platform
+
+### Fixed
+- Copy raw message content instead of modified one when it contains a participant mention ("@username")
+
+## [6.0.22] - 2026-01-20
+
+### Changed
+- Close search bar when opening bottom sheet and vice versa
+
+### Fixed
+- Sending a file from another app using Android shortcut not working if conversation was already opened
+- Trying to workaround an issue where ForegroundService notification isn't displayed in the allowed timeframe, causing an Exception
+
+## [6.0.21] - 2025-12-16
+
+### Added
+- Allow linphone-config: scheme URIs in in-app QR code scanner
+
+### Changed
+- Workaround for audio focus & audio manager mode on devices that do not support TelecomManager APIs
+- Set front camera as default after using back camera when scanning a QR code
+- Added back largeHeap flag in AndroidManifest.xml
+
+### Fixed
+- Fixed call recording indicator not showing local record in progress in case UPDATE isn't answered
+- Fixed native addressbook reload when a contact is updated in the OS default app
+- Fixed issue with linphone-config scheme URIs if scheme is followed by "//"
+- Fixed Job & Company contact field not updated if field content was removed
+- Fixed local avatar not displayed when calling ourselves
+- Prevent crashes due to some ActivityNotFound exceptions
+- Prevent crash due to empty clipboard on some devices
 
 ## [6.0.20] - 2025-11-21
 
 ### Changed
 - Added shrink resources to release config in gradle
 
-### Fixed
+### Fixed
 - Remove AuthInfo when configuring a CardDAV friend list if synchronization fails
 - Added missing toast when starting a group call or meeting if there's an issue
 - Fixed crash in RecordingPlayerFragment due to used lateinit property before it's initialized
@@ -330,7 +371,7 @@ Group changes to describe their impact on the project, as follows:
 - Reverted the way of playing incoming call ringone (you may have to configure your own ringtone again), was causing various issues depending on devices/firmwares
 - Show all call history entries if only one account is configured (workaround for missing history for now until a proper fix will be done in SDK)
 
-### Fixed
+### Fixed
 - Issue preventing bluetooth Hearing Aids from working properly (and fixed earpiece/hearing aids icon)
 - Prevent Qr Code scanner to use static picture camera
 - Prevent user from connecting the same account multiple times

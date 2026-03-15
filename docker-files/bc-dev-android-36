@@ -1,0 +1,55 @@
+FROM debian:trixie
+
+MAINTAINER Sylvain BERFINI <sylvain.berfini@belledonne-communications.com>
+
+# Configure locale
+RUN apt-get update && \
+    apt-get install -y locales && \
+    apt-get clean && \
+    echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
+    locale-gen
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
+
+ENV SHELL=/bin/bash
+
+# Define environment
+ENV ANDROID_HOME /opt/android-sdk-linux
+
+# Install common general tools
+RUN apt-get update && \
+    apt-get install -y curl nano sudo unzip vim wget rsync ssh git openjdk-21-jdk-headless && \
+    apt-get clean
+
+# Get latest Android command line tools, otherwise won't work with JDK 21
+RUN mkdir -p $ANDROID_HOME/cmdline-tools/latest
+RUN wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip && \
+    unzip commandlinetools-linux-9477386_latest.zip && \
+    cp -R ./cmdline-tools/* $ANDROID_HOME/cmdline-tools/latest/ && \
+    rm -rf ./cmdline-tools && \
+    rm -rf commandlinetools-linux-9477386_latest.zip
+
+# Update path to include all Android SDK tools
+ENV PATH $ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$PATH
+
+# Get the Android SDK
+RUN echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "tools" "platforms;android-36"
+
+# Accept Android SDK licenses
+RUN yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
+
+# Give write rights
+RUN chmod -R ugo+rwx $ANDROID_HOME
+
+# Consider all git repositories as safe
+RUN git --version
+RUN git config --global --add safe.directory '*'
+
+# Configure user bc
+RUN useradd -ms /bin/bash bc && \
+    echo 'bc:cotcot' | chpasswd && \
+    echo 'bc ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+USER bc
+WORKDIR /home/bc
+ENV PS1='\[\e[34m\]\u@bc-dev-android>\[\e[0m\] '
+CMD bash

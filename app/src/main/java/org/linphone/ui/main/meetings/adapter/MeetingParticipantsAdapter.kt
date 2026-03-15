@@ -49,7 +49,7 @@ class MeetingParticipantsAdapter : ListAdapter<ParticipantModel, RecyclerView.Vi
         (holder as ViewHolder).bind(getItem(position))
     }
 
-    inner class ViewHolder(
+    class ViewHolder(
         val binding: MeetingParticipantListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         @UiThread

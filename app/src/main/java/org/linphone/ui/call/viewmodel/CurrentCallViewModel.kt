@@ -855,15 +855,16 @@ class CurrentCallViewModel
     fun toggleRecording() {
         coreContext.postOnCoreThread {
             if (::currentCall.isInitialized) {
-                if (currentCall.params.isRecording) {
+                val recording = if (currentCall.params.isRecording) {
                     Log.i("$TAG Stopping call recording")
                     currentCall.stopRecording()
+                    false
                 } else {
                     Log.i("$TAG Starting call recording")
                     currentCall.startRecording()
+                    true
                 }
 
-                val recording = currentCall.params.isRecording
                 isRecording.postValue(recording)
                 if (recording) {
                     showRecordingToast()
@@ -1192,7 +1193,8 @@ class CurrentCallViewModel
         val model = if (conferenceInfo != null) {
             coreContext.contactsManager.getContactAvatarModelForConferenceInfo(conferenceInfo)
         } else {
-            // Do not use contact avatar model from ContactsManager
+            // Do not use contact avatar model from ContactsManager to be able to show
+            // ZRTP verification status with the device that will answer the call
             val friend = coreContext.contactsManager.findContactByAddress(address)
             if (friend != null) {
                 ContactAvatarModel(friend, address)
@@ -1200,6 +1202,12 @@ class CurrentCallViewModel
                 val fakeFriend = coreContext.core.createFriend()
                 fakeFriend.name = LinphoneUtils.getDisplayName(address)
                 fakeFriend.address = address
+                val localAccount = coreContext.core.accountList.find {
+                    it.params.identityAddress?.weakEqual(address) == true
+                }
+                if (localAccount != null) {
+                    fakeFriend.photo = localAccount.params.pictureUri
+                }
                 ContactAvatarModel(fakeFriend, address)
             }
         }

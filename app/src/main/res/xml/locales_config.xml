@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <locale-config xmlns:android="http://schemas.android.com/apk/res/android">
+    <locale android:name="cs"/>
+    <locale android:name="de"/>
     <locale android:name="en"/>
+    <locale android:name="es"/>
     <locale android:name="fr"/>
+    <locale android:name="hu"/>
+    <locale android:name="nl"/>
+    <locale android:name="pt-rBR"/>
+    <locale android:name="ru"/>
+    <locale android:name="sk"/>
+    <locale android:name="uk"/>
+    <locale android:name="zh-rCN"/>
 </locale-config>

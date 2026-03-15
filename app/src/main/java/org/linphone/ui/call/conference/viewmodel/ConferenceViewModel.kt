@@ -352,6 +352,15 @@ class ConferenceViewModel
                 "$TAG Conference has a participant sharing its screen, changing layout from mosaic to active speaker"
             )
             setNewLayout(ACTIVE_SPEAKER_LAYOUT)
+        } else if (currentLayout == AUDIO_ONLY_LAYOUT) {
+            val defaultLayout = call.core.defaultConferenceLayout.toInt()
+            if (defaultLayout == Conference.Layout.ActiveSpeaker.toInt()) {
+                Log.w("$TAG Joined conference in audio only layout, switching to active speaker layout")
+                setNewLayout(ACTIVE_SPEAKER_LAYOUT)
+            } else {
+                Log.w("$TAG Joined conference in audio only layout, switching to grid layout")
+                setNewLayout(GRID_LAYOUT)
+            }
         }
     }
 

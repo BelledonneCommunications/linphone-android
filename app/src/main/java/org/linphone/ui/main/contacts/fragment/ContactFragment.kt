@@ -21,9 +21,6 @@ package org.linphone.ui.main.contacts.fragment
 
 import android.app.Dialog
 import android.content.ActivityNotFoundException
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.ContactsContract
@@ -252,19 +249,15 @@ class ContactFragment : SlidingPaneChildFragment() {
     }
 
     private fun copyNumberOrAddressToClipboard(value: String, isSip: Boolean) {
-        val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val label = if (isSip) "SIP address" else "Phone number"
-        clipboard.setPrimaryClip(ClipData.newPlainText(label, value))
-
-        val message = if (isSip) {
-            getString(R.string.sip_address_copied_to_clipboard_toast)
-        } else {
-            getString(R.string.contact_details_phone_number_copied_to_clipboard_toast)
+        if (AppUtils.copyToClipboard(requireContext(), label, value)) {
+            val message = if (isSip) {
+                getString(R.string.sip_address_copied_to_clipboard_toast)
+            } else {
+                getString(R.string.contact_details_phone_number_copied_to_clipboard_toast)
+            }
+            (requireActivity() as GenericActivity).showGreenToast(message, R.drawable.check)
         }
-        (requireActivity() as GenericActivity).showGreenToast(
-            message,
-            R.drawable.check
-        )
     }
 
     private fun shareContact(name: String, file: File) {

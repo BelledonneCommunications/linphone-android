@@ -55,6 +55,7 @@
         android:theme="@style/Theme.Linphone"
         android:appCategory="social"
         android:supportsRtl="true"
+        android:largeHeap="true"
         tools:targetApi="35">
 
         <!-- Required for chat message & call notifications to be displayed in Android auto -->

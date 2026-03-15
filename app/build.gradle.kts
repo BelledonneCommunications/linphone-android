@@ -1,7 +1,8 @@
 import com.android.build.gradle.internal.tasks.factory.dependsOn
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
+import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsPlugin
 import com.google.gms.googleservices.GoogleServicesPlugin
-import java.io.ByteArrayOutputStream
+import java.io.BufferedReader
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -11,7 +12,6 @@ plugins {
     alias(libs.plugins.ktlint)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.navigation)
-    alias(libs.plugins.crashlytics)
 }
 
 val packageName = "org.linphone"
@@ -25,63 +25,69 @@ val firebaseCloudMessagingAvailable = googleServices.exists()
 val crashlyticsAvailable = googleServices.exists() && linphoneLibs.exists() && linphoneDebugLibs.exists()
 
 if (firebaseCloudMessagingAvailable) {
-    println("google-services.json found, enabling CloudMessaging feature")
+    println("google-services.json found, enabling Firebase CloudMessaging feature")
     apply<GoogleServicesPlugin>()
 } else {
-    println("google-services.json not found, disabling CloudMessaging feature")
+    println("google-services.json not found, disabling Firebase CloudMessaging feature")
+}
+if (crashlyticsAvailable) {
+    println("google-services.json found and Linphone SDK libs-debug folder found, enabling Crashlytics feature")
+    apply<CrashlyticsPlugin>()
+} else {
+    println("Crashlytics has been disabled because either google-services.json file wasn't found or local Linphone SDK build folder isn't configured")
 }
 
-var gitBranch = ByteArrayOutputStream()
 var gitVersion = "6.1.0-alpha"
+var gitBranch = ""
+try {
+    val gitDescribe = ProcessBuilder()
+        .command("git", "describe", "--abbrev=0")
+        .directory(project.rootDir)
+        .start()
+        .inputStream.bufferedReader().use(BufferedReader::readText)
+        .trim()
+    println("Git describe: $gitDescribe")
 
-task("getGitVersion") {
-    val gitVersionStream = ByteArrayOutputStream()
-    val gitCommitsCount = ByteArrayOutputStream()
-    val gitCommitHash = ByteArrayOutputStream()
+    val gitCommitsCount = ProcessBuilder()
+        .command("git", "rev-list", "$gitDescribe..HEAD", "--count")
+        .directory(project.rootDir)
+        .start()
+        .inputStream.bufferedReader().use(BufferedReader::readText)
+        .trim()
+    println("Git commits count: $gitCommitsCount")
 
-    try {
-        exec {
-            commandLine("git", "describe", "--abbrev=0")
-            standardOutput = gitVersionStream
-        }
-        exec {
-            commandLine(
-                "git",
-                "rev-list",
-                gitVersionStream.toString().trim() + "..HEAD",
-                "--count",
-            )
-            standardOutput = gitCommitsCount
-        }
-        exec {
-            commandLine("git", "rev-parse", "--short", "HEAD")
-            standardOutput = gitCommitHash
-        }
-        exec {
-            commandLine("git", "name-rev", "--name-only", "HEAD")
-            standardOutput = gitBranch
-        }
+    val gitCommitHash = ProcessBuilder()
+        .command("git", "rev-parse", "--short", "HEAD")
+        .directory(project.rootDir)
+        .start()
+        .inputStream.bufferedReader().use(BufferedReader::readText)
+        .trim()
+    println("Git commit hash: $gitCommitHash")
 
-        gitVersion =
-            if (gitCommitsCount.toString().trim().toInt() == 0) {
-                gitVersionStream.toString().trim()
-            } else {
-                gitVersionStream.toString().trim() + "." +
-                    gitCommitsCount.toString()
-                        .trim() + "+" + gitCommitHash.toString().trim()
-            }
-        println("Git version: $gitVersion")
-    } catch (e: Exception) {
-        println("Git not found [$e], using $gitVersion")
-    }
-    project.version = gitVersion
+    gitBranch = ProcessBuilder()
+        .command("git", "name-rev", "--name-only", "HEAD")
+        .directory(project.rootDir)
+        .start()
+        .inputStream.bufferedReader().use(BufferedReader::readText)
+        .trim()
+    println("Git branch name: $gitBranch")
+
+    gitVersion =
+        if (gitCommitsCount.toInt() == 0) {
+            gitDescribe
+        } else {
+            "$gitDescribe.$gitCommitsCount+$gitCommitHash"
+        }
+} catch (e: Exception) {
+    println("Git not found [$e], using $gitVersion")
 }
-project.tasks.preBuild.dependsOn("getGitVersion")
+println("Computed git version: $gitVersion")
 
 configurations {
     implementation { isCanBeResolved = true }
 }
-task("linphoneSdkSource") {
+
+tasks.register("linphoneSdkSource") {
     doLast {
         configurations.implementation.get().incoming.resolutionResult.allComponents.forEach {
             if (it.id.displayName.contains("linphone-sdk-android")) {
@@ -100,7 +106,7 @@ android {
         applicationId = packageName
         minSdk = 28
         targetSdk = 36
-        versionCode = 600020 // 6.00.020
+        versionCode = 601002 // 6.01.002
         versionName = "6.1.0-alpha"
 
         manifestPlaceholders["appAuthRedirectScheme"] = packageName
@@ -116,7 +122,7 @@ android {
         variant.outputs
             .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
             .forEach { output ->
-                output.outputFileName = "linphone-android-${variant.buildType.name}-${project.version}.apk"
+                output.outputFileName = "linphone-android-${variant.buildType.name}-$gitVersion.apk"
             }
     }
 
@@ -148,13 +154,16 @@ android {
             isDebuggable = true
             isJniDebuggable = true
 
+            val appVersion = gitVersion
+            val appBranch = gitBranch
+            println("Debug flavor app version is [$appVersion], app branch is [$appBranch]")
+            resValue("string", "linphone_app_version", appVersion)
+            resValue("string", "linphone_app_branch", appBranch)
             if (useDifferentPackageNameForDebugBuild) {
                 resValue("string", "file_provider", "$packageName.debug.fileprovider")
             } else {
                 resValue("string", "file_provider", "$packageName.fileprovider")
             }
-            resValue("string", "linphone_app_version", gitVersion.trim())
-            resValue("string", "linphone_app_branch", gitBranch.toString().trim())
             resValue("string", "linphone_openid_callback_scheme", packageName)
 
             if (crashlyticsAvailable) {
@@ -176,9 +185,12 @@ android {
             )
             signingConfig = signingConfigs.getByName("release")
 
+            val appVersion = gitVersion
+            val appBranch = gitBranch
+            println("Release flavor app version is [$appVersion], app branch is [$appBranch]")
+            resValue("string", "linphone_app_version", appVersion)
+            resValue("string", "linphone_app_branch", appBranch)
             resValue("string", "file_provider", "$packageName.fileprovider")
-            resValue("string", "linphone_app_version", gitVersion.trim())
-            resValue("string", "linphone_app_branch", gitBranch.toString().trim())
             resValue("string", "linphone_openid_callback_scheme", packageName)
 
             if (crashlyticsAvailable) {
@@ -193,17 +205,14 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = "17"
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 
     buildFeatures {
         dataBinding = true
         buildConfig = true
+        resValues = true
     }
 
     lint {
@@ -213,7 +222,6 @@ android {
 
 dependencies {
     implementation(libs.androidx.annotations)
-    implementation(libs.androidx.activity)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraint.layout)
     implementation(libs.androidx.core.ktx)
@@ -240,7 +248,11 @@ dependencies {
 
     implementation(platform(libs.google.firebase.bom))
     implementation(libs.google.firebase.messaging)
-    implementation(libs.google.firebase.crashlytics)
+    if (crashlyticsAvailable) {
+        implementation(libs.google.firebase.crashlytics)
+    } else {
+        compileOnly(libs.google.firebase.crashlytics)
+    }
 
     // https://github.com/coil-kt/coil/blob/main/LICENSE.txt Apache v2.0
     implementation(libs.coil)

@@ -5,9 +5,13 @@
 
     <data>
         <import type="android.view.View" />
+        <import type="android.widget.SeekBar" />
         <variable
             name="toggleFullScreenModeClickListener"
             type="View.OnClickListener" />
+        <variable
+            name="seekBarListener"
+            type="SeekBar.OnSeekBarChangeListener" />
         <variable
             name="viewModel"
             type="org.linphone.ui.fileviewer.viewmodel.MediaViewModel" />
@@ -75,24 +79,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:tint="@color/bc_white"/>
 
-        <com.google.android.material.progressindicator.LinearProgressIndicator
+        <SeekBar
+            seekBarListener="@{seekBarListener}"
             android:id="@+id/progress"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_height="0dp"
+            android:splitTrack="false"
             android:max="@{viewModel.duration, default=100}"
             android:progress="@{viewModel.position, default=75}"
-            app:trackCornerRadius="5dp"
-            app:trackThickness="10dp"
-            app:trackColor="?attr/color_main1_100"
-            app:indicatorColor="?attr/color_main1_500"
-            app:trackStopIndicatorSize="0dp"
-            app:indicatorTrackGapSize="0dp"
+            android:progressDrawable="@drawable/media_player_seekbar"
+            android:thumb="@drawable/media_player_seekbar_thumb"
             app:layout_constraintTop_toTopOf="@id/play_pause_audio_playback"
             app:layout_constraintBottom_toBottomOf="@id/play_pause_audio_playback"
             app:layout_constraintStart_toEndOf="@id/play_pause_audio_playback"
-            app:layout_constraintEnd_toStartOf="@id/duration"/>
+            app:layout_constraintEnd_toStartOf="@id/duration" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_700"

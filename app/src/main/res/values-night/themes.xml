@@ -74,7 +74,7 @@
         <item name="color_button_pressed_background">@color/gray_main2_600</item>
         <item name="color_button_disabled_background">@color/gray_600</item>
 
-        <item name="color_gradient_start">@color/background_color_alt_dark_mode</item>
+        <item name="color_gradient_start">@color/gray_main2_800</item>
         <item name="color_gradient_end">@color/background_color_alt_dark_mode</item>
 
         <item name="color_trust_background">@color/gray_main2_600</item>

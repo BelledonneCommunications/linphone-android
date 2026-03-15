@@ -26,6 +26,7 @@ import android.view.Surface
 import android.view.TextureView.SurfaceTextureListener
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.core.tools.Log
@@ -44,6 +45,21 @@ class MediaViewerFragment : GenericMainFragment() {
     private lateinit var binding: FileMediaViewerChildFragmentBinding
 
     private lateinit var viewModel: MediaViewModel
+
+    private val seekBarListener = object : SeekBar.OnSeekBarChangeListener {
+        override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+
+        }
+
+        override fun onStartTrackingTouch(seekBar: SeekBar) {
+            viewModel.pause()
+        }
+
+        override fun onStopTrackingTouch(seekBar: SeekBar) {
+            val newPosition = seekBar.progress
+            viewModel.seekTo(newPosition)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -86,6 +102,8 @@ class MediaViewerFragment : GenericMainFragment() {
             val fullScreenMode = viewModel.toggleFullScreen()
             sharedViewModel.mediaViewerFullScreenMode.value = fullScreenMode
         }
+
+        binding.setSeekBarListener(seekBarListener)
 
         viewModel.videoSizeChangedEvent.observe(viewLifecycleOwner) {
             it.consume { pair ->

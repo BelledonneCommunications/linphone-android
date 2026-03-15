@@ -226,6 +226,7 @@
     <string name="settings_conversations_mark_as_read_when_dismissing_notif_title">Marquer la conversation comme lue lorsqu\'une notification de message est supprimée</string>
     <string name="settings_contacts_title">Contacts</string>
     <string name="settings_contacts_sort_by_first_name_title">Trier les contacts par</string>
+    <string name="settings_contacts_edit_native_contacts_in_linphone_title">Editer les contacts natifs dans &appName;</string>
     <string name="settings_contacts_hide_empty_contacts_title">Masquer les contacts sans adresse SIP ni numéro de téléphone</string>
     <string name="settings_contacts_presence_subscribe_title">Souscrire aux informations de présence</string>
     <string name="settings_contacts_add_ldap_server_title">Ajouter un serveur LDAP</string>
@@ -321,6 +322,7 @@
     <string name="settings_developer_enabled_toast">Paramètres développeurs activés</string>
     <string name="settings_developer_already_enabled_toast">Paramètres développeurs déjà activés</string>
     <string name="settings_developer_enable_vu_meters_title">Activer l\'indicateur des volumes d\'enregistrement et de lecture</string>
+    <string name="settings_developer_enable_advanced_call_stats_title">Afficher plus de statistiques d\'appel</string>
     <string name="settings_developer_push_compatible_domains_list_title">Liste des domaines qui supportent les notifications poussées (séparés par des virgules)</string>
     <string name="settings_developer_clear_native_friends_in_database_title">Supprimer les contacts natifs importés</string>
     <string name="settings_developer_clear_native_friends_in_database_subtitle">Ils seront synchronisés à nouveau au prochain démarrage de l\'application sauf si vous retirez la permission de lire les contacts</string>
@@ -500,10 +502,6 @@
         <item quantity="one">%s est en train d\'écrire…</item>
         <item quantity="other">%s sont en train d\'écrire…</item>
     </plurals>
-    <plurals name="conversation_composing_voice_message_label">
-        <item quantity="one">%s est en train d\'enregistrer un message vocal…</item>
-        <item quantity="other">%s sont en train d\'enregistrer un message vocal…</item>
-    </plurals>
     <string name="conversation_add_participants_title">Ajouter des participants</string>
     <string name="conversation_reply_to_message_title">En réponse à :</string>
     <string name="conversation_menu_search_in_messages">Chercher</string>
@@ -522,8 +520,6 @@
     <string name="conversation_warning_unsafe_bottom_sheet_message">Les messages échangés dans cette conversation peuvent être interceptés et consultés par des personnes autres que le destinataire désiré, la confidentialité n\'est pas garantie !</string>
     <string name="conversation_warning_disabled_because_not_secured_title">Cette conversation n\'est pas chiffrée !</string>
     <string name="conversation_warning_disabled_because_not_secured_subtitle">Cette conversation a été désactivée pour garantir votre sécurité.</string>
-    <string name="conversation_warning_disabled_encrypted_bottom_sheet_title">Chiffrement obligatoire</string>
-    <string name="conversation_warning_disabled_encrypted_bottom_sheet_message">Vous avez activé le chiffrement obligatoire. Vos conversations non chiffrées sont désactivées pour garantir votre sécurité. Vous pouvez recréer cette conversation ou bien désactiver le chiffrement obligatoire dans vos paramètres de compte.</string>
     <string name="conversation_maximum_number_of_attachments_reached">Nombre maximum de fichiers atteint !</string>
     <string name="conversation_dialog_set_subject">Nommer la conversation</string>
     <string name="conversation_dialog_edit_subject">Renommer la conversation</string>
@@ -566,6 +562,8 @@
     <string name="conversation_dialog_delete_for_everyone_label">Pour tout le monde</string>
     <string name="conversation_message_content_deleted_label"><i>Le message a été supprimé</i></string>
     <string name="conversation_message_content_deleted_by_us_label"><i>Vous avez supprimé le message</i></string>
+    <string name="conversation_participants_list_header">Participants</string>
+    <string name="conversation_participants_list_empty">Aucun participant trouvé</string>
 
     <string name="conversation_info_participants_list_title">Participants (%s)</string>
     <string name="conversation_info_add_participants_label">Ajouter des participants</string>
@@ -750,6 +748,8 @@
     <string name="call_stats_bandwidth_label">Bande passante : %s</string>
     <string name="call_stats_loss_rate_label">Taux de perte : %s</string>
     <string name="call_stats_jitter_buffer_label">Tampon de gigue : %s</string>
+    <string name="call_stats_ice_label">ICE : %s</string>
+    <string name="call_stats_ip_family_label">Famille IP : %s</string>
     <string name="call_stats_video_title">Vidéo</string>
     <string name="call_stats_resolution_label">Définition : %s</string>
     <string name="call_stats_fps_label">FPS : %s</string>

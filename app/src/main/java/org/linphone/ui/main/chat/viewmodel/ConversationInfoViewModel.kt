@@ -82,6 +82,8 @@ class ConversationInfoViewModel
 
     val friendAvailable = MutableLiveData<Boolean>()
 
+    val disableAddContact = MutableLiveData<Boolean>()
+
     val groupLeftEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -194,6 +196,7 @@ class ConversationInfoViewModel
     init {
         expandParticipants.value = true
         showPeerSipUri.value = false
+        disableAddContact.value = corePreferences.disableAddContact
 
         coreContext.postOnCoreThread {
             hideSipAddresses.postValue(corePreferences.hideSipAddresses)

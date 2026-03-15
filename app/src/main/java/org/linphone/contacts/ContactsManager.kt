@@ -63,6 +63,7 @@ import org.linphone.utils.ImageUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.PhoneNumberUtils
 import org.linphone.utils.ShortcutUtils
+import java.io.FileNotFoundException
 
 class ContactsManager
     @UiThread
@@ -95,8 +96,6 @@ class ContactsManager
     private val magicSearchListener = object : MagicSearchListenerStub() {
         @WorkerThread
         override fun onSearchResultsReceived(magicSearch: MagicSearch) {
-            reloadRemoteContactsJob?.cancel()
-
             var queriedSipUri = ""
             for ((key, value) in magicSearchMap.entries) {
                 if (value == magicSearch) {
@@ -120,6 +119,7 @@ class ContactsManager
                         Log.w("$TAG Received friend [${friend.name}] with SIP URI [$address] doesn't match queried SIP URI [$queriedSipUri]")
                     } else {
                         found = true
+                        reloadRemoteContactsJob?.cancel()
 
                         // Store friend in app's cache to be re-used in call history, conversations, etc...
                         val temporaryFriendList = getRemoteContactDirectoriesCacheFriendList()
@@ -741,6 +741,8 @@ fun Friend.getNativeContactPictureUri(): Uri? {
                     fd.close()
                     return pictureUri
                 }
+            } catch (fnfe: FileNotFoundException) {
+                Log.w("[Contacts Manager] Can't open [$pictureUri] for contact [$name]: $fnfe")
             } catch (e: Exception) {
                 Log.e("[Contacts Manager] Can't open [$pictureUri] for contact [$name]: $e")
             }
@@ -817,6 +819,10 @@ fun Friend.getListOfSipAddressesAndPhoneNumbers(listener: ContactNumberOrAddress
 
     // Will return an empty list if corePreferences.hideSipAddresses == true
     for (address in getListOfSipAddresses()) {
+        if (LinphoneUtils.isSipAddressLinkedToPhoneNumberByPresence(this, address.asStringUriOnly())) {
+            continue
+        }
+
         val data = ContactNumberOrAddressModel(
             this,
             address,
@@ -832,7 +838,6 @@ fun Friend.getListOfSipAddressesAndPhoneNumbers(listener: ContactNumberOrAddress
         return addressesAndNumbers
     }
 
-    val indexOfLastSipAddress = addressesAndNumbers.count()
     for (number in phoneNumbersWithLabel) {
         val phoneNumber = number.phoneNumber
         val presenceModel = getPresenceModelForUriOrTel(phoneNumber)
@@ -840,25 +845,12 @@ fun Friend.getListOfSipAddressesAndPhoneNumbers(listener: ContactNumberOrAddress
         var presenceAddress: Address? = null
 
         if (presenceModel != null && hasPresenceInfo) {
-            // Show linked SIP address if not already stored as-is
             val contact = presenceModel.contact
             if (!contact.isNullOrEmpty()) {
                 val address = core.interpretUrl(contact, false)
                 if (address != null) {
                     address.clean() // To remove ;user=phone
                     presenceAddress = address
-                    if (!corePreferences.hideSipAddresses && addressesAndNumbers.find { it.address?.weakEqual(address) == true } == null) {
-                        val data = ContactNumberOrAddressModel(
-                            this,
-                            address,
-                            address.asStringUriOnly(),
-                            true, // SIP addresses are always enabled
-                            listener,
-                            true,
-                            hasPresence = true
-                        )
-                        addressesAndNumbers.add(indexOfLastSipAddress, data)
-                    }
                 } else {
                     Log.e("[Contacts Manager] Failed to parse phone number [$phoneNumber] contact address [$contact] from presence model!")
                 }

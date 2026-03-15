@@ -53,10 +53,9 @@
             android:layout_height="0dp"
             android:src="@drawable/list"
             android:contentDescription="@string/content_description_open_filter"
-            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/title"
-            app:layout_constraintBottom_toBottomOf="@id/title"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:tint="?attr/color_main2_600" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -64,6 +63,7 @@
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginStart="5dp"
             android:layout_marginEnd="10dp"
             android:gravity="center_vertical"
             android:text="@{viewModel.title, default=`Title`}"
@@ -84,10 +84,9 @@
             android:layout_marginEnd="5dp"
             android:src="@drawable/magnifying_glass"
             android:contentDescription="@string/content_description_open_filter"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintEnd_toStartOf="@id/extra_action"
-            app:layout_constraintTop_toTopOf="@id/title"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:tint="?attr/color_main2_600" />
 
         <ImageView
@@ -100,10 +99,9 @@
             android:src="@{extraActionIcon, default=@drawable/dots_three_vertical}"
             android:contentDescription="@{extraActionContentDescription}"
             android:visibility="@{!viewModel.searchBarVisible &amp;&amp; enableExtraAction ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/title"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:tint="?attr/color_main2_600" />
 
         <ImageView
@@ -115,7 +113,6 @@
             android:layout_marginStart="5dp"
             android:src="@drawable/caret_left"
             android:contentDescription="@string/content_description_cancel_filter"
-            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintBottom_toBottomOf="@id/search"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/search"
@@ -162,7 +159,6 @@
             android:layout_marginEnd="5dp"
             android:src="@drawable/x"
             android:contentDescription="@string/content_description_clear_filter"
-            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintBottom_toBottomOf="@id/search"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/search"

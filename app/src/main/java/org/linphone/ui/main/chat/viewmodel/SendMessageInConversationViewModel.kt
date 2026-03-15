@@ -110,6 +110,8 @@ class SendMessageInConversationViewModel
 
     val voiceRecordPlayerPosition = MutableLiveData<Int>()
 
+    val isComputingParticipantsList = MutableLiveData<Boolean>()
+
     private lateinit var voiceRecordPlayer: Player
 
     private val playerListener = PlayerListener {
@@ -133,6 +135,10 @@ class SendMessageInConversationViewModel
         MutableLiveData<Event<Boolean>>()
     }
 
+    val messageSentEvent: MutableLiveData<Event<ChatMessage>> by lazy {
+        MutableLiveData<Event<ChatMessage>>()
+    }
+
     lateinit var chatRoom: ChatRoom
 
     private var chatMessageToReplyTo: ChatMessage? = null
@@ -142,6 +148,8 @@ class SendMessageInConversationViewModel
     private lateinit var voiceMessageRecorder: Recorder
 
     private var voiceRecordAudioFocusRequest: AudioFocusRequestCompat? = null
+
+    private var participantsListFilter = ""
 
     private val chatRoomListener = object : ChatRoomListenerStub() {
         @WorkerThread
@@ -163,6 +171,7 @@ class SendMessageInConversationViewModel
         isKeyboardOpen.value = false
         isEmojiPickerOpen.value = false
         areFilePickersOpen.value = false
+        isParticipantsListOpen.value = false
         isVoiceRecording.value = false
         isPlayingVoiceRecord.value = false
         isCallConversation.value = false
@@ -320,6 +329,7 @@ class SendMessageInConversationViewModel
                         val voiceMessage = chatRoom.createEmptyMessage()
                         voiceMessage.addContent(content)
                         voiceMessage.send()
+                        messageSentEvent.postValue(Event(voiceMessage))
                     } else {
                         message.addContent(content)
                     }
@@ -351,6 +361,7 @@ class SendMessageInConversationViewModel
                         val fileMessage = chatRoom.createEmptyMessage()
                         fileMessage.addFileContent(content)
                         fileMessage.send()
+                        messageSentEvent.postValue(Event(fileMessage))
                     } else {
                         message.addFileContent(content)
                         contentAdded = true
@@ -361,6 +372,7 @@ class SendMessageInConversationViewModel
             if (message.contents.isNotEmpty()) {
                 Log.i("$TAG Sending message")
                 message.send()
+                messageSentEvent.postValue(Event(message))
             }
 
             Log.i("$TAG Message sent, re-setting defaults")
@@ -409,6 +421,10 @@ class SendMessageInConversationViewModel
     @UiThread
     fun closeParticipantsList() {
         isParticipantsListOpen.value = false
+        coreContext.postOnCoreThread {
+            participantsListFilter = ""
+            computeParticipantsList()
+        }
     }
 
     @UiThread
@@ -571,7 +587,32 @@ class SendMessageInConversationViewModel
     }
 
     @WorkerThread
-    private fun computeParticipantsList() {
+    fun filterParticipantsList(filter: String) {
+        Log.i("$TAG Filtering participants list using user-input [$filter]")
+        if (filter.isEmpty() && participantsListFilter.isNotEmpty()) {
+            participantsListFilter = ""
+            computeParticipantsList()
+            return
+        }
+
+        if (filter.length >= participantsListFilter.length) {
+            isComputingParticipantsList.postValue(true)
+            participantsListFilter = filter
+            val currentList = participants.value.orEmpty()
+            val newList = currentList.filter {
+                it.address.username.orEmpty().contains(filter) || it.avatarModel.contactName?.contains(filter) == true
+            }
+            participants.postValue(newList as ArrayList<ParticipantModel>)
+            isComputingParticipantsList.postValue(false)
+        } else {
+            participantsListFilter = filter
+            computeParticipantsList(filter)
+        }
+    }
+
+    @WorkerThread
+    private fun computeParticipantsList(filter: String = "") {
+        isComputingParticipantsList.postValue(true)
         val participantsList = arrayListOf<ParticipantModel>()
 
         for (participant in chatRoom.participants) {
@@ -580,14 +621,18 @@ class SendMessageInConversationViewModel
                 coreContext.postOnCoreThread {
                     val username = clicked.address.username
                     if (!username.isNullOrEmpty()) {
-                        participantUsernameToAddEvent.postValue(Event(username))
+                        participantUsernameToAddEvent.postValue(Event(username.substring(participantsListFilter.length)))
                     }
                 }
             })
-            participantsList.add(model)
+
+            if (filter.isEmpty() || participant.address.asStringUriOnly().contains(filter) || model.avatarModel.contactName?.contains(filter) == true) {
+                participantsList.add(model)
+            }
         }
 
         participants.postValue(participantsList)
+        isComputingParticipantsList.postValue(false)
     }
 
     @WorkerThread

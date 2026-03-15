@@ -564,7 +564,7 @@ class CoreContext
     private var logcatEnabled: Boolean = corePreferences.printLogsInLogcat
 
     private var crashlyticsEnabled: Boolean = corePreferences.sendLogsToCrashlytics
-    private var crashlyticsAvailable = true
+    private var crashlyticsAvailable = BuildConfig.CRASHLYTICS_ENABLED
 
     private val loggingServiceListener = object : LoggingServiceListenerStub() {
         @WorkerThread
@@ -583,7 +583,7 @@ class CoreContext
                     else -> android.util.Log.d(domain, message)
                 }
             }
-            if (crashlyticsEnabled) {
+            if (crashlyticsAvailable && crashlyticsEnabled) {
                 FirebaseCrashlytics.getInstance().log("[$domain] [${level.name}] $message")
             }
         }
@@ -1268,5 +1268,27 @@ class CoreContext
                 proximityWakeLock.release(PowerManager.RELEASE_FLAG_WAIT_FOR_NO_PROXIMITY)
             }
         }
+    }
+
+    fun setBackCamera(): Boolean {
+        for (camera in core.videoDevicesList) {
+            if (camera.contains("Back")) {
+                Log.i("TAG Found back facing camera [$camera], using it")
+                coreContext.core.videoDevice = camera
+                return true
+            }
+        }
+        return false
+    }
+
+    fun setFrontCamera(): Boolean {
+        for (camera in core.videoDevicesList) {
+            if (camera.contains("Front")) {
+                Log.i("$TAG Found front facing camera [$camera], using it")
+                coreContext.core.videoDevice = camera
+                return true
+            }
+        }
+        return false
     }
 }

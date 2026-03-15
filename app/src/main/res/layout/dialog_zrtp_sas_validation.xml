@@ -63,6 +63,7 @@
                 android:text="@string/call_zrtp_sas_validation_skip"
                 android:textSize="13sp"
                 android:textColor="@color/bc_white"
+                android:background="@drawable/squircle_transparent_button_background"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
@@ -238,10 +239,10 @@
                 android:paddingBottom="@dimen/primary_secondary_buttons_label_padding"
                 android:paddingTop="@dimen/primary_secondary_buttons_label_padding"
                 android:gravity="center"
-                android:background="@drawable/shape_red_outlined_button_background"
+                android:background="@drawable/squircle_red_outlined_button_background"
                 android:text="@string/call_dialog_zrtp_validate_trust_letters_do_not_match"
                 android:textSize="13sp"
-                android:textColor="?attr/color_danger_500"
+                android:textColor="@color/danger_500"
                 android:maxLines="1"
                 android:ellipsize="end"
                 app:layout_constraintWidth_max="@dimen/button_max_width"

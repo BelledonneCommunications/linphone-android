@@ -239,10 +239,11 @@
             android:src="@drawable/backspace_fill"
             android:contentDescription="@string/content_description_erase_last_input"
             android:padding="15dp"
+            android:background="@drawable/in_call_numpad_button_background"
             app:layout_constraintStart_toStartOf="@id/digit_sharp"
             app:layout_constraintEnd_toEndOf="@id/digit_sharp"
             app:layout_constraintTop_toTopOf="@id/call_barrier"
-            app:tint="?attr/color_main2_600" />
+            app:tint="@color/bc_white" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

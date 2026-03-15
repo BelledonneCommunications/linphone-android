@@ -35,13 +35,14 @@ import org.linphone.contacts.AvatarGenerator
 import org.linphone.core.tools.Log
 import androidx.core.net.toUri
 import androidx.core.graphics.createBitmap
+import org.linphone.R
 
 class ImageUtils {
     companion object {
         private const val TAG = "[Image Utils]"
 
         @AnyThread
-        fun generatedAvatarIfNeededAndReturnPath(context: Context, size: Int = 0, textSize: Int = 0, initials: String): String {
+        fun generatedAvatarIfNeededAndReturnPath(context: Context, initials: String): String {
             val darkMode = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
             val suffix = if (darkMode) "_dark" else "_light"
 
@@ -53,14 +54,9 @@ class ImageUtils {
 
             val builder = AvatarGenerator(context)
             builder.setInitials(initials)
-            if (size > 0) {
-                builder.setAvatarSize(
-                    AppUtils.getDimension(size).toInt()
-                )
-            }
-            if (textSize > 0) {
-                builder.setTextSize(AppUtils.getDimension(textSize))
-            }
+            builder.setAvatarSize(AppUtils.getDimension(R.dimen.avatar_big_size).toInt())
+            builder.setTextSize(AppUtils.getDimension(R.dimen.avatar_initials_call_text_size))
+
             val bitmap = builder.buildBitmap(false)
             val path = FileUtils.storeBitmap(bitmap, generatedAvatarPath)
             return path

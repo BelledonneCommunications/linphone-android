@@ -147,6 +147,8 @@ class QrCodeScannerFragment : GenericFragment() {
             core.nativePreviewWindowId = null
             core.isVideoPreviewEnabled = false
             core.isQrcodeVideoPreviewEnabled = false
+
+            coreContext.setFrontCamera()
         }
 
         super.onPause()

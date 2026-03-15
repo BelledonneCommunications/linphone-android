@@ -202,7 +202,7 @@ class ConversationEventAdapter :
         }
     }
 
-    inner class IncomingBubbleViewHolder(
+    class IncomingBubbleViewHolder(
         val binding: ChatBubbleIncomingBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(message: MessageModel) {
@@ -217,7 +217,7 @@ class ConversationEventAdapter :
         }
     }
 
-    inner class OutgoingBubbleViewHolder(
+    class OutgoingBubbleViewHolder(
         val binding: ChatBubbleOutgoingBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(message: MessageModel) {
@@ -232,7 +232,7 @@ class ConversationEventAdapter :
         }
     }
 
-    inner class EventViewHolder(
+    class EventViewHolder(
         val binding: ChatConversationEventBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(event: EventModel) {

@@ -81,6 +81,7 @@ class AccountModel
             update()
         }
 
+        @WorkerThread
         override fun onMessageWaitingIndicationChanged(
             account: Account,
             mwi: MessageWaitingIndication
@@ -107,6 +108,11 @@ class AccountModel
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
         override fun onChatRoomRead(core: Core, chatRoom: ChatRoom) {
+            computeNotificationsCount()
+        }
+
+        @WorkerThread
+        override fun onMessageRetracted(core: Core, chatRoom: ChatRoom, message: ChatMessage) {
             computeNotificationsCount()
         }
 

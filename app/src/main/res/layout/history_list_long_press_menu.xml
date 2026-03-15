@@ -19,6 +19,9 @@
         <variable
             name="contactExists"
             type="Boolean" />
+        <variable
+            name="disableAddContact"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,7 +32,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/add_to_contact"
             android:onClick="@{addToContactsListener}"
-            android:visibility="@{contactExists ? View.GONE : View.VISIBLE}"
+            android:visibility="@{contactExists || disableAddContact ? View.GONE : View.VISIBLE}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/menu_add_address_to_contacts"

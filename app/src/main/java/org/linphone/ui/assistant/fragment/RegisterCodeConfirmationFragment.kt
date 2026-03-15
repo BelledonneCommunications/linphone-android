@@ -80,7 +80,7 @@ class RegisterCodeConfirmationFragment : GenericFragment() {
         clipboard.addPrimaryClipChangedListener {
             val data = clipboard.primaryClip
             if (data != null && data.itemCount > 0) {
-                val clip = data.getItemAt(0).text.toString()
+                val clip = data.getItemAt(0).text?.toString() ?: ""
                 if (clip.length == 4) {
                     Log.i(
                         "$TAG Found 4 digits [$clip] as primary clip in clipboard, using it and clear it"

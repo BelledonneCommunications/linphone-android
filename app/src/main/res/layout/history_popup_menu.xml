@@ -23,6 +23,9 @@
         <variable
             name="isConferenceCallLog"
             type="Boolean" />
+        <variable
+            name="disableAddContact"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -36,7 +39,7 @@
             style="@style/popup_menu_item"
             android:id="@+id/add_to_contact"
             android:onClick="@{addToContactsListener}"
-            android:visibility="@{contactExists || isConferenceCallLog ? View.GONE : View.VISIBLE, default=gone}"
+            android:visibility="@{contactExists || isConferenceCallLog || disableAddContact ? View.GONE : View.VISIBLE, default=gone}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/menu_add_address_to_contacts"

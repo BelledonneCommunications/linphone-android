@@ -178,6 +178,7 @@ class ConversationModel
                 Log.i("$TAG Last message [${message.messageId}] has been retracted")
                 updateLastMessage()
             }
+            unreadMessageCount.postValue(chatRoom.unreadMessagesCount)
         }
 
         @WorkerThread

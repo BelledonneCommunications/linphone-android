@@ -11,6 +11,9 @@
         <variable
             name="model"
             type="org.linphone.ui.main.history.model.NumpadModel" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.call.viewmodel.CurrentCallViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,6 +22,7 @@
         android:background="@drawable/shape_call_bottom_sheet_background"
         android:clickable="true"
         android:focusable="true"
+        android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode ? View.INVISIBLE : View.VISIBLE}"
         app:behavior_hideable="true"
         app:behavior_peekHeight="0dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"

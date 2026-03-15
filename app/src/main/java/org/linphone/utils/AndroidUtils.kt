@@ -20,6 +20,8 @@
 package org.linphone.utils
 
 import android.app.Activity
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.os.Build
 import android.provider.Settings
@@ -27,11 +29,13 @@ import android.util.DisplayMetrics
 import android.util.Rational
 import android.view.View
 import androidx.annotation.AnyThread
+import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
 import androidx.annotation.MainThread
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import androidx.annotation.UiThread
+import androidx.core.content.ContextCompat
 import androidx.core.view.SoftwareKeyboardControllerCompat
 import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -84,6 +88,11 @@ class AppUtils {
             return LocaleHelper.applyLocale(coreContext.context)
                     .resources
                     .getQuantityString(id, count, value)
+        }
+
+        @AnyThread
+        fun getColorInt(@ColorRes id: Int): Int {
+            return ContextCompat.getColor(coreContext.context, id)
         }
 
         @MainThread
@@ -194,6 +203,18 @@ class AppUtils {
             // Some VoIP providers such as voip.ms seem to not like apostrophe in user-agent
             name = name.replace("'", "")
             return name
+        }
+
+        @AnyThread
+        fun copyToClipboard(context: Context, label: String, value: String): Boolean {
+            try {
+                val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                clipboard.setPrimaryClip(ClipData.newPlainText(label, value))
+                return true
+            } catch (e: Exception) {
+                Log.e("$TAG Failed to copy text [$value] with label [$label] to clipboard: $e")
+            }
+            return false
         }
 
         @AnyThread

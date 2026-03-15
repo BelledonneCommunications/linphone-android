@@ -25,6 +25,10 @@ import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
+import android.view.KeyEvent
+import android.view.KeyboardShortcutGroup
+import android.view.KeyboardShortcutInfo
+import android.view.Menu
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -66,6 +70,7 @@ import org.linphone.ui.call.viewmodel.CallsViewModel
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
 import org.linphone.ui.call.viewmodel.SharedCallViewModel
 import org.linphone.ui.main.MainActivity
+import org.linphone.utils.AppUtils
 
 @UiThread
 class CallActivity : GenericActivity() {
@@ -408,7 +413,51 @@ class CallActivity : GenericActivity() {
         }
     }
 
-    @UiThread
+    override fun onProvideKeyboardShortcuts(
+        data: MutableList<KeyboardShortcutGroup?>?,
+        menu: Menu?,
+        deviceId: Int
+    ) {
+        super.onProvideKeyboardShortcuts(data, menu, deviceId)
+
+        val keyboardShortcutGroup = KeyboardShortcutGroup(
+            "Answer/Decline incoming call",
+            listOf(
+                KeyboardShortcutInfo(
+                    AppUtils.getString(R.string.call_action_answer),
+                    KeyEvent.KEYCODE_A,
+                    KeyEvent.META_CTRL_ON or KeyEvent.META_SHIFT_ON
+                ),
+                KeyboardShortcutInfo(
+                    AppUtils.getString(R.string.call_action_decline),
+                    KeyEvent.KEYCODE_D,
+                    KeyEvent.META_CTRL_ON or KeyEvent.META_SHIFT_ON
+                )
+            )
+        )
+        data?.add(keyboardShortcutGroup)
+        Log.i("$TAG Incoming call answer/decline shortcuts added")
+    }
+
+    override fun onKeyShortcut(keyCode: Int, event: KeyEvent?): Boolean {
+        if (event?.isCtrlPressed == true && event.isShiftPressed) {
+            val navController = findNavController(R.id.call_nav_container)
+            if (navController.currentDestination?.id == R.id.incomingCallFragment) {
+                when (keyCode) {
+                    KeyEvent.KEYCODE_A -> {
+                        Log.i("$TAG Answer incoming call shortcut triggered")
+                        callViewModel.answer()
+                    }
+                    KeyEvent.KEYCODE_D -> {
+                        Log.i("$TAG Decline incoming call shortcut triggered")
+                        callViewModel.hangUp()
+                    }
+                }
+            }
+        }
+        return true
+    }
+
     fun goToMainActivity() {
         if (isPipSupported && callViewModel.isVideoEnabled.value == true) {
             Log.i("$TAG User is going back to MainActivity, try entering PiP mode")

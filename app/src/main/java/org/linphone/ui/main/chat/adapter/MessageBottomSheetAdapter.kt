@@ -50,7 +50,7 @@ class MessageBottomSheetAdapter : ListAdapter<MessageBottomSheetParticipantModel
         (holder as ViewHolder).bind(getItem(position))
     }
 
-    inner class ViewHolder(
+    class ViewHolder(
         val binding: ChatMessageBottomSheetListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         @UiThread

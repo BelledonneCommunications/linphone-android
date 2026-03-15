@@ -19,9 +19,6 @@
  */
 package org.linphone.ui.call.conference.fragment
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.LayoutInflater
@@ -43,6 +40,7 @@ import org.linphone.ui.call.CallActivity
 import org.linphone.ui.call.fragment.GenericCallFragment
 import org.linphone.ui.call.viewmodel.CallsViewModel
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
+import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.startAnimatedDrawable
 
@@ -272,14 +270,12 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
             }
         }
 
-        binding.setShareConferenceClickListener {
+        binding.setCopyConferenceUriToClipboardClickListener {
             val sipUri = callViewModel.conferenceModel.sipUri.value.orEmpty()
             if (sipUri.isNotEmpty()) {
-                Log.i("$TAG Sharing conference SIP URI [$sipUri]")
-
-                val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                Log.i("$TAG Copying conference SIP URI [$sipUri] into clipboard")
                 val label = "Conference SIP address"
-                clipboard.setPrimaryClip(ClipData.newPlainText(label, sipUri))
+                AppUtils.copyToClipboard(requireContext(), label, sipUri)
             }
         }
 

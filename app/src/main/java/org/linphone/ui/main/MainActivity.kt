@@ -790,11 +790,11 @@ class MainActivity : GenericActivity() {
     }
 
     private fun handleConfigIntent(uri: String) {
-        val remoteConfigUri = uri.substring("linphone-config:".length)
-        val url = when {
-            remoteConfigUri.startsWith("http://") || remoteConfigUri.startsWith("https://") -> remoteConfigUri
-            remoteConfigUri.startsWith("file://") -> remoteConfigUri
-            else -> "https://$remoteConfigUri"
+        Log.i("$TAG Trying to parse config intent [$uri] as remote provisioning URL")
+        val url = LinphoneUtils.getRemoteProvisioningUrlFromUri(uri)
+        if (url == null) {
+            Log.e("$TAG Couldn't parse URI [$uri] into a valid remote provisioning URL, aborting")
+            return
         }
 
         coreContext.postOnCoreThread { core ->

@@ -213,16 +213,12 @@ class AudioUtils {
             // In case no headset/hearing aid/bluetooth is connected, use microphone sound card
             // If none are available, default one will be used
             var headsetCard: AudioDevice? = null
-            var bluetoothCard: AudioDevice? = null
             var microphoneCard: AudioDevice? = null
             for (device in coreContext.core.audioDevices) {
                 if (device.hasCapability(AudioDevice.Capabilities.CapabilityRecord)) {
                     when (device.type) {
                         AudioDevice.Type.Headphones, AudioDevice.Type.Headset -> {
                             headsetCard = device
-                        }
-                        AudioDevice.Type.Bluetooth, AudioDevice.Type.HearingAid -> {
-                            bluetoothCard = device
                         }
                         AudioDevice.Type.Microphone -> {
                             microphoneCard = device
@@ -232,9 +228,9 @@ class AudioUtils {
                 }
             }
             Log.i(
-                "$TAG Found headset/headphones sound card [$headsetCard], bluetooth/hearingAid sound card [$bluetoothCard] and microphone card [$microphoneCard]"
+                "$TAG Found headset/headphones sound card [$headsetCard] and microphone card [$microphoneCard]"
             )
-            return headsetCard ?: bluetoothCard ?: microphoneCard
+            return headsetCard ?: microphoneCard
         }
 
         @AnyThread

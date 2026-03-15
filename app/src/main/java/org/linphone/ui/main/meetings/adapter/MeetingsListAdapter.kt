@@ -156,7 +156,7 @@ class MeetingsListAdapter :
         }
     }
 
-    inner class TodayIndicatorViewHolder(
+    class TodayIndicatorViewHolder(
         val binding: MeetingListTodayIndicatorBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         @UiThread

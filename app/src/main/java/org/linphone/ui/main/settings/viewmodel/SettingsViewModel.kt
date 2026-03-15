@@ -112,6 +112,8 @@ class SettingsViewModel
         AppUtils.getString(R.string.contact_editor_last_name),
     )
     val sortContactsByValues = arrayListOf(0, 1)
+
+    val editNativeContactsInLinphone = MutableLiveData<Boolean>()
     val hideEmptyContacts = MutableLiveData<Boolean>()
 
     val ldapAvailable = MutableLiveData<Boolean>()
@@ -247,6 +249,7 @@ class SettingsViewModel
     val logsSharingServerUrl = MutableLiveData<String>()
     val createEndToEndEncryptedConferences = MutableLiveData<Boolean>()
     val enableVuMeters = MutableLiveData<Boolean>()
+    val enableAdvancedCallStats = MutableLiveData<Boolean>()
     val pushCompatibleDomainsList = MutableLiveData<String>()
 
     private val coreListener = object : CoreListenerStub() {
@@ -343,6 +346,7 @@ class SettingsViewModel
             )
 
             sortContactsBy.postValue(if (corePreferences.sortContactsByFirstName) 0 else 1)
+            editNativeContactsInLinphone.postValue(corePreferences.editNativeContactsInLinphone)
             hideEmptyContacts.postValue(corePreferences.hideContactsWithoutPhoneNumberOrSipAddress)
             presenceSubscribe.postValue(core.isFriendListSubscriptionEnabled)
 
@@ -379,6 +383,7 @@ class SettingsViewModel
             logsSharingServerUrl.postValue(core.logCollectionUploadServerUrl)
             createEndToEndEncryptedConferences.postValue(corePreferences.createEndToEndEncryptedMeetingsAndGroupCalls)
             enableVuMeters.postValue(corePreferences.showMicrophoneAndSpeakerVuMeters)
+            enableAdvancedCallStats.postValue(corePreferences.showAdvancedCallStats)
 
             val domainsListBuilder = StringBuilder()
             val domainsArray = corePreferences.pushNotificationCompatibleDomains
@@ -582,6 +587,15 @@ class SettingsViewModel
     fun setContactSorting(sortingValue: Int) {
         coreContext.postOnCoreThread { core ->
             corePreferences.sortContactsByFirstName = sortingValue == 0
+        }
+    }
+
+    @UiThread
+    fun toggleEditNativeContactsInLinphone() {
+        val newValue = editNativeContactsInLinphone.value == false
+        coreContext.postOnCoreThread {
+            corePreferences.editNativeContactsInLinphone = newValue
+            editNativeContactsInLinphone.postValue(newValue)
         }
     }
 
@@ -1182,6 +1196,16 @@ class SettingsViewModel
         coreContext.postOnCoreThread { core ->
             corePreferences.showMicrophoneAndSpeakerVuMeters = newValue
             enableVuMeters.postValue(newValue)
+        }
+    }
+
+    @UiThread
+    fun toggleEnableAdvancedCallStats() {
+        val newValue = enableAdvancedCallStats.value == false
+
+        coreContext.postOnCoreThread { core ->
+            corePreferences.showAdvancedCallStats = newValue
+            enableAdvancedCallStats.postValue(newValue)
         }
     }
 
