@@ -245,6 +245,7 @@
                     app:layout_constraintStart_toStartOf="@id/transport"/>
 
                 <androidx.appcompat.widget.AppCompatSpinner
+                    style="@style/default_text_style"
                     android:id="@+id/transport"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
@@ -392,7 +393,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="18dp"
                     android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
                     android:labelFor="@id/outbound_proxy"
                     android:text="@string/account_settings_outbound_proxy_title"
                     app:layout_constraintTop_toBottomOf="@id/proxy"
@@ -403,7 +403,7 @@
                     android:onClick="@{outboundProxyTooltipClickListener}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="16dp"
                     android:src="@drawable/info"
                     android:contentDescription="@string/content_description_click_for_more_info"
                     app:tint="?attr/color_main2_600"

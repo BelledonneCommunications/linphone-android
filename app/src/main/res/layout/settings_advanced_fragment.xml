@@ -186,7 +186,6 @@
                         android:inputType="text|textUri"
                         android:hint="@string/settings_advanced_device_id_hint"
                         app:layout_constraintHorizontal_bias="0"
-                        app:layout_constraintWidth_max="@dimen/text_input_max_width"
                         app:layout_constraintTop_toBottomOf="@id/device_id_label"
                         app:layout_constraintStart_toStartOf="@id/device_id_label"
                         app:layout_constraintEnd_toEndOf="parent"/>
@@ -218,7 +217,6 @@
                         android:inputType="text|textUri"
                         android:hint="@string/settings_advanced_remote_provisioning_url"
                         app:layout_constraintHorizontal_bias="0"
-                        app:layout_constraintWidth_max="@dimen/text_input_max_width"
                         app:layout_constraintTop_toBottomOf="@id/remote_provisioning_label"
                         app:layout_constraintStart_toStartOf="@id/remote_provisioning_label"
                         app:layout_constraintEnd_toEndOf="parent"/>
@@ -314,7 +312,6 @@
                         android:background="@drawable/edit_text_background"
                         android:visibility="@{viewModel.expandAudioDevices ? View.VISIBLE : View.GONE}"
                         app:layout_constraintHorizontal_bias="0"
-                        app:layout_constraintWidth_max="@dimen/text_input_max_width"
                         app:layout_constraintTop_toBottomOf="@id/input_audio_device_label"
                         app:layout_constraintStart_toStartOf="@id/input_audio_device_label"
                         app:layout_constraintEnd_toEndOf="parent" />
@@ -363,7 +360,6 @@
                         android:background="@drawable/edit_text_background"
                         android:visibility="@{viewModel.expandAudioDevices ? View.VISIBLE : View.GONE}"
                         app:layout_constraintHorizontal_bias="0"
-                        app:layout_constraintWidth_max="@dimen/text_input_max_width"
                         app:layout_constraintTop_toBottomOf="@id/output_audio_device_label"
                         app:layout_constraintStart_toStartOf="@id/output_audio_device_label"
                         app:layout_constraintEnd_toEndOf="parent" />

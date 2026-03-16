@@ -157,7 +157,6 @@
                         android:inputType="text|textUri"
                         android:hint="@string/settings_advanced_upload_server_url"
                         app:layout_constraintHorizontal_bias="0"
-                        app:layout_constraintWidth_max="@dimen/text_input_max_width"
                         app:layout_constraintTop_toBottomOf="@id/upload_server_url_label"
                         app:layout_constraintStart_toStartOf="@id/upload_server_url_label"
                         app:layout_constraintEnd_toEndOf="parent"/>
@@ -189,7 +188,6 @@
                         android:inputType="text|textUri"
                         android:hint="@string/settings_advanced_logs_upload_server_url"
                         app:layout_constraintHorizontal_bias="0"
-                        app:layout_constraintWidth_max="@dimen/text_input_max_width"
                         app:layout_constraintTop_toBottomOf="@id/logs_upload_server_url_label"
                         app:layout_constraintStart_toStartOf="@id/logs_upload_server_url_label"
                         app:layout_constraintEnd_toEndOf="parent"/>
@@ -310,7 +308,6 @@
                         android:inputType="text|textNoSuggestions"
                         android:hint="@string/settings_developer_push_compatible_domains_list_title"
                         app:layout_constraintHorizontal_bias="0"
-                        app:layout_constraintWidth_max="@dimen/text_input_max_width"
                         app:layout_constraintTop_toBottomOf="@id/push_compatible_domains_list_label"
                         app:layout_constraintStart_toStartOf="@id/push_compatible_domains_list_label"
                         app:layout_constraintEnd_toEndOf="parent"/>
