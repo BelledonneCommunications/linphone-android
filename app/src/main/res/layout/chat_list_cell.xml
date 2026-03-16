@@ -42,19 +42,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/removal_in_progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/animated_in_progress"
-            android:contentDescription="@string/content_description_chat_removal_in_progress"
-            android:visibility="@{model.isBeingDeleted ? View.VISIBLE : View.GONE, default=gone}"
-            animatedDrawable="@{true}"
-            app:layout_constraintBottom_toBottomOf="@id/avatar"
-            app:layout_constraintStart_toStartOf="@id/avatar"
-            app:layout_constraintTop_toTopOf="@id/avatar"
-            app:layout_constraintEnd_toEndOf="@id/avatar"/>
-
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/right_border"
             android:layout_width="wrap_content"
@@ -99,6 +86,23 @@
             app:layout_constraintBottom_toTopOf="@id/separator"/>
 
         <ImageView
+            android:id="@+id/conversation_removal_in_progress"
+            android:layout_width="@dimen/small_icon_size"
+            android:layout_height="@dimen/small_icon_size"
+            android:layout_marginStart="@{model.lastMessageTextSender.length() > 0 &amp;&amp; !model.isComposing ? @dimen/five : @dimen/zero}"
+            android:layout_marginEnd="5dp"
+            android:layout_marginTop="3dp"
+            android:src="@drawable/animated_in_progress"
+            android:visibility="@{model.isBeingDeleted ? View.VISIBLE : View.GONE}"
+            android:contentDescription="@null"
+            animatedDrawable="@{true}"
+            app:tint="?attr/color_main1_500"
+            app:layout_constraintStart_toEndOf="@id/last_message_sender"
+            app:layout_constraintEnd_toStartOf="@id/last_message_or_composing"
+            app:layout_constraintTop_toTopOf="@id/last_message_or_composing"
+            app:layout_constraintBottom_toBottomOf="@id/last_message_or_composing"/>
+
+        <ImageView
             android:id="@+id/last_message_icon"
             android:layout_width="@dimen/small_icon_size"
             android:layout_height="@dimen/small_icon_size"
@@ -106,7 +110,7 @@
             android:layout_marginEnd="5dp"
             android:layout_marginTop="3dp"
             android:src="@{model.isComposing ? model.composingIcon : model.lastMessageContentIcon, default=@drawable/forward}"
-            android:visibility="@{model.lastMessageContentIcon > 0 || model.isComposing ? View.VISIBLE : View.GONE}"
+            android:visibility="@{model.isBeingDeleted ? View.GONE : model.lastMessageContentIcon > 0 || model.isComposing ? View.VISIBLE : View.GONE}"
             android:contentDescription="@null"
             app:tint="?attr/color_main2_600"
             app:layout_constraintStart_toEndOf="@id/last_message_sender"
