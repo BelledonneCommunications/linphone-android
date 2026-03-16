@@ -37,6 +37,7 @@ Group changes to describe their impact on the project, as follows:
 - Added a vu meter for recording & playback volumes (must be enabled in developer settings)
 - Added support for HDMI audio devices
 - Added video preview during in-call conversation
+- Allow text selection in chat bubble (once long press menu is displayed)
 
 ### Changed
 - No longer follow TelecomManager audio endpoint during calls, using our own routing policy
