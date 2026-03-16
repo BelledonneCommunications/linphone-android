@@ -943,6 +943,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                     } else {
                         // For received messages or retracted sent ones you can only delete locally
                         viewModel.deleteChatMessage(model)
+                        messageLongPressViewModel.dismiss()
                     }
                 }
             }
@@ -1661,15 +1662,17 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         val modalBottomSheet = MessageDialogFragment(
             canBeRetracted,
             { // onDismiss
-
+                messageLongPressViewModel.dismiss()
             },
             { // onMarkConversationAsRead
                 Log.i("$TAG Deleting chat message locally")
                 viewModel.deleteChatMessage(model)
+                messageLongPressViewModel.dismiss()
             },
             { // onToggleMute
                 Log.i("$TAG Deleting chat message (content) for everyone")
                 viewModel.deleteChatMessageForEveryone(model)
+                messageLongPressViewModel.dismiss()
             }
         )
         modalBottomSheet.show(parentFragmentManager, MessageDialogFragment.TAG)

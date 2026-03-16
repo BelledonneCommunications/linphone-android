@@ -167,7 +167,6 @@ class ChatMessageLongPressViewModel : GenericViewModel() {
     fun deleteClickListener() {
         Log.i("$TAG Deleting message")
         deleteMessageEvent.value = Event(true)
-        dismiss()
     }
 
     @UiThread
