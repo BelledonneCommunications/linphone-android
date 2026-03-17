@@ -239,6 +239,13 @@
 
     <!-- App & SDK settings -->
     <string name="settings_title">Settings</string>
+    <string name="settings_do_not_disturb_title">Do Not Disturb</string>
+    <string name="settings_do_not_disturb_enable_title">Enable Do Not Disturb</string>
+    <string name="settings_do_not_disturb_enable_subtitle">Notifications will not be shown when active</string>
+    <string name="settings_do_not_disturb_mode_always_title">Always on</string>
+    <string name="settings_do_not_disturb_mode_scheduled_title">Scheduled</string>
+    <string name="settings_do_not_disturb_start_time_title">Start time</string>
+    <string name="settings_do_not_disturb_end_time_title">End time</string>
     <string name="settings_security_title">Security</string>
     <string name="settings_security_enable_vfs_title">Encrypt everything</string>
     <string name="settings_security_enable_vfs_subtitle">Warning: once enabled it can\'t be disabled!</string>

@@ -744,6 +744,10 @@ class NotificationsManager
 
     @WorkerThread
     private fun showMissedCallNotification(call: Call) {
+        if (corePreferences.isDoNotDisturbActive) {
+            Log.i("$TAG Do Not Disturb is active, skipping missed call notification")
+            return
+        }
         val missedCallCount: Int = coreContext.core.missedCallsCount
         val body: String
         if (missedCallCount > 1) {
@@ -1041,6 +1045,10 @@ class NotificationsManager
 
     @WorkerThread
     private fun showChatRoomNotification(chatRoom: ChatRoom, messages: Array<ChatMessage>) {
+        if (corePreferences.isDoNotDisturbActive) {
+            Log.i("$TAG Do Not Disturb is active, skipping chat notification")
+            return
+        }
         val notifiable = getNotifiableForConversation(chatRoom, messages)
 
         if (!chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt())) {
@@ -1082,6 +1090,10 @@ class NotificationsManager
         address: Address,
         message: ChatMessage
     ) {
+        if (corePreferences.isDoNotDisturbActive) {
+            Log.i("$TAG Do Not Disturb is active, skipping reaction notification")
+            return
+        }
         val notifiable = getNotifiableForConversation(chatRoom, arrayOf(message))
 
         // Check if a previous reaction notifiable exists from the same person & for the same message

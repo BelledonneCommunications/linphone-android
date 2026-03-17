@@ -74,6 +74,20 @@ class SettingsViewModel
         MutableLiveData<Event<Boolean>>()
     }
 
+    // Do Not Disturb settings
+    val doNotDisturbEnabled = MutableLiveData<Boolean>()
+    val doNotDisturbAlwaysOn = MutableLiveData<Boolean>()
+    val doNotDisturbScheduledVisible = MutableLiveData<Boolean>()
+    val doNotDisturbStartTime = MutableLiveData<String>()
+    val doNotDisturbEndTime = MutableLiveData<String>()
+
+    val showDoNotDisturbStartTimePickerEvent: MutableLiveData<Event<Pair<Int, Int>>> by lazy {
+        MutableLiveData<Event<Pair<Int, Int>>>()
+    }
+    val showDoNotDisturbEndTimePickerEvent: MutableLiveData<Event<Pair<Int, Int>>> by lazy {
+        MutableLiveData<Event<Pair<Int, Int>>>()
+    }
+
     // Security settings
     val isVfsEnabled = MutableLiveData<Boolean>()
 
@@ -286,6 +300,13 @@ class SettingsViewModel
         }
         showContactsSettings.value = true
 
+        // Load DND settings
+        doNotDisturbEnabled.value = corePreferences.doNotDisturbEnabled
+        doNotDisturbAlwaysOn.value = corePreferences.doNotDisturbMode == 0
+        doNotDisturbScheduledVisible.value = corePreferences.doNotDisturbEnabled && corePreferences.doNotDisturbMode == 1
+        doNotDisturbStartTime.value = formatTime(corePreferences.doNotDisturbStartHour, corePreferences.doNotDisturbStartMinute)
+        doNotDisturbEndTime.value = formatTime(corePreferences.doNotDisturbEndHour, corePreferences.doNotDisturbEndMinute)
+
         expandSecurity.value = false
         expandCalls.value = false
         expandConversations.value = false
@@ -412,6 +433,55 @@ class SettingsViewModel
     @UiThread
     fun toggleSecurityExpand() {
         expandSecurity.value = expandSecurity.value == false
+    }
+
+    // Do Not Disturb functions
+
+    @UiThread
+    fun toggleDoNotDisturb() {
+        val newValue = doNotDisturbEnabled.value == false
+        corePreferences.doNotDisturbEnabled = newValue
+        doNotDisturbEnabled.value = newValue
+        doNotDisturbScheduledVisible.value = newValue && (doNotDisturbAlwaysOn.value == false)
+    }
+
+    @UiThread
+    fun setDoNotDisturbAlwaysOn(alwaysOn: Boolean) {
+        corePreferences.doNotDisturbMode = if (alwaysOn) 0 else 1
+        doNotDisturbAlwaysOn.value = alwaysOn
+        doNotDisturbScheduledVisible.value = doNotDisturbEnabled.value == true && !alwaysOn
+    }
+
+    @UiThread
+    fun pickDoNotDisturbStartTime() {
+        showDoNotDisturbStartTimePickerEvent.value = Event(
+            Pair(corePreferences.doNotDisturbStartHour, corePreferences.doNotDisturbStartMinute)
+        )
+    }
+
+    @UiThread
+    fun pickDoNotDisturbEndTime() {
+        showDoNotDisturbEndTimePickerEvent.value = Event(
+            Pair(corePreferences.doNotDisturbEndHour, corePreferences.doNotDisturbEndMinute)
+        )
+    }
+
+    @UiThread
+    fun setDoNotDisturbStartTime(hour: Int, minute: Int) {
+        corePreferences.doNotDisturbStartHour = hour
+        corePreferences.doNotDisturbStartMinute = minute
+        doNotDisturbStartTime.value = formatTime(hour, minute)
+    }
+
+    @UiThread
+    fun setDoNotDisturbEndTime(hour: Int, minute: Int) {
+        corePreferences.doNotDisturbEndHour = hour
+        corePreferences.doNotDisturbEndMinute = minute
+        doNotDisturbEndTime.value = formatTime(hour, minute)
+    }
+
+    private fun formatTime(hour: Int, minute: Int): String {
+        return String.format("%02d:%02d", hour, minute)
     }
 
     @UiThread

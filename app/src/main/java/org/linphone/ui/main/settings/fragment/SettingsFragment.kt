@@ -20,6 +20,7 @@
 package org.linphone.ui.main.settings.fragment
 
 import android.app.Activity
+import android.app.TimePickerDialog
 import android.content.Intent
 import android.media.RingtoneManager
 import android.net.Uri
@@ -323,6 +324,22 @@ class SettingsFragment : GenericMainFragment() {
 
         binding.setTurnOnVfsClickListener {
             showConfirmVfsDialog()
+        }
+
+        viewModel.showDoNotDisturbStartTimePickerEvent.observe(viewLifecycleOwner) {
+            it.consume { (hour, minute) ->
+                TimePickerDialog(requireContext(), { _, h, m ->
+                    viewModel.setDoNotDisturbStartTime(h, m)
+                }, hour, minute, true).show()
+            }
+        }
+
+        viewModel.showDoNotDisturbEndTimePickerEvent.observe(viewLifecycleOwner) {
+            it.consume { (hour, minute) ->
+                TimePickerDialog(requireContext(), { _, h, m ->
+                    viewModel.setDoNotDisturbEndTime(h, m)
+                }, hour, minute, true).show()
+            }
         }
 
         startPostponedEnterTransition()

@@ -206,6 +206,69 @@ class CorePreferences
             config.setBool("ui", "show_advanced_call_stats", value)
         }
 
+    // Do Not Disturb
+
+    @get:AnyThread @set:WorkerThread
+    var doNotDisturbEnabled: Boolean
+        get() = config.getBool("app", "do_not_disturb", false)
+        set(value) {
+            config.setBool("app", "do_not_disturb", value)
+        }
+
+    // 0 = always on, 1 = scheduled
+    @get:AnyThread @set:WorkerThread
+    var doNotDisturbMode: Int
+        get() = config.getInt("app", "do_not_disturb_mode", 0)
+        set(value) {
+            config.setInt("app", "do_not_disturb_mode", value)
+        }
+
+    @get:AnyThread @set:WorkerThread
+    var doNotDisturbStartHour: Int
+        get() = config.getInt("app", "do_not_disturb_start_hour", 22)
+        set(value) {
+            config.setInt("app", "do_not_disturb_start_hour", value)
+        }
+
+    @get:AnyThread @set:WorkerThread
+    var doNotDisturbStartMinute: Int
+        get() = config.getInt("app", "do_not_disturb_start_minute", 0)
+        set(value) {
+            config.setInt("app", "do_not_disturb_start_minute", value)
+        }
+
+    @get:AnyThread @set:WorkerThread
+    var doNotDisturbEndHour: Int
+        get() = config.getInt("app", "do_not_disturb_end_hour", 7)
+        set(value) {
+            config.setInt("app", "do_not_disturb_end_hour", value)
+        }
+
+    @get:AnyThread @set:WorkerThread
+    var doNotDisturbEndMinute: Int
+        get() = config.getInt("app", "do_not_disturb_end_minute", 0)
+        set(value) {
+            config.setInt("app", "do_not_disturb_end_minute", value)
+        }
+
+    @get:AnyThread
+    val isDoNotDisturbActive: Boolean
+        get() {
+            if (!doNotDisturbEnabled) return false
+            if (doNotDisturbMode == 0) return true // Always on
+            // Scheduled mode
+            val calendar = java.util.Calendar.getInstance()
+            val currentMinutes = calendar.get(java.util.Calendar.HOUR_OF_DAY) * 60 + calendar.get(java.util.Calendar.MINUTE)
+            val startMinutes = doNotDisturbStartHour * 60 + doNotDisturbStartMinute
+            val endMinutes = doNotDisturbEndHour * 60 + doNotDisturbEndMinute
+            return if (startMinutes <= endMinutes) {
+                currentMinutes in startMinutes until endMinutes
+            } else {
+                // Overnight (e.g., 22:00 to 07:00)
+                currentMinutes >= startMinutes || currentMinutes < endMinutes
+            }
+        }
+
     // Conversation related
 
     @get:AnyThread @set:WorkerThread

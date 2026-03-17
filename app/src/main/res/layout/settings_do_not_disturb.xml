@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.main.settings.viewmodel.SettingsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="20dp"
+        android:background="@drawable/shape_squircle_white_background">
+
+        <!-- Enable DND switch -->
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/settings_title_style"
+            android:id="@+id/dnd_enable_title"
+            android:onClick="@{() -> viewModel.toggleDoNotDisturb()}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/settings_do_not_disturb_enable_title"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:labelFor="@id/dnd_enable_switch"
+            app:layout_constraintTop_toTopOf="@id/dnd_enable_switch"
+            app:layout_constraintBottom_toTopOf="@id/dnd_enable_subtitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/dnd_enable_switch"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/settings_subtitle_style"
+            android:id="@+id/dnd_enable_subtitle"
+            android:onClick="@{() -> viewModel.toggleDoNotDisturb()}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/settings_do_not_disturb_enable_subtitle"
+            app:layout_constraintTop_toBottomOf="@id/dnd_enable_title"
+            app:layout_constraintBottom_toBottomOf="@id/dnd_enable_switch"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/dnd_enable_switch"/>
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            style="@style/material_switch_style"
+            android:id="@+id/dnd_enable_switch"
+            android:onClick="@{() -> viewModel.toggleDoNotDisturb()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:checked="@{viewModel.doNotDisturbEnabled}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Mode group: visible when DND is enabled -->
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/dnd_mode_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.doNotDisturbEnabled ? View.VISIBLE : View.GONE}"
+            app:constraint_referenced_ids="dnd_mode_always_radio, dnd_mode_scheduled_radio" />
+
+        <RadioButton
+            android:id="@+id/dnd_mode_always_radio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/settings_do_not_disturb_mode_always_title"
+            android:textAppearance="@style/settings_title_style"
+            android:checked="@{viewModel.doNotDisturbAlwaysOn}"
+            android:onClick="@{() -> viewModel.setDoNotDisturbAlwaysOn(true)}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dnd_enable_switch" />
+
+        <RadioButton
+            android:id="@+id/dnd_mode_scheduled_radio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/settings_do_not_disturb_mode_scheduled_title"
+            android:textAppearance="@style/settings_title_style"
+            android:checked="@{!viewModel.doNotDisturbAlwaysOn}"
+            android:onClick="@{() -> viewModel.setDoNotDisturbAlwaysOn(false)}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dnd_mode_always_radio" />
+
+        <!-- Scheduled time pickers: visible when DND enabled AND mode is scheduled -->
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/dnd_scheduled_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.doNotDisturbScheduledVisible ? View.VISIBLE : View.GONE}"
+            app:constraint_referenced_ids="dnd_start_time_title, dnd_start_time_value, dnd_end_time_title, dnd_end_time_value" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/settings_title_style"
+            android:id="@+id/dnd_start_time_title"
+            android:onClick="@{() -> viewModel.pickDoNotDisturbStartTime()}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/settings_do_not_disturb_start_time_title"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintTop_toTopOf="@id/dnd_start_time_value"
+            app:layout_constraintBottom_toBottomOf="@id/dnd_start_time_value"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/dnd_start_time_value"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/settings_subtitle_style"
+            android:id="@+id/dnd_start_time_value"
+            android:onClick="@{() -> viewModel.pickDoNotDisturbStartTime()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@{viewModel.doNotDisturbStartTime, default=`22:00`}"
+            android:background="@drawable/squircle_transparent_button_background"
+            android:padding="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dnd_mode_scheduled_radio" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/settings_title_style"
+            android:id="@+id/dnd_end_time_title"
+            android:onClick="@{() -> viewModel.pickDoNotDisturbEndTime()}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/settings_do_not_disturb_end_time_title"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintTop_toTopOf="@id/dnd_end_time_value"
+            app:layout_constraintBottom_toBottomOf="@id/dnd_end_time_value"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/dnd_end_time_value"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/settings_subtitle_style"
+            android:id="@+id/dnd_end_time_value"
+            android:onClick="@{() -> viewModel.pickDoNotDisturbEndTime()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@{viewModel.doNotDisturbEndTime, default=`07:00`}"
+            android:background="@drawable/squircle_transparent_button_background"
+            android:padding="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dnd_start_time_value" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
