@@ -25,6 +25,7 @@ import android.os.IBinder
 import androidx.annotation.MainThread
 import androidx.core.app.NotificationCompat
 import com.hansol.siphone.R
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.tools.Log
 import org.linphone.core.tools.service.PushService
 import org.linphone.ui.main.MainActivity
@@ -71,6 +72,7 @@ class CorePushService : PushService() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
+        val isDnd = corePreferences.isDoNotDisturbActive
         mServiceNotification = NotificationCompat.Builder(
             this,
             SERVICE_NOTIFICATION_CHANNEL_ID
@@ -80,7 +82,8 @@ class CorePushService : PushService() {
             .setSmallIcon(R.drawable.linphone_notification)
             .setAutoCancel(false)
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
-            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setVisibility(if (isDnd) NotificationCompat.VISIBILITY_SECRET else NotificationCompat.VISIBILITY_PUBLIC)
+            .setPriority(if (isDnd) NotificationCompat.PRIORITY_MIN else NotificationCompat.PRIORITY_DEFAULT)
             .setWhen(System.currentTimeMillis())
             .setShowWhen(false)
             .setOngoing(true)
