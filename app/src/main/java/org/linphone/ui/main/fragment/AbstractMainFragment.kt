@@ -341,6 +341,9 @@ abstract class AbstractMainFragment : GenericMainFragment() {
 
     override fun onResume() {
         super.onResume()
+        if (::viewModel.isInitialized) {
+            viewModel.refreshDoNotDisturbState()
+        }
 
         if (currentFragmentId > 0) {
             sharedViewModel.currentlyDisplayedFragment.value = currentFragmentId

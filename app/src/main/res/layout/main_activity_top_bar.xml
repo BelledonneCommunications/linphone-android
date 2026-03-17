@@ -70,6 +70,19 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
+        <ImageView
+            android:id="@+id/dnd_moon_badge"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_moon"
+            android:contentDescription="@null"
+            android:visibility="@{viewModel.isDoNotDisturbActive &amp;&amp; !viewModel.searchBarVisible ? View.VISIBLE : View.GONE, default=gone}"
+            app:tint="?attr/color_on_main"
+            app:layout_constraintStart_toEndOf="@id/avatar"
+            app:layout_constraintTop_toTopOf="@id/avatar"
+            app:layout_constraintBottom_toBottomOf="@id/avatar"/>
+
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_800"
             android:id="@+id/title"
@@ -83,7 +96,7 @@
             android:textSize="20sp"
             android:includeFontPadding="false"
             app:layout_constraintEnd_toStartOf="@id/search_toggle"
-            app:layout_constraintStart_toEndOf="@id/avatar"
+            app:layout_constraintStart_toEndOf="@id/dnd_moon_badge"
             app:layout_constraintTop_toTopOf="@id/avatar"
             app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 

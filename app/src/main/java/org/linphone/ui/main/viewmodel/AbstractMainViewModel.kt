@@ -73,6 +73,8 @@ open class AbstractMainViewModel
 
     val moreThanOneAccount = MutableLiveData<Boolean>()
 
+    val isDoNotDisturbActive = MutableLiveData<Boolean>()
+
     val focusSearchBarEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -200,6 +202,7 @@ open class AbstractMainViewModel
 
         searchBarVisible.value = false
         isFilterEmpty.value = true
+        isDoNotDisturbActive.value = corePreferences.isDoNotDisturbActive
     }
 
     @UiThread
@@ -328,6 +331,11 @@ open class AbstractMainViewModel
         }
     }
 
+    @UiThread
+    fun refreshDoNotDisturbState() {
+        isDoNotDisturbActive.value = corePreferences.isDoNotDisturbActive
+    }
+
     @WorkerThread
     fun updateAvailableMenus() {
         hideConversations.postValue(corePreferences.disableChat)
@@ -341,6 +349,7 @@ open class AbstractMainViewModel
 
     @WorkerThread
     private fun configure() {
+        isDoNotDisturbActive.postValue(corePreferences.isDoNotDisturbActive)
         updateAvailableMenus()
 
         val core = coreContext.core
