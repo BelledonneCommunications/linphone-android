@@ -29,6 +29,8 @@ import java.io.FileOutputStream
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.constants.DEFAULT_HIDE_CONVERSATION
 import org.linphone.constants.DISABLE_SETTINGS
+import org.linphone.constants.DND_ALWAYS_ON
+import org.linphone.constants.DoNotDisturbMode
 import org.linphone.contacts.ContactLoader.Companion.LINPHONE_ADDRESS_BOOK_FRIEND_LIST
 
 class CorePreferences
@@ -216,9 +218,11 @@ class CorePreferences
         }
 
     // 0 = always on, 1 = scheduled
-    @get:AnyThread @set:WorkerThread
+    @DoNotDisturbMode
+    @get:AnyThread
+    @set:WorkerThread
     var doNotDisturbMode: Int
-        get() = config.getInt("app", "do_not_disturb_mode", 0)
+        get() = config.getInt("app", "do_not_disturb_mode", DND_ALWAYS_ON)
         set(value) {
             config.setInt("app", "do_not_disturb_mode", value)
         }
@@ -255,7 +259,7 @@ class CorePreferences
     val isDoNotDisturbActive: Boolean
         get() {
             if (!doNotDisturbEnabled) return false
-            if (doNotDisturbMode == 0) return true // Always on
+            if (doNotDisturbMode == DND_ALWAYS_ON) return true // Always on
             // Scheduled mode
             val calendar = java.util.Calendar.getInstance()
             val currentMinutes = calendar.get(java.util.Calendar.HOUR_OF_DAY) * 60 + calendar.get(java.util.Calendar.MINUTE)

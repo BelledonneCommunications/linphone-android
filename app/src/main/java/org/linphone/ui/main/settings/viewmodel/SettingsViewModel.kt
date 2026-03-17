@@ -30,6 +30,8 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import com.hansol.siphone.R
 import org.linphone.constants.DISABLE_VIDEO_CALL
+import org.linphone.constants.DND_ALWAYS_ON
+import org.linphone.constants.DND_SCHEDULED
 import org.linphone.contacts.ContactLoader.Companion.NATIVE_ADDRESS_BOOK_FRIEND_LIST
 import org.linphone.core.AudioDevice
 import org.linphone.core.Conference
@@ -302,8 +304,8 @@ class SettingsViewModel
 
         // Load DND settings
         doNotDisturbEnabled.value = corePreferences.doNotDisturbEnabled
-        doNotDisturbAlwaysOn.value = corePreferences.doNotDisturbMode == 0
-        doNotDisturbScheduledVisible.value = corePreferences.doNotDisturbEnabled && corePreferences.doNotDisturbMode == 1
+        doNotDisturbAlwaysOn.value = corePreferences.doNotDisturbMode == DND_ALWAYS_ON
+        doNotDisturbScheduledVisible.value = corePreferences.doNotDisturbEnabled && corePreferences.doNotDisturbMode == DND_SCHEDULED
         doNotDisturbStartTime.value = formatTime(corePreferences.doNotDisturbStartHour, corePreferences.doNotDisturbStartMinute)
         doNotDisturbEndTime.value = formatTime(corePreferences.doNotDisturbEndHour, corePreferences.doNotDisturbEndMinute)
 
@@ -447,7 +449,7 @@ class SettingsViewModel
 
     @UiThread
     fun setDoNotDisturbAlwaysOn(alwaysOn: Boolean) {
-        corePreferences.doNotDisturbMode = if (alwaysOn) 0 else 1
+        corePreferences.doNotDisturbMode = if (alwaysOn) DND_ALWAYS_ON else DND_SCHEDULED
         doNotDisturbAlwaysOn.value = alwaysOn
         doNotDisturbScheduledVisible.value = doNotDisturbEnabled.value == true && !alwaysOn
     }
