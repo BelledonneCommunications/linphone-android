@@ -19,6 +19,7 @@
  */
 package org.linphone.core
 
+import android.content.Intent
 import com.google.firebase.messaging.RemoteMessage
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.tools.Log
@@ -32,17 +33,35 @@ class CoreFirebaseMessaging : org.linphone.core.tools.firebase.FirebaseMessaging
         super.onNewToken(token)
     }
 
+    /**
+     * handleIntent() is called for ALL FCM messages (including notification messages when app
+     * is in background) before Firebase displays anything. This is the only hook that works
+     * for server-sent notification messages.
+     */
+    override fun handleIntent(intent: Intent) {
+        val callId = intent.getStringExtra("call-id").orEmpty()
+        val isCallPush = callId.isNotEmpty()
+
+        if (corePreferences.isDoNotDisturbActive && !isCallPush) {
+            Log.i("$TAG Do Not Disturb is active, suppressing FCM notification message")
+            return
+        }
+
+        if (corePreferences.isDoNotDisturbActive) {
+            Log.i("$TAG Do Not Disturb is active, this is a call push (call-id=[$callId])")
+            return
+        }
+
+        super.handleIntent(intent)
+    }
+
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         val callId = remoteMessage.data["call-id"].orEmpty()
         val isCallPush = callId.isNotEmpty()
 
         if (corePreferences.isDoNotDisturbActive && !isCallPush) {
-            Log.i("$TAG Do Not Disturb is active, ignoring FCM message push (no call-id)")
+            Log.i("$TAG Do Not Disturb is active, ignoring FCM data message push")
             return
-        }
-
-        if (corePreferences.isDoNotDisturbActive) {
-            Log.i("$TAG Do Not Disturb is active but this is a call push (call-id=[$callId]), processing to allow SIP decline")
         }
 
         super.onMessageReceived(remoteMessage)
