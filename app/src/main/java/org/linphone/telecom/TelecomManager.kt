@@ -29,6 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
@@ -59,7 +60,11 @@ class TelecomManager
             message: String
         ) {
             if (state == Call.State.IncomingReceived || state == Call.State.OutgoingProgress) {
-                onCallCreated(call)
+                if (state == Call.State.IncomingReceived && corePreferences.isDoNotDisturbActive) {
+                    Log.i("$TAG Do Not Disturb is active, skipping Telecom registration for incoming call from [${call.remoteAddress.asStringUriOnly()}]")
+                } else {
+                    onCallCreated(call)
+                }
             }
         }
 

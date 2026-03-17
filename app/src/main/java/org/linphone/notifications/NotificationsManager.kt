@@ -212,10 +212,14 @@ class NotificationsManager
             Log.i("$TAG Call state changed: [$currentState]")
             when (currentState) {
                 Call.State.IncomingReceived, Call.State.IncomingEarlyMedia -> {
-                    Log.i(
-                        "$TAG Showing incoming call notification for [${call.remoteAddress.asStringUriOnly()}]"
-                    )
-                    showCallNotification(call, true)
+                    if (corePreferences.isDoNotDisturbActive) {
+                        Log.i("$TAG Do Not Disturb is active, skipping incoming call notification for [${call.remoteAddress.asStringUriOnly()}]")
+                    } else {
+                        Log.i(
+                            "$TAG Showing incoming call notification for [${call.remoteAddress.asStringUriOnly()}]"
+                        )
+                        showCallNotification(call, true)
+                    }
                 }
                 Call.State.OutgoingInit -> {
                     Log.i(
@@ -331,7 +335,7 @@ class NotificationsManager
                         break
                     }
                 }
-                if (playSound) {
+                if (playSound && !corePreferences.isDoNotDisturbActive) {
                     playMessageReceivedSound()
                 }
                 return

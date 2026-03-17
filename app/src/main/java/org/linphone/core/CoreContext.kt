@@ -316,7 +316,10 @@ class CoreContext
             )
             when (currentState) {
                 Call.State.IncomingReceived -> {
-                    if (corePreferences.autoAnswerEnabled) {
+                    if (corePreferences.isDoNotDisturbActive) {
+                        Log.i("$TAG Do Not Disturb is active, declining incoming call from [${call.remoteAddress.asStringUriOnly()}]")
+                        call.decline(Reason.DoNotDisturb)
+                    } else if (corePreferences.autoAnswerEnabled) {
                         val autoAnswerDelay = corePreferences.autoAnswerDelay
                         if (autoAnswerDelay == 0) {
                             Log.w("$TAG Auto answering call immediately")
