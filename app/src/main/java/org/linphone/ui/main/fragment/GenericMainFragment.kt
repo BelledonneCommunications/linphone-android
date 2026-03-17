@@ -19,6 +19,10 @@
  */
 package org.linphone.ui.main.fragment
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.UiThread
@@ -35,11 +39,40 @@ abstract class GenericMainFragment : GenericFragment() {
 
     protected lateinit var sharedViewModel: SharedMainViewModel
 
+    open val listenTimeTickUpdate: Boolean = false
+
+    private val timeTickReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            onTimeTickUpdate()
+        }
+    }
+
+    open fun onTimeTickUpdate() {
+
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this)[SharedMainViewModel::class.java]
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (listenTimeTickUpdate) {
+            requireContext().unregisterReceiver(timeTickReceiver)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (listenTimeTickUpdate) {
+            requireContext().registerReceiver(
+                timeTickReceiver,
+                IntentFilter(Intent.ACTION_TIME_TICK)
+            )
         }
     }
 
