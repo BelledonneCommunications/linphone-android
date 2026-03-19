@@ -31,6 +31,7 @@ import org.linphone.constants.DEFAULT_HIDE_CONVERSATION
 import org.linphone.constants.DISABLE_SETTINGS
 import org.linphone.constants.DND_ALWAYS_ON
 import org.linphone.constants.DoNotDisturbMode
+import org.linphone.constants.HIDE_ACCOUNT_SETTING
 import org.linphone.contacts.ContactLoader.Companion.LINPHONE_ADDRESS_BOOK_FRIEND_LIST
 
 class CorePreferences
@@ -462,7 +463,7 @@ class CorePreferences
 
     @get:AnyThread
     val hideAccountSettings: Boolean
-        get() = config.getBool("ui", "hide_account_settings", false)
+        get() = config.getBool("ui", "hide_account_settings", HIDE_ACCOUNT_SETTING)
 
     @get:AnyThread
     val hideAdvancedSettings: Boolean
