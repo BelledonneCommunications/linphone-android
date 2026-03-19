@@ -96,7 +96,7 @@
                     <androidx.constraintlayout.widget.Group
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:constraint_referenced_ids="details_background, sip_address, sip_address_label, display_name, display_name_label, prefix, prefix_caret, prefix_label, prefix_label_tooltip"
+                        app:constraint_referenced_ids="details_background, sip_address, sip_address_label, display_name, display_name_label"
                         android:visibility="@{viewModel.expandDetails ? View.VISIBLE : View.GONE}" />
 
                     <include
@@ -207,7 +207,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/details"
-                        app:layout_constraintBottom_toBottomOf="@id/prefix"/>
+                        app:layout_constraintBottom_toBottomOf="@id/display_name"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/settings_title_style"
@@ -321,6 +321,7 @@
                         android:layout_marginTop="20dp"
                         android:text="@string/manage_account_international_prefix"
                         android:labelFor="@id/prefix"
+                        android:visibility="gone"
                         app:layout_constraintStart_toStartOf="@id/details_background"
                         app:layout_constraintTop_toBottomOf="@id/display_name"/>
 
@@ -332,6 +333,7 @@
                         android:layout_marginStart="8dp"
                         android:src="@drawable/question"
                         android:contentDescription="@string/content_description_click_for_more_info"
+                        android:visibility="gone"
                         app:tint="?attr/color_main2_600"
                         app:layout_constraintTop_toTopOf="@id/prefix_label"
                         app:layout_constraintBottom_toBottomOf="@id/prefix_label"
@@ -353,6 +355,7 @@
                         android:spinnerMode="dropdown"
                         android:popupBackground="@drawable/shape_squircle_white_background"
                         android:background="@drawable/edit_text_background"
+                        android:visibility="gone"
                         app:layout_constraintHorizontal_bias="0"
                         app:layout_constraintWidth_max="@dimen/text_input_max_width"
                         app:layout_constraintTop_toBottomOf="@id/prefix_label"
@@ -366,6 +369,7 @@
                         android:layout_marginEnd="16dp"
                         android:src="@drawable/caret_down"
                         android:contentDescription="@null"
+                        android:visibility="gone"
                         app:tint="?attr/color_main2_600"
                         app:layout_constraintTop_toTopOf="@id/prefix"
                         app:layout_constraintBottom_toBottomOf="@id/prefix"
