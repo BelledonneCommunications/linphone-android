@@ -192,6 +192,7 @@
 
     <!-- Main navigation items -->
     <string name="bottom_navigation_contacts_label">Contacts</string>
+    <string name="org_chart_breadcrumb_home">Home</string>
     <string name="bottom_navigation_calls_label">Calls</string>
     <string name="bottom_navigation_conversations_label">Conversations</string>
     <string name="bottom_navigation_meetings_label">Meetings</string>

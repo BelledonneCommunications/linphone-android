@@ -41,6 +41,8 @@ import org.linphone.core.MagicSearchListenerStub
 import org.linphone.core.SearchResult
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
+import org.linphone.ui.main.contacts.model.OrgCategoryModel
+import org.linphone.ui.main.contacts.model.OrgListItem
 import org.linphone.ui.main.viewmodel.AbstractMainViewModel
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
@@ -55,6 +57,10 @@ class ContactsListViewModel
     val contactsList = MutableLiveData<ArrayList<ContactAvatarModel>>()
 
     val favouritesList = MutableLiveData<ArrayList<ContactAvatarModel>>()
+
+    val mixedList = MutableLiveData<ArrayList<OrgListItem>>()
+
+    val navigationPath = MutableLiveData<List<String>>(emptyList())
 
     val fetchInProgress = MutableLiveData<Boolean>()
 
@@ -90,6 +96,10 @@ class ContactsListViewModel
     private lateinit var favouritesMagicSearch: MagicSearch
 
     private var firstLoad = true
+
+    @Volatile private var cachedContacts = arrayListOf<ContactAvatarModel>()
+
+    @Volatile private var currentNavPath = listOf<String>()
 
     private val magicSearchListener = object : MagicSearchListenerStub() {
         @WorkerThread
@@ -127,7 +137,6 @@ class ContactsListViewModel
                 friendList.removeListener(this)
                 cardDavSynchronizationCompletedEvent.postValue(Event(true))
             }
-            // TODO FIXME: alert user when failure ?
         }
     }
 
@@ -152,7 +161,6 @@ class ContactsListViewModel
     init {
         fetchInProgress.value = true
         showFavourites.value = corePreferences.showFavoriteContacts
-//        showFilter.value = !corePreferences.hidePhoneNumbers && !corePreferences.hideSipAddresses
         disableAddContact.value = corePreferences.disableAddContact
 
         coreContext.postOnCoreThread { core ->
@@ -234,7 +242,7 @@ class ContactsListViewModel
     fun toggleFavouritesVisibility() {
         val show = showFavourites.value == false
         showFavourites.value = show
-        
+
         coreContext.postOnCoreThread {
             corePreferences.showFavoriteContacts = show
         }
@@ -305,6 +313,121 @@ class ContactsListViewModel
         }
     }
 
+    // Navigate into a category
+    @UiThread
+    fun navigateIntoCategory(category: OrgCategoryModel) {
+        currentNavPath = category.path
+        navigationPath.value = currentNavPath
+        coreContext.postOnCoreThread {
+            refreshDisplayAtCurrentPath()
+        }
+    }
+
+    // Navigate back up one level; returns true if went up, false if already at root
+    @UiThread
+    fun navigateBack(): Boolean {
+        val path = currentNavPath
+        if (path.isEmpty()) return false
+        val parentPath = path.dropLast(1)
+        currentNavPath = parentPath
+        navigationPath.value = parentPath
+        coreContext.postOnCoreThread {
+            refreshDisplayAtCurrentPath()
+        }
+        return true
+    }
+
+    // Navigate directly to a specific path (used by breadcrumb clicks)
+    @UiThread
+    fun navigateToPath(path: List<String>) {
+        currentNavPath = path
+        navigationPath.value = path
+        coreContext.postOnCoreThread {
+            refreshDisplayAtCurrentPath()
+        }
+    }
+
+    @WorkerThread
+    private fun refreshDisplayAtCurrentPath() {
+        val path = currentNavPath
+
+        val mixed = if (currentFilter.isNotEmpty()) {
+            // When searching, show flat contact list
+            ArrayList<OrgListItem>(cachedContacts.map { OrgListItem.Contact(it) })
+        } else {
+            buildMixedListAtPath(path)
+        }
+
+        Log.i("$TAG Showing [${mixed.size}] items at path $path")
+        mixedList.postValue(mixed)
+        // Also update contactsList for empty-state check
+        contactsList.postValue(cachedContacts)
+        fetchInProgress.postValue(false)
+    }
+
+    // Build a mixed list of categories + direct contacts at the given path level.
+    // Categories come first (sorted), then direct contacts (sorted by name).
+    // Organization field uses ";" as separator for hierarchy levels (vCard ORG format).
+    @WorkerThread
+    private fun buildMixedListAtPath(path: List<String>): ArrayList<OrgListItem> {
+        val result = arrayListOf<OrgListItem>()
+        val categoryMap = linkedMapOf<String, Int>()
+        val directContacts = arrayListOf<ContactAvatarModel>()
+        val collator = Collator.getInstance(Locale.getDefault())
+
+        for (contact in cachedContacts) {
+            val levels = getOrgLevels(contact.friend)
+
+            if (path.isEmpty()) {
+                if (levels.isEmpty()) {
+                    // Root level: contacts with no organization
+                    directContacts.add(contact)
+                } else {
+                    // Root level: group by first org level
+                    val key = levels[0]
+                    categoryMap[key] = (categoryMap[key] ?: 0) + 1
+                }
+            } else {
+                // Check if this contact is under the current path
+                if (levels.size < path.size) continue
+                val matchesPath = path.indices.all { i -> levels[i] == path[i] }
+                if (!matchesPath) continue
+
+                if (levels.size == path.size) {
+                    // Exact match: direct contact at this level
+                    directContacts.add(contact)
+                } else {
+                    // Goes deeper: contributes to a sub-category
+                    val key = levels[path.size]
+                    categoryMap[key] = (categoryMap[key] ?: 0) + 1
+                }
+            }
+        }
+
+        // Add categories first, sorted by name
+        categoryMap.entries
+            .sortedWith { a, b -> collator.compare(a.key, b.key) }
+            .forEach { (name, count) ->
+                result.add(OrgListItem.Category(OrgCategoryModel(name, path + name, count)))
+            }
+
+        // Add direct contacts, sorted by name
+        directContacts.sortWith { a, b ->
+            collator.compare(a.getNameToUseForSorting(), b.getNameToUseForSorting())
+        }
+        directContacts.forEach { result.add(OrgListItem.Contact(it)) }
+
+        return result
+    }
+
+    // Parse the organization field into hierarchy levels using ";" as separator
+    @WorkerThread
+    private fun getOrgLevels(friend: Friend): List<String> {
+        val org = friend.organization?.trim() ?: return emptyList()
+        if (org.isEmpty()) return emptyList()
+        return org.split(";").map { it.trim() }.filter { it.isNotEmpty() }
+    }
+
     @WorkerThread
     private fun applyFilter(
         filter: String,
@@ -350,7 +473,6 @@ class ContactsListViewModel
 
     @WorkerThread
     private fun processMagicSearchResults(results: Array<SearchResult>, favourites: Boolean) {
-        // Do not call destroy() on previous list items as they are cached and will be re-used
         Log.i("$TAG Processing [${results.size}] results, favourites is [$favourites]")
 
         val list = arrayListOf<ContactAvatarModel>()
@@ -396,7 +518,9 @@ class ContactsListViewModel
                 list.sortWith { model1, model2 ->
                     collator.compare(model1.getNameToUseForSorting(), model2.getNameToUseForSorting())
                 }
-                contactsList.postValue(list)
+                // During initial fast load, cache and display categories
+                cachedContacts = list
+                refreshDisplayAtCurrentPath()
             }
         }
 
@@ -408,8 +532,9 @@ class ContactsListViewModel
         if (favourites) {
             favouritesList.postValue(list)
         } else {
-            contactsList.postValue(list)
+            cachedContacts = list
             firstLoad = false
+            refreshDisplayAtCurrentPath()
         }
 
         Log.i("$TAG Processed [${results.size}] results into [${list.size} contacts]")

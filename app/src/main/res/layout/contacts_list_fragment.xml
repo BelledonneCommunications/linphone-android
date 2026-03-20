@@ -40,7 +40,7 @@
                     android:id="@+id/top_bar"
                     layout="@layout/main_activity_top_bar"
                     bind:viewModel="@{viewModel}"
-                    bind:enableExtraAction="@{viewModel.showFilter}"
+                    bind:enableExtraAction="@{false}"
                     bind:extraActionIcon="@{@drawable/funnel}"
                     bind:extraActionClickListener="@{filterClickListener}"
                     bind:extraActionContentDescription="@{@string/content_description_contacts_list_filters}"
@@ -50,75 +50,59 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
 
+                <!-- Breadcrumb navigation bar -->
+                <HorizontalScrollView
+                    android:id="@+id/breadcrumb_bar"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:background="@android:color/white"
+                    android:scrollbars="none"
+                    android:fillViewport="true"
+                    app:layout_constraintTop_toBottomOf="@id/top_bar"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <LinearLayout
+                        android:id="@+id/breadcrumb_container"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp">
+
+                        <ImageView
+                            android:id="@+id/breadcrumb_home"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/home"
+                            android:contentDescription="@string/org_chart_breadcrumb_home"
+                            app:tint="?attr/color_main2_600" />
+
+                    </LinearLayout>
+
+                </HorizontalScrollView>
+
+                <!-- Separator line under breadcrumb -->
                 <View
-                    android:id="@+id/shadow_effect"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="@dimen/top_bar_shadow_height"
-                    android:background="@drawable/shape_squircle_white_r20_top_shadow"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:id="@+id/breadcrumb_separator"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="?attr/color_separator"
+                    app:layout_constraintTop_toBottomOf="@id/breadcrumb_bar"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
                 <LinearLayout
                     android:id="@+id/lists"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_marginTop="@dimen/top_bar_height"
                     android:orientation="vertical"
-                    android:background="@drawable/shape_squircle_white_r20_top_background"
+                    android:background="@android:color/white"
                     app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/section_header_style"
-                        android:id="@+id/favourites_label"
-                        android:visibility="@{!viewModel.isListFiltered &amp;&amp; viewModel.favouritesList.size() > 0 ? View.VISIBLE : View.GONE}"
-                        onClickListener="@{() -> viewModel.toggleFavouritesVisibility()}"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="4dp"
-                        android:text="@string/contacts_list_favourites_title"
-                        android:background="@drawable/squircle_transparent_button_background"
-                        android:drawableEnd="@{viewModel.showFavourites ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
-                        android:drawableTint="?attr/color_main2_600" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/favourites_contacts_list"
-                        android:visibility="@{viewModel.showFavourites &amp;&amp; !viewModel.isListFiltered &amp;&amp; viewModel.favouritesList.size() > 0 ? View.VISIBLE : View.GONE}"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/section_header_style"
-                        android:id="@+id/all_contacts_label"
-                        android:visibility="@{!viewModel.isListFiltered &amp;&amp; viewModel.favouritesList.size() > 0 ? View.VISIBLE : View.GONE}"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginBottom="4dp"
-                        android:text="@string/contacts_list_all_contacts_title" />
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/default_text_style_300"
-                        android:id="@+id/results_limit_reached"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="@string/contacts_list_search_results_limit_reached_label"
-                        android:textColor="?attr/color_main2_600"
-                        android:textSize="12sp"
-                        android:maxLines="2"
-                        android:ellipsize="end"
-                        android:gravity="center"
-                        android:visibility="@{viewModel.showResultsLimitReached ? View.VISIBLE : View.GONE, default=gone}"/>
+                    app:layout_constraintTop_toBottomOf="@id/breadcrumb_separator">
 
                     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                         android:id="@+id/contactsListSwipeRefresh"
@@ -160,27 +144,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/no_contacts_image" />
 
-                <!--<androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style_600"
-                    android:id="@+id/show_contacts_filter"
-                    android:onClick="@{filterClickListener}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:paddingTop="6dp"
-                    android:paddingBottom="6dp"
-                    android:paddingStart="12dp"
-                    android:paddingEnd="12dp"
-                    android:text="@string/contacts_change_filter_label"
-                    android:textSize="13sp"
-                    android:textColor="@color/secondary_button_label_color"
-                    android:gravity="center"
-                    android:background="@drawable/secondary_button_background"
-                    android:visibility="@{viewModel.contactsList.empty &amp;&amp; !viewModel.areAllContactsDisplayed ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintTop_toBottomOf="@id/no_contacts_label"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>-->
-
                 <com.google.android.material.progressindicator.CircularProgressIndicator
                     android:id="@+id/fetch_in_progress"
                     android:layout_width="wrap_content"
@@ -200,22 +163,6 @@
                     layout="@layout/bottom_nav_bar"
                     bind:viewModel="@{viewModel}"
                     app:layout_constraintBottom_toBottomOf="parent" />
-
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/new_contact"
-                    android:onClick="@{onNewContactClicked}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end|bottom"
-                    android:layout_margin="16dp"
-                    android:src="@drawable/user_plus"
-                    android:contentDescription="@string/content_description_contact_create"
-                    android:visibility="@{viewModel.disableAddContact ? View.GONE : View.VISIBLE}"
-                    app:tint="?attr/color_on_main"
-                    app:backgroundTint="?attr/color_main1_500"
-                    app:shapeAppearanceOverlay="@style/rounded"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

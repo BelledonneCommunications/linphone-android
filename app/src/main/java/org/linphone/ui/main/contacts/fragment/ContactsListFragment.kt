@@ -23,6 +23,7 @@ import android.Manifest
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Paint
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.view.Gravity
@@ -31,7 +32,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.LinearLayout
 import android.widget.PopupWindow
+import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat
@@ -51,7 +55,7 @@ import org.linphone.core.tools.Log
 import com.hansol.siphone.databinding.ContactsListFilterPopupMenuBinding
 import com.hansol.siphone.databinding.ContactsListFragmentBinding
 import org.linphone.ui.main.MainActivity
-import org.linphone.ui.main.contacts.adapter.ContactsListAdapter
+import org.linphone.ui.main.contacts.adapter.ContactsOrgAdapter
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.contacts.viewmodel.ContactsListViewModel
 import org.linphone.ui.main.fragment.AbstractMainFragment
@@ -69,10 +73,18 @@ class ContactsListFragment : AbstractMainFragment() {
 
     private lateinit var listViewModel: ContactsListViewModel
 
-    private lateinit var adapter: ContactsListAdapter
-    private lateinit var favouritesAdapter: ContactsListAdapter
+    private lateinit var orgAdapter: ContactsOrgAdapter
 
     private var bottomSheetDialog: BottomSheetDialogFragment? = null
+
+    private val backPressedCallback = object : OnBackPressedCallback(false) {
+        override fun handleOnBackPressed() {
+            if (!listViewModel.navigateBack()) {
+                isEnabled = false
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+        }
+    }
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -100,7 +112,6 @@ class ContactsListFragment : AbstractMainFragment() {
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
         if (findNavController().currentDestination?.id == R.id.newContactFragment
         ) {
-            // Holds fragment in place while new fragment slides over it
             return AnimationUtils.loadAnimation(activity, R.anim.hold)
         }
         return super.onCreateAnimation(transit, enter, nextAnim)
@@ -109,8 +120,7 @@ class ContactsListFragment : AbstractMainFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        adapter = ContactsListAdapter()
-        favouritesAdapter = ContactsListAdapter(favourites = true)
+        orgAdapter = ContactsOrgAdapter()
     }
 
     override fun onCreateView(
@@ -138,46 +148,60 @@ class ContactsListFragment : AbstractMainFragment() {
         binding.contactsList.setHasFixedSize(true)
         binding.contactsList.layoutManager = LinearLayoutManager(requireContext())
         binding.contactsList.outlineProvider = outlineProvider
+        binding.contactsList.adapter = orgAdapter
 
-        binding.favouritesContactsList.setHasFixedSize(true)
-        val favouritesLayoutManager = LinearLayoutManager(requireContext())
-        favouritesLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
-        binding.favouritesContactsList.layoutManager = favouritesLayoutManager
+        // Category click → navigate deeper
+        orgAdapter.categoryClickedEvent.observe(viewLifecycleOwner) {
+            it.consume { category ->
+                binding.contactsList.scrollToPosition(0)
+                listViewModel.navigateIntoCategory(category)
+            }
+        }
 
-        configureAdapter(adapter)
-        configureAdapter(favouritesAdapter)
+        // Contact click → open contact detail
+        orgAdapter.contactClickedEvent.observe(viewLifecycleOwner) {
+            it.consume { model ->
+                sharedViewModel.displayedFriend = model.friend
+                sharedViewModel.showContactEvent.value = Event(model.id)
+            }
+        }
+
+        // Contact long press → bottom sheet menu
+        orgAdapter.contactLongClickedEvent.observe(viewLifecycleOwner) {
+            it.consume { model ->
+                val modalBottomSheet = ContactsListMenuDialogFragment(
+                    model.isFavourite.value == true,
+                    model.isStored,
+                    isReadOnly = model.isReadOnly,
+                    isNative = model.isNative,
+                    { orgAdapter.resetSelection() },
+                    { listViewModel.toggleContactFavoriteFlag(model) },
+                    {
+                        Log.i("$TAG Sharing friend [${model.name.value}]")
+                        listViewModel.exportContactAsVCard(model.friend)
+                    },
+                    { showDeleteConfirmationDialog(model) }
+                )
+                modalBottomSheet.show(parentFragmentManager, ContactsListMenuDialogFragment.TAG)
+                bottomSheetDialog = modalBottomSheet
+            }
+        }
 
         listViewModel.isListFiltered.observe(viewLifecycleOwner) { filtered ->
             binding.contactsList.clipToOutline = filtered
         }
 
-        listViewModel.contactsList.observe(
-            viewLifecycleOwner
-        ) {
-            adapter.submitList(it)
-
-            // Wait for adapter to have items before setting it in the RecyclerView,
-            // otherwise scroll position isn't retained
-            if (binding.contactsList.adapter != adapter) {
-                binding.contactsList.adapter = adapter
-            }
-
-            Log.i("$TAG Contacts list updated with [${it.size}] items")
+        // Observe mixed list (categories + contacts combined)
+        listViewModel.mixedList.observe(viewLifecycleOwner) {
+            orgAdapter.submitList(it)
+            Log.i("$TAG Mixed list updated with [${it.size}] items")
             listViewModel.fetchInProgress.value = false
         }
 
-        listViewModel.favouritesList.observe(
-            viewLifecycleOwner
-        ) {
-            favouritesAdapter.submitList(it)
-
-            // Wait for adapter to have items before setting it in the RecyclerView,
-            // otherwise scroll position isn't retained
-            if (binding.favouritesContactsList.adapter != favouritesAdapter) {
-                binding.favouritesContactsList.adapter = favouritesAdapter
-            }
-
-            Log.i("$TAG Favourites contacts list updated with [${it.size}] items")
+        // Update breadcrumb when navigation path changes
+        listViewModel.navigationPath.observe(viewLifecycleOwner) { path ->
+            updateBreadcrumb(path)
+            backPressedCallback.isEnabled = path.isNotEmpty()
         }
 
         listViewModel.vCardTerminatedEvent.observe(viewLifecycleOwner) {
@@ -234,8 +258,10 @@ class ContactsListFragment : AbstractMainFragment() {
             }
         }
 
-        // AbstractMainFragment related
+        // Register back press callback
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
 
+        // AbstractMainFragment related
         listViewModel.title.value = getString(R.string.bottom_navigation_contacts_label)
         setViewModel(listViewModel)
         initViews(
@@ -244,6 +270,11 @@ class ContactsListFragment : AbstractMainFragment() {
             binding.bottomNavBar,
             R.id.contactsListFragment
         )
+
+        // Home icon scrolls to top / navigates to root
+        binding.breadcrumbHome?.setOnClickListener {
+            listViewModel.navigateToPath(emptyList())
+        }
 
         if (ContextCompat.checkSelfPermission(
                 requireContext(),
@@ -281,40 +312,53 @@ class ContactsListFragment : AbstractMainFragment() {
         }
     }
 
-    private fun configureAdapter(adapter: ContactsListAdapter) {
-        adapter.contactLongClickedEvent.observe(viewLifecycleOwner) {
-            it.consume { model ->
-                val modalBottomSheet = ContactsListMenuDialogFragment(
-                    model.isFavourite.value == true,
-                    model.isStored,
-                    isReadOnly = model.isReadOnly,
-                    isNative = model.isNative,
-                    { // onDismiss
-                        adapter.resetSelection()
-                    },
-                    { // onFavourite
-                        listViewModel.toggleContactFavoriteFlag(model)
-                    },
-                    { // onShare
-                        Log.i(
-                            "$TAG Sharing friend [${model.name.value}], exporting it as vCard file first"
-                        )
-                        listViewModel.exportContactAsVCard(model.friend)
-                    },
-                    { // onDelete
-                        showDeleteConfirmationDialog(model)
-                    }
-                )
-                modalBottomSheet.show(parentFragmentManager, ContactsListMenuDialogFragment.TAG)
-                bottomSheetDialog = modalBottomSheet
-            }
+    private fun updateBreadcrumb(path: List<String>) {
+        val container = binding.breadcrumbContainer ?: return
+        // Remove all views after the home icon (index 0)
+        while (container.childCount > 1) {
+            container.removeViewAt(1)
         }
 
-        adapter.contactClickedEvent.observe(viewLifecycleOwner) {
-            it.consume { model ->
-                sharedViewModel.displayedFriend = model.friend
-                sharedViewModel.showContactEvent.value = Event(model.id)
+        val typedValue = android.util.TypedValue()
+        requireContext().theme.resolveAttribute(R.attr.color_main1_500, typedValue, true)
+        val accentColor = typedValue.data
+        requireContext().theme.resolveAttribute(R.attr.color_main2_400, typedValue, true)
+        val secondaryColor = typedValue.data
+
+        for ((index, segment) in path.withIndex()) {
+            // Separator ">"
+            val separator = TextView(requireContext())
+            separator.text = " › "
+            separator.textSize = 14f
+            separator.setTextColor(secondaryColor)
+            val sepParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            separator.layoutParams = sepParams
+            container.addView(separator)
+
+            // Segment text
+            val textView = TextView(requireContext())
+            textView.text = segment
+            textView.textSize = 14f
+            val isLast = index == path.size - 1
+            if (isLast) {
+                textView.setTextColor(accentColor)
+                textView.paintFlags = textView.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+            } else {
+                textView.setTextColor(secondaryColor)
+                val clickPath = path.subList(0, index + 1)
+                textView.setOnClickListener {
+                    listViewModel.navigateToPath(clickPath)
+                }
             }
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            textView.layoutParams = params
+            container.addView(textView)
         }
     }
 
@@ -388,7 +432,6 @@ class ContactsListFragment : AbstractMainFragment() {
             popupWindow.dismiss()
         }
 
-        // Elevation is for showing a shadow around the popup
         popupWindow.elevation = 20f
         popupWindow.showAsDropDown(view, 0, 0, Gravity.BOTTOM)
     }
