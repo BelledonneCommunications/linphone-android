@@ -918,4 +918,15 @@
     <string name="assistant_dialog_phone_number_validation_not_available_title">Ověření telefonního čísla není k dispozici</string>
     <string name="assistant_dialog_phone_number_validation_not_available_message">Ověření telefonního čísla není k dispozici, použijte prosím proces vytvoření e-mailového účtu.</string>
     <string name="assistant_dialog_phone_number_validation_not_available_register_button_label">Registrace s e-mailem</string>
+    <string name="terracotta">Terakota</string>
+    <string name="lavender">Levandule</string>
+    <string name="honey">Med</string>
+    <string name="burgundy">Burgundsko</string>
+    <string name="mint">Máta</string>
+    <string name="coral">Korál</string>
+    <string name="plum">Švestka</string>
+    <string name="titanium">Titan</string>
+    <string name="mineral_blue">Minerální modrá</string>
+    <string name="conversation_delete_locally_label">Smazat to pro mě</string>
+    <string name="conversation_delete_for_everyone_label">Smazat to pro všechny</string>
 </resources>

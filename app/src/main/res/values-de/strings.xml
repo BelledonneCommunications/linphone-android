@@ -907,4 +907,18 @@
     <string name="call_conference_end_to_end_encrypted">End-to-End-verschlüsselt</string>
     <string name="settings_conversations_hide_message_content_in_notif_title">Nachrichteninhalt nicht in Android-Benachrichtigungen anzeigen</string>
     <string name="settings_meetings_show_past_meetings_title">Vergangene Meetings anzeigen</string>
+    <string name="assistant_dialog_phone_number_validation_not_available_message">Die Überprüfung der Telefonnummer ist nicht verfügbar. Bitte nutzen Sie den Prozess zur Erstellung eines E-Mail-Kontos.</string>
+    <string name="assistant_dialog_phone_number_validation_not_available_title">Die Überprüfung der Telefonnummer ist nicht verfügbar</string>
+    <string name="assistant_dialog_phone_number_validation_not_available_register_button_label">Mit E-Mail registrieren</string>
+    <string name="conversation_delete_for_everyone_label">Für alle löschen</string>
+    <string name="terracotta">Terrakotta</string>
+    <string name="lavender">Lavendel</string>
+    <string name="honey">Honig</string>
+    <string name="burgundy">Burgund</string>
+    <string name="mint">Minze</string>
+    <string name="coral">Koral</string>
+    <string name="plum">Pflaume</string>
+    <string name="titanium">Titan</string>
+    <string name="mineral_blue">Mineralblau</string>
+    <string name="conversation_delete_locally_label">Für mich löschen</string>
 </resources>
