@@ -187,7 +187,6 @@
     <string name="settings_calls_calibrate_echo_canceller_done">%s ms</string>
     <string name="settings_calls_calibrate_echo_canceller_failed">fallido</string>
     <string name="settings_calls_adaptive_rate_control_title">Control de velocidad adaptativo</string>
-    <string name="settings_calls_enable_video_title">Habilitar video</string>
     <string name="settings_calls_enable_fec_title">Habilitar FEC de vídeo</string>
     <string name="settings_calls_vibrate_while_ringing_title">Vibrar mientras suena la llamada entrante</string>
     <string name="settings_calls_auto_record_title">Iniciar automáticamente la grabación de llamadas</string>

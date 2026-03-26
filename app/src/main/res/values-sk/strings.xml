@@ -176,7 +176,6 @@
     <string name="settings_calls_calibrate_echo_canceller_done_no_echo">bez ozveny</string>
     <string name="settings_calls_calibrate_echo_canceller_done">%s ms</string>
     <string name="settings_calls_calibrate_echo_canceller_failed">zlyhalo</string>
-    <string name="settings_calls_enable_video_title">Povoliť video</string>
     <string name="settings_calls_enable_fec_title">Povoliť FEC pre video</string>
     <string name="settings_calls_auto_record_title">Automaticky spustiť nahrávanie hovorov</string>
     <string name="settings_calls_change_ringtone_title">Zmeniť vyzváňací tón</string>

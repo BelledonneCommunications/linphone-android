@@ -199,7 +199,6 @@
     <string name="settings_calls_calibrate_echo_canceller_done">%s 毫秒</string>
     <string name="settings_calls_calibrate_echo_canceller_failed">失败</string>
     <string name="settings_calls_adaptive_rate_control_title">自适应速率控制</string>
-    <string name="settings_calls_enable_video_title">启用视频</string>
     <string name="settings_calls_enable_fec_title">启用视频前向纠错FEC</string>
     <string name="settings_calls_vibrate_while_ringing_title">来电铃响时振动</string>
     <string name="settings_calls_auto_record_title">自动开始录制通话</string>

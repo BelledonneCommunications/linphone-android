@@ -292,7 +292,6 @@
     <string name="settings_calls_calibrate_echo_canceller_done">%s мс</string>
     <string name="settings_calls_calibrate_echo_canceller_failed">калибровка не удалась</string>
     <string name="settings_calls_adaptive_rate_control_title">Адаптивный контроль скорости</string>
-    <string name="settings_calls_enable_video_title">Включить видео</string>
     <string name="settings_calls_enable_fec_title">Включить видео FEC</string>
     <string name="settings_calls_auto_record_title">Автоматически начинать запись звонков</string>
     <string name="settings_calls_change_ringtone_title">Изменить рингтон</string>

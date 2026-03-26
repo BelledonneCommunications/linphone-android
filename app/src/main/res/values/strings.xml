@@ -262,7 +262,6 @@
     <string name="settings_calls_calibrate_echo_canceller_done">%s ms</string>
     <string name="settings_calls_calibrate_echo_canceller_failed">failed</string>
     <string name="settings_calls_adaptive_rate_control_title">Adaptive rate control</string>
-    <string name="settings_calls_enable_video_title">Enable video</string>
     <string name="settings_calls_enable_fec_title">Enable video FEC</string>
     <string name="settings_calls_vibrate_while_ringing_title">Vibrate while incoming call is ringing</string>
     <string name="settings_calls_auto_record_title">Automatically start recording calls</string>
@@ -895,12 +894,6 @@
 
     <!-- Colors -->
     <string name="orange">Orange</string>
-    <string name="yellow">Yellow</string>
-    <string name="green">Green</string>
-    <string name="blue">Blue</string>
-    <string name="red">Red</string>
-    <string name="pink">Pink</string>
-    <string name="purple">Purple</string>
     <string name="terracotta">Terracotta</string>
     <string name="lavender">Lavender</string>
     <string name="honey">Honey</string>

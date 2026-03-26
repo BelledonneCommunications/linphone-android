@@ -222,7 +222,6 @@
     <string name="settings_calls_calibrate_echo_canceller_done_no_echo">sem eco</string>
     <string name="settings_calls_calibrate_echo_canceller_done">%s ms</string>
     <string name="settings_calls_calibrate_echo_canceller_failed">falhou</string>
-    <string name="settings_calls_enable_video_title">Ativar vídeo</string>
     <string name="settings_calls_enable_fec_title">Ativar FEC de vídeo</string>
     <string name="settings_calls_auto_record_title">Iniciar gravação de chamadas automaticamente</string>
     <string name="settings_calls_change_ringtone_title">Alterar toque</string>

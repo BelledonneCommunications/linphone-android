@@ -117,6 +117,7 @@
                 app:layout_constraintTop_toTopOf="@id/name_address"
                 app:layout_constraintBottom_toBottomOf="@id/name_address" />
 
+            <!--suppress AndroidUnknownAttribute -->
             <org.linphone.ui.call.view.RoundCornersTextureView
                 android:id="@+id/local_preview_video_surface"
                 android:layout_width="wrap_content"

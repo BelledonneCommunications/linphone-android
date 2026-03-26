@@ -170,7 +170,6 @@
     <string name="settings_calls_calibrate_echo_canceller_done">%s ms</string>
     <string name="settings_calls_calibrate_echo_canceller_failed">fehlgeschlagen</string>
     <string name="settings_calls_adaptive_rate_control_title">Adaptive Geschwindigkeitsregelung</string>
-    <string name="settings_calls_enable_video_title">Video aktivieren</string>
     <string name="settings_calls_enable_fec_title">Video FEC aktivieren</string>
     <string name="settings_calls_vibrate_while_ringing_title">Vibrieren während ein eingehender Anruf klingelt</string>
     <string name="settings_calls_auto_record_title">Automatische Anrufaufzeichnung starten</string>
@@ -661,12 +660,6 @@
     <string name="menu_export_selected_item">Herunterladen</string>
     <string name="menu_share_selected_item">Teilen</string>
     <string name="orange">Orange</string>
-    <string name="yellow">Gelb</string>
-    <string name="green">Grün</string>
-    <string name="blue">Blau</string>
-    <string name="red">Rot</string>
-    <string name="pink">Rosa</string>
-    <string name="purple">Lila</string>
     <string name="list_filter_no_result_found">Kein Ergebnis gefunden…</string>
     <string name="multiple_participants_selection_placeholder">Ausgewählte Teilnehmer erscheinen hier</string>
     <string name="connection_error_for_non_default_account">Verbindungsfehler bei den Konten</string>

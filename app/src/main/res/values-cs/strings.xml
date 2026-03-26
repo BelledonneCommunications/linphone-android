@@ -278,7 +278,6 @@
     <string name="settings_calls_calibrate_echo_canceller_done">%s ms</string>
     <string name="settings_calls_calibrate_echo_canceller_failed">selhalo</string>
     <string name="settings_calls_adaptive_rate_control_title">Adaptivní datový tok</string>
-    <string name="settings_calls_enable_video_title">Povolit video</string>
     <string name="settings_calls_enable_fec_title">Povolit FEC pro video</string>
     <string name="settings_calls_vibrate_while_ringing_title">Vibrovat při příchozím hovoru</string>
     <string name="settings_calls_auto_record_title">Automaticky spouštět nahrávání hovorů</string>
@@ -722,12 +721,6 @@
     <string name="menu_export_selected_item">Stáhnout</string>
     <string name="menu_share_selected_item">Sdílet</string>
     <string name="orange">Oranžová</string>
-    <string name="yellow">Žlutá</string>
-    <string name="green">Zelená</string>
-    <string name="blue">Modrá</string>
-    <string name="red">Červená</string>
-    <string name="pink">Růžová</string>
-    <string name="purple">Fialová</string>
     <string name="multiple_participants_selection_placeholder">Zde se zobrazí vybraní účastnící</string>
     <string name="connection_error_for_non_default_account">Chyba při připojení účtu(ů)</string>
     <string name="default_account_disabled">Zvolený účet je momentálně zákázán</string>

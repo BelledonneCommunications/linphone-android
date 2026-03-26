@@ -277,7 +277,6 @@
     <string name="settings_calls_calibrate_echo_canceller_done">%s мс</string>
     <string name="settings_calls_calibrate_echo_canceller_failed">Калібрування не вдалося</string>
     <string name="settings_calls_adaptive_rate_control_title">Адаптивне керування швидкістю</string>
-    <string name="settings_calls_enable_video_title">Увімкнути відео</string>
     <string name="settings_calls_enable_fec_title">Увімкнути FEC відео</string>
     <string name="settings_calls_vibrate_while_ringing_title">Вібрація під час вхідного дзвінка</string>
     <string name="settings_calls_auto_record_title">Автоматично починати запис дзвінків</string>

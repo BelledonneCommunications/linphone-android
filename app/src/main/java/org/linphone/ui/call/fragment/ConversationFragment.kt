@@ -120,7 +120,7 @@ class ConversationFragment : ConversationFragment() {
 
         val layout = layoutInflater.inflate(R.layout.call_video_local_preview_surface, binding.constraintLayout, false)
         binding.constraintLayout.addView(layout)
-        localPreviewVideoSurface = layout.findViewById<RoundCornersTextureView>(R.id.local_preview_video_surface)
+        localPreviewVideoSurface = layout.findViewById(R.id.local_preview_video_surface)
 
         callViewModel.isSendingVideo.observe(viewLifecycleOwner) { sending ->
             coreContext.postOnCoreThread { core ->

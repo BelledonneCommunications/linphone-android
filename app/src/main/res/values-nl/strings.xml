@@ -140,7 +140,6 @@
     <string name="settings_calls_calibrate_echo_canceller_done_no_echo">Geen echo</string>
     <string name="settings_calls_calibrate_echo_canceller_failed">Mislukt</string>
     <string name="settings_calls_adaptive_rate_control_title">Adaptieve bitrate-regeling</string>
-    <string name="settings_calls_enable_video_title">Video inschakelen</string>
     <string name="settings_calls_enable_fec_title">Video-FEC inschakelen</string>
     <string name="settings_calls_vibrate_while_ringing_title">Trillen tijdens inkomend gesprek</string>
     <string name="settings_calls_auto_record_title">Oproepen automatisch opnemen</string>
