@@ -642,15 +642,6 @@ class MainActivity : GenericActivity() {
 
     private fun handleSendIntent(intent: Intent, multiple: Boolean) {
         val parcelablesUri = arrayListOf<Uri>()
-
-        if (intent.type == "text/plain") {
-            Log.i("$TAG Intent type is [${intent.type}], expecting text in Intent.EXTRA_TEXT")
-            intent.getStringExtra(Intent.EXTRA_TEXT)?.let { extraText ->
-                Log.i("$TAG Found extra text in intent, long of [${extraText.length}]")
-                sharedViewModel.textToShareFromIntent.value = extraText
-            }
-        }
-
         if (multiple) {
             val parcelables =
                 intent.getParcelableArrayListExtra<Parcelable>(Intent.EXTRA_STREAM)
@@ -698,11 +689,23 @@ class MainActivity : GenericActivity() {
                 if (path != null) list.add(path)
             }
 
+            var textToShare = ""
+            if (intent.type == "text/plain") {
+                Log.i("$TAG Intent type is [${intent.type}], expecting text in Intent.EXTRA_TEXT")
+                textToShare = intent.getStringExtra(Intent.EXTRA_TEXT).orEmpty()
+                if (textToShare.isEmpty()) {
+                    Log.e("$TAG Intent.EXTRA_TEXT not found in intent!")
+                } else {
+                    Log.i("$TAG Found extra text in intent, long of [${textToShare.length}]")
+                }
+            }
+
             if (list.isNotEmpty()) {
                 sharedViewModel.filesToShareFromIntent.value = list
             } else {
-                if (sharedViewModel.textToShareFromIntent.value.orEmpty().isNotEmpty()) {
+                if (textToShare.isNotEmpty()) {
                     Log.i("$TAG Found plain text to share")
+                    sharedViewModel.textToShareFromIntent.value = textToShare
                 } else {
                     Log.w("$TAG Failed to find at least one file or text to share!")
                 }

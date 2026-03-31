@@ -1002,7 +1002,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         }
 
         sharedViewModel.textToShareFromIntent.observe(viewLifecycleOwner) { text ->
-            if (text.isNotEmpty()) {
+            if (text.isNotEmpty() && sharedViewModel.displayedChatRoom != null) {
                 Log.i("$TAG Found text to share from intent")
                 sendMessageViewModel.textToSend.value = text
 
