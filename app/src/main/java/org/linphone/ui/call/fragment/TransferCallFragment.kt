@@ -249,6 +249,7 @@ class TransferCallFragment : GenericCallFragment() {
     override fun onPause() {
         super.onPause()
 
+        viewModel.searchFilter.value = ""
         numberOrAddressPickerDialog?.dismiss()
         numberOrAddressPickerDialog = null
     }
