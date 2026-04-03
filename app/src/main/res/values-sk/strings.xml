@@ -705,12 +705,6 @@
     <string name="menu_export_selected_item">Stiahnuť</string>
     <string name="menu_share_selected_item">Zdieľať</string>
     <string name="orange">Oranžová</string>
-    <string name="yellow">Žltá</string>
-    <string name="green">Zelená</string>
-    <string name="blue">Modrá</string>
-    <string name="red">Červená</string>
-    <string name="pink">Ružová</string>
-    <string name="purple">Fialová</string>
     <string name="list_filter_no_result_found">Žiadne výsledky…</string>
     <string name="multiple_participants_selection_placeholder">Tu sa zobrazia vybraní účastníci</string>
     <string name="connection_error_for_non_default_account">Chyba pripojenia účtu(-ov)</string>

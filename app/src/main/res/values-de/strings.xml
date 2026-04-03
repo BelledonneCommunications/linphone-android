@@ -313,7 +313,7 @@
     <string name="contacts_list_empty">Im Moment kein Kontakt…</string>
     <string name="contacts_list_favourites_title">Favoriten</string>
     <string name="contacts_list_all_contacts_title">Alle Kontakte</string>
-    <string name="contacts_list_filter_popup_see_all">Alles sehen</string>
+    <string name="contacts_list_filter_popup_see_all">Alle anzeigen</string>
     <string name="contacts_list_filter_popup_see_linphone_only">&appName; Kontakte</string>
     <string name="contacts_list_filter_popup_see_sip_only">SIP Kontakte</string>
     <string name="contact_new_title">Neuer Kontakt</string>
@@ -533,7 +533,7 @@
     <string name="call_remotely_ended">Der Gesprächspartner hat den Anruf beendet</string>
     <string name="call_audio_incoming_for_account">Eingehender Anruf für %s</string>
     <string name="call_video_incoming_for_account">Eingehender Videoanruf für %s</string>
-    <string name="call_transfer_current_call_title">Weiterleiten %s an…</string>
+    <string name="call_transfer_current_call_title">%s weiterleiten an…</string>
     <string name="call_transfer_active_calls_label">Aktuelle Anrufe</string>
     <string name="call_transfer_no_active_call_label">Kein andere Anruf</string>
     <string name="call_transfer_confirm_dialog_tittle">Anrufweiterleitung bestätigen</string>
@@ -891,8 +891,8 @@
     <string name="manage_account_status_registration_status_title">Verbindungsstatus</string>
     <string name="settings_developer_clear_orphan_auth_info_title">Authentifizierungsinformationen löschen, die nicht mehr mit einem Konto verknüpft sind</string>
     <plurals name="settings_developer_cleared_auth_info_toast">
-        <item quantity="one">%s verwaiste Anmeldeinformation entfernt</item>
-        <item quantity="other">%s verwaiste Anmeldeinformationen entfernt</item>
+        <item quantity="one">%s nicht mehr benötigte Anmeldedaten wurden entfernt</item>
+        <item quantity="other">%s nicht mehr benötigte Anmeldedaten wurden entfernt</item>
     </plurals>
     <string name="notification_in_call_foreground_service_error_message">Klicken Sie auf diese Benachrichtigung, um das Problem zu beheben</string>
     <string name="notification_in_call_foreground_service_error_title">Ihr Gesprächspartner hört Sie nicht!</string>

@@ -2,4 +2,5 @@
 <resources>
     <string name="account_settings_avpf_title">AVPF</string>
     <string name="account_settings_dialog_invalid_password_title">Todennus tarvitaan</string>
+    <string name="account_settings_audio_video_conference_factory_uri_title">Audio/video kokous, tehdas URI</string>
 </resources>

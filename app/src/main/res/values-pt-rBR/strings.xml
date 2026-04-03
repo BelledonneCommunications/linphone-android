@@ -569,11 +569,6 @@
     <string name="menu_export_selected_item">Baixar</string>
     <string name="menu_share_selected_item">Compartilhar</string>
     <string name="orange">Laranja</string>
-    <string name="yellow">Amarelo</string>
-    <string name="blue">Azul</string>
-    <string name="red">Vermelho</string>
-    <string name="pink">Rosa</string>
-    <string name="purple">Roxo</string>
     <string name="list_filter_no_result_found">Nenhum resultado encontrado…</string>
     <string name="multiple_participants_selection_placeholder">Os participantes selecionados aparecerão aqui</string>
     <string name="connection_error_for_non_default_account">Erro de conexão da(s) conta(s)</string>
@@ -724,7 +719,6 @@
         <item quantity="many">%s de novas mensagens de voz</item>
         <item quantity="other">%s novas mensagens de voz</item>
     </plurals>
-    <string name="green">Verde</string>
     <plurals name="conversations_files_waiting_to_be_shared_toast">
         <item quantity="one">%s arquivo esperando para ser compartilhado</item>
         <item quantity="many">%s de arquivos esperando para ser compartilhados</item>
@@ -850,4 +844,7 @@
     <string name="settings_developer_clear_native_friends_in_database_title">Limpar contatos importados da agenda nativa</string>
     <string name="conversation_pdf_password_protected_file_cant_be_opened_error_toast">Não é possível abrir PDFs protegidos por senha ainda</string>
     <string name="menu_edit_chat_message">Editar</string>
+    <string name="dialog_understood">Entendido</string>
+    <string name="notification_channel_account_error_name">&appName; notificações de erro da conta</string>
+    <string name="notification_in_call_foreground_service_error_message">Clique nesta notificação para corrigí-la</string>
 </resources>

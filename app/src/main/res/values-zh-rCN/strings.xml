@@ -657,12 +657,6 @@
     <string name="menu_copy_chat_message">复制</string>
     <string name="menu_export_selected_item">下载</string>
     <string name="menu_share_selected_item">分享</string>
-    <string name="yellow">黄色</string>
-    <string name="green">绿色</string>
-    <string name="blue">蓝色</string>
-    <string name="red">红色</string>
-    <string name="pink">粉红色</string>
-    <string name="purple">紫色</string>
     <string name="orange">橙色</string>
     <string name="multiple_participants_selection_placeholder">选定的参与者将显示在此处</string>
     <string name="connection_error_for_non_default_account">账户连接错误</string>

@@ -580,17 +580,11 @@
     <string name="menu_copy_chat_message">Kopiëren</string>
     <string name="menu_export_selected_item">Downloaden</string>
     <string name="menu_share_selected_item">Delen</string>
-    <string name="yellow">Geel</string>
     <string name="post_notifications_permission_not_granted">Toestemming voor meldingen niet verleend!</string>
     <string name="full_screen_intent_permission_not_granted">Toestemming om inkomende oproepen te tonen is niet verleend!</string>
     <string name="welcome_carousel_skip"><u>Overslaan</u></string>
     <string name="assistant_forgotten_password"><u>Wachtwoord vergeten?</u></string>
     <string name="call_zrtp_sas_validation_skip"><u>Overslaan</u></string>
-    <string name="green">Groen</string>
-    <string name="blue">Blauw</string>
-    <string name="red">Rood</string>
-    <string name="pink">Roze</string>
-    <string name="purple">Paars</string>
     <string name="list_filter_no_result_found">Geen resultaat gevonden…</string>
     <string name="multiple_participants_selection_placeholder">Geselecteerde deelnemers zullen hier verschijnen</string>
     <string name="connection_error_for_non_default_account">Account(s) verbindingsfout</string>
