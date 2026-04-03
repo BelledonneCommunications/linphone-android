@@ -292,6 +292,10 @@ class ConferenceViewModel
                     Log.i("$TAG Joined conference already has at least another participant")
                     firstParticipantOtherThanOurselvesJoinedEvent.postValue(Event(true))
                 }
+
+                val chatEnabled = conference.currentParams.isChatEnabled
+                isConversationAvailable.postValue(chatEnabled)
+                Log.i("$TAG Chat is ${if (chatEnabled) "enabled" else "disabled"}")
             }
         }
     }
@@ -344,6 +348,7 @@ class ConferenceViewModel
 
         val chatEnabled = conference.currentParams.isChatEnabled
         isConversationAvailable.postValue(chatEnabled)
+        Log.i("$TAG Chat is ${if (chatEnabled) "enabled" else "disabled"}")
 
         val confSubject = conference.subjectUtf8.orEmpty()
         Log.i(
