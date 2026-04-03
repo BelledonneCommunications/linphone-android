@@ -87,7 +87,7 @@ class TransferCallFragment : GenericCallFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        callsAdapter = CallsListAdapter()
+        callsAdapter = CallsListAdapter(showTransferIconInsteadOfCallState = true)
         contactsAdapter = ConversationsContactsAndSuggestionsListAdapter()
     }
 

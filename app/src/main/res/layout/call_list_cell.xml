@@ -14,6 +14,9 @@
         <variable
             name="model"
             type="org.linphone.ui.call.model.CallModel" />
+        <variable
+            name="showTransferIcon"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -55,7 +58,7 @@
             android:layout_height="24dp"
             android:layout_marginEnd="16dp"
             android:contentDescription="@null"
-            android:src="@{model.isPaused ? @drawable/phone_pause : @drawable/phone_call, default=@drawable/phone_pause}"
+            android:src="@{showTransferIcon ? @drawable/phone_transfer : model.isPaused ? @drawable/phone_pause : @drawable/phone_call, default=@drawable/phone_pause}"
             app:tint="?attr/color_main2_500"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -70,6 +73,7 @@
             android:text="@{model.state, default=`Paused`}"
             android:textSize="12sp"
             android:layout_marginStart="10dp"
+            android:visibility="@{showTransferIcon ? View.GONE : View.VISIBLE}"
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintStart_toEndOf="@id/name"
             app:layout_constraintEnd_toStartOf="@id/call_state_icon"
