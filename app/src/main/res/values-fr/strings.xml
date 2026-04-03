@@ -266,6 +266,7 @@
     <string name="settings_contacts_ldap_name_attributes_title">Attributs de nom</string>
     <string name="settings_contacts_ldap_sip_attributes_title">Attributs SIP</string>
     <string name="settings_contacts_ldap_sip_domain_title">Domaine SIP</string>
+    <string name="settings_contacts_ldap_saved_toast">Configuration LDAP sauvegardée</string>
     <string name="settings_contacts_ldap_error_toast">Une erreur s\'est produite, la configuration LDAP n\'a pas été sauvegardée !</string>
     <string name="settings_contacts_ldap_empty_field_error_toast">Tous les champs doivent être remplis</string>
     <string name="settings_meetings_title">Réunions</string>

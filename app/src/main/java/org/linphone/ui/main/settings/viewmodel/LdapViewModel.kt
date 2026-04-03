@@ -212,6 +212,7 @@ class LdapViewModel : GenericViewModel() {
                     core.addLdap(ldap)
                     Log.i("$TAG New LDAP config created")
                 }
+                showGreenToast(R.string.settings_contacts_ldap_saved_toast, R.drawable.check)
                 ldapServerOperationSuccessfulEvent.postValue(Event(true))
             } catch (e: Exception) {
                 Log.e("$TAG Exception while creating LDAP: $e")

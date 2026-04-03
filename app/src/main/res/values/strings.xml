@@ -308,6 +308,7 @@
     <string name="settings_contacts_ldap_name_attributes_title">Name attributes</string>
     <string name="settings_contacts_ldap_sip_attributes_title">SIP attributes</string>
     <string name="settings_contacts_ldap_sip_domain_title">SIP domain</string>
+    <string name="settings_contacts_ldap_saved_toast">LDAP server saved</string>
     <string name="settings_contacts_ldap_error_toast">A error occurred, LDAP server not saved!</string>
     <string name="settings_contacts_ldap_empty_field_error_toast">All fields must be filled</string>
     <string name="settings_meetings_title">Meetings</string>
