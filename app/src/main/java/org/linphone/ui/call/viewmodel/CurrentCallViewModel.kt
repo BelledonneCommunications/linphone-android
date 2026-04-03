@@ -866,6 +866,8 @@ class CurrentCallViewModel
                 isRecording.postValue(recording)
                 if (recording) {
                     showRecordingToast()
+                } else {
+                    showGreenToast(R.string.call_has_been_recorded, R.drawable.record_fill)
                 }
             }
         }
