@@ -352,7 +352,7 @@
                     android:onClick="@{() -> viewModel.toggleParticipantsExpand()}"
                     android:padding="10dp"
                     android:text="@{viewModel.participantsLabel, default=@string/conversation_info_participants_list_title}"
-                    android:visibility="@{viewModel.isGroup ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.isGroup &amp;&amp; !viewModel.isReadOnly ? View.VISIBLE : View.GONE}"
                     android:background="@drawable/squircle_transparent_button_background"
                     app:layout_constraintWidth_max="@dimen/section_max_width"
                     app:layout_constraintEnd_toEndOf="parent"
