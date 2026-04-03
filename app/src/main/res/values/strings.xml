@@ -755,6 +755,7 @@
     <string name="call_action_pause_call">Pause</string>
     <string name="call_action_resume_call">Resume</string>
     <string name="call_action_record_call">Record</string>
+    <string name="call_action_stop_record_call">Stop recording</string>
     <string name="call_action_hang_up">Hang up</string>
     <string name="call_action_decline">Decline</string>
     <string name="call_action_answer">Answer</string>
