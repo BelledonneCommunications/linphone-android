@@ -548,6 +548,26 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                             }
                         }
                     }
+
+                    sharedViewModel.textToShareFromIntent.observe(viewLifecycleOwner) { text ->
+                        if (text.isNotEmpty() && sharedViewModel.displayedChatRoom != null) {
+                            Log.i("$TAG Found text to share from intent")
+                            sendMessageViewModel.textToSend.value = text
+
+                            sharedViewModel.textToShareFromIntent.value = ""
+                        }
+                    }
+
+                    sharedViewModel.filesToShareFromIntent.observe(viewLifecycleOwner) { files ->
+                        if (files.isNotEmpty() && sharedViewModel.displayedChatRoom != null) {
+                            Log.i("$TAG Found [${files.size}] files to share from intent")
+                            for (path in files) {
+                                sendMessageViewModel.addAttachments(arrayListOf(path))
+                            }
+
+                            sharedViewModel.filesToShareFromIntent.value = arrayListOf()
+                        }
+                    }
                 }
             }
         }
@@ -998,26 +1018,6 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             it.consume {
                 Log.w("$TAG We were asked to close conversation, going back")
                 goBack()
-            }
-        }
-
-        sharedViewModel.textToShareFromIntent.observe(viewLifecycleOwner) { text ->
-            if (text.isNotEmpty() && sharedViewModel.displayedChatRoom != null) {
-                Log.i("$TAG Found text to share from intent")
-                sendMessageViewModel.textToSend.value = text
-
-                sharedViewModel.textToShareFromIntent.value = ""
-            }
-        }
-
-        sharedViewModel.filesToShareFromIntent.observe(viewLifecycleOwner) { files ->
-            if (files.isNotEmpty()) {
-                Log.i("$TAG Found [${files.size}] files to share from intent")
-                for (path in files) {
-                    sendMessageViewModel.addAttachments(arrayListOf(path))
-                }
-
-                sharedViewModel.filesToShareFromIntent.value = arrayListOf()
             }
         }
 
