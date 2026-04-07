@@ -922,4 +922,7 @@
     <string name="mineral_blue">Minerální modrá</string>
     <string name="conversation_delete_locally_label">Smazat to pro mě</string>
     <string name="conversation_delete_for_everyone_label">Smazat to pro všechny</string>
+    <string name="settings_contacts_ldap_saved_toast">LDAP server uložen</string>
+    <string name="call_action_stop_record_call">Zastavit nahrávání</string>
+    <string name="call_has_been_recorded">Záznam hovoru byl uložen</string>
 </resources>

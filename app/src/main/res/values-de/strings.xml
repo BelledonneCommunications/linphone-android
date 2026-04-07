@@ -914,4 +914,7 @@
     <string name="titanium">Titan</string>
     <string name="mineral_blue">Mineralblau</string>
     <string name="conversation_delete_locally_label">Für mich löschen</string>
+    <string name="settings_contacts_ldap_saved_toast">LDAP Server gespeichert</string>
+    <string name="call_action_stop_record_call">Aufnahme stoppen</string>
+    <string name="call_has_been_recorded">Aufnahme wurde gespeichert</string>
 </resources>
