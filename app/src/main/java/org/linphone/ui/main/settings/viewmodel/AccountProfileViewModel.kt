@@ -268,6 +268,14 @@ class AccountProfileViewModel
                 Log.w("$TAG Removing account [$identity] and all related data (auth info, conferences, conversations, call logs)")
                 core.removeAccountWithData(account)
                 accountRemovedEvent.postValue(Event(true))
+
+                if (core.accountList.isEmpty()) {
+                    Log.w("$TAG No more account found in Core")
+                    if (!core.provisioningUri.isNullOrEmpty()) {
+                        Log.w("$TAG Removing remote provisioning URI")
+                        core.provisioningUri = null
+                    }
+                }
             }
         }
     }
