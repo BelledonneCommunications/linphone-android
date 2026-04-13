@@ -365,7 +365,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:visibility="@{!viewModel.expandParticipants || !viewModel.isMyselfAdmin || !viewModel.isGroup || viewModel.isReadOnly ? View.GONE : View.VISIBLE, default=gone}"
+                    android:visibility="@{viewModel.expandParticipants &amp;&amp; viewModel.isGroup &amp;&amp; !viewModel.isReadOnly ? View.VISIBLE : View.GONE, default=gone}"
                     android:background="@drawable/shape_squircle_white_background"
                     app:layout_constraintWidth_max="@dimen/section_max_width"
                     app:layout_constraintTop_toBottomOf="@id/participants_label"
