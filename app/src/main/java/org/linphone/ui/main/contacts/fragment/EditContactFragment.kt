@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.contacts.fragment
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -212,7 +213,11 @@ class EditContactFragment : SlidingPaneChildFragment() {
     }
 
     private fun pickImage() {
-        pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        try {
+            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        } catch (anfe: ActivityNotFoundException) {
+            Log.e("$TAG Failed to start media picker: $anfe")
+        }
     }
 
     private fun showAbortConfirmationDialogIfPendingChanges() {

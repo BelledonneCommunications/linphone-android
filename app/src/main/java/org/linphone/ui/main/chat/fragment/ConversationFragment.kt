@@ -693,14 +693,22 @@ open class ConversationFragment : SlidingPaneChildFragment() {
 
         binding.setOpenFilePickerClickListener {
             Log.i("$TAG Opening file picker")
-            pickDocument.launch(arrayOf("*/*"))
+            try {
+                pickDocument.launch(arrayOf("*/*"))
+            } catch (anfe: ActivityNotFoundException) {
+                Log.e("$TAG Failed to start file picker: $anfe")
+            }
         }
 
         binding.setOpenMediaPickerClickListener {
             Log.i("$TAG Opening media picker")
-            pickMedia.launch(
-                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo)
-            )
+            try {
+                pickMedia.launch(
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo)
+                )
+            } catch (anfe: ActivityNotFoundException) {
+                Log.e("$TAG Failed to start media picker: $anfe")
+            }
         }
 
         binding.setOpenCameraClickListener {

@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.settings.fragment
 
+import android.content.ActivityNotFoundException
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -223,7 +224,11 @@ class AccountProfileFragment : GenericMainFragment() {
     }
 
     private fun pickImage() {
-        pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        try {
+            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        } catch (anfe: ActivityNotFoundException) {
+            Log.e("$TAG Failed to start media picker: $anfe")
+        }
     }
 
     private fun copyAddressToClipboard(value: String) {
