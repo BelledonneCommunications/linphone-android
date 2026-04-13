@@ -218,7 +218,67 @@
                         android:layout_marginEnd="16dp"
                         android:checked="@{viewModel.mediaEncryptionMandatory}"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/media_encryption"
+                        app:layout_constraintTop_toBottomOf="@id/media_encryption"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/settings_title_style"
+                        android:onClick="@{() -> viewModel.toggleRfc2833Dtmf()}"
+                        android:id="@+id/rfc_2833_dtmf_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/settings_advanced_calls_rfc_2833_dmtf_title"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:labelFor="@id/rfc_2833_dtmf_switch"
+                        app:layout_constraintTop_toTopOf="@id/rfc_2833_dtmf_switch"
+                        app:layout_constraintBottom_toBottomOf="@id/rfc_2833_dtmf_switch"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/rfc_2833_dtmf_switch"/>
+
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        style="@style/material_switch_style"
+                        android:id="@+id/rfc_2833_dtmf_switch"
+                        android:onClick="@{() -> viewModel.toggleRfc2833Dtmf()}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginEnd="16dp"
+                        android:checked="@{viewModel.rfc2833Dtmf}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/media_encryption_mandatory_switch"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/settings_title_style"
+                        android:onClick="@{() -> viewModel.toggleSipInfoDtmf()}"
+                        android:id="@+id/sip_info_dtmf_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/settings_advanced_calls_sip_info_dmtf_title"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:labelFor="@id/sip_info_dtmf_switch"
+                        app:layout_constraintTop_toTopOf="@id/sip_info_dtmf_switch"
+                        app:layout_constraintBottom_toBottomOf="@id/sip_info_dtmf_switch"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/sip_info_dtmf_switch"/>
+
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        style="@style/material_switch_style"
+                        android:id="@+id/sip_info_dtmf_switch"
+                        android:onClick="@{() -> viewModel.toggleSipInfoDtmf()}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginEnd="16dp"
+                        android:checked="@{viewModel.sipInfoDtmf}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/rfc_2833_dtmf_switch"
                         app:layout_constraintBottom_toBottomOf="parent"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -229,6 +229,8 @@ class SettingsViewModel
     val mediaEncryptionLabels = arrayListOf<String>()
     private val mediaEncryptionValues = arrayListOf<MediaEncryption>()
     val mediaEncryptionMandatory = MutableLiveData<Boolean>()
+    val rfc2833Dtmf = MutableLiveData<Boolean>()
+    val sipInfoDtmf = MutableLiveData<Boolean>()
     val acceptEarlyMedia = MutableLiveData<Boolean>()
     val ringDuringEarlyMedia = MutableLiveData<Boolean>()
     val allowOutgoingEarlyMedia = MutableLiveData<Boolean>()
@@ -379,6 +381,9 @@ class SettingsViewModel
 
             deviceName.postValue(corePreferences.deviceName)
             remoteProvisioningUrl.postValue(core.provisioningUri)
+
+            rfc2833Dtmf.postValue(core.useRfc2833ForDtmf)
+            sipInfoDtmf.postValue(core.useInfoForDtmf)
 
             acceptEarlyMedia.postValue(corePreferences.acceptEarlyMedia)
             ringDuringEarlyMedia.postValue(core.ringDuringIncomingEarlyMedia)
@@ -916,6 +921,26 @@ class SettingsViewModel
         coreContext.postOnCoreThread { core ->
             core.isMediaEncryptionMandatory = newValue
             mediaEncryptionMandatory.postValue(newValue)
+        }
+    }
+
+    @UiThread
+    fun toggleRfc2833Dtmf() {
+        val newValue = rfc2833Dtmf.value == false
+
+        coreContext.postOnCoreThread { core ->
+            core.useRfc2833ForDtmf = newValue
+            rfc2833Dtmf.postValue(newValue)
+        }
+    }
+
+    @UiThread
+    fun toggleSipInfoDtmf() {
+        val newValue = sipInfoDtmf.value == false
+
+        coreContext.postOnCoreThread { core ->
+            core.useInfoForDtmf = newValue
+            sipInfoDtmf.postValue(newValue)
         }
     }
 

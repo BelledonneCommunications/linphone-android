@@ -34,6 +34,7 @@ Group changes to describe their impact on the project, as follows:
   - one to let edit native contacts Linphone copy in-app instead of opening native addressbook third party app
   - one to show past meetings (they are now hidden by default)
   - one to hide received message content in android notification
+  - possibility to choose between RFC2833 and SIP INFO for DTMFs
 - Added a vu meter for recording & playback volumes (must be enabled in developer settings)
 - Added support for HDMI audio devices
 - Added video preview during in-call conversation
