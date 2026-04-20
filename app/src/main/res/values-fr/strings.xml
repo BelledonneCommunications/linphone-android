@@ -597,7 +597,7 @@
     <string name="conversation_info_menu_go_to_contact">Voir le contact</string>
     <string name="conversation_info_menu_add_to_contacts">Ajouter aux contacts</string>
     <string name="conversation_info_dialog_delete_all_call_logs_title">Supprimer l\'historique ?</string>
-    <string name="conversation_info_dialog_delete_all_message">Tout les messages de cette conversation seront supprimés.</string>
+    <string name="conversation_info_dialog_delete_all_message">Tous les messages de cette conversation seront supprimés.</string>
     <string name="conversation_info_history_deleted_toast">Historique supprimé</string>
     <string name="conversation_info_participant_added_to_conversation_toast">%s a rejoint la conversation</string>
     <string name="conversation_info_participant_removed_from_conversation_toast">%s a quitté la conversation</string>
