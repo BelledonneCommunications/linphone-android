@@ -53,6 +53,7 @@
                     bind:extraActionIcon="@{@drawable/funnel}"
                     bind:extraActionClickListener="@{filterClickListener}"
                     bind:extraActionContentDescription="@{@string/content_description_contacts_list_filters}"
+                    bind:extraActionEnabled="@{true}"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/top_bar_height"
                     app:layout_constraintTop_toTopOf="parent"

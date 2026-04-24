@@ -47,6 +47,7 @@
                     bind:extraActionIcon="@{@drawable/calendar}"
                     bind:extraActionClickListener="@{todayClickListener}"
                     bind:extraActionContentDescription="@{@string/content_description_meeting_today}"
+                    bind:extraActionEnabled="@{true}"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/top_bar_height"
                     app:layout_constraintTop_toTopOf="parent"
