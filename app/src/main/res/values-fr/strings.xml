@@ -426,6 +426,8 @@
     <string name="history_dialog_delete_all_call_logs_message">L\'ensemble de votre historique d\'appels sera définitivement supprimé.</string>
     <string name="history_dialog_delete_call_logs_title">Supprimer l\'historique d\'appels ?</string>
     <string name="history_dialog_delete_call_logs_message">L\'ensemble de votre historique d\'appels avec ce correspondant sera définitivement supprimé.</string>
+    <string name="history_dialog_delete_call_log_title">Supprimer cet historique d\'appel ?</string>
+    <string name="history_dialog_delete_call_log_message">Seul cet appel sera supprimée.</string>
 
     <!-- Contacts -->
     <string name="contacts_list_empty">Aucun contact pour le moment…</string>
@@ -598,6 +600,10 @@
     <string name="conversation_info_menu_add_to_contacts">Ajouter aux contacts</string>
     <string name="conversation_info_dialog_delete_all_call_logs_title">Supprimer l\'historique ?</string>
     <string name="conversation_info_dialog_delete_all_message">Tous les messages de cette conversation seront supprimés.</string>
+    <string name="conversation_info_dialog_delete_chat_room_title">Supprimer la conversation ?</string>
+    <string name="conversation_info_dialog_delete_chat_room_message">Tous les messages de cette conversation seront également supprimés.</string>
+    <string name="conversation_info_dialog_leave_group_chat_room_title">Quitter la conversation ?</string>
+    <string name="conversation_info_dialog_leave_group_chat_room_message">Vous ne pourrez plus envoyer ni recevoir de nouveaux messages mais l\'historique des messages sera toujours consultable.</string>
     <string name="conversation_info_history_deleted_toast">Historique supprimé</string>
     <string name="conversation_info_participant_added_to_conversation_toast">%s a rejoint la conversation</string>
     <string name="conversation_info_participant_removed_from_conversation_toast">%s a quitté la conversation</string>

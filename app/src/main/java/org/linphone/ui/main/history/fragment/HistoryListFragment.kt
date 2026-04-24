@@ -42,6 +42,7 @@ import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.fragment.AbstractMainFragment
 import org.linphone.ui.main.history.adapter.HistoryListAdapter
+import org.linphone.ui.main.history.model.CallLogModel
 import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.ui.main.history.viewmodel.HistoryListViewModel
 import org.linphone.utils.AppUtils
@@ -164,9 +165,7 @@ class HistoryListFragment : AbstractMainFragment() {
                         copyNumberOrAddressToClipboard(addressToCopy)
                     },
                     { // onDeleteCallLog
-                        Log.i("$TAG Deleting call log with ref key or call ID [${model.id}]")
-                        model.delete()
-                        listViewModel.filter()
+                        showDeleteConfirmationDialog(model)
                     }
                 )
                 modalBottomSheet.show(parentFragmentManager, HistoryMenuDialogFragment.TAG)
@@ -286,7 +285,7 @@ class HistoryListFragment : AbstractMainFragment() {
         }
 
         binding.setDeleteAllClickListener {
-            showDeleteConfirmationDialog()
+            showDeleteAllConfirmationDialog()
         }
 
         binding.setStartCallClickListener {
@@ -339,7 +338,7 @@ class HistoryListFragment : AbstractMainFragment() {
         }
     }
 
-    private fun showDeleteConfirmationDialog() {
+    private fun showDeleteAllConfirmationDialog() {
         val model = ConfirmationDialogModel()
         val dialog = DialogUtils.getRemoveAllCallLogsConfirmationDialog(
             requireActivity(),
@@ -356,6 +355,31 @@ class HistoryListFragment : AbstractMainFragment() {
             it.consume {
                 Log.w("$TAG Removing all call entries from database")
                 listViewModel.removeAllCallLogs()
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun showDeleteConfirmationDialog(callLogModel: CallLogModel) {
+        val dialogModel = ConfirmationDialogModel()
+        val dialog = DialogUtils.getRemoveCallLogConfirmationDialog(
+            requireActivity(),
+            dialogModel
+        )
+
+        dialogModel.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        dialogModel.confirmEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Deleting call log with ref key or call ID [${callLogModel.id}]")
+                callLogModel.delete()
+                listViewModel.filter()
                 dialog.dismiss()
             }
         }

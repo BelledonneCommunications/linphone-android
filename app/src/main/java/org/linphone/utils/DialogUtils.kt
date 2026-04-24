@@ -67,7 +67,10 @@ import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.model.GroupSetOrEditSubjectDialogModel
 import androidx.core.graphics.drawable.toDrawable
 import org.linphone.databinding.DialogAssistantCreateAccountPhoneNumberValidationNotAvailableBinding
+import org.linphone.databinding.DialogLeaveGroupConversationBinding
 import org.linphone.databinding.DialogManageAccountOutboundProxyHelpBinding
+import org.linphone.databinding.DialogRemoveCallLogBinding
+import org.linphone.databinding.DialogRemoveConversationBinding
 
 class DialogUtils {
     companion object {
@@ -280,6 +283,22 @@ class DialogUtils {
         }
 
         @UiThread
+        fun getRemoveCallLogConfirmationDialog(
+            context: Context,
+            viewModel: ConfirmationDialogModel
+        ): Dialog {
+            val binding: DialogRemoveCallLogBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_remove_call_log,
+                null,
+                false
+            )
+            binding.viewModel = viewModel
+
+            return getDialog(context, binding)
+        }
+
+        @UiThread
         fun getRemoveAllCallLogsConfirmationDialog(
             context: Context,
             viewModel: ConfirmationDialogModel
@@ -339,6 +358,38 @@ class DialogUtils {
             val binding: DialogStartGroupCallFromConversationBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
                 R.layout.dialog_start_group_call_from_conversation,
+                null,
+                false
+            )
+            binding.viewModel = viewModel
+
+            return getDialog(context, binding)
+        }
+
+        @UiThread
+        fun getLeaveConversationConfirmationDialog(
+            context: Context,
+            viewModel: ConfirmationDialogModel
+        ): Dialog {
+            val binding: DialogLeaveGroupConversationBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_leave_group_conversation,
+                null,
+                false
+            )
+            binding.viewModel = viewModel
+
+            return getDialog(context, binding)
+        }
+
+        @UiThread
+        fun getDeleteConversationConfirmationDialog(
+            context: Context,
+            viewModel: ConfirmationDialogModel
+        ): Dialog {
+            val binding: DialogRemoveConversationBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_remove_conversation,
                 null,
                 false
             )

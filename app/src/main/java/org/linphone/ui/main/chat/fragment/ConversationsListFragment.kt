@@ -42,11 +42,13 @@ import org.linphone.ui.fileviewer.FileViewerActivity
 import org.linphone.ui.fileviewer.MediaViewerActivity
 import org.linphone.ui.main.MainActivity.Companion.ARGUMENTS_CONVERSATION_ID
 import org.linphone.ui.main.chat.adapter.ConversationsListAdapter
+import org.linphone.ui.main.chat.model.ConversationModel
 import org.linphone.ui.main.chat.viewmodel.ConversationsListViewModel
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.fragment.AbstractMainFragment
+import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
@@ -168,12 +170,10 @@ class ConversationsListFragment : AbstractMainFragment() {
                         model.call()
                     },
                     { // onDeleteConversation
-                        Log.i("$TAG Deleting conversation [${model.id}]")
-                        model.delete()
+                        showDeleteConfirmationDialog(model)
                     },
                     { // onLeaveGroup
-                        Log.i("$TAG Leaving group conversation [${model.id}]")
-                        model.leaveGroup()
+                        showLeaveConfirmationDialog(model)
                     }
                 )
                 modalBottomSheet.show(parentFragmentManager, ConversationDialogFragment.TAG)
@@ -415,6 +415,55 @@ class ConversationsListFragment : AbstractMainFragment() {
 
         numberOrAddressModel.dismissEvent.observe(viewLifecycleOwner) { event ->
             event.consume {
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun showDeleteConfirmationDialog(conversationModel: ConversationModel) {
+        val dialogModel = ConfirmationDialogModel()
+        val dialog = DialogUtils.getDeleteConversationConfirmationDialog(
+            requireActivity(),
+            dialogModel
+        )
+
+        dialogModel.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        dialogModel.confirmEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Deleting conversation [${conversationModel.id}]")
+                conversationModel.delete()
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun showLeaveConfirmationDialog(conversationModel: ConversationModel) {
+        val dialogModel = ConfirmationDialogModel()
+        val dialog = DialogUtils.getLeaveConversationConfirmationDialog(
+            requireActivity(),
+            dialogModel
+        )
+
+        dialogModel.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        dialogModel.confirmEvent.observe(viewLifecycleOwner) {
+            it.consume {
+
+                Log.i("$TAG Leaving group conversation [${conversationModel.id}]")
+                conversationModel.leaveGroup()
                 dialog.dismiss()
             }
         }

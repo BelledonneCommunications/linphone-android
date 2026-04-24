@@ -466,9 +466,11 @@
     <string name="history_group_call_go_to_conversation">Conversation</string>
 
     <string name="history_dialog_delete_all_call_logs_title">Do you really want to delete all calls history?</string>
-    <string name="history_dialog_delete_all_call_logs_message">All calls will be removed from the history</string>
+    <string name="history_dialog_delete_all_call_logs_message">All calls will be removed from the history.</string>
     <string name="history_dialog_delete_call_logs_title">Do you really want to delete the history with that person?</string>
-    <string name="history_dialog_delete_call_logs_message">All calls will be removed from the history</string>
+    <string name="history_dialog_delete_call_logs_message">All calls will be removed from the history.</string>
+    <string name="history_dialog_delete_call_log_title">Do you really want to delete this call log?</string>
+    <string name="history_dialog_delete_call_log_message">Only this entry will be removed.</string>
 
     <!-- Contacts -->
     <string name="contacts_list_empty">No contact for the moment…</string>
@@ -640,7 +642,11 @@
     <string name="conversation_info_menu_go_to_contact">See contact profile</string>
     <string name="conversation_info_menu_add_to_contacts">Add to contacts</string>
     <string name="conversation_info_dialog_delete_all_call_logs_title">Do you really want to delete all messages?</string>
-    <string name="conversation_info_dialog_delete_all_message">All messages will be removed from the history</string>
+    <string name="conversation_info_dialog_delete_all_message">All messages will be removed from the history.</string>
+    <string name="conversation_info_dialog_delete_chat_room_title">Do you really want to delete this conversation?</string>
+    <string name="conversation_info_dialog_delete_chat_room_message">All messages will also be removed from the history.</string>
+    <string name="conversation_info_dialog_leave_group_chat_room_title">Do you really want to leave this conversation?</string>
+    <string name="conversation_info_dialog_leave_group_chat_room_message">You will no longer be able to send or receive new messages, but your message history will still be available.</string>
     <string name="conversation_info_history_deleted_toast">History has been successfully deleted</string>
     <string name="conversation_info_participant_added_to_conversation_toast">%s joined the conversation</string>
     <string name="conversation_info_participant_removed_from_conversation_toast">%s left the conversation</string>

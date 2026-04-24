@@ -314,6 +314,10 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
             }
         }
 
+        binding.setLeaveGroupClickListener {
+            showLeaveConfirmationDialog()
+        }
+
         binding.setDeleteHistoryClickListener {
             showDeleteHistoryConfirmationDialog()
         }
@@ -479,6 +483,31 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
         model.confirmEvent.observe(viewLifecycleOwner) {
             it.consume {
                 viewModel.startGroupCall()
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun showLeaveConfirmationDialog() {
+        val dialogModel = ConfirmationDialogModel()
+        val dialog = DialogUtils.getLeaveConversationConfirmationDialog(
+            requireActivity(),
+            dialogModel
+        )
+
+        dialogModel.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        dialogModel.confirmEvent.observe(viewLifecycleOwner) {
+            it.consume {
+
+                Log.i("$TAG Leaving group conversation")
+                viewModel.leaveGroup()
                 dialog.dismiss()
             }
         }
