@@ -52,7 +52,7 @@
                     android:id="@+id/top_bar"
                     layout="@layout/main_activity_top_bar"
                     bind:viewModel="@{viewModel}"
-                    bind:enableExtraAction="@{true}"
+                    bind:showExtraAction="@{true}"
                     bind:extraActionIcon="@{@drawable/calendar}"
                     bind:extraActionClickListener="@{todayClickListener}"
                     bind:extraActionContentDescription="@{@string/content_description_meeting_today}"
