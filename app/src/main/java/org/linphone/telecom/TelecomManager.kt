@@ -125,7 +125,8 @@ class TelecomManager
                     uri,
                     direction,
                     type,
-                    capabilities
+                    capabilities,
+                    isLogExcluded = true
                 )
                 Log.i("$TAG Adding call to Telecom's CallsManager with attributes [$callAttributes]")
 
