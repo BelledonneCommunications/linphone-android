@@ -1238,6 +1238,9 @@ class NotificationsManager
         // the app is put in background and it's not relevant as long as push notifications work
         if (!corePreferences.keepServiceAlive) return
 
+        // Do not notify connexion error in background if account if push notification are available
+        if (account.params.isPushNotificationAvailable) return
+
         if (Compatibility.isPostNotificationsPermissionGranted(context)) {
             val pendingIntent = TaskStackBuilder.create(context).run {
                 addNextIntentWithParentStack(
