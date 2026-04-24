@@ -80,7 +80,7 @@ class NewCallFragment : GenericCallFragment() {
             val address = model.address
             if (address != null) {
                 coreContext.postOnCoreThread {
-                    action(address)
+                    startCall(address)
                 }
             }
         }
@@ -237,7 +237,7 @@ class NewCallFragment : GenericCallFragment() {
         coreContext.postOnCoreThread {
             val friend = model.friend
             if (friend == null) {
-                action(model.address)
+                startCall(model.address)
                 return@postOnCoreThread
             }
 
@@ -246,7 +246,7 @@ class NewCallFragment : GenericCallFragment() {
                 Log.i(
                     "$TAG Only 1 SIP address or phone number found for contact [${friend.name}], starting call directly"
                 )
-                action(singleAvailableAddress)
+                startCall(singleAvailableAddress)
             } else {
                 val list = friend.getListOfSipAddressesAndPhoneNumbers(listener)
                 Log.i(
@@ -275,7 +275,7 @@ class NewCallFragment : GenericCallFragment() {
     }
 
     @WorkerThread
-    private fun action(address: Address) {
+    private fun startCall(address: Address) {
         Log.i("$TAG Calling [${address.asStringUriOnly()}]")
         coreContext.startAudioCall(address)
 

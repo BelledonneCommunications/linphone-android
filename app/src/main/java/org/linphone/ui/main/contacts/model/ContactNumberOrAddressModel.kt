@@ -39,6 +39,8 @@ class ContactNumberOrAddressModel
 ) {
     val selected = MutableLiveData<Boolean>()
 
+    val name: String = friend.name.orEmpty()
+
     private var actionDoneCallback: (() -> Unit)? = null
 
     @UiThread
