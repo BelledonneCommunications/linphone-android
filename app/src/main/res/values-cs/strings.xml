@@ -925,4 +925,6 @@
     <string name="settings_contacts_ldap_saved_toast">LDAP server uložen</string>
     <string name="call_action_stop_record_call">Zastavit nahrávání</string>
     <string name="call_has_been_recorded">Záznam hovoru byl uložen</string>
+    <string name="settings_advanced_calls_sip_info_dmtf_title">Použít SIP INFO pro DTMF</string>
+    <string name="settings_advanced_calls_rfc_2833_dmtf_title">Použít RFC 2833 pro DTMF</string>
 </resources>

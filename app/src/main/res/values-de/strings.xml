@@ -275,7 +275,7 @@
     <string name="account_settings_push_notification_title">Push Benachrichtigungen zulassen</string>
     <string name="account_settings_push_notification_not_available_title">Push Benachrichtigungen sind nicht verfügbar!</string>
     <string name="account_settings_im_encryption_mandatory_title">IM Verschlüsselung obligatorisch</string>
-    <string name="account_settings_sip_proxy_url_title">SIP proxy Server URL</string>
+    <string name="account_settings_sip_proxy_url_title">Registrar URI</string>
     <string name="account_settings_outbound_proxy_title">Ausgehender Proxy</string>
     <string name="account_settings_stun_server_url_title">STUN/TURN Server URL</string>
     <string name="account_settings_nat_policy_title">NAT-Richtlinien</string>
@@ -917,4 +917,6 @@
     <string name="settings_contacts_ldap_saved_toast">LDAP Server gespeichert</string>
     <string name="call_action_stop_record_call">Aufnahme stoppen</string>
     <string name="call_has_been_recorded">Aufnahme wurde gespeichert</string>
+    <string name="settings_advanced_calls_rfc_2833_dmtf_title">RFC 2833 für DTMF-Töne verwenden</string>
+    <string name="settings_advanced_calls_sip_info_dmtf_title">SIP INFO für DTMF-Töne verwenden</string>
 </resources>
