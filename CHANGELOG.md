@@ -41,6 +41,7 @@ Group changes to describe their impact on the project, as follows:
 - Allow text selection in chat bubble (once long press menu is displayed)
 
 ### Changed
+- App now targets API level 37
 - No longer follow TelecomManager audio endpoint during calls, using our own routing policy
 - Show matching contacts & suggestions when filtering call history list & conversations list, allowing to quickly call someone without opening the start call/conversation fragment
 - Join a conference using default layout instead of audio only when clicking on a meeting SIP URI
@@ -65,6 +66,7 @@ Group changes to describe their impact on the project, as follows:
 
 ### Fixed
 - Prevent crash & background mode from turning on when doing a remote provisioning if an account is already configured
+- Fixed SIP address picker not showing up in call transfer view when selecting a contact with more than 1 SIP address
 - Copy raw message content instead of modified one when it contains a participant mention ("@username")
 - Do not apply Crashlytics plugin if it's not enabled
 

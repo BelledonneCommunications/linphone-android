@@ -410,7 +410,7 @@
     <string name="history_dialog_delete_call_logs_title">Supprimer l\'historique d\'appels ?</string>
     <string name="history_dialog_delete_call_logs_message">L\'ensemble de votre historique d\'appels avec ce correspondant sera définitivement supprimé.</string>
     <string name="history_dialog_delete_call_log_title">Supprimer cet historique d\'appel ?</string>
-    <string name="history_dialog_delete_call_log_message">Seul cet appel sera supprimée.</string>
+    <string name="history_dialog_delete_call_log_message">Seul cet appel sera supprimé.</string>
     <!-- Contacts -->
     <string name="contacts_list_empty">Aucun contact pour le moment…</string>
     <string name="contacts_list_sip_empty">Aucun contact SIP pour le moment…</string>
