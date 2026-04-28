@@ -391,6 +391,7 @@
                             android:layout_marginTop="20dp"
                             android:layout_marginStart="16dp"
                             android:layout_marginEnd="16dp"
+                            android:layout_marginBottom="64dp"
                             android:text="@string/meeting_schedule_send_invitations_title"
                             android:textColor="?attr/color_main2_600"
                             android:textSize="14sp"
