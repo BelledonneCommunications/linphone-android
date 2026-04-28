@@ -46,6 +46,8 @@ class RegisterCodeConfirmationFragment : GenericFragment() {
         R.id.assistant_nav_graph
     )
 
+    private var accountCreated = false
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -70,6 +72,7 @@ class RegisterCodeConfirmationFragment : GenericFragment() {
             it.consume {
                 val identity = viewModel.username.value.orEmpty()
                 Log.i("$TAG Account [$identity] has been created, leaving assistant")
+                accountCreated = true
                 requireActivity().finish()
             }
         }
@@ -92,6 +95,14 @@ class RegisterCodeConfirmationFragment : GenericFragment() {
                     clipboard.clearPrimaryClip()
                 }
             }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (!accountCreated) {
+            Log.w("$TAG Account wasn't completely created, remove Account & Auth Info from Core")
+            viewModel.abortAccountCreation()
         }
     }
 

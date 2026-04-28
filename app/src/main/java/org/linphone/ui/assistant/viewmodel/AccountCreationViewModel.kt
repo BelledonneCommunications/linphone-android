@@ -195,14 +195,7 @@ class AccountCreationViewModel
                 }
                 AccountManagerServicesRequest.Type.SendPhoneNumberLinkingCodeBySms -> {
                     Log.e("$TAG Error sending SMS code, clearing auth info & account")
-                    val authInfo = accountCreatedAuthInfo
-                    if (authInfo != null) {
-                        coreContext.core.removeAuthInfo(authInfo)
-                    }
-                    val account = accountCreated
-                    if (account != null) {
-                        coreContext.core.removeAccount(account)
-                    }
+                    removePendingAccount()
 
                     if (statusCode == 422) {
                         accountCantBeCreatedBySmsEvent.postValue(Event(true))
@@ -212,6 +205,7 @@ class AccountCreationViewModel
                 }
             }
             createEnabled.postValue(true)
+            lockUsernameAndPassword.postValue(false)
         }
     }
 
@@ -423,6 +417,25 @@ class AccountCreationViewModel
                 smsCodeThirdDigit.postValue("")
                 smsCodeLastDigit.postValue("")
             }
+        }
+    }
+
+    @UiThread
+    fun abortAccountCreation() {
+        coreContext.postOnCoreThread {
+            removePendingAccount()
+        }
+    }
+
+    @WorkerThread
+    private fun removePendingAccount() {
+        val authInfo = accountCreatedAuthInfo
+        if (authInfo != null) {
+            coreContext.core.removeAuthInfo(authInfo)
+        }
+        val account = accountCreated
+        if (account != null) {
+            coreContext.core.removeAccount(account)
         }
     }
 
