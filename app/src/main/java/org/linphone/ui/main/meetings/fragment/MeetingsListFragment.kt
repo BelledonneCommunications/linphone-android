@@ -199,9 +199,7 @@ class MeetingsListFragment : AbstractMainFragment() {
                             Log.i("$TAG Meeting start hasn't started yet and we are the organizer, asking user if it should be cancelled")
                             showCancelMeetingDialog(model)
                         } else {
-                            Log.i("$TAG Deleting meeting [${model.id}]")
-                            model.delete()
-                            listViewModel.filter()
+                            showDeleteMeetingDialog(model)
                         }
                     }
                 )
@@ -343,6 +341,28 @@ class MeetingsListFragment : AbstractMainFragment() {
                 Log.i("$TAG Cancelling meeting [${meetingModel.id}] without notifying participants")
                 meetingViewModelBeingCancelled = meetingModel
                 listViewModel.cancelMeetingViewModel.cancelMeeting(meetingModel.conferenceInfo, false)
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun showDeleteMeetingDialog(meetingModel: MeetingModel) {
+        val model = ConfirmationDialogModel()
+        val dialog = DialogUtils.getDeleteMeetingDialog(requireContext(), model)
+
+        model.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        model.confirmEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Deleting meeting [${meetingModel.id}]")
+                meetingModel.delete()
+                listViewModel.filter()
                 dialog.dismiss()
             }
         }

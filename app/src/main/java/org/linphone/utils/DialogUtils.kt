@@ -67,6 +67,7 @@ import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.model.GroupSetOrEditSubjectDialogModel
 import androidx.core.graphics.drawable.toDrawable
 import org.linphone.databinding.DialogAssistantCreateAccountPhoneNumberValidationNotAvailableBinding
+import org.linphone.databinding.DialogDeleteMeetingBinding
 import org.linphone.databinding.DialogLeaveGroupConversationBinding
 import org.linphone.databinding.DialogManageAccountOutboundProxyHelpBinding
 import org.linphone.databinding.DialogRemoveCallLogBinding
@@ -591,6 +592,22 @@ class DialogUtils {
             val binding: DialogCancelMeetingBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
                 R.layout.dialog_cancel_meeting,
+                null,
+                false
+            )
+            binding.viewModel = viewModel
+
+            return getDialog(context, binding)
+        }
+
+        @UiThread
+        fun getDeleteMeetingDialog(
+            context: Context,
+            viewModel: ConfirmationDialogModel
+        ): Dialog {
+            val binding: DialogDeleteMeetingBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_delete_meeting,
                 null,
                 false
             )

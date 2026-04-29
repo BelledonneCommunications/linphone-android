@@ -648,6 +648,8 @@
     <string name="meeting_schedule_edit_title">Modifier la réunion</string>
     <string name="meeting_schedule_notify_cancel_dialog_title">La réunion va être annulée</string>
     <string name="meeting_schedule_notify_cancel_dialog_message">Voulez-vous envoyer une notification aux participants ?</string>
+    <string name="meeting_schedule_delete_dialog_title">Supprimer la réunion ?</string>
+    <string name="meeting_schedule_delete_dialog_message">La réunion sera supprimée de la liste des réunions de cet appareil uniquement.</string>
     <string name="meeting_cancel_action_label">Annuler la réunion</string>
     <string name="meeting_delete_action_label">Supprimer la réunion</string>
     <string name="meeting_info_created_toast">Réunion créée</string>
