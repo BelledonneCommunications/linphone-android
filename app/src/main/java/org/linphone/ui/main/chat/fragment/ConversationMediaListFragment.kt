@@ -163,6 +163,14 @@ class ConversationMediaListFragment : SlidingPaneChildFragment() {
             }
         }
 
+        sharedViewModel.hideConversationEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.w("$TAG We were asked to close conversation, going back")
+                goBack()
+                sharedViewModel.hideConversationEvent.postValue(Event(true))
+            }
+        }
+
         scrollListener = object : RecyclerViewScrollListener(layoutManager, spanCount, true) {
             @UiThread
             override fun onLoadMore(totalItemsCount: Int) {

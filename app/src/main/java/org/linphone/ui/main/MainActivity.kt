@@ -701,11 +701,11 @@ class MainActivity : GenericActivity() {
             }
 
             if (list.isNotEmpty()) {
-                sharedViewModel.filesToShareFromIntent.value = list
+                sharedViewModel.filesToShareFromIntent.postValue(list)
             } else {
                 if (textToShare.isNotEmpty()) {
                     Log.i("$TAG Found plain text to share")
-                    sharedViewModel.textToShareFromIntent.value = textToShare
+                    sharedViewModel.textToShareFromIntent.postValue(textToShare)
                 } else {
                     Log.w("$TAG Failed to find at least one file or text to share!")
                 }
@@ -720,7 +720,7 @@ class MainActivity : GenericActivity() {
                     Log.i(
                         "$TAG Navigating from debug to conversation with ID [$conversationId], computed from shortcut ID"
                     )
-                    sharedViewModel.showConversationEvent.value = Event(conversationId)
+                    sharedViewModel.showConversationEvent.postValue(Event(conversationId))
                 }
 
                 val action = ConversationsListFragmentDirections.actionGlobalConversationsListFragment()
@@ -736,7 +736,7 @@ class MainActivity : GenericActivity() {
                     Log.i(
                         "$TAG Navigating to conversation with conversation ID [$conversationId] addresses, computed from shortcut ID"
                     )
-                    sharedViewModel.showConversationEvent.value = Event(conversationId)
+                    sharedViewModel.showConversationEvent.postValue(Event(conversationId))
                 }
 
                 if (findNavController().currentDestination?.id == R.id.conversationsListFragment) {

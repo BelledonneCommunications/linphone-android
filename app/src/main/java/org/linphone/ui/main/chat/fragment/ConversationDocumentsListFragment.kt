@@ -134,6 +134,14 @@ class ConversationDocumentsListFragment : SlidingPaneChildFragment() {
             }
         }
 
+        sharedViewModel.hideConversationEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.w("$TAG We were asked to close conversation, going back")
+                goBack()
+                sharedViewModel.hideConversationEvent.postValue(Event(true))
+            }
+        }
+
         scrollListener = object : RecyclerViewScrollListener(layoutManager, 4, true) {
             @UiThread
             override fun onLoadMore(totalItemsCount: Int) {
