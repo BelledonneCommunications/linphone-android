@@ -875,23 +875,25 @@ class CoreContext
     fun startAudioCall(
         address: Address,
         forceZRTP: Boolean = false,
-        localAddress: Address? = null
+        localAddress: Address? = null,
+        skipNetworkReachabilityTest: Boolean = false
     ) {
         val params = core.createCallParams(null)
         params?.isVideoEnabled = false
-        startCall(address, params, forceZRTP, localAddress)
+        startCall(address, params, forceZRTP, localAddress, skipNetworkReachabilityTest)
     }
 
     @WorkerThread
     fun startVideoCall(
         address: Address,
         forceZRTP: Boolean = false,
-        localAddress: Address? = null
+        localAddress: Address? = null,
+        skipNetworkReachabilityTest: Boolean = false
     ) {
         val params = core.createCallParams(null)
         params?.isVideoEnabled = true
         params?.videoDirection = MediaDirection.SendRecv
-        startCall(address, params, forceZRTP, localAddress)
+        startCall(address, params, forceZRTP, localAddress, skipNetworkReachabilityTest)
     }
 
     @WorkerThread
@@ -899,9 +901,10 @@ class CoreContext
         address: Address,
         callParams: CallParams? = null,
         forceZRTP: Boolean = false,
-        localAddress: Address? = null
+        localAddress: Address? = null,
+        skipNetworkReachabilityTest: Boolean = false
     ) {
-        if (!core.isNetworkReachable) {
+        if (!skipNetworkReachabilityTest && !core.isNetworkReachable) {
             Log.e("$TAG Network unreachable, abort outgoing call")
             return
         }

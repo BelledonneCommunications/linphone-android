@@ -787,7 +787,8 @@ class MainActivity : GenericActivity() {
             )
             Log.i("$TAG Interpreted SIP URI is [${address?.asStringUriOnly()}]")
             if (address != null) {
-                coreContext.startAudioCall(address)
+                // Skip network reachability test, this code will be called too soon
+                coreContext.startAudioCall(address, skipNetworkReachabilityTest = true)
             }
         }
     }
