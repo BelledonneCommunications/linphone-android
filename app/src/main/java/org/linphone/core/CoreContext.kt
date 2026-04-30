@@ -28,6 +28,7 @@ import android.content.Intent
 import android.media.AudioDeviceCallback
 import android.media.AudioDeviceInfo
 import android.media.AudioManager
+import android.os.Environment
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
@@ -668,6 +669,21 @@ class CoreContext
         Log.i("$TAG Core started, updating configuration if required")
         core.videoCodecPriorityPolicy = CodecPriorityPolicy.Auto
 
+        // Set in the Core the list of directories from which it is allowed to delete a file related to a chat message
+        val paths = arrayListOf<String>()
+        if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
+            paths.add(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)?.absolutePath.orEmpty())
+            paths.add(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)?.absolutePath.orEmpty())
+            paths.add(context.getExternalFilesDir(Compatibility.getRecordingsDirectory())?.absolutePath.orEmpty())
+        }
+        paths.add(context.filesDir?.absolutePath.orEmpty())
+        val pathsArray = arrayOfNulls<String>(paths.size)
+        paths.toArray(pathsArray)
+        core.setChatMessageFilesDirectories(pathsArray)
+        for (path in paths) {
+            Log.i("$TAG Adding path [$path] to list of directories from which Core is allowed to delete files from")
+        }
+
         val currentVersion = BuildConfig.VERSION_CODE
         val oldVersion = corePreferences.linphoneConfigurationVersion
         Log.w("$TAG Current configuration version is [$oldVersion]")
@@ -681,6 +697,9 @@ class CoreContext
                 disablePushNotificationsFromThirdPartySipAccounts()
             } else if (oldVersion < 600009) { // 6.0.9
                 removePortFromSipIdentity()
+            } else if (oldVersion < 602000) { // 6.2.0
+                core.isChatMessageFilesDeletionEnabled = true
+                Log.i("$TAG Core is allowed to automatically delete files from previously logged directories when a chat message is deleted")
             }
 
             if (core.logCollectionUploadServerUrl.isNullOrEmpty()) {
