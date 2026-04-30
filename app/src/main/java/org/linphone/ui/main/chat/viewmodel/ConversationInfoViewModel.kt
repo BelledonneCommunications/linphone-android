@@ -151,6 +151,7 @@ class ConversationInfoViewModel
             }
 
             computeParticipantsList()
+            isMyselfAdmin.postValue(chatRoom.me?.isAdmin)
         }
 
         @WorkerThread
