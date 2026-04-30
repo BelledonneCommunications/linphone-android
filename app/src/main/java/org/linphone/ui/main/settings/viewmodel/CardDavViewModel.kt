@@ -248,6 +248,13 @@ class CardDavViewModel
             }
 
             if (isEdit.value == true && ::friendList.isInitialized) {
+                friendList.displayName = name
+                friendList.uri = if (server.startsWith("http://") || server.startsWith("https://")) {
+                    server
+                } else {
+                    "https://$server"
+                }
+
                 Log.i(
                     "$TAG Changes were made to CardDAV friend list [$name], synchronizing it"
                 )
