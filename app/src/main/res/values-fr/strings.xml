@@ -588,6 +588,8 @@
     <string name="conversation_info_no_address_to_add_to_contact_toast">Aucune adresse à ajouter au contact</string>
     <string name="conversation_info_confirm_start_group_call_dialog_title">Lancer un appel de groupe ?</string>
     <string name="conversation_info_confirm_start_group_call_dialog_message">Tous les participants de la conversation recevront un appel.</string>
+    <string name="conversation_info_confirm_participant_removal_dialog_title">Retirer le participant ?</string>
+    <string name="conversation_info_confirm_participant_removal_dialog_message">Ce participant sera retiré de la conversation de groupe.</string>
     <string name="conversation_event_conference_created">Vous avez rejoint la conversation</string>
     <string name="conversation_event_conference_destroyed">Vous avez quitté la conversation</string>
     <string name="conversation_event_participant_added">%s a rejoint la conversation</string>

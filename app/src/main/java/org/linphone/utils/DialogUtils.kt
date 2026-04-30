@@ -72,6 +72,7 @@ import org.linphone.databinding.DialogLeaveGroupConversationBinding
 import org.linphone.databinding.DialogManageAccountOutboundProxyHelpBinding
 import org.linphone.databinding.DialogRemoveCallLogBinding
 import org.linphone.databinding.DialogRemoveConversationBinding
+import org.linphone.databinding.DialogRemoveParticipantFromGroupBinding
 
 class DialogUtils {
     companion object {
@@ -359,6 +360,22 @@ class DialogUtils {
             val binding: DialogStartGroupCallFromConversationBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
                 R.layout.dialog_start_group_call_from_conversation,
+                null,
+                false
+            )
+            binding.viewModel = viewModel
+
+            return getDialog(context, binding)
+        }
+
+        @UiThread
+        fun getConfirmRemoveParticipantDialog(
+            context: Context,
+            viewModel: ConfirmationDialogModel
+        ): Dialog {
+            val binding: DialogRemoveParticipantFromGroupBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_remove_participant_from_group,
                 null,
                 false
             )

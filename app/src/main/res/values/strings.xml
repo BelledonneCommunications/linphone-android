@@ -656,6 +656,8 @@
     <string name="conversation_info_no_address_to_add_to_contact_toast">No address to add to contact</string>
     <string name="conversation_info_confirm_start_group_call_dialog_title">Start a group call?</string>
     <string name="conversation_info_confirm_start_group_call_dialog_message">All participants will receive a call.</string>
+    <string name="conversation_info_confirm_participant_removal_dialog_title">Remove participant?</string>
+    <string name="conversation_info_confirm_participant_removal_dialog_message">This participant will be removed from the group conversation.</string>
 
     <string name="conversation_event_conference_created">You have joined the group</string>
     <string name="conversation_event_conference_destroyed">You have left the group</string>
