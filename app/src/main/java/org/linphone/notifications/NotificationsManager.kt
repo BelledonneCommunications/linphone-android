@@ -1354,7 +1354,7 @@ class NotificationsManager
 
     @WorkerThread
     private fun getNotificationIdForCall(call: Call): Int {
-        return call.callLog.startDate.toInt()
+        return call.hashCode()
     }
 
     @WorkerThread
