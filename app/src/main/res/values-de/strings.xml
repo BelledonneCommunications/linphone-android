@@ -307,9 +307,9 @@
     <string name="history_list_empty_history">Kein Anruf von/zu diesem Konto gefunden…</string>
     <string name="history_group_call_go_to_conversation">Chat</string>
     <string name="history_dialog_delete_all_call_logs_title">Möchten Sie wirklich den gesamten Anrufverlauf löschen?</string>
-    <string name="history_dialog_delete_all_call_logs_message">Alle Anrufe werden aus dem Verlauf gelöscht</string>
+    <string name="history_dialog_delete_all_call_logs_message">Alle Anrufe werden aus dem Verlauf gelöscht.</string>
     <string name="history_dialog_delete_call_logs_title">Möchten Sie den Verlauf mit dieser Person wirklich löschen?</string>
-    <string name="history_dialog_delete_call_logs_message">Alle Anrufe werden aus dem Verlauf gelöscht</string>
+    <string name="history_dialog_delete_call_logs_message">Alle Anrufe werden aus dem Verlauf gelöscht.</string>
     <string name="contacts_list_empty">Im Moment kein Kontakt…</string>
     <string name="contacts_list_favourites_title">Favoriten</string>
     <string name="contacts_list_all_contacts_title">Alle Kontakte</string>
@@ -448,7 +448,7 @@
     <string name="conversation_info_menu_go_to_contact">Remove admin rights</string>
     <string name="conversation_info_menu_add_to_contacts">Kontaktprofil anzeigen</string>
     <string name="conversation_info_dialog_delete_all_call_logs_title">Möchten Sie wirklich alle Nachrichten löschen?</string>
-    <string name="conversation_info_dialog_delete_all_message">Alle Nachrichten werden aus dem Verlauf gelöscht</string>
+    <string name="conversation_info_dialog_delete_all_message">Alle Nachrichten werden aus dem Verlauf gelöscht.</string>
     <string name="conversation_info_history_deleted_toast">Der Verlauf wurde erfolgreich gelöscht</string>
     <string name="conversation_info_participant_added_to_conversation_toast">%s hat sich dem Chat angeschlossen</string>
     <string name="conversation_info_participant_removed_from_conversation_toast">%s hat den Chat verlassen</string>
@@ -919,4 +919,14 @@
     <string name="call_has_been_recorded">Aufnahme wurde gespeichert</string>
     <string name="settings_advanced_calls_rfc_2833_dmtf_title">RFC 2833 für DTMF-Töne verwenden</string>
     <string name="settings_advanced_calls_sip_info_dmtf_title">SIP INFO für DTMF-Töne verwenden</string>
+    <string name="history_dialog_delete_call_log_title">Möchten Sie dieses Anrufprotokoll wirklich löschen?</string>
+    <string name="history_dialog_delete_call_log_message">Nur dieser Eintrag wird entfernt.</string>
+    <string name="conversation_info_dialog_delete_chat_room_message">Alle Nachrichten werden ebenfalls aus dem Verlauf entfernt.</string>
+    <string name="conversation_info_dialog_leave_group_chat_room_message">Sie können keine neuen Nachrichten mehr senden oder empfangen, aber Ihr Nachrichtenverlauf bleibt weiterhin verfügbar.</string>
+    <string name="conversation_info_dialog_delete_chat_room_title">Möchten Sie diese Konversation wirklich löschen?</string>
+    <string name="conversation_info_dialog_leave_group_chat_room_title">Möchten Sie diesen Chat wirklich verlassen?</string>
+    <string name="conversation_info_confirm_participant_removal_dialog_title">Teilnehmer entfernen?</string>
+    <string name="meeting_schedule_delete_dialog_title">Besprechung löschen?</string>
+    <string name="meeting_schedule_delete_dialog_message">Dieses Meeting wird nur aus der Meetingliste dieses Geräts entfernt.</string>
+    <string name="conversation_info_confirm_participant_removal_dialog_message">Dieser Teilnehmer wird aus dem Gruppenchat entfernt.</string>
 </resources>

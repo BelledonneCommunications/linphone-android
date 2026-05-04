@@ -68,7 +68,7 @@
     <string name="conversation_no_app_registered_to_handle_content_type_error_toast">Nenalezena žádná aplikace k otevření tohoto typu souboru</string>
     <string name="conversation_file_cant_be_opened_error_toast">Soubor nelze otevřít!</string>
     <string name="conversation_info_admin_menu_set_participant_admin">Udělit práva administrátora</string>
-    <string name="conversation_info_dialog_delete_all_message">Z historie budou odebrány všechny zprávy</string>
+    <string name="conversation_info_dialog_delete_all_message">Z historie budou odebrány všechny zprávy.</string>
     <string name="conversation_info_confirm_start_group_call_dialog_title">Zahájit skupinový hovor?</string>
     <string name="conversation_event_conference_created">Přidal(a) jste se ke skupině</string>
     <string name="conversation_event_security_event_level_downgraded">Úroveň bezpečnosti byla snížena kvůli %s</string>
@@ -130,7 +130,7 @@
     <string name="manage_account_status_cleared_summary">Účet byl zakázán, nebudete moci příjímat hovory ani zprávy.</string>
     <string name="manage_account_status_progress_summary">Účet se připojuje, prosím počkejte…</string>
     <string name="account_settings_dialog_invalid_password_message">Připojení se nezdařilo, protože chybí nebo je neplatné ověření účtu\n%s.\n\nMůžete znovu zadat heslo nebo zkontrolovat nastavení účtu v konfiguraci.</string>
-    <string name="history_dialog_delete_all_call_logs_message">Z historie budou odstraněny všechny hovory</string>
+    <string name="history_dialog_delete_all_call_logs_message">Z historie budou odstraněny všechny hovory.</string>
     <string name="conversation_action_configure_ephemeral_messages">Nastavení mizejících zpráv</string>
     <string name="new_conversation_no_matching_contact">Žádný shodný výsledek…</string>
     <string name="conversation_no_media_found">Nenalezena žádná média…</string>
@@ -408,7 +408,7 @@
     <string name="history_group_call_go_to_conversation">Konverzace</string>
     <string name="history_dialog_delete_all_call_logs_title">Opravdu si přejete smazat veškerou historii hovorů?</string>
     <string name="history_dialog_delete_call_logs_title">Opravdu si přejete smazat historii s touto osobou?</string>
-    <string name="history_dialog_delete_call_logs_message">Z historie bodou odstraněny všechny hovory</string>
+    <string name="history_dialog_delete_call_logs_message">Z historie budou odstraněny všechny hovory.</string>
     <string name="contacts_list_empty">Momentálně žádný kontakt…</string>
     <string name="contacts_list_favourites_title">Oblíbené</string>
     <string name="contacts_list_all_contacts_title">Všechny kontakty</string>
@@ -927,4 +927,14 @@
     <string name="call_has_been_recorded">Záznam hovoru byl uložen</string>
     <string name="settings_advanced_calls_sip_info_dmtf_title">Použít SIP INFO pro DTMF</string>
     <string name="settings_advanced_calls_rfc_2833_dmtf_title">Použít RFC 2833 pro DTMF</string>
+    <string name="conversation_info_confirm_participant_removal_dialog_title">Odstranit účastníka?</string>
+    <string name="conversation_info_confirm_participant_removal_dialog_message">Tento účastník byl odstraněn ze skupinové konverzace.</string>
+    <string name="meeting_schedule_delete_dialog_title">Smazat schůzku?</string>
+    <string name="meeting_schedule_delete_dialog_message">Tato schůzka bude odstraněna pouze ze seznamu schůzek tohoto zařízení.</string>
+    <string name="history_dialog_delete_call_log_message">Smazán bude pouze tento záznam.</string>
+    <string name="conversation_info_dialog_delete_chat_room_title">Opravdu chcete smazat tuto konverzaci?</string>
+    <string name="conversation_info_dialog_delete_chat_room_message">Všechny zprávy budou také smazány z historie.</string>
+    <string name="conversation_info_dialog_leave_group_chat_room_message">Už nebudete moci odesílat ani přijímat nové zprávy, ale vaše historie zpráv zůstane k dispozici.</string>
+    <string name="history_dialog_delete_call_log_title">Opravdu chcete smazat tento záznam hovoru?</string>
+    <string name="conversation_info_dialog_leave_group_chat_room_title">Opravdu chcete opustit tuto konverzaci?</string>
 </resources>
