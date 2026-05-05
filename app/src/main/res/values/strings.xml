@@ -268,6 +268,7 @@
     <string name="settings_calls_change_ringtone_title">Change ringtone</string>
     <string name="settings_calls_change_ringtone_pick_title">Pick ringtone</string>
     <string name="settings_calls_change_ringtone_picker_unavailable_toast">Ringtone picker isn\'t available!</string>
+    <string name="settings_calls_use_redirection_service">Use call redirection service</string>
     <string name="settings_advanced_calls_rfc_2833_dmtf_title">Use RFC 2833 for DTMFs</string>
     <string name="settings_advanced_calls_sip_info_dmtf_title">Use SIP INFO for DTMFs</string>
     <string name="settings_conversations_title">Conversations</string>

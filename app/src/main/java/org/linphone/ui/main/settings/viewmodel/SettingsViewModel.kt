@@ -93,6 +93,11 @@ class SettingsViewModel
 
     val showRingtonePickerEvent = MutableLiveData<Event<Uri?>>()
 
+    val callRedirectionService = MutableLiveData<Boolean>()
+    val callRedirectionServiceEnabledEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     // Conversations settings
     val showConversationsSettings = MutableLiveData<Boolean>()
 
@@ -348,6 +353,7 @@ class SettingsViewModel
             vibrateDuringIncomingCall.postValue(core.isVibrationOnIncomingCallEnabled)
             autoRecordCalls.postValue(corePreferences.automaticallyStartCallRecording)
             useSmffForCallRecording.postValue(corePreferences.callRecordingUseSmffFormat)
+            callRedirectionService.postValue(corePreferences.useCallRedirectionService)
 
             useWifiOnly.postValue(core.isWifiOnlyEnabled)
             allowIpv6.postValue(core.isIpv6Enabled)
@@ -552,6 +558,18 @@ class SettingsViewModel
         coreContext.postOnCoreThread { core ->
             core.ring = ringtone.toString()
             Log.i("$TAG Newly set ringtone is [${core.ring}]")
+        }
+    }
+
+    @UiThread
+    fun toggleCallRedirectionService() {
+        val newValue = callRedirectionService.value == false
+        if (newValue) {
+            callRedirectionServiceEnabledEvent.postValue(Event(true))
+        }
+        coreContext.postOnCoreThread {
+            corePreferences.useCallRedirectionService = newValue
+            callRedirectionService.postValue(newValue)
         }
     }
 

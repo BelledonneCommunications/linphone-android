@@ -22,6 +22,8 @@ package org.linphone.ui.main
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.app.role.RoleManager
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -88,6 +90,8 @@ class MainActivity : GenericActivity() {
         private const val HISTORY_FRAGMENT_ID = 2
         private const val CHAT_FRAGMENT_ID = 3
         private const val MEETINGS_FRAGMENT_ID = 4
+
+        private const val REDIRECT_ROLE_REQUEST_CODE = 101
 
         const val ARGUMENTS_CHAT = "Chat"
         const val ARGUMENTS_CONVERSATION_ID = "ConversationId"
@@ -418,6 +422,13 @@ class MainActivity : GenericActivity() {
         if (savedInstanceState == null && intent != null) {
             Log.d("$TAG savedInstanceState is null but intent isn't, handling it")
             handleIntent(intent)
+        }
+
+        if (corePreferences.useCallRedirectionService) {
+            Log.i(
+                "$TAG Call redirection service enabled, making sure we have the required permissions and role granted"
+            )
+            requestCallRedirectionRole()
         }
     }
 
@@ -857,6 +868,37 @@ class MainActivity : GenericActivity() {
                 } else {
                     Log.e("$TAG Failed to export file [$filePath] to MediaStore!")
                 }
+            }
+        }
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        for (permission in permissions) {
+            val isGranted = permission.value
+            if (isGranted) {
+                Log.i("$TAG [${permission.key}] permission has been granted")
+            } else {
+                Log.w("$TAG [${permission.key}] permission has been denied!")
+            }
+        }
+    }
+
+    private fun requestCallRedirectionRole() {
+        requestPermissionLauncher.launch(arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_PHONE_NUMBERS))
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            val roleManager: RoleManager = getSystemService(Context.ROLE_SERVICE) as RoleManager
+            // Check if the app needs to register call redirection role.
+            val shouldRequestRole = roleManager.isRoleAvailable(RoleManager.ROLE_CALL_REDIRECTION) &&
+                    !roleManager.isRoleHeld(RoleManager.ROLE_CALL_REDIRECTION)
+            if (shouldRequestRole) {
+                Log.i("$TAG Starting intent to request Linphone be used as Call Redirection")
+                val intent = roleManager.createRequestRoleIntent(RoleManager.ROLE_CALL_REDIRECTION)
+                startActivityForResult(intent, REDIRECT_ROLE_REQUEST_CODE)
+            } else {
+                Log.i("$TAG Linphone is already defined as Call Redirection")
             }
         }
     }

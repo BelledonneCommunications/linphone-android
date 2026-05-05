@@ -124,6 +124,13 @@ class CorePreferences
             config.setBool("ui", "show_developer_settings", value)
         }
 
+    @get:AnyThread @set:WorkerThread
+    var useCallRedirectionService: Boolean
+        get() = config.getBool("app", "call_redirection_service", false)
+        set(value) {
+            config.setBool("app", "call_redirection_service", value)
+        }
+
     // Call settings
 
     // This won't be done if bluetooth or wired headset is used
