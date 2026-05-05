@@ -486,6 +486,11 @@ class CorePreferences
     }
 
     @AnyThread
+    fun resetConfigToDefault() {
+        copy("linphonerc_default", configPath, true)
+    }
+
+    @AnyThread
     fun clearPreviousGrammars() {
         val cpimGrammar = File("${context.filesDir.absolutePath}/share/belr/grammars/cpim_grammar")
         if (cpimGrammar.exists()) {

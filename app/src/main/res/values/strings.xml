@@ -1035,4 +1035,11 @@
         <item>50e603d333c6049a37bd751375d08f3bd0abebd33facd30bd17b64b89658b421,
             com.google.android.apps.automotive.templates.host</item>
         </string-array>
+
+    <string name="managed_config_uri_title" translatable="false">Remote provisioning URL</string>
+    <string name="managed_config_uri_description" translatable="false">URL of the XML configuration file to fetch and apply on startup.</string>
+    <string name="managed_xml_config_title" translatable="false">Inline XML configuration</string>
+    <string name="managed_xml_config_description" translatable="false">Raw XML provisioning content applied on startup.</string>
+    <string name="managed_root_ca_title" translatable="false">Root CA certificate</string>
+    <string name="managed_root_ca_description" translatable="false">PEM-encoded root certificate(s) used to validate TLS connections.</string>
 </resources>

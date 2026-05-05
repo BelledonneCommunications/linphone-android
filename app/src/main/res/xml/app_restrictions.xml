@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<restrictions xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <restriction
+        android:key="config-uri"
+        android:title="@string/managed_config_uri_title"
+        android:description="@string/managed_config_uri_description"
+        android:restrictionType="string"
+        android:defaultValue="" />
+
+    <restriction
+        android:key="xml-config"
+        android:title="@string/managed_xml_config_title"
+        android:description="@string/managed_xml_config_description"
+        android:restrictionType="string"
+        android:defaultValue="" />
+
+    <restriction
+        android:key="root-ca"
+        android:title="@string/managed_root_ca_title"
+        android:description="@string/managed_root_ca_description"
+        android:restrictionType="string"
+        android:defaultValue="" />
+
+</restrictions>

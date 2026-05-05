@@ -426,6 +426,16 @@ class MainViewModel
     }
 
     @UiThread
+    fun onMdmConfigRemoved() {
+        coreContext.postOnCoreThread { core ->
+            if (core.accountList.isEmpty()) {
+                Log.w("$TAG MDM configuration removed with no account configured, going into assistant")
+                lastAccountRemovedEvent.postValue(Event(true))
+            }
+        }
+    }
+
+    @UiThread
     fun updateMissingPermissionAlert() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             coreContext.postOnCoreThread {

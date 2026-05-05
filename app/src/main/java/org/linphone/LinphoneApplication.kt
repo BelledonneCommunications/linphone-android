@@ -22,8 +22,11 @@ package org.linphone
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.PowerManager
 import androidx.annotation.MainThread
+import androidx.core.content.ContextCompat
 import coil3.ImageLoader
 import coil3.SingletonImageLoader
 import coil3.disk.DiskCache
@@ -41,6 +44,7 @@ import org.linphone.core.CorePreferences
 import org.linphone.core.Factory
 import org.linphone.core.LogCollectionState
 import org.linphone.core.LogLevel
+import org.linphone.core.ManagedConfigurationReceiver
 import org.linphone.core.VFS
 import org.linphone.core.tools.Log
 
@@ -95,6 +99,13 @@ class LinphoneApplication : Application(), SingletonImageLoader.Factory {
 
         coreContext = CoreContext(context)
         coreContext.start()
+
+        ContextCompat.registerReceiver(
+            this,
+            ManagedConfigurationReceiver(),
+            IntentFilter(Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED),
+            ContextCompat.RECEIVER_NOT_EXPORTED
+        )
 
         DynamicColors.applyToActivitiesIfAvailable(this)
         wakeLock.release()

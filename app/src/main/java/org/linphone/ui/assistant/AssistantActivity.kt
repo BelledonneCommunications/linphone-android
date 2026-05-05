@@ -81,6 +81,20 @@ class AssistantActivity : GenericActivity() {
             }
         }
 
+        coreContext.mdmConfigAppliedEvent.observe(this) {
+            it.consume {
+                Log.i("$TAG Managed configuration applied, checking for accounts")
+                leaveAssistantIfAnAccountIsConfigured()
+            }
+        }
+
+        coreContext.provisioningAppliedEvent.observe(this) {
+            it.consume {
+                Log.i("$TAG Provisioning applied, checking for accounts")
+                leaveAssistantIfAnAccountIsConfigured()
+            }
+        }
+
         (binding.root as? ViewGroup)?.doOnPreDraw {
             if (!areAllPermissionsGranted()) {
                 Log.w("$TAG Not all required permissions are granted, showing Permissions fragment")
@@ -90,18 +104,7 @@ class AssistantActivity : GenericActivity() {
                 Log.w(
                     "$TAG We were asked to leave assistant if at least an account is already configured"
                 )
-                coreContext.postOnCoreThread { core ->
-                    if (core.accountList.isNotEmpty()) {
-                        coreContext.postOnMainThread {
-                            try {
-                                Log.w("$TAG At least one account was found, leaving assistant")
-                                finish()
-                            } catch (ise: IllegalStateException) {
-                                Log.e("$TAG Can't finish activity: $ise")
-                            }
-                        }
-                    }
-                }
+                leaveAssistantIfAnAccountIsConfigured()
             }
         }
     }
@@ -119,5 +122,20 @@ class AssistantActivity : GenericActivity() {
             Log.i("$TAG All permissions have been granted!")
         }
         return granted
+    }
+
+    private fun leaveAssistantIfAnAccountIsConfigured() {
+        coreContext.postOnCoreThread { core ->
+            if (core.accountList.isNotEmpty()) {
+                coreContext.postOnMainThread {
+                    try {
+                        Log.w("$TAG At least one account was found, leaving assistant")
+                        finish()
+                    } catch (ise: IllegalStateException) {
+                        Log.e("$TAG Can't finish activity: $ise")
+                    }
+                }
+            }
+        }
     }
 }

@@ -355,6 +355,13 @@ class MainActivity : GenericActivity() {
             }
         }
 
+        coreContext.mdmConfigRemovedEvent.observe(this) {
+            it.consume {
+                Log.i("$TAG Managed configuration applied, checking remaining accounts")
+                viewModel.onMdmConfigRemoved()
+            }
+        }
+
         coreContext.filesToExportToNativeMediaGalleryEvent.observe(this) {
             it.consume { files ->
                 Log.i("$TAG Found [${files.size}] files to export to native media gallery")
