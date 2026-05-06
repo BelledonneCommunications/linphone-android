@@ -218,6 +218,10 @@ android {
     lint {
         abortOnError = false
     }
+
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -267,6 +271,9 @@ dependencies {
     implementation(libs.openid.appauth)
 
     implementation(libs.linphone)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
 }
 
 configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {

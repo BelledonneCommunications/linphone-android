@@ -32,6 +32,8 @@ dotsIndicator = "5.1.0"
 photoview = "2.3.0"
 openidAppauth = "0.11.1"
 linphone = "5.5.+"
+junit = "4.13.2"
+mockk = "1.13.13"
 
 [libraries]
 androidx-annotations = { group = "androidx.annotation", name = "annotation", version.ref = "annotations" }
@@ -68,6 +70,9 @@ photoview = { group = "com.github.chrisbanes", name = "PhotoView", version.ref =
 openid-appauth = { group = "net.openid", name = "appauth", version.ref = "openidAppauth" }
 
 linphone = { group = "org.linphone", name = "linphone-sdk-android", version.ref = "linphone" }
+
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
