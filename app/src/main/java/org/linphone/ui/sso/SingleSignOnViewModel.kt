@@ -12,6 +12,9 @@ import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationResponse
 import net.openid.appauth.AuthorizationService
 import net.openid.appauth.AuthorizationServiceConfiguration
+import net.openid.appauth.ClientAuthentication
+import net.openid.appauth.ClientSecretBasic
+import net.openid.appauth.NoClientAuthentication
 import net.openid.appauth.ResponseTypeValues
 import org.json.JSONObject
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -45,6 +48,8 @@ class SingleSignOnViewModel
     }
 
     private var clientId: String
+    private var clientSecret: String? = null
+    private var clientScopes: Array<String> = arrayOf("offline_access")
     private val redirectUri: String
 
     private var singleSignOnUrl = ""
@@ -70,6 +75,20 @@ class SingleSignOnViewModel
             singleSignOnUrl = ssoUrl
             username = user
 
+            coreContext.postOnCoreThread { core ->
+                for (authInfo in core.authInfoList) {
+                    if (authInfo.clientId == clientId) {
+                        Log.i("$TAG Found matching auth info for issuer [$clientId]")
+                        val secret = authInfo.clientSecret
+                        if (!secret.isNullOrEmpty()) {
+                            Log.i("$TAG A client secret has been found in AuthInfo")
+                            clientSecret = secret
+                        }
+                        break
+                    }
+                }
+            }
+
             try {
                 val parsedUrl = ssoUrl.toUri()
                 val urlClientId = parsedUrl.getQueryParameter("client_id")
@@ -78,6 +97,13 @@ class SingleSignOnViewModel
                 } else {
                     Log.w("$TAG client_id query parameter found in URL, overriding value from config [$clientId] to [$urlClientId]")
                     clientId = urlClientId
+                }
+
+                val urlScope = parsedUrl.getQueryParameter("scope")
+                if (!urlScope.isNullOrEmpty()) {
+                    Log.i("$TAG scope query parameter found in URL, overriding default value to [$urlScope]")
+                    // On sépare par des espaces car c'est le format standard OAuth2 pour les scopes dans l'URL
+                    clientScopes = urlScope.split(" ").toTypedArray()
                 }
 
             } catch (e: Exception) {
@@ -114,6 +140,17 @@ class SingleSignOnViewModel
             }
             coreContext.abortBearerAuthIfAny()
             operationInProgress.value = false
+        }
+    }
+
+    @UiThread
+    private fun getClientAuthentication(): ClientAuthentication {
+        return if (clientSecret != null) {
+            Log.i("$TAG Using ClientSecretBasic authentication")
+            ClientSecretBasic(clientSecret!!)
+        } else {
+            Log.i("$TAG Using NoClientAuthentication")
+            NoClientAuthentication.INSTANCE
         }
     }
 
@@ -157,7 +194,7 @@ class SingleSignOnViewModel
 
                 // Needed for SDK to be able to refresh the token, otherwise it will return
                 // an invalid grant error with description "Session not active"
-                authRequestBuilder.setScopes("offline_access")
+                authRequestBuilder.setScopes(*clientScopes)
 
                 if (username.isNotEmpty() && corePreferences.useUsernameAsSingleSignOnLoginHint) {
                     Log.i("$TAG Using username [$username] as login hint")
@@ -165,6 +202,8 @@ class SingleSignOnViewModel
                 }
 
                 val authRequest = authRequestBuilder.build()
+                val authUri = authRequest.toUri()
+                Log.i("$TAG Generated authorization URI: [$authUri]")
                 authService =
                     AuthorizationService(coreContext.context)
                 val authIntent = authService.getAuthorizationRequestIntent(authRequest)
@@ -187,7 +226,8 @@ class SingleSignOnViewModel
             Log.i("$TAG Starting refresh token request")
             try {
                 authService.performTokenRequest(
-                    authState.createTokenRefreshRequest()
+                    authState.createTokenRefreshRequest(),
+                    getClientAuthentication()
                 ) { resp, ex ->
                     if (resp != null) {
                         Log.i("$TAG Token refresh succeeded!")
@@ -234,7 +274,8 @@ class SingleSignOnViewModel
         if (::authService.isInitialized) {
             Log.i("$TAG Starting perform token request")
             authService.performTokenRequest(
-                response.createTokenExchangeRequest()
+                response.createTokenExchangeRequest(),
+                getClientAuthentication()
             ) { resp, ex ->
                 if (resp != null) {
                     Log.i("$TAG Token exchange succeeded!")
