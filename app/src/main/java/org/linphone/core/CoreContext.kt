@@ -699,8 +699,33 @@ class CoreContext
             } else if (oldVersion < 600009) { // 6.0.9
                 removePortFromSipIdentity()
             } else if (oldVersion < 602000) { // 6.2.0
-                core.isChatMessageFilesDeletionEnabled = true
-                Log.i("$TAG Core is allowed to automatically delete files from previously logged directories when a chat message is deleted")
+                if (!core.isChatMessageFilesDeletionEnabled) {
+                    core.isChatMessageFilesDeletionEnabled = true
+                    Log.i("$TAG Core is allowed to automatically delete files from previously logged directories when a chat message is deleted")
+                }
+
+                val rlsUri = core.config.getString("sip", "rls_uri", "").orEmpty()
+                if (rlsUri.isNotEmpty()) {
+                    var accountOnDefaultDomainFound = false
+                    for (account in core.accountList) {
+                        if (account.params.identityAddress?.domain == corePreferences.defaultDomain) {
+                            accountOnDefaultDomainFound = true
+                            break
+                        }
+                    }
+                    if (!accountOnDefaultDomainFound) {
+                        Log.w("$TAG Removing rls_uri from [sip] section & all friend lists to prevent sending SUBSCRIBE")
+                        core.config.setString("sip", "rls_uri", "")
+                        for (friendList in core.friendsLists) {
+                            if (friendList.rlsAddress != null) {
+                                Log.i("$TAG Removing RLS URI from friend list [${friendList.displayName}]")
+                                friendList.rlsAddress = null
+                            }
+                        }
+                    } else {
+                        Log.i("$TAG Keeping RLS URI as an account on the default domain has been found")
+                    }
+                }
             }
 
             if (core.logCollectionUploadServerUrl.isNullOrEmpty()) {
@@ -1159,8 +1184,6 @@ class CoreContext
         val sdkUserAgent = "$sdkVersion ($sdkBranch)"
         core.setUserAgent(userAgent, sdkUserAgent)
     }
-
-    // Migration between versions related
 
     @WorkerThread
     private fun removePortFromSipIdentity() {
