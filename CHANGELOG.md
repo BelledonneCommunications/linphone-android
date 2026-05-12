@@ -26,6 +26,7 @@ Group changes to describe their impact on the project, as follows:
 - Handle read-only CardDAV address books, disable edit/delete menus for contacts in read-only FriendList
 - Added swipe/pull to refresh on contacts list of a CardDAV addressbook has been configured to force the synchronization
 - Show information to user when filtering contacts doesn't show them all and user may have to refine it's search
+- Core will now automatically delete from device files that were sent/received in a chat message when it is deleted (because it's ephemeral or has been manually deleted)
 - Show Android notification when an account goes to failed registration state (only when background mode is enabled)
 - New settings:
   - one for user to choose whether to sort contacts by first name or last name
@@ -63,10 +64,14 @@ Group changes to describe their impact on the project, as follows:
 - Permission fragment will only show missing ones
 - Added more info into StartupListener logs
 - Updated password forgotten procedure, will use online account manager platform
+- Added confirmation dialog before deleting/removing something/someone (contact, meeting, conversation, call log, etc...)
+- Delivery information menu when long pressing an incoming chat message has been removed since we no longer send IMDNs to all participants of the group conversation
 
 ### Fixed
 - Prevent crash & background mode from turning on when doing a remote provisioning if an account is already configured
+- Prevent app from sending all phone numbers & SIP addresses to sip.linphone.org presence server for long term presence feature if account is not sip.linphone.org
 - Fixed SIP address picker not showing up in call transfer view when selecting a contact with more than 1 SIP address
+- Prevent incoming call notification from staying visible and answer button from doing nothing after answering incoming conference call
 - Copy raw message content instead of modified one when it contains a participant mention ("@username")
 - Do not apply Crashlytics plugin if it's not enabled
 
