@@ -479,9 +479,9 @@ class CorePreferences
 
     @get:AnyThread @set:WorkerThread
     var isMdmConfigured: Boolean
-        get() = config.getBool("ui", "mdm_configured", false)
+        get() = config.getBool("app", "mdm_configured", false)
         set(value) {
-            config.setBool("ui", "mdm_configured", value)
+            config.setBool("app", "mdm_configured", value)
         }
 
     @UiThread
