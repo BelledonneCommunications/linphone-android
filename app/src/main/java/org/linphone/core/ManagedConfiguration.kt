@@ -23,8 +23,8 @@ import android.content.Context
 import android.content.RestrictionsManager
 import android.os.Bundle
 import androidx.annotation.WorkerThread
-import org.linphone.LinphoneApplication
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 
@@ -51,10 +51,15 @@ object ManagedConfiguration {
     fun applyMdmConfigToCore(context: Context, core: Core) {
         val restrictions = getRestrictions(context) ?: return
         if (restrictions.isEmpty) {
-            resetConfig(core)
+            if (corePreferences.isMdmConfigured) {
+                resetConfig(core)
+                corePreferences.isMdmConfigured = false
+            }
             return
         }
 
+        corePreferences.isMdmConfigured = true
+        
         val configUri = restrictions.getString(KEY_CONFIG_URI).orEmpty()
         val rootCa = restrictions.getString(KEY_ROOT_CA).orEmpty()
         val xmlConfig = restrictions.getString(KEY_XML_CONFIG).orEmpty()
@@ -93,7 +98,7 @@ object ManagedConfiguration {
             core.stop()
             startCore = true
         }
-        LinphoneApplication.corePreferences.resetConfigToDefault()
+        corePreferences.resetConfigToDefault()
         core.config.reload()
         if (startCore) {
             core.start()

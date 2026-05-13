@@ -477,6 +477,13 @@ class CorePreferences
     val messageReceivedInVisibleConversationNotificationSound: String
         get() = context.filesDir.absolutePath + "/share/sounds/linphone/incoming_chat.wav"
 
+    @get:AnyThread @set:WorkerThread
+    var isMdmConfigured: Boolean
+        get() = config.getBool("ui", "mdm_configured", false)
+        set(value) {
+            config.setBool("ui", "mdm_configured", value)
+        }
+
     @UiThread
     fun copyAssetsFromPackage() {
         copy("linphonerc_default", configPath)
