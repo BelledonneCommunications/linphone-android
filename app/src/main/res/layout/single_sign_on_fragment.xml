@@ -5,6 +5,9 @@
     <data>
         <import type="android.view.View" />
         <variable
+            name="backClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.main.sso.viewmodel.SingleSignOnViewModel" />
     </data>
@@ -21,6 +24,7 @@
             <ImageView
                 style="@style/icon_top_bar_button_style"
                 android:id="@+id/back"
+                android:onClick="@{backClickListener}"
                 android:layout_width="@dimen/top_bar_height"
                 android:layout_height="@dimen/top_bar_height"
                 android:src="@drawable/caret_left"

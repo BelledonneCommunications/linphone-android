@@ -66,6 +66,10 @@ class SingleSignOnFragment : GenericMainFragment() {
         binding.viewModel = viewModel
         observeToastEvents(viewModel)
 
+        binding.setBackClickListener {
+            goBack()
+        }
+
         viewModel.singleSignOnProcessCompletedEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG Process complete, going back")
