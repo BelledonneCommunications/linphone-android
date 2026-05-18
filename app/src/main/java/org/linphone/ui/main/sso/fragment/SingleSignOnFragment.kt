@@ -29,10 +29,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationResponse
-import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SingleSignOnFragmentBinding
-import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.sso.viewmodel.SingleSignOnViewModel
 
@@ -85,15 +83,6 @@ class SingleSignOnFragment : GenericMainFragment() {
                 } catch (exception: ActivityNotFoundException) {
                     Log.e("$TAG No activity found to handle intent: $exception")
                 }
-            }
-        }
-
-        viewModel.onErrorEvent.observe(viewLifecycleOwner) {
-            it.consume { errorMessage ->
-                (requireActivity() as GenericActivity).showRedToast(
-                    errorMessage,
-                    R.drawable.warning_circle
-                )
             }
         }
 

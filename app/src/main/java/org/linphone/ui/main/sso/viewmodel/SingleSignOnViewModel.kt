@@ -61,10 +61,6 @@ class SingleSignOnViewModel
         MutableLiveData()
     }
 
-    val onErrorEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData()
-    }
-
     private var clientId: String
     private val redirectUri: String
 
@@ -125,7 +121,7 @@ class SingleSignOnViewModel
             performRequestToken(resp)
         } else {
             Log.e("$TAG Can't perform request token [$ex]")
-            onErrorEvent.postValue(Event(ex?.errorDescription.orEmpty()))
+            showFormattedRedToastEvent.postValue(Event(Pair(ex?.errorDescription.orEmpty(), R.drawable.warning_circle)))
             operationInProgress.value = false
         }
     }
@@ -141,8 +137,8 @@ class SingleSignOnViewModel
                     Log.e(
                         "$TAG Failed to fetch configuration from issuer [$singleSignOnUrl]: ${ex.errorDescription}"
                     )
-                    onErrorEvent.postValue(
-                        Event("Failed to fetch configuration from issuer $singleSignOnUrl")
+                    showFormattedRedToastEvent.postValue(
+                        Event(Pair("Failed to fetch configuration from issuer $singleSignOnUrl", R.drawable.warning_circle))
                     )
                     operationInProgress.postValue(false)
                     return@RetrieveConfigurationCallback
@@ -150,7 +146,7 @@ class SingleSignOnViewModel
 
                 if (serviceConfiguration == null) {
                     Log.e("$TAG Service configuration is null!")
-                    onErrorEvent.postValue(Event("Service configuration is null"))
+                    showFormattedRedToastEvent.postValue(Event(Pair("Service configuration is null", R.drawable.warning_circle)))
                     operationInProgress.postValue(false)
                     return@RetrieveConfigurationCallback
                 }
@@ -212,7 +208,7 @@ class SingleSignOnViewModel
                         Log.e(
                             "$TAG Failed to perform token refresh [$ex], destroying auth_state.json file"
                         )
-                        onErrorEvent.postValue(Event(ex?.errorDescription.orEmpty()))
+                        showFormattedRedToastEvent.postValue(Event(Pair(ex?.errorDescription.orEmpty(), R.drawable.warning_circle)))
                         operationInProgress.postValue(false)
 
                         viewModelScope.launch {
@@ -257,7 +253,7 @@ class SingleSignOnViewModel
                     storeTokensInAuthInfo()
                 } else {
                     Log.e("$TAG Failed to perform token request [$ex]")
-                    onErrorEvent.postValue(Event(ex?.errorDescription.orEmpty()))
+                    showFormattedRedToastEvent.postValue(Event(Pair(ex?.errorDescription.orEmpty(), R.drawable.warning_circle)))
                     operationInProgress.postValue(false)
                 }
             }
@@ -277,7 +273,7 @@ class SingleSignOnViewModel
                     return AuthState.jsonDeserialize(content)
                 } catch (exception: Exception) {
                     Log.e("$TAG Failed to use serialized AuthState [$exception]")
-                    onErrorEvent.postValue(Event("Failed to read stored AuthState"))
+                    showFormattedRedToastEvent.postValue(Event(Pair("Failed to read stored AuthState", R.drawable.warning_circle)))
                     operationInProgress.postValue(false)
                 }
             }
@@ -357,7 +353,7 @@ class SingleSignOnViewModel
             val expire = authState.accessTokenExpirationTime
             if (expire == null) {
                 Log.e("$TAG Access token expiration time is null!")
-                onErrorEvent.postValue(Event("Invalid access token expiration time"))
+                showFormattedRedToastEvent.postValue(Event(Pair("Invalid access token expiration time", R.drawable.warning_circle)))
                 operationInProgress.postValue(false)
             } else {
                 val accessToken =

@@ -105,6 +105,11 @@ class QrCodeViewModel
     init {
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
+
+            val coreGlobalState = core.globalState
+            if (coreGlobalState != GlobalState.On) {
+                Log.e("$TAG Core isn't ON (current state is [$coreGlobalState]), video preview won't work!")
+            }
         }
     }
 
