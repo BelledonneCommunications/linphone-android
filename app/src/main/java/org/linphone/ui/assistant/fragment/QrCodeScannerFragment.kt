@@ -172,6 +172,7 @@ class QrCodeScannerFragment : GenericFragment() {
             core.nativePreviewWindowId = binding.qrCodePreview
             core.isQrcodeVideoPreviewEnabled = true
             core.isVideoPreviewEnabled = true
+            Log.i("$TAG Video preview with QR scanner enabled")
         }
     }
 }

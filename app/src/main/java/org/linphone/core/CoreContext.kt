@@ -1304,24 +1304,28 @@ class CoreContext
     }
 
     fun setBackCamera(): Boolean {
-        for (camera in core.videoDevicesList) {
+        val list = core.videoDevicesList
+        for (camera in list) {
             if (camera.contains("Back")) {
-                Log.i("TAG Found back facing camera [$camera], using it")
+                Log.i("$TAG Found back facing camera [$camera], using it")
                 coreContext.core.videoDevice = camera
                 return true
             }
         }
+        Log.i("$TAG Back camera wasn't found in [${list.size}] detected video devices")
         return false
     }
 
     fun setFrontCamera(): Boolean {
-        for (camera in core.videoDevicesList) {
+        val list = core.videoDevicesList
+        for (camera in list) {
             if (camera.contains("Front")) {
                 Log.i("$TAG Found front facing camera [$camera], using it")
                 coreContext.core.videoDevice = camera
                 return true
             }
         }
+        Log.i("$TAG Front camera wasn't found in [${list.size}] detected video devices")
         return false
     }
 }
