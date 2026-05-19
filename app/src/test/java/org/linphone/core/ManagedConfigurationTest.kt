@@ -159,7 +159,7 @@ class ManagedConfigurationTest {
     }
 
     @Test
-    fun `xml-config is loaded as inline string into the rc config`() {
+    fun `xmlConfig is loaded as inline string into the rc config`() {
         val xml = "<config xmlns=\"http://www.linphone.org/xsds/lpconfig.xsd\"/>"
         pushRestrictions(ManagedConfiguration.KEY_XML_CONFIG to xml)
         every { core.globalState } returns GlobalState.Off
@@ -175,7 +175,7 @@ class ManagedConfigurationTest {
     }
 
     @Test
-    fun `config-uri replaces an outdated provisioning URI`() {
+    fun `configUri replaces an outdated provisioning URI`() {
         val newUri = "https://provisioning.example.com/foo.xml"
         pushRestrictions(ManagedConfiguration.KEY_CONFIG_URI to newUri)
         every { core.provisioningUri } returns "https://old.example.com/old.xml"
@@ -190,7 +190,7 @@ class ManagedConfigurationTest {
     }
 
     @Test
-    fun `config-uri identical to current is not pushed again`() {
+    fun `configUri identical to current is not pushed again`() {
         val uri = "https://provisioning.example.com/foo.xml"
         pushRestrictions(ManagedConfiguration.KEY_CONFIG_URI to uri)
         every { core.provisioningUri } returns uri
@@ -203,7 +203,7 @@ class ManagedConfigurationTest {
     }
 
     @Test
-    fun `root-ca different from current is pushed`() {
+    fun `rootCa different from current is pushed`() {
         val pemPath = "/data/local/tmp/ca.pem"
         pushRestrictions(ManagedConfiguration.KEY_ROOT_CA to pemPath)
         every { core.rootCa } returns "/old/ca.pem"
@@ -216,7 +216,7 @@ class ManagedConfigurationTest {
     }
 
     @Test
-    fun `root-ca identical to current is not pushed again`() {
+    fun `rootCa identical to current is not pushed again`() {
         val pemPath = "/data/local/tmp/ca.pem"
         pushRestrictions(ManagedConfiguration.KEY_ROOT_CA to pemPath)
         every { core.rootCa } returns pemPath
@@ -229,7 +229,7 @@ class ManagedConfigurationTest {
     }
 
     @Test
-    fun `MDM config-uri overrides a config-uri set inside xml-config's misc section`() {
+    fun `MDM configUri overrides a config-uri set inside xmlConfig's misc section`() {
         val xml = "<config/>"
         val mdmUri = "https://mdm.example.com/foo.xml"
         val xmlInternalUri = "https://embedded-in-xml.example.com/foo.xml"
@@ -241,7 +241,7 @@ class ManagedConfigurationTest {
         every { core.rootCa } returns null
         every { core.globalState } returns GlobalState.Off
 
-        // Simulate xml-config setting [misc] config-uri when loaded.
+        // Simulate xmlConfig setting [misc] config-uri when loaded.
         every { config.loadFromXmlString(xml) } answers {
             every { core.provisioningUri } returns xmlInternalUri
             0
@@ -254,9 +254,9 @@ class ManagedConfigurationTest {
     }
 
     @Test
-    fun `MDM config-uri prevails even when it equals the pre-xml provisioning URI`() {
-        // Edge case: MDM URI matches what was in core.provisioningUri before xml-config loaded,
-        // but xml-config writes a different URI to [misc] config-uri. MDM must still win.
+    fun `MDM configUri prevails even when it equals the pre-xml provisioning URI`() {
+        // Edge case: MDM URI matches what was in core.provisioningUri before xmlConfig loaded,
+        // but xmlConfig writes a different URI to [misc] config-uri. MDM must still win.
         val xml = "<config/>"
         val mdmUri = "https://mdm.example.com/foo.xml"
         val xmlInternalUri = "https://embedded-in-xml.example.com/foo.xml"
@@ -280,7 +280,7 @@ class ManagedConfigurationTest {
     }
 
     @Test
-    fun `MDM config-uri is not pushed when xml-config already produced the same URI`() {
+    fun `MDM configUri is not pushed when xmlConfig already produced the same URI`() {
         // Optimization: if loadFromXmlString happens to set [misc] config-uri to exactly
         // the MDM value, the redundant setter call is skipped. Final state still matches MDM.
         val xml = "<config/>"

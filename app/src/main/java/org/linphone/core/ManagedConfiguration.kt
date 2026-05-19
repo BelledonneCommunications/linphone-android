@@ -31,9 +31,9 @@ import org.linphone.utils.Event
 object ManagedConfiguration {
     private const val TAG = "[Managed Configuration]"
 
-    const val KEY_CONFIG_URI = "config-uri"
-    const val KEY_XML_CONFIG = "xml-config"
-    const val KEY_ROOT_CA = "root-ca"
+    const val KEY_CONFIG_URI = "configUri"
+    const val KEY_XML_CONFIG = "xmlConfig"
+    const val KEY_ROOT_CA = "rootCa"
 
     @WorkerThread
     fun getRestrictions(context: Context): Bundle? {
@@ -67,7 +67,7 @@ object ManagedConfiguration {
         val currentProvisioningUri = core.provisioningUri
 
         if (xmlConfig.isNotBlank()) {
-            Log.w("$TAG Updating  configuration from managed configuration xml-config = [$xmlConfig]")
+            Log.w("$TAG Updating  configuration from managed configuration xmlConfig = [$xmlConfig]")
             core.config.loadFromXmlString(xmlConfig)
         }
 
@@ -76,7 +76,7 @@ object ManagedConfiguration {
             core.rootCa = rootCa
         }
 
-        if (configUri.isNotBlank() && configUri != currentProvisioningUri) { // takes priority over potential config-uri set in xml-config
+        if (configUri.isNotBlank() && configUri != currentProvisioningUri) { // takes priority over potential config-uri set in xmlConfig
             Log.w("$TAG Updating provisioning URI from managed configuration $configUri")
             core.provisioningUri = configUri
         }
