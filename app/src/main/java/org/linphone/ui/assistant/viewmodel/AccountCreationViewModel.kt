@@ -201,6 +201,9 @@ class AccountCreationViewModel
                         accountCantBeCreatedBySmsEvent.postValue(Event(true))
                     }
                 }
+                AccountManagerServicesRequest.Type.LinkPhoneNumberUsingCode -> {
+                    Log.e("$TAG Wrong confirmation code")
+                }
                 else -> {
                 }
             }
@@ -432,10 +435,12 @@ class AccountCreationViewModel
         val authInfo = accountCreatedAuthInfo
         if (authInfo != null) {
             coreContext.core.removeAuthInfo(authInfo)
+            accountCreatedAuthInfo = null
         }
         val account = accountCreated
         if (account != null) {
             coreContext.core.removeAccount(account)
+            accountCreated = null
         }
     }
 
