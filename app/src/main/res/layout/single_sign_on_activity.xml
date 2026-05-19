@@ -9,7 +9,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.sso.viewmodel.SingleSignOnViewModel" />
+            type="org.linphone.ui.sso.SingleSignOnViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -73,6 +73,20 @@
                 android:layout_centerHorizontal="true"
                 android:visibility="@{viewModel.operationInProgress ? View.VISIBLE : View.GONE}"
                 app:layout_constraintTop_toBottomOf="@id/progress"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/mountains"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_800"
+                android:id="@+id/error_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.errorMessage}"
+                android:textColor="?attr/color_danger_500"
+                android:textSize="18sp"
+                android:layout_centerHorizontal="true"
+                app:layout_constraintTop_toBottomOf="@id/title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/mountains"/>

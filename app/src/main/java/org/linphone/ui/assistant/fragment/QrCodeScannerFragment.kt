@@ -20,6 +20,7 @@
 package org.linphone.ui.assistant.fragment
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -38,7 +39,7 @@ import org.linphone.databinding.AssistantQrCodeScannerFragmentBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.GenericFragment
 import org.linphone.ui.assistant.viewmodel.QrCodeViewModel
-import org.linphone.ui.main.sso.fragment.SingleSignOnFragmentDirections
+import org.linphone.ui.sso.SingleSignOnActivity
 
 @UiThread
 class QrCodeScannerFragment : GenericFragment() {
@@ -109,13 +110,10 @@ class QrCodeScannerFragment : GenericFragment() {
                 Log.i(
                     "$TAG Navigating to Single Sign On Fragment with server URL [$serverUrl] and username [$username]"
                 )
-                if (findNavController().currentDestination?.id == R.id.qrCodeScannerFragment) {
-                    val action = SingleSignOnFragmentDirections.actionGlobalSingleSignOnFragment(
-                        serverUrl,
-                        username
-                    )
-                    findNavController().navigate(action)
-                }
+                val intent = Intent(requireContext(), SingleSignOnActivity::class.java)
+                intent.putExtra(SingleSignOnActivity.INTENT_EXTRA_USERNAME, username)
+                intent.putExtra(SingleSignOnActivity.INTENT_EXTRA_SERVER_URL, serverUrl)
+                startActivity(intent)
             }
         }
 

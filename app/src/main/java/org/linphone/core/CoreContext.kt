@@ -458,6 +458,7 @@ class CoreContext
                         Log.e(
                             "$TAG Authentication request using Bearer method but authorization server is null!"
                         )
+                        core.abortAuthentication(null)
                         return
                     }
 
@@ -475,6 +476,7 @@ class CoreContext
                         Log.e(
                             "$TAG Authentication requested method is Bearer but no authorization server was found in auth info!"
                         )
+                        core.abortAuthentication(null)
                     }
                 }
                 AuthMethod.HttpDigest -> {
@@ -900,6 +902,16 @@ class CoreContext
             core.refreshRegisters()
         } else {
             Log.e("$TAG No pending auth info for digest authentication!")
+        }
+    }
+
+    @AnyThread
+    fun abortBearerAuthIfAny() {
+        coreContext.postOnCoreThread { core ->
+            if (bearerAuthInfoPendingPasswordUpdate != null) {
+                Log.e("$TAG Aborting bearer authentication")
+                core.abortAuthentication(bearerAuthInfoPendingPasswordUpdate)
+            }
         }
     }
 

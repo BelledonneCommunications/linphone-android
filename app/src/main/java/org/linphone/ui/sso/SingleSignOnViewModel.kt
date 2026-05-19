@@ -1,29 +1,10 @@
-/*
- * Copyright (c) 2010-2023 Belledonne Communications SARL.
- *
- * This file is part of linphone-android
- * (see https://www.linphone.org).
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
-package org.linphone.ui.main.sso.viewmodel
+package org.linphone.ui.sso
 
 import android.content.Intent
 import androidx.annotation.UiThread
+import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import java.io.File
 import kotlinx.coroutines.launch
 import net.openid.appauth.AuthState
 import net.openid.appauth.AuthorizationException
@@ -42,7 +23,7 @@ import org.linphone.ui.GenericViewModel
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.TimestampUtils
-import androidx.core.net.toUri
+import java.io.File
 
 class SingleSignOnViewModel
     @UiThread
@@ -52,6 +33,8 @@ class SingleSignOnViewModel
     }
 
     val operationInProgress = MutableLiveData<Boolean>()
+
+    val errorMessage = MutableLiveData<String>()
 
     val singleSignOnProcessCompletedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData()
@@ -121,7 +104,15 @@ class SingleSignOnViewModel
             performRequestToken(resp)
         } else {
             Log.e("$TAG Can't perform request token [$ex]")
-            showFormattedRedToastEvent.postValue(Event(Pair(ex?.errorDescription.orEmpty(), R.drawable.warning_circle)))
+            errorMessage.postValue(ex?.errorDescription.orEmpty())
+
+            val file = File(corePreferences.ssoCacheFile)
+            viewModelScope.launch {
+                val cache = file.absolutePath
+                Log.w("$TAG Deleting SSO cache file [$cache] to allow for a new sign-on")
+                FileUtils.deleteFile(cache)
+            }
+            coreContext.abortBearerAuthIfAny()
             operationInProgress.value = false
         }
     }
@@ -137,16 +128,16 @@ class SingleSignOnViewModel
                     Log.e(
                         "$TAG Failed to fetch configuration from issuer [$singleSignOnUrl]: ${ex.errorDescription}"
                     )
-                    showFormattedRedToastEvent.postValue(
-                        Event(Pair("Failed to fetch configuration from issuer $singleSignOnUrl", R.drawable.warning_circle))
-                    )
+                    errorMessage.postValue("Failed to fetch configuration from issuer $singleSignOnUrl")
+                    coreContext.abortBearerAuthIfAny()
                     operationInProgress.postValue(false)
                     return@RetrieveConfigurationCallback
                 }
 
                 if (serviceConfiguration == null) {
                     Log.e("$TAG Service configuration is null!")
-                    showFormattedRedToastEvent.postValue(Event(Pair("Service configuration is null", R.drawable.warning_circle)))
+                    errorMessage.postValue("Service configuration is null")
+                    coreContext.abortBearerAuthIfAny()
                     operationInProgress.postValue(false)
                     return@RetrieveConfigurationCallback
                 }
@@ -174,8 +165,10 @@ class SingleSignOnViewModel
                 }
 
                 val authRequest = authRequestBuilder.build()
-                authService = AuthorizationService(coreContext.context)
+                authService =
+                    AuthorizationService(coreContext.context)
                 val authIntent = authService.getAuthorizationRequestIntent(authRequest)
+                Log.i("$TAG Starting auth using intent [$authIntent]")
                 startAuthIntentEvent.postValue(Event(authIntent))
             }
         )
@@ -186,7 +179,8 @@ class SingleSignOnViewModel
         operationInProgress.postValue(true)
         if (::authState.isInitialized) {
             if (!::authService.isInitialized) {
-                authService = AuthorizationService(coreContext.context)
+                authService =
+                    AuthorizationService(coreContext.context)
             }
 
             val authStateJsonFile = File(corePreferences.ssoCacheFile)
@@ -208,11 +202,12 @@ class SingleSignOnViewModel
                         Log.e(
                             "$TAG Failed to perform token refresh [$ex], destroying auth_state.json file"
                         )
-                        showFormattedRedToastEvent.postValue(Event(Pair(ex?.errorDescription.orEmpty(), R.drawable.warning_circle)))
+                        errorMessage.postValue(ex?.errorDescription.orEmpty())
+                        coreContext.abortBearerAuthIfAny()
                         operationInProgress.postValue(false)
 
                         viewModelScope.launch {
-                            FileUtils.deleteFile(authStateJsonFile.absolutePath)
+                            FileUtils.Companion.deleteFile(authStateJsonFile.absolutePath)
                             Log.w(
                                 "$TAG Previous auth_state.json file deleted, starting single sign on process from scratch"
                             )
@@ -223,7 +218,7 @@ class SingleSignOnViewModel
             } catch (ise: IllegalStateException) {
                 Log.e("$TAG Illegal state exception, clearing auth state and trying again: $ise")
                 viewModelScope.launch {
-                    FileUtils.deleteFile(authStateJsonFile.absolutePath)
+                    FileUtils.Companion.deleteFile(authStateJsonFile.absolutePath)
                     authState = getAuthState()
                     performRefreshToken()
                 }
@@ -253,7 +248,8 @@ class SingleSignOnViewModel
                     storeTokensInAuthInfo()
                 } else {
                     Log.e("$TAG Failed to perform token request [$ex]")
-                    showFormattedRedToastEvent.postValue(Event(Pair(ex?.errorDescription.orEmpty(), R.drawable.warning_circle)))
+                    errorMessage.postValue(ex?.errorDescription.orEmpty())
+                    coreContext.abortBearerAuthIfAny()
                     operationInProgress.postValue(false)
                 }
             }
@@ -265,7 +261,7 @@ class SingleSignOnViewModel
         val file = File(corePreferences.ssoCacheFile)
         if (file.exists()) {
             Log.i("$TAG Auth state file found, trying to read it")
-            val content = FileUtils.readFile(file)
+            val content = FileUtils.Companion.readFile(file)
             if (content.isNotEmpty()) {
                 Log.i("$TAG Initializing AuthState from local JSON file")
                 Log.d("$TAG Local JSON file contains [$content]")
@@ -273,7 +269,8 @@ class SingleSignOnViewModel
                     return AuthState.jsonDeserialize(content)
                 } catch (exception: Exception) {
                     Log.e("$TAG Failed to use serialized AuthState [$exception]")
-                    showFormattedRedToastEvent.postValue(Event(Pair("Failed to read stored AuthState", R.drawable.warning_circle)))
+                    errorMessage.postValue("Failed to read stored AuthState")
+                    coreContext.abortBearerAuthIfAny()
                     operationInProgress.postValue(false)
                 }
             }
@@ -291,7 +288,7 @@ class SingleSignOnViewModel
         Log.d("$TAG Date to save is [$data]")
         val file = File(corePreferences.ssoCacheFile)
         viewModelScope.launch {
-            if (FileUtils.dumpStringToFile(data, file)) {
+            if (FileUtils.Companion.dumpStringToFile(data, file)) {
                 Log.i("$TAG Service configuration saved as JSON as [${file.absolutePath}]")
             } else {
                 Log.i(
@@ -316,16 +313,16 @@ class SingleSignOnViewModel
                         Log.w("$TAG Access token is expired")
                         performRefreshToken()
                     } else {
-                        val date = if (TimestampUtils.isToday(expiration, timestampInSecs = false)) {
+                        val date = if (TimestampUtils.Companion.isToday(expiration, timestampInSecs = false)) {
                             "today"
                         } else {
-                            TimestampUtils.toString(
+                            TimestampUtils.Companion.toString(
                                 expiration,
                                 onlyDate = true,
                                 timestampInSecs = false
                             )
                         }
-                        val time = TimestampUtils.toString(expiration, timestampInSecs = false)
+                        val time = TimestampUtils.Companion.toString(expiration, timestampInSecs = false)
                         Log.i("$TAG Access token expires [$date] [$time]")
                         storeTokensInAuthInfo()
                     }
@@ -333,7 +330,7 @@ class SingleSignOnViewModel
                     Log.w("$TAG Access token expiration info not available")
                     val file = File(corePreferences.ssoCacheFile)
                     viewModelScope.launch {
-                        FileUtils.deleteFile(file.absolutePath)
+                        FileUtils.Companion.deleteFile(file.absolutePath)
                         singleSignOn()
                     }
                 }
@@ -353,7 +350,8 @@ class SingleSignOnViewModel
             val expire = authState.accessTokenExpirationTime
             if (expire == null) {
                 Log.e("$TAG Access token expiration time is null!")
-                showFormattedRedToastEvent.postValue(Event(Pair("Invalid access token expiration time", R.drawable.warning_circle)))
+                errorMessage.postValue("Invalid access token expiration time")
+                coreContext.abortBearerAuthIfAny()
                 operationInProgress.postValue(false)
             } else {
                 val accessToken =
