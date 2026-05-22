@@ -370,10 +370,8 @@ class CurrentCallViewModel
                     updateCallDuration()
                     if (call.conference != null) {
                         Log.i(
-                            "$TAG Call is in Connected state and conference isn't null, going to conference fragment"
+                            "$TAG Call is in Connected state and conference isn't null, wait for StreamsRunning state to navigate to conference layout"
                         )
-                        conferenceModel.configureFromCall(call)
-                        goToConferenceEvent.postValue(Event(true))
                     } else {
                         conferenceModel.destroy()
                     }
