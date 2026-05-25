@@ -750,7 +750,6 @@
     <string name="content_description_chat_open_attach_file">Öffnet den Medien-Picker</string>
     <string name="content_description_chat_edit_conversation_subject">Klicken Sie hier, um das Thema dieser Unterhaltung zu bearbeiten</string>
     <string name="content_description_chat_toggle_mute">Stummschalten dieses Chats</string>
-    <string name="content_description_chat_removal_in_progress">Der Chat wird entfernt</string>
     <string name="content_description_chat_unsecured">Dieser Chat ist nicht gesichert</string>
     <string name="content_description_chat_search_message_up">Suche nach oben</string>
     <string name="content_description_chat_search_message_down">Suche nach unten</string>

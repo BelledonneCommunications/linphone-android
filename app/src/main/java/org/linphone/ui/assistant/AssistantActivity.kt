@@ -23,7 +23,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat

@@ -1017,7 +1017,6 @@
     <string name="content_description_chat_open_attach_file">Opens file picker</string>
     <string name="content_description_chat_edit_conversation_subject">Click to edit the subject of this conversation</string>
     <string name="content_description_chat_toggle_mute">Silences on/off this conversation</string>
-    <string name="content_description_chat_removal_in_progress">Conversation is being removed</string>
     <string name="content_description_chat_unsecured">This conversation isn\'t secured</string>
     <string name="content_description_chat_search_message_up">Search up</string>
     <string name="content_description_chat_search_message_down">Search down</string>

@@ -637,7 +637,6 @@
     <string name="content_description_chat_open_attach_file">Abre o seletor de arquivos</string>
     <string name="content_description_chat_edit_conversation_subject">Clique para editar o assunto desta conversa</string>
     <string name="content_description_chat_toggle_mute">Silencia/reativa o som desta conversa</string>
-    <string name="content_description_chat_removal_in_progress">A conversa está sendo removida</string>
     <string name="content_description_chat_unsecured">Esta conversa não é segura</string>
     <string name="content_description_chat_search_message_down">Pesquisar abaixo</string>
     <string name="content_description_meeting_today">Rolar para hoje</string>

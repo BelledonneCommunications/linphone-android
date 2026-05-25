@@ -730,7 +730,6 @@
     <string name="content_description_chat_open_attach_file">打开文件选择器</string>
     <string name="content_description_chat_edit_conversation_subject">单击以编辑此聊天的主题</string>
     <string name="content_description_chat_toggle_mute">压制此聊天使其不说话开/关</string>
-    <string name="content_description_chat_removal_in_progress">正在删除聊天</string>
     <string name="content_description_stop_voice_message_recording">停止语音信息录制</string>
     <string name="content_description_chat_start_voice_message_recording">开始录制语音信息</string>
     <string name="content_description_chat_send_message">在聊天中发送消息</string>

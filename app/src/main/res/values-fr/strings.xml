@@ -923,7 +923,6 @@
     <string name="content_description_chat_open_attach_file">Ouvre le selectionneur de fichier</string>
     <string name="content_description_chat_edit_conversation_subject">Cliquez pour modifier le sujet de la conversation</string>
     <string name="content_description_chat_toggle_mute">Met ou enlève la sourdine de la conversation</string>
-    <string name="content_description_chat_removal_in_progress">La conversation est en train d\'être supprimée</string>
     <string name="content_description_chat_unsecured">La conversation n\'est pas chiffrée de bout en bout</string>
     <string name="content_description_chat_search_message_up">Rechercher vers le haut</string>
     <string name="content_description_chat_search_message_down">Rechercher vers le bas</string>

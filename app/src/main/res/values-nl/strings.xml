@@ -216,7 +216,7 @@
     <string name="content_description_chat_create">Begin een nieuw gesprek</string>
     <string name="content_description_chat_search_message_down">Zoek naar beneden</string>
     <string name="content_description_chat_search_message_up">Zoek omhoog</string>
-    <string name="content_description_chat_removal_in_progress">Gesprek wordt verwijderd</string>
+
     <string name="content_description_chat_toggle_mute">Zet geluid aan/uit voor dit gesprek</string>
     <string name="content_description_call_voicemail">Lang indrukken om voicemail te bellen</string>
     <string name="content_description_voicemail_available">Spraakberichten zijn beschikbaar</string>

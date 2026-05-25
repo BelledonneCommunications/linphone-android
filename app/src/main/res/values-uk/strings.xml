@@ -173,7 +173,6 @@
         <item quantity="many">%s нових голосових повідомлень</item>
         <item quantity="other">%s нових голосових повідомлень</item>
     </plurals>
-    <string name="content_description_chat_removal_in_progress">Розмова видаляється</string>
     <string name="settings_user_interface_color_title">Основний колір</string>
     <string name="content_description_contact_online">Контакт в мережі</string>
     <string name="content_description_show_popup_menu">Відобразити меню</string>

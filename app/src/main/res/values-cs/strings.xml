@@ -793,7 +793,6 @@
     <string name="content_description_chat_open_emoji_picker">Otevře výběr emoji</string>
     <string name="content_description_chat_open_attach_file">Spustí výběr souboru</string>
     <string name="content_description_chat_toggle_mute">Zapne/vypne ztlumení konverzace</string>
-    <string name="content_description_chat_removal_in_progress">Konverzace se odstraňuje</string>
     <string name="content_description_chat_unsecured">Tato konverzace není zabezpečená</string>
     <string name="content_description_chat_search_message_up">Hledat směrem vzhůru</string>
     <string name="content_description_chat_search_message_down">Hledat směrem dolů</string>

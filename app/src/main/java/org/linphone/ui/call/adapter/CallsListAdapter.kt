@@ -28,7 +28,6 @@ import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import org.linphone.BR.showTransferIcon
 import org.linphone.R
 import org.linphone.databinding.CallListCellBinding
 import org.linphone.ui.call.model.CallModel

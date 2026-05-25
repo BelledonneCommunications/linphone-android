@@ -671,7 +671,6 @@
     <string name="content_description_chat_open_attach_file">Открывает средство выбора файлов</string>
     <string name="content_description_chat_edit_conversation_subject">Нажмите, чтобы изменить тему этой беседы</string>
     <string name="content_description_chat_toggle_mute">Включает/выключает эту беседу</string>
-    <string name="content_description_chat_removal_in_progress">Беседа удаляется</string>
     <string name="content_description_chat_search_message_up">Поиск вверх</string>
     <string name="content_description_chat_search_message_down">Поиск вниз</string>
     <string name="content_description_chat_create">Начать новую беседу</string>

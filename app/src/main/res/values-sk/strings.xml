@@ -774,7 +774,6 @@
     <string name="content_description_chat_open_emoji_picker">Otvorí výber emoji</string>
     <string name="content_description_chat_open_attach_file">Otvorí výber súboru</string>
     <string name="content_description_chat_toggle_mute">Zapne/vypne stlmenie konverzácie</string>
-    <string name="content_description_chat_removal_in_progress">Konverzácia sa odstraňuje</string>
     <string name="content_description_chat_unsecured">Táto konverzácia nie je zabezpečená</string>
     <string name="content_description_chat_search_message_up">Hľadať smerom hore</string>
     <string name="content_description_chat_search_message_down">Hľadať smerom dole</string>

@@ -207,7 +207,7 @@ class SingleSignOnViewModel
                         operationInProgress.postValue(false)
 
                         viewModelScope.launch {
-                            FileUtils.Companion.deleteFile(authStateJsonFile.absolutePath)
+                            FileUtils.deleteFile(authStateJsonFile.absolutePath)
                             Log.w(
                                 "$TAG Previous auth_state.json file deleted, starting single sign on process from scratch"
                             )
@@ -218,7 +218,7 @@ class SingleSignOnViewModel
             } catch (ise: IllegalStateException) {
                 Log.e("$TAG Illegal state exception, clearing auth state and trying again: $ise")
                 viewModelScope.launch {
-                    FileUtils.Companion.deleteFile(authStateJsonFile.absolutePath)
+                    FileUtils.deleteFile(authStateJsonFile.absolutePath)
                     authState = getAuthState()
                     performRefreshToken()
                 }
@@ -261,7 +261,7 @@ class SingleSignOnViewModel
         val file = File(corePreferences.ssoCacheFile)
         if (file.exists()) {
             Log.i("$TAG Auth state file found, trying to read it")
-            val content = FileUtils.Companion.readFile(file)
+            val content = FileUtils.readFile(file)
             if (content.isNotEmpty()) {
                 Log.i("$TAG Initializing AuthState from local JSON file")
                 Log.d("$TAG Local JSON file contains [$content]")
@@ -288,7 +288,7 @@ class SingleSignOnViewModel
         Log.d("$TAG Date to save is [$data]")
         val file = File(corePreferences.ssoCacheFile)
         viewModelScope.launch {
-            if (FileUtils.Companion.dumpStringToFile(data, file)) {
+            if (FileUtils.dumpStringToFile(data, file)) {
                 Log.i("$TAG Service configuration saved as JSON as [${file.absolutePath}]")
             } else {
                 Log.i(
@@ -313,16 +313,16 @@ class SingleSignOnViewModel
                         Log.w("$TAG Access token is expired")
                         performRefreshToken()
                     } else {
-                        val date = if (TimestampUtils.Companion.isToday(expiration, timestampInSecs = false)) {
+                        val date = if (TimestampUtils.isToday(expiration, timestampInSecs = false)) {
                             "today"
                         } else {
-                            TimestampUtils.Companion.toString(
+                            TimestampUtils.toString(
                                 expiration,
                                 onlyDate = true,
                                 timestampInSecs = false
                             )
                         }
-                        val time = TimestampUtils.Companion.toString(expiration, timestampInSecs = false)
+                        val time = TimestampUtils.toString(expiration, timestampInSecs = false)
                         Log.i("$TAG Access token expires [$date] [$time]")
                         storeTokensInAuthInfo()
                     }
@@ -330,7 +330,7 @@ class SingleSignOnViewModel
                     Log.w("$TAG Access token expiration info not available")
                     val file = File(corePreferences.ssoCacheFile)
                     viewModelScope.launch {
-                        FileUtils.Companion.deleteFile(file.absolutePath)
+                        FileUtils.deleteFile(file.absolutePath)
                         singleSignOn()
                     }
                 }
