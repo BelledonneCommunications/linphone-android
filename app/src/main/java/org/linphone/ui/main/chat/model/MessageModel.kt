@@ -577,7 +577,8 @@ class MessageModel
     private fun downloadContent(model: FileModel, content: Content) {
         Log.i("$TAG Start downloading content for file [${model.fileName}]")
 
-        if (content.filePath.orEmpty().isEmpty()) {
+        val path = content.filePath.orEmpty()
+        if (path.isEmpty()) {
             val contentName = content.name
             if (contentName != null) {
                 val isImage = FileUtils.isExtensionImage(contentName)
@@ -593,6 +594,8 @@ class MessageModel
             } else {
                 Log.e("$TAG Content name is null, can't download it!")
             }
+        } else {
+            Log.e("$TAG We already have a file path [$path] for this content, doing nothing")
         }
     }
 
