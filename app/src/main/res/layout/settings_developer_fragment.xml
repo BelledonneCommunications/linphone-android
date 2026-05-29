@@ -335,7 +335,6 @@
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/settings_subtitle_style"
                         android:id="@+id/clear_friends_db_subtitle"
-                        android:onClick="@{() -> viewModel.clearNativeFriendsDatabase()}"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
