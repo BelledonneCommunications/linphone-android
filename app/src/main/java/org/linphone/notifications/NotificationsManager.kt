@@ -92,6 +92,7 @@ class NotificationsManager
         const val INTENT_TOGGLE_SPEAKER_CALL_NOTIF_ACTION = "org.linphone.TOGGLE_SPEAKER_CALL_ACTION"
         const val INTENT_REPLY_MESSAGE_NOTIF_ACTION = "org.linphone.REPLY_ACTION"
         const val INTENT_MARK_MESSAGE_AS_READ_NOTIF_ACTION = "org.linphone.MARK_AS_READ_ACTION"
+        const val INTENT_FOREGROUND_SERVICE_NOTIF_DISMISSED_ACTION = "org.linphone.INTENT_FOREGROUND_SERVICE_NOTIF_DISMISSED_ACTION"
 
         const val INTENT_ANSWER_CALL_NOTIF_CODE = 2
         const val INTENT_HANGUP_CALL_NOTIF_CODE = 3
@@ -1904,6 +1905,7 @@ class NotificationsManager
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setShowWhen(false)
                 .setContentIntent(pendingIntent)
+                .setDeleteIntent(getForegroundServiceDismissedIntent())
             val notification = builder.build()
 
             Log.i(
@@ -1922,6 +1924,23 @@ class NotificationsManager
         } else {
             Log.w("$TAG Keep alive for third party accounts Service hasn't started yet...")
         }
+    }
+
+    @AnyThread
+    private fun getForegroundServiceDismissedIntent(): PendingIntent {
+        val foregroundServiceDismissedIntent = Intent(
+            context,
+            CoreKeepAliveThirdPartyAccountsService::class.java
+        ).apply {
+            action = INTENT_FOREGROUND_SERVICE_NOTIF_DISMISSED_ACTION
+        }
+
+        return PendingIntent.getService(
+            context,
+            KEEP_ALIVE_FOR_THIRD_PARTY_ACCOUNTS_ID,
+            foregroundServiceDismissedIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
     }
 
     @MainThread
