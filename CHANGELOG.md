@@ -10,7 +10,7 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
-## [6.2.0] - Unreleased
+## [6.2.0] - 2026-06-02
 
 ### Added
 - Added the ability to edit/delete chat messages sent less than 24 hours ago.
@@ -53,6 +53,7 @@ Group changes to describe their impact on the project, as follows:
 - Improved navigation within app when using a keyboard
 - Now loading media/documents contents in conversation by chunks (instead of all of them at once)
 - If in-call foreground service doesn't start, show an error notification and clicking on it will fix the issue (by bringing Linphone in foreground and re-starting the foreground service)
+- Restart keep-alive service foreground notification if it's dismissed to ensure app will be kept alive in background
 - Simplified audio device name in settings
 - Reworked some settings (moved calls related ones from advanced settings to advanced calls settings)
 - Removed menu to access account profile, button is now directly available from drawer menu
