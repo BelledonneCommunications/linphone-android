@@ -48,7 +48,7 @@ class ConversationForwardMessageViewModel
     val operationInProgress = MutableLiveData<Boolean>()
 
     val chatRoomCreatedEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+        MutableLiveData()
     }
 
     private val chatRoomListener = object : ChatRoomListenerStub() {
@@ -58,7 +58,7 @@ class ConversationForwardMessageViewModel
             if (state == ChatRoom.State.Instantiated) return
 
             val id = LinphoneUtils.getConversationId(chatRoom)
-            Log.i("$TAG Conversation [$id] (${chatRoom.subject}) state changed: [$state]")
+            Log.i("$TAG Conversation [$id] (${chatRoom.subjectUtf8}) state changed: [$state]")
 
             if (state == ChatRoom.State.Created) {
                 Log.i("$TAG Conversation [$id] successfully created")

@@ -19,12 +19,16 @@
  */
 package org.linphone.ui.main.history.model
 
+import android.provider.Settings
+import android.provider.Settings.SettingNotFoundException
+import android.view.View
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.TouchListener
 
 open class NumpadModel
     @UiThread
@@ -47,7 +51,38 @@ open class NumpadModel
 
     val showLetters = MutableLiveData<Boolean>()
 
+    val systemPolicyAllowsDtmf: Boolean
+
+    val touchListener = object : TouchListener {
+        override fun onPressed(view: View): Boolean {
+            Log.i("$TAG Numpad digit [${view.tag}] pressed")
+            startPlayingDtmf(view.tag.toString())
+            return false
+        }
+
+        override fun onReleased(view: View): Boolean {
+            Log.i("$TAG Numpad digit [${view.tag}] released")
+            stopPlayingDtmf(view.tag.toString())
+            return false
+        }
+    }
+
     init {
+        var dtmfAllowed = false
+        try {
+            dtmfAllowed = Settings.System.getInt(
+                coreContext.context.contentResolver,
+                Settings.System.DTMF_TONE_WHEN_DIALING
+            ) != 0
+            if (!dtmfAllowed) {
+                Log.w("$TAG Numpad DTMF tones are disabled in system settings, not playing them")
+            }
+        } catch (snfe: SettingNotFoundException) {
+            Log.e("$TAG DTMF_TONE_WHEN_DIALING system setting not found: $snfe")
+            dtmfAllowed = false
+        }
+        systemPolicyAllowsDtmf = dtmfAllowed
+
         coreContext.postOnCoreThread {
             showLetters.postValue(corePreferences.showLettersOnDialpad)
 
@@ -61,12 +96,6 @@ open class NumpadModel
     fun onDigitClicked(value: String) {
         Log.i("$TAG Clicked on digit [$value]")
         onDigitClicked.invoke(value)
-
-        if (value.isNotEmpty()) {
-            coreContext.postOnCoreThread {
-                coreContext.playDtmf(value[0], ignoreSystemPolicy = inCallNumpad)
-            }
-        }
     }
 
     @UiThread
@@ -112,5 +141,25 @@ open class NumpadModel
     fun onBlindTransferClicked() {
         Log.i("$TAG Transferring call")
         onTransferCallClicked.invoke()
+    }
+
+    @UiThread
+    private fun startPlayingDtmf(dtmf: String) {
+        if (dtmf.isEmpty() || (!inCallNumpad && !systemPolicyAllowsDtmf)) return
+
+        coreContext.postOnCoreThread { core ->
+            Log.i("$TAG Start playing DTMF [$dtmf]")
+            core.playDtmf(dtmf[0], -1)
+        }
+    }
+
+    @UiThread
+    private fun stopPlayingDtmf(dtmf: String) {
+        if (dtmf.isEmpty() || (!inCallNumpad && !systemPolicyAllowsDtmf)) return
+
+        coreContext.postOnCoreThread { core ->
+            Log.i("$TAG Stop playing DTMF [$dtmf]")
+            core.stopDtmf()
+        }
     }
 }

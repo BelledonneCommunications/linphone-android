@@ -22,7 +22,7 @@ package org.linphone.ui.assistant
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.ViewGroup
-import androidx.activity.addCallback
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat
@@ -51,6 +51,15 @@ class AssistantActivity : GenericActivity() {
 
     private lateinit var binding: AssistantActivityBinding
 
+    private val backPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            val navController = binding.assistantNavContainer.findNavController()
+            if (navController.currentDestination?.id != R.id.landingFragment) {
+                navController.popBackStack()
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
@@ -75,8 +84,9 @@ class AssistantActivity : GenericActivity() {
             if (core.accountList.isEmpty()) {
                 Log.i("$TAG No account configured, disabling back gesture")
                 coreContext.postOnMainThread {
-                    // Disable back gesture / button
-                    onBackPressedDispatcher.addCallback { }
+                    // Only allow to navigate back within the assistant nav controller,
+                    // not to leave the AssistantActivity
+                    onBackPressedDispatcher.addCallback(backPressedCallback)
                 }
             }
         }

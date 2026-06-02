@@ -314,6 +314,10 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
             }
         }
 
+        binding.setLeaveGroupClickListener {
+            showLeaveConfirmationDialog()
+        }
+
         binding.setDeleteHistoryClickListener {
             showDeleteHistoryConfirmationDialog()
         }
@@ -369,8 +373,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
         popupView.disableAddContact = corePreferences.disableAddContact
 
         popupView.setRemoveParticipantClickListener {
-            Log.i("$TAG Trying to remove participant [$address]")
-            viewModel.removeParticipant(participantModel)
+            showConfirmParticipantRemovalPopup(participantModel)
             popupWindow.dismiss()
         }
 
@@ -479,6 +482,55 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
         model.confirmEvent.observe(viewLifecycleOwner) {
             it.consume {
                 viewModel.startGroupCall()
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun showLeaveConfirmationDialog() {
+        val dialogModel = ConfirmationDialogModel()
+        val dialog = DialogUtils.getLeaveConversationConfirmationDialog(
+            requireActivity(),
+            dialogModel
+        )
+
+        dialogModel.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        dialogModel.confirmEvent.observe(viewLifecycleOwner) {
+            it.consume {
+
+                Log.i("$TAG Leaving group conversation")
+                viewModel.leaveGroup()
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun showConfirmParticipantRemovalPopup(participantModel: ParticipantModel) {
+        val dialogModel = ConfirmationDialogModel()
+        val dialog = DialogUtils.getConfirmRemoveParticipantDialog(
+            requireActivity(),
+            dialogModel
+        )
+
+        dialogModel.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        dialogModel.confirmEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Trying to remove participant [${participantModel.sipUri}]")
+                viewModel.removeParticipant(participantModel)
                 dialog.dismiss()
             }
         }

@@ -44,16 +44,18 @@ class Api34Compatibility {
             id: Int,
             notification: Notification,
             foregroundServiceType: Int
-        ) {
+        ): Boolean {
             try {
                 service.startForeground(
                     id,
                     notification,
                     foregroundServiceType
                 )
+                return true
             } catch (e: Exception) {
                 Log.e("$TAG Can't start service as foreground! $e")
             }
+            return false
         }
 
         fun hasFullScreenIntentPermission(context: Context): Boolean {

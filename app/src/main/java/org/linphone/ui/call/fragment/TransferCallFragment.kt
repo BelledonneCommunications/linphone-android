@@ -25,6 +25,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -35,6 +36,7 @@ import kotlin.getValue
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.contacts.getListOfSipAddressesAndPhoneNumbers
 import org.linphone.core.Address
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallTransferFragmentBinding
@@ -43,10 +45,15 @@ import org.linphone.ui.call.model.CallModel
 import org.linphone.ui.call.viewmodel.CallsViewModel
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
 import org.linphone.ui.main.adapter.ConversationsContactsAndSuggestionsListAdapter
+import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
+import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
+import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.history.viewmodel.StartCallViewModel
+import org.linphone.ui.main.model.ConversationContactOrSuggestionModel
 import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
+import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.RecyclerViewHeaderDecoration
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.setKeyboardInsetListener
@@ -84,10 +91,26 @@ class TransferCallFragment : GenericCallFragment() {
 
     private var numberOrAddressPickerDialog: Dialog? = null
 
+    private val listener = object : ContactNumberOrAddressClickListener {
+        @UiThread
+        override fun onClicked(model: ContactNumberOrAddressModel) {
+            val address = model.address
+            if (address != null) {
+                coreContext.postOnCoreThread {
+                    doCallTransfer(address, model.name)
+                }
+            }
+        }
+
+        @UiThread
+        override fun onLongPress(model: ContactNumberOrAddressModel) {
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        callsAdapter = CallsListAdapter()
+        callsAdapter = CallsListAdapter(showTransferIconInsteadOfCallState = true)
         contactsAdapter = ConversationsContactsAndSuggestionsListAdapter()
     }
 
@@ -144,7 +167,7 @@ class TransferCallFragment : GenericCallFragment() {
 
         contactsAdapter.onClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
-                showConfirmBlindTransferDialog(model.address, model.name)
+                startCallTransfer(model)
             }
         }
 
@@ -249,6 +272,7 @@ class TransferCallFragment : GenericCallFragment() {
     override fun onPause() {
         super.onPause()
 
+        viewModel.searchFilter.value = ""
         numberOrAddressPickerDialog?.dismiss()
         numberOrAddressPickerDialog = null
     }
@@ -265,6 +289,54 @@ class TransferCallFragment : GenericCallFragment() {
             if (corePreferences.automaticallyShowDialpad) {
                 viewModel.isNumpadVisible.postValue(true)
             }
+        }
+    }
+
+    private fun startCallTransfer(model: ConversationContactOrSuggestionModel) {
+        coreContext.postOnCoreThread {
+            val friend = model.friend
+            if (friend == null) {
+                doCallTransfer(model.address, model.name)
+                return@postOnCoreThread
+            }
+
+            val singleAvailableAddress = LinphoneUtils.getSingleAvailableAddressForFriend(friend)
+            if (singleAvailableAddress != null) {
+                Log.i(
+                    "$TAG Only 1 SIP address or phone number found for contact [${friend.name}], starting call directly"
+                )
+                doCallTransfer(singleAvailableAddress, model.name)
+            } else {
+                val list = friend.getListOfSipAddressesAndPhoneNumbers(listener)
+                Log.i(
+                    "$TAG [${list.size}] numbers or addresses found for contact [${friend.name}], showing selection dialog"
+                )
+
+                coreContext.postOnMainThread {
+                    val numberOrAddressModel = NumberOrAddressPickerDialogModel(list)
+                    val dialog =
+                        DialogUtils.getNumberOrAddressPickerDialog(
+                            requireActivity(),
+                            numberOrAddressModel
+                        )
+                    numberOrAddressPickerDialog = dialog
+
+                    numberOrAddressModel.dismissEvent.observe(viewLifecycleOwner) { event ->
+                        event.consume {
+                            dialog.dismiss()
+                        }
+                    }
+
+                    dialog.show()
+                }
+            }
+        }
+    }
+
+    @WorkerThread
+    private fun doCallTransfer(address: Address, name: String) {
+        coreContext.postOnMainThread {
+            showConfirmBlindTransferDialog(address, name)
         }
     }
 

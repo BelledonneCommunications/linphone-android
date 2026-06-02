@@ -221,6 +221,13 @@ class CorePreferences
             config.setBool("app", "make_downloaded_images_public_in_gallery", value)
         }
 
+    @get:AnyThread @set:WorkerThread
+    var showChatMessageContentInNotification: Boolean
+        get() = config.getBool("ui", "display_notification_content", true)
+        set(value) {
+            config.setBool("ui", "display_notification_content", value)
+        }
+
     // Conference related
 
     @get:AnyThread @set:WorkerThread
@@ -228,6 +235,13 @@ class CorePreferences
         get() = config.getBool("app", "create_e2e_encrypted_conferences", false)
         set(value) {
             config.setBool("app", "create_e2e_encrypted_conferences", value)
+        }
+
+    @get:AnyThread @set:WorkerThread
+    var showPastMeetings: Boolean
+        get() = config.getBool("ui", "show_past_meetings", false)
+        set(value) {
+            config.setBool("ui", "show_past_meetings", value)
         }
 
     // Contacts related

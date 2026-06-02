@@ -32,6 +32,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <androidx.constraintlayout.widget.Group
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids="no_meeting_image, no_meeting_label"
+                    android:visibility="@{viewModel.meetings.empty &amp;&amp; !viewModel.isFilterEmpty ? View.VISIBLE : View.GONE, default=gone}" />
+
                 <include
                     android:id="@+id/bottom_nav_bar"
                     android:layout_width="@dimen/landscape_nav_bar_width"
@@ -46,26 +52,16 @@
                     android:id="@+id/top_bar"
                     layout="@layout/main_activity_top_bar"
                     bind:viewModel="@{viewModel}"
-                    bind:enableExtraAction="@{true}"
+                    bind:showExtraAction="@{true}"
                     bind:extraActionIcon="@{@drawable/calendar}"
                     bind:extraActionClickListener="@{todayClickListener}"
                     bind:extraActionContentDescription="@{@string/content_description_meeting_today}"
+                    bind:extraActionEnabled="@{true}"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/top_bar_height"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
                     app:layout_constraintEnd_toEndOf="parent"/>
-
-                <View
-                    android:id="@+id/background"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:background="?attr/color_main2_000"
-                    android:contentDescription="@null"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
-                    app:layout_constraintTop_toBottomOf="@id/top_bar"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/meetings_list"
@@ -73,6 +69,33 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/top_bar_height"
                     android:layout_marginStart="@dimen/landscape_nav_bar_width" />
+
+                <ImageView
+                    android:id="@+id/no_meeting_image"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:src="@drawable/illu"
+                    android:contentDescription="@null"
+                    app:layout_constraintHeight_max="200dp"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
+                    app:layout_constraintTop_toBottomOf="@id/top_bar"
+                    app:layout_constraintBottom_toTopOf="@id/no_meeting_label"  />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/section_header_style"
+                    android:id="@+id/no_meeting_label"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/list_filter_no_result_found"
+                    android:textAlignment="center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
+                    app:layout_constraintTop_toBottomOf="@id/no_meeting_image"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
                 <com.google.android.material.progressindicator.CircularProgressIndicator
                     android:id="@+id/fetch_in_progress"

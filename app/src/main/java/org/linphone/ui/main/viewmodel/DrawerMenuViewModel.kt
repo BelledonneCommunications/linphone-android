@@ -19,7 +19,6 @@
  */
 package org.linphone.ui.main.viewmodel
 
-import android.view.View
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
@@ -55,23 +54,23 @@ class DrawerMenuViewModel
     val hideQuitButton = MutableLiveData<Boolean>()
 
     val startAssistantEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val closeDrawerEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
-    val showAccountPopupMenuEvent: MutableLiveData<Event<Pair<View, Account>>> by lazy {
-        MutableLiveData<Event<Pair<View, Account>>>()
+    val openAccountProfileEvent: MutableLiveData<Event<AccountModel>> by lazy {
+        MutableLiveData()
     }
 
     val defaultAccountChangedEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+        MutableLiveData()
     }
 
     val openLinkInBrowserEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+        MutableLiveData()
     }
 
     private val coreListener = object : CoreListenerStub() {
@@ -185,9 +184,9 @@ class DrawerMenuViewModel
 
         val list = arrayListOf<AccountModel>()
         for (account in coreContext.core.accountList) {
-            val model = AccountModel(account) { view, account ->
+            val model = AccountModel(account) { model ->
                 // onClicked
-                showAccountPopupMenuEvent.postValue(Event(Pair(view, account)))
+                openAccountProfileEvent.postValue(Event(model))
             }
             list.add(model)
 

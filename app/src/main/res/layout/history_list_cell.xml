@@ -83,13 +83,15 @@
         <ImageView
             android:onClick="@{onCallClickListener}"
             android:id="@+id/call"
-            android:layout_width="@dimen/icon_size"
-            android:layout_height="@dimen/icon_size"
+            android:layout_width="@dimen/large_icon_size"
+            android:layout_height="@dimen/large_icon_size"
+            android:padding="5dp"
             android:layout_marginEnd="6dp"
             android:src="@drawable/phone"
+            android:background="@drawable/circle_transparent_button_background"
             android:contentDescription="@string/content_description_call_start"
-            app:tint="?attr/color_main2_500"
             android:visibility="@{model.wasConference ? View.GONE : View.VISIBLE}"
+            app:tint="?attr/color_main2_500"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/name"
             app:layout_constraintBottom_toBottomOf="@id/date_time" />

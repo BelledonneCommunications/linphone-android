@@ -24,7 +24,7 @@
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <com.google.android.material.bottomsheet.BottomSheetDragHandleView
-        android:id="@+id/handle"
+        android:id="@+id/media_encryption_stats_bottom_sheet_handle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:padding="11dp"
@@ -42,7 +42,7 @@
             android:layout_marginBottom="20dp"
             android:background="@drawable/shape_squircle_gray_600_background"
             app:columnCount="2"
-            app:layout_constraintTop_toBottomOf="@id/handle"
+            app:layout_constraintTop_toBottomOf="@id/media_encryption_stats_bottom_sheet_handle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
@@ -138,12 +138,13 @@
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/primary_button_label_style"
                 android:onClick="@{() -> model.showSasValidationDialog()}"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 android:text="@string/call_do_zrtp_sas_validation_again"
-                android:visibility="@{model.isMediaEncryptionZrtp ? View.VISIBLE : View.GONE}"
-                app:layout_columnSpan="2"/>
+                android:visibility="@{model.isMediaEncryptionZrtp &amp;&amp; !viewModel.conferenceModel.isCurrentCallInConference() ? View.VISIBLE : View.GONE}"
+                app:layout_columnSpan="2"
+                app:layout_gravity="center_horizontal"/>
 
         </androidx.gridlayout.widget.GridLayout>
 

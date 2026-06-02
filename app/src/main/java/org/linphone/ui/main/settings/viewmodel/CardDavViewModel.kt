@@ -64,11 +64,11 @@ class CardDavViewModel
     var pendingAuthInfo: AuthInfo? = null
 
     val syncSuccessfulEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val friendListRemovedEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     private lateinit var friendList: FriendList
@@ -248,6 +248,13 @@ class CardDavViewModel
             }
 
             if (isEdit.value == true && ::friendList.isInitialized) {
+                friendList.displayName = name
+                friendList.uri = if (server.startsWith("http://") || server.startsWith("https://")) {
+                    server
+                } else {
+                    "https://$server"
+                }
+
                 Log.i(
                     "$TAG Changes were made to CardDAV friend list [$name], synchronizing it"
                 )

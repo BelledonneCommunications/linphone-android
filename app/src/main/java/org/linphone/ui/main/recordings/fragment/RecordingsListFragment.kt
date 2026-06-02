@@ -21,10 +21,12 @@ package org.linphone.ui.main.recordings.fragment
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.graphics.Outline
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewOutlineProvider
 import androidx.annotation.UiThread
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
@@ -63,6 +65,14 @@ class RecordingsListFragment : GenericMainFragment() {
 
     private var bottomSheetDialog: BottomSheetDialogFragment? = null
 
+    private val outlineProvider = object : ViewOutlineProvider() {
+        override fun getOutline(view: View?, outline: Outline?) {
+            val radius = resources.getDimension(R.dimen.top_list_item_rounded_corner_radius)
+            view ?: return
+            outline?.setRoundRect(0, 0, view.width, (view.height + radius).toInt(), radius)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -94,6 +104,8 @@ class RecordingsListFragment : GenericMainFragment() {
         binding.recordingsList.layoutManager = LinearLayoutManager(requireContext())
         val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
         binding.recordingsList.addItemDecoration(headerItemDecoration)
+        binding.recordingsList.outlineProvider = outlineProvider
+        binding.recordingsList.clipToOutline = true
 
         listViewModel.recordings.observe(viewLifecycleOwner) {
             val count = it.size

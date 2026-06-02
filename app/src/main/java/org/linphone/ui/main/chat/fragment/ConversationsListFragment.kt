@@ -33,18 +33,26 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.contacts.getListOfSipAddressesAndPhoneNumbers
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatListFragmentBinding
 import org.linphone.ui.fileviewer.FileViewerActivity
 import org.linphone.ui.fileviewer.MediaViewerActivity
 import org.linphone.ui.main.MainActivity.Companion.ARGUMENTS_CONVERSATION_ID
 import org.linphone.ui.main.chat.adapter.ConversationsListAdapter
+import org.linphone.ui.main.chat.model.ConversationModel
 import org.linphone.ui.main.chat.viewmodel.ConversationsListViewModel
+import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
+import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
+import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.fragment.AbstractMainFragment
-import org.linphone.ui.main.history.fragment.HistoryMenuDialogFragment
+import org.linphone.utils.ConfirmationDialogModel
+import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.RecyclerViewHeaderDecoration
 
 @UiThread
 class ConversationsListFragment : AbstractMainFragment() {
@@ -59,6 +67,21 @@ class ConversationsListFragment : AbstractMainFragment() {
     private lateinit var adapter: ConversationsListAdapter
 
     private var bottomSheetDialog: BottomSheetDialogFragment? = null
+
+    private val numberOrAddressClickListener = object : ContactNumberOrAddressClickListener {
+        @UiThread
+        override fun onClicked(model: ContactNumberOrAddressModel) {
+            coreContext.postOnCoreThread {
+                val address = model.address
+                if (address != null) {
+                    Log.i("$TAG Creating 1-1 conversation with to [${address.asStringUriOnly()}]")
+                    listViewModel.createOneToOneChatRoomWith(address)
+                }
+            }
+        }
+
+        override fun onLongPress(model: ContactNumberOrAddressModel) { }
+    }
 
     private val dataObserver = object : RecyclerView.AdapterDataObserver() {
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
@@ -78,7 +101,7 @@ class ConversationsListFragment : AbstractMainFragment() {
         Log.i(
             "$TAG Default account changed, updating avatar in top bar & re-computing conversations"
         )
-        listViewModel.applyFilter()
+        listViewModel.filter()
     }
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
@@ -121,6 +144,9 @@ class ConversationsListFragment : AbstractMainFragment() {
         binding.conversationsList.outlineProvider = outlineProvider
         binding.conversationsList.clipToOutline = true
 
+        val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
+        binding.conversationsList.addItemDecoration(headerItemDecoration)
+
         adapter.conversationLongClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
                 val modalBottomSheet = ConversationDialogFragment(
@@ -144,15 +170,13 @@ class ConversationsListFragment : AbstractMainFragment() {
                         model.call()
                     },
                     { // onDeleteConversation
-                        Log.i("$TAG Deleting conversation [${model.id}]")
-                        model.delete()
+                        showDeleteConfirmationDialog(model)
                     },
                     { // onLeaveGroup
-                        Log.i("$TAG Leaving group conversation [${model.id}]")
-                        model.leaveGroup()
+                        showLeaveConfirmationDialog(model)
                     }
                 )
-                modalBottomSheet.show(parentFragmentManager, HistoryMenuDialogFragment.TAG)
+                modalBottomSheet.show(parentFragmentManager, ConversationDialogFragment.TAG)
                 bottomSheetDialog = modalBottomSheet
             }
         }
@@ -162,6 +186,35 @@ class ConversationsListFragment : AbstractMainFragment() {
                 Log.i("$TAG Show conversation with ID [${model.id}]")
                 sharedViewModel.displayedChatRoom = model.chatRoom
                 sharedViewModel.showConversationEvent.value = Event(model.id)
+            }
+        }
+
+        adapter.createConversationWithFriendClickedEvent.observe(viewLifecycleOwner) {
+            it.consume { friend ->
+                coreContext.postOnCoreThread {
+                    val singleAvailableAddress = LinphoneUtils.getSingleAvailableAddressForFriend(friend)
+                    if (singleAvailableAddress != null) {
+                        Log.i(
+                            "$TAG Only 1 SIP address or phone number found for contact [${friend.name}], using it"
+                        )
+                        listViewModel.createOneToOneChatRoomWith(singleAvailableAddress)
+                    } else {
+                        val list = friend.getListOfSipAddressesAndPhoneNumbers(numberOrAddressClickListener)
+                        Log.i(
+                            "$TAG [${list.size}] numbers or addresses found for contact [${friend.name}], showing selection dialog"
+                        )
+                        coreContext.postOnMainThread {
+                            showNumbersOrAddressesDialog(list)
+                        }
+                    }
+                }
+            }
+        }
+
+        adapter.createConversationWithAddressClickedEvent.observe(viewLifecycleOwner) {
+            it.consume { address ->
+                Log.i("$TAG Creating 1-1 conversation with to [${address.asStringUriOnly()}]")
+                listViewModel.createOneToOneChatRoomWith(address)
             }
         }
 
@@ -185,6 +238,14 @@ class ConversationsListFragment : AbstractMainFragment() {
 
             Log.i("$TAG Conversations list ready with [${it.size}] items")
             listViewModel.fetchInProgress.value = false
+        }
+
+        listViewModel.chatRoomCreatedEvent.observe(viewLifecycleOwner) {
+            it.consume { conversationId ->
+                Log.i("$TAG Conversation [$conversationId] has been created, navigating to it")
+                val action = ConversationFragmentDirections.actionGlobalConversationFragment(conversationId)
+                binding.chatNavContainer.findNavController().navigate(action)
+            }
         }
 
         sharedViewModel.showConversationEvent.observe(viewLifecycleOwner) {
@@ -251,10 +312,10 @@ class ConversationsListFragment : AbstractMainFragment() {
 
         sharedViewModel.updateConversationLastMessageEvent.observe(viewLifecycleOwner) {
             it.consume { conversationId ->
-                val model = listViewModel.conversations.value.orEmpty().find { conversationModel ->
-                    conversationModel.id == conversationId
+                val model = listViewModel.conversations.value.orEmpty().find { wrapperModel ->
+                    wrapperModel.conversationModel?.id == conversationId
                 }
-                model?.updateLastMessageInfo()
+                model?.conversationModel?.updateLastMessageInfo()
             }
         }
 
@@ -262,10 +323,10 @@ class ConversationsListFragment : AbstractMainFragment() {
             it.consume {
                 val displayChatRoom = sharedViewModel.displayedChatRoom
                 if (displayChatRoom != null) {
-                    val found = listViewModel.conversations.value.orEmpty().find { model ->
-                        model.chatRoom == displayChatRoom
+                    val found = listViewModel.conversations.value.orEmpty().find { wrapperModel ->
+                        wrapperModel.conversationModel?.chatRoom == displayChatRoom
                     }
-                    found?.updateMuteState()
+                    found?.conversationModel?.updateMuteState()
                 }
             }
         }
@@ -277,9 +338,9 @@ class ConversationsListFragment : AbstractMainFragment() {
                 val displayChatRoom = sharedViewModel.displayedChatRoom
                 if (displayChatRoom != null) {
                     val found = listViewModel.conversations.value.orEmpty().find { model ->
-                        model.chatRoom == displayChatRoom
+                        model.conversationModel?.chatRoom == displayChatRoom
                     }
-                    found?.updateUnreadCount()
+                    found?.conversationModel?.updateUnreadCount()
                 }
                 listViewModel.updateUnreadMessagesCount()
             }
@@ -342,5 +403,71 @@ class ConversationsListFragment : AbstractMainFragment() {
         } catch (e: IllegalStateException) {
             Log.e("$TAG Failed to unregister data observer to adapter: $e")
         }
+    }
+
+    private fun showNumbersOrAddressesDialog(list: List<ContactNumberOrAddressModel>) {
+        val numberOrAddressModel = NumberOrAddressPickerDialogModel(list)
+        val dialog =
+            DialogUtils.getNumberOrAddressPickerDialog(
+                requireActivity(),
+                numberOrAddressModel
+            )
+
+        numberOrAddressModel.dismissEvent.observe(viewLifecycleOwner) { event ->
+            event.consume {
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun showDeleteConfirmationDialog(conversationModel: ConversationModel) {
+        val dialogModel = ConfirmationDialogModel()
+        val dialog = DialogUtils.getDeleteConversationConfirmationDialog(
+            requireActivity(),
+            dialogModel
+        )
+
+        dialogModel.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        dialogModel.confirmEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Deleting conversation [${conversationModel.id}]")
+                conversationModel.delete()
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun showLeaveConfirmationDialog(conversationModel: ConversationModel) {
+        val dialogModel = ConfirmationDialogModel()
+        val dialog = DialogUtils.getLeaveConversationConfirmationDialog(
+            requireActivity(),
+            dialogModel
+        )
+
+        dialogModel.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        dialogModel.confirmEvent.observe(viewLifecycleOwner) {
+            it.consume {
+
+                Log.i("$TAG Leaving group conversation [${conversationModel.id}]")
+                conversationModel.leaveGroup()
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
     }
 }

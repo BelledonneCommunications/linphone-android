@@ -196,8 +196,6 @@
                     android:layout_marginBottom="@dimen/screen_bottom_margin"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
                     android:text="@string/manage_account_choose_mode_apply_label"
                     app:layout_constraintWidth_max="@dimen/button_max_width"
                     app:layout_constraintVertical_bias="1"

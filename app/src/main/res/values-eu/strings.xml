@@ -22,4 +22,10 @@
     <string name="dialog_accept">Onartu</string>
     <string name="sip_address">SIP helbidea</string>
     <string name="start">Hasi</string>
+    <string name="settings_contacts_carddav_name_title">Erakusteko izena</string>
+    <string name="settings_contacts_carddav_username_title">Erabiltzaile izena</string>
+    <string name="settings_contacts_carddav_password_title">Pasahitza</string>
+    <string name="settings_contacts_ldap_password_title">Pasahitza</string>
+    <string name="settings_advanced_device_id">Gailuaren IDa</string>
+    <string name="account_settings_dialog_invalid_password_hint">Pasahitza</string>
 </resources>

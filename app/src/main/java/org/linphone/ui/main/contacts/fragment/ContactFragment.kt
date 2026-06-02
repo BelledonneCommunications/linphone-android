@@ -115,6 +115,24 @@ class ContactFragment : SlidingPaneChildFragment() {
             showDeleteConfirmationDialog()
         }
 
+        binding.setGoToSharedMediaClickListener {
+            if (findNavController().currentDestination?.id == R.id.contactFragment) {
+                val conversationId = viewModel.existingConversationId.value.orEmpty()
+                Log.i("$TAG Going to shared media fragment for conversation [$conversationId]")
+                val action = ContactFragmentDirections.actionContactFragmentToConversationMediaListFragment(conversationId)
+                findNavController().navigate(action)
+            }
+        }
+
+        binding.setGoToSharedDocumentsClickListener {
+            if (findNavController().currentDestination?.id == R.id.contactFragment) {
+                val conversationId = viewModel.existingConversationId.value.orEmpty()
+                Log.i("$TAG Going to shared documents fragment for conversation [$conversationId]")
+                val action = ContactFragmentDirections.actionContactFragmentToConversationDocumentsListFragment(conversationId)
+                findNavController().navigate(action)
+            }
+        }
+
         sharedViewModel.isSlidingPaneSlideable.observe(viewLifecycleOwner) { slideable ->
             viewModel.showBackButton.value = slideable
         }

@@ -45,11 +45,11 @@ class RecordingsListAdapter :
     var selectedAdapterPosition = -1
 
     val recordingClickedEvent: MutableLiveData<Event<RecordingModel>> by lazy {
-        MutableLiveData<Event<RecordingModel>>()
+        MutableLiveData()
     }
 
     val recordingLongClickedEvent: MutableLiveData<Event<RecordingModel>> by lazy {
-        MutableLiveData<Event<RecordingModel>>()
+        MutableLiveData()
     }
 
     override fun displayHeaderForPosition(position: Int): Boolean {

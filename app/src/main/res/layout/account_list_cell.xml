@@ -124,12 +124,12 @@
 
         <ImageView
             style="@style/icon_top_bar_button_style"
-            android:onClick="@{() -> model.openMenu(menu)}"
+            android:onClick="@{() -> model.openMenu()}"
             android:id="@+id/menu"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:contentDescription="@string/content_description_open_drawer_menu_icon"
-            android:src="@drawable/dots_three_vertical"
+            android:contentDescription="@string/drawer_menu_manage_account"
+            android:src="@drawable/user_circle_gear"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/name"

@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.call.viewmodel
 
+import android.content.res.Configuration
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import androidx.window.layout.FoldingFeature
@@ -35,4 +36,5 @@ class SharedCallViewModel
     // For moving video preview purposes
     var videoPreviewX: Float = 0f
     var videoPreviewY: Float = 0f
+    var videoPreviewOrientation: Int = Configuration.ORIENTATION_UNDEFINED
 }

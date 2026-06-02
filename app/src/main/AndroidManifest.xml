@@ -141,6 +141,12 @@
             android:resizeableActivity="true" />
 
         <activity
+            android:name=".ui.sso.SingleSignOnActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true" />
+
+        <activity
             android:name=".ui.fileviewer.MediaViewerActivity"
             android:windowSoftInputMode="adjustResize"
             android:launchMode="singleTask"

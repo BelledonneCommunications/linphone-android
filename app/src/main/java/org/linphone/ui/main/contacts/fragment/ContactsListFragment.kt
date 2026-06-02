@@ -50,6 +50,8 @@ import org.linphone.core.FriendList
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactsListFilterPopupMenuBinding
 import org.linphone.databinding.ContactsListFragmentBinding
+import org.linphone.ui.fileviewer.FileViewerActivity
+import org.linphone.ui.fileviewer.MediaViewerActivity
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.contacts.adapter.ContactsListAdapter
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
@@ -231,6 +233,32 @@ class ContactsListFragment : AbstractMainFragment() {
         sharedViewModel.forceRefreshContactsList.observe(viewLifecycleOwner) {
             it.consume {
                 listViewModel.filter()
+            }
+        }
+
+        sharedViewModel.displayFileEvent.observe(viewLifecycleOwner) {
+            it.consume { bundle ->
+                if (findNavController().currentDestination?.id == R.id.contactsListFragment) {
+                    val path = bundle.getString("path", "")
+                    val isMedia = bundle.getBoolean("isMedia", false)
+                    if (path.isEmpty()) {
+                        Log.e("$TAG Can't navigate to file viewer for empty path!")
+                        return@consume
+                    }
+
+                    Log.i(
+                        "$TAG Navigating to [${if (isMedia) "media" else "file"}] viewer fragment with path [$path]"
+                    )
+                    if (isMedia) {
+                        val intent = Intent(requireActivity(), MediaViewerActivity::class.java)
+                        intent.putExtras(bundle)
+                        startActivity(intent)
+                    } else {
+                        val intent = Intent(requireActivity(), FileViewerActivity::class.java)
+                        intent.putExtras(bundle)
+                        startActivity(intent)
+                    }
+                }
             }
         }
 

@@ -117,6 +117,7 @@
                 app:layout_constraintTop_toTopOf="@id/name_address"
                 app:layout_constraintBottom_toBottomOf="@id/name_address" />
 
+            <!--suppress AndroidUnknownAttribute -->
             <org.linphone.ui.call.view.RoundCornersTextureView
                 android:id="@+id/local_preview_video_surface"
                 android:layout_width="wrap_content"
@@ -125,7 +126,7 @@
                 android:layout_marginBottom="10dp"
                 app:alignTopRight="true"
                 app:displayMode="black_bars"
-                app:radius="@dimen/call_round_corners_texture_view_radius"
+                roundCornersRadius="@dimen/call_round_corners_texture_view_radius"
                 app:layout_constraintBottom_toTopOf="@id/bottom_bar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHeight_max="@dimen/call_video_preview_max_size"

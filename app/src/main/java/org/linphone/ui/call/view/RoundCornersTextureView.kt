@@ -25,7 +25,9 @@ import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewOutlineProvider
+import androidx.annotation.MainThread
 import androidx.annotation.UiThread
+import org.linphone.LinphoneApplication.Companion.coreContext
 import java.lang.NumberFormatException
 import org.linphone.R
 import org.linphone.mediastream.video.capture.CaptureTextureView
@@ -86,11 +88,13 @@ class RoundCornersTextureView : CaptureTextureView {
         }
     }
 
+    @MainThread
     fun setRadius(radius: Float) {
         mRadius = radius
         setRoundCorners()
     }
 
+    @MainThread
     private fun setRoundCorners() {
         outlineProvider = object : ViewOutlineProvider() {
             override fun getOutline(view: View, outline: Outline) {
@@ -123,7 +127,9 @@ class RoundCornersTextureView : CaptureTextureView {
 
         val previewSize = previewVideoSize
         if (previewSize.width > 0 && previewSize.height > 0) {
-            setRoundCorners()
+            coreContext.postOnMainThread {
+                setRoundCorners()
+            }
         }
     }
 }

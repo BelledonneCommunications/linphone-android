@@ -41,6 +41,8 @@ class ConversationContactOrSuggestionModel
 ) {
     val id = friend?.refKey ?: address.asStringUriOnly().hashCode()
 
+    val isFriend = friend != null
+
     val starred = friend?.starred == true
 
     val name = conversationSubject

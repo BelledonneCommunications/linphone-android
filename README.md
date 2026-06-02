@@ -169,7 +169,7 @@ We no longer use transifex for the translation process, instead we have deployed
 Due to the full app rewrite we can't re-use previous translations, so we'll be very happy if you want to contribute.
 
 <a href="https://weblate.linphone.org/engage/linphone/">
-<img src="https://weblate.linphone.org/widget/linphone/linphone-android-6-0/multi-auto.svg" alt="Translation status" />
+<img src="https://weblate.linphone.org/widget/linphone/linphone-android-6-2/multi-auto.svg" alt="Translation status" />
 </a>
 
 # CONTRIBUTIONS

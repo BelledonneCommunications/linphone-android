@@ -42,11 +42,11 @@ abstract class AbstractConversationViewModel : GenericViewModel() {
     }
 
     val chatRoomFoundEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val confirmGroupCallEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     lateinit var chatRoom: ChatRoom
@@ -169,7 +169,7 @@ abstract class AbstractConversationViewModel : GenericViewModel() {
                 return@postOnCoreThread
             }
 
-            val conference = LinphoneUtils.createGroupCall(account, chatRoom.subject.orEmpty())
+            val conference = LinphoneUtils.createGroupCall(account, chatRoom.subjectUtf8.orEmpty())
             if (conference == null) {
                 Log.e("$TAG Failed to create group call!")
                 showRedToast(R.string.conference_failed_to_create_group_call_toast, R.drawable.warning_circle)

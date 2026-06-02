@@ -56,283 +56,318 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
-                    android:onClick="@{() -> viewModel.toggleDeveloperSettings()}"
-                    android:id="@+id/settings_developer_title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/settings_developer_show_title"
-                    android:maxLines="2"
-                    android:ellipsize="end"
-                    android:labelFor="@id/settings_developer_switch"
-                    app:layout_constraintTop_toTopOf="@id/settings_developer_switch"
-                    app:layout_constraintBottom_toBottomOf="@id/settings_developer_switch"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/settings_developer_switch"/>
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    style="@style/material_switch_style"
-                    android:id="@+id/settings_developer_switch"
-                    android:onClick="@{() -> viewModel.toggleDeveloperSettings()}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="16dp"
-                    android:checked="@{viewModel.showDeveloperSettings}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
-                    android:onClick="@{() -> viewModel.toggleLogcat()}"
-                    android:id="@+id/logcat_title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/help_troubleshooting_print_logs_in_logcat"
-                    android:maxLines="2"
-                    android:ellipsize="end"
-                    android:labelFor="@id/logcat_switch"
-                    app:layout_constraintTop_toTopOf="@id/logcat_switch"
-                    app:layout_constraintBottom_toBottomOf="@id/logcat_switch"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/logcat_switch"/>
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    style="@style/material_switch_style"
-                    android:id="@+id/logcat_switch"
-                    android:onClick="@{() -> viewModel.toggleLogcat()}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="16dp"
-                    android:checked="@{viewModel.logcat}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/settings_developer_switch" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_padding_style"
-                    android:id="@+id/upload_server_url_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="20dp"
-                    android:labelFor="@id/upload_server_url"
-                    android:text="@string/settings_advanced_upload_server_url"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/logcat_switch"/>
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    style="@style/default_text_style"
-                    android:id="@+id/upload_server_url"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_marginEnd="16dp"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
-                    android:text="@={viewModel.fileSharingServerUrl}"
-                    android:textSize="14sp"
-                    android:maxLines="1"
-                    android:background="@drawable/edit_text_background"
-                    android:inputType="text|textUri"
-                    android:hint="@string/settings_advanced_upload_server_url"
-                    app:layout_constraintHorizontal_bias="0"
-                    app:layout_constraintWidth_max="@dimen/text_input_max_width"
-                    app:layout_constraintTop_toBottomOf="@id/upload_server_url_label"
-                    app:layout_constraintStart_toStartOf="@id/upload_server_url_label"
-                    app:layout_constraintEnd_toEndOf="parent"/>
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_padding_style"
-                    android:id="@+id/logs_upload_server_url_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="20dp"
-                    android:labelFor="@id/logs_upload_server_url"
-                    android:text="@string/settings_advanced_logs_upload_server_url"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/upload_server_url"/>
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    style="@style/default_text_style"
-                    android:id="@+id/logs_upload_server_url"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_marginEnd="16dp"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
-                    android:text="@={viewModel.logsSharingServerUrl}"
-                    android:textSize="14sp"
-                    android:maxLines="1"
-                    android:background="@drawable/edit_text_background"
-                    android:inputType="text|textUri"
-                    android:hint="@string/settings_advanced_logs_upload_server_url"
-                    app:layout_constraintHorizontal_bias="0"
-                    app:layout_constraintWidth_max="@dimen/text_input_max_width"
-                    app:layout_constraintTop_toBottomOf="@id/logs_upload_server_url_label"
-                    app:layout_constraintStart_toStartOf="@id/logs_upload_server_url_label"
-                    app:layout_constraintEnd_toEndOf="parent"/>
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
-                    android:onClick="@{() -> viewModel.toggleConferencesEndToEndEncryption()}"
-                    android:id="@+id/e2e_encrypted_conferences_title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/settings_advanced_create_e2e_encrypted_conferences_title"
-                    android:maxLines="2"
-                    android:ellipsize="end"
-                    android:labelFor="@id/e2e_encrypted_conferences_switch"
-                    app:layout_constraintTop_toTopOf="@id/e2e_encrypted_conferences_switch"
-                    app:layout_constraintBottom_toBottomOf="@id/e2e_encrypted_conferences_switch"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/e2e_encrypted_conferences_switch"/>
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    style="@style/material_switch_style"
-                    android:id="@+id/e2e_encrypted_conferences_switch"
-                    android:onClick="@{() -> viewModel.toggleConferencesEndToEndEncryption()}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="16dp"
-                    android:checked="@{viewModel.createEndToEndEncryptedConferences}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/logs_upload_server_url" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
-                    android:onClick="@{() -> viewModel.toggleEnableVuMeters()}"
-                    android:id="@+id/enable_vu_meters_title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/settings_developer_enable_vu_meters_title"
-                    android:maxLines="2"
-                    android:ellipsize="end"
-                    android:labelFor="@id/enable_vu_meters_switch"
-                    app:layout_constraintTop_toTopOf="@id/enable_vu_meters_switch"
-                    app:layout_constraintBottom_toBottomOf="@id/enable_vu_meters_switch"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/enable_vu_meters_switch"/>
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    style="@style/material_switch_style"
-                    android:id="@+id/enable_vu_meters_switch"
-                    android:onClick="@{() -> viewModel.toggleEnableVuMeters()}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="16dp"
-                    android:checked="@{viewModel.enableVuMeters}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/e2e_encrypted_conferences_switch" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
-                    android:onClick="@{() -> viewModel.toggleEnableAdvancedCallStats()}"
-                    android:id="@+id/enable_advanced_call_stats_title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/settings_developer_enable_advanced_call_stats_title"
-                    android:maxLines="2"
-                    android:ellipsize="end"
-                    android:labelFor="@id/enable_advanced_call_stats_switch"
-                    app:layout_constraintTop_toTopOf="@id/enable_advanced_call_stats_switch"
-                    app:layout_constraintBottom_toBottomOf="@id/enable_advanced_call_stats_switch"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/enable_advanced_call_stats_switch"/>
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    style="@style/material_switch_style"
-                    android:id="@+id/enable_advanced_call_stats_switch"
-                    android:onClick="@{() -> viewModel.toggleEnableAdvancedCallStats()}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="16dp"
-                    android:checked="@{viewModel.enableAdvancedCallStats}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/enable_vu_meters_switch" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_padding_style"
-                    android:id="@+id/push_compatible_domains_list_label"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/main_section"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginTop="20dp"
-                    android:text="@string/settings_developer_push_compatible_domains_list_title"
-                    android:labelFor="@id/push_compatible_domains_list"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/enable_advanced_call_stats_switch"/>
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    style="@style/default_text_style"
-                    android:id="@+id/push_compatible_domains_list"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_marginEnd="16dp"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
-                    android:text="@={viewModel.pushCompatibleDomainsList}"
-                    android:textSize="14sp"
-                    android:maxLines="1"
-                    android:background="@drawable/edit_text_background"
-                    android:inputType="text|textNoSuggestions"
-                    android:hint="@string/settings_developer_push_compatible_domains_list_title"
-                    app:layout_constraintHorizontal_bias="0"
-                    app:layout_constraintWidth_max="@dimen/text_input_max_width"
-                    app:layout_constraintTop_toBottomOf="@id/push_compatible_domains_list_label"
-                    app:layout_constraintStart_toStartOf="@id/push_compatible_domains_list_label"
-                    app:layout_constraintEnd_toEndOf="parent"/>
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
-                    android:id="@+id/clear_friends_db_label"
-                    android:onClick="@{() -> viewModel.clearNativeFriendsDatabase()}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/settings_developer_clear_native_friends_in_database_title"
-                    android:maxLines="2"
-                    android:ellipsize="end"
-                    android:drawablePadding="5dp"
-                    android:drawableEnd="@drawable/warning_circle"
-                    android:drawableTint="?attr/color_main2_600"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/push_compatible_domains_list"/>
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_subtitle_style"
-                    android:id="@+id/clear_friends_db_subtitle"
-                    android:onClick="@{() -> viewModel.clearNativeFriendsDatabase()}"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="10dp"
                     android:layout_marginBottom="@dimen/screen_bottom_margin"
-                    android:maxLines="3"
-                    android:text="@string/settings_developer_clear_native_friends_in_database_subtitle"
+                    android:background="@drawable/shape_squircle_white_background"
+                    app:layout_constraintWidth_max="@dimen/section_max_width"
                     app:layout_constraintVertical_bias="0"
-                    app:layout_constraintTop_toBottomOf="@id/clear_friends_db_label"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/settings_title_style"
+                        android:onClick="@{() -> viewModel.toggleDeveloperSettings()}"
+                        android:id="@+id/settings_developer_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/settings_developer_show_title"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:labelFor="@id/settings_developer_switch"
+                        app:layout_constraintTop_toTopOf="@id/settings_developer_switch"
+                        app:layout_constraintBottom_toBottomOf="@id/settings_developer_switch"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/settings_developer_switch"/>
+
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        style="@style/material_switch_style"
+                        android:id="@+id/settings_developer_switch"
+                        android:onClick="@{() -> viewModel.toggleDeveloperSettings()}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="16dp"
+                        android:checked="@{viewModel.showDeveloperSettings}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/settings_title_style"
+                        android:onClick="@{() -> viewModel.toggleLogcat()}"
+                        android:id="@+id/logcat_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/help_troubleshooting_print_logs_in_logcat"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:labelFor="@id/logcat_switch"
+                        app:layout_constraintTop_toTopOf="@id/logcat_switch"
+                        app:layout_constraintBottom_toBottomOf="@id/logcat_switch"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/logcat_switch"/>
+
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        style="@style/material_switch_style"
+                        android:id="@+id/logcat_switch"
+                        android:onClick="@{() -> viewModel.toggleLogcat()}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="16dp"
+                        android:checked="@{viewModel.logcat}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/settings_developer_switch" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/settings_title_padding_style"
+                        android:id="@+id/upload_server_url_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="20dp"
+                        android:labelFor="@id/upload_server_url"
+                        android:text="@string/settings_advanced_upload_server_url"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/logcat_switch"/>
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        style="@style/default_text_style"
+                        android:id="@+id/upload_server_url"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="16dp"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:text="@={viewModel.fileSharingServerUrl}"
+                        android:textSize="14sp"
+                        android:maxLines="1"
+                        android:background="@drawable/edit_text_background"
+                        android:inputType="text|textUri"
+                        android:hint="@string/settings_advanced_upload_server_url"
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintTop_toBottomOf="@id/upload_server_url_label"
+                        app:layout_constraintStart_toStartOf="@id/upload_server_url_label"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/settings_title_padding_style"
+                        android:id="@+id/logs_upload_server_url_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="20dp"
+                        android:labelFor="@id/logs_upload_server_url"
+                        android:text="@string/settings_advanced_logs_upload_server_url"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/upload_server_url"/>
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        style="@style/default_text_style"
+                        android:id="@+id/logs_upload_server_url"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="16dp"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:text="@={viewModel.logsSharingServerUrl}"
+                        android:textSize="14sp"
+                        android:maxLines="1"
+                        android:background="@drawable/edit_text_background"
+                        android:inputType="text|textUri"
+                        android:hint="@string/settings_advanced_logs_upload_server_url"
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintTop_toBottomOf="@id/logs_upload_server_url_label"
+                        app:layout_constraintStart_toStartOf="@id/logs_upload_server_url_label"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/settings_title_style"
+                        android:onClick="@{() -> viewModel.toggleConferencesEndToEndEncryption()}"
+                        android:id="@+id/e2e_encrypted_conferences_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/settings_advanced_create_e2e_encrypted_conferences_title"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:labelFor="@id/e2e_encrypted_conferences_switch"
+                        app:layout_constraintTop_toTopOf="@id/e2e_encrypted_conferences_switch"
+                        app:layout_constraintBottom_toBottomOf="@id/e2e_encrypted_conferences_switch"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/e2e_encrypted_conferences_switch"/>
+
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        style="@style/material_switch_style"
+                        android:id="@+id/e2e_encrypted_conferences_switch"
+                        android:onClick="@{() -> viewModel.toggleConferencesEndToEndEncryption()}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="16dp"
+                        android:checked="@{viewModel.createEndToEndEncryptedConferences}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/logs_upload_server_url" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/settings_title_style"
+                        android:onClick="@{() -> viewModel.toggleEnableVuMeters()}"
+                        android:id="@+id/enable_vu_meters_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/settings_developer_enable_vu_meters_title"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:labelFor="@id/enable_vu_meters_switch"
+                        app:layout_constraintTop_toTopOf="@id/enable_vu_meters_switch"
+                        app:layout_constraintBottom_toBottomOf="@id/enable_vu_meters_switch"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/enable_vu_meters_switch"/>
+
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        style="@style/material_switch_style"
+                        android:id="@+id/enable_vu_meters_switch"
+                        android:onClick="@{() -> viewModel.toggleEnableVuMeters()}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="16dp"
+                        android:checked="@{viewModel.enableVuMeters}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/e2e_encrypted_conferences_switch" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/settings_title_style"
+                        android:onClick="@{() -> viewModel.toggleEnableAdvancedCallStats()}"
+                        android:id="@+id/enable_advanced_call_stats_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/settings_developer_enable_advanced_call_stats_title"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:labelFor="@id/enable_advanced_call_stats_switch"
+                        app:layout_constraintTop_toTopOf="@id/enable_advanced_call_stats_switch"
+                        app:layout_constraintBottom_toBottomOf="@id/enable_advanced_call_stats_switch"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/enable_advanced_call_stats_switch"/>
+
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        style="@style/material_switch_style"
+                        android:id="@+id/enable_advanced_call_stats_switch"
+                        android:onClick="@{() -> viewModel.toggleEnableAdvancedCallStats()}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="16dp"
+                        android:checked="@{viewModel.enableAdvancedCallStats}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/enable_vu_meters_switch" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/settings_title_padding_style"
+                        android:id="@+id/push_compatible_domains_list_label"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/settings_developer_push_compatible_domains_list_title"
+                        android:labelFor="@id/push_compatible_domains_list"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/enable_advanced_call_stats_switch"/>
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        style="@style/default_text_style"
+                        android:id="@+id/push_compatible_domains_list"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="16dp"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:text="@={viewModel.pushCompatibleDomainsList}"
+                        android:textSize="14sp"
+                        android:maxLines="1"
+                        android:background="@drawable/edit_text_background"
+                        android:inputType="text|textNoSuggestions"
+                        android:hint="@string/settings_developer_push_compatible_domains_list_title"
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintTop_toBottomOf="@id/push_compatible_domains_list_label"
+                        app:layout_constraintStart_toStartOf="@id/push_compatible_domains_list_label"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/tertiary_button_label_style"
+                        android:id="@+id/clear_friends_db_label"
+                        android:onClick="@{() -> viewModel.clearNativeFriendsDatabase()}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/tertiary_button_background"
+                        android:gravity="center"
+                        android:text="@string/settings_developer_clear_native_friends_in_database_title"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        app:layout_constraintWidth_max="@dimen/button_max_width"
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/push_compatible_domains_list"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/settings_subtitle_style"
+                        android:id="@+id/clear_friends_db_subtitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="20dp"
+                        android:maxLines="3"
+                        android:text="@string/settings_developer_clear_native_friends_in_database_subtitle"
+                        app:layout_constraintVertical_bias="0"
+                        app:layout_constraintTop_toBottomOf="@id/clear_friends_db_label"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/tertiary_button_label_style"
+                        android:id="@+id/clear_orphan_auth_info"
+                        android:onClick="@{() -> viewModel.clearOrphanAuthInfo()}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:text="@string/settings_developer_clear_orphan_auth_info_title"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        app:layout_constraintWidth_max="@dimen/button_max_width"
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/clear_friends_db_subtitle"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

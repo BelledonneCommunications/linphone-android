@@ -112,8 +112,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.localToken, default=`ZZ`}"
-                android:textSize="18sp"
+                android:textSize="32sp"
                 android:textColor="@color/gray_main2_600"
+                android:includeFontPadding="false"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/local_code_label" />

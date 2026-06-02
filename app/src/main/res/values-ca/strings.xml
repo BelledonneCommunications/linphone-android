@@ -6,4 +6,21 @@
         <item quantity="many">%s dies</item>
         <item quantity="other">%s dies</item>
     </plurals>
+    <string name="notification_in_call_foreground_service_error_message">Prem a la notificació per arregar-ho</string>
+    <string name="welcome_page_title">Benvingut</string>
+    <string name="welcome_page_2_title">Assegurada</string>
+    <string name="notification_in_call_foreground_service_error_title">No t\'escolten!</string>
+    <string name="welcome_page_1_message">Un aplicatiu de comunicació <b>segur</b>, <b>de codi obert</b> i <b>en francès</b>.</string>
+    <string name="conversation_delete_locally_label">Esborra-ho per a mi</string>
+    <string name="conversation_message_content_deleted_by_us_label"><i>Has esborrat aquest missatge</i></string>
+    <string name="conversation_participants_list_header">Participants</string>
+    <string name="conversation_participants_list_empty">No s\'ha trobat cap participant</string>
+    <string name="conversation_info_add_participants_label">Afegeix participants</string>
+    <string name="conversation_message_content_deleted_label"><i>Aquest missatge ha estat esborrat</i></string>
+    <string name="conversation_info_participants_list_title">Grup de membres (%s)</string>
+    <string name="conversation_delete_for_everyone_label">Esborra-ho per a tothom</string>
+    <string name="content_description_add_participants">Afegeix participants</string>
+    <string name="meeting_schedule_add_participants_title">Afegeix participants</string>
+    <string name="conference_action_show_participants">Participants</string>
+    <string name="conversation_add_participants_title">Afegeix participants</string>
 </resources>

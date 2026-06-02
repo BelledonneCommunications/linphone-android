@@ -16,6 +16,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:onClick="@{() -> model.onDigitClicked(digit)}"
         android:onLongClick="@{() -> model.onDigitLongClicked(digit)}"
+        android:tag="@{digit}"
+        onTouchListener="@{model.touchListener}"
         android:layout_width="@dimen/call_dtmf_button_size"
         android:layout_height="@dimen/call_dtmf_button_size"
         android:background="@drawable/in_call_numpad_button_background">

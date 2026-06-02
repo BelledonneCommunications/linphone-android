@@ -17,7 +17,7 @@
         android:onClick="@{() -> viewModel.onCallTopBarClicked()}">
 
         <ImageView
-            android:id="@+id/icon"
+            android:id="@+id/alert_call_icon"
             android:layout_width="@dimen/icon_size"
             android:layout_height="@dimen/icon_size"
             android:layout_marginStart="16dp"
@@ -32,7 +32,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_300"
-            android:id="@+id/label"
+            android:id="@+id/alert_call_label"
             android:layout_width="0dp"
             android:layout_height="30dp"
             android:layout_marginStart="5dp"
@@ -45,14 +45,14 @@
             android:textSize="16sp"
             android:maxLines="1"
             android:ellipsize="end"
-            app:layout_constraintEnd_toStartOf="@id/call_time"
-            app:layout_constraintStart_toEndOf="@id/icon"
+            app:layout_constraintEnd_toStartOf="@id/alert_call_time"
+            app:layout_constraintStart_toEndOf="@id/alert_call_icon"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
-            android:id="@+id/call_time"
+            android:id="@+id/alert_call_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
@@ -61,7 +61,7 @@
             android:textColor="@color/bc_white"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/label"
+            app:layout_constraintStart_toEndOf="@id/alert_call_label"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 

@@ -285,7 +285,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
-            android:text="@string/call_action_record_call"
+            android:text="@{viewModel.isRecording ? @string/call_action_stop_record_call : @string/call_action_record_call, default=@string/call_action_record_call}"
             android:labelFor="@id/record_call"
             app:layout_constraintTop_toBottomOf="@id/record_call"
             app:layout_constraintStart_toStartOf="@id/calls_list_label"

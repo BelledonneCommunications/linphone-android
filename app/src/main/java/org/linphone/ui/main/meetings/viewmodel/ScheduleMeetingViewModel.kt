@@ -83,7 +83,7 @@ class ScheduleMeetingViewModel
     val chatDisabled = MutableLiveData<Boolean>()
 
     val conferenceCreatedEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     private var startTimestamp = 0L

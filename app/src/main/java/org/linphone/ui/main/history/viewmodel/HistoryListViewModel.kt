@@ -23,17 +23,27 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.contacts.ContactsManager
+import org.linphone.core.Address
 import org.linphone.core.CallLog
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.Friend
 import org.linphone.core.GlobalState
+import org.linphone.core.MagicSearch
+import org.linphone.core.MagicSearchListenerStub
+import org.linphone.core.SearchResult
 import org.linphone.core.tools.Log
+import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.history.model.CallLogModel
+import org.linphone.ui.main.history.model.CallLogModelWrapper
+import org.linphone.ui.main.model.ConversationContactOrSuggestionModel
 import org.linphone.ui.main.viewmodel.AbstractMainViewModel
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
+import java.text.Collator
+import java.util.Locale
 
 class HistoryListViewModel
     @UiThread
@@ -42,16 +52,30 @@ class HistoryListViewModel
         private const val TAG = "[History List ViewModel]"
     }
 
-    val callLogs = MutableLiveData<ArrayList<CallLogModel>>()
+    val callLogs = MutableLiveData<ArrayList<CallLogModelWrapper>>()
 
     val fetchInProgress = MutableLiveData<Boolean>()
 
     val historyInsertedEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val historyDeletedEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
+    }
+
+    private val tempCallLogsList = ArrayList<CallLogModelWrapper>()
+
+    private val magicSearch = coreContext.core.createMagicSearch()
+
+    private val magicSearchListener = object : MagicSearchListenerStub() {
+        @WorkerThread
+        override fun onSearchResultsReceived(magicSearch: MagicSearch) {
+            Log.i("$TAG Magic search contacts available")
+            val results = magicSearch.lastSearch
+            processMagicSearchResults(results)
+            fetchInProgress.postValue(false)
+        }
     }
 
     private val coreListener = object : CoreListenerStub() {
@@ -88,6 +112,7 @@ class HistoryListViewModel
         coreContext.postOnCoreThread { core ->
             coreContext.contactsManager.addListener(contactsListener)
             core.addListener(coreListener)
+            magicSearch.addListener(magicSearchListener)
 
             computeCallLogsList(currentFilter)
         }
@@ -100,6 +125,7 @@ class HistoryListViewModel
         coreContext.postOnCoreThread { core ->
             coreContext.contactsManager.removeListener(contactsListener)
             core.removeListener(coreListener)
+            magicSearch.removeListener(magicSearchListener)
         }
     }
 
@@ -141,8 +167,17 @@ class HistoryListViewModel
             fetchInProgress.postValue(true)
         }
 
-        val list = arrayListOf<CallLogModel>()
-        var count = 0
+        val isFilterEmpty = filter.isEmpty()
+        if (!isFilterEmpty) {
+            magicSearch.getContactsListAsync(
+                filter,
+                corePreferences.contactsFilter,
+                MagicSearch.Source.All.toInt(),
+                MagicSearch.Aggregation.Friend
+            )
+        }
+
+        val list = arrayListOf<CallLogModelWrapper>()
 
         val account = LinphoneUtils.getDefaultAccount()
         // Fetch all call logs if only one account to workaround no history issue
@@ -156,17 +191,18 @@ class HistoryListViewModel
         for (callLog in logs) {
             val model = CallLogModel(callLog)
             if (isCallLogMatchingFilter(model, filter)) {
-                list.add(model)
-                count += 1
-            }
-
-            if (count == 20) {
-                callLogs.postValue(list)
+                list.add(CallLogModelWrapper(model))
             }
         }
 
         Log.i("$TAG Fetched [${list.size}] call log(s)")
-        callLogs.postValue(list)
+        if (isFilterEmpty) {
+            callLogs.postValue(list)
+        } else {
+            fetchInProgress.postValue(true)
+            tempCallLogsList.clear()
+            tempCallLogsList.addAll(list)
+        }
     }
 
     @WorkerThread
@@ -175,5 +211,85 @@ class HistoryListViewModel
 
         val friendName = model.avatarModel.friend.name ?: LinphoneUtils.getDisplayName(model.address)
         return friendName.contains(filter, ignoreCase = true) || model.address.asStringUriOnly().contains(filter, ignoreCase = true)
+    }
+
+    @WorkerThread
+    private fun processMagicSearchResults(results: Array<SearchResult>) {
+        Log.i("$TAG Processing [${results.size}] results")
+
+        val contactsList = arrayListOf<CallLogModelWrapper>()
+        val suggestionsList = arrayListOf<CallLogModelWrapper>()
+        val requestList = arrayListOf<CallLogModelWrapper>()
+
+        val defaultAccountDomain = LinphoneUtils.getDefaultAccount()?.params?.domain
+        for (result in results) {
+            val address = result.address
+            val friend = result.friend
+            if (friend != null) {
+                val found = contactsList.find { it.contactModel?.friend == friend }
+                if (found != null) continue
+
+                val mainAddress = address ?: LinphoneUtils.getFirstAvailableAddressForFriend(friend)
+                if (mainAddress != null) {
+                    val model = ConversationContactOrSuggestionModel(mainAddress, friend = friend)
+                    val avatarModel = coreContext.contactsManager.getContactAvatarModelForFriend(
+                        friend
+                    )
+                    model.avatarModel.postValue(avatarModel)
+                    contactsList.add(CallLogModelWrapper(null, model))
+                } else {
+                    Log.w("$TAG Found friend [${friend.name}] in search results but no Address could be found, skipping it")
+                }
+            } else if (address != null) {
+                if (result.sourceFlags == MagicSearch.Source.Request.toInt()) {
+                    val model = ConversationContactOrSuggestionModel(address) {
+                        coreContext.startAudioCall(address)
+                    }
+                    val avatarModel = getContactAvatarModelForAddress(address)
+                    model.avatarModel.postValue(avatarModel)
+                    requestList.add(CallLogModelWrapper(null, model))
+                    continue
+                }
+
+                val defaultAccountAddress = coreContext.core.defaultAccount?.params?.identityAddress
+                if (defaultAccountAddress != null && address.weakEqual(defaultAccountAddress)) {
+                    Log.i("$TAG Removing from suggestions current default account address")
+                    continue
+                }
+
+                val model = ConversationContactOrSuggestionModel(address, defaultAccountDomain = defaultAccountDomain) {
+                    coreContext.startAudioCall(address)
+                }
+                val avatarModel = getContactAvatarModelForAddress(address)
+                model.avatarModel.postValue(avatarModel)
+                suggestionsList.add(CallLogModelWrapper(null, model))
+            }
+        }
+
+        val collator = Collator.getInstance(Locale.getDefault())
+        contactsList.sortWith { model1, model2 ->
+            collator.compare(model1.contactModel?.name, model2.contactModel?.name)
+        }
+        suggestionsList.sortWith { model1, model2 ->
+            collator.compare(model1.contactModel?.name, model2.contactModel?.name)
+        }
+
+        val list = arrayListOf<CallLogModelWrapper>()
+        list.addAll(tempCallLogsList)
+        list.addAll(contactsList)
+        list.addAll(suggestionsList)
+        list.addAll(requestList)
+        callLogs.postValue(list)
+        Log.i(
+            "$TAG Processed [${results.size}] results: [${contactsList.size}] contacts and [${suggestionsList.size}] suggestions"
+        )
+    }
+
+    @WorkerThread
+    private fun getContactAvatarModelForAddress(address: Address): ContactAvatarModel {
+        val fakeFriend = coreContext.core.createFriend()
+        fakeFriend.name = LinphoneUtils.getDisplayName(address)
+        fakeFriend.address = address
+        return ContactAvatarModel(fakeFriend)
     }
 }

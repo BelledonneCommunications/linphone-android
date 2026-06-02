@@ -140,7 +140,7 @@ class ShortcutUtils {
                     ).buildIcon()
                 } else {
                     isGroup = true
-                    subject = chatRoom.subject.orEmpty()
+                    subject = chatRoom.subjectUtf8.orEmpty()
                     AvatarGenerator(context).setInitials(AppUtils.getInitials(subject)).buildIcon()
                 }
 

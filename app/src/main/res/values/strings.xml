@@ -118,6 +118,9 @@
     <string name="notification_disable_speaker_for_call">Turn off speaker</string>
     <string name="notification_account_registration_error_title">Account %s registration failed!</string>
     <string name="notification_account_registration_error_message">Open &appName; to refresh the registration</string>
+    <string name="notification_in_call_foreground_service_error_title">Your correspondent does not hear you!</string>
+    <string name="notification_in_call_foreground_service_error_message">Click on this notification to fix it</string>
+    <string name="notification_chat_message_hidden_content">&lt;redacted&gt;</string>
 
     <!-- First screens user see when app is installed and started -->
     <string name="welcome_page_title">Welcome</string>
@@ -147,6 +150,9 @@
     <string name="assistant_dialog_general_terms_and_privacy_policy_message">By continuing, you accept our %1$s and %2$s.</string>
     <string name="assistant_dialog_confirm_phone_number_title">Confirm phone number</string>
     <string name="assistant_dialog_confirm_phone_number_message">Are you sure your phone number is %s?</string>
+    <string name="assistant_dialog_phone_number_validation_not_available_title">Phone number validation not available</string>
+    <string name="assistant_dialog_phone_number_validation_not_available_message">Phone number validation is not available, please use email account creation process.</string>
+    <string name="assistant_dialog_phone_number_validation_not_available_register_button_label">Register with an email</string>
     <string name="assistant_account_login">Login</string>
     <string name="assistant_scan_qr_code">Scan QR code</string>
     <string name="assistant_qr_code_invalid_toast">Invalid QR code!</string>
@@ -256,16 +262,19 @@
     <string name="settings_calls_calibrate_echo_canceller_done">%s ms</string>
     <string name="settings_calls_calibrate_echo_canceller_failed">failed</string>
     <string name="settings_calls_adaptive_rate_control_title">Adaptive rate control</string>
-    <string name="settings_calls_enable_video_title">Enable video</string>
     <string name="settings_calls_enable_fec_title">Enable video FEC</string>
     <string name="settings_calls_vibrate_while_ringing_title">Vibrate while incoming call is ringing</string>
     <string name="settings_calls_auto_record_title">Automatically start recording calls</string>
     <string name="settings_calls_change_ringtone_title">Change ringtone</string>
     <string name="settings_calls_change_ringtone_pick_title">Pick ringtone</string>
+    <string name="settings_calls_change_ringtone_picker_unavailable_toast">Ringtone picker isn\'t available!</string>
+    <string name="settings_advanced_calls_rfc_2833_dmtf_title">Use RFC 2833 for DTMFs</string>
+    <string name="settings_advanced_calls_sip_info_dmtf_title">Use SIP INFO for DTMFs</string>
     <string name="settings_conversations_title">Conversations</string>
     <string name="settings_conversations_auto_download_title">Auto-download files</string>
     <string name="settings_conversations_auto_export_media_to_native_gallery_title">Make downloaded media public</string>
     <string name="settings_conversations_mark_as_read_when_dismissing_notif_title">Mark conversation as read when dismissing message notification</string>
+    <string name="settings_conversations_hide_message_content_in_notif_title">Do not show message content in Android notification</string>
     <string name="settings_contacts_title">Contacts</string>
     <string name="settings_contacts_sort_by_first_name_title">Sort contacts by</string>
     <string name="settings_contacts_edit_native_contacts_in_linphone_title">Use &appName; contact editor for native contacts</string>
@@ -301,9 +310,11 @@
     <string name="settings_contacts_ldap_name_attributes_title">Name attributes</string>
     <string name="settings_contacts_ldap_sip_attributes_title">SIP attributes</string>
     <string name="settings_contacts_ldap_sip_domain_title">SIP domain</string>
+    <string name="settings_contacts_ldap_saved_toast">LDAP server saved</string>
     <string name="settings_contacts_ldap_error_toast">A error occurred, LDAP server not saved!</string>
     <string name="settings_contacts_ldap_empty_field_error_toast">All fields must be filled</string>
     <string name="settings_meetings_title">Meetings</string>
+    <string name="settings_meetings_show_past_meetings_title">Show past meetings</string>
     <string name="settings_meetings_default_layout_title">Default layout</string>
     <string name="settings_meetings_layout_active_speaker_label">Active speaker</string>
     <string name="settings_meetings_layout_mosaic_label">Mosaic</string>
@@ -374,6 +385,12 @@
     <string name="settings_developer_clear_native_friends_in_database_title">Clear imported contacts from native address book</string>
     <string name="settings_developer_clear_native_friends_in_database_subtitle">They will be imported again the next time the app starts unless you remove the contacts permission</string>
     <string name="settings_developer_cleared_native_friends_in_database_toast">Imported contacts have been deleted</string>
+    <string name="settings_developer_clear_orphan_auth_info_title">Clear authentication info no longer associated to any account</string>
+    <string name="settings_developer_no_auth_info_removed_toast">No orphan authentication info found</string>
+    <plurals name="settings_developer_cleared_auth_info_toast">
+        <item quantity="one">%s orphan authentication info removed</item>
+        <item quantity="other">%s orphans authentication info removed</item>
+    </plurals>
 
     <!-- Account profile & settings -->
     <string name="manage_account_title">Manage account</string>
@@ -383,6 +400,7 @@
     <string name="manage_account_add_picture">Add a picture</string>
     <string name="manage_account_edit_picture">Edit picture</string>
     <string name="manage_account_remove_picture">Remove picture</string>
+    <string name="manage_account_status_registration_status_title">Connection status</string>
     <string name="manage_account_status_connected_summary">This account in online, everybody can call you.</string>
     <string name="manage_account_status_disconnected_summary">This account in offline, probably because you aren\'t connected to internet right now.</string>
     <string name="manage_account_status_cleared_summary">Account has been disabled, you won\'t receive any call or message.</string>
@@ -448,9 +466,11 @@
     <string name="history_group_call_go_to_conversation">Conversation</string>
 
     <string name="history_dialog_delete_all_call_logs_title">Do you really want to delete all calls history?</string>
-    <string name="history_dialog_delete_all_call_logs_message">All calls will be removed from the history</string>
+    <string name="history_dialog_delete_all_call_logs_message">All calls will be removed from the history.</string>
     <string name="history_dialog_delete_call_logs_title">Do you really want to delete the history with that person?</string>
-    <string name="history_dialog_delete_call_logs_message">All calls will be removed from the history</string>
+    <string name="history_dialog_delete_call_logs_message">All calls will be removed from the history.</string>
+    <string name="history_dialog_delete_call_log_title">Do you really want to delete this call log?</string>
+    <string name="history_dialog_delete_call_log_message">Only this entry will be removed.</string>
 
     <!-- Contacts -->
     <string name="contacts_list_empty">No contact for the moment…</string>
@@ -605,9 +625,8 @@
     <string name="conversation_pdf_file_error_toast">Can\'t open this PDF, file may be corrupted</string>
     <string name="conversation_editing_message_title">Message being edited</string>
     <string name="conversation_message_edited_label">Edited</string>
-    <string name="conversation_dialog_delete_chat_message_title">Delete this message?</string>
-    <string name="conversation_dialog_delete_locally_label">For me</string>
-    <string name="conversation_dialog_delete_for_everyone_label">For everyone</string>
+    <string name="conversation_delete_locally_label">Delete for me</string>
+    <string name="conversation_delete_for_everyone_label">Delete for everyone</string>
     <string name="conversation_message_content_deleted_label"><i>This message has been deleted</i></string>
     <string name="conversation_message_content_deleted_by_us_label"><i>You have deleted this message</i></string>
     <string name="conversation_participants_list_header">Participants</string>
@@ -623,7 +642,11 @@
     <string name="conversation_info_menu_go_to_contact">See contact profile</string>
     <string name="conversation_info_menu_add_to_contacts">Add to contacts</string>
     <string name="conversation_info_dialog_delete_all_call_logs_title">Do you really want to delete all messages?</string>
-    <string name="conversation_info_dialog_delete_all_message">All messages will be removed from the history</string>
+    <string name="conversation_info_dialog_delete_all_message">All messages will be removed from the history.</string>
+    <string name="conversation_info_dialog_delete_chat_room_title">Do you really want to delete this conversation?</string>
+    <string name="conversation_info_dialog_delete_chat_room_message">All messages will also be removed from the history.</string>
+    <string name="conversation_info_dialog_leave_group_chat_room_title">Do you really want to leave this conversation?</string>
+    <string name="conversation_info_dialog_leave_group_chat_room_message">You will no longer be able to send or receive new messages, but your message history will still be available.</string>
     <string name="conversation_info_history_deleted_toast">History has been successfully deleted</string>
     <string name="conversation_info_participant_added_to_conversation_toast">%s joined the conversation</string>
     <string name="conversation_info_participant_removed_from_conversation_toast">%s left the conversation</string>
@@ -633,6 +656,8 @@
     <string name="conversation_info_no_address_to_add_to_contact_toast">No address to add to contact</string>
     <string name="conversation_info_confirm_start_group_call_dialog_title">Start a group call?</string>
     <string name="conversation_info_confirm_start_group_call_dialog_message">All participants will receive a call.</string>
+    <string name="conversation_info_confirm_participant_removal_dialog_title">Remove participant?</string>
+    <string name="conversation_info_confirm_participant_removal_dialog_message">This participant will be removed from the group conversation.</string>
 
     <string name="conversation_event_conference_created">You have joined the group</string>
     <string name="conversation_event_conference_destroyed">You have left the group</string>
@@ -700,9 +725,9 @@
     <string name="meeting_schedule_edit_title">Edit meeting</string>
     <string name="meeting_schedule_notify_cancel_dialog_title">Meeting will be cancelled</string>
     <string name="meeting_schedule_notify_cancel_dialog_message">Do you want to send a notification to all participants?</string>
+    <string name="meeting_schedule_delete_dialog_title">Delete meeting?</string>
+    <string name="meeting_schedule_delete_dialog_message">This meeting will only be removed from this device meetings list.</string>
     <string name="meeting_cancel_action_label">Cancel meeting</string>
-    <string name="meeting_schedule_delete_dialog_title">Delete the meeting?</string>
-    <string name="meeting_schedule_delete_dialog_message">Do you want to delete the meeting?</string>
     <string name="meeting_delete_action_label">Delete meeting</string>
     <string name="meeting_info_created_toast">Meeting has been created</string>
     <string name="meeting_info_updated_toast">Meeting has been updated</string>
@@ -743,6 +768,7 @@
     <string name="call_action_pause_call">Pause</string>
     <string name="call_action_resume_call">Resume</string>
     <string name="call_action_record_call">Record</string>
+    <string name="call_action_stop_record_call">Stop recording</string>
     <string name="call_action_hang_up">Hang up</string>
     <string name="call_action_decline">Decline</string>
     <string name="call_action_answer">Answer</string>
@@ -758,12 +784,14 @@
     <string name="call_waiting_for_encryption_info">Waiting for encryption…</string>
     <string name="call_zrtp_end_to_end_encrypted">End-to-end encrypted by ZRTP</string>
     <string name="call_zrtp_point_to_point_encrypted">Point-to-point encrypted by ZRTP</string>
+    <string name="call_conference_end_to_end_encrypted">End-to-end encrypted</string>
     <string name="call_do_zrtp_sas_validation_again">Validate ZRTP SAS again</string>
     <string name="call_zrtp_sas_validation_required">Validation required</string>
     <string name="call_srtp_point_to_point_encrypted">Point-to-point encrypted by SRTP</string>
     <string name="call_not_encrypted">Call is not encrypted</string>
     <string name="calls_list_title">Calls list</string>
     <string name="call_is_being_recorded">Call is being recorded</string>
+    <string name="call_has_been_recorded">Call recording has been saved</string>
     <string name="call_remote_is_recording">%s is recording</string>
     <string name="calls_count_label">%s calls</string>
     <string name="calls_paused_count_label">%s paused calls</string>
@@ -881,12 +909,15 @@
 
     <!-- Colors -->
     <string name="orange">Orange</string>
-    <string name="yellow">Yellow</string>
-    <string name="green">Green</string>
-    <string name="blue">Blue</string>
-    <string name="red">Red</string>
-    <string name="pink">Pink</string>
-    <string name="purple">Purple</string>
+    <string name="terracotta">Terracotta</string>
+    <string name="lavender">Lavender</string>
+    <string name="honey">Honey</string>
+    <string name="burgundy">Burgundy</string>
+    <string name="mint">Mint</string>
+    <string name="coral">Coral</string>
+    <string name="plum">Plum</string>
+    <string name="titanium">Titanium</string>
+    <string name="mineral_blue">Mineral Blue</string>
 
     <!-- Misc -->
     <string name="list_filter_no_result_found">No result found…</string>
@@ -986,7 +1017,6 @@
     <string name="content_description_chat_open_attach_file">Opens file picker</string>
     <string name="content_description_chat_edit_conversation_subject">Click to edit the subject of this conversation</string>
     <string name="content_description_chat_toggle_mute">Silences on/off this conversation</string>
-    <string name="content_description_chat_removal_in_progress">Conversation is being removed</string>
     <string name="content_description_chat_unsecured">This conversation isn\'t secured</string>
     <string name="content_description_chat_search_message_up">Search up</string>
     <string name="content_description_chat_search_message_down">Search down</string>

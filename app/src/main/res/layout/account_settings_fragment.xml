@@ -62,18 +62,23 @@
                 app:layout_constraintTop_toBottomOf="@id/title"
                 app:layout_constraintBottom_toBottomOf="parent">
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:paddingBottom="@dimen/screen_bottom_margin">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
+                        android:id="@+id/account_settings"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="20dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:background="@drawable/shape_squircle_white_background">
+                        android:background="@drawable/shape_squircle_white_background"
+                        app:layout_constraintWidth_max="@dimen/section_max_width"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
                         <com.google.android.material.materialswitch.MaterialSwitch
                             style="@style/material_switch_style"
@@ -165,6 +170,8 @@
                             android:text="@={viewModel.voicemailUri}"
                             android:inputType="text|textUri"
                             android:hint="@string/account_settings_voicemail_uri_title"
+                            app:layout_constraintHorizontal_bias="0"
+                            app:layout_constraintWidth_max="@dimen/text_input_max_width"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/voicemail_uri_title" />
@@ -198,6 +205,8 @@
                             android:text="@={viewModel.mwiUri}"
                             android:inputType="text|textUri"
                             android:hint="@string/account_settings_mwi_uri_title"
+                            app:layout_constraintHorizontal_bias="0"
+                            app:layout_constraintWidth_max="@dimen/text_input_max_width"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/mwi_uri_title"
@@ -266,59 +275,71 @@
                         style="@style/section_header_style"
                         android:id="@+id/nat_policy_settings_header"
                         android:onClick="@{() -> viewModel.toggleNatPolicySettingsExpand()}"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginBottom="10dp"
-                        android:text="@string/account_settings_nat_policy_title"
-                        android:drawableEnd="@{viewModel.expandNatPolicySettings ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
-                        android:drawableTint="?attr/color_main2_600"
-                        android:background="@drawable/squircle_transparent_button_background" />
-
-                    <include
-                        android:id="@+id/nat_policy_settings"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginBottom="@dimen/screen_bottom_margin"
-                        android:visibility="@{viewModel.expandNatPolicySettings ? View.VISIBLE : View.GONE}"
-                        layout="@layout/account_nat_policy_settings"
-                        bind:viewModel="@{viewModel}"/>
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/section_header_style"
-                        android:id="@+id/advanced_settings_header"
-                        android:onClick="@{() -> viewModel.toggleAdvancedSettingsExpand()}"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:padding="10dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:layout_marginTop="16dp"
-                        android:layout_marginBottom="10dp"
-                        android:text="@string/settings_advanced_title"
-                        android:drawableEnd="@{viewModel.expandAdvancedSettings ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
+                        android:text="@string/account_settings_nat_policy_title"
+                        android:drawableEnd="@{viewModel.expandNatPolicySettings ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
                         android:drawableTint="?attr/color_main2_600"
-                        android:background="@drawable/squircle_transparent_button_background" />
+                        android:background="@drawable/squircle_transparent_button_background"
+                        app:layout_constraintWidth_max="@dimen/section_max_width"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/account_settings" />
 
                     <include
-                        android:id="@+id/account_advanced_settings"
-                        android:layout_width="match_parent"
+                        android:id="@+id/nat_policy_settings"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:layout_marginBottom="@dimen/screen_bottom_margin"
+                        android:visibility="@{viewModel.expandNatPolicySettings ? View.VISIBLE : View.GONE}"
+                        layout="@layout/account_nat_policy_settings"
+                        bind:viewModel="@{viewModel}"
+                        app:layout_constraintWidth_max="@dimen/section_max_width"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/nat_policy_settings_header"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/section_header_style"
+                        android:id="@+id/advanced_settings_header"
+                        android:onClick="@{() -> viewModel.toggleAdvancedSettingsExpand()}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/settings_advanced_title"
+                        android:drawableEnd="@{viewModel.expandAdvancedSettings ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
+                        android:drawableTint="?attr/color_main2_600"
+                        android:background="@drawable/squircle_transparent_button_background"
+                        app:layout_constraintWidth_max="@dimen/section_max_width"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/nat_policy_settings" />
+
+                    <include
+                        android:id="@+id/account_advanced_settings"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
                         android:visibility="@{viewModel.expandAdvancedSettings ? View.VISIBLE : View.GONE}"
                         layout="@layout/account_advanced_settings"
                         bind:updatePasswordClickListener="@{updatePasswordClickListener}"
                         bind:outboundProxyTooltipClickListener="@{outboundProxyTooltipClickListener}"
-                        bind:viewModel="@{viewModel}"/>
+                        bind:viewModel="@{viewModel}"
+                        app:layout_constraintWidth_max="@dimen/section_max_width"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/advanced_settings_header"/>
 
-                </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </ScrollView>
 

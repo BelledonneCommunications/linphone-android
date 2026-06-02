@@ -105,6 +105,11 @@ class QrCodeViewModel
     init {
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
+
+            val coreGlobalState = core.globalState
+            if (coreGlobalState != GlobalState.On) {
+                Log.e("$TAG Core isn't ON (current state is [$coreGlobalState]), video preview won't work!")
+            }
         }
     }
 
@@ -121,6 +126,7 @@ class QrCodeViewModel
         coreContext.postOnCoreThread { core ->
             // Just in case, on some devices such as Xiaomi Redmi Note 5
             // this is required right after granting the CAMERA permission
+            Log.i("$TAG Reloading video devices, might be needed if CAMERA permission was granted very recently")
             core.reloadVideoDevices()
 
             if (!coreContext.setBackCamera()) {

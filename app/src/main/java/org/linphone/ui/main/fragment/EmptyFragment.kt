@@ -35,7 +35,7 @@ import org.linphone.utils.Event
 class EmptyFragment : GenericFragment() {
     private lateinit var binding: EmptyFragmentBinding
 
-    protected lateinit var sharedViewModel: SharedMainViewModel
+    private lateinit var sharedViewModel: SharedMainViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,

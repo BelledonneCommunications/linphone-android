@@ -5,7 +5,7 @@
     <data>
         <import type="android.view.View" />
         <variable
-            name="enableExtraAction"
+            name="showExtraAction"
             type="Boolean" />
         <variable
             name="extraActionClickListener"
@@ -16,6 +16,9 @@
         <variable
             name="extraActionContentDescription"
             type="String" />
+        <variable
+            name="extraActionEnabled"
+            type="Boolean" />
         <variable
             name="viewModel"
             type="org.linphone.ui.main.viewmodel.AbstractMainViewModel" />
@@ -52,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:src="@drawable/list"
-            android:contentDescription="@string/content_description_open_filter"
+            android:contentDescription="@string/content_description_open_drawer_menu_icon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -98,7 +101,8 @@
             android:layout_marginEnd="5dp"
             android:src="@{extraActionIcon, default=@drawable/dots_three_vertical}"
             android:contentDescription="@{extraActionContentDescription}"
-            android:visibility="@{!viewModel.searchBarVisible &amp;&amp; enableExtraAction ? View.VISIBLE : View.GONE, default=gone}"
+            android:enabled="@{extraActionEnabled}"
+            android:visibility="@{!viewModel.searchBarVisible &amp;&amp; showExtraAction ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

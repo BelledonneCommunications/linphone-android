@@ -94,6 +94,8 @@ class ConferenceParticipantsListFragment : GenericCallFragment() {
 
         binding.participantsList.setHasFixedSize(true)
         binding.participantsList.layoutManager = LinearLayoutManager(requireContext())
+        binding.participantsList.outlineProvider = outlineProvider
+        binding.participantsList.clipToOutline = true
 
         binding.setBackClickListener {
             findNavController().popBackStack()

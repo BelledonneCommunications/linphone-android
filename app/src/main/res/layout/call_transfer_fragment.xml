@@ -56,179 +56,194 @@
                 app:layout_constraintStart_toEndOf="@id/back"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <View
-                android:id="@+id/background"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/calls_content"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:background="?attr/color_main2_000"
+                android:background="?attr/color_grey_100"
+                app:layout_constraintTop_toBottomOf="@id/back"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/back" />
+                app:layout_constraintEnd_toEndOf="parent">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/section_header_style"
-                android:id="@+id/calls_label"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="16dp"
-                android:text="@string/call_transfer_active_calls_label"
-                app:layout_constraintTop_toBottomOf="@id/title"
-                app:layout_constraintStart_toStartOf="parent"/>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/shape_squircle_white_background"
+                    app:layout_constraintWidth_max="@dimen/section_max_width"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/section_header_style"
-                android:id="@+id/no_current_call_label"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/call_transfer_no_active_call_label"
-                android:gravity="center"
-                android:visibility="@{callsViewModel.callsExceptCurrentOne.isEmpty ? View.VISIBLE : View.GONE}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/calls_label" />
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/section_header_style"
+                        android:id="@+id/calls_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/call_transfer_active_calls_label"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"/>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/calls_list"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/calls_label"/>
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/section_header_style"
+                        android:id="@+id/no_current_call_label"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/call_transfer_no_active_call_label"
+                        android:gravity="center"
+                        android:visibility="@{callsViewModel.callsExceptCurrentOne.isEmpty ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/calls_label" />
 
-            <androidx.constraintlayout.widget.Barrier
-                android:id="@+id/calls_barrier"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:constraint_referenced_ids="calls_list, no_current_call_label"
-                app:barrierDirection="bottom" />
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/calls_list"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/calls_label"/>
 
-            <androidx.appcompat.widget.AppCompatEditText
-                style="@style/default_text_style"
-                android:id="@+id/search_bar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="20dp"
-                android:background="@drawable/edit_text_background"
-                android:drawableStart="@drawable/magnifying_glass"
-                android:drawablePadding="10dp"
-                android:drawableTint="?attr/color_main2_600"
-                android:hint="@string/history_call_start_search_bar_filter_hint"
-                android:inputType="text|textPersonName|textNoSuggestions"
-                android:paddingStart="15dp"
-                android:paddingTop="10dp"
-                android:paddingEnd="45dp"
-                android:paddingBottom="10dp"
-                android:text="@={viewModel.searchFilter}"
-                android:textSize="14sp"
-                app:layout_constraintHeight_min="48dp"
-                app:layout_constraintWidth_max="@dimen/text_input_max_width"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/calls_barrier" />
+                    <androidx.constraintlayout.widget.Barrier
+                        android:id="@+id/calls_barrier"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:constraint_referenced_ids="calls_list, no_current_call_label"
+                        app:barrierDirection="bottom" />
 
-            <ImageView
-                android:id="@+id/numpad"
-                android:layout_width="@dimen/icon_size"
-                android:layout_height="@dimen/icon_size"
-                android:layout_marginEnd="15dp"
-                android:onClick="@{() -> viewModel.switchBetweenKeyboardAndNumpad()}"
-                android:contentDescription="@string/content_description_show_numpad"
-                android:src="@{viewModel.isNumpadVisible ? @drawable/keyboard : @drawable/numpad, default=@drawable/numpad}"
-                android:visibility="@{viewModel.searchFilter.length() == 0 ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toBottomOf="@id/search_bar"
-                app:layout_constraintEnd_toEndOf="@id/search_bar"
-                app:layout_constraintTop_toTopOf="@id/search_bar"
-                app:tint="?attr/color_main2_600" />
+                    <androidx.appcompat.widget.AppCompatEditText
+                        style="@style/default_text_style"
+                        android:id="@+id/search_bar"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="20dp"
+                        android:background="@drawable/edit_text_background"
+                        android:drawableStart="@drawable/magnifying_glass"
+                        android:drawablePadding="10dp"
+                        android:drawableTint="?attr/color_main2_600"
+                        android:hint="@string/history_call_start_search_bar_filter_hint"
+                        android:inputType="text|textUri|textNoSuggestions"
+                        android:paddingStart="15dp"
+                        android:paddingTop="10dp"
+                        android:paddingEnd="45dp"
+                        android:paddingBottom="10dp"
+                        android:text="@={viewModel.searchFilter}"
+                        android:textSize="14sp"
+                        app:layout_constraintHeight_min="48dp"
+                        app:layout_constraintWidth_max="@dimen/text_input_max_width"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/calls_barrier" />
 
-            <ImageView
-                android:id="@+id/clear_field"
-                android:layout_width="@dimen/icon_size"
-                android:layout_height="@dimen/icon_size"
-                android:layout_marginEnd="15dp"
-                android:onClick="@{() -> viewModel.clearFilter()}"
-                android:src="@drawable/x"
-                android:contentDescription="@string/content_description_clear_filter"
-                android:visibility="@{viewModel.searchFilter.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
-                app:layout_constraintBottom_toBottomOf="@id/search_bar"
-                app:layout_constraintEnd_toEndOf="@id/search_bar"
-                app:layout_constraintTop_toTopOf="@id/search_bar"
-                app:tint="?attr/color_main2_600" />
+                    <ImageView
+                        android:id="@+id/numpad"
+                        android:layout_width="@dimen/icon_size"
+                        android:layout_height="@dimen/icon_size"
+                        android:layout_marginEnd="15dp"
+                        android:onClick="@{() -> viewModel.switchBetweenKeyboardAndNumpad()}"
+                        android:contentDescription="@string/content_description_show_numpad"
+                        android:src="@{viewModel.isNumpadVisible ? @drawable/keyboard : @drawable/numpad, default=@drawable/numpad}"
+                        android:visibility="@{viewModel.searchFilter.length() == 0 ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="@id/search_bar"
+                        app:layout_constraintEnd_toEndOf="@id/search_bar"
+                        app:layout_constraintTop_toTopOf="@id/search_bar"
+                        app:tint="?attr/color_main2_600" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style_300"
-                android:id="@+id/results_limit_reached"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="@string/contacts_list_search_results_limit_reached_label"
-                android:textColor="?attr/color_main2_600"
-                android:textSize="12sp"
-                android:maxLines="2"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:visibility="@{viewModel.showResultsLimitReached ? View.VISIBLE : View.GONE, default=gone}"
-                app:layout_constraintTop_toBottomOf="@id/search_bar"
-                app:layout_constraintStart_toStartOf="@id/search_bar"
-                app:layout_constraintEnd_toEndOf="@id/search_bar"/>
+                    <ImageView
+                        android:id="@+id/clear_field"
+                        android:layout_width="@dimen/icon_size"
+                        android:layout_height="@dimen/icon_size"
+                        android:layout_marginEnd="15dp"
+                        android:onClick="@{() -> viewModel.clearFilter()}"
+                        android:src="@drawable/x"
+                        android:contentDescription="@string/content_description_clear_filter"
+                        android:visibility="@{viewModel.searchFilter.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
+                        app:layout_constraintBottom_toBottomOf="@id/search_bar"
+                        app:layout_constraintEnd_toEndOf="@id/search_bar"
+                        app:layout_constraintTop_toTopOf="@id/search_bar"
+                        app:tint="?attr/color_main2_600" />
 
-            <ImageView
-                android:id="@+id/no_contacts_nor_suggestion_image"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_margin="10dp"
-                android:src="@drawable/illu"
-                android:contentDescription="@null"
-                android:visibility="@{viewModel.isEmpty ? View.VISIBLE : View.GONE}"
-                app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHeight_max="200dp"
-                app:layout_constraintVertical_bias="0.3"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/search_bar"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/default_text_style_300"
+                        android:id="@+id/results_limit_reached"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="@string/contacts_list_search_results_limit_reached_label"
+                        android:textColor="?attr/color_main2_600"
+                        android:textSize="12sp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:visibility="@{viewModel.showResultsLimitReached ? View.VISIBLE : View.GONE, default=gone}"
+                        app:layout_constraintTop_toBottomOf="@id/search_bar"
+                        app:layout_constraintStart_toStartOf="@id/search_bar"
+                        app:layout_constraintEnd_toEndOf="@id/search_bar"/>
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/section_header_style"
-                android:id="@+id/no_contacts_nor_suggestion_label"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/history_call_start_no_suggestion_nor_contact"
-                android:gravity="center"
-                android:visibility="@{viewModel.isEmpty ? View.VISIBLE : View.GONE}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/no_contacts_nor_suggestion_image" />
+                    <ImageView
+                        android:id="@+id/no_contacts_nor_suggestion_image"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_margin="10dp"
+                        android:src="@drawable/illu"
+                        android:contentDescription="@null"
+                        android:visibility="@{viewModel.isEmpty ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintDimensionRatio="1:1"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHeight_max="200dp"
+                        app:layout_constraintVertical_bias="0.3"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/search_bar"
+                        app:layout_constraintBottom_toBottomOf="parent" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/contacts_and_suggestions_list"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginTop="8dp"
-                android:visibility="@{viewModel.isEmpty ? View.GONE : View.VISIBLE}"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/results_limit_reached"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/section_header_style"
+                        android:id="@+id/no_contacts_nor_suggestion_label"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/history_call_start_no_suggestion_nor_contact"
+                        android:gravity="center"
+                        android:visibility="@{viewModel.isEmpty ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/no_contacts_nor_suggestion_image" />
 
-            <com.google.android.material.progressindicator.CircularProgressIndicator
-                android:id="@+id/fetch_in_progress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:indeterminate="true"
-                android:visibility="@{viewModel.searchInProgress ? View.VISIBLE : View.GONE}"
-                app:indicatorColor="?attr/color_main1_500"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/search_bar"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/contacts_and_suggestions_list"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="8dp"
+                        android:visibility="@{viewModel.isEmpty ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/results_limit_reached"
+                        app:layout_constraintBottom_toBottomOf="parent" />
+
+                    <com.google.android.material.progressindicator.CircularProgressIndicator
+                        android:id="@+id/fetch_in_progress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:indeterminate="true"
+                        android:visibility="@{viewModel.searchInProgress ? View.VISIBLE : View.GONE}"
+                        app:indicatorColor="?attr/color_main1_500"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/search_bar"
+                        app:layout_constraintBottom_toBottomOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/show_numpad"

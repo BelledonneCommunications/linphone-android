@@ -176,7 +176,6 @@
     <string name="settings_calls_calibrate_echo_canceller_done_no_echo">bez ozveny</string>
     <string name="settings_calls_calibrate_echo_canceller_done">%s ms</string>
     <string name="settings_calls_calibrate_echo_canceller_failed">zlyhalo</string>
-    <string name="settings_calls_enable_video_title">Povoliť video</string>
     <string name="settings_calls_enable_fec_title">Povoliť FEC pre video</string>
     <string name="settings_calls_auto_record_title">Automaticky spustiť nahrávanie hovorov</string>
     <string name="settings_calls_change_ringtone_title">Zmeniť vyzváňací tón</string>
@@ -566,8 +565,6 @@
     <string name="meeting_schedule_description_title">Popis</string>
     <string name="meeting_schedule_edit_title">Upraviť schôdzku</string>
     <string name="meeting_cancel_action_label">Zrušiť schôdzku</string>
-    <string name="meeting_schedule_delete_dialog_title">Vymazať schôdzku?</string>
-    <string name="meeting_schedule_delete_dialog_message">Želáte si vymazať schôdzku?</string>
     <string name="meeting_delete_action_label">Vymazať schôdzku</string>
     <string name="meeting_info_updated_toast">Schôdzka bola aktualizovaná</string>
     <string name="meeting_info_cancelled_toast">Schôdzka bola zrušená</string>
@@ -708,12 +705,6 @@
     <string name="menu_export_selected_item">Stiahnuť</string>
     <string name="menu_share_selected_item">Zdieľať</string>
     <string name="orange">Oranžová</string>
-    <string name="yellow">Žltá</string>
-    <string name="green">Zelená</string>
-    <string name="blue">Modrá</string>
-    <string name="red">Červená</string>
-    <string name="pink">Ružová</string>
-    <string name="purple">Fialová</string>
     <string name="list_filter_no_result_found">Žiadne výsledky…</string>
     <string name="multiple_participants_selection_placeholder">Tu sa zobrazia vybraní účastníci</string>
     <string name="connection_error_for_non_default_account">Chyba pripojenia účtu(-ov)</string>
@@ -783,7 +774,6 @@
     <string name="content_description_chat_open_emoji_picker">Otvorí výber emoji</string>
     <string name="content_description_chat_open_attach_file">Otvorí výber súboru</string>
     <string name="content_description_chat_toggle_mute">Zapne/vypne stlmenie konverzácie</string>
-    <string name="content_description_chat_removal_in_progress">Konverzácia sa odstraňuje</string>
     <string name="content_description_chat_unsecured">Táto konverzácia nie je zabezpečená</string>
     <string name="content_description_chat_search_message_up">Hľadať smerom hore</string>
     <string name="content_description_chat_search_message_down">Hľadať smerom dole</string>
@@ -845,4 +835,9 @@
     <string name="content_description_chat_edit_conversation_subject">Kliknutím upraviť názov konverzácie</string>
     <string name="content_description_contact_create">Vytvoriť kontakt</string>
     <string name="content_description_call_voicemail">Podržaním tlačidla volanie hlasovej schránky</string>
+    <string name="conversation_pdf_password_protected_file_cant_be_opened_error_toast">Heslom chránené PDF zatiaľ nie je možné otvoriť</string>
+    <string name="conversation_participants_list_header">Účastníci</string>
+    <string name="search">Hľadať</string>
+    <string name="settings_developer_clear_native_friends_in_database_title">Vymazať importované kontakty zo systémového adresára</string>
+    <string name="menu_edit_chat_message">Upraviť</string>
 </resources>

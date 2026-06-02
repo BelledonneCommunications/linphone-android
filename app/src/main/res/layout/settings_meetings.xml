@@ -17,6 +17,35 @@
         android:background="@drawable/shape_squircle_white_background">
 
         <androidx.appcompat.widget.AppCompatTextView
+            style="@style/settings_title_style"
+            android:onClick="@{() -> viewModel.toggleShowPastMeetings()}"
+            android:id="@+id/show_past_meetings_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/settings_meetings_show_past_meetings_title"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:labelFor="@id/show_past_meetings_switch"
+            app:layout_constraintTop_toTopOf="@id/show_past_meetings_switch"
+            app:layout_constraintBottom_toBottomOf="@id/show_past_meetings_switch"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/show_past_meetings_switch"/>
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            style="@style/material_switch_style"
+            android:id="@+id/show_past_meetings_switch"
+            android:onClick="@{() -> viewModel.toggleShowPastMeetings()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:checked="@{viewModel.showPastMeetings}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
             style="@style/settings_title_padding_style"
             android:id="@+id/layout_title"
             android:layout_width="0dp"
@@ -28,12 +57,12 @@
             android:maxLines="2"
             android:ellipsize="end"
             android:labelFor="@id/layout_spinner"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/show_past_meetings_switch"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatSpinner
-            style="@style/material_switch_style"
+            style="@style/default_text_style"
             android:id="@+id/layout_spinner"
             android:layout_width="0dp"
             android:layout_height="50dp"
@@ -45,7 +74,6 @@
             android:spinnerMode="dropdown"
             android:popupBackground="@drawable/shape_squircle_white_background"
             app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintWidth_max="@dimen/text_input_max_width"
             app:layout_constraintTop_toBottomOf="@id/layout_title"
             app:layout_constraintStart_toStartOf="@id/layout_title"
             app:layout_constraintEnd_toEndOf="@id/layout_title" />

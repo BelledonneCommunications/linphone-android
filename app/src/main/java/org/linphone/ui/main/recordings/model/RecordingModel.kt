@@ -83,7 +83,7 @@ class RecordingModel
             val indexOfSeparator = withoutHeader.indexOf(
                 LinphoneUtils.RECORDING_FILE_NAME_URI_TIMESTAMP_SEPARATOR
             )
-            sipUri = withoutHeader.substring(0, indexOfSeparator)
+            sipUri = withoutHeader.take(indexOfSeparator)
             val sipAddress = Factory.instance().createAddress(sipUri)
             displayName = if (sipAddress != null) {
                 val contact = coreContext.contactsManager.findContactByAddress(sipAddress)

@@ -84,7 +84,7 @@ class TimestampUtils {
                     it.toString()
                 }
             } ?: "?"
-            val shorten = upperCased.substring(0, 3)
+            val shorten = upperCased.take(3)
             return "$shorten."
         }
 

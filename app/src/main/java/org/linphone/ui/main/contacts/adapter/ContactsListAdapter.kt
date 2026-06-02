@@ -41,11 +41,11 @@ class ContactsListAdapter(
     var selectedAdapterPosition = -1
 
     val contactClickedEvent: MutableLiveData<Event<ContactAvatarModel>> by lazy {
-        MutableLiveData<Event<ContactAvatarModel>>()
+        MutableLiveData()
     }
 
     val contactLongClickedEvent: MutableLiveData<Event<ContactAvatarModel>> by lazy {
-        MutableLiveData<Event<ContactAvatarModel>>()
+        MutableLiveData()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

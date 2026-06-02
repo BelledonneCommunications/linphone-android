@@ -124,6 +124,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/menu_show_imdn"
                     android:background="@{viewModel.isMessageInError &amp;&amp; viewModel.isMessageOutgoing ? @drawable/action_background_middle : @drawable/action_background_top, default=@drawable/action_background_top}"
+                    android:visibility="@{viewModel.isMessageOutgoing ? View.VISIBLE : View.GONE}"
                     android:drawableEnd="@drawable/info"/>
 
                 <View
@@ -156,7 +157,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/menu_reply_to_chat_message"
-                    android:background="@drawable/action_background_middle"
+                    android:background="@{viewModel.isMessageOutgoing ? @drawable/action_background_middle : @drawable/action_background_top, default=@drawable/action_background_middle}"
                     android:visibility="@{viewModel.isChatRoomReadOnly || viewModel.hasBeenRetracted ? View.GONE : View.VISIBLE}"
                     android:drawableEnd="@drawable/reply" />
 

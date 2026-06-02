@@ -105,7 +105,11 @@ class AccountCreationViewModel
     val accountCreatedEvent = MutableLiveData<Event<Boolean>>()
 
     val accountRecoveryTokenReceivedEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+        MutableLiveData()
+    }
+
+    val accountCantBeCreatedBySmsEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData()
     }
 
     private var waitingForFlexiApiPushToken = false
@@ -166,7 +170,11 @@ class AccountCreationViewModel
             operationInProgress.postValue(false)
 
             if (!errorMessage.isNullOrEmpty()) {
-                showFormattedRedToast(errorMessage, R.drawable.warning_circle)
+                if (request.type == AccountManagerServicesRequest.Type.SendPhoneNumberLinkingCodeBySms && statusCode == 422) {
+                    // Do not show error message sent by the account management platform for this specific scenario
+                } else {
+                    showFormattedRedToast(errorMessage, R.drawable.warning_circle)
+                }
             }
 
             for (parameter in parameterErrors?.keys.orEmpty()) {
@@ -186,19 +194,21 @@ class AccountCreationViewModel
                     waitForPushJob?.cancel()
                 }
                 AccountManagerServicesRequest.Type.SendPhoneNumberLinkingCodeBySms -> {
-                    val authInfo = accountCreatedAuthInfo
-                    if (authInfo != null) {
-                        coreContext.core.removeAuthInfo(authInfo)
+                    Log.e("$TAG Error sending SMS code, clearing auth info & account")
+                    removePendingAccount()
+
+                    if (statusCode == 422) {
+                        accountCantBeCreatedBySmsEvent.postValue(Event(true))
                     }
-                    val account = accountCreated
-                    if (account != null) {
-                        coreContext.core.removeAccount(account)
-                    }
+                }
+                AccountManagerServicesRequest.Type.LinkPhoneNumberUsingCode -> {
+                    Log.e("$TAG Wrong confirmation code")
                 }
                 else -> {
                 }
             }
             createEnabled.postValue(true)
+            lockUsernameAndPassword.postValue(false)
         }
     }
 
@@ -410,6 +420,27 @@ class AccountCreationViewModel
                 smsCodeThirdDigit.postValue("")
                 smsCodeLastDigit.postValue("")
             }
+        }
+    }
+
+    @UiThread
+    fun abortAccountCreation() {
+        coreContext.postOnCoreThread {
+            removePendingAccount()
+        }
+    }
+
+    @WorkerThread
+    private fun removePendingAccount() {
+        val authInfo = accountCreatedAuthInfo
+        if (authInfo != null) {
+            coreContext.core.removeAuthInfo(authInfo)
+            accountCreatedAuthInfo = null
+        }
+        val account = accountCreated
+        if (account != null) {
+            coreContext.core.removeAccount(account)
+            accountCreated = null
         }
     }
 

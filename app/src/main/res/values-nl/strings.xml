@@ -140,7 +140,6 @@
     <string name="settings_calls_calibrate_echo_canceller_done_no_echo">Geen echo</string>
     <string name="settings_calls_calibrate_echo_canceller_failed">Mislukt</string>
     <string name="settings_calls_adaptive_rate_control_title">Adaptieve bitrate-regeling</string>
-    <string name="settings_calls_enable_video_title">Video inschakelen</string>
     <string name="settings_calls_enable_fec_title">Video-FEC inschakelen</string>
     <string name="settings_calls_vibrate_while_ringing_title">Trillen tijdens inkomend gesprek</string>
     <string name="settings_calls_auto_record_title">Oproepen automatisch opnemen</string>
@@ -217,7 +216,7 @@
     <string name="content_description_chat_create">Begin een nieuw gesprek</string>
     <string name="content_description_chat_search_message_down">Zoek naar beneden</string>
     <string name="content_description_chat_search_message_up">Zoek omhoog</string>
-    <string name="content_description_chat_removal_in_progress">Gesprek wordt verwijderd</string>
+
     <string name="content_description_chat_toggle_mute">Zet geluid aan/uit voor dit gesprek</string>
     <string name="content_description_call_voicemail">Lang indrukken om voicemail te bellen</string>
     <string name="content_description_voicemail_available">Spraakberichten zijn beschikbaar</string>
@@ -581,17 +580,11 @@
     <string name="menu_copy_chat_message">Kopiëren</string>
     <string name="menu_export_selected_item">Downloaden</string>
     <string name="menu_share_selected_item">Delen</string>
-    <string name="yellow">Geel</string>
     <string name="post_notifications_permission_not_granted">Toestemming voor meldingen niet verleend!</string>
     <string name="full_screen_intent_permission_not_granted">Toestemming om inkomende oproepen te tonen is niet verleend!</string>
     <string name="welcome_carousel_skip"><u>Overslaan</u></string>
     <string name="assistant_forgotten_password"><u>Wachtwoord vergeten?</u></string>
     <string name="call_zrtp_sas_validation_skip"><u>Overslaan</u></string>
-    <string name="green">Groen</string>
-    <string name="blue">Blauw</string>
-    <string name="red">Rood</string>
-    <string name="pink">Roze</string>
-    <string name="purple">Paars</string>
     <string name="list_filter_no_result_found">Geen resultaat gevonden…</string>
     <string name="multiple_participants_selection_placeholder">Geselecteerde deelnemers zullen hier verschijnen</string>
     <string name="connection_error_for_non_default_account">Account(s) verbindingsfout</string>
@@ -771,8 +764,6 @@
     <string name="meeting_schedule_description_title">Beschrijving</string>
     <string name="meeting_schedule_edit_title">Vergadering bewerken</string>
     <string name="meeting_cancel_action_label">Vergadering annuleren</string>
-    <string name="meeting_schedule_delete_dialog_title">Vergadering verwijderen?</string>
-    <string name="meeting_schedule_delete_dialog_message">Wil je de vergadering verwijderen?</string>
     <string name="meeting_delete_action_label">Vergadering verwijderen</string>
     <string name="meeting_info_created_toast">Vergadering is aangemaakt</string>
     <string name="meeting_info_updated_toast">Vergadering is bijgewerkt</string>
@@ -829,4 +820,19 @@
     <string name="content_description_toggle_microphone">Dempen/dempen opheffen microfoon</string>
     <string name="content_description_change_output_audio_device">Wijzigt het uitvoerapparaat voor audio</string>
     <string name="content_description_merge_calls_into_conference">Voegt oproepen samen in een groepsgesprek</string>
+    <string name="search">Zoeken</string>
+    <string name="menu_edit_chat_message">Bewerken</string>
+    <string name="drawer_menu_account_connection_status_disconnected">Verbinding verbroken</string>
+    <string name="help_about_user_guide_title">&appName; gebruikershandleiding</string>
+    <string name="help_about_user_guide_subtitle">Leer alle functies van de app te beheersen, stap voor stap.</string>
+    <string name="help_about_contribute_translations_subtitle">Help mee de app toegankelijk te maken aan zoveel mogelijk personen.</string>
+    <string name="help_troubleshooting_subtitle">Verstuur uw diagnostische logs om het oplossen van fouten te vergemakkelijken.</string>
+    <string name="settings_contacts_presence_subscribe_title">Abboneer op aanwezigheidsinformatie</string>
+    <string name="settings_contacts_ldap_enabled_title">Is ingeschakeld</string>
+    <string name="settings_developer_clear_native_friends_in_database_title">Geïmporteerde contacten uit het lokale adresboek verwijderen</string>
+    <string name="manage_account_status_disconnected_summary">Dit account is offline, waarschijnlijk omdat u momenteel niet met internet bent verbonden.</string>
+    <string name="conversation_pdf_password_protected_file_cant_be_opened_error_toast">Wachtwoord beveiligde Pdf\'s kunnen nog niet worden geopend</string>
+    <string name="conversation_participants_list_header">Deelnemers</string>
+    <string name="call_zrtp_point_to_point_encrypted">Punt-naar-puntversleuteling door ZRTP</string>
+    <string name="content_description_cancel_files_or_text_pending_sharing">Klik om vrijgeven van bestanden of teksten te annuleren.</string>
 </resources>

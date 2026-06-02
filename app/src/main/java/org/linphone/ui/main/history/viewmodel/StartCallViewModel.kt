@@ -62,27 +62,27 @@ class StartCallViewModel
     val operationInProgress = MutableLiveData<Boolean>()
 
     val appendDigitToSearchBarEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+        MutableLiveData()
     }
 
     val removedCharacterAtCurrentPositionEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val clearSearchBarEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val requestKeyboardVisibilityChangedEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val leaveFragmentEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val initiateBlindTransferEvent: MutableLiveData<Event<Pair<Address, String>>> by lazy {
-        MutableLiveData<Event<Pair<Address, String>>>()
+        MutableLiveData()
     }
 
     private val conferenceListener = object : ConferenceListenerStub() {

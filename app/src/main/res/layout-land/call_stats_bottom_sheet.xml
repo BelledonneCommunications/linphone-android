@@ -22,7 +22,7 @@
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <com.google.android.material.bottomsheet.BottomSheetDragHandleView
-            android:id="@+id/handle"
+            android:id="@+id/stats_bottom_sheet_handle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="11dp"
@@ -43,7 +43,7 @@
             android:background="@drawable/shape_squircle_gray_600_background"
             app:layout_constraintVertical_bias="0"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
-            app:layout_constraintTop_toBottomOf="@id/handle"
+            app:layout_constraintTop_toBottomOf="@id/stats_bottom_sheet_handle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/video_stats"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -140,7 +140,7 @@
             android:layout_marginBottom="20dp"
             android:background="@drawable/shape_squircle_gray_600_background"
             android:visibility="@{model.isVideoEnabled ? View.VISIBLE : View.GONE}"
-            app:layout_constraintTop_toBottomOf="@id/handle"
+            app:layout_constraintTop_toBottomOf="@id/stats_bottom_sheet_handle"
             app:layout_constraintStart_toEndOf="@id/audio_stats"
             app:layout_constraintEnd_toStartOf="@id/fec_stats"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -249,7 +249,7 @@
             android:background="@drawable/shape_squircle_gray_600_background"
             android:visibility="@{model.fecEnabled ? View.VISIBLE : View.GONE}"
             app:layout_constraintVertical_bias="0"
-            app:layout_constraintTop_toBottomOf="@id/handle"
+            app:layout_constraintTop_toBottomOf="@id/stats_bottom_sheet_handle"
             app:layout_constraintStart_toEndOf="@id/video_stats"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

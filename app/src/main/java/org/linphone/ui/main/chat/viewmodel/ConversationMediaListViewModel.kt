@@ -44,7 +44,7 @@ class ConversationMediaListViewModel
     val operationInProgress = MutableLiveData<Boolean>()
 
     val openMediaEvent: MutableLiveData<Event<FileModel>> by lazy {
-        MutableLiveData<Event<FileModel>>()
+        MutableLiveData()
     }
 
     private var totalMediaCount: Int = -1
@@ -105,9 +105,6 @@ class ConversationMediaListViewModel
     private fun getFileModelsListFromContents(contents: Array<Content>): ArrayList<FileModel> {
         val list = arrayListOf<FileModel>()
         for (mediaContent in contents) {
-            // Do not display voice recordings here, even if they are media file
-            if (mediaContent.isVoiceRecording) continue
-
             val isEncrypted = mediaContent.isFileEncrypted
             val originalPath = mediaContent.filePath.orEmpty()
             val path = if (isEncrypted) {

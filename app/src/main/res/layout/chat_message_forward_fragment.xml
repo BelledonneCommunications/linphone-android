@@ -47,66 +47,81 @@
                 app:layout_constraintStart_toEndOf="@id/back"
                 app:layout_constraintTop_toTopOf="parent"/>
 
-            <View
-                android:id="@+id/background"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/contacts_content"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:background="?attr/color_main2_000"
+                android:background="?attr/color_grey_100"
+                app:layout_constraintTop_toBottomOf="@id/back"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/back" />
+                app:layout_constraintEnd_toEndOf="parent">
 
-            <androidx.appcompat.widget.AppCompatEditText
-                style="@style/default_text_style"
-                android:id="@+id/search_bar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="20dp"
-                android:background="@drawable/edit_text_background"
-                android:drawableStart="@drawable/magnifying_glass"
-                android:drawablePadding="10dp"
-                android:drawableTint="?attr/color_main2_600"
-                android:hint="@string/new_conversation_search_bar_filter_hint"
-                android:inputType="text|textPersonName|textNoSuggestions"
-                android:paddingStart="15dp"
-                android:paddingTop="10dp"
-                android:paddingEnd="15dp"
-                android:paddingBottom="10dp"
-                android:text="@={viewModel.searchFilter}"
-                android:textSize="14sp"
-                app:layout_constraintHeight_min="48dp"
-                app:layout_constraintWidth_max="@dimen/text_input_max_width"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/title" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/shape_squircle_white_background"
+                    app:layout_constraintWidth_max="@dimen/section_max_width"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
 
-            <ImageView
-                android:id="@+id/clear_field"
-                android:layout_width="@dimen/icon_size"
-                android:layout_height="@dimen/icon_size"
-                android:layout_marginEnd="15dp"
-                android:onClick="@{() -> viewModel.clearFilter()}"
-                android:src="@drawable/x"
-                android:contentDescription="@string/content_description_clear_filter"
-                android:visibility="@{viewModel.searchFilter.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
-                app:layout_constraintBottom_toBottomOf="@id/search_bar"
-                app:layout_constraintEnd_toEndOf="@id/search_bar"
-                app:layout_constraintTop_toTopOf="@id/search_bar"
-                app:tint="?attr/color_main2_600" />
+                    <androidx.appcompat.widget.AppCompatEditText
+                        style="@style/default_text_style"
+                        android:id="@+id/search_bar"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="20dp"
+                        android:background="@drawable/edit_text_background"
+                        android:drawableStart="@drawable/magnifying_glass"
+                        android:drawablePadding="10dp"
+                        android:drawableTint="?attr/color_main2_600"
+                        android:hint="@string/new_conversation_search_bar_filter_hint"
+                        android:inputType="text|textUri|textNoSuggestions"
+                        android:paddingStart="15dp"
+                        android:paddingTop="10dp"
+                        android:paddingEnd="15dp"
+                        android:paddingBottom="10dp"
+                        android:text="@={viewModel.searchFilter}"
+                        android:textSize="14sp"
+                        app:layout_constraintHeight_min="48dp"
+                        app:layout_constraintWidth_max="@dimen/text_input_max_width"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/contacts_list"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginTop="8dp"
-                android:visibility="@{viewModel.isEmpty ? View.GONE : View.VISIBLE}"
-                app:layout_constraintTop_toBottomOf="@id/search_bar"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                    <ImageView
+                        android:id="@+id/clear_field"
+                        android:layout_width="@dimen/icon_size"
+                        android:layout_height="@dimen/icon_size"
+                        android:layout_marginEnd="15dp"
+                        android:onClick="@{() -> viewModel.clearFilter()}"
+                        android:src="@drawable/x"
+                        android:contentDescription="@string/content_description_clear_filter"
+                        android:visibility="@{viewModel.searchFilter.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
+                        app:layout_constraintBottom_toBottomOf="@id/search_bar"
+                        app:layout_constraintEnd_toEndOf="@id/search_bar"
+                        app:layout_constraintTop_toTopOf="@id/search_bar"
+                        app:tint="?attr/color_main2_600" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/contacts_list"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="8dp"
+                        android:visibility="@{viewModel.isEmpty ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintTop_toBottomOf="@id/search_bar"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <com.google.android.material.progressindicator.CircularProgressIndicator
                 android:id="@+id/fetch_in_progress"
@@ -117,7 +132,7 @@
                 app:indicatorColor="?attr/color_main1_500"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/search_bar"
+                app:layout_constraintTop_toBottomOf="@id/contacts_content"
                 app:layout_constraintBottom_toBottomOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

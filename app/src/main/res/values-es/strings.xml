@@ -66,7 +66,7 @@
     <string name="file_successfully_exported_to_media_store_toast">El archivo se ha exportado a la galería nativa</string>
     <string name="export_file_to_media_store_error_toast">Error tratando de exportar el archivo a la galería nativa</string>
     <string name="file_successfully_exported_to_documents_toast">El archivo ha sido exportado a documentos</string>
-    <string name="media_playback_low_volume_warning_toast">El volumen de los medios es bajo, ¡es posible que no escuches nada!</string>
+    <string name="media_playback_low_volume_warning_toast">El volumen de los medios es bajo !es posible que no escuches nada!</string>
     <string name="remote_provisioning_config_applied_toast">Configuración aplicada satisfactoriamente</string>
     <string name="remote_provisioning_config_failed_toast">Error al intentar descargar y aplicar la configuración remota</string>
     <string name="assistant_dialog_general_terms_and_privacy_policy_title">Términos generales y política de privacidad</string>
@@ -76,20 +76,20 @@
     <string name="assistant_dialog_confirm_phone_number_title">Confirmar número de teléfono</string>
     <string name="assistant_account_login">Acceso</string>
     <string name="assistant_scan_qr_code">Escanear código QR</string>
-    <string name="assistant_qr_code_invalid_toast">Código QR no válido!</string>
+    <string name="assistant_qr_code_invalid_toast">¡Código QR no válido!</string>
     <string name="assistant_login_third_party_sip_account">Utilice una cuenta SIP de terceros</string>
     <string name="assistant_login_third_party_sip_account_title">Cuenta SIP de terceros</string>
     <string name="assistant_login_using_single_sign_on">Inicio de sesión único</string>
-    <string name="assistant_login_cant_parse_address_toast">La dirección SIP no es válida!</string>
+    <string name="assistant_login_cant_parse_address_toast">¡La dirección SIP no es válida!</string>
     <string name="assistant_account_login_already_connected_error">La cuenta ya existe</string>
-    <string name="assistant_no_account_yet">Aún no tienes cuenta?</string>
+    <string name="assistant_no_account_yet">¿Aún no tienes cuenta?</string>
     <string name="assistant_account_register">Registrar</string>
     <string name="assistant_account_creation_sms_confirmation_title">Confirma tu número de teléfono</string>
     <string name="welcome_page_3_message">Una aplicación <b>gratuita</b> y de código abierto desde <b>2001</b>.</string>
     <string name="export_file_to_documents_error_toast">Error tratando de exportar archivo a documentos</string>
     <string name="media_player_generic_error_toast">Error al intentar crear un reproductor multimedia</string>
     <string name="assistant_dialog_confirm_phone_number_message">¿Estás seguro que tu número de teléfono es %s?</string>
-    <string name="assistant_login_address_without_username_toast">La dirección SIP no contiene un nombre de usuario!</string>
+    <string name="assistant_login_address_without_username_toast">¡La dirección SIP no contiene un nombre de usuario!</string>
     <string name="assistant_account_creation_sms_confirmation_explanation">Hemos enviado un código de verificación a tu número de teléfono %1$s.\n\nIntroduce el código de verificación a continuación:</string>
     <plurals name="notification_file_transfer_upload">
         <item quantity="one">%s archivo en proceso de carga</item>
@@ -102,10 +102,10 @@
         <item quantity="many">%s Archivos en descarga</item>
         <item quantity="other">%s Archivo en descarga</item>
     </plurals>
-    <string name="assistant_account_creation_wrong_phone_number">Número equivocado?</string>
+    <string name="assistant_account_creation_wrong_phone_number">¿Número equivocado?</string>
     <string name="assistant_account_create">Crear</string>
     <string name="assistant_create_account_using_email_on_our_web_platform">Crea una cuenta con tu correo electrónico en:</string>
-    <string name="assistant_already_have_an_account">Ya tienes una cuenta?</string>
+    <string name="assistant_already_have_an_account">¿Ya tienes una cuenta?</string>
     <string name="assistant_sip_account_transport_protocol">Transporte</string>
     <string name="assistant_third_party_sip_account_warning_explanation">Algunas funciones requieren una cuenta &appName; como la mensajería grupal, las videoconferencias, etc.\n\nEstas funciones están ocultas al registrarse con una cuenta SIP de terceros.\n\nPara habilitarlas en un proyecto comercial, contáctenos.</string>
     <string name="assistant_third_party_sip_account_create_linphone_account">Prefiero crear una cuenta; &appName;</string>
@@ -172,7 +172,7 @@
     <string name="settings_title">Ajustes</string>
     <string name="settings_security_title">Seguridad</string>
     <string name="settings_security_enable_vfs_title">Cifrar todo</string>
-    <string name="settings_security_enable_vfs_subtitle">Advertencia: una vez habilitado, ¡no se puede deshabilitar!</string>
+    <string name="settings_security_enable_vfs_subtitle">Advertencia: una vez habilitado ¡no se puede deshabilitar!</string>
     <string name="settings_security_enable_vfs_failure_toast">¡Error al habilitar el módulo de cifrado!</string>
     <string name="settings_security_enable_vfs_success_toast">Módulo de cifrado habilitado</string>
     <string name="settings_security_enable_vfs_dialog_confirmation_title">¿Realmente quieres cifrarlo todo?</string>
@@ -187,7 +187,6 @@
     <string name="settings_calls_calibrate_echo_canceller_done">%s ms</string>
     <string name="settings_calls_calibrate_echo_canceller_failed">fallido</string>
     <string name="settings_calls_adaptive_rate_control_title">Control de velocidad adaptativo</string>
-    <string name="settings_calls_enable_video_title">Habilitar video</string>
     <string name="settings_calls_enable_fec_title">Habilitar FEC de vídeo</string>
     <string name="settings_calls_vibrate_while_ringing_title">Vibrar mientras suena la llamada entrante</string>
     <string name="settings_calls_auto_record_title">Iniciar automáticamente la grabación de llamadas</string>
@@ -209,10 +208,10 @@
     <string name="settings_contacts_carddav_realm_title">Dominio de autenticación</string>
     <string name="settings_contacts_carddav_use_as_default_title">Almacenar los contactos recién creados</string>
     <string name="settings_contacts_carddav_sync_successful_toast">La sincronización fue exitosa</string>
-    <string name="settings_contacts_carddav_sync_error_toast">Error de sincronización!</string>
+    <string name="settings_contacts_carddav_sync_error_toast">¡Error de sincronización!</string>
     <string name="settings_contacts_carddav_deleted_toast">Cuenta CardDAV eliminada</string>
     <string name="settings_advanced_device_id">Identificador del dispositivo</string>
-    <string name="settings_contacts_ldap_error_toast">Se produjo un error, ¡el servidor LDAP no se guardó!</string>
+    <string name="settings_contacts_ldap_error_toast">Se produjo un error ¡el servidor LDAP no se guardó!</string>
     <string name="settings_advanced_enable_auto_answer_incoming_calls_title">Respuesta automática de las llamadas entrantes</string>
     <string name="settings_user_interface_title">Interfaz de usuario</string>
     <string name="settings_tunnel_dual_mode_label">Utilice dos servidores</string>
@@ -306,4 +305,10 @@
     <string name="menu_reply_to_chat_message">Responder</string>
     <string name="generic_address_picker_conversations_list_title">Conversaciones</string>
     <string name="generic_address_picker_contacts_list_title">Contactos</string>
+    <string name="settings_developer_clear_native_friends_in_database_title">Borrar contactos importados de la libreta de direcciones nativa</string>
+    <string name="search">Buscar</string>
+    <string name="dialog_understood">Entendido</string>
+    <string name="dialog_do_not_cancel">No cancelar</string>
+    <string name="notification_account_registration_error_title">¡El registro de la cuenta %s falló!</string>
+    <string name="conversation_menu_search_in_messages">Buscar</string>
 </resources>

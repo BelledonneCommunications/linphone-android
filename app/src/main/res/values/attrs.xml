@@ -12,10 +12,7 @@
 
     <declare-styleable name="LinphoneAppTheme">
         <attr name="color_main1_100" format="color"/>
-        <attr name="color_main1_100_alpha_50" format="color"/>
-        <attr name="color_main1_300" format="color"/>
         <attr name="color_main1_500" format="color"/>
-        <attr name="color_main1_700" format="color"/>
 
         <attr name="color_main2_000" format="color"/>
         <attr name="color_main2_100" format="color"/>
@@ -80,5 +77,6 @@
 
         <attr name="color_bottom_sheet_handle" format="color"/>
         <attr name="color_bottom_sheet_background" format="color"/>
+        <attr name="color_bottom_sheet_disabled_menu" format="color" />
     </declare-styleable>
 </resources>

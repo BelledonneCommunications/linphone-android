@@ -47,7 +47,7 @@
             android:src="@drawable/x"
             android:background="@drawable/squircle_transparent_button_background"
             android:contentDescription="@string/content_description_contact_remove_field"
-            app:tint="?attr/color_main2_700"
+            app:tint="?attr/color_main2_600"
             app:layout_constraintStart_toEndOf="@id/field"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/field"

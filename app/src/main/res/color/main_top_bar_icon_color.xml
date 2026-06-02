@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="false"
+        android:color="?attr/color_grey_300" />
     <item android:state_pressed="true"
         android:color="?attr/color_main2_600" />
     <item android:state_hovered="true"

@@ -19,7 +19,7 @@
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <com.google.android.material.bottomsheet.BottomSheetDragHandleView
-            android:id="@+id/handle"
+            android:id="@+id/emoji_picker_bottom_sheet_handle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="11dp"
@@ -30,12 +30,12 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.emoji2.emojipicker.EmojiPickerView
-            android:id="@+id/emoji_picker"
+            android:id="@+id/emoji_picker_bottom_sheet"
             android:layout_width="match_parent"
             android:layout_height="@dimen/chat_bubble_emoji_picker_height"
             android:nestedScrollingEnabled="true"
             app:emojiPickedListener="@{(emoji) -> model.sendReaction(emoji.emoji)}"
-            app:layout_constraintTop_toBottomOf="@id/handle"
+            app:layout_constraintTop_toBottomOf="@id/emoji_picker_bottom_sheet_handle"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>

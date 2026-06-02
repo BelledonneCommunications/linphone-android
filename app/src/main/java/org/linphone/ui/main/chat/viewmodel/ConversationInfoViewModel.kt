@@ -85,29 +85,29 @@ class ConversationInfoViewModel
     val disableAddContact = MutableLiveData<Boolean>()
 
     val groupLeftEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val historyDeletedEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val infoChangedEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val showParticipantAdminPopupMenuEvent: MutableLiveData<Event<Pair<View, ParticipantModel>>> by lazy {
-        MutableLiveData<Event<Pair<View, ParticipantModel>>>()
+        MutableLiveData()
     }
 
     val goToScheduleMeetingEvent: MutableLiveData<Event<Pair<String, ArrayList<String>>>> by lazy {
-        MutableLiveData<Event<Pair<String, ArrayList<String>>>>()
+        MutableLiveData()
     }
 
     private val chatRoomListener = object : ChatRoomListenerStub() {
         @WorkerThread
         override fun onParticipantAdded(chatRoom: ChatRoom, eventLog: EventLog) {
-            Log.i("$TAG A participant has been added to the group [${chatRoom.subject}]")
+            Log.i("$TAG A participant has been added to the group [${chatRoom.subjectUtf8}]")
             val message = AppUtils.getFormattedString(
                 R.string.conversation_info_participant_added_to_conversation_toast,
                 getParticipant(eventLog)
@@ -120,7 +120,7 @@ class ConversationInfoViewModel
 
         @WorkerThread
         override fun onParticipantRemoved(chatRoom: ChatRoom, eventLog: EventLog) {
-            Log.i("$TAG A participant has been removed from the group [${chatRoom.subject}]")
+            Log.i("$TAG A participant has been removed from the group [${chatRoom.subjectUtf8}]")
             val message = AppUtils.getFormattedString(
                 R.string.conversation_info_participant_removed_from_conversation_toast,
                 getParticipant(eventLog)
@@ -134,7 +134,7 @@ class ConversationInfoViewModel
         @WorkerThread
         override fun onParticipantAdminStatusChanged(chatRoom: ChatRoom, eventLog: EventLog) {
             Log.i(
-                "$TAG A participant has been given/removed administration rights for group [${chatRoom.subject}]"
+                "$TAG A participant has been given/removed administration rights for group [${chatRoom.subjectUtf8}]"
             )
             if (eventLog.type == EventLog.Type.ConferenceParticipantSetAdmin) {
                 val message = AppUtils.getFormattedString(
@@ -151,16 +151,17 @@ class ConversationInfoViewModel
             }
 
             computeParticipantsList()
+            isMyselfAdmin.postValue(chatRoom.me?.isAdmin)
         }
 
         @WorkerThread
         override fun onSubjectChanged(chatRoom: ChatRoom, eventLog: EventLog) {
             Log.i(
-                "$TAG Conversation [${LinphoneUtils.getConversationId(chatRoom)}] has a new subject [${chatRoom.subject}]"
+                "$TAG Conversation [${LinphoneUtils.getConversationId(chatRoom)}] has a new subject [${chatRoom.subjectUtf8}]"
             )
             showGreenToast(R.string.conversation_subject_changed_toast, R.drawable.check)
 
-            subject.postValue(chatRoom.subject)
+            subject.postValue(chatRoom.subjectUtf8)
             computeParticipantsList()
             infoChangedEvent.postValue(Event(true))
         }
@@ -263,7 +264,7 @@ class ConversationInfoViewModel
                     participantsList.add(participant.address.asStringUriOnly())
                 }
                 goToScheduleMeetingEvent.postValue(
-                    Event(Pair(chatRoom.subject.orEmpty(), participantsList))
+                    Event(Pair(chatRoom.subjectUtf8.orEmpty(), participantsList))
                 )
             } else {
                 val firstParticipant = chatRoom.participants.firstOrNull()
@@ -464,10 +465,10 @@ class ConversationInfoViewModel
         val readOnly = chatRoom.isReadOnly
         isReadOnly.postValue(readOnly)
         if (readOnly) {
-            Log.w("$TAG Conversation with subject [${chatRoom.subject}] is read only!")
+            Log.w("$TAG Conversation with subject [${chatRoom.subjectUtf8}] is read only!")
         }
 
-        subject.postValue(chatRoom.subject)
+        subject.postValue(chatRoom.subjectUtf8)
         peerSipUri.postValue(chatRoom.peerAddress.asStringUriOnly())
 
         val firstParticipant = chatRoom.participants.firstOrNull()
@@ -558,7 +559,7 @@ class ConversationInfoViewModel
 
         val avatar = if (groupChatRoom) {
             val fakeFriend = coreContext.core.createFriend()
-            fakeFriend.name = chatRoom.subject
+            fakeFriend.name = chatRoom.subjectUtf8
             val model = ContactAvatarModel(fakeFriend)
             model.defaultToConversationIcon.postValue(true)
             model.updateSecurityLevelUsingConversation(chatRoom)

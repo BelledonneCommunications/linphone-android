@@ -76,15 +76,15 @@ class ThirdPartySipAccountLoginViewModel
     val registrationInProgress = MutableLiveData<Boolean>()
 
     val accountLoggedInEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val accountLoginErrorEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+        MutableLiveData()
     }
 
     val defaultTransportIndexEvent: MutableLiveData<Event<Int>> by lazy {
-        MutableLiveData<Event<Int>>()
+        MutableLiveData()
     }
 
     val availableTransports = arrayListOf<String>()

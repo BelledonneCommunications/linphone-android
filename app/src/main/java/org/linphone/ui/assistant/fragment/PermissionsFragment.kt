@@ -182,6 +182,7 @@ class PermissionsFragment : GenericFragment() {
         if (findNavController().currentDestination?.id == R.id.permissionsFragment) {
             val action =
                 PermissionsFragmentDirections.actionPermissionsFragmentToLandingFragment()
+            leaving = false
             findNavController().navigate(action)
         }
     }

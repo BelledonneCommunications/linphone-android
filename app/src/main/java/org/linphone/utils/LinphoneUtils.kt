@@ -266,6 +266,14 @@ class LinphoneUtils {
             }
         }
 
+        @AnyThread
+        fun isCallActive(callState: Call.State): Boolean {
+            return when (callState) {
+                Call.State.Connected, Call.State.StreamsRunning, Call.State.UpdatedByRemote, Call.State.Updating -> true
+                else -> false
+            }
+        }
+
         @WorkerThread
         fun getCallErrorInfoToast(call: Call): String {
             val errorInfo = call.errorInfo
@@ -644,7 +652,7 @@ class LinphoneUtils {
 
         @WorkerThread
         private fun getTextDescribingMessage(message: ChatMessage): Pair<String, String> {
-            // Check if message is empty (when deleted by it's sender, for everyone)
+            // Check if message is empty (when deleted by its sender, for everyone)
             if (message.isRetracted) {
                 val text = if (message.isOutgoing) {
                     AppUtils.getString(R.string.conversation_message_content_deleted_by_us_label)
@@ -655,7 +663,7 @@ class LinphoneUtils {
             }
 
             // If message contains text, then use that
-            var text = message.contents.find { content -> content.isText }?.utf8Text ?: ""
+            var text = message.contents.find { content -> content.isText }?.utf8Text.orEmpty()
             var contentDescription = ""
 
             if (text.isEmpty()) {
@@ -703,7 +711,9 @@ class LinphoneUtils {
                         if (text.isNotEmpty()) {
                             text += ", "
                         }
-                        text += content.name
+                        if (!content.name.isNullOrEmpty()) {
+                            text += content.name
+                        }
                     }
                 }
             }

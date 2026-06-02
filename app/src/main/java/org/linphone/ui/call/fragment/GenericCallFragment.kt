@@ -20,11 +20,15 @@
 package org.linphone.ui.call.fragment
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
+import android.graphics.Outline
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewOutlineProvider
 import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModelProvider
+import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericFragment
 import org.linphone.ui.call.view.RoundCornersTextureView
@@ -38,6 +42,14 @@ abstract class GenericCallFragment : GenericFragment() {
 
     protected lateinit var sharedViewModel: SharedCallViewModel
 
+    protected val outlineProvider = object : ViewOutlineProvider() {
+        override fun getOutline(view: View?, outline: Outline?) {
+            val radius = resources.getDimension(R.dimen.top_list_item_rounded_corner_radius)
+            view ?: return
+            outline?.setRoundRect(0, 0, view.width, (view.height + radius).toInt(), radius)
+        }
+    }
+
     // For moving video preview purposes
     private val videoPreviewTouchListener = View.OnTouchListener { view, event ->
         when (event.action) {
@@ -49,6 +61,7 @@ abstract class GenericCallFragment : GenericFragment() {
             MotionEvent.ACTION_UP -> {
                 sharedViewModel.videoPreviewX = view.x
                 sharedViewModel.videoPreviewY = view.y
+                sharedViewModel.videoPreviewOrientation = resources.configuration.orientation
                 true
             }
             MotionEvent.ACTION_MOVE -> {
@@ -82,10 +95,13 @@ abstract class GenericCallFragment : GenericFragment() {
         }
 
         // To restore video preview position if possible
-        if (sharedViewModel.videoPreviewX != 0f && sharedViewModel.videoPreviewY != 0f) {
-            Log.i("$TAG Restoring video preview position with position X [${sharedViewModel.videoPreviewX}] and Y [${sharedViewModel.videoPreviewY}]")
-            localPreviewVideoSurface.x = sharedViewModel.videoPreviewX
-            localPreviewVideoSurface.y = sharedViewModel.videoPreviewY
+        val currentOrientation = resources.configuration.orientation
+        if (sharedViewModel.videoPreviewOrientation == currentOrientation || sharedViewModel.videoPreviewOrientation == Configuration.ORIENTATION_UNDEFINED) {
+            if (sharedViewModel.videoPreviewX != 0f && sharedViewModel.videoPreviewY != 0f) {
+                Log.i("$TAG Restoring video preview position with position X [${sharedViewModel.videoPreviewX}] and Y [${sharedViewModel.videoPreviewY}]")
+                localPreviewVideoSurface.x = sharedViewModel.videoPreviewX
+                localPreviewVideoSurface.y = sharedViewModel.videoPreviewY
+            }
         }
 
         localPreviewVideoSurface.setOnTouchListener(videoPreviewTouchListener)

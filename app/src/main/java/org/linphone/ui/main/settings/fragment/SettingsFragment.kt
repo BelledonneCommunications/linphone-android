@@ -36,6 +36,7 @@ import org.linphone.R
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsFragmentBinding
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.ui.main.settings.viewmodel.SettingsViewModel
@@ -176,7 +177,7 @@ class SettingsFragment : GenericMainFragment() {
             }
         }
 
-        viewModel.goToIncomingCallNotificationChannelSettingsEvent.observe(viewLifecycleOwner) {
+        viewModel.showRingtonePickerEvent.observe(viewLifecycleOwner) {
             it.consume { currentRingtone ->
                 try {
                     val intent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER).apply {
@@ -184,13 +185,16 @@ class SettingsFragment : GenericMainFragment() {
                             RingtoneManager.EXTRA_RINGTONE_TYPE,
                             RingtoneManager.TYPE_RINGTONE
                         )
-                        putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, currentRingtone)
+                        if (currentRingtone != null) {
+                            putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, currentRingtone)
+                        }
                         putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, AppUtils.getString(R.string.settings_calls_change_ringtone_pick_title))
                     }
                     startActivityForResult(intent, RINGTONE_PICKER_INTENT_ID)
                 } catch (e: Exception) {
                     Log.e("$TAG Failed start ringtone picker: $e")
-                    // TODO: show error to user
+                    val toastMessage = getString(R.string.settings_calls_change_ringtone_picker_unavailable_toast)
+                    (requireActivity() as GenericActivity).showRedToast(toastMessage, R.drawable.warning_circle)
                 }
             }
         }
@@ -319,6 +323,12 @@ class SettingsFragment : GenericMainFragment() {
 
         viewModel.tunnelModeIndex.observe(viewLifecycleOwner) { index ->
             binding.tunnelSettings.tunnelModeSpinner.setSelection(index)
+        }
+
+        viewModel.forceRefreshMeetingsListEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                sharedViewModel.forceRefreshMeetingsListEvent.postValue(Event(true))
+            }
         }
 
         binding.setTurnOnVfsClickListener {

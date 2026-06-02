@@ -61,34 +61,50 @@
             app:layout_constraintTop_toTopOf="@id/title"
             app:tint="?attr/color_main2_500"/>
 
-        <View
-            android:id="@+id/background"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/contacts_content"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="?attr/color_main2_000"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/back" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/participants_list"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:background="?attr/color_grey_100"
             app:layout_constraintTop_toBottomOf="@id/title"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/shape_squircle_white_background"
+                app:layout_constraintWidth_max="@dimen/section_max_width"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/participants_list"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!--suppress AndroidUnknownAttribute -->
         <org.linphone.ui.call.view.RoundCornersTextureView
             android:id="@+id/local_preview_video_surface"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
             app:alignTopRight="true"
             app:displayMode="black_bars"
-            app:radius="@dimen/call_round_corners_texture_view_radius"
+            roundCornersRadius="@dimen/call_round_corners_texture_view_radius"
             app:layout_constraintBottom_toTopOf="@id/add_participants"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_max="@dimen/call_video_preview_max_size"

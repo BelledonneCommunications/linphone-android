@@ -67,7 +67,6 @@ import org.linphone.ui.GenericActivity
 import org.linphone.ui.assistant.AssistantActivity
 import org.linphone.ui.main.chat.fragment.ConversationsListFragmentDirections
 import org.linphone.utils.PasswordDialogModel
-import org.linphone.ui.main.sso.fragment.SingleSignOnFragmentDirections
 import org.linphone.ui.main.viewmodel.MainViewModel
 import org.linphone.ui.main.viewmodel.SharedMainViewModel
 import org.linphone.ui.welcome.WelcomeActivity
@@ -77,6 +76,7 @@ import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
 import androidx.core.content.edit
+import org.linphone.ui.sso.SingleSignOnActivity
 
 @UiThread
 class MainActivity : GenericActivity() {
@@ -289,7 +289,6 @@ class MainActivity : GenericActivity() {
                 }
             }
         })
-
         coreContext.bearerAuthenticationRequestedEvent.observe(this) {
             it.consume { pair ->
                 val serverUrl = pair.first
@@ -298,11 +297,10 @@ class MainActivity : GenericActivity() {
                 Log.i(
                     "$TAG Navigating to Single Sign On Fragment with server URL [$serverUrl] and username [$username]"
                 )
-                val action = SingleSignOnFragmentDirections.actionGlobalSingleSignOnFragment(
-                    serverUrl,
-                    username
-                )
-                findNavController().navigate(action)
+                val intent = Intent(this, SingleSignOnActivity::class.java)
+                intent.putExtra(SingleSignOnActivity.INTENT_EXTRA_USERNAME, username)
+                intent.putExtra(SingleSignOnActivity.INTENT_EXTRA_SERVER_URL, serverUrl)
+                startActivity(intent)
             }
         }
 
@@ -385,6 +383,29 @@ class MainActivity : GenericActivity() {
             Log.i("$TAG Car connection is [$asString]")
             val projection = it == CarConnection.CONNECTION_TYPE_PROJECTION
             coreContext.isConnectedToAndroidAuto = projection
+        }
+
+        coreContext.postOnCoreThread { core ->
+            if (corePreferences.firstLaunch) {
+                Log.i("$TAG First time Linphone 6.0 has been started, showing Welcome activity")
+                corePreferences.firstLaunch = false
+                coreContext.postOnMainThread {
+                    try {
+                        startActivity(Intent(this, WelcomeActivity::class.java))
+                    } catch (ise: IllegalStateException) {
+                        Log.e("$TAG Can't start activity: $ise")
+                    }
+                }
+            } else if (core.accountList.isEmpty()) {
+                Log.w("$TAG No account found, showing Assistant activity")
+                coreContext.postOnMainThread {
+                    try {
+                        startActivity(Intent(this, AssistantActivity::class.java))
+                    } catch (ise: IllegalStateException) {
+                        Log.e("$TAG Can't start activity: $ise")
+                    }
+                }
+            }
         }
     }
 
@@ -585,62 +606,41 @@ class MainActivity : GenericActivity() {
 
     private fun handleMainIntent(intent: Intent) {
         coreContext.postOnCoreThread { core ->
-            if (corePreferences.firstLaunch) {
-                Log.i("$TAG First time Linphone 6.0 has been started, showing Welcome activity")
-                corePreferences.firstLaunch = false
+            if (intent.hasExtra(ARGUMENTS_CHAT)) {
+                Log.i("$TAG Intent has [Chat] extra")
                 coreContext.postOnMainThread {
                     try {
-                        startActivity(Intent(this, WelcomeActivity::class.java))
-                    } catch (ise: IllegalStateException) {
-                        Log.e("$TAG Can't start activity: $ise")
-                    }
-                }
-            } else if (core.accountList.isEmpty()) {
-                Log.w("$TAG No account found, showing Assistant activity")
-                coreContext.postOnMainThread {
-                    try {
-                        startActivity(Intent(this, AssistantActivity::class.java))
-                    } catch (ise: IllegalStateException) {
-                        Log.e("$TAG Can't start activity: $ise")
-                    }
-                }
-            } else {
-                if (intent.hasExtra(ARGUMENTS_CHAT)) {
-                    Log.i("$TAG Intent has [Chat] extra")
-                    coreContext.postOnMainThread {
-                        try {
-                            Log.i("$TAG Trying to go to Conversations fragment")
-                            val args = intent.extras
-                            val conversationId = args?.getString(ARGUMENTS_CONVERSATION_ID, "")
-                            if (conversationId.isNullOrEmpty()) {
-                                Log.w("$TAG Found [Chat] extra but no conversation ID!")
-                            } else {
-                                Log.i("$TAG Found [Chat] extra with conversation ID [$conversationId]")
-                                sharedViewModel.showConversationEvent.value = Event(conversationId)
-                            }
-                            args?.clear()
-
-                            if (findNavController().currentDestination?.id == R.id.conversationsListFragment) {
-                                Log.w(
-                                    "$TAG Current destination is already conversations list, skipping navigation"
-                                )
-                            } else {
-                                val navOptionsBuilder = NavOptions.Builder()
-                                navOptionsBuilder.setPopUpTo(
-                                    findNavController().currentDestination?.id ?: R.id.historyListFragment,
-                                    true
-                                )
-                                navOptionsBuilder.setLaunchSingleTop(true)
-                                val navOptions = navOptionsBuilder.build()
-                                findNavController().navigate(
-                                    R.id.conversationsListFragment,
-                                    args,
-                                    navOptions
-                                )
-                            }
-                        } catch (ise: IllegalStateException) {
-                            Log.e("$TAG Can't navigate to Conversations fragment: $ise")
+                        Log.i("$TAG Trying to go to Conversations fragment")
+                        val args = intent.extras
+                        val conversationId = args?.getString(ARGUMENTS_CONVERSATION_ID, "")
+                        if (conversationId.isNullOrEmpty()) {
+                            Log.w("$TAG Found [Chat] extra but no conversation ID!")
+                        } else {
+                            Log.i("$TAG Found [Chat] extra with conversation ID [$conversationId]")
+                            sharedViewModel.showConversationEvent.value = Event(conversationId)
                         }
+                        args?.clear()
+
+                        if (findNavController().currentDestination?.id == R.id.conversationsListFragment) {
+                            Log.w(
+                                "$TAG Current destination is already conversations list, skipping navigation"
+                            )
+                        } else {
+                            val navOptionsBuilder = NavOptions.Builder()
+                            navOptionsBuilder.setPopUpTo(
+                                findNavController().currentDestination?.id ?: R.id.historyListFragment,
+                                true
+                            )
+                            navOptionsBuilder.setLaunchSingleTop(true)
+                            val navOptions = navOptionsBuilder.build()
+                            findNavController().navigate(
+                                R.id.conversationsListFragment,
+                                args,
+                                navOptions
+                            )
+                        }
+                    } catch (ise: IllegalStateException) {
+                        Log.e("$TAG Can't navigate to Conversations fragment: $ise")
                     }
                 }
             }
@@ -649,15 +649,6 @@ class MainActivity : GenericActivity() {
 
     private fun handleSendIntent(intent: Intent, multiple: Boolean) {
         val parcelablesUri = arrayListOf<Uri>()
-
-        if (intent.type == "text/plain") {
-            Log.i("$TAG Intent type is [${intent.type}], expecting text in Intent.EXTRA_TEXT")
-            intent.getStringExtra(Intent.EXTRA_TEXT)?.let { extraText ->
-                Log.i("$TAG Found extra text in intent, long of [${extraText.length}]")
-                sharedViewModel.textToShareFromIntent.value = extraText
-            }
-        }
-
         if (multiple) {
             val parcelables =
                 intent.getParcelableArrayListExtra<Parcelable>(Intent.EXTRA_STREAM)
@@ -705,11 +696,23 @@ class MainActivity : GenericActivity() {
                 if (path != null) list.add(path)
             }
 
+            var textToShare = ""
+            if (intent.type == "text/plain") {
+                Log.i("$TAG Intent type is [${intent.type}], expecting text in Intent.EXTRA_TEXT")
+                textToShare = intent.getStringExtra(Intent.EXTRA_TEXT).orEmpty()
+                if (textToShare.isEmpty()) {
+                    Log.e("$TAG Intent.EXTRA_TEXT not found in intent!")
+                } else {
+                    Log.i("$TAG Found extra text in intent, long of [${textToShare.length}]")
+                }
+            }
+
             if (list.isNotEmpty()) {
-                sharedViewModel.filesToShareFromIntent.value = list
+                sharedViewModel.filesToShareFromIntent.postValue(list)
             } else {
-                if (sharedViewModel.textToShareFromIntent.value.orEmpty().isNotEmpty()) {
+                if (textToShare.isNotEmpty()) {
                     Log.i("$TAG Found plain text to share")
+                    sharedViewModel.textToShareFromIntent.postValue(textToShare)
                 } else {
                     Log.w("$TAG Failed to find at least one file or text to share!")
                 }
@@ -724,7 +727,7 @@ class MainActivity : GenericActivity() {
                     Log.i(
                         "$TAG Navigating from debug to conversation with ID [$conversationId], computed from shortcut ID"
                     )
-                    sharedViewModel.showConversationEvent.value = Event(conversationId)
+                    sharedViewModel.showConversationEvent.postValue(Event(conversationId))
                 }
 
                 val action = ConversationsListFragmentDirections.actionGlobalConversationsListFragment()
@@ -740,7 +743,7 @@ class MainActivity : GenericActivity() {
                     Log.i(
                         "$TAG Navigating to conversation with conversation ID [$conversationId] addresses, computed from shortcut ID"
                     )
-                    sharedViewModel.showConversationEvent.value = Event(conversationId)
+                    sharedViewModel.showConversationEvent.postValue(Event(conversationId))
                 }
 
                 if (findNavController().currentDestination?.id == R.id.conversationsListFragment) {
@@ -791,7 +794,8 @@ class MainActivity : GenericActivity() {
             )
             Log.i("$TAG Interpreted SIP URI is [${address?.asStringUriOnly()}]")
             if (address != null) {
-                coreContext.startAudioCall(address)
+                // Skip network reachability test, this code will be called too soon
+                coreContext.startAudioCall(address, skipNetworkReachabilityTest = true)
             }
         }
     }

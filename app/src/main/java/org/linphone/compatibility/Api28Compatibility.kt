@@ -23,6 +23,8 @@ import android.app.Activity
 import android.app.Notification
 import android.app.PictureInPictureParams
 import android.app.Service
+import android.content.Context
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.MediaStore
 import org.linphone.core.tools.Log
@@ -32,15 +34,17 @@ class Api28Compatibility {
     companion object {
         private const val TAG = "[API 28 Compatibility]"
 
-        fun startServiceForeground(service: Service, id: Int, notification: Notification) {
+        fun startServiceForeground(service: Service, id: Int, notification: Notification): Boolean {
             try {
                 service.startForeground(
                     id,
                     notification
                 )
+                return true
             } catch (e: Exception) {
                 Log.e("$TAG Can't start service as foreground! $e")
             }
+            return false
         }
 
         fun enterPipMode(activity: Activity): Boolean {
@@ -73,6 +77,14 @@ class Api28Compatibility {
                 }
                 else -> Uri.EMPTY
             }
+        }
+
+        fun hasTelecomManagerFeature(context: Context): Boolean {
+            val hasFeature = context.packageManager.hasSystemFeature(
+                PackageManager.FEATURE_CONNECTION_SERVICE
+            )
+            Log.i("$TAG Feature [${PackageManager.FEATURE_CONNECTION_SERVICE}] is [${if (hasFeature) "available" else "not available"}]")
+            return hasFeature
         }
     }
 }

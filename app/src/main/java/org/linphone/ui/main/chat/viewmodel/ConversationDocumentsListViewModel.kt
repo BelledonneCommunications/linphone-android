@@ -44,7 +44,7 @@ class ConversationDocumentsListViewModel
     val operationInProgress = MutableLiveData<Boolean>()
 
     val openDocumentEvent: MutableLiveData<Event<FileModel>> by lazy {
-        MutableLiveData<Event<FileModel>>()
+        MutableLiveData()
     }
 
     private var totalDocumentsCount: Int = -1

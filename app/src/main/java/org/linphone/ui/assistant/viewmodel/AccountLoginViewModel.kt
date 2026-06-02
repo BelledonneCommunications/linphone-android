@@ -68,15 +68,15 @@ open class AccountLoginViewModel
     val registrationInProgress = MutableLiveData<Boolean>()
 
     val accountLoggedInEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val accountLoginErrorEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+        MutableLiveData()
     }
 
     val skipLandingToThirdPartySipAccountEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     var conditionsAndPrivacyPolicyAccepted = false

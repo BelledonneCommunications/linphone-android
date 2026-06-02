@@ -626,6 +626,11 @@ class ContactsManager
         Log.w("$TAG Core has been stopped")
         coroutineScope.cancel()
 
+        knownContactsAvatarsMap.clear()
+        unknownContactsAvatarsMap.clear()
+        conferenceAvatarMap.clear()
+        magicSearchMap.clear()
+
         core.removeListener(coreListener)
 
         for (list in core.friendsLists) {

@@ -95,7 +95,6 @@ import org.linphone.utils.setKeyboardInsetListener
 import org.linphone.utils.showKeyboard
 import androidx.core.net.toUri
 import org.linphone.ui.main.chat.adapter.ConversationParticipantsAdapter
-import org.linphone.ui.main.chat.model.MessageDeleteDialogModel
 import org.linphone.utils.ShortcutUtils
 import kotlin.collections.arrayListOf
 
@@ -549,6 +548,26 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                             }
                         }
                     }
+
+                    sharedViewModel.textToShareFromIntent.observe(viewLifecycleOwner) { text ->
+                        if (text.isNotEmpty() && sharedViewModel.displayedChatRoom != null) {
+                            Log.i("$TAG Found text to share from intent")
+                            sendMessageViewModel.textToSend.value = text
+
+                            sharedViewModel.textToShareFromIntent.value = ""
+                        }
+                    }
+
+                    sharedViewModel.filesToShareFromIntent.observe(viewLifecycleOwner) { files ->
+                        if (files.isNotEmpty() && sharedViewModel.displayedChatRoom != null) {
+                            Log.i("$TAG Found [${files.size}] files to share from intent")
+                            for (path in files) {
+                                sendMessageViewModel.addAttachments(arrayListOf(path))
+                            }
+
+                            sharedViewModel.filesToShareFromIntent.value = arrayListOf()
+                        }
+                    }
                 }
             }
         }
@@ -674,14 +693,22 @@ open class ConversationFragment : SlidingPaneChildFragment() {
 
         binding.setOpenFilePickerClickListener {
             Log.i("$TAG Opening file picker")
-            pickDocument.launch(arrayOf("*/*"))
+            try {
+                pickDocument.launch(arrayOf("*/*"))
+            } catch (anfe: ActivityNotFoundException) {
+                Log.e("$TAG Failed to start file picker: $anfe")
+            }
         }
 
         binding.setOpenMediaPickerClickListener {
             Log.i("$TAG Opening media picker")
-            pickMedia.launch(
-                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo)
-            )
+            try {
+                pickMedia.launch(
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo)
+                )
+            } catch (anfe: ActivityNotFoundException) {
+                Log.e("$TAG Failed to start media picker: $anfe")
+            }
         }
 
         binding.setOpenCameraClickListener {
@@ -886,7 +913,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                     "$TAG Scrolling to message/event at position [$position], " +
                         "display show events between positions [$firstDisplayedItemPosition] and [$lastDisplayedItemPosition]"
                 )
-                if (firstDisplayedItemPosition > position && position > 0) {
+                if (position in 1..<firstDisplayedItemPosition) {
                     recyclerView.scrollToPosition(position - 1)
                 } else if (lastDisplayedItemPosition < position && position < layoutManager.itemCount - 1) {
                     recyclerView.scrollToPosition(position + 1)
@@ -940,10 +967,11 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                 if (model != null) {
                     if (model.isOutgoing && !(model.hasBeenRetracted.value ?: false)) {
                         // For sent messages let user choose between delete locally / delete for everyone
-                        showHowToDeleteMessageDialog(model)
+                        showHowToDeleteMessageMenu(model)
                     } else {
                         // For received messages or retracted sent ones you can only delete locally
                         viewModel.deleteChatMessage(model)
+                        messageLongPressViewModel.dismiss()
                     }
                 }
             }
@@ -998,26 +1026,6 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             it.consume {
                 Log.w("$TAG We were asked to close conversation, going back")
                 goBack()
-            }
-        }
-
-        sharedViewModel.textToShareFromIntent.observe(viewLifecycleOwner) { text ->
-            if (text.isNotEmpty()) {
-                Log.i("$TAG Found text to share from intent")
-                sendMessageViewModel.textToSend.value = text
-
-                sharedViewModel.textToShareFromIntent.value = ""
-            }
-        }
-
-        sharedViewModel.filesToShareFromIntent.observe(viewLifecycleOwner) { files ->
-            if (files.isNotEmpty()) {
-                Log.i("$TAG Found [${files.size}] files to share from intent")
-                for (path in files) {
-                    sendMessageViewModel.addAttachments(arrayListOf(path))
-                }
-
-                sharedViewModel.filesToShareFromIntent.value = arrayListOf()
             }
         }
 
@@ -1657,43 +1665,25 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         }
     }
 
-    private fun showHowToDeleteMessageDialog(model: MessageModel) {
+    private fun showHowToDeleteMessageMenu(model: MessageModel) {
         val canBeRetracted = messageLongPressViewModel.canBeRemotelyDeleted.value == true
-        val dialogModel = MessageDeleteDialogModel(canBeRetracted)
-
-        val dialog = DialogUtils.getHowToDeleteMessageDialog(
-            requireActivity(),
-            dialogModel
-        )
-
-        dialogModel.dismissEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                dialog.dismiss()
-            }
-        }
-
-        dialogModel.cancelEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                dialog.dismiss()
-            }
-        }
-
-        dialogModel.deleteLocallyEvent.observe(viewLifecycleOwner) {
-            it.consume {
+        val modalBottomSheet = MessageDialogFragment(
+            canBeRetracted,
+            { // onDismiss
+                messageLongPressViewModel.dismiss()
+            },
+            { // onMarkConversationAsRead
                 Log.i("$TAG Deleting chat message locally")
                 viewModel.deleteChatMessage(model)
-                dialog.dismiss()
-            }
-        }
-
-        dialogModel.deleteForEveryoneEvent.observe(viewLifecycleOwner) {
-            it.consume {
+                messageLongPressViewModel.dismiss()
+            },
+            { // onToggleMute
                 Log.i("$TAG Deleting chat message (content) for everyone")
                 viewModel.deleteChatMessageForEveryone(model)
-                dialog.dismiss()
+                messageLongPressViewModel.dismiss()
             }
-        }
-
-        dialog.show()
+        )
+        modalBottomSheet.show(parentFragmentManager, MessageDialogFragment.TAG)
+        bottomSheetDialog = modalBottomSheet
     }
 }

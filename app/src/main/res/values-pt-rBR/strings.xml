@@ -222,7 +222,6 @@
     <string name="settings_calls_calibrate_echo_canceller_done_no_echo">sem eco</string>
     <string name="settings_calls_calibrate_echo_canceller_done">%s ms</string>
     <string name="settings_calls_calibrate_echo_canceller_failed">falhou</string>
-    <string name="settings_calls_enable_video_title">Ativar vídeo</string>
     <string name="settings_calls_enable_fec_title">Ativar FEC de vídeo</string>
     <string name="settings_calls_auto_record_title">Iniciar gravação de chamadas automaticamente</string>
     <string name="settings_calls_change_ringtone_title">Alterar toque</string>
@@ -504,8 +503,6 @@
     <string name="meeting_schedule_description_title">Descrição</string>
     <string name="meeting_schedule_edit_title">Editar reunião</string>
     <string name="meeting_cancel_action_label">Cancelar reunião</string>
-    <string name="meeting_schedule_delete_dialog_title">Excluir a reunião?</string>
-    <string name="meeting_schedule_delete_dialog_message">Você quer excluir a reunião?</string>
     <string name="meeting_delete_action_label">Excluir reunião</string>
     <string name="meeting_info_created_toast">A reunião foi criada</string>
     <string name="meeting_info_updated_toast">A reunião foi atualizada</string>
@@ -572,11 +569,6 @@
     <string name="menu_export_selected_item">Baixar</string>
     <string name="menu_share_selected_item">Compartilhar</string>
     <string name="orange">Laranja</string>
-    <string name="yellow">Amarelo</string>
-    <string name="blue">Azul</string>
-    <string name="red">Vermelho</string>
-    <string name="pink">Rosa</string>
-    <string name="purple">Roxo</string>
     <string name="list_filter_no_result_found">Nenhum resultado encontrado…</string>
     <string name="multiple_participants_selection_placeholder">Os participantes selecionados aparecerão aqui</string>
     <string name="connection_error_for_non_default_account">Erro de conexão da(s) conta(s)</string>
@@ -645,7 +637,6 @@
     <string name="content_description_chat_open_attach_file">Abre o seletor de arquivos</string>
     <string name="content_description_chat_edit_conversation_subject">Clique para editar o assunto desta conversa</string>
     <string name="content_description_chat_toggle_mute">Silencia/reativa o som desta conversa</string>
-    <string name="content_description_chat_removal_in_progress">A conversa está sendo removida</string>
     <string name="content_description_chat_unsecured">Esta conversa não é segura</string>
     <string name="content_description_chat_search_message_down">Pesquisar abaixo</string>
     <string name="content_description_meeting_today">Rolar para hoje</string>
@@ -727,7 +718,6 @@
         <item quantity="many">%s de novas mensagens de voz</item>
         <item quantity="other">%s novas mensagens de voz</item>
     </plurals>
-    <string name="green">Verde</string>
     <plurals name="conversations_files_waiting_to_be_shared_toast">
         <item quantity="one">%s arquivo esperando para ser compartilhado</item>
         <item quantity="many">%s de arquivos esperando para ser compartilhados</item>
@@ -848,4 +838,12 @@
     <string name="content_description_voicemail_available">Mensagens de voz estão disponíveis</string>
     <string name="content_description_call_voicemail">Pressione e segure para ligar para o correio de voz</string>
     <string name="manage_account_delete">Sair</string>
+    <string name="search">Pesquisar</string>
+    <string name="conversation_participants_list_header">Participantes</string>
+    <string name="settings_developer_clear_native_friends_in_database_title">Limpar contatos importados da agenda nativa</string>
+    <string name="conversation_pdf_password_protected_file_cant_be_opened_error_toast">Não é possível abrir PDFs protegidos por senha ainda</string>
+    <string name="menu_edit_chat_message">Editar</string>
+    <string name="dialog_understood">Entendido</string>
+    <string name="notification_channel_account_error_name">&appName; notificações de erro da conta</string>
+    <string name="notification_in_call_foreground_service_error_message">Clique nesta notificação para corrigí-la</string>
 </resources>

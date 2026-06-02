@@ -22,239 +22,250 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:onClick="@{() -> viewModel.closeDrawerMenu()}"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="?attr/color_main2_000"
-        android:clickable="true"
-        android:focusable="true">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/brand_icon"
-            android:onClick="@{() -> viewModel.closeDrawerMenu()}"
-            android:layout_width="@dimen/large_icon_size"
-            android:layout_height="@dimen/large_icon_size"
-            android:layout_marginStart="26dp"
-            android:layout_marginTop="15dp"
-            android:src="@drawable/linphone_notification"
-            android:contentDescription="@string/app_name"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:tint="?attr/color_main1_500" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/section_header_style"
-            android:id="@+id/brand_name"
-            android:onClick="@{() -> viewModel.closeDrawerMenu()}"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@string/app_name"
-            android:gravity="center_vertical"
-            app:layout_constraintTop_toTopOf="@id/brand_icon"
-            app:layout_constraintStart_toEndOf="@id/brand_icon"
-            app:layout_constraintBottom_toBottomOf="@id/brand_icon"
-            app:layout_constraintEnd_toStartOf="@id/close_drawer" />
-
-        <ImageView
-            android:id="@+id/close_drawer"
-            android:onClick="@{() -> viewModel.closeDrawerMenu()}"
-            android:layout_width="@dimen/large_icon_size"
-            android:layout_height="@dimen/large_icon_size"
-            android:layout_marginEnd="16dp"
-            android:padding="5dp"
-            android:src="@drawable/x"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/content_description_close_drawer_menu"
-            android:background="@drawable/circle_transparent_button_background"
-            app:drawableTint="?attr/color_main2_600"
-            app:layout_constraintTop_toTopOf="@id/brand_name"
-            app:layout_constraintStart_toEndOf="@id/brand_name"
-            app:layout_constraintBottom_toBottomOf="@id/brand_name"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <ScrollView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
-            android:fillViewport="true"
+            android:background="?attr/color_main2_000"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintWidth_max="@dimen/section_max_width"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/brand_name"
-            app:layout_constraintBottom_toTopOf="@id/add_account">
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:id="@+id/brand_icon"
+                android:onClick="@{() -> viewModel.closeDrawerMenu()}"
+                android:layout_width="@dimen/large_icon_size"
+                android:layout_height="@dimen/large_icon_size"
+                android:layout_marginStart="26dp"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/linphone_notification"
+                android:contentDescription="@string/app_name"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:tint="?attr/color_main1_500" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/section_header_style"
+                android:id="@+id/brand_name"
+                android:onClick="@{() -> viewModel.closeDrawerMenu()}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/app_name"
+                android:gravity="center_vertical"
+                app:layout_constraintTop_toTopOf="@id/brand_icon"
+                app:layout_constraintStart_toEndOf="@id/brand_icon"
+                app:layout_constraintBottom_toBottomOf="@id/brand_icon"
+                app:layout_constraintEnd_toStartOf="@id/close_drawer" />
+
+            <ImageView
+                android:id="@+id/close_drawer"
+                android:onClick="@{() -> viewModel.closeDrawerMenu()}"
+                android:layout_width="@dimen/large_icon_size"
+                android:layout_height="@dimen/large_icon_size"
+                android:layout_marginEnd="16dp"
+                android:padding="5dp"
+                android:src="@drawable/x"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/content_description_close_drawer_menu"
+                android:background="@drawable/circle_transparent_button_background"
+                app:tint="?attr/color_main2_600"
+                app:layout_constraintTop_toTopOf="@id/brand_name"
+                app:layout_constraintStart_toEndOf="@id/brand_name"
+                app:layout_constraintBottom_toBottomOf="@id/brand_name"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <ScrollView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:fillViewport="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/brand_name"
+                app:layout_constraintBottom_toTopOf="@id/add_account">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    entries="@{viewModel.accounts}"
+                    layout="@{@layout/account_list_cell}">
+
+                    <ImageView
+                        android:id="@+id/no_account_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/illu"
+                        android:layout_margin="10dp"
+                        android:contentDescription="@null" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/section_header_style"
+                        android:id="@+id/no_account_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/drawer_menu_no_account_configured_yet"
+                        android:gravity="center" />
+
+                </LinearLayout>
+
+            </ScrollView>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:onClick="@{() -> viewModel.addAccount()}"
+                style="@style/secondary_button_label_style"
+                android:id="@+id/add_account"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="15dp"
+                android:text="@string/drawer_menu_add_account"
+                android:drawableStart="@drawable/plus_circle"
+                android:drawablePadding="8dp"
+                android:visibility="@{viewModel.hideAddAccount ? View.GONE : View.VISIBLE}"
+                app:drawableTint="@color/secondary_button_label_color"
+                app:layout_constraintWidth_max="@dimen/button_max_width"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/separator" />
+
+            <View
+                android:id="@+id/separator"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="?attr/color_separator"
+                android:importantForAccessibility="no"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/shortcuts" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:id="@+id/shortcuts"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:orientation="vertical"
-                entries="@{viewModel.accounts}"
-                layout="@{@layout/account_list_cell}">
+                android:visibility="@{viewModel.shortcuts.empty ? View.GONE : View.VISIBLE, default=gone}"
+                app:entries="@{viewModel.shortcuts}"
+                app:layout="@{@layout/drawer_shortcuts_list_cell}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/settings" />
 
-                <ImageView
-                    android:id="@+id/no_account_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/illu"
-                    android:layout_margin="10dp"
-                    android:contentDescription="@null" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:onClick="@{settingsClickedListener}"
+                style="@style/header_style"
+                android:id="@+id/settings"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:padding="5dp"
+                android:text="@string/settings_title"
+                android:drawableStart="@drawable/gear"
+                android:drawableEnd="@drawable/caret_right"
+                android:drawablePadding="8dp"
+                android:background="@drawable/squircle_transparent_button_background"
+                android:visibility="@{viewModel.hideSettings ? View.GONE : View.VISIBLE}"
+                app:drawableTint="?attr/color_main2_500"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/recordings" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/section_header_style"
-                    android:id="@+id/no_account_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/drawer_menu_no_account_configured_yet"
-                    android:gravity="center" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:onClick="@{recordingsClickListener}"
+                style="@style/header_style"
+                android:id="@+id/recordings"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:padding="5dp"
+                android:text="@string/recordings_title"
+                android:drawableStart="@drawable/record_fill"
+                android:drawableEnd="@drawable/caret_right"
+                android:drawablePadding="8dp"
+                android:background="@drawable/squircle_transparent_button_background"
+                android:visibility="@{viewModel.hideRecordings ? View.GONE : View.VISIBLE}"
+                app:drawableTint="?attr/color_main2_500"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/help" />
 
-            </LinearLayout>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:onClick="@{helpClickedListener}"
+                style="@style/header_style"
+                android:id="@+id/help"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:padding="5dp"
+                android:text="@string/help_title"
+                android:drawableStart="@drawable/question"
+                android:drawableEnd="@drawable/caret_right"
+                android:drawablePadding="8dp"
+                android:background="@drawable/squircle_transparent_button_background"
+                app:drawableTint="?attr/color_main2_500"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/separator_2" />
 
-        </ScrollView>
+            <View
+                android:id="@+id/separator_2"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="?attr/color_separator"
+                android:importantForAccessibility="no"
+                android:visibility="@{viewModel.hideQuitButton ? View.GONE : View.VISIBLE, default=gone}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/quit" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{() -> viewModel.addAccount()}"
-            style="@style/secondary_button_label_style"
-            android:id="@+id/add_account"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="15dp"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:text="@string/drawer_menu_add_account"
-            android:drawableStart="@drawable/plus_circle"
-            android:drawablePadding="8dp"
-            android:visibility="@{viewModel.hideAddAccount ? View.GONE : View.VISIBLE}"
-            app:drawableTint="@color/secondary_button_label_color"
-            app:layout_constraintWidth_max="@dimen/button_max_width"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/separator" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:onClick="@{quitClickedListener}"
+                style="@style/header_style"
+                android:id="@+id/quit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:padding="5dp"
+                android:text="@string/help_quit_title"
+                android:visibility="@{viewModel.hideQuitButton ? View.GONE : View.VISIBLE, default=gone}"
+                android:drawableStart="@drawable/power"
+                android:drawablePadding="8dp"
+                android:background="@drawable/squircle_transparent_button_background"
+                app:drawableTint="?attr/color_main2_500"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
-        <View
-            android:id="@+id/separator"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginBottom="15dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:background="?attr/color_separator"
-            android:importantForAccessibility="no"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/shortcuts" />
-
-        <LinearLayout
-            android:id="@+id/shortcuts"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:orientation="vertical"
-            android:visibility="@{viewModel.shortcuts.empty ? View.GONE : View.VISIBLE, default=gone}"
-            app:entries="@{viewModel.shortcuts}"
-            app:layout="@{@layout/drawer_shortcuts_list_cell}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/settings" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{settingsClickedListener}"
-            style="@style/header_style"
-            android:id="@+id/settings"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:padding="5dp"
-            android:text="@string/settings_title"
-            android:drawableStart="@drawable/gear"
-            android:drawableEnd="@drawable/caret_right"
-            android:drawablePadding="8dp"
-            android:background="@drawable/squircle_transparent_button_background"
-            android:visibility="@{viewModel.hideSettings ? View.GONE : View.VISIBLE}"
-            app:drawableTint="?attr/color_main2_500"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/recordings" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{recordingsClickListener}"
-            style="@style/header_style"
-            android:id="@+id/recordings"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:padding="5dp"
-            android:text="@string/recordings_title"
-            android:drawableStart="@drawable/record_fill"
-            android:drawableEnd="@drawable/caret_right"
-            android:drawablePadding="8dp"
-            android:background="@drawable/squircle_transparent_button_background"
-            android:visibility="@{viewModel.hideRecordings ? View.GONE : View.VISIBLE}"
-            app:drawableTint="?attr/color_main2_500"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/help" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{helpClickedListener}"
-            style="@style/header_style"
-            android:id="@+id/help"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:padding="5dp"
-            android:text="@string/help_title"
-            android:drawableStart="@drawable/question"
-            android:drawableEnd="@drawable/caret_right"
-            android:drawablePadding="8dp"
-            android:background="@drawable/squircle_transparent_button_background"
-            app:drawableTint="?attr/color_main2_500"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/separator_2" />
-
-        <View
-            android:id="@+id/separator_2"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginBottom="15dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:background="?attr/color_separator"
-            android:importantForAccessibility="no"
-            android:visibility="@{viewModel.hideQuitButton ? View.GONE : View.VISIBLE, default=gone}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/quit" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{quitClickedListener}"
-            style="@style/header_style"
-            android:id="@+id/quit"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:padding="5dp"
-            android:text="@string/help_quit_title"
-            android:visibility="@{viewModel.hideQuitButton ? View.GONE : View.VISIBLE, default=gone}"
-            android:drawableStart="@drawable/power"
-            android:drawablePadding="8dp"
-            android:background="@drawable/squircle_transparent_button_background"
-            app:drawableTint="?attr/color_main2_500"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

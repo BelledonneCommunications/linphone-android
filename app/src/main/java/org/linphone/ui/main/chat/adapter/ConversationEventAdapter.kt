@@ -60,15 +60,15 @@ class ConversationEventAdapter :
     val chatMessageLongPressEvent = MutableLiveData<Event<MessageModel>>()
 
     val showDeliveryForChatMessageModelEvent: MutableLiveData<Event<MessageModel>> by lazy {
-        MutableLiveData<Event<MessageModel>>()
+        MutableLiveData()
     }
 
     val showReactionForChatMessageModelEvent: MutableLiveData<Event<MessageModel>> by lazy {
-        MutableLiveData<Event<MessageModel>>()
+        MutableLiveData()
     }
 
     val scrollToRepliedMessageEvent: MutableLiveData<Event<MessageModel>> by lazy {
-        MutableLiveData<Event<MessageModel>>()
+        MutableLiveData()
     }
 
     private var isConversationSecured: Boolean = false

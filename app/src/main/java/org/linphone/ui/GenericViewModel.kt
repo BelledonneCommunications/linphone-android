@@ -28,20 +28,20 @@ import org.linphone.utils.Event
 open class GenericViewModel : ViewModel() {
     // Message res id, icon
     val showGreenToastEvent: MutableLiveData<Event<Pair<Int, Int>>> by lazy {
-        MutableLiveData<Event<Pair<Int, Int>>>()
+        MutableLiveData()
     }
 
     val showFormattedGreenToastEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
-        MutableLiveData<Event<Pair<String, Int>>>()
+        MutableLiveData()
     }
 
     // Message res id, icon
     val showRedToastEvent: MutableLiveData<Event<Pair<Int, Int>>> by lazy {
-        MutableLiveData<Event<Pair<Int, Int>>>()
+        MutableLiveData()
     }
 
     val showFormattedRedToastEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
-        MutableLiveData<Event<Pair<String, Int>>>()
+        MutableLiveData()
     }
 
     fun showGreenToast(@StringRes message: Int, @DrawableRes icon: Int) {

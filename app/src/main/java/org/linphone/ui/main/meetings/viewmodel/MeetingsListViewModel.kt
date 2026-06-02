@@ -23,6 +23,7 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.Account
 import org.linphone.core.AccountListenerStub
 import org.linphone.core.ConferenceInfo
@@ -114,6 +115,9 @@ class MeetingsListViewModel
             fetchInProgress.postValue(true)
         }
 
+        val showPastMeetings = corePreferences.showPastMeetings
+        val nowInSecs = System.currentTimeMillis() / 1000
+
         val sortedSource = source.toList().sortedBy {
             it.dateTime
         }
@@ -135,6 +139,14 @@ class MeetingsListViewModel
                 )
                 continue
             } // This isn't a scheduled conference, don't display it
+
+            if (!showPastMeetings && (info.dateTime + (info.duration * 60) < nowInSecs)) {
+                Log.d(
+                    "$TAG Skipping conference info [${info.subject}] with uri [${info.uri?.asStringUriOnly()}] because it's in the past"
+                )
+                continue
+            }
+
             val add = if (filter.isNotEmpty()) {
                 val organizerCheck = info.organizer?.asStringUriOnly()?.contains(
                     filter,

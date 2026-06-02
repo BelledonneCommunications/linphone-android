@@ -85,6 +85,8 @@ class CallsListFragment : GenericCallFragment() {
 
         binding.callsList.setHasFixedSize(true)
         binding.callsList.layoutManager = LinearLayoutManager(requireContext())
+        binding.callsList.outlineProvider = outlineProvider
+        binding.callsList.clipToOutline = true
 
         adapter.callLongClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->

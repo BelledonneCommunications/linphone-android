@@ -74,11 +74,11 @@ class ContactsListViewModel
     val disableAddContact = MutableLiveData<Boolean>()
 
     val vCardTerminatedEvent: MutableLiveData<Event<Pair<String, File>>> by lazy {
-        MutableLiveData<Event<Pair<String, File>>>()
+        MutableLiveData()
     }
 
     val cardDavSynchronizationCompletedEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     private var previousFilter = "NotSet"
@@ -153,6 +153,7 @@ class ContactsListViewModel
         showFavourites.value = corePreferences.showFavoriteContacts
         showFilter.value = !corePreferences.hidePhoneNumbers && !corePreferences.hideSipAddresses
         disableAddContact.value = corePreferences.disableAddContact
+        isListFiltered.value = false
 
         coreContext.postOnCoreThread { core ->
             domainFilter = corePreferences.contactsFilter
@@ -169,9 +170,7 @@ class ContactsListViewModel
             favouritesMagicSearch.limitedSearch = false
             favouritesMagicSearch.addListener(favouritesMagicSearchListener)
 
-            coreContext.postOnMainThread {
-                applyFilter(currentFilter)
-            }
+            applyFilter(currentFilter, domainFilter)
         }
     }
 
@@ -189,10 +188,7 @@ class ContactsListViewModel
     override fun filter() {
         isListFiltered.value = currentFilter.isNotEmpty()
         coreContext.postOnCoreThread {
-            applyFilter(
-                currentFilter,
-                domainFilter
-            )
+            applyFilter(currentFilter, domainFilter)
         }
     }
 
@@ -203,9 +199,7 @@ class ContactsListViewModel
             areAllContactsDisplayed.postValue(domainFilter.isEmpty())
             checkIfDefaultAccountOnDefaultDomain()
 
-            coreContext.postOnMainThread {
-                applyFilter(currentFilter)
-            }
+            applyFilter(currentFilter, domainFilter)
         }
     }
 
@@ -353,7 +347,6 @@ class ContactsListViewModel
         Log.i("$TAG Processing [${results.size}] results, favourites is [$favourites]")
 
         val list = arrayListOf<ContactAvatarModel>()
-        var count = 0
         val collator = Collator.getInstance(Locale.getDefault())
         val hideEmptyContacts = corePreferences.hideContactsWithoutPhoneNumberOrSipAddress
 
@@ -384,19 +377,10 @@ class ContactsListViewModel
                 coreContext.contactsManager.getContactAvatarModelForAddress(result.address)
             }
             model.refreshSortingName()
-
-            list.add(model)
-            count += 1
-
             val starred = friend?.starred == true
             model.isFavourite.postValue(starred)
 
-            if (!favourites && firstLoad && count == 20) {
-                list.sortWith { model1, model2 ->
-                    collator.compare(model1.getNameToUseForSorting(), model2.getNameToUseForSorting())
-                }
-                contactsList.postValue(list)
-            }
+            list.add(model)
         }
 
         list.sortWith { model1, model2 ->

@@ -33,6 +33,22 @@
             app:destination="@id/emptyFragment"
             app:popUpTo="@id/contactFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_contactFragment_to_conversationDocumentsListFragment"
+            app:destination="@id/conversationDocumentsListFragment"
+            app:launchSingleTop="true"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_contactFragment_to_conversationMediaListFragment"
+            app:destination="@id/conversationMediaListFragment"
+            app:launchSingleTop="true"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <action
@@ -47,6 +63,26 @@
         tools:layout="@layout/contact_new_or_edit_fragment" >
         <argument
             android:name="contactRefKey"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/conversationMediaListFragment"
+        android:name="org.linphone.ui.main.chat.fragment.ConversationMediaListFragment"
+        android:label="ConversationMediaListFragment"
+        tools:layout="@layout/chat_media_fragment">
+        <argument
+            android:name="conversationId"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/conversationDocumentsListFragment"
+        android:name="org.linphone.ui.main.chat.fragment.ConversationDocumentsListFragment"
+        android:label="ConversationDocumentsListFragment"
+        tools:layout="@layout/chat_documents_fragment">
+        <argument
+            android:name="conversationId"
             app:argType="string" />
     </fragment>
 

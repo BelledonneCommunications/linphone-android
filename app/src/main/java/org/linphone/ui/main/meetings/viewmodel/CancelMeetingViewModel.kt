@@ -42,7 +42,7 @@ open class CancelMeetingViewModel
     val operationInProgress = MutableLiveData<Boolean>()
 
     val conferenceCancelledEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     private var sendNotificationForCancelledConference: Boolean = false

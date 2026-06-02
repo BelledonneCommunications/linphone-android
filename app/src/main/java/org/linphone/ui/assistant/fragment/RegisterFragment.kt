@@ -100,23 +100,7 @@ class RegisterFragment : GenericFragment() {
         }
 
         binding.setOpenSubscribeWebPageClickListener {
-            val url = getString(R.string.web_platform_register_email_url)
-            try {
-                val browserIntent = Intent(Intent.ACTION_VIEW, url.toUri())
-                startActivity(browserIntent)
-            } catch (ise: IllegalStateException) {
-                Log.e(
-                    "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
-                )
-            } catch (anfe: ActivityNotFoundException) {
-                Log.e(
-                    "$TAG Can't start ACTION_VIEW intent for URL [$url], ActivityNotFoundException: $anfe"
-                )
-            } catch (e: Exception) {
-                Log.e(
-                    "$TAG Can't start ACTION_VIEW intent for URL [$url]: $e"
-                )
-            }
+            openSubscribeOnlineWebpage()
         }
 
         binding.username.addTextChangedListener(object : TextWatcher {
@@ -149,6 +133,12 @@ class RegisterFragment : GenericFragment() {
             lifecycleScope.launch {
                 delay(50)
                 binding.password.setSelection(binding.password.text?.length ?: 0)
+            }
+        }
+
+        viewModel.accountCantBeCreatedBySmsEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                showPhoneNumberValidationNotAvailableDialog()
             }
         }
 
@@ -218,6 +208,49 @@ class RegisterFragment : GenericFragment() {
         model.confirmEvent.observe(viewLifecycleOwner) {
             it.consume {
                 viewModel.startAccountCreation()
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun openSubscribeOnlineWebpage() {
+        val url = getString(R.string.web_platform_register_email_url)
+        try {
+            val browserIntent = Intent(Intent.ACTION_VIEW, url.toUri())
+            startActivity(browserIntent)
+        } catch (ise: IllegalStateException) {
+            Log.e(
+                "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
+            )
+        } catch (anfe: ActivityNotFoundException) {
+            Log.e(
+                "$TAG Can't start ACTION_VIEW intent for URL [$url], ActivityNotFoundException: $anfe"
+            )
+        } catch (e: Exception) {
+            Log.e(
+                "$TAG Can't start ACTION_VIEW intent for URL [$url]: $e"
+            )
+        }
+    }
+
+    private fun showPhoneNumberValidationNotAvailableDialog() {
+        val model = ConfirmationDialogModel()
+        val dialog = DialogUtils.getAccountCreationPhoneNumberValidationNotAvailableDialog(
+            requireActivity(),
+            model
+        )
+
+        model.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        model.confirmEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                openSubscribeOnlineWebpage()
                 dialog.dismiss()
             }
         }

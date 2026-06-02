@@ -31,6 +31,7 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
+import org.linphone.core.Factory
 import org.linphone.core.VersionUpdateCheckResult
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
@@ -61,34 +62,38 @@ class HelpViewModel
 
     val logsUploadInProgress = MutableLiveData<Boolean>()
 
+    val printLogsInLogcat = MutableLiveData<Boolean>()
+
+    val developerSettingsEnabled = MutableLiveData<Boolean>()
+
     val canConfigFileBeViewed = MutableLiveData<Boolean>()
 
     val newVersionAvailableEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
-        MutableLiveData<Event<Pair<String, String>>>()
+        MutableLiveData()
     }
 
     val versionUpToDateEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val errorEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val debugLogsCleanedEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val uploadDebugLogsFinishedEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+        MutableLiveData()
     }
 
     val uploadDebugLogsErrorEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val showConfigFileEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+        MutableLiveData()
     }
 
     private var versionClickCount: Int = 0
@@ -165,6 +170,8 @@ class HelpViewModel
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
 
+            printLogsInLogcat.postValue(corePreferences.printLogsInLogcat)
+            developerSettingsEnabled.postValue(corePreferences.showDeveloperSettings)
             checkUpdateAvailable.postValue(corePreferences.checkForUpdateServerUrl.isNotEmpty())
             uploadLogsAvailable.postValue(!core.logCollectionUploadServerUrl.isNullOrEmpty())
         }
@@ -195,6 +202,7 @@ class HelpViewModel
                 coreContext.postOnCoreThread {
                     Log.w("$TAG Enabling developer settings")
                     corePreferences.showDeveloperSettings = true
+                    developerSettingsEnabled.postValue(true)
                 }
             }
             NUMBER_OF_CLICK_TO_ENABLE_DEVELOPER_MODE + 1 -> {
@@ -228,6 +236,17 @@ class HelpViewModel
         coreContext.postOnCoreThread { core ->
             Log.i("$TAG Checking for update using current version [$currentVersion]")
             core.checkForUpdate(currentVersion)
+        }
+    }
+
+    @UiThread
+    fun toggleLogcat() {
+        val newValue = printLogsInLogcat.value == false
+        coreContext.postOnCoreThread {
+            corePreferences.printLogsInLogcat = newValue
+            coreContext.updateLogcatEnabledSetting(newValue)
+            Factory.instance().enableLogcatLogs(newValue)
+            printLogsInLogcat.postValue(newValue)
         }
     }
 

@@ -47,9 +47,6 @@ store_friends=0
 [app]
 record_aware=1
 
-[account_creator]
-url=https://subscribe.linphone.org/api/
-
 [lime]
 lime_update_threshold=86400
 

@@ -17,8 +17,7 @@
         android:selected="@{model.selected}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+        android:padding="10dp"
         android:background="@drawable/secondary_cell_background">
 
         <androidx.appcompat.widget.AppCompatTextView

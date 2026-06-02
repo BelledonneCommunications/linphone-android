@@ -47,6 +47,8 @@ class CallsViewModel
 
     val callsCount = MutableLiveData<Int>()
 
+    val allCallsIntoConference = MutableLiveData<Boolean>()
+
     val showTopBar = MutableLiveData<Boolean>()
 
     val goToActiveCallEvent = MutableLiveData<Event<Boolean>>()
@@ -64,7 +66,7 @@ class CallsViewModel
     val callsTopBarStatus = MutableLiveData<String>()
 
     val goToCallsListEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     private val coreListener = object : CoreListenerStub() {
@@ -234,6 +236,7 @@ class CallsViewModel
                 showRedToast(R.string.conference_failed_to_merge_calls_into_conference_toast, R.drawable.warning_circle)
             } else {
                 conference.addParticipants(core.calls)
+                allCallsIntoConference.postValue(true)
             }
         }
     }
@@ -251,9 +254,16 @@ class CallsViewModel
         }
         callsExceptCurrentOne.postValue(list)
 
-        if (core.callsNb > 1) {
-            showTopBar.postValue(true)
-            if (core.callsNb == 2) {
+        val callsCount = core.callsNb
+        if (callsCount > 1) {
+            val callsNotInConference = core.calls.filter {
+                it.conference == null
+            }
+            val callsNotInConferenceCount = callsNotInConference.count()
+            Log.i("$TAG Found [$callsNotInConferenceCount] calls not in conference over [$callsCount] calls")
+            allCallsIntoConference.postValue(callsNotInConferenceCount == 0)
+
+            if (callsNotInConferenceCount == 1) {
                 val found = core.calls.find {
                     it.state == Call.State.Paused
                 }
@@ -273,33 +283,37 @@ class CallsViewModel
                     }
                     callsTopBarStatus.postValue(LinphoneUtils.callStateToString(found.state))
                 } else {
-                    Log.e("$TAG Failed to find a paused call")
+                    Log.w("$TAG Failed to find a paused call")
                 }
-            } else {
+            } else if (callsNotInConferenceCount > 1) {
                 callsTopBarLabel.postValue(
                     AppUtils.getFormattedString(R.string.calls_paused_count_label, core.callsNb - 1)
                 )
                 callsTopBarStatus.postValue("") // TODO: improve ?
+            } else {
+                configureTopBarForSingleCallOrConference()
             }
-        } else {
-            if (core.callsNb == 1) {
-                callsTopBarIcon.postValue(R.drawable.phone)
-
-                val call = core.calls.first()
-                val conference = call.conference
-                if (conference != null) {
-                    callsTopBarLabel.postValue(conference.subject)
-                } else {
-                    val remoteAddress = call.callLog.remoteAddress
-                    val contact = coreContext.contactsManager.findContactByAddress(
-                        remoteAddress
-                    )
-                    callsTopBarLabel.postValue(
-                        contact?.name ?: LinphoneUtils.getDisplayName(remoteAddress)
-                    )
-                }
-                callsTopBarStatus.postValue(LinphoneUtils.callStateToString(call.state))
-            }
+        } else if (core.callsNb == 1) {
+            configureTopBarForSingleCallOrConference()
         }
+    }
+
+    private fun configureTopBarForSingleCallOrConference() {
+        callsTopBarIcon.postValue(R.drawable.phone)
+
+        val call = coreContext.core.calls.first()
+        val conference = call.conference
+        if (conference != null) {
+            callsTopBarLabel.postValue(conference.subject)
+        } else {
+            val remoteAddress = call.callLog.remoteAddress
+            val contact = coreContext.contactsManager.findContactByAddress(
+                remoteAddress
+            )
+            callsTopBarLabel.postValue(
+                contact?.name ?: LinphoneUtils.getDisplayName(remoteAddress)
+            )
+        }
+        callsTopBarStatus.postValue(LinphoneUtils.callStateToString(call.state))
     }
 }

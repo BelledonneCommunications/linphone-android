@@ -199,7 +199,6 @@
     <string name="settings_calls_calibrate_echo_canceller_done">%s 毫秒</string>
     <string name="settings_calls_calibrate_echo_canceller_failed">失败</string>
     <string name="settings_calls_adaptive_rate_control_title">自适应速率控制</string>
-    <string name="settings_calls_enable_video_title">启用视频</string>
     <string name="settings_calls_enable_fec_title">启用视频前向纠错FEC</string>
     <string name="settings_calls_vibrate_while_ringing_title">来电铃响时振动</string>
     <string name="settings_calls_auto_record_title">自动开始录制通话</string>
@@ -531,8 +530,6 @@
     <string name="meeting_schedule_description_title">描述</string>
     <string name="meeting_schedule_edit_title">编辑会议</string>
     <string name="meeting_cancel_action_label">取消会议</string>
-    <string name="meeting_schedule_delete_dialog_title">删除会议？</string>
-    <string name="meeting_schedule_delete_dialog_message">您想删除会议吗？</string>
     <string name="meeting_delete_action_label">删除会议</string>
     <string name="meeting_info_created_toast">会议已创建</string>
     <string name="meeting_info_updated_toast">会议已更新</string>
@@ -660,12 +657,6 @@
     <string name="menu_copy_chat_message">复制</string>
     <string name="menu_export_selected_item">下载</string>
     <string name="menu_share_selected_item">分享</string>
-    <string name="yellow">黄色</string>
-    <string name="green">绿色</string>
-    <string name="blue">蓝色</string>
-    <string name="red">红色</string>
-    <string name="pink">粉红色</string>
-    <string name="purple">紫色</string>
     <string name="orange">橙色</string>
     <string name="multiple_participants_selection_placeholder">选定的参与者将显示在此处</string>
     <string name="connection_error_for_non_default_account">账户连接错误</string>
@@ -739,7 +730,6 @@
     <string name="content_description_chat_open_attach_file">打开文件选择器</string>
     <string name="content_description_chat_edit_conversation_subject">单击以编辑此聊天的主题</string>
     <string name="content_description_chat_toggle_mute">压制此聊天使其不说话开/关</string>
-    <string name="content_description_chat_removal_in_progress">正在删除聊天</string>
     <string name="content_description_stop_voice_message_recording">停止语音信息录制</string>
     <string name="content_description_chat_start_voice_message_recording">开始录制语音信息</string>
     <string name="content_description_chat_send_message">在聊天中发送消息</string>
@@ -830,4 +820,9 @@
     <string name="drawer_menu_account_connection_status_disconnected">连接已断开</string>
     <string name="settings_contacts_presence_subscribe_title">订阅在线状态信息</string>
     <string name="manage_account_status_disconnected_summary">该账户处于离线状态，可能是由于您当前未连接到互联网。</string>
+    <string name="search">搜索</string>
+    <string name="settings_developer_clear_native_friends_in_database_title">从本地通讯簿中清除导入的联系人</string>
+    <string name="conversation_pdf_password_protected_file_cant_be_opened_error_toast">尚无法打开受密码保护的PDF</string>
+    <string name="conversation_participants_list_header">参与者</string>
+    <string name="menu_edit_chat_message">编辑</string>
 </resources>

@@ -35,6 +35,7 @@ import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
 import androidx.core.net.toUri
+import org.linphone.compatibility.Compatibility
 
 class TelecomManager
     @WorkerThread
@@ -68,19 +69,21 @@ class TelecomManager
         }
     }
 
-    private val hasTelecomFeature = context.packageManager.hasSystemFeature("android.software.telecom")
+    private val hasTelecomFeature = Compatibility.hasTelecomManagerFeature(context)
 
     private var currentlyFollowedCalls: Int = 0
 
     init {
         Log.i(
-            "$TAG android.software.telecom feature is [${if (hasTelecomFeature) "available" else "not available"}]"
+            "$TAG Feature is [${if (hasTelecomFeature) "available" else "not available"}]"
         )
-        try {
-            callsManager.registerAppWithTelecom(CallsManager.CAPABILITY_SUPPORTS_VIDEO_CALLING)
-            Log.i("$TAG App has been registered with Telecom")
-        } catch (e: Exception) {
-            Log.e("$TAG Can't init TelecomManager: $e")
+        if (hasTelecomFeature) {
+            try {
+                callsManager.registerAppWithTelecom(CallsManager.CAPABILITY_SUPPORTS_VIDEO_CALLING)
+                Log.i("$TAG App has been registered with Telecom")
+            } catch (e: Exception) {
+                Log.e("$TAG Can't init TelecomManager: $e")
+            }
         }
     }
 
@@ -122,7 +125,8 @@ class TelecomManager
                     uri,
                     direction,
                     type,
-                    capabilities
+                    capabilities,
+                    isLogExcluded = true
                 )
                 Log.i("$TAG Adding call to Telecom's CallsManager with attributes [$callAttributes]")
 

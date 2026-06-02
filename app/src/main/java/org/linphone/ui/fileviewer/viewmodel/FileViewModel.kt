@@ -72,15 +72,15 @@ class FileViewModel
     val isFromEphemeralMessage = MutableLiveData<Boolean>()
 
     val exportPlainTextFileEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+        MutableLiveData()
     }
 
     val pdfRendererReadyEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val exportPdfEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+        MutableLiveData()
     }
 
     // Below are required for PDF viewer

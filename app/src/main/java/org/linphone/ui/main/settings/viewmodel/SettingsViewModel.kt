@@ -66,11 +66,11 @@ class SettingsViewModel
     val isTunnelAvailable = MutableLiveData<Boolean>()
 
     val recreateActivityEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val keepAliveServiceSettingChangedEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     // Security settings
@@ -84,7 +84,6 @@ class SettingsViewModel
 
     val adaptiveRateControlEnabled = MutableLiveData<Boolean>()
 
-    val videoEnabled = MutableLiveData<Boolean>()
     val videoFecEnabled = MutableLiveData<Boolean>()
 
     val isVibrationAvailable = MutableLiveData<Boolean>()
@@ -92,7 +91,7 @@ class SettingsViewModel
 
     val autoRecordCalls = MutableLiveData<Boolean>()
 
-    val goToIncomingCallNotificationChannelSettingsEvent = MutableLiveData<Event<Uri?>>()
+    val showRingtonePickerEvent = MutableLiveData<Event<Uri?>>()
 
     // Conversations settings
     val showConversationsSettings = MutableLiveData<Boolean>()
@@ -102,6 +101,8 @@ class SettingsViewModel
     val autoExportMediaToNativeGallery = MutableLiveData<Boolean>()
 
     val markAsReadWhenDismissingNotification = MutableLiveData<Boolean>()
+
+    val hideMessageContentInNotification = MutableLiveData<Boolean>()
 
     // Contacts settings
     val showContactsSettings = MutableLiveData<Boolean>()
@@ -124,22 +125,27 @@ class SettingsViewModel
     val presenceSubscribe = MutableLiveData<Boolean>()
 
     val addLdapServerEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
     val editLdapServerEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+        MutableLiveData()
     }
 
     val addCardDavServerEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val editCardDavServerEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+        MutableLiveData()
     }
 
     // Meetings settings
     val showMeetingsSettings = MutableLiveData<Boolean>()
+
+    val showPastMeetings = MutableLiveData<Boolean>()
+    val forceRefreshMeetingsListEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
 
     val defaultLayout = MutableLiveData<Int>()
     val availableLayoutsNames = arrayListOf(
@@ -171,21 +177,27 @@ class SettingsViewModel
     val color = MutableLiveData<String>()
     val availableColorsNames = arrayListOf(
         AppUtils.getString(R.string.orange),
-        AppUtils.getString(R.string.yellow),
-        AppUtils.getString(R.string.green),
-        AppUtils.getString(R.string.blue),
-        AppUtils.getString(R.string.red),
-        AppUtils.getString(R.string.pink),
-        AppUtils.getString(R.string.purple)
+        AppUtils.getString(R.string.terracotta),
+        AppUtils.getString(R.string.lavender),
+        AppUtils.getString(R.string.honey),
+        AppUtils.getString(R.string.burgundy),
+        AppUtils.getString(R.string.mint),
+        AppUtils.getString(R.string.coral),
+        AppUtils.getString(R.string.plum),
+        AppUtils.getString(R.string.titanium),
+        AppUtils.getString(R.string.mineral_blue),
     )
     val availableColorsValues = arrayListOf(
         "orange",
-        "yellow",
-        "green",
-        "blue",
-        "red",
-        "pink",
-        "purple"
+        "terracotta",
+        "lavender",
+        "honey",
+        "burgundy",
+        "mint",
+        "coral",
+        "plum",
+        "titanium",
+        "mineral_blue"
     )
 
     // Tunnel settings
@@ -217,6 +229,8 @@ class SettingsViewModel
     val mediaEncryptionLabels = arrayListOf<String>()
     private val mediaEncryptionValues = arrayListOf<MediaEncryption>()
     val mediaEncryptionMandatory = MutableLiveData<Boolean>()
+    val rfc2833Dtmf = MutableLiveData<Boolean>()
+    val sipInfoDtmf = MutableLiveData<Boolean>()
     val acceptEarlyMedia = MutableLiveData<Boolean>()
     val ringDuringEarlyMedia = MutableLiveData<Boolean>()
     val allowOutgoingEarlyMedia = MutableLiveData<Boolean>()
@@ -330,7 +344,6 @@ class SettingsViewModel
 
             adaptiveRateControlEnabled.postValue(core.isAdaptiveRateControlEnabled)
 
-            videoEnabled.postValue(core.isVideoEnabled)
             videoFecEnabled.postValue(core.isFecEnabled)
             vibrateDuringIncomingCall.postValue(core.isVibrationOnIncomingCallEnabled)
             autoRecordCalls.postValue(corePreferences.automaticallyStartCallRecording)
@@ -344,12 +357,14 @@ class SettingsViewModel
             markAsReadWhenDismissingNotification.postValue(
                 corePreferences.markConversationAsReadWhenDismissingMessageNotification
             )
+            hideMessageContentInNotification.postValue(!corePreferences.showChatMessageContentInNotification)
 
             sortContactsBy.postValue(if (corePreferences.sortContactsByFirstName) 0 else 1)
             editNativeContactsInLinphone.postValue(corePreferences.editNativeContactsInLinphone)
             hideEmptyContacts.postValue(corePreferences.hideContactsWithoutPhoneNumberOrSipAddress)
             presenceSubscribe.postValue(core.isFriendListSubscriptionEnabled)
 
+            showPastMeetings.postValue(corePreferences.showPastMeetings)
             defaultLayout.postValue(core.defaultConferenceLayout.toInt())
 
             autoShowDialpad.postValue(corePreferences.automaticallyShowDialpad)
@@ -366,6 +381,9 @@ class SettingsViewModel
 
             deviceName.postValue(corePreferences.deviceName)
             remoteProvisioningUrl.postValue(core.provisioningUri)
+
+            rfc2833Dtmf.postValue(core.useRfc2833ForDtmf)
+            sipInfoDtmf.postValue(core.useInfoForDtmf)
 
             acceptEarlyMedia.postValue(corePreferences.acceptEarlyMedia)
             ringDuringEarlyMedia.postValue(core.ringDuringIncomingEarlyMedia)
@@ -475,16 +493,6 @@ class SettingsViewModel
     }
 
     @UiThread
-    fun toggleEnableVideo() {
-        val newValue = videoEnabled.value == false
-        coreContext.postOnCoreThread { core ->
-            core.isVideoCaptureEnabled = newValue
-            core.isVideoDisplayEnabled = newValue
-            videoEnabled.postValue(newValue)
-        }
-    }
-
-    @UiThread
     fun toggleEnableVideoFec() {
         val newValue = videoFecEnabled.value == false
         coreContext.postOnCoreThread { core ->
@@ -531,9 +539,10 @@ class SettingsViewModel
                 val coreRingtone = core.ring?.toUri()
                 Log.i("$TAG Currently set ringtone in Core is [$coreRingtone], device default ringtone is [$defaultDeviceRingtone]")
                 val currentRingtone = coreRingtone ?: defaultDeviceRingtone
-                goToIncomingCallNotificationChannelSettingsEvent.postValue(Event(currentRingtone))
+                showRingtonePickerEvent.postValue(Event(currentRingtone))
             } catch (e: Exception) {
-                Log.e("$TAG Failed to get current ringtone: $e")
+                Log.e("$TAG Failed to get current ringtone, opening picker anyway: $e")
+                showRingtonePickerEvent.postValue(Event(null))
             }
         }
     }
@@ -575,6 +584,15 @@ class SettingsViewModel
         coreContext.postOnCoreThread {
             corePreferences.markConversationAsReadWhenDismissingMessageNotification = newValue
             markAsReadWhenDismissingNotification.postValue(newValue)
+        }
+    }
+
+    @UiThread
+    fun toggleHideMessageContentInNotification() {
+        val newValue = hideMessageContentInNotification.value == false
+        coreContext.postOnCoreThread {
+            corePreferences.showChatMessageContentInNotification = !newValue
+            hideMessageContentInNotification.postValue(newValue)
         }
     }
 
@@ -672,6 +690,16 @@ class SettingsViewModel
     @UiThread
     fun toggleMeetingsExpand() {
         expandMeetings.value = expandMeetings.value == false
+    }
+
+    @UiThread
+    fun toggleShowPastMeetings() {
+        val newValue = showPastMeetings.value == false
+        coreContext.postOnCoreThread {
+            corePreferences.showPastMeetings = newValue
+            showPastMeetings.postValue(newValue)
+            forceRefreshMeetingsListEvent.postValue(Event(true))
+        }
     }
 
     @UiThread
@@ -893,6 +921,26 @@ class SettingsViewModel
         coreContext.postOnCoreThread { core ->
             core.isMediaEncryptionMandatory = newValue
             mediaEncryptionMandatory.postValue(newValue)
+        }
+    }
+
+    @UiThread
+    fun toggleRfc2833Dtmf() {
+        val newValue = rfc2833Dtmf.value == false
+
+        coreContext.postOnCoreThread { core ->
+            core.useRfc2833ForDtmf = newValue
+            rfc2833Dtmf.postValue(newValue)
+        }
+    }
+
+    @UiThread
+    fun toggleSipInfoDtmf() {
+        val newValue = sipInfoDtmf.value == false
+
+        coreContext.postOnCoreThread { core ->
+            core.useInfoForDtmf = newValue
+            sipInfoDtmf.postValue(newValue)
         }
     }
 
@@ -1233,6 +1281,36 @@ class SettingsViewModel
                 Log.i("$TAG Friend list [$NATIVE_ADDRESS_BOOK_FRIEND_LIST] removed")
             }
             showGreenToast(R.string.settings_developer_cleared_native_friends_in_database_toast, R.drawable.trash_simple)
+        }
+    }
+
+    @UiThread
+    fun clearOrphanAuthInfo() {
+        coreContext.postOnCoreThread { core ->
+            var count = 0
+            for (authInfo in core.authInfoList) {
+                val username = authInfo.username
+                if (username == null) {
+                    Log.i("$TAG Removing auth info [$authInfo] without username")
+                    core.removeAuthInfo(authInfo)
+                    count += 1
+                } else {
+                    val account = core.accountList.find {
+                        it.params.identityAddress?.username == username
+                    }
+                    if (account == null) {
+                        Log.i("$TAG Removing auth info [$authInfo] with username [$username] for which no account was found")
+                        core.removeAuthInfo(authInfo)
+                        count += 1
+                    }
+                }
+            }
+            if (count == 0) {
+                showGreenToast(R.string.settings_developer_no_auth_info_removed_toast, R.drawable.trash_simple)
+            } else {
+                val message = AppUtils.getStringWithPlural(R.plurals.settings_developer_cleared_auth_info_toast, count, "$count")
+                showFormattedGreenToast(message, R.drawable.warning_circle)
+            }
         }
     }
 }

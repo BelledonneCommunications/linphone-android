@@ -63,8 +63,6 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
 
         const val NATIVE_ADDRESS_BOOK_FRIEND_LIST = "Native address-book"
         const val LINPHONE_ADDRESS_BOOK_FRIEND_LIST = "Linphone address-book"
-
-        private const val MIN_INTERVAL_TO_WAIT_BEFORE_REFRESH = 300000L // 5 minutes
     }
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
@@ -102,7 +100,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
         // WARNING: this doesn't prevent to be called again in onLoadFinished,
         // it will only have for effect that the notified cursor will be the same as before
         // instead of a new one with updated content!
-        // loader.setUpdateThrottle(MIN_INTERVAL_TO_WAIT_BEFORE_REFRESH)
+        // loader.setUpdateThrottle(300000L)
 
         return loader
     }

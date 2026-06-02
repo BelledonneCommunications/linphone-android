@@ -22,14 +22,10 @@ package org.linphone.ui.main.fragment
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams
-import android.widget.PopupWindow
 import androidx.annotation.UiThread
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -38,9 +34,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
-import org.linphone.core.Account
 import org.linphone.core.tools.Log
-import org.linphone.databinding.AccountPopupMenuBinding
 import org.linphone.databinding.DrawerMenuBinding
 import org.linphone.ui.assistant.AssistantActivity
 import org.linphone.ui.main.MainActivity
@@ -121,9 +115,15 @@ class DrawerMenuFragment : GenericMainFragment() {
             }
         }
 
-        viewModel.showAccountPopupMenuEvent.observe(viewLifecycleOwner) {
-            it.consume { pair ->
-                showAccountPopupMenu(pair.first, pair.second)
+        viewModel.openAccountProfileEvent.observe(viewLifecycleOwner) {
+            it.consume { model ->
+                val navController = (requireActivity() as MainActivity).findNavController()
+                val action = AccountProfileFragmentDirections.actionGlobalAccountProfileFragment(
+                    model.identity
+                )
+                Log.i("$TAG Going to account [${model.identity}] profile")
+                navController.navigate(action)
+                (requireActivity() as MainActivity).closeDrawerMenu()
             }
         }
 
@@ -182,37 +182,5 @@ class DrawerMenuFragment : GenericMainFragment() {
                 }
             }
         }
-    }
-
-    private fun showAccountPopupMenu(view: View, account: Account) {
-        val popupView: AccountPopupMenuBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(requireContext()),
-            R.layout.account_popup_menu,
-            null,
-            false
-        )
-
-        val popupWindow = PopupWindow(
-            popupView.root,
-            LayoutParams.WRAP_CONTENT,
-            LayoutParams.WRAP_CONTENT,
-            true
-        )
-
-        popupView.setManageProfileClickListener {
-            val navController = (requireActivity() as MainActivity).findNavController()
-            val identity = account.params.identityAddress?.asStringUriOnly().orEmpty()
-            val action = AccountProfileFragmentDirections.actionGlobalAccountProfileFragment(
-                identity
-            )
-            Log.i("$TAG Going to account [$identity] profile")
-            navController.navigate(action)
-            popupWindow.dismiss()
-            (requireActivity() as MainActivity).closeDrawerMenu()
-        }
-
-        // Elevation is for showing a shadow around the popup
-        popupWindow.elevation = 20f
-        popupWindow.showAsDropDown(view, 0, 0, Gravity.BOTTOM)
     }
 }

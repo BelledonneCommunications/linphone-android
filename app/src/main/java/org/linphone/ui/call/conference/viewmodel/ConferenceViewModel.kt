@@ -66,6 +66,8 @@ class ConferenceViewModel
 
     val isCurrentCallInConference = MutableLiveData<Boolean>()
 
+    val isEndToEndEncrypted = MutableLiveData<Boolean>()
+
     val conferenceLayout = MutableLiveData<Int>()
 
     val screenSharingParticipantName = MutableLiveData<String>()
@@ -83,20 +85,22 @@ class ConferenceViewModel
     val fullScreenMode = MutableLiveData<Boolean>()
 
     val firstParticipantOtherThanOurselvesJoinedEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val showLayoutMenuEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val removeParticipantEvent: MutableLiveData<Event<Pair<String, Participant>>> by lazy {
-        MutableLiveData<Event<Pair<String, Participant>>>()
+        MutableLiveData()
     }
 
     val goToConversationEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+        MutableLiveData()
     }
+
+    var conferenceConfigured = false
 
     private lateinit var conference: Conference
 
@@ -278,17 +282,26 @@ class ConferenceViewModel
                 isPaused.postValue(!isIn)
                 Log.i("$TAG We [${if (isIn) "are" else "aren't"}] in the conference")
 
+                val conferenceSecurityLevel = conference.currentParams.securityLevel
+                Log.i("$TAG Conference call security level is [$conferenceSecurityLevel]")
+                isEndToEndEncrypted.postValue(conferenceSecurityLevel == Conference.SecurityLevel.EndToEnd)
+
                 subject.postValue(conference.subjectUtf8.orEmpty())
                 computeParticipants(false)
                 if (conference.participantList.size >= 1) { // we do not count
                     Log.i("$TAG Joined conference already has at least another participant")
                     firstParticipantOtherThanOurselvesJoinedEvent.postValue(Event(true))
                 }
+
+                val chatEnabled = conference.currentParams.isChatEnabled
+                isConversationAvailable.postValue(chatEnabled)
+                Log.i("$TAG Chat is ${if (chatEnabled) "enabled" else "disabled"}")
             }
         }
     }
 
     init {
+        conferenceConfigured = false
         isPaused.value = false
         isConversationAvailable.value = false
         isMeParticipantSendingVideo.value = false
@@ -297,6 +310,7 @@ class ConferenceViewModel
 
     @WorkerThread
     fun destroy() {
+        conferenceConfigured = false
         isCurrentCallInConference.postValue(false)
         if (::conference.isInitialized) {
             conference.removeListener(conferenceListener)
@@ -312,8 +326,13 @@ class ConferenceViewModel
         }
 
         isCurrentCallInConference.postValue(true)
+        val conferenceSecurityLevel = conf.currentParams.securityLevel
+        Log.i("$TAG Conference call security level is [$conferenceSecurityLevel]")
+        isEndToEndEncrypted.postValue(conferenceSecurityLevel == Conference.SecurityLevel.EndToEnd)
+
         conference = conf
         conference.addListener(conferenceListener)
+        conferenceConfigured = true
 
         val isIn = conference.isIn
         val state = conf.state
@@ -329,6 +348,7 @@ class ConferenceViewModel
 
         val chatEnabled = conference.currentParams.isChatEnabled
         isConversationAvailable.postValue(chatEnabled)
+        Log.i("$TAG Chat is ${if (chatEnabled) "enabled" else "disabled"}")
 
         val confSubject = conference.subjectUtf8.orEmpty()
         Log.i(
@@ -351,15 +371,15 @@ class ConferenceViewModel
             Log.w(
                 "$TAG Conference has a participant sharing its screen, changing layout from mosaic to active speaker"
             )
-            setNewLayout(ACTIVE_SPEAKER_LAYOUT)
+            setNewLayout(ACTIVE_SPEAKER_LAYOUT, call)
         } else if (currentLayout == AUDIO_ONLY_LAYOUT) {
             val defaultLayout = call.core.defaultConferenceLayout.toInt()
             if (defaultLayout == Conference.Layout.ActiveSpeaker.toInt()) {
                 Log.w("$TAG Joined conference in audio only layout, switching to active speaker layout")
-                setNewLayout(ACTIVE_SPEAKER_LAYOUT)
+                setNewLayout(ACTIVE_SPEAKER_LAYOUT, call)
             } else {
                 Log.w("$TAG Joined conference in audio only layout, switching to grid layout")
-                setNewLayout(GRID_LAYOUT)
+                setNewLayout(GRID_LAYOUT, call)
             }
         }
     }
@@ -461,9 +481,9 @@ class ConferenceViewModel
     }
 
     @WorkerThread
-    fun setNewLayout(newLayout: Int) {
+    fun setNewLayout(newLayout: Int, currentCall: Call? = null) {
         if (::conference.isInitialized) {
-            val call = conference.call
+            val call = conference.call ?: currentCall
             if (call != null) {
                 val params = call.core.createCallParams(call)
                 if (params != null) {

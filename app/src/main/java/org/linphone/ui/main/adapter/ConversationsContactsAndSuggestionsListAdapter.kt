@@ -53,7 +53,7 @@ class ConversationsContactsAndSuggestionsListAdapter :
     }
 
     val onClickedEvent: MutableLiveData<Event<ConversationContactOrSuggestionModel>> by lazy {
-        MutableLiveData<Event<ConversationContactOrSuggestionModel>>()
+        MutableLiveData()
     }
 
     override fun displayHeaderForPosition(position: Int): Boolean {

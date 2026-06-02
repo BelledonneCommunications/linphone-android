@@ -33,6 +33,7 @@ import org.linphone.core.ChatMessageListenerStub
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoom.Capabilities
 import org.linphone.core.ChatRoomListenerStub
+import org.linphone.core.Content
 import org.linphone.core.EventLog
 import org.linphone.core.Friend
 import org.linphone.core.tools.Log
@@ -101,7 +102,7 @@ class ConversationModel
         override fun onStateChanged(chatRoom: ChatRoom, newState: ChatRoom.State?) {
             Log.i("$TAG Conversation state changed [${chatRoom.state}]")
             if (chatRoom.state == ChatRoom.State.Created) {
-                subject.postValue(chatRoom.subject)
+                subject.postValue(chatRoom.subjectUtf8)
                 computeParticipants()
             } else if (chatRoom.state == ChatRoom.State.Deleted) {
                 Log.i("$TAG Conversation [$id] has been deleted")
@@ -113,7 +114,7 @@ class ConversationModel
         override fun onConferenceJoined(chatRoom: ChatRoom, eventLog: EventLog) {
             // This is required as a Created chat room may not have the participants list yet
             Log.i("$TAG Conversation has been joined")
-            subject.postValue(chatRoom.subject)
+            subject.postValue(chatRoom.subjectUtf8)
             computeParticipants()
         }
 
@@ -156,8 +157,8 @@ class ConversationModel
 
         @WorkerThread
         override fun onSubjectChanged(chatRoom: ChatRoom, eventLog: EventLog) {
-            Log.i("$TAG Conversation subject changed [${chatRoom.subject}]")
-            subject.postValue(chatRoom.subject)
+            Log.i("$TAG Conversation subject changed [${chatRoom.subjectUtf8}]")
+            subject.postValue(chatRoom.subjectUtf8)
             computeParticipants()
         }
 
@@ -201,7 +202,7 @@ class ConversationModel
         chatRoom.addListener(chatRoomListener)
 
         computeComposingLabel()
-        subject.postValue(chatRoom.subject)
+        subject.postValue(chatRoom.subjectUtf8)
         computeParticipants()
 
         isMuted.postValue(chatRoom.muted)
@@ -332,27 +333,10 @@ class ConversationModel
         } else if (message.isForward) {
             lastMessageContentIcon.postValue(R.drawable.forward)
         } else {
-            val firstContent = message.contents.firstOrNull()
-            val icon = if (firstContent?.isIcalendar == true) {
-                R.drawable.calendar
-            } else if (firstContent?.isVoiceRecording == true) {
-                R.drawable.waveform
-            } else if (firstContent?.isFile == true) {
-                val mime = "${firstContent.type}/${firstContent.subtype}"
-                val mimeType = FileUtils.getMimeType(mime)
-                val drawable = when (mimeType) {
-                    FileUtils.MimeType.Image -> R.drawable.file_image
-                    FileUtils.MimeType.Video -> R.drawable.file_video
-                    FileUtils.MimeType.Audio -> R.drawable.file_audio
-                    FileUtils.MimeType.Pdf -> R.drawable.file_pdf
-                    FileUtils.MimeType.PlainText -> R.drawable.file_text
-                    else -> R.drawable.file
-                }
-                drawable
-            } else if (firstContent?.isFileTransfer == true) {
-                R.drawable.download_simple
-            } else {
-                0
+            var icon = 0
+            for (content in message.contents) {
+                icon = getIconFromContent(content)
+                if (icon != 0) break
             }
             lastMessageContentIcon.postValue(icon)
         }
@@ -399,6 +383,31 @@ class ConversationModel
     }
 
     @WorkerThread
+    private fun getIconFromContent(content: Content): Int {
+        return if (content.isIcalendar) {
+            R.drawable.calendar
+        } else if (content.isVoiceRecording) {
+            R.drawable.waveform
+        } else if (content.isFile) {
+            val mime = "${content.type}/${content.subtype}"
+            val mimeType = FileUtils.getMimeType(mime)
+            val drawable = when (mimeType) {
+                FileUtils.MimeType.Image -> R.drawable.file_image
+                FileUtils.MimeType.Video -> R.drawable.file_video
+                FileUtils.MimeType.Audio -> R.drawable.file_audio
+                FileUtils.MimeType.Pdf -> R.drawable.file_pdf
+                FileUtils.MimeType.PlainText -> R.drawable.file_text
+                else -> R.drawable.file
+            }
+            drawable
+        } else if (content.isFileTransfer) {
+            R.drawable.download_simple
+        } else {
+            0
+        }
+    }
+
+    @WorkerThread
     private fun updateLastUpdatedTime() {
         val timestamp = chatRoom.lastUpdateTime
         lastUpdateTime.postValue(timestamp)
@@ -433,9 +442,9 @@ class ConversationModel
         }
 
         if (isGroup) {
-            if (avatarModel.value == null || avatarModel.value?.contactName != chatRoom.subject) {
+            if (avatarModel.value == null || avatarModel.value?.contactName != chatRoom.subjectUtf8) {
                 val fakeFriend = coreContext.core.createFriend()
-                fakeFriend.name = chatRoom.subject
+                fakeFriend.name = chatRoom.subjectUtf8
                 val model = ContactAvatarModel(fakeFriend)
                 model.defaultToConversationIcon.postValue(true)
                 model.updateSecurityLevelUsingConversation(chatRoom)

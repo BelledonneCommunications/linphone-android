@@ -18,7 +18,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/settings_title_style"
-            android:onClick="@{() -> viewModel.toggleEnableVideo()}"
+            android:onClick="@{() -> viewModel.toggleUseWifiOnly()}"
             android:id="@+id/wifi_only_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

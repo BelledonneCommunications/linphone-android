@@ -33,16 +33,16 @@ import org.linphone.databinding.CallListCellBinding
 import org.linphone.ui.call.model.CallModel
 import org.linphone.utils.Event
 
-class CallsListAdapter :
+class CallsListAdapter(private val showTransferIconInsteadOfCallState: Boolean = false) :
     ListAdapter<CallModel, RecyclerView.ViewHolder>(CallDiffCallback()) {
     var selectedAdapterPosition = -1
 
     val callClickedEvent: MutableLiveData<Event<CallModel>> by lazy {
-        MutableLiveData<Event<CallModel>>()
+        MutableLiveData()
     }
 
     val callLongClickedEvent: MutableLiveData<Event<CallModel>> by lazy {
-        MutableLiveData<Event<CallModel>>()
+        MutableLiveData()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -55,6 +55,7 @@ class CallsListAdapter :
         val viewHolder = ViewHolder(binding)
         binding.apply {
             lifecycleOwner = parent.findViewTreeLifecycleOwner()
+            showTransferIcon = showTransferIconInsteadOfCallState
 
             setOnClickListener {
                 callClickedEvent.value = Event(model!!)

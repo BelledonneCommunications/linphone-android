@@ -60,13 +60,13 @@
             android:drawablePadding="5dp"
             app:drawableTint="@color/icon_color_selector"
             app:layout_constraintStart_toEndOf="@id/capture_image"
-            app:layout_constraintEnd_toStartOf="@id/attach_file"
+            app:layout_constraintEnd_toStartOf="@id/pick_file"
             app:layout_constraintTop_toBottomOf="@id/file_pickers_separator"
             app:layout_constraintBottom_toBottomOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
-            android:id="@+id/attach_file"
+            android:id="@+id/pick_file"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:onClick="@{openFilePickerClickListener}"

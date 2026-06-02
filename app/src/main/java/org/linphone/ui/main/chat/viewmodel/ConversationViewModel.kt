@@ -107,43 +107,43 @@ class ConversationViewModel
     val unreadMessagesCount = MutableLiveData<Int>()
 
     val focusSearchBarEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val fileToDisplayEvent: MutableLiveData<Event<FileModel>> by lazy {
-        MutableLiveData<Event<FileModel>>()
+        MutableLiveData()
     }
 
     val sipUriToCallEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+        MutableLiveData()
     }
 
     val conferenceToJoinEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+        MutableLiveData()
     }
 
     val openWebBrowserEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+        MutableLiveData()
     }
 
     val contactToDisplayEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+        MutableLiveData()
     }
 
     val messageDeletedEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val updateEvents: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val forwardMessageEvent: MutableLiveData<Event<MessageModel>> by lazy {
-        MutableLiveData<Event<MessageModel>>()
+        MutableLiveData()
     }
 
     val voiceRecordPlaybackEndedEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+        MutableLiveData()
     }
 
     var eventsList = arrayListOf<EventLogModel>()
@@ -250,7 +250,7 @@ class ConversationViewModel
 
         @WorkerThread
         override fun onSubjectChanged(chatRoom: ChatRoom, eventLog: EventLog) {
-            Log.i("$TAG Conversation subject changed [${chatRoom.subject}]")
+            Log.i("$TAG Conversation subject changed [${chatRoom.subjectUtf8}]")
             addEvents(arrayOf(eventLog))
         }
 
@@ -580,7 +580,7 @@ class ConversationViewModel
         if (!chatRoom.hasCapability(ChatRoom.Capabilities.Encrypted.toInt())) {
             if (LinphoneUtils.getAccountForAddress(chatRoom.localAddress)?.params?.instantMessagingEncryptionMandatory == true) {
                 Log.w(
-                    "$TAG Conversation with subject [${chatRoom.subject}] is considered as read-only because it isn't encrypted and default account is in secure mode"
+                    "$TAG Conversation with subject [${chatRoom.subjectUtf8}] is considered as read-only because it isn't encrypted and default account is in secure mode"
                 )
                 isDisabledBecauseNotSecured.postValue(true)
             } else {
@@ -655,12 +655,12 @@ class ConversationViewModel
         val readOnly = chatRoom.isReadOnly
         isReadOnly.postValue(readOnly)
         if (readOnly) {
-            Log.w("$TAG Conversation with subject [${chatRoom.subject}] is read only!")
+            Log.w("$TAG Conversation with subject [${chatRoom.subjectUtf8}] is read only!")
         }
 
         checkIfConversationShouldBeDisabledForSecurityReasons()
 
-        subject.postValue(chatRoom.subject)
+        subject.postValue(chatRoom.subjectUtf8)
 
         computeParticipantsInfo()
 
@@ -693,7 +693,7 @@ class ConversationViewModel
 
         val avatar = if (LinphoneUtils.isChatRoomAGroup(chatRoom)) {
             val fakeFriend = coreContext.core.createFriend()
-            fakeFriend.name = chatRoom.subject
+            fakeFriend.name = chatRoom.subjectUtf8
             val model = ContactAvatarModel(fakeFriend)
             model.updateSecurityLevelUsingConversation(chatRoom)
             model

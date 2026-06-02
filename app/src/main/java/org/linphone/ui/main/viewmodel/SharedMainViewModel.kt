@@ -39,27 +39,27 @@ class SharedMainViewModel
     val isSlidingPaneSlideable = MutableLiveData<Boolean>()
 
     val closeSlidingPaneEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val openSlidingPaneEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val navigateToHistoryEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val navigateToContactsEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val navigateToConversationsEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val navigateToMeetingsEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     var currentlyDisplayedFragment = MutableLiveData<Int>()
@@ -67,40 +67,40 @@ class SharedMainViewModel
     // Top bar related
 
     val searchFilter: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+        MutableLiveData()
     }
 
     val refreshDrawerMenuAccountsListEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val refreshDrawerMenuQuitButtonEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val forceUpdateAvailableNavigationItems: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     // Account Profile related
 
     val goToAccountProfileEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     // Contacts related
 
     var displayedFriend: Friend? = null // Prevents the need to go look for the friend
     val showContactEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+        MutableLiveData()
     }
 
     val showNewContactEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val forceRefreshContactsList: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     var sipAddressToAddToNewContact: String = ""
@@ -108,11 +108,11 @@ class SharedMainViewModel
     // Call logs related
 
     val forceRefreshCallLogsListEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val resetMissedCallsCountEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     // Conversation related
@@ -122,48 +122,48 @@ class SharedMainViewModel
     val filesToShareFromIntent = MutableLiveData<ArrayList<String>>()
 
     val messageToForwardEvent: MutableLiveData<Event<MessageModel>> by lazy {
-        MutableLiveData<Event<MessageModel>>()
+        MutableLiveData()
     }
 
     var displayedChatRoom: ChatRoom? = null // Prevents the need to go look for the chat room
 
     val showConversationEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+        MutableLiveData()
     }
 
     val hideConversationEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     // When using keyboard to share gif or other, see RichContentReceiver & RichEditText classes
     val richContentUri = MutableLiveData<Event<Uri>>()
 
     val displayFileEvent: MutableLiveData<Event<Bundle>> by lazy {
-        MutableLiveData<Event<Bundle>>()
+        MutableLiveData()
     }
 
     val forceRefreshDisplayedConversationEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val forceRefreshConversationInfoEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val forceRefreshConversationEvents: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val newChatMessageEphemeralLifetimeToSetEvent: MutableLiveData<Event<Long>> by lazy {
-        MutableLiveData<Event<Long>>()
+        MutableLiveData()
     }
 
     val updateConversationLastMessageEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+        MutableLiveData()
     }
 
     val updateUnreadMessageCountForCurrentConversationEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     // Meetings related
@@ -171,19 +171,19 @@ class SharedMainViewModel
     var displayedMeeting: ConferenceInfo? = null // Prevents the need to go look for the conference info
 
     val meetingEditedEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val forceRefreshMeetingsListEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val goToMeetingWaitingRoomEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+        MutableLiveData()
     }
 
     val goToScheduleMeetingEvent: MutableLiveData<Event<Pair<String, ArrayList<String>>>> by lazy {
-        MutableLiveData<Event<Pair<String, ArrayList<String>>>>()
+        MutableLiveData()
     }
 
     // Recordings related
@@ -195,6 +195,6 @@ class SharedMainViewModel
     val mediaViewerFullScreenMode = MutableLiveData<Boolean>()
 
     val listOfSelectedSipUrisEvent: MutableLiveData<Event<ArrayList<String>>> by lazy {
-        MutableLiveData<Event<ArrayList<String>>>()
+        MutableLiveData()
     }
 }

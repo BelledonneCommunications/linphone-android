@@ -73,31 +73,31 @@ open class AbstractMainViewModel
     val moreThanOneAccount = MutableLiveData<Boolean>()
 
     val focusSearchBarEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val openDrawerMenuEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val navigateToHistoryEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val navigateToContactsEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val navigateToConversationsEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val navigateToMeetingsEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val defaultAccountChangedEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     protected var currentFilter = ""
@@ -241,10 +241,12 @@ open class AbstractMainViewModel
 
     @UiThread
     fun applyFilter(filter: String = currentFilter) {
-        Log.i("$TAG New filter set by user [$filter]")
-        currentFilter = filter
-        isFilterEmpty.postValue(filter.isEmpty())
-        filter()
+        if (currentFilter != filter) {
+            Log.i("$TAG New filter set by user [$filter]")
+            currentFilter = filter
+            isFilterEmpty.postValue(filter.isEmpty())
+            filter()
+        }
     }
 
     @UiThread

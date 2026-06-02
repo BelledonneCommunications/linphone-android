@@ -77,7 +77,7 @@ class MeetingsListFragment : AbstractMainFragment() {
             Log.i(
                 "$TAG Default account changed, updating avatar in top bar & re-computing meetings list"
             )
-            listViewModel.applyFilter()
+            listViewModel.filter()
         }
     }
 
@@ -176,7 +176,7 @@ class MeetingsListFragment : AbstractMainFragment() {
 
                 meetingViewModelBeingCancelled?.delete()
                 meetingViewModelBeingCancelled = null
-                listViewModel.applyFilter()
+                listViewModel.filter()
 
                 (requireActivity() as GenericActivity).showGreenToast(
                     getString(R.string.meeting_info_deleted_toast),
@@ -199,9 +199,7 @@ class MeetingsListFragment : AbstractMainFragment() {
                             Log.i("$TAG Meeting start hasn't started yet and we are the organizer, asking user if it should be cancelled")
                             showCancelMeetingDialog(model)
                         } else {
-                            Log.i("$TAG Deleting meeting [${model.id}]")
-                            model.delete()
-                            listViewModel.applyFilter()
+                            showDeleteMeetingDialog(model)
                         }
                     }
                 )
@@ -213,7 +211,7 @@ class MeetingsListFragment : AbstractMainFragment() {
         sharedViewModel.forceRefreshMeetingsListEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG We were asked to refresh the meetings list, doing it now")
-                listViewModel.applyFilter()
+                listViewModel.filter()
             }
         }
 
@@ -308,7 +306,7 @@ class MeetingsListFragment : AbstractMainFragment() {
         }
         val index = listViewModel.meetings.value.orEmpty().indexOf(todayMeeting)
         Log.i("$TAG 'Today' is at position [$index]")
-        if (index > 0) {
+        if (index >= 0) {
             binding.meetingsList.smoothScrollToPosition(index) // Workaround to have header decoration visible at top
             (binding.meetingsList.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(
                 index,
@@ -343,6 +341,28 @@ class MeetingsListFragment : AbstractMainFragment() {
                 Log.i("$TAG Cancelling meeting [${meetingModel.id}] without notifying participants")
                 meetingViewModelBeingCancelled = meetingModel
                 listViewModel.cancelMeetingViewModel.cancelMeeting(meetingModel.conferenceInfo, false)
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun showDeleteMeetingDialog(meetingModel: MeetingModel) {
+        val model = ConfirmationDialogModel()
+        val dialog = DialogUtils.getDeleteMeetingDialog(requireContext(), model)
+
+        model.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        model.confirmEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Deleting meeting [${meetingModel.id}]")
+                meetingModel.delete()
+                listViewModel.filter()
                 dialog.dismiss()
             }
         }

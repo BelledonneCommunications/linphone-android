@@ -79,15 +79,15 @@ class MeetingWaitingRoomViewModel
     val conferenceInfoFoundEvent = MutableLiveData<Event<Boolean>>()
 
     val showAudioDevicesListEvent: MutableLiveData<Event<ArrayList<AudioDeviceModel>>> by lazy {
-        MutableLiveData<Event<ArrayList<AudioDeviceModel>>>()
+        MutableLiveData()
     }
 
     val leaveWaitingRoomEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val conferenceCreationError: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     private lateinit var conferenceAddress: Address

@@ -5,6 +5,7 @@
 
     <data>
         <import type="android.view.View" />
+        <import type="org.linphone.core.RegistrationState" />
         <variable
             name="backClickListener"
             type="View.OnClickListener" />
@@ -93,88 +94,96 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="@dimen/screen_bottom_margin">
 
-                    <androidx.constraintlayout.widget.Group
-                        android:layout_width="wrap_content"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/avatar_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        app:constraint_referenced_ids="details_background, sip_address, sip_address_label, display_name, display_name_label, prefix, prefix_caret, prefix_label, prefix_label_tooltip"
-                        android:visibility="@{viewModel.expandDetails ? View.VISIBLE : View.GONE}" />
-
-                    <include
-                        android:id="@+id/avatar"
-                        android:onClick="@{pickImageClickListener}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
                         android:layout_marginTop="20dp"
-                        layout="@layout/contact_avatar_big"
-                        bind:model="@{viewModel.accountModel}"
+                        android:background="@drawable/shape_squircle_white_background"
+                        app:layout_constraintWidth_max="@dimen/section_max_width"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent">
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:onClick="@{pickImageClickListener}"
-                        style="@style/default_text_style"
-                        android:id="@+id/add_picture_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:padding="5dp"
-                        android:text="@string/manage_account_add_picture"
-                        android:textSize="14sp"
-                        android:drawableStart="@drawable/camera"
-                        android:drawablePadding="3dp"
-                        android:background="@drawable/squircle_transparent_button_background"
-                        android:visibility="@{viewModel.accountModel.picturePath.length() == 0 ? View.VISIBLE : View.GONE, default=gone}"
-                        app:layout_constraintTop_toBottomOf="@id/avatar"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"/>
+                        <include
+                            android:id="@+id/avatar"
+                            android:onClick="@{pickImageClickListener}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            layout="@layout/contact_avatar_big"
+                            bind:model="@{viewModel.accountModel}"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:onClick="@{pickImageClickListener}"
-                        style="@style/default_text_style"
-                        android:id="@+id/edit_picture_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:padding="5dp"
-                        android:text="@string/manage_account_edit_picture"
-                        android:textSize="14sp"
-                        android:drawableStart="@drawable/pencil_simple"
-                        android:drawablePadding="3dp"
-                        android:drawableTint="?attr/color_main2_600"
-                        android:background="@drawable/squircle_transparent_button_background"
-                        android:visibility="@{viewModel.accountModel.picturePath.length() == 0 ? View.GONE : View.VISIBLE}"
-                        app:layout_constraintHorizontal_chainStyle="packed"
-                        app:layout_constraintTop_toBottomOf="@id/avatar"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/remove_picture_label"/>
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:onClick="@{pickImageClickListener}"
+                            style="@style/default_text_style"
+                            android:id="@+id/add_picture_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:padding="5dp"
+                            android:text="@string/manage_account_add_picture"
+                            android:textSize="14sp"
+                            android:drawableStart="@drawable/camera"
+                            android:drawablePadding="3dp"
+                            android:background="@drawable/squircle_transparent_button_background"
+                            android:visibility="@{viewModel.accountModel.picturePath.length() == 0 ? View.VISIBLE : View.GONE, default=gone}"
+                            app:layout_constraintTop_toBottomOf="@id/avatar"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"/>
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:onClick="@{deleteImageClickListener}"
-                        style="@style/default_text_style"
-                        android:id="@+id/remove_picture_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginStart="16dp"
-                        android:padding="5dp"
-                        android:text="@string/manage_account_remove_picture"
-                        android:textSize="14sp"
-                        android:drawableStart="@drawable/trash_simple"
-                        android:drawablePadding="3dp"
-                        android:drawableTint="?attr/color_main2_600"
-                        android:background="@drawable/squircle_transparent_button_background"
-                        android:visibility="@{viewModel.accountModel.picturePath.length() == 0 ? View.GONE : View.VISIBLE}"
-                        app:layout_constraintTop_toBottomOf="@id/avatar"
-                        app:layout_constraintStart_toEndOf="@id/edit_picture_label"
-                        app:layout_constraintEnd_toEndOf="parent"/>
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:onClick="@{pickImageClickListener}"
+                            style="@style/default_text_style"
+                            android:id="@+id/edit_picture_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:padding="5dp"
+                            android:text="@string/manage_account_edit_picture"
+                            android:textSize="14sp"
+                            android:drawableStart="@drawable/pencil_simple"
+                            android:drawablePadding="3dp"
+                            android:drawableTint="?attr/color_main2_600"
+                            android:background="@drawable/squircle_transparent_button_background"
+                            android:visibility="@{viewModel.accountModel.picturePath.length() == 0 ? View.GONE : View.VISIBLE}"
+                            app:layout_constraintHorizontal_chainStyle="packed"
+                            app:layout_constraintTop_toBottomOf="@id/avatar"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/remove_picture_label"/>
 
-                    <androidx.constraintlayout.widget.Barrier
-                        android:id="@+id/avatar_barrier"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:constraint_referenced_ids="remove_picture_label, edit_picture_label, add_picture_label"
-                        app:barrierDirection="bottom" />
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:onClick="@{deleteImageClickListener}"
+                            style="@style/default_text_style"
+                            android:id="@+id/remove_picture_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginBottom="10dp"
+                            android:padding="5dp"
+                            android:text="@string/manage_account_remove_picture"
+                            android:textSize="14sp"
+                            android:drawableStart="@drawable/trash_simple"
+                            android:drawablePadding="3dp"
+                            android:drawableTint="?attr/color_main2_600"
+                            android:background="@drawable/squircle_transparent_button_background"
+                            android:visibility="@{viewModel.accountModel.picturePath.length() == 0 ? View.GONE : View.VISIBLE}"
+                            app:layout_constraintTop_toBottomOf="@id/avatar"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/edit_picture_label"
+                            app:layout_constraintEnd_toEndOf="parent"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/section_header_style"
@@ -190,238 +199,265 @@
                         android:drawableEnd="@{viewModel.expandDetails ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
                         android:drawableTint="?attr/color_main2_600"
                         android:background="@drawable/squircle_transparent_button_background"
+                        app:layout_constraintWidth_max="@dimen/section_max_width"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/avatar_barrier"/>
+                        app:layout_constraintTop_toBottomOf="@id/avatar_content"/>
 
-                    <ImageView
-                        android:id="@+id/details_background"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/details_content"
                         android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_marginTop="8dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:layout_marginBottom="-20dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/shape_squircle_white_background"
+                        android:background="@drawable/shape_squircle_white_background"
+                        android:visibility="@{viewModel.expandDetails ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintWidth_max="@dimen/section_max_width"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/details">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            style="@style/settings_title_style"
+                            android:id="@+id/sip_address_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="10dp"
+                            android:text="@string/sip_address"
+                            android:visibility="@{!viewModel.hideSipAddresses || viewModel.showDeviceId ? View.VISIBLE : View.GONE}"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            style="@style/default_text_style"
+                            android:id="@+id/sip_address"
+                            android:onClick="@{copySipUriClickListener}"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="8dp"
+                            android:text="@={viewModel.sipAddress, default=`sip:johndoe@sip.example.org`}"
+                            android:textSize="13sp"
+                            android:maxLines="2"
+                            android:ellipsize="end"
+                            android:drawableEnd="@drawable/copy"
+                            android:drawablePadding="5dp"
+                            app:drawableTint="?attr/color_main2_600"
+                            android:visibility="@{!viewModel.hideSipAddresses || viewModel.showDeviceId ? View.VISIBLE : View.GONE}"
+                            app:layout_constraintHorizontal_bias="0"
+                            app:layout_constraintStart_toEndOf="@id/sip_address_label"
+                            app:layout_constraintEnd_toEndOf="@id/display_name"
+                            app:layout_constraintTop_toTopOf="@id/sip_address_label"
+                            app:layout_constraintBottom_toBottomOf="@id/sip_address_label"/>
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            style="@style/settings_title_style"
+                            android:id="@+id/device_id_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="20dp"
+                            android:text="@string/device_id"
+                            android:visibility="@{viewModel.showDeviceId ? View.VISIBLE : View.GONE, default=gone}"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/sip_address"/>
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            style="@style/default_text_style"
+                            android:id="@+id/device_id"
+                            android:onClick="@{copyDeviceIdClickListener}"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="8dp"
+                            android:text="@={viewModel.deviceId, default=`1234`}"
+                            android:textSize="13sp"
+                            android:maxLines="2"
+                            android:ellipsize="end"
+                            android:drawableEnd="@drawable/copy"
+                            android:drawablePadding="5dp"
+                            app:drawableTint="?attr/color_main2_600"
+                            android:visibility="@{viewModel.showDeviceId ? View.VISIBLE : View.GONE, default=gone}"
+                            app:layout_constraintStart_toEndOf="@id/device_id_label"
+                            app:layout_constraintEnd_toEndOf="@id/display_name"
+                            app:layout_constraintTop_toTopOf="@id/device_id_label"
+                            app:layout_constraintBottom_toBottomOf="@id/device_id_label"/>
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            style="@style/settings_title_padding_style"
+                            android:id="@+id/display_name_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="10dp"
+                            android:text="@string/sip_address_display_name"
+                            android:labelFor="@id/display_name"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/device_id"/>
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            style="@style/default_text_style"
+                            android:id="@+id/display_name"
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_marginEnd="16dp"
+                            android:paddingStart="20dp"
+                            android:paddingEnd="20dp"
+                            android:text="@={viewModel.displayName, default=`John Doe`}"
+                            android:textSize="14sp"
+                            android:maxLines="1"
+                            android:background="@drawable/edit_text_background"
+                            android:inputType="text|textPersonName|textCapSentences"
+                            app:layout_constraintHorizontal_bias="0"
+                            app:layout_constraintTop_toBottomOf="@id/display_name_label"
+                            app:layout_constraintStart_toStartOf="@id/display_name_label"
+                            app:layout_constraintEnd_toEndOf="parent"/>
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            style="@style/settings_title_padding_style"
+                            android:id="@+id/prefix_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="20dp"
+                            android:text="@string/manage_account_international_prefix"
+                            android:labelFor="@id/prefix"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/display_name"/>
+
+                        <ImageView
+                            android:id="@+id/prefix_label_tooltip"
+                            android:onClick="@{prefixTooltipClickListener}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:src="@drawable/question"
+                            android:contentDescription="@string/content_description_click_for_more_info"
+                            app:tint="?attr/color_main2_600"
+                            app:layout_constraintTop_toTopOf="@id/prefix_label"
+                            app:layout_constraintBottom_toBottomOf="@id/prefix_label"
+                            app:layout_constraintStart_toEndOf="@id/prefix_label" />
+
+                        <androidx.appcompat.widget.AppCompatSpinner
+                            style="@style/default_text_style"
+                            android:id="@+id/prefix"
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginBottom="10dp"
+                            android:paddingStart="20dp"
+                            android:paddingEnd="20dp"
+                            android:textSize="14sp"
+                            android:textColor="@color/gray_main2_600"
+                            android:gravity="center_vertical"
+                            android:overlapAnchor="false"
+                            android:dropDownVerticalOffset="25dp"
+                            android:spinnerMode="dropdown"
+                            android:popupBackground="@drawable/shape_squircle_white_background"
+                            android:background="@drawable/edit_text_background"
+                            app:layout_constraintHorizontal_bias="0"
+                            app:layout_constraintTop_toBottomOf="@id/prefix_label"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="@id/prefix_label"
+                            app:layout_constraintEnd_toEndOf="parent" />
+
+                        <ImageView
+                            android:id="@+id/prefix_caret"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:src="@drawable/caret_down"
+                            android:contentDescription="@null"
+                            app:tint="?attr/color_main2_600"
+                            app:layout_constraintTop_toTopOf="@id/prefix"
+                            app:layout_constraintBottom_toBottomOf="@id/prefix"
+                            app:layout_constraintEnd_toEndOf="@id/prefix"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/section_header_style"
+                        android:id="@+id/registration_status"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/manage_account_status_registration_status_title"
+                        app:layout_constraintWidth_max="@dimen/section_max_width"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/details"
-                        app:layout_constraintBottom_toBottomOf="@id/prefix"/>
+                        app:layout_constraintTop_toBottomOf="@id/details_content"/>
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/settings_title_style"
-                        android:id="@+id/sip_address_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="20dp"
-                        android:text="@string/sip_address"
-                        android:visibility="@{!viewModel.hideSipAddresses || viewModel.showDeviceId ? View.VISIBLE : View.GONE, default=gone}"
-                        app:layout_constraintStart_toStartOf="@id/details_background"
-                        app:layout_constraintTop_toTopOf="@id/details_background"/>
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/default_text_style"
-                        android:id="@+id/sip_address"
-                        android:onClick="@{copySipUriClickListener}"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/connection_content"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginEnd="16dp"
-                        android:paddingTop="8dp"
-                        android:paddingBottom="8dp"
-                        android:text="@={viewModel.sipAddress, default=`sip:johndoe@sip.example.org`}"
-                        android:textSize="13sp"
-                        android:maxLines="2"
-                        android:ellipsize="end"
-                        android:drawableEnd="@drawable/copy"
-                        android:drawablePadding="5dp"
-                        app:drawableTint="?attr/color_main2_600"
-                        android:visibility="@{!viewModel.hideSipAddresses || viewModel.showDeviceId ? View.VISIBLE : View.GONE, default=gone}"
-                        app:layout_constraintHorizontal_bias="0"
-                        app:layout_constraintWidth_max="@dimen/text_input_max_width"
-                        app:layout_constraintStart_toEndOf="@id/sip_address_label"
-                        app:layout_constraintEnd_toEndOf="@id/details_background"
-                        app:layout_constraintTop_toTopOf="@id/sip_address_label"
-                        app:layout_constraintBottom_toBottomOf="@id/sip_address_label"/>
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/settings_title_style"
-                        android:id="@+id/device_id_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="20dp"
-                        android:text="@string/device_id"
-                        android:visibility="@{viewModel.showDeviceId ? View.VISIBLE : View.GONE, default=gone}"
-                        app:layout_constraintStart_toStartOf="@id/details_background"
-                        app:layout_constraintTop_toBottomOf="@id/sip_address"/>
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/default_text_style"
-                        android:id="@+id/device_id"
-                        android:onClick="@{copyDeviceIdClickListener}"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginEnd="16dp"
-                        android:paddingTop="8dp"
-                        android:paddingBottom="8dp"
-                        android:text="@={viewModel.deviceId, default=`1234`}"
-                        android:textSize="13sp"
-                        android:maxLines="2"
-                        android:ellipsize="end"
-                        android:drawableEnd="@drawable/copy"
-                        android:drawablePadding="5dp"
-                        app:drawableTint="?attr/color_main2_600"
-                        android:visibility="@{viewModel.showDeviceId ? View.VISIBLE : View.GONE, default=gone}"
-                        app:layout_constraintStart_toEndOf="@id/device_id_label"
-                        app:layout_constraintEnd_toEndOf="@id/details_background"
-                        app:layout_constraintTop_toTopOf="@id/device_id_label"
-                        app:layout_constraintBottom_toBottomOf="@id/device_id_label"/>
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/settings_title_padding_style"
-                        android:id="@+id/display_name_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="20dp"
-                        android:text="@string/sip_address_display_name"
-                        android:labelFor="@id/display_name"
-                        app:layout_constraintStart_toStartOf="@id/details_background"
-                        app:layout_constraintTop_toBottomOf="@id/device_id"/>
-
-                    <androidx.appcompat.widget.AppCompatEditText
-                        style="@style/default_text_style"
-                        android:id="@+id/display_name"
-                        android:layout_width="0dp"
-                        android:layout_height="50dp"
-                        android:layout_marginEnd="16dp"
-                        android:paddingStart="20dp"
-                        android:paddingEnd="20dp"
-                        android:text="@={viewModel.displayName, default=`John Doe`}"
-                        android:textSize="14sp"
-                        android:maxLines="1"
-                        android:background="@drawable/edit_text_background"
-                        android:inputType="text|textPersonName|textCapSentences"
-                        app:layout_constraintHorizontal_bias="0"
-                        app:layout_constraintWidth_max="@dimen/text_input_max_width"
-                        app:layout_constraintTop_toBottomOf="@id/display_name_label"
-                        app:layout_constraintStart_toStartOf="@id/display_name_label"
-                        app:layout_constraintEnd_toEndOf="@id/details_background"/>
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/settings_title_padding_style"
-                        android:id="@+id/prefix_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="20dp"
-                        android:text="@string/manage_account_international_prefix"
-                        android:labelFor="@id/prefix"
-                        app:layout_constraintStart_toStartOf="@id/details_background"
-                        app:layout_constraintTop_toBottomOf="@id/display_name"/>
-
-                    <ImageView
-                        android:id="@+id/prefix_label_tooltip"
-                        android:onClick="@{prefixTooltipClickListener}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:src="@drawable/question"
-                        android:contentDescription="@string/content_description_click_for_more_info"
-                        app:tint="?attr/color_main2_600"
-                        app:layout_constraintTop_toTopOf="@id/prefix_label"
-                        app:layout_constraintBottom_toBottomOf="@id/prefix_label"
-                        app:layout_constraintStart_toEndOf="@id/prefix_label" />
-
-                    <androidx.appcompat.widget.AppCompatSpinner
-                        style="@style/default_text_style"
-                        android:id="@+id/prefix"
-                        android:layout_width="0dp"
-                        android:layout_height="50dp"
-                        android:layout_marginEnd="16dp"
-                        android:paddingStart="20dp"
-                        android:paddingEnd="20dp"
-                        android:textSize="14sp"
-                        android:textColor="@color/gray_main2_600"
-                        android:gravity="center_vertical"
-                        android:overlapAnchor="false"
-                        android:dropDownVerticalOffset="25dp"
-                        android:spinnerMode="dropdown"
-                        android:popupBackground="@drawable/shape_squircle_white_background"
-                        android:background="@drawable/edit_text_background"
-                        app:layout_constraintHorizontal_bias="0"
-                        app:layout_constraintWidth_max="@dimen/text_input_max_width"
-                        app:layout_constraintTop_toBottomOf="@id/prefix_label"
-                        app:layout_constraintStart_toStartOf="@id/prefix_label"
-                        app:layout_constraintEnd_toEndOf="@id/details_background" />
-
-                    <ImageView
-                        android:id="@+id/prefix_caret"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
-                        android:src="@drawable/caret_down"
-                        android:contentDescription="@null"
-                        app:tint="?attr/color_main2_600"
-                        app:layout_constraintTop_toTopOf="@id/prefix"
-                        app:layout_constraintBottom_toBottomOf="@id/prefix"
-                        app:layout_constraintEnd_toEndOf="@id/prefix"/>
-
-                    <ImageView
-                        android:id="@+id/connection_background"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_marginTop="16dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/shape_squircle_white_background"
-                        app:layout_constraintStart_toStartOf="parent"
+                        android:background="@drawable/shape_squircle_white_background"
+                        app:layout_constraintWidth_max="@dimen/section_max_width"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/details_background"
-                        app:layout_constraintBottom_toBottomOf="@id/connected_summary"/>
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/registration_status">
 
-                    <com.google.android.material.materialswitch.MaterialSwitch
-                        style="@style/material_switch_style"
-                        android:onClick="@{() -> viewModel.toggleRegister()}"
-                        android:id="@+id/connected_switch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="20dp"
-                        android:checked="@{viewModel.registerEnabled, default=true}"
-                        app:layout_constraintStart_toStartOf="@id/connection_background"
-                        app:layout_constraintTop_toTopOf="@id/connection_background" />
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            style="@style/material_switch_style"
+                            android:id="@+id/connected_switch"
+                            android:onClick="@{() -> viewModel.toggleRegister()}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="10dp"
+                            android:checked="@{viewModel.registerEnabled, default=true}"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/header_style"
-                        android:id="@+id/connected_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:text="@{viewModel.accountModel.registrationStateLabel, default=@string/drawer_menu_account_connection_status_connected}"
-                        app:layout_constraintStart_toEndOf="@id/connected_switch"
-                        app:layout_constraintTop_toTopOf="@id/connected_switch"
-                        app:layout_constraintBottom_toBottomOf="@id/connected_switch" />
+                        <androidx.appcompat.widget.AppCompatTextView
+                            style="@style/header_style"
+                            android:id="@+id/connected_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:text="@{viewModel.accountModel.registrationStateLabel, default=@string/drawer_menu_account_connection_status_connected}"
+                            app:layout_constraintStart_toEndOf="@id/connected_switch"
+                            app:layout_constraintTop_toTopOf="@id/connected_switch"
+                            app:layout_constraintBottom_toBottomOf="@id/connected_switch" />
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/default_text_style"
-                        android:id="@+id/connected_summary"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginTop="16dp"
-                        android:textSize="14sp"
-                        android:paddingBottom="20dp"
-                        android:text="@{viewModel.accountModel.registrationStateSummary, default=@string/manage_account_status_connected_summary}"
-                        app:layout_constraintStart_toStartOf="@id/connection_background"
-                        app:layout_constraintEnd_toEndOf="@id/connection_background"
-                        app:layout_constraintTop_toBottomOf="@id/connected_label" />
+                        <ImageView
+                            android:id="@+id/register_in_progress"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:src="@drawable/animated_in_progress"
+                            android:contentDescription="@null"
+                            android:visibility="@{viewModel.accountModel.registrationState == RegistrationState.Progress || viewModel.accountModel.registrationState == RegistrationState.Refreshing ? View.VISIBLE : View.GONE, default=gone}"
+                            animatedDrawable="@{true}"
+                            app:layout_constraintTop_toTopOf="@id/connected_label"
+                            app:layout_constraintBottom_toBottomOf="@id/connected_label"
+                            app:layout_constraintStart_toEndOf="@id/connected_label" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            style="@style/default_text_style"
+                            android:id="@+id/connected_summary"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginBottom="10dp"
+                            android:textSize="14sp"
+                            android:text="@{viewModel.accountModel.registrationStateSummary, default=@string/manage_account_status_connected_summary}"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/connected_label"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/section_header_style"
@@ -438,27 +474,26 @@
                         android:drawableEnd="@{viewModel.expandDevices ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
                         android:drawableTint="?attr/color_main2_600"
                         android:background="@drawable/squircle_transparent_button_background"
+                        app:layout_constraintWidth_max="@dimen/section_max_width"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/connection_background"/>
+                        app:layout_constraintTop_toBottomOf="@id/connection_content"/>
 
                     <LinearLayout
                         android:id="@+id/devices_list"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:paddingTop="6dp"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
-                        android:paddingBottom="20dp"
+                        android:paddingBottom="10dp"
                         android:background="@drawable/shape_squircle_white_background"
                         android:visibility="@{viewModel.isOnDefaultDomain &amp;&amp; viewModel.expandDevices ? View.VISIBLE : View.GONE, default=gone}"
                         app:entries="@{viewModel.devices}"
                         app:layout="@{@layout/account_profile_device_list_cell}"
+                        app:layout_constraintWidth_max="@dimen/section_max_width"
                         app:layout_constraintHeight_min="80dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -497,11 +532,12 @@
                         android:id="@+id/actions"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginEnd="20dp"
-                        android:layout_marginTop="16dp"
+                        android:padding="10dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginTop="20dp"
                         android:text="@string/contact_details_actions_title"
+                        app:layout_constraintWidth_max="@dimen/section_max_width"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/devices_list"/>
@@ -518,6 +554,7 @@
                         android:text="@string/manage_account_settings"
                         android:drawableStart="@drawable/gear"
                         android:visibility="@{viewModel.hideAccountSettings ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintWidth_max="@dimen/section_max_width"
                         app:layout_constraintTop_toBottomOf="@id/actions"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"/>
@@ -530,10 +567,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:layout_marginBottom="@dimen/screen_bottom_margin"
                         android:background="@drawable/action_background_bottom"
                         android:text="@string/manage_account_delete"
                         android:drawableStart="@drawable/sign_out"
+                        app:layout_constraintWidth_max="@dimen/section_max_width"
                         app:layout_constraintTop_toBottomOf="@id/action_settings"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"/>

@@ -22,6 +22,7 @@
         android:background="@drawable/shape_bottom_sheet_background"
         android:clickable="true"
         android:focusable="true"
+        android:layoutDirection="ltr"
         app:behavior_hideable="true"
         app:behavior_peekHeight="0dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">

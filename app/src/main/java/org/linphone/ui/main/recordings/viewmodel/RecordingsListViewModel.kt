@@ -49,7 +49,7 @@ class RecordingsListViewModel
     val fetchInProgress = MutableLiveData<Boolean>()
 
     val focusSearchBarEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     init {

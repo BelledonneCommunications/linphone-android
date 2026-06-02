@@ -70,7 +70,7 @@ class MeetingViewModel
     val endTimeStamp = MutableLiveData<Long>()
 
     val conferenceInfoDeletedEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     private lateinit var conferenceInfo: ConferenceInfo

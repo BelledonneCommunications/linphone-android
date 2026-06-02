@@ -28,12 +28,11 @@ import android.content.Intent
 import android.media.AudioDeviceCallback
 import android.media.AudioDeviceInfo
 import android.media.AudioManager
+import android.os.Environment
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
 import android.os.PowerManager
-import android.provider.Settings
-import android.provider.Settings.SettingNotFoundException
 import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
@@ -96,35 +95,35 @@ class CoreContext
     var isConnectedToAndroidAuto: Boolean = false
 
     val bearerAuthenticationRequestedEvent: MutableLiveData<Event<Pair<String, String?>>> by lazy {
-        MutableLiveData<Event<Pair<String, String?>>>()
+        MutableLiveData()
     }
 
     val digestAuthenticationRequestedEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+        MutableLiveData()
     }
 
     val clearAuthenticationRequestDialogEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val refreshMicrophoneMuteStateEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val showGreenToastEvent: MutableLiveData<Event<Pair<Int, Int>>> by lazy {
-        MutableLiveData<Event<Pair<Int, Int>>>()
+        MutableLiveData()
     }
 
     val showRedToastEvent: MutableLiveData<Event<Pair<Int, Int>>> by lazy {
-        MutableLiveData<Event<Pair<Int, Int>>>()
+        MutableLiveData()
     }
 
     val showFormattedRedToastEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
-        MutableLiveData<Event<Pair<String, Int>>>()
+        MutableLiveData()
     }
 
     val provisioningAppliedEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     val mdmConfigAppliedEvent: MutableLiveData<Event<Boolean>> by lazy {
@@ -137,7 +136,7 @@ class CoreContext
 
     private var filesToExportToNativeMediaGallery = arrayListOf<String>()
     val filesToExportToNativeMediaGalleryEvent: MutableLiveData<Event<List<String>>> by lazy {
-        MutableLiveData<Event<List<String>>>()
+        MutableLiveData()
     }
 
     private var keepAliveServiceStarted = false
@@ -159,9 +158,10 @@ class CoreContext
                     )
 
                     when (device.type) {
-                        AudioDeviceInfo.TYPE_BLUETOOTH_SCO, AudioDeviceInfo.TYPE_BLE_HEADSET, AudioDeviceInfo.TYPE_BLE_SPEAKER, AudioDeviceInfo.TYPE_HEARING_AID -> {
+                        AudioDeviceInfo.TYPE_BLUETOOTH_SCO, AudioDeviceInfo.TYPE_BLE_HEADSET, AudioDeviceInfo.TYPE_BLE_SPEAKER, AudioDeviceInfo.TYPE_HEARING_AID, AudioDeviceInfo.TYPE_BLE_HEARING_AID -> {
                             atLeastOneNewDeviceIsBluetooth = true
                         }
+                        else -> {}
                     }
                 }
 
@@ -466,6 +466,7 @@ class CoreContext
                         Log.e(
                             "$TAG Authentication request using Bearer method but authorization server is null!"
                         )
+                        core.abortAuthentication(null)
                         return
                     }
 
@@ -483,6 +484,7 @@ class CoreContext
                         Log.e(
                             "$TAG Authentication requested method is Bearer but no authorization server was found in auth info!"
                         )
+                        core.abortAuthentication(null)
                     }
                 }
                 AuthMethod.HttpDigest -> {
@@ -527,7 +529,7 @@ class CoreContext
             Log.i(
                 "$TAG New account configured: [${account.params.identityAddress?.asStringUriOnly()}]"
             )
-            if (!core.isPushNotificationAvailable || !account.params.isPushNotificationAvailable) {
+            if (!account.params.isPushNotificationAvailable) {
                 if (!corePreferences.keepServiceAlive) {
                     Log.w(
                         "$TAG Newly added account (or the whole Core) doesn't support push notifications, enabling keep-alive foreground service..."
@@ -681,6 +683,21 @@ class CoreContext
         Log.i("$TAG Core started, updating configuration if required")
         core.videoCodecPriorityPolicy = CodecPriorityPolicy.Auto
 
+        // Set in the Core the list of directories from which it is allowed to delete a file related to a chat message
+        val paths = arrayListOf<String>()
+        if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
+            paths.add(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)?.absolutePath.orEmpty())
+            paths.add(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)?.absolutePath.orEmpty())
+            paths.add(context.getExternalFilesDir(Compatibility.getRecordingsDirectory())?.absolutePath.orEmpty())
+        }
+        paths.add(context.filesDir?.absolutePath.orEmpty())
+        val pathsArray = arrayOfNulls<String>(paths.size)
+        paths.toArray(pathsArray)
+        core.setChatMessageFilesDirectories(pathsArray)
+        for (path in paths) {
+            Log.i("$TAG Adding path [$path] to list of directories from which Core is allowed to delete files from")
+        }
+
         val currentVersion = BuildConfig.VERSION_CODE
         val oldVersion = corePreferences.linphoneConfigurationVersion
         Log.w("$TAG Current configuration version is [$oldVersion]")
@@ -694,6 +711,34 @@ class CoreContext
                 disablePushNotificationsFromThirdPartySipAccounts()
             } else if (oldVersion < 600009) { // 6.0.9
                 removePortFromSipIdentity()
+            } else if (oldVersion < 602000) { // 6.2.0
+                if (!core.isChatMessageFilesDeletionEnabled) {
+                    core.isChatMessageFilesDeletionEnabled = true
+                    Log.i("$TAG Core is allowed to automatically delete files from previously logged directories when a chat message is deleted")
+                }
+
+                val rlsUri = core.config.getString("sip", "rls_uri", "").orEmpty()
+                if (rlsUri.isNotEmpty()) {
+                    var accountOnDefaultDomainFound = false
+                    for (account in core.accountList) {
+                        if (account.params.identityAddress?.domain == corePreferences.defaultDomain) {
+                            accountOnDefaultDomainFound = true
+                            break
+                        }
+                    }
+                    if (!accountOnDefaultDomainFound) {
+                        Log.w("$TAG Removing rls_uri from [sip] section & all friend lists to prevent sending SUBSCRIBE")
+                        core.config.setString("sip", "rls_uri", "")
+                        for (friendList in core.friendsLists) {
+                            if (friendList.rlsAddress != null) {
+                                Log.i("$TAG Removing RLS URI from friend list [${friendList.displayName}]")
+                                friendList.rlsAddress = null
+                            }
+                        }
+                    } else {
+                        Log.i("$TAG Keeping RLS URI as an account on the default domain has been found")
+                    }
+                }
             }
 
             if (core.logCollectionUploadServerUrl.isNullOrEmpty()) {
@@ -871,6 +916,16 @@ class CoreContext
         }
     }
 
+    @AnyThread
+    fun abortBearerAuthIfAny() {
+        coreContext.postOnCoreThread { core ->
+            if (bearerAuthInfoPendingPasswordUpdate != null) {
+                Log.e("$TAG Aborting bearer authentication")
+                core.abortAuthentication(bearerAuthInfoPendingPasswordUpdate)
+            }
+        }
+    }
+
     @WorkerThread
     fun isAddressMyself(address: Address): Boolean {
         val found = core.accountList.find {
@@ -888,23 +943,25 @@ class CoreContext
     fun startAudioCall(
         address: Address,
         forceZRTP: Boolean = false,
-        localAddress: Address? = null
+        localAddress: Address? = null,
+        skipNetworkReachabilityTest: Boolean = false
     ) {
         val params = core.createCallParams(null)
         params?.isVideoEnabled = false
-        startCall(address, params, forceZRTP, localAddress)
+        startCall(address, params, forceZRTP, localAddress, skipNetworkReachabilityTest)
     }
 
     @WorkerThread
     fun startVideoCall(
         address: Address,
         forceZRTP: Boolean = false,
-        localAddress: Address? = null
+        localAddress: Address? = null,
+        skipNetworkReachabilityTest: Boolean = false
     ) {
         val params = core.createCallParams(null)
         params?.isVideoEnabled = true
         params?.videoDirection = MediaDirection.SendRecv
-        startCall(address, params, forceZRTP, localAddress)
+        startCall(address, params, forceZRTP, localAddress, skipNetworkReachabilityTest)
     }
 
     @WorkerThread
@@ -912,9 +969,10 @@ class CoreContext
         address: Address,
         callParams: CallParams? = null,
         forceZRTP: Boolean = false,
-        localAddress: Address? = null
+        localAddress: Address? = null,
+        skipNetworkReachabilityTest: Boolean = false
     ) {
-        if (!core.isNetworkReachable) {
+        if (!skipNetworkReachabilityTest && !core.isNetworkReachable) {
             Log.e("$TAG Network unreachable, abort outgoing call")
             return
         }
@@ -1051,15 +1109,21 @@ class CoreContext
 
     @WorkerThread
     fun terminateCall(call: Call) {
-        if (call.dir == Call.Dir.Incoming && LinphoneUtils.isCallIncoming(call.state)) {
-            val reason = if (call.core.callsNb > 1) Reason.Busy else Reason.Declined
-            Log.i(
-                "$TAG Declining call [${call.remoteAddress.asStringUriOnly()}] with reason [$reason]"
-            )
-            call.decline(reason)
+        val conference = call.conference
+        if (conference != null) {
+            Log.i("$TAG Terminating conference [${call.remoteAddress.asStringUriOnly()}]")
+            conference.terminate()
         } else {
-            Log.i("$TAG Terminating call [${call.remoteAddress.asStringUriOnly()}]")
-            call.terminate()
+            if (call.dir == Call.Dir.Incoming && LinphoneUtils.isCallIncoming(call.state)) {
+                val reason = if (call.core.callsNb > 1) Reason.Busy else Reason.Declined
+                Log.i(
+                    "$TAG Declining call [${call.remoteAddress.asStringUriOnly()}] with reason [$reason]"
+                )
+                call.decline(reason)
+            } else {
+                Log.i("$TAG Terminating call [${call.remoteAddress.asStringUriOnly()}]")
+                call.terminate()
+            }
         }
     }
 
@@ -1117,23 +1181,6 @@ class CoreContext
     }
 
     @WorkerThread
-    fun playDtmf(character: Char, duration: Int = 200, ignoreSystemPolicy: Boolean = false) {
-        try {
-            if (ignoreSystemPolicy || Settings.System.getInt(
-                    context.contentResolver,
-                    Settings.System.DTMF_TONE_WHEN_DIALING
-                ) != 0
-            ) {
-                core.playDtmf(character, duration)
-            } else {
-                Log.w("$TAG Numpad DTMF tones are disabled in system settings, not playing them")
-            }
-        } catch (snfe: SettingNotFoundException) {
-            Log.e("$TAG DTMF_TONE_WHEN_DIALING system setting not found: $snfe")
-        }
-    }
-
-    @WorkerThread
     fun computeUserAgent() {
         val savedDeviceName = corePreferences.deviceName
         val deviceName = if (savedDeviceName.isEmpty()) {
@@ -1160,8 +1207,6 @@ class CoreContext
         val sdkUserAgent = "$sdkVersion ($sdkBranch)"
         core.setUserAgent(userAgent, sdkUserAgent)
     }
-
-    // Migration between versions related
 
     @WorkerThread
     private fun removePortFromSipIdentity() {
@@ -1282,24 +1327,28 @@ class CoreContext
     }
 
     fun setBackCamera(): Boolean {
-        for (camera in core.videoDevicesList) {
+        val list = core.videoDevicesList
+        for (camera in list) {
             if (camera.contains("Back")) {
-                Log.i("TAG Found back facing camera [$camera], using it")
+                Log.i("$TAG Found back facing camera [$camera], using it")
                 coreContext.core.videoDevice = camera
                 return true
             }
         }
+        Log.i("$TAG Back camera wasn't found in [${list.size}] detected video devices")
         return false
     }
 
     fun setFrontCamera(): Boolean {
-        for (camera in core.videoDevicesList) {
+        val list = core.videoDevicesList
+        for (camera in list) {
             if (camera.contains("Front")) {
                 Log.i("$TAG Found front facing camera [$camera], using it")
                 coreContext.core.videoDevice = camera
                 return true
             }
         }
+        Log.i("$TAG Front camera wasn't found in [${list.size}] detected video devices")
         return false
     }
 }

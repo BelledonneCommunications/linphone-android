@@ -158,7 +158,7 @@ class FileModel
     @AnyThread
     fun updateTransferProgress(percent: Int) {
         transferProgress.postValue(percent)
-        if (percent < 0 || percent > 100) {
+        if (percent !in 0..100) {
             transferProgressLabel.postValue("")
         } else {
             transferProgressLabel.postValue("$percent%")

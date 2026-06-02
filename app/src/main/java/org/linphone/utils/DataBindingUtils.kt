@@ -26,6 +26,7 @@ import android.graphics.drawable.AnimatedVectorDrawable
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
@@ -63,6 +64,7 @@ import coil3.transform.RoundedCornersTransformation
 import coil3.video.videoFrameMillis
 import com.google.android.flexbox.FlexboxLayout
 import org.linphone.BR
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.contacts.AbstractAvatarModel
 import org.linphone.core.ConsolidatedPresence
@@ -250,8 +252,10 @@ fun ImageView.setSourceImageResource(resource: Int) {
 @UiThread
 @BindingAdapter("android:drawableTint")
 fun AppCompatTextView.setDrawableTint(@ColorInt color: Int) {
-    for (drawable in compoundDrawablesRelative) {
-        drawable?.setTint(color)
+    coreContext.postOnMainThread {
+        for (drawable in compoundDrawablesRelative) {
+            drawable?.setTint(color)
+        }
     }
 }
 
@@ -648,4 +652,22 @@ fun EmojiPickerView.setEmojiPickedListener(listener: EmojiPickedListener) {
 
 interface EmojiPickedListener {
     fun onEmojiPicked(item: EmojiViewItem)
+}
+
+@SuppressLint("ClickableViewAccessibility")
+@BindingAdapter("onTouchListener")
+fun View.setTouchListener(listener: TouchListener) {
+    setOnTouchListener { view, event ->
+        return@setOnTouchListener when (event.action) {
+            MotionEvent.ACTION_DOWN -> listener.onPressed(view)
+            MotionEvent.ACTION_UP -> listener.onReleased(view)
+            else -> false
+        }
+    }
+}
+
+interface TouchListener {
+    fun onPressed(view: View): Boolean
+
+    fun onReleased(view: View): Boolean
 }

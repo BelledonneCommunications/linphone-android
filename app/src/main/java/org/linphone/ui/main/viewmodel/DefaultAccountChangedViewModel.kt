@@ -36,7 +36,7 @@ open class DefaultAccountChangedViewModel : GenericViewModel() {
     }
 
     val defaultAccountChangedEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+        MutableLiveData()
     }
 
     private val coreListener = object : CoreListenerStub() {

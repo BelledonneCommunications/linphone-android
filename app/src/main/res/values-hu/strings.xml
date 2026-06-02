@@ -157,4 +157,6 @@
     <string name="menu_reply_to_chat_message">Válasz</string>
     <string name="generic_address_picker_conversations_list_title">Üzenetek</string>
     <string name="generic_address_picker_contacts_list_title">Névjegyek</string>
+    <string name="notification_file_transfer_title">&appName;</string>
+    <string name="settings_developer_clear_native_friends_in_database_title">Importált névjegyek törlése a telefon névjegyzékéből</string>
 </resources>
