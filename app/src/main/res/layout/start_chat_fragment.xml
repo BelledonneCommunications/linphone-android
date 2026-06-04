@@ -124,7 +124,7 @@
                         android:inputType="text|textUri|textNoSuggestions"
                         android:paddingStart="15dp"
                         android:paddingTop="10dp"
-                        android:paddingEnd="15dp"
+                        android:paddingEnd="45dp"
                         android:paddingBottom="10dp"
                         android:text="@={viewModel.searchFilter}"
                         android:textSize="14sp"
