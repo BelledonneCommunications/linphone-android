@@ -1094,7 +1094,7 @@ class CurrentCallViewModel
             Log.i("$TAG Conference [$subject] found, going to conference fragment")
             conferenceModel.configureFromCall(call)
             goToConferenceEvent.postValue(Event(true))
-        } else {
+        } else if (LinphoneUtils.isCallActive(call.state)) {
             Log.i("$TAG No conference attached to this call, going to call fragment")
             conferenceModel.destroy()
             goToCallEvent.postValue(Event(true))
