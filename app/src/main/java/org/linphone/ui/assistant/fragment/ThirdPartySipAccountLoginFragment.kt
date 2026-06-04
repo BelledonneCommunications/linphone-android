@@ -139,7 +139,7 @@ class ThirdPartySipAccountLoginFragment : GenericFragment() {
                 val username = pair.second
 
                 Log.i(
-                    "$TAG Navigating to Single Sign On Fragment with server URL [$serverUrl] and username [$username]"
+                    "$TAG Bearer auth request, navigating to Single Sign On Fragment with server URL [$serverUrl] and username [$username]"
                 )
                 val intent = Intent(requireContext(), SingleSignOnActivity::class.java)
                 intent.putExtra(SingleSignOnActivity.INTENT_EXTRA_USERNAME, username)
