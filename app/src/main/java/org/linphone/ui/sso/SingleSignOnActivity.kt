@@ -99,7 +99,12 @@ class SingleSignOnActivity : GenericActivity() {
         val username = intent.getStringExtra(INTENT_EXTRA_USERNAME).orEmpty()
         val serverUrl = intent.getStringExtra(INTENT_EXTRA_SERVER_URL).orEmpty()
         Log.i("$TAG Found server URL [$serverUrl] and username [$username] in args")
-        viewModel.setUp(serverUrl, username)
+        if (serverUrl.isEmpty()) {
+            Log.e("$TAG Server URL is empty, aborting authentication and going back")
+            finish()
+        } else {
+            viewModel.setUp(serverUrl, username)
+        }
     }
 
     @Deprecated("Deprecated in Java")
