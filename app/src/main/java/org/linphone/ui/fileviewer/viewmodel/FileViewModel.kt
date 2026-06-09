@@ -273,11 +273,11 @@ class FileViewModel
 
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val input = ParcelFileDescriptor.open(
-                    File(filePath),
-                    ParcelFileDescriptor.MODE_READ_ONLY
-                )
                 try {
+                    val input = ParcelFileDescriptor.open(
+                        File(filePath),
+                        ParcelFileDescriptor.MODE_READ_ONLY
+                    )
                     pdfRenderer = PdfRenderer(input)
                     val count = pdfRenderer.pageCount
                     Log.i("$TAG $count pages in file $filePath")
