@@ -616,19 +616,25 @@ class SendMessageInConversationViewModel
         isComputingParticipantsList.postValue(true)
         val participantsList = arrayListOf<ParticipantModel>()
 
-        for (participant in chatRoom.participants) {
-            val model = ParticipantModel(participant.address, onClicked = { clicked ->
-                Log.i("$TAG Clicked on participant [${clicked.sipUri}]")
-                coreContext.postOnCoreThread {
-                    val username = clicked.address.username
-                    if (!username.isNullOrEmpty()) {
-                        participantUsernameToAddEvent.postValue(Event(username.substring(participantsListFilter.length)))
+        if (::chatRoom.isInitialized) {
+            for (participant in chatRoom.participants) {
+                val model = ParticipantModel(participant.address, onClicked = { clicked ->
+                    Log.i("$TAG Clicked on participant [${clicked.sipUri}]")
+                    coreContext.postOnCoreThread {
+                        val username = clicked.address.username
+                        if (!username.isNullOrEmpty()) {
+                            participantUsernameToAddEvent.postValue(Event(username.substring(participantsListFilter.length)))
+                        }
                     }
-                }
-            })
+                })
 
-            if (filter.isEmpty() || participant.address.asStringUriOnly().contains(filter) || model.avatarModel.contactName?.contains(filter) == true) {
-                participantsList.add(model)
+                if (
+                    filter.isEmpty() ||
+                    participant.address.asStringUriOnly().contains(filter) ||
+                    model.avatarModel.contactName?.contains(filter) == true
+                ) {
+                    participantsList.add(model)
+                }
             }
         }
 
