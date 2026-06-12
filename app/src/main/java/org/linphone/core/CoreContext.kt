@@ -44,6 +44,7 @@ import androidx.annotation.WorkerThread
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import java.util.concurrent.Executors
 import kotlin.system.exitProcess
 import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -91,6 +92,12 @@ class CoreContext
     private val activityMonitor = ActivityMonitor()
 
     private val mainThread = Handler(Looper.getMainLooper())
+
+    private val callTranslatorSessionClient = CallTranslatorSessionClient()
+
+    private val callTranslatorSessionExecutor = Executors.newSingleThreadExecutor { runnable ->
+        Thread(runnable, "Call Translator Session Thread")
+    }
 
     var defaultAccountHasVideoConferenceFactoryUri: Boolean = false
 
@@ -1009,6 +1016,46 @@ class CoreContext
             return
         }
 
+        val targetAddress = address.clone()
+        val callee = targetAddress.username.orEmpty()
+        val calleeUri = targetAddress.asStringUriOnly()
+        Log.i("$TAG Requesting call translator session before calling [$calleeUri]")
+        callTranslatorSessionExecutor.execute {
+            try {
+                val session = callTranslatorSessionClient.createSession(callee, calleeUri)
+                Log.i("$TAG Call translator session [${session.sessionId}] created for [$calleeUri]")
+                postOnCoreThread {
+                    startCallWithTranslatorSession(
+                        targetAddress,
+                        callParams,
+                        forceZRTP,
+                        localAddress,
+                        skipNetworkReachabilityTest,
+                        session
+                    )
+                }
+            } catch (exception: CallTranslatorSessionClient.SessionRequestException) {
+                Log.e(
+                    "$TAG Failed to request call translator session before calling [$calleeUri], aborting call: $exception"
+                )
+            }
+        }
+    }
+
+    @WorkerThread
+    private fun startCallWithTranslatorSession(
+        address: Address,
+        callParams: CallParams?,
+        forceZRTP: Boolean,
+        localAddress: Address?,
+        skipNetworkReachabilityTest: Boolean,
+        session: CallTranslatorSessionClient.Session
+    ) {
+        if (!skipNetworkReachabilityTest && !core.isNetworkReachable) {
+            Log.e("$TAG Network unreachable after call translator session creation, abort outgoing call")
+            return
+        }
+
         val currentCall = core.currentCall
         if (currentCall != null) {
             Log.w(
@@ -1019,10 +1066,12 @@ class CoreContext
 
         val params = callParams ?: core.createCallParams(null)
         if (params == null) {
-            val call = core.inviteAddress(address)
-            Log.w("$TAG Starting call $call without params")
+            Log.e("$TAG Failed to create call params, aborting call because translator headers are required")
             return
         }
+
+        params.addCustomHeader("X-Call-Translator-Session-Id", session.sessionId)
+        params.addCustomHeader("X-Call-Translator-Join-Token", session.joinToken)
 
         if (forceZRTP) {
             params.mediaEncryption = MediaEncryption.ZRTP

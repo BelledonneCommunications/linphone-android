@@ -34,6 +34,7 @@ openidAppauth = "0.11.1"
 linphone = "5.5.+"
 junit = "4.13.2"
 mockk = "1.13.13"
+json = "20240303"
 
 [libraries]
 androidx-annotations = { group = "androidx.annotation", name = "annotation", version.ref = "annotations" }
@@ -73,6 +74,7 @@ linphone = { group = "org.linphone", name = "linphone-sdk-android", version.ref 
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+json = { group = "org.json", name = "json", version.ref = "json" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

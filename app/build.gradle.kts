@@ -274,6 +274,7 @@ dependencies {
 
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
+    testImplementation(libs.json)
 }
 
 configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
