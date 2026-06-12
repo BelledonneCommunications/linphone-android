@@ -30,13 +30,19 @@ class CallTranslatorSessionClient(
     }
 ) {
     companion object {
-        const val DEFAULT_ENDPOINT_URL = "https://example.invalid/api/call-translator/sessions"
+        const val DEFAULT_ENDPOINT_URL = "http://localhost:3000/api/v1/devices/call_engine/calls/initialize"
 
         private const val CONNECT_TIMEOUT_MS = 5000
         private const val READ_TIMEOUT_MS = 5000
+
+        private const val CALLER_LANG = "pl"
+        private const val CALLEE_LANG = "en"
+        private const val CALLEE_PHONE_PREFIX = "+48"
+        private const val CALLEE_PHONE_NUMBER = "700"
     }
 
     data class Session(
+        val platformUri: String,
         val sessionId: String,
         val joinToken: String
     )
@@ -44,7 +50,7 @@ class CallTranslatorSessionClient(
     class SessionRequestException(message: String, cause: Throwable? = null) : Exception(message, cause)
 
     @Throws(SessionRequestException::class)
-    fun createSession(callee: String, calleeUri: String): Session {
+    fun createSession(): Session {
         val connection = try {
             openConnection(URL(endpointUrl))
         } catch (exception: Exception) {
@@ -60,8 +66,10 @@ class CallTranslatorSessionClient(
             connection.setRequestProperty("Content-Type", "application/json; charset=utf-8")
 
             val requestBody = JSONObject()
-                .put("callee", callee)
-                .put("callee_uri", calleeUri)
+                .put("caller_lang", CALLER_LANG)
+                .put("callee_lang", CALLEE_LANG)
+                .put("callee_phone_prefix", CALLEE_PHONE_PREFIX)
+                .put("callee_phone_number", CALLEE_PHONE_NUMBER)
                 .toString()
                 .toByteArray(Charsets.UTF_8)
 
@@ -104,13 +112,14 @@ class CallTranslatorSessionClient(
             throw SessionRequestException("Call translator session response isn't valid JSON", exception)
         }
 
+        val platformUri = json.optString("platform_uri").trim()
         val sessionId = json.optString("session_id").trim()
         val joinToken = json.optString("join_token").trim()
 
-        if (sessionId.isEmpty() || joinToken.isEmpty()) {
-            throw SessionRequestException("Call translator session response is missing session_id or join_token")
+        if (platformUri.isEmpty() || sessionId.isEmpty() || joinToken.isEmpty()) {
+            throw SessionRequestException("Call translator session response is missing platform_uri, session_id or join_token")
         }
 
-        return Session(sessionId, joinToken)
+        return Session(platformUri, sessionId, joinToken)
     }
 }

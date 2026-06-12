@@ -32,35 +32,38 @@ import org.junit.Test
 
 class CallTranslatorSessionClientTest {
     @Test
-    fun `createSession posts callee payload and parses credentials`() {
+    fun `createSession posts hardcoded payload and parses platform credentials`() {
         val connection = FakeHttpURLConnection(
             httpResponseCode = 201,
-            responseBody = """{"session_id":"session-1","join_token":"token-1"}"""
+            responseBody = """{"platform_uri":"sip:700@example.test","session_id":"session-1","join_token":"token-1"}"""
         )
         val client = CallTranslatorSessionClient(
             endpointUrl = "https://example.test/sessions",
             openConnection = { connection }
         )
 
-        val session = client.createSession("700", "sip:700@example.test")
+        val session = client.createSession()
 
+        assertEquals("sip:700@example.test", session.platformUri)
         assertEquals("session-1", session.sessionId)
         assertEquals("token-1", session.joinToken)
         assertEquals("POST", connection.requestMethod)
         assertEquals("application/json", connection.capturedRequestProperties["Accept"])
         assertEquals("application/json; charset=utf-8", connection.capturedRequestProperties["Content-Type"])
         val requestJson = JSONObject(connection.requestBody.toString(Charsets.UTF_8.name()))
-        assertEquals("700", requestJson.getString("callee"))
-        assertEquals("sip:700@example.test", requestJson.getString("callee_uri"))
+        assertEquals("pl", requestJson.getString("caller_lang"))
+        assertEquals("en", requestJson.getString("callee_lang"))
+        assertEquals("+48", requestJson.getString("callee_phone_prefix"))
+        assertEquals("700", requestJson.getString("callee_phone_number"))
         assertEquals(true, connection.disconnected)
     }
 
     @Test
-    fun `parseSession rejects missing credentials`() {
+    fun `parseSession rejects missing platform credentials`() {
         val client = CallTranslatorSessionClient()
 
         assertThrows(CallTranslatorSessionClient.SessionRequestException::class.java) {
-            client.parseSession("""{"session_id":"session-1"}""")
+            client.parseSession("""{"platform_uri":"sip:700@example.test","session_id":"session-1"}""")
         }
     }
 
@@ -76,7 +79,7 @@ class CallTranslatorSessionClientTest {
         )
 
         assertThrows(CallTranslatorSessionClient.SessionRequestException::class.java) {
-            client.createSession("700", "sip:700@example.test")
+            client.createSession()
         }
         assertEquals(true, connection.disconnected)
     }

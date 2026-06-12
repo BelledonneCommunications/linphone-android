@@ -41,7 +41,6 @@ import android.os.PowerManager
 import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
-import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import java.util.concurrent.Executors
@@ -1016,17 +1015,24 @@ class CoreContext
             return
         }
 
-        val targetAddress = address.clone()
-        val callee = targetAddress.username.orEmpty()
-        val calleeUri = targetAddress.asStringUriOnly()
-        Log.i("$TAG Requesting call translator session before calling [$calleeUri]")
+        val originalAddress = address.clone()
+        val originalUri = originalAddress.asStringUriOnly()
+        Log.i("$TAG Requesting call translator session before calling [$originalUri]")
         callTranslatorSessionExecutor.execute {
             try {
-                val session = callTranslatorSessionClient.createSession(callee, calleeUri)
-                Log.i("$TAG Call translator session [${session.sessionId}] created for [$calleeUri]")
+                val session = callTranslatorSessionClient.createSession()
+                Log.i("$TAG Call translator session [${session.sessionId}] created for [$originalUri]")
                 postOnCoreThread {
+                    val platformAddress = core.interpretUrl(session.platformUri, false)
+                    if (platformAddress == null) {
+                        Log.e(
+                            "$TAG Failed to parse call translator platform URI [${session.platformUri}], aborting call"
+                        )
+                        return@postOnCoreThread
+                    }
+
                     startCallWithTranslatorSession(
-                        targetAddress,
+                        platformAddress,
                         callParams,
                         forceZRTP,
                         localAddress,
@@ -1036,7 +1042,7 @@ class CoreContext
                 }
             } catch (exception: CallTranslatorSessionClient.SessionRequestException) {
                 Log.e(
-                    "$TAG Failed to request call translator session before calling [$calleeUri], aborting call: $exception"
+                    "$TAG Failed to request call translator session before calling [$originalUri], aborting call: $exception"
                 )
             }
         }
@@ -1099,25 +1105,6 @@ class CoreContext
             val defaultAccount = core.defaultAccount
             params.account = defaultAccount
             Log.i("$TAG No local address given, using default account [${defaultAccount?.params?.identityAddress?.asStringUriOnly()}]")
-        }
-
-        val username = address.username.orEmpty()
-        val domain = address.domain.orEmpty()
-        val account = params.account ?: core.defaultAccount
-        if (account != null && Compatibility.isIpAddress(domain)) {
-            Log.i("$TAG SIP URI [${address.asStringUriOnly()}] seems to have an IP address as domain")
-            if (username.isNotEmpty() && (username.startsWith("+") || username.isDigitsOnly())) {
-                val identityDomain = account.params.identityAddress?.domain
-                Log.w("$TAG Username [$username] looks like a phone number, replacing domain [$domain] by the local account one [$identityDomain]")
-                if (identityDomain != null) {
-                    val newAddress = address.clone()
-                    newAddress.domain = identityDomain
-
-                    core.inviteAddressWithParams(newAddress, params)
-                    Log.i("$TAG Starting call to [${newAddress.asStringUriOnly()}]")
-                    return
-                }
-            }
         }
 
         core.inviteAddressWithParams(address, params)
