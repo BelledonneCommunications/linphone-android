@@ -24,7 +24,12 @@ import android.app.Application
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Context.POWER_SERVICE
+import android.content.Context.SENSOR_SERVICE
 import android.content.Intent
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.media.AudioDeviceCallback
 import android.media.AudioDeviceInfo
 import android.media.AudioManager
@@ -599,6 +604,24 @@ class CoreContext
         }
     }
 
+    private val proximitySensorListener = object : SensorEventListener {
+        override fun onAccuracyChanged(
+            sensor: Sensor?,
+            accuracy: Int
+        ) {
+        }
+
+        override fun onSensorChanged(event: SensorEvent?) {
+            if (event?.sensor?.type == Sensor.TYPE_PROXIMITY) {
+                if (event.values[0] == 0f) {
+                    Log.i("$TAG Proximity sensor triggered, screen will turn off")
+                } else {
+                    Log.i("$TAG Proximity sensor released, screen will turn back on")
+                }
+            }
+        }
+    }
+
     init {
         (context as Application).registerActivityLifecycleCallbacks(activityMonitor)
     }
@@ -776,12 +799,21 @@ class CoreContext
                 PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
                 "${context.packageName};proximity_sensor"
             )
+            val sensorManager = context.getSystemService(SENSOR_SERVICE) as SensorManager
+            val proximity = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
+            val added = sensorManager.registerListener(proximitySensorListener, proximity, SensorManager.SENSOR_DELAY_NORMAL)
+            if (!added) {
+                Log.e("$TAG Failed to add proximity sensor listener!")
+            }
         }
     }
 
     @WorkerThread
     private fun onCoreStopped() {
         Log.w("$TAG Core is being shut down, notifying managers so they can remove their listeners and do some cleanup if needed")
+        val sensorManager = context.getSystemService(SENSOR_SERVICE) as SensorManager
+        sensorManager.unregisterListener(proximitySensorListener)
+
         contactsManager.onCoreStopped(core)
         telecomManager.onCoreStopped(core)
         notificationsManager.onCoreStopped(core)
