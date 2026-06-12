@@ -30,7 +30,7 @@ class CallTranslatorSessionClient(
     }
 ) {
     companion object {
-        const val DEFAULT_ENDPOINT_URL = "http://localhost:3000/api/v1/devices/call_engine/calls/initialize"
+        const val DEFAULT_ENDPOINT_URL = "http://10.10.50.120:3000/api/v1/devices/call_engine/calls/initialize"
 
         private const val CONNECT_TIMEOUT_MS = 5000
         private const val READ_TIMEOUT_MS = 5000
