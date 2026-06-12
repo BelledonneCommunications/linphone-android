@@ -30,15 +30,15 @@ class CallTranslatorSessionClient(
     }
 ) {
     companion object {
-        const val DEFAULT_ENDPOINT_URL = "http://10.10.50.120:3000/api/v1/devices/call_engine/calls/initialize"
+        const val DEFAULT_ENDPOINT_URL = "https://vasco.ngrok.app/api/v1/devices/call_engine/calls/initialize"
 
         private const val CONNECT_TIMEOUT_MS = 5000
         private const val READ_TIMEOUT_MS = 5000
 
-        private const val CALLER_LANG = "pl"
-        private const val CALLEE_LANG = "en"
+        private const val CALLER_LANG = "pl_PL"
+        private const val CALLEE_LANG = "en_US"
         private const val CALLEE_PHONE_PREFIX = "+48"
-        private const val CALLEE_PHONE_NUMBER = "700"
+        private const val CALLEE_PHONE_NUMBER = "700800900"
     }
 
     data class Session(
