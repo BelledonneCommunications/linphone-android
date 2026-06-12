@@ -908,6 +908,21 @@ class CoreContext
         }
     }
 
+    @AnyThread
+    private fun notifyCallTranslatorFailure(logMessage: String) {
+        Log.e("$TAG $logMessage")
+        postOnMainThread {
+            showFormattedRedToastEvent.postValue(
+                Event(
+                    Pair(
+                        "Couldn't connect to call translator backend. Call wasn't started.",
+                        org.linphone.R.drawable.warning_circle
+                    )
+                )
+            )
+        }
+    }
+
     @UiThread
     fun onForeground() {
         postOnCoreThread {
@@ -1025,8 +1040,8 @@ class CoreContext
                 postOnCoreThread {
                     val platformAddress = core.interpretUrl(session.platformUri, false)
                     if (platformAddress == null) {
-                        Log.e(
-                            "$TAG Failed to parse call translator platform URI [${session.platformUri}], aborting call"
+                        notifyCallTranslatorFailure(
+                            "Failed to parse call translator platform URI [${session.platformUri}], aborting call"
                         )
                         return@postOnCoreThread
                     }
@@ -1041,8 +1056,8 @@ class CoreContext
                     )
                 }
             } catch (exception: CallTranslatorSessionClient.SessionRequestException) {
-                Log.e(
-                    "$TAG Failed to request call translator session before calling [$originalUri], aborting call: $exception"
+                notifyCallTranslatorFailure(
+                    "Failed to request call translator session before calling [$originalUri], aborting call: $exception"
                 )
             }
         }
@@ -1058,7 +1073,9 @@ class CoreContext
         session: CallTranslatorSessionClient.Session
     ) {
         if (!skipNetworkReachabilityTest && !core.isNetworkReachable) {
-            Log.e("$TAG Network unreachable after call translator session creation, abort outgoing call")
+            notifyCallTranslatorFailure(
+                "Network unreachable after call translator session creation, abort outgoing call"
+            )
             return
         }
 
@@ -1072,7 +1089,9 @@ class CoreContext
 
         val params = callParams ?: core.createCallParams(null)
         if (params == null) {
-            Log.e("$TAG Failed to create call params, aborting call because translator headers are required")
+            notifyCallTranslatorFailure(
+                "Failed to create call params, aborting call because translator headers are required"
+            )
             return
         }
 
