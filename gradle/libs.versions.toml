@@ -1,16 +1,16 @@
 [versions]
 agp = "9.2.1"
-kotlin = "2.3.21"
+kotlin = "2.4.0"
 gmsGoogleServices = "4.4.4"
 firebaseCrashlytics = "3.0.7"
-firebaseBomVersion = "34.13.0"
+firebaseBomVersion = "34.14.1"
 #noinspection NewerVersionAvailable
 ktlint = "12.3.0"
 
 annotations = "1.10.0"
 appcompat = "1.7.1"
 constraintLayout = "2.2.1"
-coreKtx = "1.18.0"
+coreKtx = "1.19.0"
 splashscreen = "1.2.0"
 telecom = "1.1.0-alpha05"
 media = "1.8.0"
@@ -27,7 +27,7 @@ flexbox = "3.0.0"
 material = "1.14.0"
 #noinspection NewerVersionAvailable
 protobuf = "3.25.5"
-coil = "3.4.0"
+coil = "3.5.0"
 dotsIndicator = "5.1.0"
 photoview = "2.3.0"
 openidAppauth = "0.11.1"
