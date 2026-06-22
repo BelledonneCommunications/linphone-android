@@ -660,7 +660,7 @@ fun View.setTouchListener(listener: TouchListener) {
     setOnTouchListener { view, event ->
         return@setOnTouchListener when (event.action) {
             MotionEvent.ACTION_DOWN -> listener.onPressed(view)
-            MotionEvent.ACTION_UP -> listener.onReleased(view)
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> listener.onReleased(view)
             else -> false
         }
     }
