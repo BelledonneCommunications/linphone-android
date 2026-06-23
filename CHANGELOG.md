@@ -10,6 +10,20 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [6.2.1] - 2026-06-23
+
+### Added
+- Added proximity sensor listener to be able to log events
+- Laotian translation from Weblate
+
+### Changed
+- Abort single sign-on process if server URL is null or empty
+- Automatically route audio to wired headphones/headset if such device is available
+
+### Fixed
+- Active call screen showing up after going back from outgoing call screen
+- Prevent DTMF to be played indefinitely when swiping the numpad bottom sheet away while pressing a digit
+
 ## [6.2.0] - 2026-06-02
 
 ### Added
