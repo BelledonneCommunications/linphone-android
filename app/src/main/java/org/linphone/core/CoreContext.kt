@@ -144,6 +144,7 @@ class CoreContext
             if (!addedDevices.isNullOrEmpty()) {
                 Log.i("$TAG [${addedDevices.size}] new device(s) have been added:")
                 var atLeastOneNewDeviceIsBluetooth = false
+                var atLeastOneNewDeviceIsHeadset = false
                 for (device in addedDevices) {
                     Log.i(
                         "$TAG Added device [${device.productName}] with ID [${device.id}] and type [${device.type}]"
@@ -152,6 +153,10 @@ class CoreContext
                     when (device.type) {
                         AudioDeviceInfo.TYPE_BLUETOOTH_SCO, AudioDeviceInfo.TYPE_BLE_HEADSET, AudioDeviceInfo.TYPE_BLE_SPEAKER, AudioDeviceInfo.TYPE_HEARING_AID, AudioDeviceInfo.TYPE_BLE_HEARING_AID -> {
                             atLeastOneNewDeviceIsBluetooth = true
+                        }
+
+                        AudioDeviceInfo.TYPE_USB_HEADSET, AudioDeviceInfo.TYPE_WIRED_HEADPHONES, AudioDeviceInfo.TYPE_WIRED_HEADSET -> {
+                            atLeastOneNewDeviceIsHeadset = true
                         }
                         else -> {}
                     }
@@ -164,7 +169,10 @@ class CoreContext
 
                     if (atLeastOneNewDeviceIsBluetooth && core.callsNb > 0 && corePreferences.routeAudioToBluetoothWhenPossible) {
                         Log.i("$TAG It seems a bluetooth device is now available, trying to route audio to it")
-                        AudioUtils.routeAudioToEitherBluetoothOrHearingAid()
+                        AudioUtils.routeAudioBluetoothOrHearingAid()
+                    } else if (atLeastOneNewDeviceIsHeadset && core.callsNb > 0) {
+                        Log.i("$TAG It seems a headset or headphones device is now available, trying to route audio to it")
+                        AudioUtils.routeAudioToHeadset()
                     }
                 }, 500)
             }
@@ -358,8 +366,8 @@ class CoreContext
                 }
                 Call.State.OutgoingRinging, Call.State.OutgoingEarlyMedia -> {
                     if (corePreferences.routeAudioToBluetoothWhenPossible) {
-                        Log.i("$TAG Trying to route audio to either bluetooth or hearing aid if available")
-                        AudioUtils.routeAudioToEitherBluetoothOrHearingAid(call)
+                        Log.i("$TAG Trying to route audio to either bluetooth, hearing aid, headphones or headset if available")
+                        AudioUtils.routeAudioToAnyConnectedAudioDeviceOtherThanEarpieceAndSpeaker(call)
                     }
                 }
                 Call.State.Connected -> {
@@ -367,8 +375,8 @@ class CoreContext
                         showCallActivity()
                     }
                     if (corePreferences.routeAudioToBluetoothWhenPossible) {
-                        Log.i("$TAG Call is connected, trying to route audio to either bluetooth or hearing aid if available")
-                        AudioUtils.routeAudioToEitherBluetoothOrHearingAid(call)
+                        Log.i("$TAG Call is connected, trying to route audio to either bluetooth, hearing aid, headphones or headset if available")
+                        AudioUtils.routeAudioToAnyConnectedAudioDeviceOtherThanEarpieceAndSpeaker(call)
                     }
                 }
                 Call.State.StreamsRunning -> {
