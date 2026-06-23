@@ -56,8 +56,22 @@ class AudioUtils {
         }
 
         @WorkerThread
-        fun routeAudioToEitherBluetoothOrHearingAid(call: Call? = null) {
-            routeAudioTo(call, arrayListOf(AudioDevice.Type.Bluetooth, AudioDevice.Type.HearingAid))
+        fun routeAudioBluetoothOrHearingAid(call: Call? = null) {
+            routeAudioTo(
+                call,
+                arrayListOf(AudioDevice.Type.Bluetooth, AudioDevice.Type.HearingAid)
+            )
+        }
+
+        @WorkerThread
+        fun routeAudioToAnyConnectedAudioDeviceOtherThanEarpieceAndSpeaker(call: Call? = null) {
+            routeAudioTo(
+                call,
+                arrayListOf(
+                    AudioDevice.Type.Bluetooth, AudioDevice.Type.HearingAid,
+                    AudioDevice.Type.Headphones, AudioDevice.Type.Headset
+                )
+            )
         }
 
         @WorkerThread
