@@ -31,7 +31,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.Gravity
-import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.WindowManager
 import androidx.activity.SystemBarStyle
@@ -174,12 +173,7 @@ class MainActivity : GenericActivity() {
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.drawerMenuContent) { v, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-            val mlp = v.layoutParams as ViewGroup.MarginLayoutParams
-            mlp.leftMargin = insets.left
-            mlp.topMargin = insets.top
-            mlp.rightMargin = insets.right
-            mlp.bottomMargin = insets.bottom
-            v.layoutParams = mlp
+            v.updatePadding(insets.left, insets.top, insets.right, insets.bottom)
             WindowInsetsCompat.CONSUMED
         }
 
