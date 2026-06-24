@@ -75,7 +75,7 @@ class CurrentCallViewModel
     companion object {
         private const val TAG = "[Current Call ViewModel]"
         private const val VU_METER_MIN = -20f
-        private const val VU_METER_MAX = 4
+        private const val VU_METER_MAX = 0
     }
 
     val contact = MutableLiveData<ContactAvatarModel>()
