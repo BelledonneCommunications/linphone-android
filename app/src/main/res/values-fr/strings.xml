@@ -69,6 +69,7 @@
         <item quantity="other">%s fichiers en cours de réception</item>
     </plurals>
     <string name="notification_keep_app_alive_message">Cliquez pour ouvrir</string>
+    <string name="notification_keep_app_alive_description">Cette notification maintient l\'app en vie en arrière plan</string>
     <string name="notification_enable_speaker_for_call">Activer haut-parleur</string>
     <string name="notification_disable_speaker_for_call">Désactiver haut-parleur</string>
     <string name="notification_account_registration_error_title">Compte %s en erreur !</string>
