@@ -162,10 +162,12 @@ class MediaViewModel
     }
 
     @UiThread
-    fun seekTo(position: Int) {
+    fun seekTo(position: Int, resumePlay: Boolean) {
         if (::mediaPlayer.isInitialized) {
             mediaPlayer.seekTo(position)
-            play()
+            if (resumePlay) {
+                play()
+            }
         }
     }
 

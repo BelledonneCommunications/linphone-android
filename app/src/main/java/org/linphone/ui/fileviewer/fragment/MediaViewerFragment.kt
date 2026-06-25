@@ -46,18 +46,21 @@ class MediaViewerFragment : GenericMainFragment() {
 
     private lateinit var viewModel: MediaViewModel
 
+    private var wasVideoPlayingBeforeTrackingTouch = false
+
     private val seekBarListener = object : SeekBar.OnSeekBarChangeListener {
         override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
 
         }
 
         override fun onStartTrackingTouch(seekBar: SeekBar) {
+            wasVideoPlayingBeforeTrackingTouch = viewModel.isMediaPlaying.value == true
             viewModel.pause()
         }
 
         override fun onStopTrackingTouch(seekBar: SeekBar) {
             val newPosition = seekBar.progress
-            viewModel.seekTo(newPosition)
+            viewModel.seekTo(newPosition, wasVideoPlayingBeforeTrackingTouch)
         }
     }
 
