@@ -16,6 +16,15 @@ Group changes to describe their impact on the project, as follows:
 - Client secret support to OIDC authentication
 - Call Redirection Service APIs allowing to redirect a GSM call to a SIP address via Linphone
 
+## [6.2.2] - 2026-06-25
+
+### Changed
+- Improved keep app alive foreground service notification content text
+- Only resume media player after seeking if it was playing before
+
+### Fixed
+- Prevent drawer menu to be drawn behind the navigation bar in landscape
+
 ## [6.2.1] - 2026-06-23
 
 ### Added
