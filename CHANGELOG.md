@@ -10,6 +10,15 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [6.2.2] - 2026-06-25
+
+### Changed
+- Improved keep app alive foreground service notification content text
+- Only resume media player after seeking if it was playing before
+
+### Fixed
+- Prevent drawer menu to be drawn behind the navigation bar in landscape
+
 ## [6.2.1] - 2026-06-23
 
 ### Added
