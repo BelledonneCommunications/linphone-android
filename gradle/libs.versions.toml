@@ -1,9 +1,9 @@
 [versions]
 agp = "9.2.1"
 kotlin = "2.4.0"
-gmsGoogleServices = "4.4.4"
+gmsGoogleServices = "4.5.0"
 firebaseCrashlytics = "3.0.7"
-firebaseBomVersion = "34.14.1"
+firebaseBomVersion = "34.15.0"
 #noinspection NewerVersionAvailable
 ktlint = "12.3.0"
 
@@ -12,7 +12,7 @@ appcompat = "1.7.1"
 constraintLayout = "2.2.1"
 coreKtx = "1.19.0"
 splashscreen = "1.2.0"
-telecom = "1.1.0-alpha05"
+telecom = "1.1.0-alpha06"
 media = "1.8.0"
 recyclerview = "1.4.0"
 swipeRefreshLayout = "1.2.0"
@@ -28,10 +28,10 @@ material = "1.14.0"
 #noinspection NewerVersionAvailable
 protobuf = "3.25.5"
 coil = "3.5.0"
-dotsIndicator = "5.1.0"
+dotsIndicator = "5.1.1"
 photoview = "2.3.0"
 openidAppauth = "0.11.1"
-linphone = "5.5.+"
+linphone = "5.6.+"
 junit = "4.13.2"
 mockk = "1.13.13"
 
