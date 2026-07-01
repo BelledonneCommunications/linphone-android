@@ -219,6 +219,7 @@
     <string name="settings_calls_change_ringtone_picker_unavailable_toast">Le sélectionneur de sonnerie n\'est pas disponible !</string>
     <string name="settings_advanced_calls_rfc_2833_dmtf_title">Utiliser la RFC 2833 pour les DTMFs</string>
     <string name="settings_advanced_calls_sip_info_dmtf_title">Utiliser SIP INFO pour les DTMFs</string>
+    <string name="settings_advanced_calls_proximity_sensor_title">Utiliser le détecteur de proximité pour éteindre l\'écran quand proche de l\'oreille</string>
     <string name="settings_conversations_title">Conversations</string>
     <string name="settings_conversations_auto_download_title">Télécharger automatiquement les fichiers</string>
     <string name="settings_conversations_auto_export_media_to_native_gallery_title">Rendre visible dans la galerie les médias téléchargés</string>
