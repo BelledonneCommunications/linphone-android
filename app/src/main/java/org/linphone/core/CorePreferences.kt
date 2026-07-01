@@ -211,6 +211,13 @@ class CorePreferences
             config.setBool("ui", "show_advanced_call_stats", value)
         }
 
+    @get:AnyThread @set:WorkerThread
+    var useProximitySensor: Boolean
+        get() = config.getBool("ui", "use_proximity_sensor", true)
+        set(value) {
+            config.setBool("ui", "use_proximity_sensor", value)
+        }
+
     // Conversation related
 
     @get:AnyThread @set:WorkerThread

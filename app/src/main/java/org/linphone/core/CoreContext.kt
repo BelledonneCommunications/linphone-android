@@ -1355,6 +1355,11 @@ class CoreContext
 
     @UiThread
     fun enableProximitySensor(enable: Boolean) {
+        if (enable && !corePreferences.useProximitySensor) {
+            Log.w("$TAG App tried to enable proximity sensor but it's been disabled in settings, doing nothing")
+            return
+        }
+
         if (::proximityWakeLock.isInitialized) {
             if (enable && !proximityWakeLock.isHeld) {
                 Log.i("$TAG Acquiring proximity sensor wake lock for 2 hours")

@@ -272,6 +272,7 @@
     <string name="settings_calls_use_redirection_service">Use call redirection service</string>
     <string name="settings_advanced_calls_rfc_2833_dmtf_title">Use RFC 2833 for DTMFs</string>
     <string name="settings_advanced_calls_sip_info_dmtf_title">Use SIP INFO for DTMFs</string>
+    <string name="settings_advanced_calls_proximity_sensor_title">Use proximity sensor to turn OFF the screen when near the ear</string>
     <string name="settings_conversations_title">Conversations</string>
     <string name="settings_conversations_auto_download_title">Auto-download files</string>
     <string name="settings_conversations_auto_export_media_to_native_gallery_title">Make downloaded media public</string>

@@ -236,6 +236,7 @@ class SettingsViewModel
     val mediaEncryptionMandatory = MutableLiveData<Boolean>()
     val rfc2833Dtmf = MutableLiveData<Boolean>()
     val sipInfoDtmf = MutableLiveData<Boolean>()
+    val useProximitySensor = MutableLiveData<Boolean>()
     val acceptEarlyMedia = MutableLiveData<Boolean>()
     val ringDuringEarlyMedia = MutableLiveData<Boolean>()
     val allowOutgoingEarlyMedia = MutableLiveData<Boolean>()
@@ -390,6 +391,7 @@ class SettingsViewModel
 
             rfc2833Dtmf.postValue(core.useRfc2833ForDtmf)
             sipInfoDtmf.postValue(core.useInfoForDtmf)
+            useProximitySensor.postValue(corePreferences.useProximitySensor)
 
             acceptEarlyMedia.postValue(corePreferences.acceptEarlyMedia)
             ringDuringEarlyMedia.postValue(core.ringDuringIncomingEarlyMedia)
@@ -959,6 +961,16 @@ class SettingsViewModel
         coreContext.postOnCoreThread { core ->
             core.useInfoForDtmf = newValue
             sipInfoDtmf.postValue(newValue)
+        }
+    }
+
+    @UiThread
+    fun toggleUseProximitySensor() {
+        val newValue = useProximitySensor.value == false
+
+        coreContext.postOnCoreThread {
+            corePreferences.useProximitySensor = newValue
+            useProximitySensor.postValue(newValue)
         }
     }
 
