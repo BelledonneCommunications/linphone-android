@@ -59,8 +59,6 @@ class AccountSettingsViewModel
 
     val availableTransports = arrayListOf<String>()
 
-    val selectedTransport = MutableLiveData<TransportType>()
-
     val sipProxyServer = MutableLiveData<String>()
 
     val outboundProxyServer = MutableLiveData<String>()
@@ -152,9 +150,6 @@ class AccountSettingsViewModel
 
                 imEncryptionMandatory.postValue(params.instantMessagingEncryptionMandatory)
 
-                val transportType = params.serverAddress?.transport ?: TransportType.Tls
-                selectedTransport.postValue(transportType)
-
                 sipProxyServer.postValue(params.serverAddress?.asStringUriOnly())
                 if (params.routesAddresses.isNotEmpty()) {
                     outboundProxyServer.postValue(params.routesAddresses.first().asStringUriOnly())
@@ -228,7 +223,6 @@ class AccountSettingsViewModel
                     Log.i("$TAG Proxy server set to [$server]")
                     val serverAddress = core.interpretUrl(server, false)
                     if (serverAddress != null) {
-                        serverAddress.transport = selectedTransport.value
                         newParams.serverAddress = serverAddress
                     } else {
                         Log.e("$TAG Failed to parse proxy server!")
@@ -239,7 +233,6 @@ class AccountSettingsViewModel
                     Log.i("$TAG Outbound proxy server set to [$outboundProxy]")
                     val outboundProxyAddress = core.interpretUrl(outboundProxy, false)
                     if (outboundProxyAddress != null) {
-                        outboundProxyAddress.transport = selectedTransport.value
                         newParams.setRoutesAddresses(arrayOf(outboundProxyAddress))
                     } else {
                         Log.e("$TAG Failed to parse outbound proxy server!")
