@@ -234,6 +234,15 @@ class ActiveCallFragment : GenericCallFragment() {
             callMediaEncryptionStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
+        callViewModel.isPausedByRemote.observe(viewLifecycleOwner) { paused ->
+            if (paused) {
+                if (callViewModel.fullScreenMode.value == true) {
+                    Log.i("$TAG Call is paused by remote, leaving full screen mode")
+                    callViewModel.fullScreenMode.postValue(false)
+                }
+            }
+        }
+
         callViewModel.showZrtpSasDialogEvent.observe(viewLifecycleOwner) {
             it.consume { pair ->
                 callMediaEncryptionStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
