@@ -247,7 +247,7 @@ class MessageModel
 
         @WorkerThread
         override fun onReactionRemoved(message: ChatMessage, address: Address) {
-            Log.i("$TAG A reaction was removed for message with ID [$id]")
+            Log.i("$TAG A reaction from [${address.asStringUriOnly()}] was removed for message with ID [$id]")
             updateReactionsList()
         }
 
@@ -360,6 +360,7 @@ class MessageModel
                 val reaction = chatMessage.createReaction(emoji)
                 reaction.send()
             }
+            updateReactionsList()
             dismissLongPressMenuEvent.postValue(Event(true))
         }
     }
@@ -637,7 +638,9 @@ class MessageModel
             ourReactionIndex.postValue(-1)
         }
 
-        reactions.postValue(reactionsList)
+        if (reactionsList != reactions.value) {
+            reactions.postValue(reactionsList)
+        }
     }
 
     @WorkerThread
