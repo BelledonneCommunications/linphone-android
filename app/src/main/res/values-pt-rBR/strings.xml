@@ -846,4 +846,11 @@
     <string name="dialog_understood">Entendido</string>
     <string name="notification_channel_account_error_name">&appName; notificações de erro da conta</string>
     <string name="notification_in_call_foreground_service_error_message">Clique nesta notificação para corrigí-la</string>
+    <string name="dialog_do_not_cancel">Não cancele</string>
+    <string name="notification_keep_app_alive_description">Essa notificação mantém o aplicativo em execução em segundo plano</string>
+    <string name="notification_disable_speaker_for_call">Desligue o alto-falante</string>
+    <string name="notification_enable_speaker_for_call">Ligue o alto-falante</string>
+    <string name="notification_in_call_foreground_service_error_title">Seu interlocutor não o ouve!</string>
+    <string name="notification_account_registration_error_title">Falha no registro da conta %s!</string>
+    <string name="notification_account_registration_error_message">Abra &appName; para atualizar o registro</string>
 </resources>
