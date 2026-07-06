@@ -270,6 +270,36 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="@id/hinge_bottom"/>
 
+            <LinearLayout
+                android:id="@+id/conference_paused_layout"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                android:background="@color/gray_900"
+                android:gravity="center"
+                android:visibility="@{conferenceViewModel.isPaused ? View.VISIBLE : View.GONE, default=gone}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/hinge_bottom">
+
+                <ImageView
+                    android:layout_width="@dimen/big_icon_size"
+                    android:layout_height="@dimen/big_icon_size"
+                    android:src="@drawable/pause"
+                    android:contentDescription="@string/content_description_paused_call"
+                    app:tint="?attr/color_main1_500"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/call_header_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/call_state_paused"/>
+
+            </LinearLayout>
+
             <ImageView
                 android:id="@+id/recording"
                 android:layout_width="@dimen/icon_size"

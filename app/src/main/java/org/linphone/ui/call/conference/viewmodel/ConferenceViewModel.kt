@@ -392,6 +392,11 @@ class ConferenceViewModel
             return
         }
 
+        if (isPaused.value == true) {
+            // Do not allow turning full screen on while conference is paused
+            return
+        }
+
         if (conferenceLayout.value == AUDIO_ONLY_LAYOUT) {
             // Do not allow turning full screen on for audio only conference
             return
