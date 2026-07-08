@@ -21,6 +21,7 @@
     <color name="gray_main2_600">#4E6074</color>
     <color name="gray_main2_700">#364860</color>
     <color name="gray_main2_800">#22334D</color>
+    <color name="gray_main2_900">#37475A</color>
 
     <color name="gray_100">#F9F9F9</color>
     <color name="gray_200">#EDEDED</color>
@@ -34,26 +35,36 @@
     <color name="gray_800">#0F0F0F</color>
     <color name="gray_900">#070707</color>
 
+    <color name="red_danger_100">#FBE9E9</color>
     <color name="red_danger_500">#DD5F5F</color>
     <color name="red_danger_500_night">#E17474</color>
+    <color name="red_danger_600">#B03A3A</color>
     <color name="red_danger_700">#9E3548</color>
     <color name="red_danger_700_night">#B13B51</color>
     <color name="red_danger_900">#723333</color>
     <color name="red_danger_900_night">#843B3B</color>
 
+    <color name="green_success_100">#E4F4EC</color>
     <color name="green_success_200">#ACF5C1</color>
     <color name="green_success_200_night">#0D6A27</color>
     <color name="green_success_500">#4FAE80</color>
     <color name="green_success_500_night">#60B78D</color>
     <color name="green_success_700">#377D71</color>
     <color name="green_success_700_night">#3F8F81</color>
+    <color name="green_success_900">#2A7050</color>
 
     <color name="blue_info_500">#4AA8FF</color>
     <color name="blue_info_500_night">#64B4FF</color>
 
     <color name="orange_plain_text_security_warning_600">#AF9308</color>
+    <color name="orange_warning_100">#F8F1D4</color>
+    <color name="orange_warning_100_night">#d6aa28</color>
     <color name="orange_warning_600">#DBB820</color>
     <color name="orange_warning_600_night">#E1C133</color>
+    <color name="orange_warning_900">#776208</color>
+
+    <color name="gray_offline_100">#E9EDF1</color>
+    <color name="gray_offline_900">#37475A</color>
 
     <color name="gradient_progress">#80FFFFFF</color>
 
