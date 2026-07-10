@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="sip_address">Indirizzo Di registrazione SIP</string>
+    <string name="device_id">ID dispositivo</string>
+    <string name="sip_address_display_name">Nome visualizzato</string>
+</resources>
