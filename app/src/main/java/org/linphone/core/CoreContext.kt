@@ -379,6 +379,20 @@ class CoreContext
                     postOnMainThread {
                         showCallActivity()
                     }
+
+                    if (previousCallState == Call.State.IncomingEarlyMedia && core.ringDuringIncomingEarlyMedia && !LinphoneUtils.isVideoEnabled(call)) {
+                        Log.i("$TAG Audio call is in Connected state and was in IncomingEarlyMedia before with ring during early media enabled")
+                        val earpiece = core.audioDevices.find {
+                            it.type == AudioDevice.Type.Earpiece
+                        }
+                        if (earpiece != null) {
+                            Log.i("$TAG Switching audio back to earpiece ([${earpiece.id}])")
+                            call.outputAudioDevice = earpiece
+                        } else {
+                            Log.w("$TAG No earpiece device found")
+                        }
+                    }
+
                     if (corePreferences.routeAudioToBluetoothWhenPossible) {
                         Log.i("$TAG Call is connected, trying to route audio to either bluetooth, hearing aid, headphones or headset if available")
                         AudioUtils.routeAudioToAnyConnectedAudioDeviceOtherThanEarpieceAndSpeaker(call)
