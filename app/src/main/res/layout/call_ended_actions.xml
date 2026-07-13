@@ -38,6 +38,7 @@
             android:paddingTop="15dp"
             android:paddingBottom="15dp"
             android:src="@drawable/phone_disconnect"
+            android:enabled="@{false}"
             android:contentDescription="@null"
             android:background="@drawable/shape_squircle_red_disabled_background"
             app:tint="@color/in_call_button_tint_color"
