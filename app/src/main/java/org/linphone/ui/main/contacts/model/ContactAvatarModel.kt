@@ -189,10 +189,10 @@ class ContactAvatarModel
     }
 
     @WorkerThread
-    fun getNameToUseForSorting(): String? {
+    fun getNameToUseForSorting(): String {
         val sortByFirstName = corePreferences.sortContactsByFirstName
         val firstOrLastName = if (sortByFirstName) friend.firstName else friend.lastName
-        return firstOrLastName ?: friend.name ?: friend.organization ?: friend.vcard?.fullName
+        return firstOrLastName ?: friend.name ?: friend.organization ?: friend.vcard?.fullName ?: ""
     }
 
     @WorkerThread
