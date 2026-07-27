@@ -24,6 +24,7 @@ import androidx.annotation.WorkerThread
 import androidx.core.telecom.CallAttributesCompat
 import androidx.core.telecom.CallException
 import androidx.core.telecom.CallsManager
+import android.os.Build
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -42,6 +43,9 @@ class TelecomManager
     constructor(context: Context) {
     companion object {
         private const val TAG = "[Telecom Manager]"
+
+        private val SAMSUNG_S23s =
+            arrayListOf("dm3q", "dm1q", "dm2q", "r11s", "r11q", "SC-52D", "SCG19", "SC-51D", "SCG24", "SCG20")
     }
 
     private val callsManager = CallsManager(context)
@@ -113,6 +117,9 @@ class TelecomManager
         // Always set type to video (if enabled in Core) as it indicates that video is supported, not that it's being used at the time
         // https://developer.android.com/reference/kotlin/androidx/core/telecom/CallAttributesCompat#CALL_TYPE_VIDEO_CALL()
         val type = if (!call.core.isVideoEnabled) {
+            CallAttributesCompat.CALL_TYPE_AUDIO_CALL
+        } else if (Build.DEVICE in SAMSUNG_S23s) {
+            Log.w("$TAG Samsung S23, S23 FE, S23+ or S23 Ultra detected [${Build.MODEL}], applying workaround to prevent no audio on earpiece issue")
             CallAttributesCompat.CALL_TYPE_AUDIO_CALL
         } else {
             CallAttributesCompat.CALL_TYPE_VIDEO_CALL
