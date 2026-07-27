@@ -22,6 +22,7 @@ package org.linphone.ui.main.chat.viewmodel
 import android.Manifest
 import android.content.pm.PackageManager
 import android.text.Spannable
+import android.view.inputmethod.EditorInfo
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.core.app.ActivityCompat
@@ -111,6 +112,8 @@ class SendMessageInConversationViewModel
     val voiceRecordPlayerPosition = MutableLiveData<Int>()
 
     val isComputingParticipantsList = MutableLiveData<Boolean>()
+
+    val imeFlags = MutableLiveData<Int>()
 
     private lateinit var voiceRecordPlayer: Player
 
@@ -212,6 +215,14 @@ class SendMessageInConversationViewModel
         chatRoom = room
         coreContext.postOnCoreThread {
             chatRoom.addListener(chatRoomListener)
+
+            val ime = if (chatRoom.hasCapability(ChatRoom.Capabilities.Encrypted.toInt())) {
+                EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING
+            } else {
+                EditorInfo.IME_NULL
+            }
+            imeFlags.postValue(ime)
+
             computeParticipantsList()
         }
     }
