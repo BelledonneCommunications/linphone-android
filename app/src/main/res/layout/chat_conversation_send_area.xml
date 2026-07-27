@@ -152,7 +152,7 @@
             android:layout_marginBottom="10dp"
             android:background="@color/transparent_color"
             android:hint="@string/conversation_text_field_hint"
-            android:imeOptions="flagNoPersonalizedLearning"
+            android:imeOptions="@{viewModel.imeFlags}"
             android:inputType="textShortMessage|textMultiLine|textAutoComplete|textAutoCorrect|textCapSentences"
             android:maxLines="3"
             android:minHeight="48dp"
