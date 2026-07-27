@@ -195,6 +195,7 @@
     <string name="assistant_permissions_post_notifications_title"><b>Post notifications:</b> To be informed when you receive a message or a call.</string>
     <string name="assistant_permissions_record_audio_title"><b>Record audio:</b> So your correspondent can hear you and to record voice messages.</string>
     <string name="assistant_permissions_access_camera_title"><b>Access camera:</b> To capture video during video calls and conferences.</string>
+    <string name="assistant_permissions_access_local_network_title"><b>Access local network (optional):</b> Required since Android 17 to be able to connect to a server located on the local network.</string>
     <string name="assistant_forgotten_password_title">Account recovery</string>
     <string name="assistant_forgotten_password_subtitle">Choose how to recover your account.</string>
     <string name="assistant_forgotten_password_message">You created your account using:</string>

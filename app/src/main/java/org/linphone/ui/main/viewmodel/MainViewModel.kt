@@ -98,6 +98,10 @@ class MainViewModel
         MutableLiveData()
     }
 
+    val askAccessLocalNetworkPermissionEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData()
+    }
+
     val showNewAccountToastEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData()
     }
@@ -239,6 +243,7 @@ class MainViewModel
                         )
                         addAlert(NON_DEFAULT_ACCOUNT_NOT_CONNECTED, label)
                     }
+                    checkAccessLocalNetworkPermission()
                 }
                 RegistrationState.Ok -> {
                     removeAlert(NETWORK_NOT_REACHABLE) // Just in case
@@ -709,7 +714,7 @@ class MainViewModel
     @WorkerThread
     private fun checkFullScreenIntentNotificationPermission() {
         if (!Compatibility.hasFullScreenIntentPermission(coreContext.context)) {
-            Log.w("$TAG USE_FULL_SCREEN_INTENT seems to be not granted!")
+            Log.w("$TAG USE_FULL_SCREEN_INTENT permission seems to be not granted!")
             val label = AppUtils.getString(R.string.full_screen_intent_permission_not_granted)
             coreContext.postOnCoreThread {
                 addAlert(FULL_SCREEN_INTENTS_PERMISSION_NOT_GRANTED, label)
@@ -723,13 +728,21 @@ class MainViewModel
     @WorkerThread
     private fun checkPostNotificationsPermission() {
         if (!Compatibility.isPostNotificationsPermissionGranted(coreContext.context)) {
-            Log.w("$TAG POST_NOTIFICATIONS seems to be not granted!")
+            Log.w("$TAG POST_NOTIFICATIONS permission seems to be not granted!")
             val label = AppUtils.getString(R.string.post_notifications_permission_not_granted)
             coreContext.postOnCoreThread {
                 addAlert(SEND_NOTIFICATIONS_PERMISSION_NOT_GRANTED, label)
             }
         } else {
             removeAlert(SEND_NOTIFICATIONS_PERMISSION_NOT_GRANTED)
+        }
+    }
+
+    @WorkerThread
+    private fun checkAccessLocalNetworkPermission() {
+        if (!Compatibility.isAccessLocalNetworkPermissionGranted(coreContext.context)) {
+            Log.w("$TAG ACCESS_LOCAL_NETWORK permission seems to be not granted!")
+            askAccessLocalNetworkPermissionEvent.postValue(Event(true))
         }
     }
 

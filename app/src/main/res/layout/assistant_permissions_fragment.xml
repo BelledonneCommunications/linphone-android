@@ -203,6 +203,37 @@
                 app:layout_constraintBottom_toBottomOf="@id/access_camera_icon"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
+            <ImageView
+                android:id="@+id/access_local_network_icon"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/circle_light_blue_button_background"
+                android:padding="12dp"
+                android:src="@drawable/share_network"
+                android:contentDescription="@null"
+                android:visibility="@{viewModel.accessLocalNetworkPermissionGranted ? View.GONE : View.VISIBLE}"
+                app:tint="?attr/color_main2_500"
+                app:layout_constraintTop_toBottomOf="@id/access_camera_icon"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:id="@+id/access_local_network_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/assistant_permissions_access_local_network_title"
+                android:maxLines="3"
+                android:ellipsize="end"
+                android:visibility="@{viewModel.accessLocalNetworkPermissionGranted ? View.GONE : View.VISIBLE}"
+                app:layout_constraintTop_toTopOf="@id/access_local_network_icon"
+                app:layout_constraintStart_toEndOf="@id/access_local_network_icon"
+                app:layout_constraintBottom_toBottomOf="@id/access_local_network_icon"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:onClick="@{skipClickListener}"
                 style="@style/secondary_button_label_style"
@@ -217,7 +248,7 @@
                 app:layout_constraintWidth_max="@dimen/button_max_width"
                 app:layout_constraintVertical_bias="1"
                 app:layout_constraintVertical_chainStyle="packed"
-                app:layout_constraintTop_toBottomOf="@id/access_camera_title"
+                app:layout_constraintTop_toBottomOf="@id/access_local_network_title"
                 app:layout_constraintBottom_toTopOf="@id/grant_all_permissions"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />

@@ -140,6 +140,17 @@ class MainActivity : GenericActivity() {
         }
     }
 
+    private val accessLocalNetworkPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            Log.i("$TAG ACCESS_LOCAL_NETWORK permission has been granted")
+            viewModel.updateMissingPermissionAlert()
+        } else {
+            Log.w("$TAG ACCESS_LOCAL_NETWORK permission has been denied!")
+        }
+    }
+
     @SuppressLint("InlinedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         // Must be done before the setContentView
@@ -208,7 +219,7 @@ class MainActivity : GenericActivity() {
                     Log.w("$TAG Asking for POST_NOTIFICATIONS permission")
                     postNotificationsPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 } else {
-                    Log.i("$TAG Permission request for POST_NOTIFICATIONS will be automatically denied, go to android app settings instead")
+                    Log.e("$TAG Permission request for POST_NOTIFICATIONS will be automatically denied, go to android app settings instead")
                     goToAndroidPermissionSettings()
                 }
             }
@@ -220,9 +231,16 @@ class MainActivity : GenericActivity() {
                     Log.w("$TAG Asking for USE_FULL_SCREEN_INTENT permission")
                     fullScreenIntentPermissionLauncher.launch(Manifest.permission.USE_FULL_SCREEN_INTENT)
                 } else {
-                    Log.i("$TAG Permission request for USE_FULL_SCREEN_INTENT will be automatically denied, go to manage app full screen intent android settings instead")
+                    Log.e("$TAG Permission request for USE_FULL_SCREEN_INTENT will be automatically denied, go to manage app full screen intent android settings instead")
                     Compatibility.requestFullScreenIntentPermission(this)
                 }
+            }
+        }
+
+        viewModel.askAccessLocalNetworkPermissionEvent.observe(this) {
+            it.consume {
+                Log.w("$TAG Asking for ACCESS_LOCAL_NETWORK permission")
+                accessLocalNetworkPermissionLauncher.launch(Manifest.permission.ACCESS_LOCAL_NETWORK)
             }
         }
 

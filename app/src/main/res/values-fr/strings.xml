@@ -146,6 +146,7 @@
     <string name="assistant_permissions_post_notifications_title"><b>Notifications :</b> Pour vous informer quand vous recevez un message ou un appel.</string>
     <string name="assistant_permissions_record_audio_title"><b>Microphone :</b> Pour permettre à vos correspondants de vous entendre.</string>
     <string name="assistant_permissions_access_camera_title"><b>Caméra :</b> Pour capturer votre vidéo lors des appels et des conférences.</string>
+    <string name="assistant_permissions_access_local_network_title"><b>Accès au réseau local (optionnel):</b> Requis depuis Android 17 pour pouvoir se connecter à un serveur situé sur le réseau local.</string>
     <string name="assistant_forgotten_password_title">Récupération de compte</string>
     <string name="assistant_forgotten_password_subtitle">Choisissez comment récupérer votre compte.</string>
     <string name="assistant_forgotten_password_message">Vous avez créé votre compte avec :</string>
