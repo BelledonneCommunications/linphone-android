@@ -29,7 +29,6 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.util.Patterns
@@ -91,7 +90,7 @@ class Compatibility {
         }
 
         fun getAllRequiredPermissionsArray(): Array<String> {
-            if (Version.sdkAboveOrEqual(Build.VERSION_CODES.CINNAMON_BUN)) {
+            if (Version.sdkAboveOrEqual(Version.API37_ANDROID_17_CINNAMON_BUN)) {
                 return Api37Compatibility.getAllRequiredPermissionsArray()
             } else if (Version.sdkAboveOrEqual(Version.API33_ANDROID_13_TIRAMISU)) {
                 return Api33Compatibility.getAllRequiredPermissionsArray()
@@ -135,7 +134,7 @@ class Compatibility {
         }
 
         fun isAccessLocalNetworkPermissionGranted(context: Context): Boolean {
-            if (Version.sdkAboveOrEqual(Build.VERSION_CODES.CINNAMON_BUN)) {
+            if (Version.sdkAboveOrEqual(Version.API37_ANDROID_17_CINNAMON_BUN)) {
                 return Api37Compatibility.isAccessLocalNetworkPermissionGranted(context)
             }
             return true
