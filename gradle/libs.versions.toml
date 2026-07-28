@@ -1,9 +1,9 @@
 [versions]
-agp = "9.3.0"
-kotlin = "2.4.0"
+agp = "9.3.1"
+kotlin = "2.4.10"
 gmsGoogleServices = "4.5.0"
 firebaseCrashlytics = "3.0.7"
-firebaseBomVersion = "34.15.0"
+firebaseBomVersion = "34.16.0"
 #noinspection NewerVersionAvailable
 ktlint = "12.3.0"
 
