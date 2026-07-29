@@ -10,6 +10,19 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [6.2.4] - 2026-07-29
+
+### Added
+- Local network access permission is now requested for Android 17 devices. It's optional unless you want to connect to a SIP server located on your device local network.
+
+### Changed
+- Only set the privacy flag for the keyboard in end-to-end encrypted conversations instead of all of them
+- Improved contrast for registration status chips in drawer menu
+
+### Fixed
+- No sound issue when device is close to the ear for Samsung S23, S23+, S23 Ultra and S23 FE devices
+- Answered incoming early-media call on speaker instead of earpiece audio device
+
 ## [6.2.3] - 2026-07-07
 
 ### Added
