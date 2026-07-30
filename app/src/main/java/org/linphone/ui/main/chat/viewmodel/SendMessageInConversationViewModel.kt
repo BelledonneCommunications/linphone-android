@@ -154,6 +154,8 @@ class SendMessageInConversationViewModel
 
     private var participantsListFilter = ""
 
+    private var capturedPicturedPath = ""
+
     private val chatRoomListener = object : ChatRoomListenerStub() {
         @WorkerThread
         override fun onParticipantAdded(chatRoom: ChatRoom, eventLog: EventLog) {
@@ -620,6 +622,21 @@ class SendMessageInConversationViewModel
             participantsListFilter = filter
             computeParticipantsList(filter)
         }
+    }
+
+    @UiThread
+    fun setCapturedPicturePath(path: String) {
+        capturedPicturedPath = path
+    }
+
+    @UiThread
+    fun getCapturedPicturePath(): String {
+        return capturedPicturedPath
+    }
+
+    @UiThread
+    fun clearCapturedPicturePath() {
+        capturedPicturedPath = ""
     }
 
     @WorkerThread

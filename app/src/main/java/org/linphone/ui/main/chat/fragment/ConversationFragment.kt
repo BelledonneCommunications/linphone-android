@@ -56,7 +56,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCa
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
-import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -149,8 +148,6 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         }
     }
 
-    private var pendingImageCaptureFile: File? = null
-
     private val pickDocument = registerForActivityResult(
         ActivityResultContracts.OpenMultipleDocuments()
     ) { files ->
@@ -176,8 +173,8 @@ open class ConversationFragment : SlidingPaneChildFragment() {
         ActivityResultContracts.TakePicture()
     ) { captured ->
         sendMessageViewModel.closeFilePickerBottomSheet()
-        val path = pendingImageCaptureFile?.absolutePath
-        if (path != null) {
+        val path = sendMessageViewModel.getCapturedPicturePath()
+        if (path.isNotEmpty()) {
             if (captured) {
                 Log.i("$TAG Image was captured and saved in [$path]")
                 sendMessageViewModel.addAttachments(arrayListOf(path))
@@ -187,7 +184,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                     FileUtils.deleteFile(path)
                 }
             }
-            pendingImageCaptureFile = null
+            sendMessageViewModel.clearCapturedPicturePath()
         } else {
             Log.e("$TAG No pending captured image file!")
         }
@@ -735,7 +732,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                         requireContext().getString(R.string.file_provider),
                         file
                     )
-                    pendingImageCaptureFile = file
+                    sendMessageViewModel.setCapturedPicturePath(file.absolutePath)
                     startCameraCapture.launch(publicUri)
                 } catch (e: Exception) {
                     Log.e(
