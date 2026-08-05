@@ -24,6 +24,7 @@ import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.ChatMessage
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatBubbleEmojiPickerBottomSheetBinding
 import org.linphone.ui.GenericViewModel
@@ -49,6 +50,8 @@ class ChatMessageLongPressViewModel : GenericViewModel() {
     val canBeEdited = MutableLiveData<Boolean>()
 
     val canBeRemotelyDeleted = MutableLiveData<Boolean>()
+
+    val isQueued = MutableLiveData<Boolean>()
 
     val messageModel = MutableLiveData<MessageModel>()
 
@@ -86,6 +89,7 @@ class ChatMessageLongPressViewModel : GenericViewModel() {
         visible.value = false
         canBeEdited.value = false
         canBeRemotelyDeleted.value = false
+        isQueued.value = false
     }
 
     @UiThread
@@ -104,6 +108,10 @@ class ChatMessageLongPressViewModel : GenericViewModel() {
         horizontalBias.value = if (model.isOutgoing) 1f else 0f
         canBeEdited.value = model.chatMessage.isEditable
         canBeRemotelyDeleted.value = model.chatMessage.isRetractable
+        isQueued.value = when (model.chatMessage.state) {
+            ChatMessage.State.Queued, ChatMessage.State.PendingDelivery, ChatMessage.State.Idle -> true
+            else -> false
+        }
         hasBeenRetracted.value = model.hasBeenRetracted.value == true
         messageModel.value = model
 

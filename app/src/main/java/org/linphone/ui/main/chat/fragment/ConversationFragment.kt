@@ -1663,7 +1663,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
     }
 
     private fun showHowToDeleteMessageMenu(model: MessageModel) {
-        val canBeRetracted = messageLongPressViewModel.canBeRemotelyDeleted.value == true
+        val canBeRetracted = messageLongPressViewModel.canBeRemotelyDeleted.value == true && messageLongPressViewModel.isQueued.value != true
         val modalBottomSheet = MessageDialogFragment(
             canBeRetracted,
             { // onDismiss
