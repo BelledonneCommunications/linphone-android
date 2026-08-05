@@ -938,4 +938,5 @@
     <string name="conversation_info_dialog_leave_group_chat_room_title">Opravdu chcete opustit tuto konverzaci?</string>
     <string name="notification_keep_app_alive_description">Toto oznámení udržuje aplikaci aktivní, i když běží na pozadí</string>
     <string name="settings_advanced_calls_proximity_sensor_title">Pomocí senzoru přiblížení vypnout displej, když se přiblížíte k uchu</string>
+    <string name="assistant_permissions_access_local_network_title"><b>Přístup k místní síti (volitelné):</b> Od verze Android 17 je toto oprávnění nutné pro připojení k serveru umístěnému v místní síti.</string>
 </resources>
