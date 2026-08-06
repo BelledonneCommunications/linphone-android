@@ -10,6 +10,15 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [6.2.5] - 2026-08-06
+
+### Added
+- Italian translation thanks to a contributor on Weblate
+
+### Fixed
+- Prevent picture taken from camera while in conversation to be lost if the device gets rotated during the capture
+- Prevent "delete for all" to be available for chat messages that haven't been sent yet
+
 ## [6.2.4] - 2026-07-29
 
 ### Added
