@@ -16,6 +16,15 @@ Group changes to describe their impact on the project, as follows:
 - Client secret support to OIDC authentication
 - Call Redirection Service APIs allowing to redirect a GSM call to a SIP address via Linphone
 
+## [6.2.5] - 2026-08-06
+
+### Added
+- Italian translation thanks to a contributor on Weblate
+
+### Fixed
+- Prevent picture taken from camera while in conversation to be lost if the device gets rotated during the capture
+- Prevent "delete for all" to be available for chat messages that haven't been sent yet
+
 ## [6.2.4] - 2026-07-29
 
 ### Added
