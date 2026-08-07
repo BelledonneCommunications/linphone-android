@@ -68,7 +68,7 @@ class AssistantActivity : GenericActivity() {
         binding.lifecycleOwner = this
         setUpToastsArea(binding.toastsArea)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, windowInsets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.assistantNavContainer) { v, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
             val keyboard = windowInsets.getInsets(WindowInsetsCompat.Type.ime())
             v.updatePadding(
