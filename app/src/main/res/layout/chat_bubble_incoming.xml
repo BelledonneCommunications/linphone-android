@@ -62,8 +62,15 @@
             android:ellipsize="end"
             android:visibility="@{!model.isFromGroup ? View.GONE: model.groupedWithPreviousMessage ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/reply_icon"
+            app:layout_constraintBottom_toTopOf="@id/reply_forward_icon_barrier"
             app:layout_constraintStart_toStartOf="@id/bubble" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/reply_forward_icon_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="top"
+            app:constraint_referenced_ids="reply_icon, forward_icon" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/reply_group"
