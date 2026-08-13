@@ -40,10 +40,10 @@ class ConferenceParticipantDeviceModel
         private const val TAG = "[Conference Participant Device Model]"
     }
 
-    val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(device.address)
+    val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(device.participant.address)
 
     val name = avatarModel.contactName ?: device.name.orEmpty().ifEmpty {
-        LinphoneUtils.getDisplayName(device.address)
+        LinphoneUtils.getDisplayName(device.participant.address)
     }
 
     val isMuted = MutableLiveData<Boolean>()

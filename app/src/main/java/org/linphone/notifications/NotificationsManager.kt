@@ -321,7 +321,7 @@ class NotificationsManager
             chatRoom: ChatRoom,
             messages: Array<ChatMessage>
         ) {
-            Log.i("$TAG Received ${messages.size} aggregated messages")
+            Log.i("$TAG Received [${messages.size}] aggregated messages")
             if (corePreferences.disableChat) return
 
             val id = LinphoneUtils.getConversationId(chatRoom)
