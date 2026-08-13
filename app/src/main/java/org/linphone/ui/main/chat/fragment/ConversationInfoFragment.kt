@@ -429,7 +429,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
 
         popupView.setCopySipUriClickListener {
             val sipUri = participantModel.sipUri
-            if (AppUtils.copyToClipboard(requireContext(), "SIP address", sipUri)) {
+            if (AppUtils.copyToClipboard(requireContext(), AppUtils.getString(R.string.sip_address), sipUri)) {
                 val message = getString(R.string.sip_address_copied_to_clipboard_toast)
                 (requireActivity() as GenericActivity).showGreenToast(
                     message,
@@ -539,7 +539,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
     }
 
     private fun copyAddressToClipboard(value: String) {
-        if (AppUtils.copyToClipboard(requireContext(), "SIP address", value)) {
+        if (AppUtils.copyToClipboard(requireContext(), AppUtils.getString(R.string.sip_address), value)) {
             val message = getString(R.string.sip_address_copied_to_clipboard_toast)
             (requireActivity() as GenericActivity).showGreenToast(message, R.drawable.check)
         }

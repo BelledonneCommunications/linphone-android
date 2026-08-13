@@ -267,7 +267,8 @@ class ContactFragment : SlidingPaneChildFragment() {
     }
 
     private fun copyNumberOrAddressToClipboard(value: String, isSip: Boolean) {
-        val label = if (isSip) "SIP address" else "Phone number"
+        val resourceId = if (isSip) R.string.sip_address else R.string.phone_number
+        val label = AppUtils.getString(resourceId)
         if (AppUtils.copyToClipboard(requireContext(), label, value)) {
             val message = if (isSip) {
                 getString(R.string.sip_address_copied_to_clipboard_toast)

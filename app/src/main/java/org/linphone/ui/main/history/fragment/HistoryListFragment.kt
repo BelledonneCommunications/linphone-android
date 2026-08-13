@@ -26,6 +26,7 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.annotation.UiThread
+import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -34,6 +35,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.contacts.getListOfSipAddressesAndPhoneNumbers
+import org.linphone.core.Address
 import org.linphone.core.tools.Log
 import org.linphone.databinding.HistoryListFragmentBinding
 import org.linphone.ui.GenericActivity
@@ -160,9 +162,7 @@ class HistoryListFragment : AbstractMainFragment() {
                         }
                     },
                     { // onCopyNumberOrAddressToClipboard
-                        val addressToCopy = model.sipUri
-                        Log.i("$TAG Copying number [$addressToCopy] to clipboard")
-                        copyNumberOrAddressToClipboard(addressToCopy)
+                        copyNumberOrAddressToClipboard(model.address)
                     },
                     { // onDeleteCallLog
                         showDeleteConfirmationDialog(model)
@@ -329,12 +329,27 @@ class HistoryListFragment : AbstractMainFragment() {
         }
     }
 
-    private fun copyNumberOrAddressToClipboard(value: String) {
-        if (AppUtils.copyToClipboard(requireContext(), "SIP address", value)) {
-            (requireActivity() as GenericActivity).showGreenToast(
-                getString(R.string.sip_address_copied_to_clipboard_toast),
-                R.drawable.check
-            )
+    private fun copyNumberOrAddressToClipboard(address: Address?) {
+        if (address != null) {
+            val username = address.username.orEmpty()
+            if (username.isNotEmpty() && (username.startsWith("+") || username.isDigitsOnly())) {
+                Log.i("$TAG Adding phone number [$username] into clipboard")
+                if (AppUtils.copyToClipboard(requireContext(), AppUtils.getString(R.string.phone_number), username)) {
+                    (requireActivity() as GenericActivity).showGreenToast(
+                        getString(R.string.phone_number_copied_to_clipboard_toast),
+                        R.drawable.check
+                    )
+                }
+            } else {
+                val sipUri = address.asStringUriOnly()
+                Log.i("$TAG Adding SIP address [$sipUri] into clipboard")
+                if (AppUtils.copyToClipboard(requireContext(), AppUtils.getString(R.string.sip_address), sipUri)) {
+                    (requireActivity() as GenericActivity).showGreenToast(
+                        getString(R.string.sip_address_copied_to_clipboard_toast),
+                        R.drawable.check
+                    )
+                }
+            }
         }
     }
 
