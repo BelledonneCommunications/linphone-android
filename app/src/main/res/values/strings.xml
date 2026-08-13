@@ -133,6 +133,7 @@
     <string name="welcome_page_3_message">A <b>free</b> and open source application since <b>2001</b>.</string>
 
     <!-- Generic toasts -->
+    <string name="phone_number_copied_to_clipboard_toast">Phone number copied into clipboard</string>
     <string name="sip_address_copied_to_clipboard_toast">SIP address copied into clipboard</string>
     <string name="new_account_configured_toast">New account configured</string>
     <string name="file_successfully_exported_to_media_store_toast">File has been exported to native gallery</string>

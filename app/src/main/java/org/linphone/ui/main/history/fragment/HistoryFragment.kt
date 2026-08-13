@@ -26,6 +26,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import androidx.annotation.UiThread
+import androidx.core.text.isDigitsOnly
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -33,6 +34,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.core.Address
 import org.linphone.core.tools.Log
 import org.linphone.databinding.HistoryFragmentBinding
 import org.linphone.databinding.HistoryPopupMenuBinding
@@ -183,16 +185,31 @@ class HistoryFragment : SlidingPaneChildFragment() {
         }
 
         binding.setCopyPeerSipUriClickListener {
-            copyNumberOrAddressToClipboard(viewModel.callLogModel.value?.sipUri.orEmpty())
+            copyNumberOrAddressToClipboard(viewModel.callLogModel.value?.address)
         }
     }
 
-    private fun copyNumberOrAddressToClipboard(value: String) {
-        if (AppUtils.copyToClipboard(requireContext(), "SIP address", value)) {
-            (requireActivity() as GenericActivity).showGreenToast(
-                getString(R.string.sip_address_copied_to_clipboard_toast),
-                R.drawable.check
-            )
+    private fun copyNumberOrAddressToClipboard(address: Address?) {
+        if (address != null) {
+            val username = address.username.orEmpty()
+            if (username.isNotEmpty() && (username.startsWith("+") || username.isDigitsOnly())) {
+                Log.i("$TAG Adding phone number [$username] into clipboard")
+                if (AppUtils.copyToClipboard(requireContext(), AppUtils.getString(R.string.phone_number), username)) {
+                    (requireActivity() as GenericActivity).showGreenToast(
+                        getString(R.string.phone_number_copied_to_clipboard_toast),
+                        R.drawable.check
+                    )
+                }
+            } else {
+                val sipUri = address.asStringUriOnly()
+                Log.i("$TAG Adding SIP address [$sipUri] into clipboard")
+                if (AppUtils.copyToClipboard(requireContext(), AppUtils.getString(R.string.sip_address), sipUri)) {
+                    (requireActivity() as GenericActivity).showGreenToast(
+                        getString(R.string.sip_address_copied_to_clipboard_toast),
+                        R.drawable.check
+                    )
+                }
+            }
         }
     }
 
@@ -238,7 +255,7 @@ class HistoryFragment : SlidingPaneChildFragment() {
 
         popupView.setCopyNumberClickListener {
             popupWindow.dismiss()
-            copyNumberOrAddressToClipboard(viewModel.callLogModel.value?.sipUri.orEmpty())
+            copyNumberOrAddressToClipboard(viewModel.callLogModel.value?.address)
         }
 
         // Elevation is for showing a shadow around the popup

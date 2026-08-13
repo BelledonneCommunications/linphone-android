@@ -86,6 +86,7 @@
     <string name="welcome_page_3_title">Open source</string>
     <string name="welcome_page_3_message">Une application open source et un <b>service gratuit</b> depuis <b>2001</b>.</string>
     <!-- Generic toasts -->
+    <string name="phone_number_copied_to_clipboard_toast">Numéro de téléphone copié</string>
     <string name="sip_address_copied_to_clipboard_toast">Adresse copiée</string>
     <string name="new_account_configured_toast">Nouveau compte ajouté</string>
     <string name="file_successfully_exported_to_media_store_toast">Média exporté</string>

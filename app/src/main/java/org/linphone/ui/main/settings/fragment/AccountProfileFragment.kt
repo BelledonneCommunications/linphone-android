@@ -232,7 +232,7 @@ class AccountProfileFragment : GenericMainFragment() {
     }
 
     private fun copyAddressToClipboard(value: String) {
-        if (AppUtils.copyToClipboard(requireContext(), "SIP address", value)) {
+        if (AppUtils.copyToClipboard(requireContext(), AppUtils.getString(R.string.sip_address), value)) {
             val message = getString(R.string.sip_address_copied_to_clipboard_toast)
             (requireActivity() as GenericActivity).showGreenToast(message, R.drawable.check)
         }
