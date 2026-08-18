@@ -58,7 +58,6 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
         ) {
             handleChatIntent(context, intent, notificationId, action)
         } else if (
-            action == NotificationsManager.INTENT_ALLOW_CALL_REDIRECTION_ACTION ||
             action == NotificationsManager.INTENT_DENY_CALL_REDIRECTION_ACTION
         ) {
             handleCallRedirectionIntent(action)
@@ -103,12 +102,6 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
 
     private fun handleCallRedirectionIntent(action: String) {
         when (action) {
-            NotificationsManager.INTENT_ALLOW_CALL_REDIRECTION_ACTION -> {
-                Log.i("$TAG User allowed GSM call redirection through Linphone, doing it")
-                RedirectionHandler.useLinphone = true
-                RedirectionHandler.responseLatch?.countDown()
-            }
-
             NotificationsManager.INTENT_DENY_CALL_REDIRECTION_ACTION -> {
                 Log.i("$TAG User declined GSM call redirection through Linphone")
                 RedirectionHandler.useLinphone = false

@@ -48,6 +48,9 @@ class TelecomConnectionService : ConnectionService() {
             if (address != null) {
                 Log.i("$TAG Starting call to [${address.asStringUriOnly()}]")
                 coreContext.startCall(address = address, skipNetworkReachabilityTest = true)
+                // Required here to show activity in case notification times out
+                // or if confirmation notification is disabled in settings
+                coreContext.showCallActivity()
             } else {
                 Log.e("$TAG Failed to parse [$uri] as a SIP address!")
             }

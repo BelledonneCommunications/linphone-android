@@ -57,6 +57,7 @@ import org.linphone.compatibility.Api28Compatibility
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallActivityBinding
+import org.linphone.telecom.RedirectionHandler
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.call.conference.fragment.ActiveConferenceCallFragmentDirections
 import org.linphone.ui.call.conference.fragment.ConferenceLayoutMenuDialogFragment
@@ -87,6 +88,8 @@ class CallActivity : GenericActivity() {
     private var bottomSheetDialog: BottomSheetDialogFragment? = null
 
     private var isPipSupported = false
+
+    private var keepActivityAliveEvenIfNoCall = false
 
     private val requestCameraPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -301,7 +304,12 @@ class CallActivity : GenericActivity() {
 
         callsViewModel.noCallFoundEvent.observe(this) {
             it.consume {
-                finish()
+                if (keepActivityAliveEvenIfNoCall) {
+                    Log.w("$TAG No call was found but we were asked to keep Activity alive, doing nothing")
+                } else {
+                    Log.w("$TAG No call was found, finishing Activity")
+                    finish()
+                }
             }
         }
 
@@ -339,6 +347,11 @@ class CallActivity : GenericActivity() {
             val caller = intent.extras?.getString("Caller")
             Log.i("$TAG Answering incoming call from [$caller]")
             callViewModel.answer()
+        } else if (intent.extras?.getBoolean("DoCallRedirection", false) == true) {
+            Log.i("$TAG User allowed GSM call redirection through Linphone, doing it")
+            keepActivityAliveEvenIfNoCall = true
+            RedirectionHandler.useLinphone = true
+            RedirectionHandler.responseLatch?.countDown()
         }
     }
 
