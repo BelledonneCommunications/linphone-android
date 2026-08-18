@@ -111,7 +111,6 @@ class NotificationsManager
         private const val MISSED_CALL_TAG = "Missed call"
         private const val CHAT_NOTIFICATIONS_GROUP = "CHAT_NOTIF_GROUP"
 
-        private const val ANSWER_CALL_ID = 1
         private const val DUMMY_NOTIF_ID = 3
         private const val KEEP_ALIVE_FOR_THIRD_PARTY_ACCOUNTS_ID = 5
         private const val ACCOUNT_REGISTRATION_ERROR_ID = 7
@@ -1734,7 +1733,7 @@ class NotificationsManager
                 }
             )
             getPendingIntent(
-                ANSWER_CALL_ID,
+                INTENT_ANSWER_CALL_NOTIF_CODE,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
                 Compatibility.getPendingIntentActivityOptions(creator = true).toBundle()
             )!!
