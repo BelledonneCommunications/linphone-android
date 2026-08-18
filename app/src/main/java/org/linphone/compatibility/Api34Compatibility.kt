@@ -89,13 +89,14 @@ class Api34Compatibility {
         }
 
         fun getPendingIntentActivityOptions(creator: Boolean): ActivityOptions {
-            val options = ActivityOptions.makeBasic()
-            if (creator) {
-                options.pendingIntentCreatorBackgroundActivityStartMode =
-                    ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED
-            } else {
-                options.pendingIntentBackgroundActivityStartMode =
-                    ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED
+            val options = ActivityOptions.makeBasic().apply {
+                if (creator) {
+                    pendingIntentCreatorBackgroundActivityStartMode =
+                        ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED
+                } else {
+                    pendingIntentBackgroundActivityStartMode =
+                        ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED
+                }
             }
             return options
         }
