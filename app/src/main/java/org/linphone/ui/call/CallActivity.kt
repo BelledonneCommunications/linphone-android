@@ -334,6 +334,12 @@ class CallActivity : GenericActivity() {
                 callViewModel.refreshMicrophoneState()
             }
         }
+
+        if (intent.extras?.getBoolean("AnswerIncomingCall", false) == true) {
+            val caller = intent.extras?.getString("Caller")
+            Log.i("$TAG Answering incoming call from [$caller]")
+            callViewModel.answer()
+        }
     }
 
     override fun onStart() {

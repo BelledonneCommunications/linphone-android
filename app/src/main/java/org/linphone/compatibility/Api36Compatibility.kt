@@ -29,13 +29,14 @@ class Api36Compatibility {
         private const val TAG = "[API 36 Compatibility]"
 
         fun getPendingIntentActivityOptions(creator: Boolean): ActivityOptions {
-            val options = ActivityOptions.makeBasic()
-            if (creator) {
-                options.pendingIntentCreatorBackgroundActivityStartMode =
-                    ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOW_ALWAYS
-            } else {
-                options.pendingIntentBackgroundActivityStartMode =
-                    ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOW_ALWAYS
+            val options = ActivityOptions.makeBasic().apply {
+                if (creator) {
+                    pendingIntentCreatorBackgroundActivityStartMode =
+                        ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOW_ALWAYS
+                } else {
+                    pendingIntentBackgroundActivityStartMode =
+                        ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOW_ALWAYS
+                }
             }
             return options
         }

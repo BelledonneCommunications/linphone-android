@@ -88,7 +88,6 @@ class NotificationsManager
         private const val TAG = "[Notifications Manager]"
 
         const val INTENT_HANGUP_CALL_NOTIF_ACTION = "org.linphone.HANGUP_CALL_ACTION"
-        const val INTENT_ANSWER_CALL_NOTIF_ACTION = "org.linphone.ANSWER_CALL_ACTION"
         const val INTENT_TOGGLE_SPEAKER_CALL_NOTIF_ACTION = "org.linphone.TOGGLE_SPEAKER_CALL_ACTION"
         const val INTENT_REPLY_MESSAGE_NOTIF_ACTION = "org.linphone.REPLY_ACTION"
         const val INTENT_MARK_MESSAGE_AS_READ_NOTIF_ACTION = "org.linphone.MARK_AS_READ_ACTION"
@@ -112,6 +111,7 @@ class NotificationsManager
         private const val MISSED_CALL_TAG = "Missed call"
         private const val CHAT_NOTIFICATIONS_GROUP = "CHAT_NOTIF_GROUP"
 
+        private const val ANSWER_CALL_ID = 1
         private const val DUMMY_NOTIF_ID = 3
         private const val KEEP_ALIVE_FOR_THIRD_PARTY_ACCOUNTS_ID = 5
         private const val ACCOUNT_REGISTRATION_ERROR_ID = 7
@@ -1724,19 +1724,22 @@ class NotificationsManager
 
     @AnyThread
     fun getCallAnswerPendingIntent(notifiable: Notifiable): PendingIntent {
-        val answerIntent = Intent(context, NotificationBroadcastReceiver::class.java)
-        answerIntent.apply {
-            action = INTENT_ANSWER_CALL_NOTIF_ACTION
-            putExtra(INTENT_NOTIF_ID, notifiable.notificationId)
-            putExtra(INTENT_REMOTE_SIP_URI, notifiable.remoteAddress)
+        val pendingIntent = TaskStackBuilder.create(context).run {
+            addNextIntentWithParentStack(
+                Intent(context, CallActivity::class.java).apply {
+                    action = Intent.ACTION_MAIN // Needed as well
+                    flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+                    putExtra("AnswerIncomingCall", true)
+                    putExtra("Caller", notifiable.remoteAddress)
+                }
+            )
+            getPendingIntent(
+                ANSWER_CALL_ID,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+                Compatibility.getPendingIntentActivityOptions(creator = true).toBundle()
+            )!!
         }
-
-        return PendingIntent.getBroadcast(
-            context,
-            INTENT_ANSWER_CALL_NOTIF_CODE,
-            answerIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-        )
+        return pendingIntent
     }
 
     @AnyThread

@@ -47,7 +47,6 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
         }
 
         if (
-            action == NotificationsManager.INTENT_ANSWER_CALL_NOTIF_ACTION ||
             action == NotificationsManager.INTENT_HANGUP_CALL_NOTIF_ACTION ||
             action == NotificationsManager.INTENT_TOGGLE_SPEAKER_CALL_NOTIF_ACTION
         ) {
@@ -75,10 +74,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
                 Log.e("$TAG Couldn't find call from remote address [$remoteSipUri]")
             } else {
                 when (action) {
-                    NotificationsManager.INTENT_ANSWER_CALL_NOTIF_ACTION -> {
-                        Log.i("$TAG Answering call with remote address [$remoteSipUri]")
-                        coreContext.answerCall(call)
-                    }
+
                     NotificationsManager.INTENT_HANGUP_CALL_NOTIF_ACTION -> {
                         Log.i("$TAG Declining/terminating call with remote address [$remoteSipUri]")
                         coreContext.terminateCall(call)
