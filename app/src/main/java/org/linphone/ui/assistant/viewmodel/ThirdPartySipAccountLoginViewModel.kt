@@ -238,25 +238,6 @@ class ThirdPartySipAccountLoginViewModel
             }
             accountParams.identityAddress = identityAddress
 
-            val proxyServerValue = proxy.value.orEmpty().trim()
-            val proxyServerAddress = if (proxyServerValue.isNotEmpty()) {
-                val server = if (proxyServerValue.startsWith("sip:")) {
-                    proxyServerValue
-                } else {
-                    "sip:$proxyServerValue"
-                }
-                Factory.instance().createAddress(server)
-            } else {
-                domainAddress ?: Factory.instance().createAddress("sip:$domainWithoutSip")
-            }
-            proxyServerAddress?.transport = when (transport.value.orEmpty().trim()) {
-                TransportType.Tcp.name.uppercase(Locale.getDefault()) -> TransportType.Tcp
-                TransportType.Tls.name.uppercase(Locale.getDefault()) -> TransportType.Tls
-                else -> TransportType.Udp
-            }
-            Log.i("$TAG Created proxy server SIP address [${proxyServerAddress?.asStringUriOnly()}]")
-            accountParams.serverAddress = proxyServerAddress
-
             val outboundProxyValue = outboundProxy.value.orEmpty().trim()
             val outboundProxyAddress = if (outboundProxyValue.isNotEmpty()) {
                 val server = if (outboundProxyValue.startsWith("sip:")) {
@@ -274,9 +255,29 @@ class ThirdPartySipAccountLoginViewModel
                     TransportType.Tls.name.uppercase(Locale.getDefault()) -> TransportType.Tls
                     else -> TransportType.Udp
                 }
-                Log.i("$TAG Created outbound proxy server SIP address [${outboundProxyAddress?.asStringUriOnly()}]")
+                Log.i("$TAG Created outbound proxy server SIP address [${outboundProxyAddress.asStringUriOnly()}]")
                 accountParams.setRoutesAddresses(arrayOf(outboundProxyAddress))
             }
+
+            val proxyServerValue = proxy.value.orEmpty().trim()
+            val proxyServerAddress = if (proxyServerValue.isNotEmpty()) {
+                val server = if (proxyServerValue.startsWith("sip:")) {
+                    proxyServerValue
+                } else {
+                    "sip:$proxyServerValue"
+                }
+                Factory.instance().createAddress(server)
+            } else {
+                outboundProxyAddress ?: domainAddress ?: Factory.instance().createAddress("sip:$domainWithoutSip")
+            }
+            proxyServerAddress?.transport = when (transport.value.orEmpty().trim()) {
+                TransportType.Tcp.name.uppercase(Locale.getDefault()) -> TransportType.Tcp
+                TransportType.Tls.name.uppercase(Locale.getDefault()) -> TransportType.Tls
+                else -> TransportType.Udp
+            }
+            Log.i("$TAG Created proxy server SIP address [${proxyServerAddress?.asStringUriOnly()}]")
+            accountParams.serverAddress = proxyServerAddress
+            Log.i("$TAG Is outbound proxy enabled ? [${accountParams.isOutboundProxyEnabled}]")
 
             val prefix = internationalPrefix.value.orEmpty().trim()
             val isoCountryCode = internationalPrefixIsoCountryCode.value.orEmpty()
