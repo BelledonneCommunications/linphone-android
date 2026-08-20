@@ -234,6 +234,9 @@ class AccountSettingsViewModel
                     val outboundProxyAddress = core.interpretUrl(outboundProxy, false)
                     if (outboundProxyAddress != null) {
                         newParams.setRoutesAddresses(arrayOf(outboundProxyAddress))
+                        if (server.isEmpty()) {
+                            newParams.serverAddress = outboundProxyAddress
+                        }
                     } else {
                         Log.e("$TAG Failed to parse outbound proxy server!")
                     }
