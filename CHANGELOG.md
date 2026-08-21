@@ -16,6 +16,16 @@ Group changes to describe their impact on the project, as follows:
 - Client secret support to OIDC authentication
 - Call Redirection Service APIs allowing to redirect a GSM call to a SIP address via Linphone
 
+## [6.2.6] - 2026-08-20
+
+### Changed
+- Copy address to clipboard will now only copy username in case it's a phone number
+
+### Fixed
+- CallActivity is now displayed after answering an incoming call from the notification
+- Correctly display Linphone Web users display name instead of IP address while in conference
+- Outbound proxy field not working as expected if Registrar URI field was left empty
+
 ## [6.2.5] - 2026-08-06
 
 ### Added
