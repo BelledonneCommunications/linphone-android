@@ -124,13 +124,17 @@ class ContactsListAdapter(
                 binding.root.isSelected = bindingAdapterPosition == selectedAdapterPosition
 
                 val previousItem = bindingAdapterPosition - 1
-                val previousLetter = if (previousItem >= 0) {
+                val previousLetter = if (previousItem >= 0 && !getItem(previousItem).sortingName.isNullOrEmpty()) {
                     getItem(previousItem).sortingName?.get(0).toString()
                 } else {
                     ""
                 }
 
-                val currentLetter = contactModel.sortingName?.get(0).toString()
+                val currentLetter = if (!contactModel.sortingName.isNullOrEmpty()) {
+                    contactModel.sortingName?.get(0).toString()
+                } else {
+                    ""
+                }
                 val displayLetter = previousLetter.isEmpty() || currentLetter != previousLetter
                 firstContactStartingByThatLetter = displayLetter
 
