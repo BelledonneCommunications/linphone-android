@@ -146,35 +146,7 @@ class ConferenceViewModel
             conference: Conference,
             participantDevice: ParticipantDevice?
         ) {
-            activeSpeaker.value?.isActiveSpeaker?.postValue(false)
-
-            if (participantDevice != null) {
-                val found = participantDevices.value.orEmpty().find {
-                    it.device.address.equal(participantDevice.address)
-                }
-                if (found != null) {
-                    Log.i("$TAG Newly active speaker participant is [${found.name}]")
-                    found.isActiveSpeaker.postValue(true)
-                    activeSpeaker.postValue(found!!)
-                } else {
-                    Log.i("$TAG Failed to find actively speaking participant...")
-                    val model = ConferenceParticipantDeviceModel(participantDevice)
-                    model.isActiveSpeaker.postValue(true)
-                    activeSpeaker.postValue(model)
-                }
-            } else {
-                Log.w("$TAG Notified active speaker participant device is null, using first one that's not us")
-                val firstNotUs = participantDevices.value.orEmpty().find {
-                    !it.isMe
-                }
-                if (firstNotUs != null) {
-                    Log.i("$TAG Newly active speaker participant is [${firstNotUs.name}]")
-                    firstNotUs.isActiveSpeaker.postValue(true)
-                    activeSpeaker.postValue(firstNotUs!!)
-                } else {
-                    Log.i("$TAG No participant device that's not us found, expected if we're alone")
-                }
-            }
+            updateActiveSpeakerParticipantDevice(participantDevice)
         }
 
         @WorkerThread
@@ -209,6 +181,8 @@ class ConferenceViewModel
                 val newModel = ConferenceParticipantDeviceModel(participantDevice)
                 list.add(newModel)
                 participantDevices.postValue(sortParticipantDevicesList(list))
+                // Update active speaker when first participant other than ourselves joins
+                setParticipantDeviceModelAsActiveSpeaker(newModel)
             } else {
                 addParticipantDevice(participantDevice)
             }
@@ -872,6 +846,42 @@ class ConferenceViewModel
             )
             setNewLayout(ACTIVE_SPEAKER_LAYOUT)
             showRedToast(R.string.conference_too_many_participants_for_mosaic_layout_toast, R.drawable.warning_circle)
+        }
+    }
+
+    @WorkerThread
+    private fun setParticipantDeviceModelAsActiveSpeaker(model: ConferenceParticipantDeviceModel) {
+        Log.i("$TAG Newly active speaker participant is [${model.name}]")
+        model.isActiveSpeaker.postValue(true)
+        activeSpeaker.postValue(model)
+    }
+
+    @WorkerThread
+    private fun updateActiveSpeakerParticipantDevice(participantDevice: ParticipantDevice?) {
+        activeSpeaker.value?.isActiveSpeaker?.postValue(false)
+
+        if (participantDevice != null) {
+            val found = participantDevices.value.orEmpty().find {
+                it.device.address.equal(participantDevice.address)
+            }
+            if (found != null) {
+                setParticipantDeviceModelAsActiveSpeaker(found)
+            } else {
+                Log.i("$TAG Failed to find actively speaking participant...")
+                val model = ConferenceParticipantDeviceModel(participantDevice)
+                model.isActiveSpeaker.postValue(true)
+                activeSpeaker.postValue(model)
+            }
+        } else {
+            Log.w("$TAG Notified active speaker participant device is null, using first one that's not us")
+            val firstNotUs = participantDevices.value.orEmpty().find {
+                !it.isMe
+            }
+            if (firstNotUs != null) {
+                setParticipantDeviceModelAsActiveSpeaker(firstNotUs)
+            } else {
+                Log.i("$TAG No participant device that's not us found, expected if we're alone")
+            }
         }
     }
 }
