@@ -16,9 +16,9 @@
         android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.AppCompatEditText
-            onValueChanged="@{() -> model.onValueChanged(field.getText().toString())}"
+            onValueChanged="@{() -> model.onValueChanged(phoneNumberField.getText().toString())}"
             style="@style/default_text_style"
-            android:id="@+id/field"
+            android:id="@+id/phone_number_field"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginTop="5dp"
@@ -27,18 +27,18 @@
             android:text="@={model.value}"
             android:textSize="14sp"
             android:textColor="?attr/color_main2_600"
-            android:hint="@{model.isSip ? @string/sip_address : @string/phone_number, default=@string/sip_address}"
+            android:hint="@string/phone_number"
             android:background="@drawable/edit_text_background"
             android:maxLines="1"
-            android:inputType="@{model.isSip ? InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS : InputType.TYPE_CLASS_PHONE}"
+            android:inputType="phone"
             app:layout_constraintWidth_max="@dimen/text_input_max_width"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/remove"/>
+            app:layout_constraintEnd_toStartOf="@+id/remove_phone_number"/>
 
         <ImageView
             android:onClick="@{() -> model.remove()}"
-            android:id="@+id/remove"
+            android:id="@+id/remove_phone_number"
             android:visibility="@{model.showRemoveButton ? View.VISIBLE : View.INVISIBLE, default=invisible}"
             android:layout_width="@dimen/large_icon_size"
             android:layout_height="@dimen/large_icon_size"
@@ -47,11 +47,12 @@
             android:src="@drawable/x"
             android:background="@drawable/squircle_transparent_button_background"
             android:contentDescription="@string/content_description_contact_remove_field"
+            android:tag="@{model.value}"
             app:tint="?attr/color_main2_600"
-            app:layout_constraintStart_toEndOf="@id/field"
+            app:layout_constraintStart_toEndOf="@id/phone_number_field"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/field"
-            app:layout_constraintBottom_toBottomOf="@id/field"/>
+            app:layout_constraintTop_toTopOf="@id/phone_number_field"
+            app:layout_constraintBottom_toBottomOf="@id/phone_number_field"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -58,7 +58,7 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/assistant_page_title_style"
-                    android:id="@+id/title"
+                    android:id="@+id/login_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/assistant_account_login"
@@ -84,8 +84,8 @@
                     android:background="@drawable/squircle_transparent_button_background"
                     app:drawableTint="?attr/color_main2_500"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/title"
-                    app:layout_constraintBottom_toBottomOf="@id/title"/>
+                    app:layout_constraintTop_toTopOf="@id/login_title"
+                    app:layout_constraintBottom_toBottomOf="@id/login_title"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/header_style"
@@ -96,7 +96,7 @@
                     android:layout_marginEnd="16dp"
                     android:labelFor="@id/sip_identity"
                     android:text="@{@string/username + `*`, default=`Username*`}"
-                    app:layout_constraintTop_toBottomOf="@id/title"
+                    app:layout_constraintTop_toBottomOf="@id/login_title"
                     app:layout_constraintStart_toStartOf="@id/sip_identity"/>
 
                 <androidx.appcompat.widget.AppCompatEditText

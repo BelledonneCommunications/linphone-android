@@ -46,7 +46,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
-            android:id="@+id/name"
+            android:id="@+id/call_log_display_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -63,7 +63,7 @@
             android:layout_height="12dp"
             android:src="@{model.iconResId, default=@drawable/outgoing_call}"
             android:contentDescription="@null"
-            app:layout_constraintStart_toStartOf="@id/name"
+            app:layout_constraintStart_toStartOf="@id/call_log_display_name"
             app:layout_constraintTop_toTopOf="@id/date_time"
             app:layout_constraintBottom_toBottomOf="@id/date_time" />
 
@@ -77,7 +77,7 @@
             android:text="@{model.dateTime, default=`13 aout 2023`}"
             android:textSize="12sp"
             app:layout_constraintStart_toEndOf="@id/call_status"
-            app:layout_constraintTop_toBottomOf="@id/name"
+            app:layout_constraintTop_toBottomOf="@id/call_log_display_name"
             app:layout_constraintBottom_toTopOf="@id/separator"/>
 
         <ImageView
@@ -93,7 +93,7 @@
             android:visibility="@{model.wasConference ? View.GONE : View.VISIBLE}"
             app:tint="?attr/color_main2_500"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/name"
+            app:layout_constraintTop_toTopOf="@id/call_log_display_name"
             app:layout_constraintBottom_toBottomOf="@id/date_time" />
 
         <View
@@ -104,7 +104,7 @@
             android:background="?attr/color_separator"
             android:visibility="gone"
             android:importantForAccessibility="no"
-            app:layout_constraintStart_toStartOf="@id/name"
+            app:layout_constraintStart_toStartOf="@id/call_log_display_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 

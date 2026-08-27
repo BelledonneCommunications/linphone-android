@@ -191,12 +191,21 @@ class EditContactFragment : SlidingPaneChildFragment() {
         val inflater = requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val parent = if (model.isSip) binding.sipAddresses else binding.phoneNumbers
 
-        val cellBinding = DataBindingUtil.inflate<ViewDataBinding>(
-            inflater,
-            R.layout.contact_new_or_edit_cell,
-            parent,
-            false
-        )
+        val cellBinding: ViewDataBinding = if (model.isSip) {
+            DataBindingUtil.inflate(
+                inflater,
+                R.layout.contact_new_or_edit_sip_address_cell,
+                parent,
+                false
+            )
+        } else {
+            DataBindingUtil.inflate(
+                inflater,
+                R.layout.contact_new_or_edit_phone_number_cell,
+                parent,
+                false
+            )
+        }
         cellBinding.setVariable(BR.model, model)
         cellBinding.lifecycleOwner = (requireActivity() as MainActivity)
 

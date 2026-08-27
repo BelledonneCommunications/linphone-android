@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="android.text.InputType" />
+        <variable
+            name="model"
+            type="org.linphone.ui.main.contacts.model.NewOrEditNumberOrAddressModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            onValueChanged="@{() -> model.onValueChanged(sipAddressField.getText().toString())}"
+            style="@style/default_text_style"
+            android:id="@+id/sip_address_field"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="5dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@={model.value}"
+            android:textSize="14sp"
+            android:textColor="?attr/color_main2_600"
+            android:hint="@string/sip_address"
+            android:background="@drawable/edit_text_background"
+            android:maxLines="1"
+            android:inputType="textEmailAddress"
+            app:layout_constraintWidth_max="@dimen/text_input_max_width"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/remove_sip_address"/>
+
+        <ImageView
+            android:onClick="@{() -> model.remove()}"
+            android:id="@+id/remove_sip_address"
+            android:visibility="@{model.showRemoveButton ? View.VISIBLE : View.INVISIBLE, default=invisible}"
+            android:layout_width="@dimen/large_icon_size"
+            android:layout_height="@dimen/large_icon_size"
+            android:padding="5dp"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/x"
+            android:background="@drawable/squircle_transparent_button_background"
+            android:contentDescription="@string/content_description_contact_remove_field"
+            android:tag="@{model.value}"
+            app:tint="?attr/color_main2_600"
+            app:layout_constraintStart_toEndOf="@id/sip_address_field"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/sip_address_field"
+            app:layout_constraintBottom_toBottomOf="@id/sip_address_field"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

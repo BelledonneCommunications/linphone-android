@@ -33,13 +33,13 @@
             android:src="@drawable/caret_left"
             android:contentDescription="@string/content_description_go_back_icon"
             app:tint="?attr/color_main1_500"
-            app:layout_constraintBottom_toBottomOf="@id/title"
+            app:layout_constraintBottom_toBottomOf="@id/contact_editor_title"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/title" />
+            app:layout_constraintTop_toTopOf="@id/contact_editor_title" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/main_page_title_style"
-            android:id="@+id/title"
+            android:id="@+id/contact_editor_title"
             android:layout_width="0dp"
             android:layout_height="@dimen/top_bar_height"
             android:paddingStart="10dp"
@@ -53,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="?attr/color_grey_100"
-            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintTop_toBottomOf="@id/contact_editor_title"
             app:layout_constraintBottom_toBottomOf="parent">
 
             <ScrollView

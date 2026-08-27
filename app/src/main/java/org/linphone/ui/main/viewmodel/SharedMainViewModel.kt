@@ -103,6 +103,8 @@ class SharedMainViewModel
         MutableLiveData()
     }
 
+    var displayNameToSetToNewContact: String = ""
+
     var sipAddressToAddToNewContact: String = ""
 
     // Call logs related

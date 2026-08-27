@@ -170,6 +170,21 @@ class ContactNewOrEditViewModel
         coreContext.postOnCoreThread { core ->
             var status = Status.OK
 
+            val parsedSipAddresses = arrayListOf<Address>()
+            for (address in sipAddresses) {
+                val data = address.value.value.orEmpty().trim()
+                if (data.isNotEmpty()) {
+                    val parsedAddress = core.interpretUrl(data, false)
+                    if (parsedAddress != null) {
+                        parsedSipAddresses.add(parsedAddress)
+                    } else {
+                        Log.e("$TAG Failed to parse SIP address [$data]")
+                        showRedToast(R.string.assistant_login_cant_parse_address_toast, R.drawable.warning_circle)
+                        return@postOnCoreThread
+                    }
+                }
+            }
+
             if (!::friend.isInitialized) {
                 friend = core.createFriend()
             }
@@ -215,7 +230,7 @@ class ContactNewOrEditViewModel
             friend.organization = organization
             friend.jobTitle = jobTitle.value.orEmpty().trim()
 
-            updateAddresses()
+            updateAddresses(parsedSipAddresses)
             updatePhoneNumbers()
 
             if (isEdit.value == false) {
@@ -406,23 +421,11 @@ class ContactNewOrEditViewModel
     }
 
     @WorkerThread
-    private fun updateAddresses() {
-        val core = coreContext.core
-
-        val toKeep = arrayListOf<Address>()
-        for (address in sipAddresses) {
-            val data = address.value.value.orEmpty().trim()
-            if (data.isNotEmpty()) {
-                val parsedAddress = core.interpretUrl(data, false)
-                if (parsedAddress != null) {
-                    toKeep.add(parsedAddress)
-                }
-            }
-        }
+    private fun updateAddresses(parsedAddresses: ArrayList<Address>) {
         val toRemove = arrayListOf<Address>()
         val toAdd = arrayListOf<Address>()
 
-        for (newAddress in toKeep) {
+        for (newAddress in parsedAddresses) {
             var found = false
             for (oldAddress in friend.addresses) {
                 if (oldAddress.weakEqual(newAddress)) {
@@ -439,7 +442,7 @@ class ContactNewOrEditViewModel
         }
         for (oldAddress in friend.addresses) {
             var found = false
-            for (newAddress in toKeep) {
+            for (newAddress in parsedAddresses) {
                 if (oldAddress.weakEqual(newAddress)) {
                     found = true
                     break

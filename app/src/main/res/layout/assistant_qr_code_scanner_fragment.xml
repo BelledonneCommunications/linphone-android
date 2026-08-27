@@ -43,7 +43,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/assistant_page_title_style"
-            android:id="@+id/title"
+            android:id="@+id/scan_qr_code_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="100dp"

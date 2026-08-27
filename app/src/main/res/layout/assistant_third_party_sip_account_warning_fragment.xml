@@ -43,7 +43,7 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/assistant_page_title_style"
-                android:id="@+id/title"
+                android:id="@+id/third_party_warning_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/assistant_login_third_party_sip_account_title"
@@ -67,7 +67,7 @@
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/no_video"
-                app:layout_constraintTop_toBottomOf="@id/title"/>
+                app:layout_constraintTop_toBottomOf="@id/third_party_warning_title"/>
 
             <ImageView
                 android:id="@+id/no_video"
@@ -81,7 +81,7 @@
                 app:tint="?attr/color_main2_500"
                 app:layout_constraintStart_toEndOf="@id/no_chat"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/title"/>
+                app:layout_constraintTop_toBottomOf="@id/third_party_warning_title"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style"

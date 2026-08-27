@@ -145,6 +145,7 @@ class HistoryListFragment : AbstractMainFragment() {
                         )
 
                         sharedViewModel.sipAddressToAddToNewContact = addressToAdd
+                        sharedViewModel.displayNameToSetToNewContact = model.avatarModel.contactName.orEmpty()
                         sharedViewModel.navigateToContactsEvent.value = Event(true)
                         sharedViewModel.showNewContactEvent.value = Event(true)
                     },

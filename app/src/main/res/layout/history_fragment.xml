@@ -51,14 +51,14 @@
                 android:layout_height="@dimen/top_bar_height"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                app:layout_constraintEnd_toStartOf="@id/menu"
+                app:layout_constraintEnd_toStartOf="@id/call_details_menu"
                 app:layout_constraintStart_toEndOf="@id/back"
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <ImageView
                 style="@style/icon_top_bar_button_style"
                 android:onClick="@{menuClickListener}"
-                android:id="@+id/menu"
+                android:id="@+id/call_details_menu"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:src="@drawable/dots_three_vertical"
@@ -111,7 +111,7 @@
 
                         <androidx.appcompat.widget.AppCompatTextView
                             style="@style/default_text_style"
-                            android:id="@+id/name"
+                            android:id="@+id/call_details_display_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
@@ -128,7 +128,7 @@
 
                         <androidx.appcompat.widget.AppCompatTextView
                             style="@style/default_text_style"
-                            android:id="@+id/address"
+                            android:id="@+id/call_details_sip_address"
                             android:onClick="@{copyPeerSipUriClickListener}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -145,7 +145,7 @@
                             app:drawableTint="?attr/color_main2_600"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/name" />
+                            app:layout_constraintTop_toBottomOf="@id/call_details_display_name" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             style="@style/default_text_style_300"
@@ -158,7 +158,7 @@
                             android:textSize="14sp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/address"/>
+                            app:layout_constraintTop_toBottomOf="@id/call_details_sip_address"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 

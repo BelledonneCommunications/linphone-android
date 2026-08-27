@@ -57,7 +57,7 @@
                     android:scaleType="centerCrop"
                     android:contentDescription="@null"
                     android:src="@drawable/assistant_logo"
-                    app:layout_constraintStart_toEndOf="@id/title"
+                    app:layout_constraintStart_toEndOf="@id/register_title"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/mountains"
                     app:layout_constraintTop_toBottomOf="@id/login" />
@@ -73,13 +73,13 @@
                     android:contentDescription="@string/content_description_go_back_icon"
                     android:background="@drawable/circle_transparent_button_background"
                     app:tint="?attr/color_main2_500"
-                    app:layout_constraintTop_toTopOf="@id/title"
+                    app:layout_constraintTop_toTopOf="@id/register_title"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/title"/>
+                    app:layout_constraintEnd_toStartOf="@id/register_title"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/assistant_page_title_style"
-                    android:id="@+id/title"
+                    android:id="@+id/register_title"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/top_bar_height"
                     android:layout_marginStart="10dp"
@@ -104,9 +104,9 @@
                     android:contentDescription="@null"
                     app:tint="?attr/color_main2_500"
                     app:layout_constraintVertical_chainStyle="packed"
-                    app:layout_constraintStart_toStartOf="@id/title"
-                    app:layout_constraintEnd_toEndOf="@id/title"
-                    app:layout_constraintTop_toBottomOf="@id/title"
+                    app:layout_constraintStart_toStartOf="@id/register_title"
+                    app:layout_constraintEnd_toEndOf="@id/register_title"
+                    app:layout_constraintTop_toBottomOf="@id/register_title"
                     app:layout_constraintBottom_toTopOf="@id/no_push_label"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -121,8 +121,8 @@
                     android:text="@string/assistant_account_register_unavailable_no_push_warning"
                     app:layout_constraintTop_toBottomOf="@id/no_push"
                     app:layout_constraintBottom_toTopOf="@id/create_email_account_no_push"
-                    app:layout_constraintStart_toStartOf="@id/title"
-                    app:layout_constraintEnd_toEndOf="@id/title"/>
+                    app:layout_constraintStart_toStartOf="@id/register_title"
+                    app:layout_constraintEnd_toEndOf="@id/register_title"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:onClick="@{openSubscribeWebPageClickListener}"
@@ -141,8 +141,8 @@
                     android:textColor="@color/secondary_button_label_color"
                     android:gravity="center"
                     android:background="@drawable/secondary_button_background"
-                    app:layout_constraintStart_toStartOf="@id/title"
-                    app:layout_constraintEnd_toEndOf="@id/title"
+                    app:layout_constraintStart_toStartOf="@id/register_title"
+                    app:layout_constraintEnd_toEndOf="@id/register_title"
                     app:layout_constraintTop_toBottomOf="@id/no_push_label"
                     app:layout_constraintBottom_toTopOf="@id/mountains" />
 
@@ -156,7 +156,7 @@
                     android:labelFor="@id/username"
                     android:text="@{@string/username + `*`}"
                     app:layout_constraintVertical_chainStyle="packed"
-                    app:layout_constraintTop_toBottomOf="@id/title"
+                    app:layout_constraintTop_toBottomOf="@id/register_title"
                     app:layout_constraintBottom_toTopOf="@id/username"
                     app:layout_constraintStart_toStartOf="@id/username"/>
 
@@ -179,8 +179,8 @@
                     app:layout_constraintWidth_max="@dimen/text_input_max_width"
                     app:layout_constraintTop_toBottomOf="@id/username_label"
                     app:layout_constraintBottom_toTopOf="@id/username_error"
-                    app:layout_constraintStart_toStartOf="@id/title"
-                    app:layout_constraintEnd_toEndOf="@id/title"/>
+                    app:layout_constraintStart_toStartOf="@id/register_title"
+                    app:layout_constraintEnd_toEndOf="@id/register_title"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/default_text_style_600"
@@ -319,8 +319,8 @@
                     app:layout_constraintWidth_max="@dimen/text_input_max_width"
                     app:layout_constraintTop_toBottomOf="@id/password_label"
                     app:layout_constraintBottom_toTopOf="@id/password_error"
-                    app:layout_constraintStart_toStartOf="@id/title"
-                    app:layout_constraintEnd_toEndOf="@id/title"/>
+                    app:layout_constraintStart_toStartOf="@id/register_title"
+                    app:layout_constraintEnd_toEndOf="@id/register_title"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/default_text_style_600"
@@ -364,8 +364,8 @@
                     app:layout_constraintWidth_max="@dimen/button_max_width"
                     app:layout_constraintTop_toBottomOf="@id/password_error"
                     app:layout_constraintBottom_toTopOf="@id/create_email_account"
-                    app:layout_constraintStart_toStartOf="@id/title"
-                    app:layout_constraintEnd_toEndOf="@id/title" />
+                    app:layout_constraintStart_toStartOf="@id/register_title"
+                    app:layout_constraintEnd_toEndOf="@id/register_title" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/default_text_style"
@@ -378,7 +378,7 @@
                     android:textColor="?attr/color_main2_700"
                     app:layout_constraintTop_toTopOf="@id/create_email_account"
                     app:layout_constraintBottom_toBottomOf="@id/create_email_account"
-                    app:layout_constraintStart_toStartOf="@id/title"
+                    app:layout_constraintStart_toStartOf="@id/register_title"
                     app:layout_constraintEnd_toStartOf="@id/create_email_account"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -427,8 +427,8 @@
                     android:text="@string/assistant_account_login"
                     app:layout_constraintVertical_bias="1"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/title"
-                    app:layout_constraintBottom_toBottomOf="@id/title"/>
+                    app:layout_constraintTop_toTopOf="@id/register_title"
+                    app:layout_constraintBottom_toBottomOf="@id/register_title"/>
 
                 <ImageView
                     android:id="@+id/mountains"

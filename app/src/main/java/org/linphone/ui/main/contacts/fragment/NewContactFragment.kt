@@ -114,6 +114,8 @@ class NewContactFragment : GenericMainFragment() {
         binding.viewModel = viewModel
         observeToastEvents(viewModel)
 
+        viewModel.findFriendByRefKey("")
+
         val addressToAdd = sharedViewModel.sipAddressToAddToNewContact
         if (addressToAdd.isNotEmpty()) {
             Log.i("$TAG Pre-filling new contact form with SIP address [$addressToAdd]")
@@ -124,7 +126,21 @@ class NewContactFragment : GenericMainFragment() {
             }
         }
 
-        viewModel.findFriendByRefKey("")
+        val displayNameToSetToNewContact = sharedViewModel.displayNameToSetToNewContact
+        if (displayNameToSetToNewContact.isNotEmpty()) {
+            if (displayNameToSetToNewContact.contains(" ")) {
+                val split = displayNameToSetToNewContact.split(" ")
+                val firstName = split[0]
+                val lastName = split[1]
+                Log.i("$TAG Pre-filling new contact form with first name [$firstName] and last name [$lastName]")
+                viewModel.firstName.value = firstName
+                viewModel.lastName.value = lastName
+            } else {
+                Log.i("$TAG Pre-filling new contact form with last name [$displayNameToSetToNewContact]")
+                viewModel.lastName.value = displayNameToSetToNewContact
+            }
+            sharedViewModel.displayNameToSetToNewContact = ""
+        }
 
         binding.setBackClickListener {
             showAbortConfirmationDialogIfPendingChanges()
@@ -193,12 +209,21 @@ class NewContactFragment : GenericMainFragment() {
         val inflater = requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val parent = if (model.isSip) binding.sipAddresses else binding.phoneNumbers
 
-        val cellBinding = DataBindingUtil.inflate<ViewDataBinding>(
-            inflater,
-            R.layout.contact_new_or_edit_cell,
-            parent,
-            false
-        )
+        val cellBinding: ViewDataBinding = if (model.isSip) {
+            DataBindingUtil.inflate(
+                inflater,
+                R.layout.contact_new_or_edit_sip_address_cell,
+                parent,
+                false
+            )
+        } else {
+            DataBindingUtil.inflate(
+                inflater,
+                R.layout.contact_new_or_edit_phone_number_cell,
+                parent,
+                false
+            )
+        }
         cellBinding.setVariable(BR.model, model)
         cellBinding.lifecycleOwner = (requireActivity() as MainActivity)
 

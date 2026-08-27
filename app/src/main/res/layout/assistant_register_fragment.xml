@@ -70,7 +70,7 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/assistant_page_title_style"
-                    android:id="@+id/title"
+                    android:id="@+id/register_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/assistant_account_register"
@@ -117,7 +117,7 @@
                     android:layout_marginEnd="16dp"
                     android:labelFor="@id/username"
                     android:text="@{@string/username + `*`}"
-                    app:layout_constraintTop_toBottomOf="@id/title"
+                    app:layout_constraintTop_toBottomOf="@id/register_title"
                     app:layout_constraintStart_toStartOf="@id/username"/>
 
                 <androidx.appcompat.widget.AppCompatEditText

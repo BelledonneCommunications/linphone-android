@@ -36,7 +36,7 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/assistant_page_title_style"
-                android:id="@+id/title"
+                android:id="@+id/register_code_confirmation_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/assistant_account_creation_sms_confirmation_title"
@@ -58,7 +58,7 @@
                 android:textSize="14sp"
                 android:textColor="?attr/color_main2_600"
                 android:gravity="center_horizontal"
-                app:layout_constraintTop_toBottomOf="@id/title"
+                app:layout_constraintTop_toBottomOf="@id/register_code_confirmation_title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 

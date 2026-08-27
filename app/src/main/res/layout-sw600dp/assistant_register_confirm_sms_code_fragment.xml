@@ -33,7 +33,7 @@
                 app:layout_constraintStart_toEndOf="@id/message"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/mountains"
-                app:layout_constraintTop_toBottomOf="@id/title" />
+                app:layout_constraintTop_toBottomOf="@id/register_code_confirmation_title" />
 
             <ImageView
                 android:id="@+id/back"
@@ -47,13 +47,13 @@
                 android:background="@drawable/circle_transparent_button_background"
                 android:visibility="invisible"
                 app:tint="?attr/color_main2_500"
-                app:layout_constraintTop_toTopOf="@id/title"
+                app:layout_constraintTop_toTopOf="@id/register_code_confirmation_title"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/title"/>
+                app:layout_constraintEnd_toStartOf="@id/register_code_confirmation_title"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/assistant_page_title_style"
-                android:id="@+id/title"
+                android:id="@+id/register_code_confirmation_title"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/top_bar_height"
                 android:layout_marginStart="10dp"
@@ -79,10 +79,10 @@
                 android:textSize="14sp"
                 android:textColor="?attr/color_main2_600"
                 app:layout_constraintVertical_chainStyle="packed"
-                app:layout_constraintTop_toBottomOf="@id/title"
+                app:layout_constraintTop_toBottomOf="@id/register_code_confirmation_title"
                 app:layout_constraintBottom_toTopOf="@id/code_first_digit"
-                app:layout_constraintStart_toStartOf="@id/title"
-                app:layout_constraintEnd_toEndOf="@id/title"/>
+                app:layout_constraintStart_toStartOf="@id/register_code_confirmation_title"
+                app:layout_constraintEnd_toEndOf="@id/register_code_confirmation_title"/>
 
             <androidx.appcompat.widget.AppCompatEditText
                 focusNextOnInput="@{true}"
@@ -105,7 +105,7 @@
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
                 app:layout_constraintTop_toBottomOf="@id/message"
                 app:layout_constraintBottom_toTopOf="@id/wrong_number"
-                app:layout_constraintStart_toStartOf="@id/title"
+                app:layout_constraintStart_toStartOf="@id/register_code_confirmation_title"
                 app:layout_constraintEnd_toStartOf="@id/code_second_digit" />
 
             <androidx.appcompat.widget.AppCompatEditText
@@ -171,7 +171,7 @@
                 app:layout_constraintTop_toTopOf="@id/code_first_digit"
                 app:layout_constraintBottom_toBottomOf="@id/code_first_digit"
                 app:layout_constraintStart_toEndOf="@id/code_third_digit"
-                app:layout_constraintEnd_toEndOf="@id/title" />
+                app:layout_constraintEnd_toEndOf="@id/register_code_confirmation_title" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style_600"
@@ -189,8 +189,8 @@
                 android:textColor="@color/secondary_button_label_color"
                 android:gravity="center"
                 android:background="@drawable/secondary_button_background"
-                app:layout_constraintStart_toStartOf="@id/title"
-                app:layout_constraintEnd_toEndOf="@id/title"
+                app:layout_constraintStart_toStartOf="@id/register_code_confirmation_title"
+                app:layout_constraintEnd_toEndOf="@id/register_code_confirmation_title"
                 app:layout_constraintTop_toBottomOf="@id/code_first_digit"
                 app:layout_constraintBottom_toTopOf="@id/mountains"/>
 

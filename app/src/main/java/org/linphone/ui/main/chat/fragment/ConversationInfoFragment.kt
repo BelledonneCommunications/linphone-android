@@ -288,6 +288,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
             if (!sipUri.isNullOrEmpty()) {
                 Log.i("$TAG Trying to add participant [$sipUri] to contacts")
                 sharedViewModel.sipAddressToAddToNewContact = sipUri
+                sharedViewModel.displayNameToSetToNewContact = viewModel.avatarModel.value?.contactName.orEmpty()
                 sharedViewModel.navigateToContactsEvent.value = Event(true)
                 sharedViewModel.showNewContactEvent.value = Event(true)
             } else {
@@ -412,6 +413,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
             if (sipUri.isNotEmpty()) {
                 Log.i("$TAG Trying to add participant [${participantModel.sipUri}] to contacts")
                 sharedViewModel.sipAddressToAddToNewContact = sipUri
+                sharedViewModel.displayNameToSetToNewContact = viewModel.avatarModel.value?.contactName.orEmpty()
                 sharedViewModel.navigateToContactsEvent.value = Event(true)
                 sharedViewModel.showNewContactEvent.value = Event(true)
             } else {

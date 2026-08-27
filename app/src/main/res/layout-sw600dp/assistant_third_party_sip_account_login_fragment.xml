@@ -42,7 +42,7 @@
                     app:layout_constraintStart_toEndOf="@id/advanced_settings"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/mountains"
-                    app:layout_constraintTop_toBottomOf="@id/title" />
+                    app:layout_constraintTop_toBottomOf="@id/third_party_login_title" />
 
                 <ImageView
                     android:id="@+id/back"
@@ -55,13 +55,13 @@
                     android:contentDescription="@string/content_description_go_back_icon"
                     android:background="@drawable/circle_transparent_button_background"
                     app:tint="?attr/color_main2_500"
-                    app:layout_constraintTop_toTopOf="@id/title"
+                    app:layout_constraintTop_toTopOf="@id/third_party_login_title"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/title"/>
+                    app:layout_constraintEnd_toStartOf="@id/third_party_login_title"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/assistant_page_title_style"
-                    android:id="@+id/title"
+                    android:id="@+id/third_party_login_title"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/top_bar_height"
                     android:layout_marginStart="10dp"
@@ -86,7 +86,7 @@
                     android:labelFor="@id/username"
                     android:text="@{@string/username + `*`}"
                     app:layout_constraintVertical_chainStyle="packed"
-                    app:layout_constraintTop_toBottomOf="@id/title"
+                    app:layout_constraintTop_toBottomOf="@id/third_party_login_title"
                     app:layout_constraintBottom_toTopOf="@id/username"
                     app:layout_constraintStart_toStartOf="@id/username"/>
 
@@ -108,8 +108,8 @@
                     app:layout_constraintWidth_max="@dimen/button_max_width"
                     app:layout_constraintTop_toBottomOf="@id/username_label"
                     app:layout_constraintBottom_toTopOf="@id/password_label"
-                    app:layout_constraintStart_toStartOf="@id/title"
-                    app:layout_constraintEnd_toEndOf="@id/title"/>
+                    app:layout_constraintStart_toStartOf="@id/third_party_login_title"
+                    app:layout_constraintEnd_toEndOf="@id/third_party_login_title"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/header_style"
@@ -143,8 +143,8 @@
                     app:layout_constraintWidth_max="@dimen/text_input_max_width"
                     app:layout_constraintTop_toBottomOf="@id/password_label"
                     app:layout_constraintBottom_toTopOf="@id/domain_label"
-                    app:layout_constraintStart_toStartOf="@id/title"
-                    app:layout_constraintEnd_toEndOf="@id/title"/>
+                    app:layout_constraintStart_toStartOf="@id/third_party_login_title"
+                    app:layout_constraintEnd_toEndOf="@id/third_party_login_title"/>
 
                 <ImageView
                     android:onClick="@{() -> viewModel.toggleShowPassword()}"
@@ -192,8 +192,8 @@
                     app:layout_constraintWidth_max="@dimen/text_input_max_width"
                     app:layout_constraintTop_toBottomOf="@id/domain_label"
                     app:layout_constraintBottom_toTopOf="@id/display_name_label"
-                    app:layout_constraintStart_toStartOf="@id/title"
-                    app:layout_constraintEnd_toEndOf="@id/title"/>
+                    app:layout_constraintStart_toStartOf="@id/third_party_login_title"
+                    app:layout_constraintEnd_toEndOf="@id/third_party_login_title"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/header_style"
@@ -227,8 +227,8 @@
                     app:layout_constraintWidth_max="@dimen/text_input_max_width"
                     app:layout_constraintTop_toBottomOf="@id/display_name_label"
                     app:layout_constraintBottom_toTopOf="@id/transport_label"
-                    app:layout_constraintStart_toStartOf="@id/title"
-                    app:layout_constraintEnd_toEndOf="@id/title"/>
+                    app:layout_constraintStart_toStartOf="@id/third_party_login_title"
+                    app:layout_constraintEnd_toEndOf="@id/third_party_login_title"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/header_style"
@@ -260,8 +260,8 @@
                     app:layout_constraintWidth_max="@dimen/text_input_max_width"
                     app:layout_constraintTop_toBottomOf="@id/transport_label"
                     app:layout_constraintBottom_toTopOf="@id/login"
-                    app:layout_constraintStart_toStartOf="@id/title"
-                    app:layout_constraintEnd_toEndOf="@id/title"/>
+                    app:layout_constraintStart_toStartOf="@id/third_party_login_title"
+                    app:layout_constraintEnd_toEndOf="@id/third_party_login_title"/>
 
                 <ImageView
                     android:id="@+id/transport_caret"
@@ -290,7 +290,7 @@
                     app:layout_constraintWidth_max="@dimen/button_max_width"
                     app:layout_constraintTop_toBottomOf="@id/transport"
                     app:layout_constraintBottom_toTopOf="@id/mountains"
-                    app:layout_constraintStart_toStartOf="@id/title" />
+                    app:layout_constraintStart_toStartOf="@id/third_party_login_title" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/section_header_style"
@@ -307,9 +307,9 @@
                     android:drawablePadding="10dp"
                     android:background="@drawable/squircle_transparent_button_background"
                     app:layout_constraintWidth_max="@dimen/button_max_width"
-                    app:layout_constraintStart_toEndOf="@id/title"
+                    app:layout_constraintStart_toEndOf="@id/third_party_login_title"
                     app:layout_constraintEnd_toStartOf="@id/logo"
-                    app:layout_constraintTop_toBottomOf="@id/title" />
+                    app:layout_constraintTop_toBottomOf="@id/third_party_login_title" />
 
                 <androidx.constraintlayout.widget.Group
                     android:id="@+id/advanced_settings_group"

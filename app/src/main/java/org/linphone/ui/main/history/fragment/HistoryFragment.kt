@@ -233,7 +233,10 @@ class HistoryFragment : SlidingPaneChildFragment() {
         popupView.disableAddContact = corePreferences.disableAddContact
 
         popupView.setAddToContactsListener {
-            sharedViewModel.sipAddressToAddToNewContact = viewModel.callLogModel.value?.displayedAddress.orEmpty()
+            val addressToAdd = viewModel.callLogModel.value?.displayedAddress.orEmpty()
+            Log.i("$TAG Navigating to new contact with pre-filled value [$addressToAdd]")
+            sharedViewModel.sipAddressToAddToNewContact = addressToAdd
+            sharedViewModel.displayNameToSetToNewContact = viewModel.callLogModel.value?.avatarModel?.contactName.orEmpty()
             sharedViewModel.navigateToContactsEvent.value = Event(true)
             sharedViewModel.showNewContactEvent.value = Event(true)
             popupWindow.dismiss()
@@ -242,6 +245,7 @@ class HistoryFragment : SlidingPaneChildFragment() {
         popupView.setGoToContactListener {
             val friendRefKey = viewModel.callLogModel.value?.friendRefKey
             if (!friendRefKey.isNullOrEmpty()) {
+                Log.i("$TAG Navigating to contact with ref key [$friendRefKey]")
                 sharedViewModel.navigateToContactsEvent.value = Event(true)
                 sharedViewModel.showContactEvent.value = Event(friendRefKey)
             }
@@ -260,7 +264,7 @@ class HistoryFragment : SlidingPaneChildFragment() {
 
         // Elevation is for showing a shadow around the popup
         popupWindow.elevation = 20f
-        popupWindow.showAsDropDown(binding.menu, 0, 0, Gravity.BOTTOM)
+        popupWindow.showAsDropDown(binding.callDetailsMenu, 0, 0, Gravity.BOTTOM)
     }
 
     private fun showDeleteConfirmationDialog() {

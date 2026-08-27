@@ -55,7 +55,7 @@
     
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/assistant_page_title_style"
-                android:id="@+id/title"
+                android:id="@+id/grant_permissions_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/assistant_permissions_title"
