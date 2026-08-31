@@ -67,6 +67,15 @@ class MediaListViewModel
         mediaList.postValue(arrayListOf(model))
     }
 
+    @UiThread
+    fun getTempModelPath(): String {
+        return if (::temporaryModel.isInitialized) {
+            temporaryModel.path
+        } else {
+            ""
+        }
+    }
+
     @WorkerThread
     private fun loadMediaList() {
         val list = arrayListOf<FileModel>()

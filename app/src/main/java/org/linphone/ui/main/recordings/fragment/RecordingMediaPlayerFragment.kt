@@ -59,12 +59,13 @@ class RecordingMediaPlayerFragment : GenericMainFragment() {
         }
 
         override fun onStartTrackingTouch(seekBar: SeekBar) {
+            viewModel.automaticallyStartPlaying = viewModel.isPlaying.value == true
             viewModel.pause()
         }
 
         override fun onStopTrackingTouch(seekBar: SeekBar) {
             val newPosition = seekBar.progress
-            viewModel.seekTo(newPosition)
+            viewModel.seekTo(newPosition, viewModel.automaticallyStartPlaying)
         }
     }
 
@@ -146,10 +147,15 @@ class RecordingMediaPlayerFragment : GenericMainFragment() {
             }
         }
 
-        viewModel.play()
+        if (viewModel.automaticallyStartPlaying) {
+            Log.i("$TAG Fragment has been resumed, starting media player")
+            viewModel.play()
+        }
     }
 
     override fun onPause() {
+        viewModel.automaticallyStartPlaying = viewModel.isPlaying.value == true
+
         if (viewModel.isPlaying.value == true) {
             Log.i("$TAG Paused, stopping player")
             viewModel.pause()

@@ -64,6 +64,8 @@ class MediaViewModel
 
     val position = MutableLiveData<Int>()
 
+    val videoSizeRatio = MutableLiveData<Pair<Int, Int>>()
+
     val videoSizeChangedEvent: MutableLiveData<Event<Pair<Int, Int>>> by lazy {
         MutableLiveData()
     }
@@ -71,6 +73,8 @@ class MediaViewModel
     val changeFullScreenModeEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData()
     }
+
+    var automaticallyStartPlaying = true
 
     lateinit var mediaPlayer: MediaPlayer
 
@@ -91,6 +95,17 @@ class MediaViewModel
 
     @UiThread
     fun loadFile(file: String) {
+        if (::filePath.isInitialized && filePath == file) {
+            Log.w("$TAG Media player already configured for this file, doing nothing (device was probably rotated)")
+            if (isVideo.value == true) {
+                val ratio = videoSizeRatio.value
+                if (ratio != null) {
+                    videoSizeChangedEvent.postValue(Event(ratio))
+                }
+            }
+            return
+        }
+
         filePath = file
         val name = FileUtils.getNameFromFilePath(file)
         fileName.value = name
@@ -195,6 +210,7 @@ class MediaViewModel
                     changeFullScreenModeEvent.postValue(Event(false))
                 }
                 setOnVideoSizeChangedListener { mediaPlayer, width, height ->
+                    videoSizeRatio.postValue(Pair(width, height))
                     videoSizeChangedEvent.postValue(Event(Pair(width, height)))
                 }
                 try {
