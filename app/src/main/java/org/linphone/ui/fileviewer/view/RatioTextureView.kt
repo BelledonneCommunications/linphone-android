@@ -35,13 +35,13 @@ class RatioTextureView : TextureView {
     )
 
     private var ratioWidth = 0
-    private var rationHeight = 0
+    private var ratioHeight = 0
 
     fun setAspectRatio(width: Int, height: Int) {
         if (width < 0 || height < 0) return
 
         ratioWidth = width
-        rationHeight = height
+        ratioHeight = height
         requestLayout()
     }
 
@@ -50,13 +50,13 @@ class RatioTextureView : TextureView {
         val width = MeasureSpec.getSize(widthMeasureSpec)
         val height = MeasureSpec.getSize(heightMeasureSpec)
 
-        if (ratioWidth == 0 || rationHeight == 0) {
+        if (ratioWidth == 0 || ratioHeight == 0) {
             setMeasuredDimension(width, height)
         } else {
-            if (width < height * ratioWidth / rationHeight) {
-                setMeasuredDimension(width, width * rationHeight / ratioWidth)
+            if (width < height * ratioWidth / ratioHeight) {
+                setMeasuredDimension(width, width * ratioHeight / ratioWidth)
             } else {
-                setMeasuredDimension(height * ratioWidth / rationHeight, height)
+                setMeasuredDimension(height * ratioWidth / ratioHeight, height)
             }
         }
     }

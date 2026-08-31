@@ -112,17 +112,27 @@ class MediaViewerActivity : GenericActivity() {
             enableWindowSecureMode(true)
         }
 
+        val currentlyLoadedPath = viewModel.getTempModelPath()
+
         val timestamp = args.getLong("timestamp", -1)
         val isEncrypted = args.getBoolean("isEncrypted", false)
         val originalPath = args.getString("originalPath", "")
         Log.i("$TAG Path argument is [$path], timestamp [$timestamp], encrypted [$isEncrypted] and original path [$originalPath]")
-        viewModel.initTempModel(path, timestamp, isEncrypted, originalPath, isFromEphemeralMessage)
+        if (currentlyLoadedPath.isEmpty() || currentlyLoadedPath != path) {
+            viewModel.initTempModel(
+                path,
+                timestamp,
+                isEncrypted,
+                originalPath,
+                isFromEphemeralMessage
+            )
 
-        val conversationId = args.getString("conversationId").orEmpty()
-        Log.i(
-            "$TAG Looking up for conversation with conversation ID [$conversationId] trying to display file [$path]"
-        )
-        viewModel.findChatRoom(null, conversationId)
+            val conversationId = args.getString("conversationId").orEmpty()
+            Log.i(
+                "$TAG Looking up for conversation with conversation ID [$conversationId] trying to display file [$path]"
+            )
+            viewModel.findChatRoom(null, conversationId)
+        }
 
         viewModel.mediaList.observe(this) {
             updateMediaList(path, it)
@@ -191,6 +201,7 @@ class MediaViewerActivity : GenericActivity() {
             index
         }
 
+        Log.i("$TAG Setting current item position to [$position]")
         viewPager.setCurrentItem(position, false)
         viewPager.offscreenPageLimit = 1
     }
