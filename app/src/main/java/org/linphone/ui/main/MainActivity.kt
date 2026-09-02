@@ -24,6 +24,7 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
@@ -152,11 +153,19 @@ class MainActivity : GenericActivity() {
         // Must be done before the setContentView
         installSplashScreen()
 
-        enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT) {
-                true // Force dark mode to always have white icons in status bar
-            }
-        )
+        val sw600dpLand = resources.configuration.smallestScreenWidthDp >= 600 &&
+                resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        if (sw600dpLand) {
+            // Do not force white icons in status bar as it will use the app's background color depending on device light/dark theme
+            Log.i("$TAG Device is in sw600dp-land configuration")
+            enableEdgeToEdge()
+        } else {
+            enableEdgeToEdge(
+                statusBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT) {
+                    true // Force dark mode to always have white icons in status bar, black over orange isn't looking great
+                }
+            )
+        }
 
         super.onCreate(savedInstanceState)
 
