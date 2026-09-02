@@ -27,6 +27,7 @@ import android.view.ViewGroup
 import android.widget.PopupWindow
 import androidx.annotation.UiThread
 import androidx.core.text.isDigitsOnly
+import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -90,7 +91,6 @@ class HistoryFragment : SlidingPaneChildFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        postponeEnterTransition()
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
@@ -112,8 +112,9 @@ class HistoryFragment : SlidingPaneChildFragment() {
                     Log.i(
                         "$TAG Found matching call log for call ID [$callId]"
                     )
-                    startPostponedEnterTransition()
-                    sharedViewModel.openSlidingPaneEvent.value = Event(true)
+                    (view.parent as? ViewGroup)?.doOnPreDraw {
+                        sharedViewModel.openSlidingPaneEvent.postValue(Event(true))
+                    }
                 } else {
                     Log.e("$TAG Failed to find call log, going back")
                     goBack()

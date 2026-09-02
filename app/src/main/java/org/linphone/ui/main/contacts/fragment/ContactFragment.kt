@@ -50,6 +50,7 @@ import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import androidx.core.net.toUri
+import androidx.core.view.doOnPreDraw
 
 @UiThread
 class ContactFragment : SlidingPaneChildFragment() {
@@ -89,7 +90,6 @@ class ContactFragment : SlidingPaneChildFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        postponeEnterTransition()
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
@@ -140,8 +140,9 @@ class ContactFragment : SlidingPaneChildFragment() {
         viewModel.contactFoundEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG Contact has been found, start postponed enter transition")
-                startPostponedEnterTransition()
-                sharedViewModel.openSlidingPaneEvent.value = Event(true)
+                (view.parent as? ViewGroup)?.doOnPreDraw {
+                    sharedViewModel.openSlidingPaneEvent.postValue(Event(true))
+                }
             }
         }
 
