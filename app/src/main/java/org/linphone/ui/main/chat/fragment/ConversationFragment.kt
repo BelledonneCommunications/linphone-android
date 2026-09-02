@@ -769,6 +769,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
 
         sendMessageViewModel.messageSentEvent.observe(viewLifecycleOwner) {
             it.consume { message ->
+                sharedViewModel.updateConversationLastMessageEvent.value = Event(viewModel.conversationId)
                 viewModel.addSentMessageToEventsList(message)
             }
         }
