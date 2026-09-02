@@ -153,9 +153,7 @@ class ContactsListFragment : AbstractMainFragment() {
             binding.contactsList.clipToOutline = filtered
         }
 
-        listViewModel.contactsList.observe(
-            viewLifecycleOwner
-        ) {
+        listViewModel.contactsList.observe(viewLifecycleOwner) {
             adapter.submitList(it)
 
             // Wait for adapter to have items before setting it in the RecyclerView,
@@ -168,9 +166,7 @@ class ContactsListFragment : AbstractMainFragment() {
             listViewModel.fetchInProgress.value = false
         }
 
-        listViewModel.favouritesList.observe(
-            viewLifecycleOwner
-        ) {
+        listViewModel.favouritesList.observe(viewLifecycleOwner) {
             favouritesAdapter.submitList(it)
 
             // Wait for adapter to have items before setting it in the RecyclerView,

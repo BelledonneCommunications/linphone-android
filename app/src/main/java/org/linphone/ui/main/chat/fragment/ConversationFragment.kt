@@ -619,7 +619,7 @@ open class ConversationFragment : SlidingPaneChildFragment() {
                 }
 
                 (view.parent as? ViewGroup)?.doOnPreDraw {
-                    sharedViewModel.openSlidingPaneEvent.value = Event(true)
+                    sharedViewModel.openSlidingPaneEvent.postValue(Event(true))
                 }
             }
         }

@@ -29,6 +29,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import androidx.annotation.UiThread
+import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -90,7 +91,6 @@ class MeetingFragment : SlidingPaneChildFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        postponeEnterTransition()
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
@@ -165,7 +165,9 @@ class MeetingFragment : SlidingPaneChildFragment() {
         viewModel.conferenceInfoFoundEvent.observe(viewLifecycleOwner) {
             it.consume { found ->
                 if (found) {
-                    startPostponedEnterTransition()
+                    (view.parent as? ViewGroup)?.doOnPreDraw {
+                        sharedViewModel.openSlidingPaneEvent.postValue(Event(true))
+                    }
                 } else {
                     Log.e("$TAG Failed to find meeting with URI [$uri], going back")
                     goBack()
