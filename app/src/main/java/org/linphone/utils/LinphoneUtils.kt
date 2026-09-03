@@ -397,15 +397,24 @@ class LinphoneUtils {
         }
 
         @WorkerThread
-        fun getChatRoomParamsToCancelMeeting(): ConferenceParams? {
-            val chatRoomParams = coreContext.core.createConferenceParams(null)
+        fun getChatRoomParamsForMeetingInvitationsAndUpdates(): ConferenceParams? {
+            val core = coreContext.core
+            val chatRoomParams = core.createConferenceParams(null)
             chatRoomParams.isChatEnabled = true
             chatRoomParams.isGroupEnabled = false
             chatRoomParams.subject = "Meeting invitation" // Won't be used
             val chatParams = chatRoomParams.chatParams ?: return null
             chatParams.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
-            chatParams.backend = ChatRoom.Backend.FlexisipChat
-            chatRoomParams.securityLevel = Conference.SecurityLevel.EndToEnd
+
+            if (isEndToEndEncryptedChatAvailable(core)) {
+                Log.i("$TAG LIME is available, sending invitation through 1-1 E2E encrypted chat rooms with each participant")
+                chatParams.backend = ChatRoom.Backend.FlexisipChat
+                chatRoomParams.securityLevel = Conference.SecurityLevel.EndToEnd
+            } else {
+                Log.w("$TAG LIME is not available, sending invitation through 1-1 clear text chat rooms with each participant")
+                chatParams.backend = ChatRoom.Backend.Basic
+                chatRoomParams.securityLevel = Conference.SecurityLevel.None
+            }
             return chatRoomParams
         }
 

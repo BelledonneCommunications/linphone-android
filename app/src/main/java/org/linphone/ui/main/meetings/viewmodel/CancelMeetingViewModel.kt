@@ -59,7 +59,7 @@ open class CancelMeetingViewModel
                 )
                 if (sendNotificationForCancelledConference) {
                     Log.i("$TAG Sending cancelled meeting ICS to participants")
-                    val params = LinphoneUtils.getChatRoomParamsToCancelMeeting()
+                    val params = LinphoneUtils.getChatRoomParamsForMeetingInvitationsAndUpdates()
                     if (params != null && !corePreferences.disableChat) {
                         conferenceScheduler.sendInvitations(params)
                     } else {

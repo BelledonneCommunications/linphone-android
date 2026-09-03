@@ -29,7 +29,6 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.Address
-import org.linphone.core.ChatRoom
 import org.linphone.core.Conference
 import org.linphone.core.ConferenceInfo
 import org.linphone.core.ConferenceScheduler
@@ -139,15 +138,8 @@ class ScheduleMeetingViewModel
 
                     if (sendInvitations.value == true && !corePreferences.disableChat) {
                         Log.i("$TAG User asked for invitations to be sent, let's do it")
-
-                        val chatRoomParams = coreContext.core.createConferenceParams(null)
-                        chatRoomParams.isChatEnabled = true
-                        chatRoomParams.isGroupEnabled = false
-                        chatRoomParams.subject = "Meeting invitation" // Won't be used
-                        val chatParams = chatRoomParams.chatParams ?: return
-                        chatParams.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
-                        chatParams.backend = ChatRoom.Backend.FlexisipChat
-                        chatRoomParams.securityLevel = Conference.SecurityLevel.EndToEnd
+                        val chatRoomParams = LinphoneUtils.getChatRoomParamsForMeetingInvitationsAndUpdates()
+                        chatRoomParams ?: return
                         conferenceScheduler.sendInvitations(chatRoomParams)
                     } else {
                         Log.i("$TAG User didn't asked for invitations to be sent")
