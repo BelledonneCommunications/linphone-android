@@ -122,7 +122,7 @@ class ContactAvatarModel
     @WorkerThread
     fun refreshSortingName() {
         sortingName = getNameToUseForSorting()
-        firstLetter = AppUtils.getFirstLetter(getNameToUseForSorting().orEmpty())
+        firstLetter = AppUtils.getFirstLetter(getNameToUseForSorting())
     }
 
     @WorkerThread
