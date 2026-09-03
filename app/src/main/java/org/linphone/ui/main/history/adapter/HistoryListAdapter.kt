@@ -28,7 +28,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.core.Address
@@ -36,6 +35,7 @@ import org.linphone.core.Friend
 import org.linphone.databinding.GenericAddressPickerListDecorationBinding
 import org.linphone.databinding.HistoryListCellBinding
 import org.linphone.databinding.HistoryListContactSuggestionCellBinding
+import org.linphone.ui.GenericListAdapter
 import org.linphone.ui.main.history.model.CallLogModel
 import org.linphone.ui.main.history.model.CallLogModelWrapper
 import org.linphone.ui.main.model.ConversationContactOrSuggestionModel
@@ -44,15 +44,13 @@ import org.linphone.utils.Event
 import org.linphone.utils.HeaderAdapter
 
 class HistoryListAdapter :
-    ListAdapter<CallLogModelWrapper, RecyclerView.ViewHolder>(CallLogDiffCallback()),
+    GenericListAdapter<CallLogModelWrapper, RecyclerView.ViewHolder>(CallLogDiffCallback()),
     HeaderAdapter {
     companion object {
         private const val CALL_LOG_TYPE = 0
         private const val CONTACT_TYPE = 1
         private const val SUGGESTION_TYPE = 2
     }
-
-    var selectedAdapterPosition = -1
 
     val callLogClickedEvent: MutableLiveData<Event<CallLogModel>> by lazy {
         MutableLiveData()
@@ -136,7 +134,7 @@ class HistoryListAdapter :
 
                     setOnLongClickListener {
                         selectedAdapterPosition = viewHolder.bindingAdapterPosition
-                        root.isSelected = true
+                        selectBindingRoot(this)
                         callLogLongClickedEvent.value = Event(model!!)
                         true
                     }
@@ -178,11 +176,6 @@ class HistoryListAdapter :
         }
     }
 
-    fun resetSelection() {
-        notifyItemChanged(selectedAdapterPosition)
-        selectedAdapterPosition = -1
-    }
-
     inner class CallLogViewHolder(
         val binding: HistoryListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -191,7 +184,7 @@ class HistoryListAdapter :
             with(binding) {
                 model = callLogModel
 
-                binding.root.isSelected = bindingAdapterPosition == selectedAdapterPosition
+                setBindingRootSelectedIfNeeded(binding, bindingAdapterPosition)
 
                 executePendingBindings()
             }

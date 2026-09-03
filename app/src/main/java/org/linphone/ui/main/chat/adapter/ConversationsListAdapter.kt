@@ -29,7 +29,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.core.Address
@@ -37,6 +36,7 @@ import org.linphone.core.Friend
 import org.linphone.databinding.ChatListCellBinding
 import org.linphone.databinding.ChatListContactSuggestionCellBinding
 import org.linphone.databinding.GenericAddressPickerListDecorationBinding
+import org.linphone.ui.GenericListAdapter
 import org.linphone.ui.main.chat.model.ConversationModel
 import org.linphone.ui.main.chat.model.ConversationModelWrapper
 import org.linphone.ui.main.model.ConversationContactOrSuggestionModel
@@ -46,7 +46,7 @@ import org.linphone.utils.HeaderAdapter
 import org.linphone.utils.startAnimatedDrawable
 
 class ConversationsListAdapter :
-    ListAdapter<ConversationModelWrapper, RecyclerView.ViewHolder>(
+    GenericListAdapter<ConversationModelWrapper, RecyclerView.ViewHolder>(
     ChatRoomDiffCallback()
 ),
     HeaderAdapter  {
@@ -55,8 +55,6 @@ class ConversationsListAdapter :
         private const val CONTACT_TYPE = 1
         private const val SUGGESTION_TYPE = 2
     }
-
-    var selectedAdapterPosition = -1
 
     val conversationClickedEvent: MutableLiveData<Event<ConversationModel>> by lazy {
         MutableLiveData()
@@ -136,7 +134,7 @@ class ConversationsListAdapter :
 
                     setOnLongClickListener {
                         selectedAdapterPosition = viewHolder.bindingAdapterPosition
-                        root.isSelected = true
+                        selectBindingRoot(this)
                         conversationLongClickedEvent.value = Event(model!!)
                         true
                     }
@@ -174,11 +172,6 @@ class ConversationsListAdapter :
         }
     }
 
-    fun resetSelection() {
-        notifyItemChanged(selectedAdapterPosition)
-        selectedAdapterPosition = -1
-    }
-
     inner class ConversationViewHolder(
         val binding: ChatListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -187,7 +180,7 @@ class ConversationsListAdapter :
             with(binding) {
                 model = conversationModel
 
-                binding.root.isSelected = bindingAdapterPosition == selectedAdapterPosition
+                setBindingRootSelectedIfNeeded(binding, bindingAdapterPosition)
 
                 executePendingBindings()
 

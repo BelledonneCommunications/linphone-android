@@ -28,19 +28,19 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.databinding.MeetingListCellBinding
 import org.linphone.databinding.MeetingListTodayIndicatorBinding
 import org.linphone.databinding.MeetingsListDecorationBinding
+import org.linphone.ui.GenericListAdapter
 import org.linphone.ui.main.meetings.model.MeetingListItemModel
 import org.linphone.ui.main.meetings.model.MeetingModel
 import org.linphone.utils.Event
 import org.linphone.utils.HeaderAdapter
 
 class MeetingsListAdapter :
-    ListAdapter<MeetingListItemModel, RecyclerView.ViewHolder>(
+    GenericListAdapter<MeetingListItemModel, RecyclerView.ViewHolder>(
         MeetingDiffCallback()
     ),
     HeaderAdapter {
@@ -48,8 +48,6 @@ class MeetingsListAdapter :
         const val MEETING = 1
         const val TODAY_INDICATOR = 2
     }
-
-    var selectedAdapterPosition = -1
 
     val meetingClickedEvent: MutableLiveData<Event<MeetingModel>> by lazy {
         MutableLiveData()
@@ -97,11 +95,6 @@ class MeetingsListAdapter :
         }
     }
 
-    fun resetSelection() {
-        notifyItemChanged(selectedAdapterPosition)
-        selectedAdapterPosition = -1
-    }
-
     private fun createMeetingViewHolder(parent: ViewGroup): MeetingViewHolder {
         val binding: MeetingListCellBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
@@ -119,7 +112,7 @@ class MeetingsListAdapter :
 
             setOnLongClickListener {
                 selectedAdapterPosition = viewHolder.bindingAdapterPosition
-                root.isSelected = true
+                selectBindingRoot(this)
                 meetingLongClickedEvent.value = Event(model!!)
                 true
             }
@@ -149,7 +142,7 @@ class MeetingsListAdapter :
             with(binding) {
                 model = meetingModel
 
-                binding.root.isSelected = bindingAdapterPosition == selectedAdapterPosition
+                setBindingRootSelectedIfNeeded(binding, bindingAdapterPosition)
 
                 executePendingBindings()
             }

@@ -28,21 +28,20 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.databinding.RecordingListCellBinding
 import org.linphone.databinding.RecordingsListDecorationBinding
+import org.linphone.ui.GenericListAdapter
 import org.linphone.ui.main.recordings.model.RecordingModel
 import org.linphone.utils.Event
 import org.linphone.utils.HeaderAdapter
 
 class RecordingsListAdapter :
-    ListAdapter<RecordingModel, RecyclerView.ViewHolder>(
+    GenericListAdapter<RecordingModel, RecyclerView.ViewHolder>(
         RecordingDiffCallback()
     ),
     HeaderAdapter {
-    var selectedAdapterPosition = -1
 
     val recordingClickedEvent: MutableLiveData<Event<RecordingModel>> by lazy {
         MutableLiveData()
@@ -85,7 +84,7 @@ class RecordingsListAdapter :
 
             setOnLongClickListener {
                 selectedAdapterPosition = viewHolder.bindingAdapterPosition
-                root.isSelected = true
+                selectBindingRoot(this)
                 recordingLongClickedEvent.value = Event(model!!)
                 true
             }
@@ -97,11 +96,6 @@ class RecordingsListAdapter :
         (holder as ViewHolder).bind(getItem(position))
     }
 
-    fun resetSelection() {
-        notifyItemChanged(selectedAdapterPosition)
-        selectedAdapterPosition = -1
-    }
-
     inner class ViewHolder(
         val binding: RecordingListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -110,7 +104,7 @@ class RecordingsListAdapter :
             with(binding) {
                 model = recordingModel
 
-                binding.root.isSelected = bindingAdapterPosition == selectedAdapterPosition
+                setBindingRootSelectedIfNeeded(binding, bindingAdapterPosition)
 
                 executePendingBindings()
             }
