@@ -180,9 +180,11 @@ class HistoryListFragment : AbstractMainFragment() {
 
         adapter.callLogClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
-                val uri = model.id
+                val uri = model.id.orEmpty()
                 Log.i("$TAG Show details for call log with ID [$uri]")
-                if (!uri.isNullOrEmpty()) {
+                listViewModel.currentlyDisplayedItemId = uri
+
+                if (uri.isNotEmpty()) {
                     val navController = binding.historyNavContainer.findNavController()
                     val action =
                         HistoryFragmentDirections.actionGlobalHistoryFragment(uri)
@@ -247,6 +249,12 @@ class HistoryListFragment : AbstractMainFragment() {
             if (binding.historyList.adapter != adapter) {
                 binding.historyList.adapter = adapter
             }
+
+            val index = listViewModel.callLogs.value.orEmpty().indexOfFirst { callLog ->
+                callLog.callLogModel?.id == listViewModel.currentlyDisplayedItemId
+            }
+            Log.i("$TAG Found call log with ID [${listViewModel.currentlyDisplayedItemId}] at index [$index]")
+            adapter.notifyItemHasBeenSelected(index)
 
             Log.i("$TAG Call logs ready with [${it.size}] items")
             listViewModel.fetchInProgress.value = false
