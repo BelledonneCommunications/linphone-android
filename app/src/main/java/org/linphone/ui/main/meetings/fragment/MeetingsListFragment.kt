@@ -147,6 +147,8 @@ class MeetingsListFragment : AbstractMainFragment() {
                     Log.w("$TAG Meeting with ID [${model.id}] is cancelled, can't show the details")
                 } else {
                     Log.i("$TAG Show meeting with ID [${model.id}]")
+                    listViewModel.currentlyDisplayedItemId = model.id
+
                     if (findNavController().currentDestination?.id == R.id.meetingsListFragment) {
                         sharedViewModel.displayedMeeting = model.conferenceInfo
                         val action = MeetingFragmentDirections.actionGlobalMeetingFragment(model.id)
@@ -165,6 +167,12 @@ class MeetingsListFragment : AbstractMainFragment() {
             if (binding.meetingsList.adapter != adapter) {
                 binding.meetingsList.adapter = adapter
             }
+
+            val index = listViewModel.meetings.value.orEmpty().indexOfFirst { meeting ->
+                meeting.id == listViewModel.currentlyDisplayedItemId
+            }
+            Log.i("$TAG Found meeting with ID [${listViewModel.currentlyDisplayedItemId}] at index [$index]")
+            adapter.notifyItemHasBeenSelected(index)
 
             Log.i("$TAG Meetings list ready with [$newCount] items")
             listViewModel.fetchInProgress.value = false

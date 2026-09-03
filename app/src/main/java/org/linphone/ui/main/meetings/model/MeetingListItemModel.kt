@@ -28,6 +28,8 @@ class MeetingListItemModel
     meetingModel: MeetingModel?,
     val firstMeetingOfTheWeek: Boolean
 ) {
+    val id = meetingModel?.id.orEmpty()
+
     val isToday = meetingModel == null || meetingModel.isToday
 
     val isTodayIndicator = meetingModel == null
