@@ -89,6 +89,10 @@ class HistoryListFragment : AbstractMainFragment() {
         listViewModel.filter()
     }
 
+    override fun onSlidingPaneClosed() {
+        adapter.resetSelection()
+    }
+
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
         if (findNavController().currentDestination?.id == R.id.startCallFragment ||
             findNavController().currentDestination?.id == R.id.meetingWaitingRoomFragment
@@ -136,7 +140,7 @@ class HistoryListFragment : AbstractMainFragment() {
                 val modalBottomSheet = HistoryMenuDialogFragment(
                     model.friendExists,
                     { // onDismiss
-                        adapter.resetSelection()
+                        adapter.resetActivated()
                     },
                     { // onAddToContact
                         val addressToAdd = model.displayedAddress

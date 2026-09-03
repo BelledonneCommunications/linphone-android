@@ -129,12 +129,12 @@ class ConversationsListAdapter :
                     lifecycleOwner = parent.findViewTreeLifecycleOwner()
 
                     setOnClickListener {
+                        selectBindingRoot(this, viewHolder.bindingAdapterPosition)
                         conversationClickedEvent.value = Event(model!!)
                     }
 
                     setOnLongClickListener {
-                        selectedAdapterPosition = viewHolder.bindingAdapterPosition
-                        selectBindingRoot(this)
+                        activateBindingRoot(this, viewHolder.bindingAdapterPosition)
                         conversationLongClickedEvent.value = Event(model!!)
                         true
                     }
@@ -180,7 +180,7 @@ class ConversationsListAdapter :
             with(binding) {
                 model = conversationModel
 
-                setBindingRootSelectedIfNeeded(binding, bindingAdapterPosition)
+                setBindingRootSelectedAndActivatedIfNeeded(binding, bindingAdapterPosition)
 
                 executePendingBindings()
 

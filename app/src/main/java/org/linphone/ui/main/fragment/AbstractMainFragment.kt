@@ -96,6 +96,8 @@ abstract class AbstractMainFragment : GenericMainFragment() {
 
     abstract fun onDefaultAccountChanged()
 
+    abstract fun onSlidingPaneClosed()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         postponeEnterTransition()
 
@@ -235,6 +237,7 @@ abstract class AbstractMainFragment : GenericMainFragment() {
                 if (slidingPane.isSlideable) {
                     Log.d("$TAG Closing sliding pane")
                     ensureNavigationBarIsVisible()
+                    onSlidingPaneClosed()
                     slidingPane.closePane()
                 }
             }

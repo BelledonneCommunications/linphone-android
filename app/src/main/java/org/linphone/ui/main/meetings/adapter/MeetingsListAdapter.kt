@@ -107,12 +107,12 @@ class MeetingsListAdapter :
             lifecycleOwner = parent.findViewTreeLifecycleOwner()
 
             setOnClickListener {
+                selectBindingRoot(this, viewHolder.bindingAdapterPosition)
                 meetingClickedEvent.value = Event(model!!)
             }
 
             setOnLongClickListener {
-                selectedAdapterPosition = viewHolder.bindingAdapterPosition
-                selectBindingRoot(this)
+                activateBindingRoot(this, viewHolder.bindingAdapterPosition)
                 meetingLongClickedEvent.value = Event(model!!)
                 true
             }
@@ -142,7 +142,7 @@ class MeetingsListAdapter :
             with(binding) {
                 model = meetingModel
 
-                setBindingRootSelectedIfNeeded(binding, bindingAdapterPosition)
+                setBindingRootSelectedAndActivatedIfNeeded(binding, bindingAdapterPosition)
 
                 executePendingBindings()
             }

@@ -152,17 +152,17 @@ class RecordingsListFragment : GenericMainFragment() {
             it.consume { model ->
                 val modalBottomSheet = RecordingsMenuDialogFragment(
                     { // onDismiss
-                        adapter.resetSelection()
+                        adapter.resetActivated()
                     },
                     { // onShare
                         Log.i("$TAG Sharing call recording [${model.filePath}]")
                         shareFile(model.filePath, model.fileName)
-                        adapter.resetSelection()
+                        adapter.resetActivated()
                     },
                     { // onExport
                         Log.i("$TAG Saving call recording [${model.filePath}]")
                         exportFile(model.filePath)
-                        adapter.resetSelection()
+                        adapter.resetActivated()
                     },
                     { // onDelete
                         Log.i("$TAG Deleting call recording [${model.filePath}]")

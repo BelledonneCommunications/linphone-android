@@ -71,8 +71,8 @@ class ContactsListFragment : AbstractMainFragment() {
 
     private lateinit var listViewModel: ContactsListViewModel
 
-    private lateinit var adapter: ContactsListAdapter
-    private lateinit var favouritesAdapter: ContactsListAdapter
+    private lateinit var allContactsAdapter: ContactsListAdapter
+    private lateinit var favouritesContactsAdapter: ContactsListAdapter
 
     private var bottomSheetDialog: BottomSheetDialogFragment? = null
 
@@ -99,6 +99,10 @@ class ContactsListFragment : AbstractMainFragment() {
         listViewModel.applyCurrentDefaultAccountFilter()
     }
 
+    override fun onSlidingPaneClosed() {
+        allContactsAdapter.resetSelection()
+    }
+
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
         if (findNavController().currentDestination?.id == R.id.newContactFragment
         ) {
@@ -111,8 +115,8 @@ class ContactsListFragment : AbstractMainFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        adapter = ContactsListAdapter()
-        favouritesAdapter = ContactsListAdapter(favourites = true)
+        allContactsAdapter = ContactsListAdapter()
+        favouritesContactsAdapter = ContactsListAdapter(favourites = true)
     }
 
     override fun onCreateView(
@@ -147,20 +151,22 @@ class ContactsListFragment : AbstractMainFragment() {
         favouritesLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
         binding.favouritesContactsList.layoutManager = favouritesLayoutManager
 
-        configureAdapter(adapter)
-        configureAdapter(favouritesAdapter)
+        configureAdapter(allContactsAdapter)
+        configureAdapter(favouritesContactsAdapter)
 
         listViewModel.isListFiltered.observe(viewLifecycleOwner) { filtered ->
             binding.contactsList.clipToOutline = filtered
         }
 
         listViewModel.contactsList.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
+            allContactsAdapter.submitList(it)
 
             // Wait for adapter to have items before setting it in the RecyclerView,
             // otherwise scroll position isn't retained
-            if (binding.contactsList.adapter != adapter) {
-                binding.contactsList.adapter = adapter
+            if (binding.contactsList.adapter != allContactsAdapter) {
+                binding.contactsList.adapter = allContactsAdapter
+
+                highlightSelectedContactIfAny()
             }
 
             Log.i("$TAG Contacts list updated with [${it.size}] items")
@@ -168,12 +174,12 @@ class ContactsListFragment : AbstractMainFragment() {
         }
 
         listViewModel.favouritesList.observe(viewLifecycleOwner) {
-            favouritesAdapter.submitList(it)
+            favouritesContactsAdapter.submitList(it)
 
             // Wait for adapter to have items before setting it in the RecyclerView,
             // otherwise scroll position isn't retained
-            if (binding.favouritesContactsList.adapter != favouritesAdapter) {
-                binding.favouritesContactsList.adapter = favouritesAdapter
+            if (binding.favouritesContactsList.adapter != favouritesContactsAdapter) {
+                binding.favouritesContactsList.adapter = favouritesContactsAdapter
             }
 
             Log.i("$TAG Favourites contacts list updated with [${it.size}] items")
@@ -207,12 +213,7 @@ class ContactsListFragment : AbstractMainFragment() {
 
         sharedViewModel.showContactEvent.observe(viewLifecycleOwner) {
             it.consume { refKey ->
-                Log.i("$TAG Displaying contact with ref key [$refKey]")
-                val navController = binding.contactsNavContainer.findNavController()
-                val action = ContactFragmentDirections.actionGlobalContactFragment(
-                    refKey
-                )
-                navController.navigate(action)
+                showContact(refKey)
             }
         }
 
@@ -315,7 +316,7 @@ class ContactsListFragment : AbstractMainFragment() {
                     isReadOnly = model.isReadOnly,
                     isNative = model.isNative,
                     { // onDismiss
-                        adapter.resetSelection()
+                        adapter.resetActivated()
                     },
                     { // onFavourite
                         listViewModel.toggleContactFavoriteFlag(model)
@@ -335,12 +336,32 @@ class ContactsListFragment : AbstractMainFragment() {
             }
         }
 
+        adapter.favouriteContactClickedEvent.observe(viewLifecycleOwner) {
+            it.consume { model ->
+                sharedViewModel.displayedFriend = model.friend
+                allContactsAdapter.resetSelection()
+                showContact(model.id)
+                highlightSelectedContactIfAny()
+            }
+        }
+
         adapter.contactClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
                 sharedViewModel.displayedFriend = model.friend
-                sharedViewModel.showContactEvent.value = Event(model.id)
+                showContact(model.id)
             }
         }
+    }
+
+    private fun showContact(id: String) {
+        Log.i("$TAG Displaying contact with ref key [$id]")
+        listViewModel.currentlyDisplayedItemId = id
+
+        val navController = binding.contactsNavContainer.findNavController()
+        val action = ContactFragmentDirections.actionGlobalContactFragment(
+            id
+        )
+        navController.navigate(action)
     }
 
     private fun shareContact(name: String, file: File) {
@@ -440,5 +461,13 @@ class ContactsListFragment : AbstractMainFragment() {
         }
 
         dialog.show()
+    }
+
+    private fun highlightSelectedContactIfAny() {
+        val index = listViewModel.contactsList.value.orEmpty().indexOfFirst { contact ->
+            contact.id == listViewModel.currentlyDisplayedItemId
+        }
+        Log.i("$TAG Found contact with RefKey [${listViewModel.currentlyDisplayedItemId}] at index [$index]")
+        allContactsAdapter.notifyItemHasBeenSelected(index)
     }
 }

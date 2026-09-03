@@ -42,6 +42,10 @@ class ContactsListAdapter(
         MutableLiveData()
     }
 
+    val favouriteContactClickedEvent: MutableLiveData<Event<ContactAvatarModel>> by lazy {
+        MutableLiveData()
+    }
+
     val contactLongClickedEvent: MutableLiveData<Event<ContactAvatarModel>> by lazy {
         MutableLiveData()
     }
@@ -59,12 +63,11 @@ class ContactsListAdapter(
                 lifecycleOwner = parent.findViewTreeLifecycleOwner()
 
                 setOnClickListener {
-                    contactClickedEvent.value = Event(model!!)
+                    favouriteContactClickedEvent.value = Event(model!!)
                 }
 
                 setOnLongClickListener {
-                    selectedAdapterPosition = viewHolder.bindingAdapterPosition
-                    selectBindingRoot(this)
+                    activateBindingRoot(this, viewHolder.bindingAdapterPosition)
                     contactLongClickedEvent.value = Event(model!!)
                     true
                 }
@@ -82,13 +85,13 @@ class ContactsListAdapter(
                 lifecycleOwner = parent.findViewTreeLifecycleOwner()
 
                 setOnClickListener {
+                    selectBindingRoot(this, viewHolder.bindingAdapterPosition)
                     contactClickedEvent.value = Event(model!!)
                 }
 
                 if (!disableLongClick) {
                     setOnLongClickListener {
-                        selectedAdapterPosition = viewHolder.bindingAdapterPosition
-                        selectBindingRoot(this)
+                        activateBindingRoot(this, viewHolder.bindingAdapterPosition)
                         contactLongClickedEvent.value = Event(model!!)
                         true
                     }
@@ -114,7 +117,7 @@ class ContactsListAdapter(
             with(binding) {
                 model = contactModel
 
-                setBindingRootSelectedIfNeeded(binding, bindingAdapterPosition)
+                setBindingRootSelectedAndActivatedIfNeeded(binding, bindingAdapterPosition)
 
                 val previousItem = bindingAdapterPosition - 1
                 val previousLetter = if (previousItem >= 0 && !getItem(previousItem).sortingName.isNullOrEmpty()) {
@@ -144,7 +147,7 @@ class ContactsListAdapter(
             with(binding) {
                 model = contactModel
 
-                setBindingRootSelectedIfNeeded(binding, bindingAdapterPosition)
+                setBindingRootSelectedAndActivatedIfNeeded(binding, bindingAdapterPosition)
 
                 executePendingBindings()
             }

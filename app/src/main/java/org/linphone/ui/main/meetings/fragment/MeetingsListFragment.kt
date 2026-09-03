@@ -81,6 +81,10 @@ class MeetingsListFragment : AbstractMainFragment() {
         }
     }
 
+    override fun onSlidingPaneClosed() {
+        adapter.resetSelection()
+    }
+
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
         if (
             findNavController().currentDestination?.id == R.id.scheduleMeetingFragment ||
@@ -192,7 +196,7 @@ class MeetingsListFragment : AbstractMainFragment() {
                 val modalBottomSheet = MeetingsMenuDialogFragment(
                     showCancelActionInsteadOfDelete,
                     { // onDismiss
-                        adapter.resetSelection()
+                        adapter.resetActivated()
                     },
                     { // onDelete
                         if (showCancelActionInsteadOfDelete) {

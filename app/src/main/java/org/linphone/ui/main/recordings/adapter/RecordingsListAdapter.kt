@@ -79,12 +79,11 @@ class RecordingsListAdapter :
 
             setOnClickListener {
                 recordingClickedEvent.value = Event(model!!)
-                resetSelection()
+                resetActivated()
             }
 
             setOnLongClickListener {
-                selectedAdapterPosition = viewHolder.bindingAdapterPosition
-                selectBindingRoot(this)
+                activateBindingRoot(this, viewHolder.bindingAdapterPosition)
                 recordingLongClickedEvent.value = Event(model!!)
                 true
             }
@@ -104,7 +103,7 @@ class RecordingsListAdapter :
             with(binding) {
                 model = recordingModel
 
-                setBindingRootSelectedIfNeeded(binding, bindingAdapterPosition)
+                setBindingRootSelectedAndActivatedIfNeeded(binding, bindingAdapterPosition)
 
                 executePendingBindings()
             }

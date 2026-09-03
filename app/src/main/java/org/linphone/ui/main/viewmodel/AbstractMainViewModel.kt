@@ -100,6 +100,8 @@ open class AbstractMainViewModel
         MutableLiveData()
     }
 
+    var currentlyDisplayedItemId = ""
+
     protected var currentFilter = ""
 
     private val coreListener = object : CoreListenerStub() {

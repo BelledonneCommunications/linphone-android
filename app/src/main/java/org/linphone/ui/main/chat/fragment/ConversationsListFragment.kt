@@ -104,6 +104,10 @@ class ConversationsListFragment : AbstractMainFragment() {
         listViewModel.filter()
     }
 
+    override fun onSlidingPaneClosed() {
+        adapter.resetSelection()
+    }
+
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
         if (
             findNavController().currentDestination?.id == R.id.startConversationFragment ||
@@ -155,7 +159,7 @@ class ConversationsListFragment : AbstractMainFragment() {
                     model.isReadOnly.value == true,
                     (model.unreadMessageCount.value ?: 0) > 0,
                     { // onDismiss
-                        adapter.resetSelection()
+                        adapter.resetActivated()
                     },
                     { // onMarkConversationAsRead
                         Log.i("$TAG Marking conversation [${model.id}] as read")
@@ -236,6 +240,12 @@ class ConversationsListFragment : AbstractMainFragment() {
                 binding.conversationsList.adapter = adapter
             }
 
+            val index = listViewModel.conversations.value.orEmpty().indexOfFirst { conversation ->
+                conversation.conversationModel?.id == listViewModel.currentlyDisplayedItemId
+            }
+            Log.i("$TAG Found conversation with ID [${listViewModel.currentlyDisplayedItemId}] at index [$index]")
+            adapter.notifyItemHasBeenSelected(index)
+
             Log.i("$TAG Conversations list ready with [${it.size}] items")
             listViewModel.fetchInProgress.value = false
         }
@@ -251,6 +261,8 @@ class ConversationsListFragment : AbstractMainFragment() {
         sharedViewModel.showConversationEvent.observe(viewLifecycleOwner) {
             it.consume { conversationId ->
                 Log.i("$TAG Navigating to conversation fragment with ID [$conversationId]")
+                listViewModel.currentlyDisplayedItemId = conversationId
+
                 val action = ConversationFragmentDirections.actionGlobalConversationFragment(conversationId)
                 binding.chatNavContainer.findNavController().navigate(action)
             }
