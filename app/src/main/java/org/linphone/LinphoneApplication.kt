@@ -56,6 +56,7 @@ class LinphoneApplication : Application(), SingletonImageLoader.Factory {
         lateinit var coreContext: CoreContext
     }
 
+    @SuppressLint("ThreadConstraint")
     override fun onCreate() {
         super.onCreate()
         val context = applicationContext
