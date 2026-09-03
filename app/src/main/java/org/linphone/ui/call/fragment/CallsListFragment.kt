@@ -92,7 +92,7 @@ class CallsListFragment : GenericCallFragment() {
             it.consume { model ->
                 val modalBottomSheet = CallMenuDialogFragment(model) {
                     // onDismiss
-                    adapter.resetSelection()
+                    adapter.resetActivated()
                 }
                 modalBottomSheet.show(parentFragmentManager, CallMenuDialogFragment.TAG)
                 bottomSheetDialog = modalBottomSheet

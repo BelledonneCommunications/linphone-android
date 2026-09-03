@@ -129,12 +129,12 @@ class HistoryListAdapter :
                     lifecycleOwner = parent.findViewTreeLifecycleOwner()
 
                     setOnClickListener {
+                        selectBindingRoot(this, viewHolder.bindingAdapterPosition)
                         callLogClickedEvent.value = Event(model!!)
                     }
 
                     setOnLongClickListener {
-                        selectedAdapterPosition = viewHolder.bindingAdapterPosition
-                        selectBindingRoot(this)
+                        activateBindingRoot(this, viewHolder.bindingAdapterPosition)
                         callLogLongClickedEvent.value = Event(model!!)
                         true
                     }
@@ -184,7 +184,7 @@ class HistoryListAdapter :
             with(binding) {
                 model = callLogModel
 
-                setBindingRootSelectedIfNeeded(binding, bindingAdapterPosition)
+                setBindingRootSelectedAndActivatedIfNeeded(binding, bindingAdapterPosition)
 
                 executePendingBindings()
             }

@@ -61,8 +61,7 @@ class CallsListAdapter(private val showTransferIconInsteadOfCallState: Boolean =
             }
 
             setOnLongClickListener {
-                selectedAdapterPosition = viewHolder.bindingAdapterPosition
-                selectBindingRoot(this)
+                activateBindingRoot(this, viewHolder.bindingAdapterPosition)
                 callLongClickedEvent.value = Event(model!!)
                 true
             }
@@ -82,7 +81,7 @@ class CallsListAdapter(private val showTransferIconInsteadOfCallState: Boolean =
             with(binding) {
                 model = callModel
 
-                setBindingRootSelectedIfNeeded(binding, bindingAdapterPosition)
+                setBindingRootSelectedAndActivatedIfNeeded(binding, bindingAdapterPosition)
 
                 executePendingBindings()
             }
