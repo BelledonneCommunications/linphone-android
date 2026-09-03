@@ -136,10 +136,11 @@ class ContactsListFragment : AbstractMainFragment() {
         // Disabled by default, may be enabled in onResume()
         binding.contactsListSwipeRefresh.isEnabled = false
         binding.contactsListSwipeRefresh.setOnRefreshListener(swipeToRefreshListener)
+        binding.contactsListSwipeRefresh.outlineProvider = outlineProvider
+        binding.contactsListSwipeRefresh.clipToOutline = true
 
         binding.contactsList.setHasFixedSize(true)
         binding.contactsList.layoutManager = LinearLayoutManager(requireContext())
-        binding.contactsList.outlineProvider = outlineProvider
 
         binding.favouritesContactsList.setHasFixedSize(true)
         val favouritesLayoutManager = LinearLayoutManager(requireContext())
