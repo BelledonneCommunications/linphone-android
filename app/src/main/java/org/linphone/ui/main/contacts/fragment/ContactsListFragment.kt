@@ -100,6 +100,7 @@ class ContactsListFragment : AbstractMainFragment() {
     }
 
     override fun onSlidingPaneClosed() {
+        listViewModel.currentlyDisplayedItemId = ""
         allContactsAdapter.resetSelection()
     }
 

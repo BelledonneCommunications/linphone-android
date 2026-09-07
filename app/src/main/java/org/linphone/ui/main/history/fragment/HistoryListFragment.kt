@@ -90,6 +90,7 @@ class HistoryListFragment : AbstractMainFragment() {
     }
 
     override fun onSlidingPaneClosed() {
+        listViewModel.currentlyDisplayedItemId = ""
         adapter.resetSelection()
     }
 
