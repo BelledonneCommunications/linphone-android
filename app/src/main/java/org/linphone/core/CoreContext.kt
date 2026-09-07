@@ -913,6 +913,16 @@ class CoreContext
         }
     }
 
+    @AnyThread
+    fun postOnMainThreadDelayed(
+        @WorkerThread lambda: () -> Unit,
+        delay: Long
+    ) {
+        mainThread.postDelayed({
+            lambda.invoke()
+        }, delay)
+    }
+
     @UiThread
     fun onForeground() {
         postOnCoreThread {

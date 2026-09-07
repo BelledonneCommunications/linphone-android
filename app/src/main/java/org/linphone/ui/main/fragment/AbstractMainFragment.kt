@@ -238,7 +238,14 @@ abstract class AbstractMainFragment : GenericMainFragment() {
                     Log.d("$TAG Closing sliding pane")
                     ensureNavigationBarIsVisible()
                     onSlidingPaneClosed()
-                    slidingPane.closePane()
+
+                    if (!slidingPane.closePane()) {
+                        Log.d("$TAG Failed to close sliding pane!")
+                        coreContext.postOnMainThreadDelayed( {
+                            Log.d("$TAG Trying once again to close sliding pane")
+                            slidingPane.close()
+                        }, 200)
+                    }
                 }
             }
         }
