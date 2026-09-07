@@ -37,7 +37,7 @@ if (crashlyticsAvailable) {
     println("Crashlytics has been disabled because either google-services.json file wasn't found or local Linphone SDK build folder isn't configured")
 }
 
-var gitVersion = "6.2.6"
+var gitVersion = "6.2.7"
 var gitBranch = ""
 try {
     val gitDescribe = ProcessBuilder()
@@ -106,8 +106,8 @@ android {
         applicationId = packageName
         minSdk = 28
         targetSdk = 37
-        versionCode = 602006 // 6.02.006
-        versionName = "6.2.6"
+        versionCode = 602007 // 6.02.007
+        versionName = "6.2.7"
 
         manifestPlaceholders["appAuthRedirectScheme"] = packageName
 

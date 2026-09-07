@@ -10,6 +10,23 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [6.2.7] - 2026-09-07
+
+### Added
+- Show selected item in list when sliding pane is in side by side mode (mostly in landscape configurations)
+
+### Changed
+- Improved sliding pane fragment behavior that should result in more smooth opening animation
+- Do not use orange as system bar background color when in "desktop mode" (sw600dp-land)
+
+### Fixed
+- Update active speaker as soon as first participant joins conference when we're alone
+- Fixed meeting invitations not sent by chat if LIME wasn't available
+- Keep media player position when rotating device
+- Chat bubble layout issue in a 1-1 conversation for received message if it's been forwarded
+- Conversation last message not updated if sent message is queued by SDK
+- Contacts list top clipping broken when no one was marked as favourite
+
 ## [6.2.6] - 2026-08-20
 
 ### Changed
