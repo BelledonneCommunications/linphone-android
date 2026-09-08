@@ -169,11 +169,15 @@ class MeetingsListFragment : AbstractMainFragment() {
                 binding.meetingsList.adapter = adapter
             }
 
-            val index = listViewModel.meetings.value.orEmpty().indexOfFirst { meeting ->
-                meeting.id == listViewModel.currentlyDisplayedItemId
+            if (listViewModel.currentlyDisplayedItemId.isNotEmpty()) {
+                val index = listViewModel.meetings.value.orEmpty().indexOfFirst { meeting ->
+                    meeting.id == listViewModel.currentlyDisplayedItemId
+                }
+                Log.i("$TAG Found meeting with ID [${listViewModel.currentlyDisplayedItemId}] at index [$index]")
+                adapter.notifyItemHasBeenSelected(index)
+            } else {
+                Log.i("$TAG No currently selected item ID")
             }
-            Log.i("$TAG Found meeting with ID [${listViewModel.currentlyDisplayedItemId}] at index [$index]")
-            adapter.notifyItemHasBeenSelected(index)
 
             Log.i("$TAG Meetings list ready with [$newCount] items")
             listViewModel.fetchInProgress.value = false

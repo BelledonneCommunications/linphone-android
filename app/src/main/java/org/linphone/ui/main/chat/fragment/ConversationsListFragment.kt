@@ -241,11 +241,16 @@ class ConversationsListFragment : AbstractMainFragment() {
                 binding.conversationsList.adapter = adapter
             }
 
-            val index = listViewModel.conversations.value.orEmpty().indexOfFirst { conversation ->
-                conversation.conversationModel?.id == listViewModel.currentlyDisplayedItemId
+            if (listViewModel.currentlyDisplayedItemId.isNotEmpty()) {
+                val index =
+                    listViewModel.conversations.value.orEmpty().indexOfFirst { conversation ->
+                        conversation.conversationModel?.id == listViewModel.currentlyDisplayedItemId
+                    }
+                Log.i("$TAG Found conversation with ID [${listViewModel.currentlyDisplayedItemId}] at index [$index]")
+                adapter.notifyItemHasBeenSelected(index)
+            } else {
+                Log.i("$TAG No currently selected item ID")
             }
-            Log.i("$TAG Found conversation with ID [${listViewModel.currentlyDisplayedItemId}] at index [$index]")
-            adapter.notifyItemHasBeenSelected(index)
 
             Log.i("$TAG Conversations list ready with [${it.size}] items")
             listViewModel.fetchInProgress.value = false

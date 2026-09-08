@@ -465,10 +465,14 @@ class ContactsListFragment : AbstractMainFragment() {
     }
 
     private fun highlightSelectedContactIfAny() {
-        val index = listViewModel.contactsList.value.orEmpty().indexOfFirst { contact ->
-            contact.id == listViewModel.currentlyDisplayedItemId
+        if (listViewModel.currentlyDisplayedItemId.isNotEmpty()) {
+            val index = listViewModel.contactsList.value.orEmpty().indexOfFirst { contact ->
+                contact.id == listViewModel.currentlyDisplayedItemId
+            }
+            Log.i("$TAG Found contact with RefKey [${listViewModel.currentlyDisplayedItemId}] at index [$index]")
+            allContactsAdapter.notifyItemHasBeenSelected(index)
+        } else {
+            Log.i("$TAG No currently selected item ID")
         }
-        Log.i("$TAG Found contact with RefKey [${listViewModel.currentlyDisplayedItemId}] at index [$index]")
-        allContactsAdapter.notifyItemHasBeenSelected(index)
     }
 }
