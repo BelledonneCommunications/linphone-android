@@ -250,11 +250,15 @@ class HistoryListFragment : AbstractMainFragment() {
                 binding.historyList.adapter = adapter
             }
 
-            val index = listViewModel.callLogs.value.orEmpty().indexOfFirst { callLog ->
-                callLog.callLogModel?.id == listViewModel.currentlyDisplayedItemId
+            if (listViewModel.currentlyDisplayedItemId.isNotEmpty()) {
+                val index = listViewModel.callLogs.value.orEmpty().indexOfFirst { callLog ->
+                    callLog.callLogModel?.id == listViewModel.currentlyDisplayedItemId
+                }
+                Log.i("$TAG Found call log with ID [${listViewModel.currentlyDisplayedItemId}] at index [$index]")
+                adapter.notifyItemHasBeenSelected(index)
+            } else {
+                Log.i("$TAG No currently selected item ID")
             }
-            Log.i("$TAG Found call log with ID [${listViewModel.currentlyDisplayedItemId}] at index [$index]")
-            adapter.notifyItemHasBeenSelected(index)
 
             Log.i("$TAG Call logs ready with [${it.size}] items")
             listViewModel.fetchInProgress.value = false
