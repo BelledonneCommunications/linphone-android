@@ -152,6 +152,27 @@ class MainActivity : GenericActivity() {
         }
     }
 
+    private val requestReadPhonePermissionsLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        var allGranted = true
+        for (permission in permissions) {
+            val isGranted = permission.value
+            if (isGranted) {
+                Log.i("$TAG [${permission.key}] permission has been granted")
+            } else {
+                allGranted = false
+                Log.w("$TAG [${permission.key}] permission has been denied, toggling OFF Call Redirection setting")
+                corePreferences.useCallRedirectionService = false
+            }
+        }
+
+        if (allGranted) {
+            Log.i("$TAG Permissions required for Call Redirection have been granted, requesting redirection role")
+            requestCallRedirectionRole()
+        }
+    }
+
     @SuppressLint("InlinedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         // Must be done before the setContentView
@@ -449,7 +470,7 @@ class MainActivity : GenericActivity() {
             Log.i(
                 "$TAG Call redirection service enabled, making sure we have the required permissions and role granted"
             )
-            requestCallRedirectionRole()
+            requestCallRedirectionPermissionsAndRole()
         }
     }
 
@@ -498,6 +519,18 @@ class MainActivity : GenericActivity() {
         handleIntent(intent)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REDIRECT_ROLE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Log.i("$TAG App was granted ROLE_CALL_REDIRECTION")
+            } else {
+                Log.w("$TAG App wasn't granted ROLE_CALL_REDIRECTION, toggling OFF Call Redirection setting")
+                corePreferences.useCallRedirectionService = false
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
     @SuppressLint("RtlHardcoded")
     fun toggleDrawerMenu() {
         if (binding.drawerMenu.isDrawerOpen(Gravity.LEFT)) {
@@ -521,6 +554,11 @@ class MainActivity : GenericActivity() {
 
     fun loadContacts() {
         coreContext.contactsManager.loadContacts(this)
+    }
+
+    fun requestCallRedirectionPermissionsAndRole() {
+        Log.i("$TAG Requesting READ_PHONE_STATE and READ_PHONE_NUMBERS permissions needed for Call Redirection feature")
+        requestReadPhonePermissionsLauncher.launch(arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_PHONE_NUMBERS))
     }
 
     private fun goToLatestVisitedFragment() {
@@ -893,22 +931,7 @@ class MainActivity : GenericActivity() {
         }
     }
 
-    private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        for (permission in permissions) {
-            val isGranted = permission.value
-            if (isGranted) {
-                Log.i("$TAG [${permission.key}] permission has been granted")
-            } else {
-                Log.w("$TAG [${permission.key}] permission has been denied!")
-            }
-        }
-    }
-
     private fun requestCallRedirectionRole() {
-        requestPermissionLauncher.launch(arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_PHONE_NUMBERS))
-
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
             val roleManager: RoleManager = getSystemService(Context.ROLE_SERVICE) as RoleManager
             // Check if the app needs to register call redirection role.
@@ -921,6 +944,9 @@ class MainActivity : GenericActivity() {
             } else {
                 Log.i("$TAG Linphone is already defined as Call Redirection")
             }
+        } else {
+            Log.e("$TAG Call Redirection feature requires Android Q (API 29) or higher")
+            corePreferences.useCallRedirectionService = false
         }
     }
 }

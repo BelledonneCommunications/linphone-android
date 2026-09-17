@@ -19,10 +19,7 @@
  */
 package org.linphone.ui.main.settings.fragment
 
-import android.Manifest
 import android.app.Activity
-import android.app.role.RoleManager
-import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
 import android.net.Uri
@@ -32,7 +29,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
@@ -41,6 +37,7 @@ import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsFragmentBinding
 import org.linphone.ui.GenericActivity
+import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.utils.ConfirmationDialogModel
 import org.linphone.ui.main.settings.viewmodel.SettingsViewModel
@@ -48,7 +45,6 @@ import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import java.lang.Exception
-import kotlin.collections.iterator
 
 @UiThread
 class SettingsFragment : GenericMainFragment() {
@@ -56,7 +52,6 @@ class SettingsFragment : GenericMainFragment() {
         private const val TAG = "[Settings Fragment]"
 
         private const val RINGTONE_PICKER_INTENT_ID = 89
-        private const val REDIRECT_ROLE_REQUEST_CODE = 101
     }
 
     private lateinit var binding: SettingsFragmentBinding
@@ -210,7 +205,7 @@ class SettingsFragment : GenericMainFragment() {
                 Log.i(
                     "$TAG Call redirection service enabled, making sure we have the required permissions and role granted"
                 )
-                requestCallRedirectionRole()
+                (requireActivity() as MainActivity).requestCallRedirectionPermissionsAndRole()
             }
         }
 
@@ -370,6 +365,7 @@ class SettingsFragment : GenericMainFragment() {
     override fun onResume() {
         super.onResume()
 
+        viewModel.reloadCallRedirection()
         viewModel.reloadLdapServers()
         viewModel.reloadConfiguredCardDavServers()
         viewModel.reloadShowDeveloperSettings()
@@ -407,36 +403,5 @@ class SettingsFragment : GenericMainFragment() {
         }
 
         dialog.show()
-    }
-
-    private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        for (permission in permissions) {
-            val isGranted = permission.value
-            if (isGranted) {
-                Log.i("$TAG [${permission.key}] permission has been granted")
-            } else {
-                Log.w("$TAG [${permission.key}] permission has been denied!")
-            }
-        }
-    }
-
-    private fun requestCallRedirectionRole() {
-        requestPermissionLauncher.launch(arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_PHONE_NUMBERS))
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-            val roleManager: RoleManager = requireContext().getSystemService(Context.ROLE_SERVICE) as RoleManager
-            // Check if the app needs to register call redirection role.
-            val shouldRequestRole = roleManager.isRoleAvailable(RoleManager.ROLE_CALL_REDIRECTION) &&
-                    !roleManager.isRoleHeld(RoleManager.ROLE_CALL_REDIRECTION)
-            if (shouldRequestRole) {
-                Log.i("$TAG Starting intent to request Linphone be used as Call Redirection")
-                val intent = roleManager.createRequestRoleIntent(RoleManager.ROLE_CALL_REDIRECTION)
-                startActivityForResult(intent, REDIRECT_ROLE_REQUEST_CODE)
-            } else {
-                Log.i("$TAG Linphone is already defined as Call Redirection")
-            }
-        }
     }
 }

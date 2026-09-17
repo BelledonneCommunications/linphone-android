@@ -94,6 +94,7 @@ class SettingsViewModel
     val showRingtonePickerEvent = MutableLiveData<Event<Uri?>>()
 
     val callRedirectionService = MutableLiveData<Boolean>()
+    val callRedirectionServiceAvailable = MutableLiveData<Boolean>()
     val callRedirectionServiceEnabledEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -327,6 +328,8 @@ class SettingsViewModel
         if (isVibrationAvailable.value == false) {
             Log.w("$TAG Device doesn't seem to have a vibrator, hiding related setting")
         }
+
+        callRedirectionServiceAvailable.value = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q
 
         coreContext.postOnCoreThread { core ->
             isUiSecureModeEnabled.postValue(corePreferences.enableSecureMode)
@@ -573,6 +576,11 @@ class SettingsViewModel
             corePreferences.useCallRedirectionService = newValue
             callRedirectionService.postValue(newValue)
         }
+    }
+
+    @UiThread
+    fun reloadCallRedirection() {
+        callRedirectionService.postValue(corePreferences.useCallRedirectionService)
     }
 
     @UiThread
