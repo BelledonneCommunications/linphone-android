@@ -5,9 +5,9 @@
 contact="Linphone Android" <sip:linphone.android@unknown-host>
 use_ipv6=1
 keepalive_period=30000
-sip_port=-1
-sip_tcp_port=-1
-sip_tls_port=-1
+sip_port=-2
+sip_tcp_port=-2
+sip_tls_port=-2
 media_encryption=none
 update_presence_model_timestamp_before_publish_expires_refresh=1
 use_rfc2833=1

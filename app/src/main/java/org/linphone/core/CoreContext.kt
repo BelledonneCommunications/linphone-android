@@ -784,6 +784,16 @@ class CoreContext
                         Log.i("$TAG Keeping RLS URI as an account on the default domain has been found")
                     }
                 }
+            } else if (oldVersion < 603000) { // 6.3.0
+                // Migrate UDP/TCP listening ports from -1 (RANDOM) to -2 (DONT BIND)
+                if (core.config.getInt("sip", "sip_port", -1) == -1) {
+                    Log.i("$TAG Migrating UDP listening port from -1 to -2")
+                    core.config.setInt("sip", "sip_port", -2)
+                }
+                if (core.config.getInt("sip", "sip_tcp_port", -1) == -1) {
+                    Log.i("$TAG Migrating TCP listening port from -1 to -2")
+                    core.config.setInt("sip", "sip_tcp_port", -2)
+                }
             }
 
             if (core.logCollectionUploadServerUrl.isNullOrEmpty()) {
