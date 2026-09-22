@@ -72,7 +72,6 @@ import org.linphone.core.Friend
 import org.linphone.core.MediaDirection
 import org.linphone.core.RegistrationState
 import org.linphone.core.tools.Log
-import org.linphone.ui.call.CallActivity
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.MainActivity.Companion.ARGUMENTS_CHAT
 import org.linphone.ui.main.MainActivity.Companion.ARGUMENTS_CONVERSATION_ID
@@ -734,14 +733,12 @@ class NotificationsManager
     private fun showCallNotification(call: Call, isIncoming: Boolean, friend: Friend? = null) {
         val notifiable = getNotifiableForCall(call)
 
-        val callNotificationIntent = Intent(context, CallActivity::class.java)
-        callNotificationIntent.addFlags(
-            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-        )
-        if (isIncoming) {
-            callNotificationIntent.putExtra("IncomingCall", true)
-        } else {
-            callNotificationIntent.putExtra("ActiveCall", true)
+        val callNotificationIntent = LinphoneUtils.getCallActivityIntent(context).apply {
+            if (isIncoming) {
+                putExtra("IncomingCall", true)
+            } else {
+                putExtra("ActiveCall", true)
+            }
         }
         val options = Compatibility.getPendingIntentActivityOptions(true)
         val pendingIntent = PendingIntent.getActivity(
@@ -1287,10 +1284,7 @@ class NotificationsManager
         if (Compatibility.isPostNotificationsPermissionGranted(context)) {
             val pendingIntent = TaskStackBuilder.create(context).run {
                 addNextIntentWithParentStack(
-                    Intent(context, CallActivity::class.java).apply {
-                        action = Intent.ACTION_MAIN // Needed as well
-                        flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-                    }
+                    LinphoneUtils.getCallActivityIntent(context)
                 )
                 getPendingIntent(
                     IN_CALL_FOREGROUND_SERVICE_ERROR_ID,
@@ -1423,9 +1417,6 @@ class NotificationsManager
         isIncoming: Boolean,
         friend: Friend? = null
     ): Notification {
-        val declineIntent = getCallDeclinePendingIntent(notifiable)
-        val answerIntent = getCallAnswerPendingIntent(notifiable)
-
         val remoteAddress = call.callLog.remoteAddress
         val conference = call.conference
         val conferenceInfo = LinphoneUtils.getConferenceInfoIfAny(call)
@@ -1458,12 +1449,14 @@ class NotificationsManager
             R.drawable.phone
         }
 
+        val declineIntent = getCallDeclinePendingIntent(notifiable)
         val style = if (isIncoming) {
             if (!Compatibility.hasFullScreenIntentPermission(context)) {
                 Log.e(
                     "$TAG Android >= 14 & full screen intent permission wasn't granted, incoming call may not be visible!"
                 )
             }
+            val answerIntent = getCallAnswerPendingIntent(notifiable)
             NotificationCompat.CallStyle.forIncomingCall(
                 caller,
                 declineIntent,
@@ -1729,9 +1722,7 @@ class NotificationsManager
     fun getCallAnswerPendingIntent(notifiable: Notifiable): PendingIntent {
         val pendingIntent = TaskStackBuilder.create(context).run {
             addNextIntentWithParentStack(
-                Intent(context, CallActivity::class.java).apply {
-                    action = Intent.ACTION_MAIN // Needed as well
-                    flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+                LinphoneUtils.getCallActivityIntent(context).apply {
                     putExtra("AnswerIncomingCall", true)
                     putExtra("Caller", notifiable.remoteAddress)
                 }
@@ -2189,9 +2180,7 @@ class NotificationsManager
     fun getAllowCallRedirectionPendingIntent(): PendingIntent {
         val pendingIntent = TaskStackBuilder.create(context).run {
             addNextIntentWithParentStack(
-                Intent(context, CallActivity::class.java).apply {
-                    action = Intent.ACTION_MAIN // Needed as well
-                    flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+                LinphoneUtils.getCallActivityIntent(context).apply {
                     putExtra("DoCallRedirection", true)
                 }
             )
