@@ -419,7 +419,11 @@ class CallActivity : GenericActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
 
-        if (intent.extras?.getBoolean("ActiveCall", false) == true) {
+        if (intent.extras?.getBoolean("AnswerIncomingCall", false) == true) {
+            val caller = intent.extras?.getString("Caller")
+            Log.i("$TAG Answering incoming call from [$caller]")
+            callViewModel.answer()
+        } else if (intent.extras?.getBoolean("ActiveCall", false) == true) {
             navigateToActiveCall(
                 callViewModel.conferenceModel.isCurrentCallInConference.value == false
             )

@@ -53,7 +53,6 @@ import org.linphone.contacts.ContactsManager
 import org.linphone.core.tools.Log
 import org.linphone.notifications.NotificationsManager
 import org.linphone.telecom.TelecomManager
-import org.linphone.ui.call.CallActivity
 import org.linphone.utils.ActivityMonitor
 import org.linphone.utils.AppUtils
 import org.linphone.utils.AudioUtils
@@ -1183,11 +1182,7 @@ class CoreContext
     @UiThread
     fun showCallActivity() {
         Log.i("$TAG Starting Call activity")
-        val intent = Intent(context, CallActivity::class.java)
-        // This flag is required to start an Activity from a Service context
-        intent.addFlags(
-            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-        )
+        val intent = LinphoneUtils.getCallActivityIntent(context)
         val options = Compatibility.getPendingIntentActivityOptions(true)
         val pendingIntent = PendingIntent.getActivity(
             context,
