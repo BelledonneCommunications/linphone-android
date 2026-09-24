@@ -167,7 +167,10 @@ class ContactsListFragment : AbstractMainFragment() {
             if (binding.contactsList.adapter != allContactsAdapter) {
                 binding.contactsList.adapter = allContactsAdapter
 
-                highlightSelectedContactIfAny()
+                coreContext.postOnMainThreadDelayed({
+                    // Delay update to give the adapter enough time to update the list first
+                    highlightSelectedContactIfAny()
+                }, 200)
             }
 
             Log.i("$TAG Contacts list updated with [${it.size}] items")

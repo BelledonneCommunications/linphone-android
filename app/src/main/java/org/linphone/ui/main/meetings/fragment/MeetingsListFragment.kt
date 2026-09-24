@@ -32,6 +32,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.MeetingsListFragmentBinding
@@ -169,15 +170,18 @@ class MeetingsListFragment : AbstractMainFragment() {
                 binding.meetingsList.adapter = adapter
             }
 
-            if (listViewModel.currentlyDisplayedItemId.isNotEmpty()) {
-                val index = listViewModel.meetings.value.orEmpty().indexOfFirst { meeting ->
-                    meeting.id == listViewModel.currentlyDisplayedItemId
+            coreContext.postOnMainThreadDelayed({
+                // Delay update to give the adapter enough time to update the list first
+                if (listViewModel.currentlyDisplayedItemId.isNotEmpty()) {
+                    val index = it.orEmpty().indexOfFirst { meeting ->
+                        meeting.id == listViewModel.currentlyDisplayedItemId
+                    }
+                    Log.i("$TAG Found meeting with ID [${listViewModel.currentlyDisplayedItemId}] at index [$index]")
+                    adapter.notifyItemHasBeenSelected(index)
+                } else {
+                    Log.i("$TAG No currently selected item ID")
                 }
-                Log.i("$TAG Found meeting with ID [${listViewModel.currentlyDisplayedItemId}] at index [$index]")
-                adapter.notifyItemHasBeenSelected(index)
-            } else {
-                Log.i("$TAG No currently selected item ID")
-            }
+            }, 200)
 
             Log.i("$TAG Meetings list ready with [$newCount] items")
             listViewModel.fetchInProgress.value = false

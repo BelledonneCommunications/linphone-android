@@ -25,6 +25,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 abstract class GenericListAdapter<T, VH : RecyclerView.ViewHolder>(callback: DiffUtil.ItemCallback<T>) : ListAdapter<T, VH>(callback) {
+    companion object {
+        private const val TAG = "[Generic List Adapter]"
+    }
+
     private var activatedAdapterPosition = -1
     private var activatedViewHolder: ViewDataBinding? = null
 
@@ -32,8 +36,12 @@ abstract class GenericListAdapter<T, VH : RecyclerView.ViewHolder>(callback: Dif
     private var selectedViewHolder: ViewDataBinding? = null
 
     override fun submitList(list: List<T?>?) {
+        activatedViewHolder?.root?.isActivated = false
+        selectedViewHolder?.root?.isSelected = false
         activatedViewHolder = null
         selectedViewHolder = null
+        activatedAdapterPosition = -1
+        selectedAdapterPosition = -1
 
         super.submitList(list)
     }
