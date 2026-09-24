@@ -357,13 +357,6 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
             false
         )
 
-        val popupWindow = PopupWindow(
-            popupView.root,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            true
-        )
-
         val address = participantModel.sipUri
         val isAdmin = participantModel.isParticipantAdmin
         popupView.isParticipantAdmin = isAdmin
@@ -371,6 +364,15 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
         val friendRefKey = participantModel.refKey
         popupView.isParticipantContact = participantModel.friendAvailable
         popupView.disableAddContact = corePreferences.disableAddContact
+
+        popupView.root.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+
+        val popupWindow = PopupWindow(
+            popupView.root,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            popupView.root.measuredHeight,
+            true
+        )
 
         popupView.setRemoveParticipantClickListener {
             showConfirmParticipantRemovalPopup(participantModel)
