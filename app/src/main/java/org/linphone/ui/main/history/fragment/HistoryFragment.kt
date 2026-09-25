@@ -215,6 +215,8 @@ class HistoryFragment : SlidingPaneChildFragment() {
     }
 
     private fun showPopupMenu() {
+        binding.callDetailsMenu.isSelected = true
+
         val popupView: HistoryPopupMenuBinding = DataBindingUtil.inflate(
             LayoutInflater.from(requireContext()),
             R.layout.history_popup_menu,
@@ -228,6 +230,10 @@ class HistoryFragment : SlidingPaneChildFragment() {
             ViewGroup.LayoutParams.WRAP_CONTENT,
             true
         )
+
+        popupWindow.setOnDismissListener {
+            binding.callDetailsMenu.isSelected = false
+        }
 
         popupView.contactExists = viewModel.callLogModel.value?.friendExists == true
         popupView.isConferenceCallLog = viewModel.isConferenceCallLog.value == true
@@ -261,7 +267,7 @@ class HistoryFragment : SlidingPaneChildFragment() {
 
         // Elevation is for showing a shadow around the popup
         popupWindow.elevation = 20f
-        popupWindow.showAsDropDown(binding.menu, 0, 0, Gravity.BOTTOM)
+        popupWindow.showAsDropDown(binding.callDetailsMenu, 0, 0, Gravity.BOTTOM)
     }
 
     private fun showDeleteConfirmationDialog() {

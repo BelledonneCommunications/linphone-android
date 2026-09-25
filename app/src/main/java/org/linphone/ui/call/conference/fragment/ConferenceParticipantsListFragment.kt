@@ -189,6 +189,8 @@ class ConferenceParticipantsListFragment : GenericCallFragment() {
     }
 
     private fun showPopupMenu(view: View) {
+        view.isSelected = true
+
         val popupView: CallConferenceParticipantsListPopupMenuBinding = DataBindingUtil.inflate(
             LayoutInflater.from(requireContext()),
             R.layout.call_conference_participants_list_popup_menu,
@@ -202,6 +204,10 @@ class ConferenceParticipantsListFragment : GenericCallFragment() {
             ViewGroup.LayoutParams.WRAP_CONTENT,
             true
         )
+
+        popupWindow.setOnDismissListener {
+            view.isSelected = false
+        }
 
         popupView.setShareInvitationClickListener {
             val sipUri = viewModel.conferenceModel.sipUri.value.orEmpty()
