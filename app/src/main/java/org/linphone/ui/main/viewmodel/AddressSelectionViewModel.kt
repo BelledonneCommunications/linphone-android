@@ -317,6 +317,8 @@ abstract class AddressSelectionViewModel
         }
 
         val defaultAccountDomain = LinphoneUtils.getDefaultAccount()?.params?.domain
+        val defaultAccountAddress = coreContext.core.defaultAccount?.params?.identityAddress
+
         val favoritesList = arrayListOf<ConversationContactOrSuggestionModel>()
         val domain = corePreferences.contactsFilter
         // Make a quick synchronous search for favorites (in case of total results exceed magic search limit to prevent missing ones)
@@ -328,6 +330,12 @@ abstract class AddressSelectionViewModel
 
             val found = favoritesList.find { it.friend == friend }
             if (found != null) continue
+
+            val singleAddress = LinphoneUtils.getSingleAvailableAddressForFriend(friend)
+            if (defaultAccountAddress != null && singleAddress != null && singleAddress.weakEqual(defaultAccountAddress)) {
+                Log.i("$TAG Removing from favorite contacts [${friend.name}] that only contains current default account address")
+                continue
+            }
 
             val mainAddress = address ?: LinphoneUtils.getFirstAvailableAddressForFriend(friend)
             if (mainAddress != null) {
@@ -356,18 +364,29 @@ abstract class AddressSelectionViewModel
                 val found = contactsList.find { it.friend == friend }
                 if (found != null) continue
 
+                val singleAddress = LinphoneUtils.getSingleAvailableAddressForFriend(friend)
+                if (defaultAccountAddress != null && singleAddress != null && singleAddress.weakEqual(defaultAccountAddress)) {
+                    Log.i("$TAG Removing from contacts [${friend.name}] that only contains current default account address")
+                    continue
+                }
+
                 val mainAddress = address ?: LinphoneUtils.getFirstAvailableAddressForFriend(friend)
                 if (mainAddress != null) {
-                    val model = ConversationContactOrSuggestionModel(mainAddress, friend = friend)
-                    val avatarModel = coreContext.contactsManager.getContactAvatarModelForFriend(
-                        friend
-                    )
+                    val model =
+                        ConversationContactOrSuggestionModel(mainAddress, friend = friend)
+                    val avatarModel =
+                        coreContext.contactsManager.getContactAvatarModelForFriend(friend)
                     model.avatarModel.postValue(avatarModel)
                     contactsList.add(model)
                 } else {
                     Log.w("$TAG Found friend [${friend.name}] in search results but no Address could be found, skipping it")
                 }
             } else if (address != null) {
+                if (defaultAccountAddress != null && address.weakEqual(defaultAccountAddress)) {
+                    Log.i("$TAG Removing from suggestions current default account address")
+                    continue
+                }
+
                 if (result.sourceFlags == MagicSearch.Source.Request.toInt()) {
                     val model = ConversationContactOrSuggestionModel(address) {
                         coreContext.startAudioCall(address)
@@ -375,12 +394,6 @@ abstract class AddressSelectionViewModel
                     val avatarModel = getContactAvatarModelForAddress(address)
                     model.avatarModel.postValue(avatarModel)
                     requestList.add(model)
-                    continue
-                }
-
-                val defaultAccountAddress = coreContext.core.defaultAccount?.params?.identityAddress
-                if (defaultAccountAddress != null && address.weakEqual(defaultAccountAddress)) {
-                    Log.i("$TAG Removing from suggestions current default account address")
                     continue
                 }
 
@@ -552,7 +565,10 @@ abstract class AddressSelectionViewModel
                 )
                 onAddressSelected(singleAvailableAddress, friend)
             } else {
-                val list = friend.getListOfSipAddressesAndPhoneNumbers(numberOrAddressClickListener)
+                val list = friend.getListOfSipAddressesAndPhoneNumbers(
+                    numberOrAddressClickListener,
+                    removeDefaultAccountAddress = true
+                )
                 Log.i(
                     "$TAG [${list.size}] numbers or addresses found for contact [${friend.name}], showing selection dialog"
                 )

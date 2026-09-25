@@ -819,12 +819,20 @@ fun Friend.getListOfSipAddresses(): ArrayList<Address> {
 }
 
 @WorkerThread
-fun Friend.getListOfSipAddressesAndPhoneNumbers(listener: ContactNumberOrAddressClickListener): ArrayList<ContactNumberOrAddressModel> {
+fun Friend.getListOfSipAddressesAndPhoneNumbers(
+    listener: ContactNumberOrAddressClickListener,
+    removeDefaultAccountAddress: Boolean = false
+): ArrayList<ContactNumberOrAddressModel> {
     val addressesAndNumbers = arrayListOf<ContactNumberOrAddressModel>()
+    val defaultAccountAddress = coreContext.core.defaultAccount?.params?.identityAddress
 
     // Will return an empty list if corePreferences.hideSipAddresses == true
     for (address in getListOfSipAddresses()) {
         if (LinphoneUtils.isSipAddressLinkedToPhoneNumberByPresence(this, address.asStringUriOnly())) {
+            continue
+        }
+        if (removeDefaultAccountAddress && defaultAccountAddress != null && address.weakEqual(defaultAccountAddress)) {
+            Log.i("[Contacts Manager] Removing from addresses current default account address")
             continue
         }
 
@@ -870,6 +878,10 @@ fun Friend.getListOfSipAddressesAndPhoneNumbers(listener: ContactNumberOrAddress
             LinphoneUtils.applyInternationalPrefix(defaultAccount)
         )
         address ?: continue
+        if (removeDefaultAccountAddress && defaultAccountAddress != null && address.weakEqual(defaultAccountAddress)) {
+            Log.i("[Contacts Manager] Removing from phone number presence extracted addresses current default account address")
+            continue
+        }
 
         val label = PhoneNumberUtils.vcardParamStringToAddressBookLabel(
             coreContext.context.resources,
