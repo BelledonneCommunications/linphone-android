@@ -12,22 +12,10 @@
             name="addToContactsClickListener"
             type="View.OnClickListener" />
         <variable
-            name="setAdminClickListener"
-            type="View.OnClickListener" />
-        <variable
-            name="unsetAdminClickListener"
-            type="View.OnClickListener" />
-        <variable
             name="copySipUriClickListener"
             type="View.OnClickListener" />
         <variable
-            name="removeParticipantClickListener"
-            type="View.OnClickListener" />
-        <variable
             name="isParticipantContact"
-            type="Boolean" />
-        <variable
-            name="isParticipantAdmin"
             type="Boolean" />
         <variable
             name="disableAddContact"
@@ -39,7 +27,7 @@
         android:layout_height="wrap_content"
         android:paddingEnd="@dimen/popup_menu_padding"
         android:paddingStart="@dimen/popup_menu_padding"
-        android:minHeight="200dp"
+        android:minHeight="100dp"
         android:background="@drawable/shape_round_popup_menu_background">
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -70,36 +58,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/show_contact"
-            app:layout_constraintBottom_toTopOf="@id/set_admin"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/popup_menu_item"
-            android:id="@+id/set_admin"
-            android:onClick="@{setAdminClickListener}"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:visibility="@{isParticipantAdmin ? View.GONE : View.VISIBLE}"
-            android:text="@string/conversation_info_admin_menu_set_participant_admin"
-            android:drawableStart="@drawable/user_circle"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/add_to_contacts"
-            app:layout_constraintBottom_toTopOf="@id/unset_admin"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/popup_menu_item"
-            android:id="@+id/unset_admin"
-            android:onClick="@{unsetAdminClickListener}"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:visibility="@{isParticipantAdmin ? View.VISIBLE : View.GONE, default=gone}"
-            android:text="@string/conversation_info_admin_menu_unset_participant_admin"
-            android:drawableStart="@drawable/user_circle"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/set_admin"
             app:layout_constraintBottom_toTopOf="@id/copy_sip_uri"/>
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -113,35 +71,7 @@
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/unset_admin"
-            app:layout_constraintBottom_toTopOf="@id/separator"/>
-
-        <View
-            android:id="@+id/separator"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="@dimen/popup_menu_padding"
-            android:background="?attr/color_main2_400"
-            android:importantForAccessibility="no"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/copy_sip_uri"
-            app:layout_constraintBottom_toTopOf="@id/remove_participant" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/popup_menu_item"
-            android:id="@+id/remove_participant"
-            android:onClick="@{removeParticipantClickListener}"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/conversation_info_admin_menu_remove_participant"
-            android:textColor="?attr/color_danger_500"
-            android:drawableStart="@drawable/trash_simple"
-            app:drawableTint="?attr/color_danger_500"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/separator"
+            app:layout_constraintTop_toBottomOf="@id/add_to_contacts"
             app:layout_constraintBottom_toTopOf="@id/bottom_anchor"/>
 
         <View
@@ -152,7 +82,7 @@
             app:layout_constraintWidth_max="@dimen/popup_menu_width"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/remove_participant"
+            app:layout_constraintTop_toBottomOf="@id/copy_sip_uri"
             app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
