@@ -351,6 +351,8 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
     }
 
     private fun showParticipantAdminPopupMenu(view: View, participantModel: ParticipantModel) {
+        view.isSelected = true
+
         val popupView: ChatParticipantAdminPopupMenuBinding = DataBindingUtil.inflate(
             LayoutInflater.from(requireContext()),
             R.layout.chat_participant_admin_popup_menu,
@@ -374,6 +376,10 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
             popupView.root.measuredHeight,
             true
         )
+
+        popupWindow.setOnDismissListener {
+            view.isSelected = false
+        }
 
         popupView.setRemoveParticipantClickListener {
             showConfirmParticipantRemovalPopup(participantModel)

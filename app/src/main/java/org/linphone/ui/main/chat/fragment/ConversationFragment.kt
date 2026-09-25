@@ -1253,6 +1253,8 @@ open class ConversationFragment : SlidingPaneChildFragment() {
     }
 
     private fun showPopupMenu(view: View) {
+        view.isSelected = true
+
         val popupView: ChatConversationPopupMenuBinding = DataBindingUtil.inflate(
             LayoutInflater.from(requireContext()),
             R.layout.chat_conversation_popup_menu,
@@ -1266,6 +1268,10 @@ open class ConversationFragment : SlidingPaneChildFragment() {
             ViewGroup.LayoutParams.WRAP_CONTENT,
             true
         )
+
+        popupWindow.setOnDismissListener {
+            view.isSelected = false
+        }
 
         popupView.conversationMuted = viewModel.isMuted.value == true
         popupView.ephemeralMessagesAvailable = viewModel.isEndToEndEncrypted.value == true

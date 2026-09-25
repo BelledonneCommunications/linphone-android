@@ -15,6 +15,7 @@ Group changes to describe their impact on the project, as follows:
 ### Added
 - Client secret support to OIDC authentication
 - Call Redirection Service APIs allowing to redirect a GSM call to a SIP address via Linphone
+- Keep menu button highlight while popup window is visible
 
 ## [6.2.7] - 2026-09-07
 

@@ -209,6 +209,8 @@ class MeetingFragment : SlidingPaneChildFragment() {
     }
 
     private fun showPopupMenu() {
+        binding.menu.isSelected = true
+
         val popupView: MeetingPopupMenuBinding = DataBindingUtil.inflate(
             LayoutInflater.from(requireContext()),
             R.layout.meeting_popup_menu,
@@ -221,6 +223,10 @@ class MeetingFragment : SlidingPaneChildFragment() {
             ViewGroup.LayoutParams.WRAP_CONTENT,
             true
         )
+
+        popupWindow.setOnDismissListener {
+            binding.menu.isSelected = false
+        }
 
         val isUserOrganizer = viewModel.isEditable.value == true && viewModel.isCancelled.value == false
         val hasNotStartedYet = viewModel.hasNotStartedYet.value == true
