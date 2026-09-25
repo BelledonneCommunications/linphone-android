@@ -36,6 +36,7 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatInfoFragmentBinding
 import org.linphone.databinding.ChatParticipantAdminPopupMenuBinding
+import org.linphone.databinding.ChatParticipantPopupMenuBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.chat.adapter.ConversationParticipantsAdapter
 import org.linphone.ui.main.chat.model.ParticipantModel
@@ -353,18 +354,21 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
     private fun showParticipantAdminPopupMenu(view: View, participantModel: ParticipantModel) {
         view.isSelected = true
 
-        val popupView: ChatParticipantAdminPopupMenuBinding = DataBindingUtil.inflate(
+        if (participantModel.isMyselfAdmin) {
+            showParticipantAdminPopupView(view, participantModel)
+        } else {
+            showParticipantPopupView(view, participantModel)
+        }
+    }
+
+    private fun showParticipantPopupView(view: View, participantModel: ParticipantModel) {
+        val popupView: ChatParticipantPopupMenuBinding = DataBindingUtil.inflate(
             LayoutInflater.from(requireContext()),
-            R.layout.chat_participant_admin_popup_menu,
+            R.layout.chat_participant_popup_menu,
             null,
             false
         )
 
-        val address = participantModel.sipUri
-        val isAdmin = participantModel.isParticipantAdmin
-        popupView.isParticipantAdmin = isAdmin
-        popupView.isMeAdmin = participantModel.isMyselfAdmin
-        val friendRefKey = participantModel.refKey
         popupView.isParticipantContact = participantModel.friendAvailable
         popupView.disableAddContact = corePreferences.disableAddContact
 
@@ -377,28 +381,9 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
             true
         )
 
-        popupWindow.setOnDismissListener {
-            view.isSelected = false
-        }
-
-        popupView.setRemoveParticipantClickListener {
-            showConfirmParticipantRemovalPopup(participantModel)
-            popupWindow.dismiss()
-        }
-
-        popupView.setSetAdminClickListener {
-            Log.i("$TAG Trying to give admin rights to participant [$address]")
-            viewModel.giveAdminRightsTo(participantModel)
-            popupWindow.dismiss()
-        }
-
-        popupView.setUnsetAdminClickListener {
-            Log.i("$TAG Trying to remove admin rights from participant [$address]")
-            viewModel.removeAdminRightsFrom(participantModel)
-            popupWindow.dismiss()
-        }
-
         popupView.setSeeContactProfileClickListener {
+            val address = participantModel.sipUri
+            val friendRefKey = participantModel.refKey
             Log.i("$TAG Trying to display participant [$address] contact page")
             if (friendRefKey.isNotEmpty()) {
                 sharedViewModel.navigateToContactsEvent.value = Event(true)
@@ -446,6 +431,114 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
                     R.drawable.check
                 )
             }
+            popupWindow.dismiss()
+        }
+
+        popupWindow.setOnDismissListener {
+            view.isSelected = false
+        }
+
+        // Elevation is for showing a shadow around the popup
+        popupWindow.elevation = 20f
+        popupWindow.showAsDropDown(view, 0, 0, Gravity.BOTTOM)
+    }
+
+    private fun showParticipantAdminPopupView(view: View, participantModel: ParticipantModel) {
+        val popupView: ChatParticipantAdminPopupMenuBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(requireContext()),
+            R.layout.chat_participant_admin_popup_menu,
+            null,
+            false
+        )
+
+        val isAdmin = participantModel.isParticipantAdmin
+        popupView.isParticipantAdmin = isAdmin
+        popupView.isParticipantContact = participantModel.friendAvailable
+        popupView.disableAddContact = corePreferences.disableAddContact
+
+        popupView.root.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+
+        val popupWindow = PopupWindow(
+            popupView.root,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            popupView.root.measuredHeight,
+            true
+        )
+
+        popupView.setSeeContactProfileClickListener {
+            val address = participantModel.sipUri
+            val friendRefKey = participantModel.refKey
+            Log.i("$TAG Trying to display participant [$address] contact page")
+            if (friendRefKey.isNotEmpty()) {
+                sharedViewModel.navigateToContactsEvent.value = Event(true)
+                sharedViewModel.showContactEvent.value = Event(friendRefKey)
+            } else {
+                Log.e("$TAG Can't go to contact page, friend ref key is null or empty!")
+                val message = getString(
+                    R.string.conversation_info_cant_find_contact_to_display_toast
+                )
+                (requireActivity() as GenericActivity).showRedToast(
+                    message,
+                    R.drawable.warning_circle
+                )
+            }
+            popupWindow.dismiss()
+        }
+
+        popupView.setAddToContactsClickListener {
+            val sipUri = participantModel.sipUri
+            if (sipUri.isNotEmpty()) {
+                Log.i("$TAG Trying to add participant [${participantModel.sipUri}] to contacts")
+                sharedViewModel.sipAddressToAddToNewContact = sipUri
+                sharedViewModel.displayNameToSetToNewContact = viewModel.avatarModel.value?.contactName.orEmpty()
+                sharedViewModel.navigateToContactsEvent.value = Event(true)
+                sharedViewModel.showNewContactEvent.value = Event(true)
+            } else {
+                Log.e("$TAG Can't add empty/null SIP URI to contacts!")
+                val message = getString(
+                    R.string.conversation_info_no_address_to_add_to_contact_toast
+                )
+                (requireActivity() as GenericActivity).showRedToast(
+                    message,
+                    R.drawable.warning_circle
+                )
+            }
+            popupWindow.dismiss()
+        }
+
+        popupView.setCopySipUriClickListener {
+            val sipUri = participantModel.sipUri
+            if (AppUtils.copyToClipboard(requireContext(), AppUtils.getString(R.string.sip_address), sipUri)) {
+                val message = getString(R.string.sip_address_copied_to_clipboard_toast)
+                (requireActivity() as GenericActivity).showGreenToast(
+                    message,
+                    R.drawable.check
+                )
+            }
+            popupWindow.dismiss()
+        }
+
+        popupView.setRemoveParticipantClickListener {
+            showConfirmParticipantRemovalPopup(participantModel)
+            popupWindow.dismiss()
+        }
+
+        popupView.setSetAdminClickListener {
+            val address = participantModel.sipUri
+            Log.i("$TAG Trying to give admin rights to participant [$address]")
+            viewModel.giveAdminRightsTo(participantModel)
+            popupWindow.dismiss()
+        }
+
+        popupView.setUnsetAdminClickListener {
+            val address = participantModel.sipUri
+            Log.i("$TAG Trying to remove admin rights from participant [$address]")
+            viewModel.removeAdminRightsFrom(participantModel)
+            popupWindow.dismiss()
+        }
+
+        popupWindow.setOnDismissListener {
+            view.isSelected = false
         }
 
         // Elevation is for showing a shadow around the popup
