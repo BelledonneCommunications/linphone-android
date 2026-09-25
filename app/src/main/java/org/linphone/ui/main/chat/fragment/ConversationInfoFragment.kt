@@ -353,7 +353,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
     private fun showParticipantAdminPopupMenu(view: View, participantModel: ParticipantModel) {
         view.isSelected = true
 
-        if (participantModel.isMyselfAdmin) {
+        if (viewModel.isMyselfAdmin.value == true) {
             showParticipantAdminPopupView(view, participantModel)
         } else {
             showParticipantPopupView(view, participantModel)

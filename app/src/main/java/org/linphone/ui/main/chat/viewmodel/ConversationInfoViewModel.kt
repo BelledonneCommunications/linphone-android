@@ -110,7 +110,7 @@ class ConversationInfoViewModel
             Log.i("$TAG A participant has been added to the group [${chatRoom.subjectUtf8}]")
             val message = AppUtils.getFormattedString(
                 R.string.conversation_info_participant_added_to_conversation_toast,
-                getParticipant(eventLog)
+                getParticipantName(eventLog)
             )
             showFormattedGreenToast(message, R.drawable.user_circle_plus)
 
@@ -123,7 +123,7 @@ class ConversationInfoViewModel
             Log.i("$TAG A participant has been removed from the group [${chatRoom.subjectUtf8}]")
             val message = AppUtils.getFormattedString(
                 R.string.conversation_info_participant_removed_from_conversation_toast,
-                getParticipant(eventLog)
+                getParticipantName(eventLog)
             )
             showFormattedGreenToast(message, R.drawable.user_circle_minus)
 
@@ -133,25 +133,43 @@ class ConversationInfoViewModel
 
         @WorkerThread
         override fun onParticipantAdminStatusChanged(chatRoom: ChatRoom, eventLog: EventLog) {
-            Log.i(
-                "$TAG A participant has been given/removed administration rights for group [${chatRoom.subjectUtf8}]"
-            )
+            val meAddress = chatRoom.me?.address
+            val participantName = getParticipantName(eventLog)
+            val isAdmin = chatRoom.me?.isAdmin == true
+            if (meAddress != null && eventLog.participantAddress?.weakEqual(meAddress) == true) {
+                Log.i(
+                    "$TAG We have been ${if (isAdmin) "given" else "removed"} administration rights for group [${chatRoom.subjectUtf8}]"
+                )
+            } else {
+                val participantAddress = eventLog.participantAddress
+                if (participantAddress != null) {
+                    val isParticipantAdmin = chatRoom.findParticipant(participantAddress)?.isAdmin == true
+                    Log.i(
+                        "$TAG Participant [$participantName] have been ${if (isParticipantAdmin) "given" else "removed"} administration rights for group [${chatRoom.subjectUtf8}]"
+                    )
+                } else {
+                    Log.i(
+                        "$TAG Participant [$participantName] has been given or removed administration rights for group [${chatRoom.subjectUtf8}]"
+                    )
+                }
+            }
+
             if (eventLog.type == EventLog.Type.ConferenceParticipantSetAdmin) {
                 val message = AppUtils.getFormattedString(
                     R.string.conversation_info_participant_has_been_granted_admin_rights_toast,
-                    getParticipant(eventLog)
+                    getParticipantName(eventLog)
                 )
                 showFormattedGreenToast(message, R.drawable.user_circle_check)
             } else {
                 val message = AppUtils.getFormattedString(
                     R.string.conversation_info_participant_no_longer_has_admin_rights_toast,
-                    getParticipant(eventLog)
+                    getParticipantName(eventLog)
                 )
                 showFormattedGreenToast(message, R.drawable.user_circle_dashed)
             }
 
             computeParticipantsList()
-            isMyselfAdmin.postValue(chatRoom.me?.isAdmin)
+            isMyselfAdmin.postValue(isAdmin)
         }
 
         @WorkerThread
@@ -250,7 +268,9 @@ class ConversationInfoViewModel
     @UiThread
     fun toggleMute() {
         coreContext.postOnCoreThread {
-            chatRoom.muted = !chatRoom.muted
+            val muted = chatRoom.muted
+            Log.i("$TAG Conversation will now be [${if (muted) "un-muted" else "muted"}]")
+            chatRoom.muted = !muted
             isMuted.postValue(chatRoom.muted)
         }
     }
@@ -452,24 +472,30 @@ class ConversationInfoViewModel
 
     @WorkerThread
     private fun configureChatRoom() {
-        isMuted.postValue(chatRoom.muted)
-
-        isMyselfAdmin.postValue(chatRoom.me?.isAdmin)
+        val conversationSubject = chatRoom.subjectUtf8.orEmpty()
+        subject.postValue(conversationSubject)
+        val conversationAddress = chatRoom.peerAddress.asStringUriOnly()
+        peerSipUri.postValue(conversationAddress)
+        Log.i("$TAG Configuring conversation with subject [$conversationSubject] and SIP address [$conversationAddress]")
 
         val isGroupChatRoom = LinphoneUtils.isChatRoomAGroup(chatRoom)
         isGroup.postValue(isGroupChatRoom)
         isEndToEndEncrypted.postValue(
             chatRoom.hasCapability(ChatRoom.Capabilities.Encrypted.toInt())
         )
+        isMuted.postValue(chatRoom.muted)
+
+        val isAdmin = chatRoom.me?.isAdmin == true
+        if (isGroupChatRoom) {
+            Log.i("$TAG We ${if (isAdmin) "do" else "don't"} have administration rights")
+        }
+        isMyselfAdmin.postValue(isAdmin)
 
         val readOnly = chatRoom.isReadOnly
         isReadOnly.postValue(readOnly)
         if (readOnly) {
-            Log.w("$TAG Conversation with subject [${chatRoom.subjectUtf8}] is read only!")
+            Log.w("$TAG Conversation is read only!")
         }
-
-        subject.postValue(chatRoom.subjectUtf8)
-        peerSipUri.postValue(chatRoom.peerAddress.asStringUriOnly())
 
         val firstParticipant = chatRoom.participants.firstOrNull()
         if (firstParticipant != null) {
@@ -502,6 +528,7 @@ class ConversationInfoViewModel
     private fun computeParticipantsList() {
         val groupChatRoom = LinphoneUtils.isChatRoomAGroup(chatRoom)
         val selfAdmin = if (groupChatRoom) chatRoom.me?.isAdmin == true else false
+        Log.i("$TAG Computing participants list for chat room [${chatRoom.identifier}] for which we ${if (selfAdmin) "are" else "aren't"} admin")
 
         val friends = arrayListOf<Friend>()
         val participantsList = arrayListOf<ParticipantModel>()
@@ -571,17 +598,19 @@ class ConversationInfoViewModel
             avatarModel.postValue(avatar)
         }
 
+        val participantsCount = participantsList.size
+        Log.i("$TAG Found [$participantsCount] participants in the conversation")
         participants.postValue(participantsList)
         participantsLabel.postValue(
             AppUtils.getFormattedString(
                 R.string.conversation_info_participants_list_title,
-                participantsList.size.toString()
+                participantsCount.toString()
             )
         )
     }
 
     @WorkerThread
-    private fun getParticipant(eventLog: EventLog): String {
+    private fun getParticipantName(eventLog: EventLog): String {
         val participantAddress = eventLog.participantAddress
         return if (participantAddress != null) {
             val model = participants.value.orEmpty().find {
