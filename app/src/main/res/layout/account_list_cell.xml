@@ -14,9 +14,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:onClick="@{() -> model.setAsDefault()}"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:selected="@{model.isDefault}"
-        android:background="@drawable/account_list_background">
+        android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/end_barrier"
@@ -24,6 +22,17 @@
             android:layout_height="wrap_content"
             app:barrierDirection="start"
             app:constraint_referenced_ids="voicemail_count, voicemail_icon, notifications_count, menu" />
+
+        <View
+            android:id="@+id/background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:selected="@{model.isDefault}"
+            android:background="@drawable/account_list_background"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <include
             android:id="@+id/avatar"
