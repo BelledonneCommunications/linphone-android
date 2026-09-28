@@ -54,7 +54,7 @@
             android:textColor="@{model.isSuccessful ? @color/main2_600 : @color/danger_500, default=@color/main2_600}"
             app:layout_constraintStart_toStartOf="@id/direction_label"
             app:layout_constraintTop_toBottomOf="@id/direction_label"
-            app:layout_constraintBottom_toTopOf="@id/separator"/>
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_300"
@@ -68,18 +68,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/direction_label"
             app:layout_constraintBottom_toBottomOf="@id/date_time"/>
-
-        <View
-            android:id="@+id/separator"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginEnd="10dp"
-            android:background="?attr/color_separator"
-            android:visibility="gone"
-            android:importantForAccessibility="no"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
