@@ -66,10 +66,10 @@ these without updating every pipeline:
 
 - the `cloud.xarios.dimensions` literal in `app/build.gradle` (replaced with the brand package id)
 - the exact lines `versionCode appVersionCode` and `versionName "${project.version}"`
-- `@~#TOKEN#~@` placeholders in `strings.xml`, for example `@~#resellerName#~@`. The
-  `replacetokens` task fills them from pipeline variables. `environment/Environments.kt` also
-  contains tokens such as `@~#DIAGBLOB_UK#~@`, but the pipelines only replace tokens in
-  `strings.xml`. Never commit real values in place of any token.
+- `@~#{key}#~@` placeholders are filled at release time, for example `@~#resellerName#~@` in
+  `strings.xml` and `@~#DIAGBLOB_UK#~@` in `environment/Environments.kt`. The build YAMLs replace
+  the `strings.xml` tokens, and the release environments handle the rest outside this repo. An
+  unreplaced token in the repo is expected. Never commit real values in place of a token.
 
 Pipeline roles:
 - `build-ci.yml` is the release pipeline for the main app. It builds `bundleRelease` and pushes it
