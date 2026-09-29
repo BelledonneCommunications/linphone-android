@@ -1,4 +1,9 @@
 name: $(MAJOR).$(MINOR).$(YEAR:yy)$(DAYOFYEAR).$(REV:r)
+parameters:
+- name: runTests
+  displayName: 'Run unit tests and lint before building'
+  type: boolean
+  default: true
 pool:
   vmImage: 'ubuntu-latest'
 variables:
@@ -72,8 +77,23 @@ stages:
           tokenPrefix: '@~#'
           tokenSuffix: '#~@'
           escapeType: custom
-          actionOnNoFiles: fail     
-             
+          actionOnNoFiles: fail
+
+      # Runs before the build so a failure stops the Play Store upload. To skip it, untick
+      # "Run unit tests and lint before building" when queueing the pipeline.
+      - ${{ if eq(parameters.runTests, true) }}:
+        - task: Gradle@3
+          displayName: "Unit Tests and Lint"
+          inputs:
+            gradleWrapperFile: 'gradlew'
+            tasks: 'testDebugUnitTest lintDebug'
+            publishJUnitResults: true
+            testResultsFiles: '**/TEST-*.xml'
+            testRunTitle: 'Unit tests'
+            javaHomeOption: 'JDKVersion'
+            sonarQubeRunAnalysis: false
+            spotBugsAnalysis: false
+
       - task: Gradle@3
         displayName: "Build App"
         inputs:

@@ -245,6 +245,21 @@ android {
         dataBinding = true
     }
 
+    testOptions {
+        // android.jar methods return defaults instead of throwing, so JVM tests don't crash on
+        // incidental framework calls (e.g. Timber's DebugTree calling android.util.Log).
+        unitTests.returnDefaultValues = true
+    }
+
+    lint {
+        // Existing issues are recorded here and ignored; only new ones fail lint.
+        // Regenerate with: ./gradlew updateLintBaselineDebug
+        baseline = file("lint-baseline.xml")
+        // This check ships with lifecycle-livedata 2.9.x and was built for a newer lint than AGP 8.7
+        // bundles, so it crashes lint analysis. Re-enable after upgrading AGP.
+        disable "NullSafeMutableLiveData"
+    }
+
     namespace 'org.linphone'
     packagingOptions {
         jniLibs {
@@ -345,6 +360,12 @@ dependencies {
     // Media player
     implementation("androidx.media3:media3-exoplayer:1.8.0")
     implementation("androidx.media3:media3-ui:1.8.0")
+
+    // Unit tests (JVM only, see app/src/test)
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'com.squareup.okhttp3:mockwebserver:4.12.0'
+    // ThreeTenABP loads its time-zone data from Android assets; the plain library bundles it for the JVM.
+    testImplementation 'org.threeten:threetenbp:1.6.9'
 }
 
 task generateContactsXml(type: Copy) {

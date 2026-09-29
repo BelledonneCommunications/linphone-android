@@ -15,12 +15,18 @@ class CallDirectionsAdapter : TypeAdapter<CallDirections>() {
     }
 
     override fun read(reader: JsonReader): CallDirections? {
-        return if (reader.peek() == JsonToken.NULL) {
-            reader.nextNull()
-            null
-        } else {
-            val intValue = reader.nextInt()
-            CallDirections.fromValue(intValue) // Map the integer to the corresponding enum
+        return when (reader.peek()) {
+            JsonToken.NULL -> {
+                reader.nextNull()
+                null
+            }
+            JsonToken.NUMBER -> CallDirections.fromValue(reader.nextInt()) // Map the integer to the corresponding enum
+            // Names, as written by Gson's default enum handling
+            else -> reader.nextString().let { str ->
+                str.toIntOrNull()?.let { CallDirections.fromValue(it) }
+                    ?: CallDirections.values().find { it.name.equals(str, ignoreCase = true) }
+                    ?: CallDirections.Unknown
+            }
         }
     }
 }

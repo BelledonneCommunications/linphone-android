@@ -6,15 +6,23 @@ import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonToken
 import com.google.gson.stream.JsonWriter
 
-class BooleanTypeAdapter : TypeAdapter<Boolean>() {
+class BooleanTypeAdapter : TypeAdapter<Boolean?>() {
     override fun write(out: JsonWriter, value: Boolean?) {
         out.value(value) // Serialize as true/false
     }
 
-    override fun read(reader: JsonReader): Boolean {
+    override fun read(reader: JsonReader): Boolean? {
         return when (reader.peek()) {
             JsonToken.NUMBER -> reader.nextInt() == 1 // Convert 1 to true, 0 to false
             JsonToken.BOOLEAN -> reader.nextBoolean() // Handle standard boolean values
+            // Matches Gson's default Boolean handling of strings, plus "1"
+            JsonToken.STRING -> reader.nextString().let { it == "1" || it.toBoolean() }
+            // Null leaves a non-nullable property at its default (false unless the model says
+            // otherwise) and a nullable one null, rather than failing the whole response.
+            JsonToken.NULL -> {
+                reader.nextNull()
+                null
+            }
             else -> throw JsonParseException("Invalid boolean value")
         }
     }

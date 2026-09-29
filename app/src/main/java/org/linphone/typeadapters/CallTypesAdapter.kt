@@ -16,12 +16,18 @@ class CallTypesAdapter : TypeAdapter<CallTypes>() {
     }
 
     override fun read(reader: JsonReader): CallTypes? {
-        return if (reader.peek() == JsonToken.NULL) {
-            reader.nextNull()
-            null
-        } else {
-            val intValue = reader.nextInt()
-            CallTypes.fromValue(intValue) // Map the integer to the corresponding enum
+        return when (reader.peek()) {
+            JsonToken.NULL -> {
+                reader.nextNull()
+                null
+            }
+            JsonToken.NUMBER -> CallTypes.fromValue(reader.nextInt()) // Map the integer to the corresponding enum
+            // Names, as written by Gson's default enum handling (e.g. older call history caches)
+            else -> reader.nextString().let { str ->
+                str.toIntOrNull()?.let { CallTypes.fromValue(it) }
+                    ?: CallTypes.values().find { it.name.equals(str, ignoreCase = true) }
+                    ?: CallTypes.Unknown
+            }
         }
     }
 }

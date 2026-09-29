@@ -1,0 +1,18 @@
+{
+  "brandName": "Example Brand",
+  "documentationRootUrl": "https://docs.example.com",
+  "identityPortal": {
+    "name": "Example Identity",
+    "logoImageUrl": "https://resource.example.com/logo.svg",
+    "favIconUrl": "https://resource.example.com/favicon.ico",
+    "clientStartupScript": null
+  },
+  "customerPortal": {
+    "name": "Example Customer Portal",
+    "logoImageUrl": "https://resource.example.com/customer-logo.svg"
+  },
+  "cssVariables": {
+    "--primary-color": "#123456",
+    "--secondary-color": "#abcdef"
+  }
+}

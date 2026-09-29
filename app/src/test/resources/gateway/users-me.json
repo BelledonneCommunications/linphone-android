@@ -1,0 +1,22 @@
+{
+  "id": "5b0c4f7e-1a2b-4c3d-8e9f-000000000001",
+  "tenantId": "5b0c4f7e-1a2b-4c3d-8e9f-0000000000aa",
+  "tenantName": "Example Tenant",
+  "tenantTier": "Standard",
+  "displayName": "Test User",
+  "email": "test.user@example.com",
+  "isEnabled": 1,
+  "profileImageUrl": "https://resource.example.com/profile/1.png",
+  "permissions": ["customer.user.uc.mobile.access", "customer.user.presence"],
+  "presenceId": "presence-1",
+  "primaryGroupId": "group-1",
+  "pbxCountryCode": "GB",
+  "tenantTimeZoneId": "Europe/London",
+  "deviceCount": 2,
+  "clientProfileSettings": {
+    "presenceSelectionEnabled": true,
+    "presenceOverrideEnabled": false,
+    "queueControlEnabled": true,
+    "agentControlDisplayed": false
+  }
+}

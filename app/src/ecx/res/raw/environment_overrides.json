@@ -3,6 +3,6 @@
     "id": "UK",
     "isDefault": true,
     "defaultTenantId": "885dae64-5d2c-486a-1eff-08dcbcffde8c",
-    "documentationRootUrl": "https://ucdocs.elasticcx.com"
+    "documentationUri": "https://ucdocs.elasticcx.com"
   }
 ]

@@ -1,0 +1,58 @@
+{
+  "dateCreated": "2025-03-01T10:15:30Z",
+  "requestId": "request-1",
+  "reportId": "report-1",
+  "status": 1,
+  "statusMessage": "Complete",
+  "userId": "5b0c4f7e-1a2b-4c3d-8e9f-000000000001",
+  "data": [
+    {
+      "missedCall": false,
+      "answered": true,
+      "hasRecording": true,
+      "startTime": "2025-03-01T09:00:00Z",
+      "connectionId": "connection-1",
+      "callType": "External",
+      "callDirection": 2,
+      "contactName": "Example Contact",
+      "contactMatchType": "Directory",
+      "hasContactMatch": true,
+      "calledUserName": "Test User",
+      "calledUserNumber": "1001",
+      "callingUserName": null,
+      "callingUserNumber": "+441234567890",
+      "routePathName": null,
+      "groupName": "Sales",
+      "huntgroupName": null,
+      "documentId": "document-1",
+      "isConference": false,
+      "pbxType": "DimensionsVoice",
+      "interactionTags": [
+        { "id": "tag-1", "type": "Outcome", "name": "Outcome", "value": "Sale", "required": false, "userId": null }
+      ]
+    },
+    {
+      "missedCall": 1,
+      "answered": 0,
+      "hasRecording": false,
+      "startTime": "2025-03-01T08:30:00",
+      "connectionId": "connection-2",
+      "callType": 1,
+      "callDirection": 1,
+      "contactName": null,
+      "contactMatchType": null,
+      "hasContactMatch": false,
+      "calledUserName": "Test User",
+      "calledUserNumber": "1001",
+      "callingUserName": "Colleague",
+      "callingUserNumber": "1002",
+      "routePathName": null,
+      "groupName": null,
+      "huntgroupName": null,
+      "documentId": "document-2",
+      "isConference": false,
+      "pbxType": "Kazoo",
+      "interactionTags": []
+    }
+  ]
+}

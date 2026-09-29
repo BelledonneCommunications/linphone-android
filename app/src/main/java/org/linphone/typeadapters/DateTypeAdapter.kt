@@ -11,6 +11,8 @@ import java.util.TimeZone
 import org.linphone.utils.Log
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
+import org.threeten.bp.ZonedDateTime
+import org.threeten.bp.format.DateTimeParseException
 
 class DateTypeAdapter : TypeAdapter<Date>() {
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).apply {
@@ -37,18 +39,15 @@ class DateTypeAdapter : TypeAdapter<Date>() {
 
     private fun convertToDate(dateTimeString: String): Date {
         try {
-            // Parse the string into a LocalDateTime
-            val localDateTime = LocalDateTime.parse(dateTimeString)
+            val instant = try {
+                // Timestamps with a zone or offset, e.g. "2025-03-01T10:15:30Z" (including our own output)
+                ZonedDateTime.parse(dateTimeString).toInstant()
+            } catch (e: DateTimeParseException) {
+                // Timestamps without a zone are treated as UTC
+                LocalDateTime.parse(dateTimeString).atZone(ZoneId.of("UTC")).toInstant()
+            }
 
-            // Convert LocalDateTime to an Instant using a time zone (e.g., UTC)
-            val instant = localDateTime.atZone(ZoneId.of("UTC")).toInstant()
-
-            val epochMilli = instant.toEpochMilli()
-
-            // Convert the Instant to a Date
-            val theDate = Date(epochMilli)
-
-            return theDate
+            return Date(instant.toEpochMilli())
         } catch (e: Exception) {
             Log.e(e)
             return Date()
