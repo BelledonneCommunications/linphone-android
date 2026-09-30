@@ -17,6 +17,21 @@ Group changes to describe their impact on the project, as follows:
 - Call Redirection Service APIs allowing to redirect a GSM call to a SIP address via Linphone
 - Keep menu button highlight while popup window is visible
 
+## [6.2.8] - 2026-09-28
+
+### Changed
+
+- Never store CallActivity in device's recent tasks list
+- Keep menu icons highlighted while the popup menu is opened
+- Hide currently default account SIP address from participant pickers (contacts, suggestions and request results)
+
+### Fixed
+
+- Prevent app going into background after answering incoming call from notification
+- Fixed conversation info not updating UI to reflect changes if you were granted/removed administration rights while on this page
+- Fixed item in list still being highlighted after closing pane if list was reordered
+- Fixed conversation participants list popup broken display for cells close to the bottom of the screen
+
 ## [6.2.7] - 2026-09-07
 
 ### Added
