@@ -830,21 +830,12 @@ class CoreContext
                 PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
                 "${context.packageName};proximity_sensor"
             )
-            val sensorManager = context.getSystemService(SENSOR_SERVICE) as SensorManager
-            val proximity = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
-            val added = sensorManager.registerListener(proximitySensorListener, proximity, SensorManager.SENSOR_DELAY_NORMAL)
-            if (!added) {
-                Log.e("$TAG Failed to add proximity sensor listener!")
-            }
         }
     }
 
     @WorkerThread
     private fun onCoreStopped() {
         Log.w("$TAG Core is being shut down, notifying managers so they can remove their listeners and do some cleanup if needed")
-        val sensorManager = context.getSystemService(SENSOR_SERVICE) as SensorManager
-        sensorManager.unregisterListener(proximitySensorListener)
-
         contactsManager.onCoreStopped(core)
         telecomManager.onCoreStopped(core)
         notificationsManager.onCoreStopped(core)
@@ -1393,8 +1384,18 @@ class CoreContext
             if (enable && !proximityWakeLock.isHeld) {
                 Log.i("$TAG Acquiring proximity sensor wake lock for 2 hours")
                 proximityWakeLock.acquire(7200 * 1000L) // 2 hours
+
+                val sensorManager = context.getSystemService(SENSOR_SERVICE) as SensorManager
+                val proximity = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
+                val added = sensorManager.registerListener(proximitySensorListener, proximity, SensorManager.SENSOR_DELAY_NORMAL)
+                if (!added) {
+                    Log.e("$TAG Failed to add proximity sensor listener!")
+                }
             } else if (!enable && proximityWakeLock.isHeld) {
                 Log.i("$TAG Releasing proximity sensor wake lock")
+                val sensorManager = context.getSystemService(SENSOR_SERVICE) as SensorManager
+                sensorManager.unregisterListener(proximitySensorListener)
+
                 proximityWakeLock.release(PowerManager.RELEASE_FLAG_WAIT_FOR_NO_PROXIMITY)
             }
         }
