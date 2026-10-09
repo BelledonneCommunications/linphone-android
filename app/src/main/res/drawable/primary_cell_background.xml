@@ -10,4 +10,4 @@
         android:drawable="@drawable/color_main2_100" />
     <item
         android:drawable="@drawable/color_main2_000" />
-</selector>5
+</selector>
