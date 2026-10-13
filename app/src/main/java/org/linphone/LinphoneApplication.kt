@@ -68,7 +68,7 @@ class LinphoneApplication : Application(), SingletonImageLoader.Factory {
         val powerManager = context.getSystemService(POWER_SERVICE) as PowerManager
         val wakeLock = powerManager.newWakeLock(
             PowerManager.PARTIAL_WAKE_LOCK,
-            "Linphone:AppCreation"
+            "Linphone:AppCreation",
         )
         wakeLock.acquire(20000L) // 20 seconds
 
@@ -112,6 +112,7 @@ class LinphoneApplication : Application(), SingletonImageLoader.Factory {
         wakeLock.release()
     }
 
+    @Suppress("DEPRECATION")
     override fun onTrimMemory(level: Int) {
         Log.w("$TAG onTrimMemory called with level [${trimLevelToString(level)}]($level) !")
         when (level) {
@@ -136,7 +137,7 @@ class LinphoneApplication : Application(), SingletonImageLoader.Factory {
         }
 
         return ImageLoader.Builder(this)
-            .crossfade(false)
+            .crossfade(enable = false)
             .components {
                 add(VideoFrameDecoder.Factory())
                 // add(GifDecoder.Factory) // Do not add it, GIFs are properly rendered without it and adding it breaks resizing...
@@ -160,6 +161,7 @@ class LinphoneApplication : Application(), SingletonImageLoader.Factory {
             .build()
     }
 
+    @Suppress("DEPRECATION")
     private fun trimLevelToString(level: Int): String {
         return when (level) {
             TRIM_MEMORY_UI_HIDDEN -> "Hidden UI"

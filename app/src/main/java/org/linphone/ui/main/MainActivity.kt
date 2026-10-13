@@ -77,6 +77,7 @@ import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
+import androidx.core.content.IntentCompat
 import androidx.core.content.edit
 import org.linphone.ui.sso.SingleSignOnActivity
 
@@ -90,8 +91,6 @@ class MainActivity : GenericActivity() {
         private const val HISTORY_FRAGMENT_ID = 2
         private const val CHAT_FRAGMENT_ID = 3
         private const val MEETINGS_FRAGMENT_ID = 4
-
-        private const val REDIRECT_ROLE_REQUEST_CODE = 101
 
         const val ARGUMENTS_CHAT = "Chat"
         const val ARGUMENTS_CONVERSATION_ID = "ConversationId"
@@ -156,14 +155,15 @@ class MainActivity : GenericActivity() {
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         var allGranted = true
-        for (permission in permissions) {
-            val isGranted = permission.value
+        for ((permissionName, isGranted) in permissions) {
             if (isGranted) {
-                Log.i("$TAG [${permission.key}] permission has been granted")
+                Log.i("$TAG [$permissionName] permission has been granted")
             } else {
                 allGranted = false
-                Log.w("$TAG [${permission.key}] permission has been denied, toggling OFF Call Redirection setting")
-                corePreferences.useCallRedirectionService = false
+                Log.w("$TAG [$permissionName] permission has been denied, toggling OFF Call Redirection setting")
+                lifecycleScope.launch(Dispatchers.IO) {
+                    corePreferences.useCallRedirectionService = false
+                }
             }
         }
 
@@ -173,13 +173,26 @@ class MainActivity : GenericActivity() {
         }
     }
 
+    private val requestCallRedirectionRoleLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            Log.i("$TAG App was granted ROLE_CALL_REDIRECTION")
+        } else {
+            Log.w("$TAG App wasn't granted ROLE_CALL_REDIRECTION, toggling OFF Call Redirection setting")
+            lifecycleScope.launch(Dispatchers.IO) {
+                corePreferences.useCallRedirectionService = false
+            }
+        }
+    }
+
     @SuppressLint("InlinedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         // Must be done before the setContentView
         installSplashScreen()
 
-        val sw600dpLand = resources.configuration.smallestScreenWidthDp >= 600 &&
-                resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        val sw600dpLand = (resources.configuration.smallestScreenWidthDp >= 600 &&
+                resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
         if (sw600dpLand) {
             // Do not force white icons in status bar as it will use the app's background color depending on device light/dark theme
             Log.i("$TAG Device is in sw600dp-land configuration")
@@ -311,7 +324,7 @@ class MainActivity : GenericActivity() {
         }
 
         sharedViewModel.textToShareFromIntent.observe(this) { text ->
-            if (!text.isEmpty()) {
+            if (text.isNotEmpty()) {
                 viewModel.addTextPendingSharing()
             } else {
                 viewModel.filesOrTextPendingSharingListCleared()
@@ -475,7 +488,7 @@ class MainActivity : GenericActivity() {
     }
 
     override fun onPause() {
-        viewModel.enableAccountMonitoring(false)
+        viewModel.enableAccountMonitoring(enable = false)
 
         currentlyDisplayedAuthDialog?.dismiss()
         currentlyDisplayedAuthDialog = null
@@ -517,18 +530,6 @@ class MainActivity : GenericActivity() {
         super.onNewIntent(intent)
         Log.d("$TAG Handling new intent")
         handleIntent(intent)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REDIRECT_ROLE_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                Log.i("$TAG App was granted ROLE_CALL_REDIRECTION")
-            } else {
-                Log.w("$TAG App wasn't granted ROLE_CALL_REDIRECTION, toggling OFF Call Redirection setting")
-                corePreferences.useCallRedirectionService = false
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data)
     }
 
     @SuppressLint("RtlHardcoded")
@@ -675,7 +676,7 @@ class MainActivity : GenericActivity() {
     }
 
     private fun handleMainIntent(intent: Intent) {
-        coreContext.postOnCoreThread { core ->
+        coreContext.postOnCoreThread { _ ->
             if (intent.hasExtra(ARGUMENTS_CHAT)) {
                 Log.i("$TAG Intent has [Chat] extra")
                 coreContext.postOnMainThread {
@@ -721,7 +722,7 @@ class MainActivity : GenericActivity() {
         val parcelablesUri = arrayListOf<Uri>()
         if (multiple) {
             val parcelables =
-                intent.getParcelableArrayListExtra<Parcelable>(Intent.EXTRA_STREAM)
+                IntentCompat.getParcelableArrayListExtra(intent, Intent.EXTRA_STREAM, Parcelable::class.java)
             for (parcelable in parcelables.orEmpty()) {
                 val uri = parcelable as? Uri
                 if (uri != null) {
@@ -730,7 +731,7 @@ class MainActivity : GenericActivity() {
                 }
             }
         } else {
-            val uri = intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri
+            val uri = IntentCompat.getParcelableExtra(intent, Intent.EXTRA_STREAM, Parcelable::class.java) as? Uri
             if (uri != null) {
                 Log.i("$TAG Found URI [$uri] in parcelable extra")
                 parcelablesUri.add(uri)
@@ -940,13 +941,15 @@ class MainActivity : GenericActivity() {
             if (shouldRequestRole) {
                 Log.i("$TAG Starting intent to request Linphone be used as Call Redirection")
                 val intent = roleManager.createRequestRoleIntent(RoleManager.ROLE_CALL_REDIRECTION)
-                startActivityForResult(intent, REDIRECT_ROLE_REQUEST_CODE)
+                requestCallRedirectionRoleLauncher.launch(intent)
             } else {
                 Log.i("$TAG Linphone is already defined as Call Redirection")
             }
         } else {
             Log.e("$TAG Call Redirection feature requires Android Q (API 29) or higher")
-            corePreferences.useCallRedirectionService = false
+            lifecycleScope.launch(Dispatchers.IO) {
+                corePreferences.useCallRedirectionService = false
+            }
         }
     }
 }
