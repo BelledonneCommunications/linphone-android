@@ -466,6 +466,9 @@
     <string name="history_group_call_start_dialog_set_subject">Set group call subject</string>
     <string name="history_group_call_start_dialog_subject_hint">Group call subject</string>
     <string name="history_list_empty_history">No call from/to this account was found…</string>
+    <string name="history_list_empty_missed_calls">No missed call…</string>
+    <string name="history_list_filter_all_calls">All calls</string>
+    <string name="history_list_filter_missed_calls">Missed</string>
     <string name="history_list_change_selected_account_label">Change account</string>
     <string name="history_group_call_go_to_conversation">Conversation</string>
 

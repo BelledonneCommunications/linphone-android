@@ -56,6 +56,12 @@ class HistoryListViewModel
 
     val fetchInProgress = MutableLiveData<Boolean>()
 
+    val missedCallsFilterSelected = MutableLiveData<Boolean>()
+
+    var keepCallsFilterOnViewRecreation = false
+
+    var scrollToTopOnNextUpdate = false
+
     val historyInsertedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData()
     }
@@ -66,11 +72,20 @@ class HistoryListViewModel
 
     private val tempCallLogsList = ArrayList<CallLogModelWrapper>()
 
+    @Volatile
+    private var missedCallsOnly = false
+
+    private var waitingForMagicSearchResults = false
+
     private val magicSearch = coreContext.core.createMagicSearch()
 
     private val magicSearchListener = object : MagicSearchListenerStub() {
         @WorkerThread
         override fun onSearchResultsReceived(magicSearch: MagicSearch) {
+            if (!waitingForMagicSearchResults) {
+                Log.w("$TAG Magic search results received but no longer expected, ignoring them")
+                return
+            }
             Log.i("$TAG Magic search contacts available")
             val results = magicSearch.lastSearch
             processMagicSearchResults(results)
@@ -108,6 +123,7 @@ class HistoryListViewModel
 
     init {
         fetchInProgress.value = true
+        missedCallsFilterSelected.value = false
 
         coreContext.postOnCoreThread { core ->
             coreContext.contactsManager.addListener(contactsListener)
@@ -150,6 +166,27 @@ class HistoryListViewModel
     }
 
     @UiThread
+    fun showAllCalls() {
+        setMissedCallsOnly(false)
+    }
+
+    @UiThread
+    fun showMissedCalls() {
+        setMissedCallsOnly(true)
+    }
+
+    @UiThread
+    private fun setMissedCallsOnly(missedOnly: Boolean) {
+        if (missedCallsOnly == missedOnly) return
+
+        Log.i("$TAG Calls filter changed, missed calls only is now [$missedOnly]")
+        missedCallsOnly = missedOnly
+        missedCallsFilterSelected.value = missedOnly
+        scrollToTopOnNextUpdate = true
+        filter()
+    }
+
+    @UiThread
     override fun filter() {
         coreContext.postOnCoreThread {
             computeCallLogsList(currentFilter)
@@ -167,8 +204,11 @@ class HistoryListViewModel
             fetchInProgress.postValue(true)
         }
 
+        val missedOnly = missedCallsOnly
         val isFilterEmpty = filter.isEmpty()
-        if (!isFilterEmpty) {
+        val searchContacts = !isFilterEmpty && !missedOnly
+        waitingForMagicSearchResults = searchContacts
+        if (searchContacts) {
             magicSearch.getContactsListAsync(
                 filter,
                 corePreferences.contactsFilter,
@@ -189,6 +229,8 @@ class HistoryListViewModel
         }
 
         for (callLog in logs) {
+            if (missedOnly && !LinphoneUtils.isCallLogMissed(callLog)) continue
+
             val model = CallLogModel(callLog)
             if (isCallLogMatchingFilter(model, filter)) {
                 list.add(CallLogModelWrapper(model))
@@ -196,7 +238,7 @@ class HistoryListViewModel
         }
 
         Log.i("$TAG Fetched [${list.size}] call log(s)")
-        if (isFilterEmpty) {
+        if (!searchContacts) {
             callLogs.postValue(list)
         } else {
             fetchInProgress.postValue(true)

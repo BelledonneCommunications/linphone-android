@@ -123,6 +123,10 @@ class HistoryListFragment : AbstractMainFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         listViewModel = ViewModelProvider(this)[HistoryListViewModel::class.java]
+        if (!listViewModel.keepCallsFilterOnViewRecreation) {
+            listViewModel.showAllCalls()
+        }
+        listViewModel.keepCallsFilterOnViewRecreation = false
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = listViewModel
@@ -130,8 +134,6 @@ class HistoryListFragment : AbstractMainFragment() {
 
         binding.historyList.setHasFixedSize(true)
         binding.historyList.layoutManager = LinearLayoutManager(requireContext())
-        binding.historyList.outlineProvider = outlineProvider
-        binding.historyList.clipToOutline = true
 
         val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
         binding.historyList.addItemDecoration(headerItemDecoration)
@@ -242,7 +244,14 @@ class HistoryListFragment : AbstractMainFragment() {
         }
 
         listViewModel.callLogs.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
+            if (listViewModel.scrollToTopOnNextUpdate) {
+                listViewModel.scrollToTopOnNextUpdate = false
+                adapter.submitList(it) {
+                    binding.historyList.scrollToPosition(0)
+                }
+            } else {
+                adapter.submitList(it)
+            }
 
             // Wait for adapter to have items before setting it in the RecyclerView,
             // otherwise scroll position isn't retained
@@ -327,6 +336,14 @@ class HistoryListFragment : AbstractMainFragment() {
             binding.bottomNavBar,
             R.id.historyListFragment
         )
+    }
+
+    override fun onDestroyView() {
+        if (::listViewModel.isInitialized) {
+            listViewModel.keepCallsFilterOnViewRecreation = requireActivity().isChangingConfigurations
+        }
+
+        super.onDestroyView()
     }
 
     override fun onPause() {

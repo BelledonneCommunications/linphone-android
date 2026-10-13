@@ -36,14 +36,24 @@ abstract class GenericListAdapter<T, VH : RecyclerView.ViewHolder>(callback: Dif
     private var selectedViewHolder: ViewDataBinding? = null
 
     override fun submitList(list: List<T?>?) {
+        resetActivatedAndSelectedStates()
+
+        super.submitList(list)
+    }
+
+    override fun submitList(list: List<T?>?, commitCallback: Runnable?) {
+        resetActivatedAndSelectedStates()
+
+        super.submitList(list, commitCallback)
+    }
+
+    private fun resetActivatedAndSelectedStates() {
         activatedViewHolder?.root?.isActivated = false
         selectedViewHolder?.root?.isSelected = false
         activatedViewHolder = null
         selectedViewHolder = null
         activatedAdapterPosition = -1
         selectedAdapterPosition = -1
-
-        super.submitList(list)
     }
 
     fun resetActivated() {
