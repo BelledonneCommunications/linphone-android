@@ -65,13 +65,76 @@
                     android:background="@drawable/shape_squircle_white_r20_top_shadow"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/history_list"
+                <View
+                    android:id="@+id/history_list_background"
                     android:background="@drawable/shape_squircle_white_r20_top_background"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_marginTop="@dimen/top_bar_height"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar" />
+
+                <LinearLayout
+                    android:id="@+id/calls_filter"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:orientation="horizontal"
+                    android:background="@drawable/shape_squircle_gray_main2_100_r10_background"
+                    app:layout_constraintTop_toTopOf="@id/history_list_background"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/default_text_style_700"
+                        android:id="@+id/calls_filter_all"
+                        android:onClick="@{() -> viewModel.showAllCalls()}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:minHeight="32dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:text="@string/history_list_filter_all_calls"
+                        android:textColor="@{viewModel.missedCallsFilterSelected ? @color/main2_600 : @color/bc_white, default=@color/bc_white}"
+                        android:background="@{viewModel.missedCallsFilterSelected ? null : @drawable/shape_squircle_main1_500_r10_background}"
+                        android:selected="@{!viewModel.missedCallsFilterSelected}" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/default_text_style_700"
+                        android:id="@+id/calls_filter_missed"
+                        android:onClick="@{() -> viewModel.showMissedCalls()}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:minHeight="32dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:text="@string/history_list_filter_missed_calls"
+                        android:textColor="@{viewModel.missedCallsFilterSelected ? @color/bc_white : @color/main2_600, default=@color/main2_600}"
+                        android:background="@{viewModel.missedCallsFilterSelected ? @drawable/shape_squircle_main1_500_r10_background : null}"
+                        android:selected="@{viewModel.missedCallsFilterSelected}" />
+
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/history_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="6dp"
+                    app:layout_constraintTop_toBottomOf="@id/calls_filter"
                     app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar" />
 
                 <ImageView
@@ -94,7 +157,7 @@
                     android:id="@+id/no_calls_label"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@{viewModel.isFilterEmpty ? @string/history_list_empty_history : @string/list_filter_no_result_found, default=@string/history_list_empty_history}"
+                    android:text="@{!viewModel.isFilterEmpty ? @string/list_filter_no_result_found : viewModel.missedCallsFilterSelected ? @string/history_list_empty_missed_calls : @string/history_list_empty_history, default=@string/history_list_empty_history}"
                     android:textAlignment="center"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
