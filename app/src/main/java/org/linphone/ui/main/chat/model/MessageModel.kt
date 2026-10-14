@@ -692,19 +692,19 @@ class MessageModel
         while (matcher.find()) {
             val start = matcher.start()
             val end = matcher.end()
-            val source = rawTextContent.subSequence(start + 1, end) // +1 to remove @
+            val source = rawTextContent.subSequence(start + 1, end).toString().lowercase() // +1 to remove @
             Log.d("$TAG Found mention [$source]")
 
             // Find address matching username
-            val address = if (chatRoom.localAddress.username == source) {
+            val address = if (chatRoom.localAddress.username?.lowercase() == source) {
                 coreContext.core.accountList.find {
-                    it.params.identityAddress?.username == source
+                    it.params.identityAddress?.username?.lowercase() == source
                 }?.params?.identityAddress
-            } else if (chatRoom.peerAddress.username == source) {
+            } else if (chatRoom.peerAddress.username?.lowercase() == source) {
                 chatRoom.peerAddress
             } else {
                 chatRoom.participants.find {
-                    it.address.username == source
+                    it.address.username?.lowercase() == source
                 }?.address
             }
             // Find display name for address
