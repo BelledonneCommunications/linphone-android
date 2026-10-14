@@ -415,7 +415,6 @@ class LinphoneUtils {
             chatRoomParams.isGroupEnabled = false
             chatRoomParams.subject = "Meeting invitation" // Won't be used
             val chatParams = chatRoomParams.chatParams ?: return null
-            chatParams.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
 
             if (isEndToEndEncryptedChatAvailable(core)) {
                 Log.i("$TAG LIME is available, sending invitation through 1-1 E2E encrypted chat rooms with each participant")

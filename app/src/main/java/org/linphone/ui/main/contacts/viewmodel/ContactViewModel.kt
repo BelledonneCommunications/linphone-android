@@ -513,7 +513,6 @@ class ContactViewModel
             params.account = account
 
             val chatParams = params.chatParams ?: return
-            chatParams.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
 
             val sameDomain = remote.domain == corePreferences.defaultDomain && remote.domain == account.params.domain
             if (account.params.instantMessagingEncryptionMandatory && sameDomain) {
