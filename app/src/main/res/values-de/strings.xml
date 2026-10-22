@@ -94,7 +94,7 @@
     <string name="assistant_login_third_party_sip_account_title">Drittanbieter-SIP-Konto</string>
     <string name="assistant_login_using_single_sign_on">Single Sign-on</string>
     <string name="assistant_login_cant_parse_address_toast">SIP Adresse ist ungültig!</string>
-    <string name="assistant_login_address_without_username_toast">SIP Adresse enthält keinen Benutzernamen!</string>
+    <string name="assistant_login_address_without_username_toast">SIP-Adresse enthält keinen Benutzernamen!</string>
     <string name="assistant_account_login_already_connected_error">Das Konto ist bereits vorhanden</string>
     <string name="assistant_no_account_yet">Noch kein Konto?</string>
     <string name="assistant_account_register">Registrieren</string>
@@ -928,4 +928,11 @@
     <string name="meeting_schedule_delete_dialog_title">Besprechung löschen?</string>
     <string name="meeting_schedule_delete_dialog_message">Dieses Meeting wird nur aus der Meetingliste dieses Geräts entfernt.</string>
     <string name="conversation_info_confirm_participant_removal_dialog_message">Dieser Teilnehmer wird aus dem Gruppenchat entfernt.</string>
+    <string name="notification_keep_app_alive_description">Diese Benachrichtigung sorgt dafür, dass die App im Hintergrund weiterläuft</string>
+    <string name="assistant_permissions_access_local_network_title"><b>Zugriff auf das lokale Netzwerk (optional):</b> Seit Android 17 erforderlich, um eine Verbindung zu einem Server im lokalen Netzwerk herstellen zu können.</string>
+    <string name="history_list_empty_missed_calls">Kein verpasster Anruf…</string>
+    <string name="history_list_filter_all_calls">Alle Anrufe</string>
+    <string name="history_list_filter_missed_calls">Verpasst</string>
+    <string name="phone_number_copied_to_clipboard_toast">Telefonnummer in die Zwischenablage kopiert</string>
+    <string name="settings_advanced_calls_proximity_sensor_title">Den Näherungssensor verwenden, um den Bildschirm auszuschalten, wenn man sich in der Nähe des Ohrs befindet</string>
 </resources>
