@@ -429,6 +429,38 @@ class LinphoneUtils {
         }
 
         @WorkerThread
+        fun getChatRoomParamsForOneToOneConversationWithAddress(address: Address, conference: Conference? = null): ConferenceParams? {
+            val account = getDefaultAccount() ?: return null
+
+            val params = coreContext.core.createConferenceParams(conference)
+            params.isChatEnabled = true
+            params.isGroupEnabled = false
+            params.account = account
+            params.subject = AppUtils.getString(R.string.conversation_one_to_one_hidden_subject)
+            val chatParams = params.chatParams ?: return null
+
+            val sameDomain = address.domain == corePreferences.defaultDomain && address.domain == account.params.domain
+            if (account.params.instantMessagingEncryptionMandatory && sameDomain) {
+                chatParams.backend = ChatRoom.Backend.FlexisipChat
+                params.securityLevel = Conference.SecurityLevel.EndToEnd
+            } else if (!account.params.instantMessagingEncryptionMandatory) {
+                if (isEndToEndEncryptedChatAvailable(coreContext.core)) {
+                    chatParams.backend = ChatRoom.Backend.FlexisipChat
+                    params.securityLevel = Conference.SecurityLevel.EndToEnd
+                } else if (isGroupChatAvailable(coreContext.core)) {
+                    chatParams.backend = ChatRoom.Backend.FlexisipChat
+                    params.securityLevel = Conference.SecurityLevel.None
+                } else {
+                    chatParams.backend = ChatRoom.Backend.Basic
+                    params.securityLevel = Conference.SecurityLevel.None
+                }
+            } else {
+                return null
+            }
+            return params
+        }
+
+        @WorkerThread
         fun arePushNotificationsAvailable(core: Core): Boolean {
             if (!core.isPushNotificationAvailable) {
                 Log.w(
