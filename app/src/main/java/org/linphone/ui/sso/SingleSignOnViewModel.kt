@@ -25,6 +25,7 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
+import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
 import java.io.File
 
@@ -421,6 +422,50 @@ class SingleSignOnViewModel
                     Log.e(
                         "$TAG Failed to extract tokenEndpoint from lastTokenResponse in AuthState's JSON: $e"
                     )
+                }
+                
+                if (username.isEmpty() || authInfo.username.isNullOrEmpty()) {
+                    Log.w("$TAG No username information yet, extracting it from JWT token")
+                    val json = LinphoneUtils.jwtTokenToJson(authState.accessToken.orEmpty())
+                    if (json != null) {
+                        var extractedUsername = ""
+                        if (json.has("sip_identity")) {
+                            val sipIdentity = json.getString("sip_identity")
+                            val address = Factory.instance().createAddress(sipIdentity)
+                            if (address != null) {
+                                val addressUsername = address.username
+                                if (!addressUsername.isNullOrEmpty()) {
+                                    Log.i("$TAG Extracted username [$addressUsername] from SIP identity field of JWT token with value [$sipIdentity]")
+                                    extractedUsername = addressUsername
+                                }
+                            }
+                        }
+                        if (extractedUsername.isEmpty() && json.has("preferred_username")) {
+                            var preferredUsername = json.getString("preferred_username")
+                            if (!preferredUsername.isNullOrEmpty()) {
+                                if (preferredUsername.contains("@")) {
+                                    preferredUsername = preferredUsername.split("@")[0]
+                                }
+                                Log.i("$TAG Extracted username [$preferredUsername] from preferred username field of JWT token")
+                                extractedUsername = preferredUsername
+                            }
+                        }
+                        if (extractedUsername.isEmpty() && json.has("username")) {
+                            var username = json.getString("username")
+                            if (!username.isNullOrEmpty()) {
+                                if (username.contains("@")) {
+                                    username = username.split("@")[0]
+                                }
+                                Log.i("$TAG Extracted username [$username] from username field of JWT token")
+                                extractedUsername = username
+                            }
+                        }
+
+                        if (extractedUsername.isNotEmpty()) {
+                            Log.i("$TAG Found username information in JWT token, storing it in AuthInfo")
+                            authInfo.username = extractedUsername
+                        }
+                    }
                 }
 
                 authInfo.clientId = clientId
