@@ -21,7 +21,6 @@ package org.linphone.ui.assistant.fragment
 
 import android.Manifest
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.telephony.TelephonyManager
 import android.view.LayoutInflater
@@ -44,7 +43,6 @@ import org.linphone.databinding.AssistantThirdPartySipAccountLoginFragmentBindin
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.GenericFragment
 import org.linphone.ui.assistant.viewmodel.ThirdPartySipAccountLoginViewModel
-import org.linphone.ui.sso.SingleSignOnActivity
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.PhoneNumberUtils
 
@@ -147,21 +145,6 @@ class ThirdPartySipAccountLoginFragment : GenericFragment() {
         viewModel.defaultTransportIndexEvent.observe(viewLifecycleOwner) {
             it.consume { index ->
                 binding.transport.setSelection(index)
-            }
-        }
-
-        coreContext.bearerAuthenticationRequestedEvent.observe(viewLifecycleOwner) {
-            it.consume { pair ->
-                val serverUrl = pair.first
-                val username = pair.second
-
-                Log.i(
-                    "$TAG Bearer auth request, navigating to Single Sign On Fragment with server URL [$serverUrl] and username [$username]"
-                )
-                val intent = Intent(requireContext(), SingleSignOnActivity::class.java)
-                intent.putExtra(SingleSignOnActivity.INTENT_EXTRA_USERNAME, username)
-                intent.putExtra(SingleSignOnActivity.INTENT_EXTRA_SERVER_URL, serverUrl)
-                startActivity(intent)
             }
         }
 
