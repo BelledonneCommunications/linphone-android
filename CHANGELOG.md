@@ -17,6 +17,28 @@ Group changes to describe their impact on the project, as follows:
 - Call Redirection Service APIs allowing to redirect a GSM call to a SIP address via Linphone
 - Keep menu button highlight while popup window is visible
 
+## [6.2.10] - 2026-11-05
+
+### Changed
+- Allow a 1-1 conversation to be created with a Flexisip backend if LIME isn't available instead of directly fallbacking to a BASIC chat room
+- Bumped dependencies to latest releases
+
+### Fixed
+- Extracting username from JWT token when using OIDC login if we didn't have it yet in the AuthInfo, preventing auth_info_X in config file that remains even after logging out from account
+
+## [6.2.9] - 2026-10-22
+
+### Added
+- Added filter in calls history to choose between showing all calls / only missed calls
+
+### Changed
+- Removed forced ephemeral lifetime when creating chat rooms, required for remote provisioning configuration
+- Only enable proximity sensor listener when we hold the proximity sensor wake lock
+- Updated translations from Weblate
+
+### Fixed
+- Fixed mentions in chat messages if the name following the '@' wasn't matching the username case
+
 ## [6.2.8] - 2026-09-28
 
 ### Changed
