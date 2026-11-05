@@ -10,7 +10,7 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
-## [6.2.10] - Unreleased
+## [6.2.10] - 2026-11-05
 
 ### Changed
 - Allow a 1-1 conversation to be created with a Flexisip backend if LIME isn't available instead of directly fallbacking to a BASIC chat room
