@@ -231,18 +231,28 @@ class LinphoneUtils {
         }
 
         @WorkerThread
-        fun isSipAddressLinkedToPhoneNumberByPresence(friend: Friend, sipAddress: String): Boolean {
+        fun getPhoneNumberLinkedToSipAddressByPresence(friend: Friend, sipAddress: Address): String? {
             for (phoneNumber in friend.phoneNumbers) {
                 val presenceModel = friend.getPresenceModelForUriOrTel(phoneNumber)
                 if (presenceModel != null) {
                     val contact = presenceModel.contact
-                    if (contact == sipAddress) {
-                        Log.i("$TAG SIP address [$sipAddress] is presence contact address for phone number [$phoneNumber]")
-                        return true
+                    if (!contact.isNullOrEmpty()) {
+                        if (
+                            sipAddress.asStringUriOnly() == contact ||
+                            Factory.instance().createAddress(contact)?.weakEqual(sipAddress) == true
+                        ) {
+                            Log.i("$TAG SIP address [$sipAddress] is presence contact address for phone number [$phoneNumber]")
+                            return phoneNumber
+                        }
                     }
                 }
             }
-            return false
+            return null
+        }
+
+        @WorkerThread
+        fun isSipAddressLinkedToPhoneNumberByPresence(friend: Friend, sipAddress: Address): Boolean {
+            return !getPhoneNumberLinkedToSipAddressByPresence(friend, sipAddress).isNullOrEmpty()
         }
 
         @AnyThread

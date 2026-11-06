@@ -801,6 +801,7 @@ fun Friend.getPerson(): Person {
     personBuilder.setKey(refKey)
     personBuilder.setUri(nativeUri)
     personBuilder.setImportant(true)
+    Log.i("[Friend] Created Person with name [$personName], refKey [$refKey], URI [$nativeUri]")
     return personBuilder.build()
 }
 
@@ -828,7 +829,7 @@ fun Friend.getListOfSipAddressesAndPhoneNumbers(
 
     // Will return an empty list if corePreferences.hideSipAddresses == true
     for (address in getListOfSipAddresses()) {
-        if (LinphoneUtils.isSipAddressLinkedToPhoneNumberByPresence(this, address.asStringUriOnly())) {
+        if (LinphoneUtils.isSipAddressLinkedToPhoneNumberByPresence(this, address)) {
             continue
         }
         if (removeDefaultAccountAddress && defaultAccountAddress != null && address.weakEqual(defaultAccountAddress)) {

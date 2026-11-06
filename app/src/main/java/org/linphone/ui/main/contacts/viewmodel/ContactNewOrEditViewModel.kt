@@ -123,7 +123,7 @@ class ContactNewOrEditViewModel
                 for (address in friend.addresses) {
                     val sipAddress = address.asStringUriOnly()
                     // Prevents showing presence address as editable when in fact it's not
-                    if (!LinphoneUtils.isSipAddressLinkedToPhoneNumberByPresence(friend, sipAddress)) {
+                    if (!LinphoneUtils.isSipAddressLinkedToPhoneNumberByPresence(friend, address)) {
                         addSipAddress(sipAddress)
                         sipAddressesBeforeEdit.add(sipAddress)
                     } else {
