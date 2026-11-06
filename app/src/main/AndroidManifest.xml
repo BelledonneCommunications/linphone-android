@@ -45,6 +45,9 @@
     <!-- Needed for auto start at boot if keep alive service is enabled -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+    <!-- Simply to prevent "attributionTag  not declared in manifest of org.linphone" error in logs -->
+    <attribution android:tag="@string/empty" android:label="@string/app_name" />
+
     <application
         android:name=".LinphoneApplication"
         android:allowBackup="true"

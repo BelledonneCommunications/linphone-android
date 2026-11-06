@@ -5,6 +5,7 @@
 ]>
 
 <resources>
+    <string name="empty" translatable="false" />
     <string name="app_name" translatable="false">&appName;</string>
 
     <!-- Not translatable strings -->
