@@ -100,12 +100,12 @@ project.tasks.preBuild.dependsOn("linphoneSdkSource")
 
 android {
     namespace = "org.linphone"
-    compileSdk = 37
+    compileSdk = 37 // Android 17 (Cinnamon Bun)
 
     defaultConfig {
         applicationId = packageName
-        minSdk = 28
-        targetSdk = 37
+        minSdk = 28 // Android 9 (Pie)
+        targetSdk = 37 // Android 17 (Cinnamon Bun)
         versionCode = 602010 // 6.02.010
         versionName = "6.3.0-alpha"
 

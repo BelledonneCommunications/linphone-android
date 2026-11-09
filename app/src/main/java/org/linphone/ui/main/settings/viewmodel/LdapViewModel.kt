@@ -181,7 +181,7 @@ class LdapViewModel : GenericViewModel() {
                 ldapParams.enabled = isEnabled.value == true
                 ldapParams.server = server
                 ldapParams.bindDn = bindDn
-                if (!pwd.isEmpty()) {
+                if (pwd.isNotEmpty()) {
                     ldapParams.password = pwd
                 } else if (::ldapToEdit.isInitialized) {
                     ldapParams.password = ldapToEdit.params.password
