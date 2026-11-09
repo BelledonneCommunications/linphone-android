@@ -547,7 +547,10 @@ class MessageModel
                                 isWaitingToBeDownloaded = true,
                                 flexboxLayoutWrapBefore = wrapBefore
                             ) { model ->
-                                downloadContent(model, content)
+                                // /!\ FileModel's onClicked is dispatched on UI thread
+                                coreContext.postOnCoreThread {
+                                    downloadContent(model, content)
+                                }
                             }
                         }
                         filesPath.add(fileModel)

@@ -54,7 +54,7 @@ class FileModel
     val isFromEphemeralMessage: Boolean,
     val isWaitingToBeDownloaded: Boolean = false,
     val flexboxLayoutWrapBefore: Boolean = false,
-    private val onClicked: ((model: FileModel) -> Unit)? = null
+    @UiThread private val onClicked: ((model: FileModel) -> Unit)? = null
 ) {
     companion object {
         private const val TAG = "[File Model]"
