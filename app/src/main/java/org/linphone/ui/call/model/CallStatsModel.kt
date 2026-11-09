@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.call.model
 
+import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -32,7 +33,7 @@ import org.linphone.core.StreamType
 import org.linphone.utils.AppUtils
 
 class CallStatsModel
-    @WorkerThread
+    @UiThread
     constructor() {
     val audioCodec = MutableLiveData<String>()
     val audioBandwidth = MutableLiveData<String>()

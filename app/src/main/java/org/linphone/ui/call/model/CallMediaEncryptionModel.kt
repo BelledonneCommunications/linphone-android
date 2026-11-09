@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.call.model
 
+import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.R
@@ -28,7 +29,7 @@ import org.linphone.core.StreamType
 import org.linphone.utils.AppUtils
 
 class CallMediaEncryptionModel
-    @WorkerThread
+    @UiThread
     constructor(
     private val showZrtpSasValidationDialog: () -> Unit
 ) {
