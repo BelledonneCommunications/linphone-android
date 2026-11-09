@@ -504,7 +504,8 @@ private fun getErrorImageLoader(
             R.drawable.inset_user_circle
         }
     } else {
-        ImageUtils.generatedAvatarIfNeededAndReturnPath(context, initials)
+        val initialsBitmapPath = ImageUtils.generatedAvatarIfNeededAndReturnPath(context, initials)
+        initialsBitmapPath.ifEmpty { R.drawable.inset_user_circle }
     }
 }
 
