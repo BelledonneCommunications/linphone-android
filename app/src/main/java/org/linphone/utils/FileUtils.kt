@@ -180,6 +180,14 @@ class FileUtils {
         @AnyThread
         fun getFileStorageCacheDir(fileName: String, overrideExisting: Boolean = false): File {
             val path = coreContext.context.cacheDir
+            if (!path.exists()) {
+                Log.w("$TAG Cache directory [${path.absolutePath}] doesn't exists!")
+                try {
+                    path.mkdirs()
+                } catch (e: Exception) {
+                    Log.e("$TAG Failed to create cache directory at [${path.absolutePath}]: $e")
+                }
+            }
 
             var file = File(path, fileName)
             if (!overrideExisting) {
@@ -419,14 +427,19 @@ class FileUtils {
             } else {
                 Bitmap.CompressFormat.JPEG
             }
-            FileOutputStream(file).use { outputStream ->
-                bitmap.compress(
-                    format,
-                    100,
-                    outputStream
-                )
+            try {
+                FileOutputStream(file).use { outputStream ->
+                    bitmap.compress(
+                        format,
+                        100,
+                        outputStream
+                    )
+                }
+                return file.absolutePath
+            } catch (e: Exception) {
+                Log.e("$TAG Failed to write file [${file.absolutePath}]: $e")
             }
-            return file.absolutePath
+            return ""
         }
 
         @AnyThread

@@ -43,6 +43,11 @@ class ImageUtils {
 
         @AnyThread
         fun generatedAvatarIfNeededAndReturnPath(context: Context, initials: String): String {
+            if (initials.isEmpty()) {
+                Log.e("$TAG Can't generate avatar without initials!")
+                return ""
+            }
+
             val darkMode = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
             val suffix = if (darkMode) "_dark" else "_light"
 
