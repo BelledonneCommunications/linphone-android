@@ -20,6 +20,7 @@
 package org.linphone.ui.assistant.fragment
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.telephony.TelephonyManager
@@ -90,6 +91,7 @@ class ThirdPartySipAccountLoginFragment : GenericFragment() {
         return binding.root
     }
 
+    @SuppressLint("InlinedApi")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

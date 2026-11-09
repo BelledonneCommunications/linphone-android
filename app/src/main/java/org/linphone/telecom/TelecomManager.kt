@@ -25,6 +25,7 @@ import androidx.core.telecom.CallAttributesCompat
 import androidx.core.telecom.CallException
 import androidx.core.telecom.CallsManager
 import android.os.Build
+import androidx.annotation.UiThread
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -40,7 +41,7 @@ import androidx.core.text.isDigitsOnly
 import org.linphone.compatibility.Compatibility
 
 class TelecomManager
-    @WorkerThread
+    @UiThread
     constructor(context: Context) {
     companion object {
         private const val TAG = "[Telecom Manager]"
