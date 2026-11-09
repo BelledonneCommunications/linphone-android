@@ -286,7 +286,7 @@ class MainActivity : GenericActivity() {
         }
 
         sharedViewModel.textToShareFromIntent.observe(this) { text ->
-            if (!text.isEmpty()) {
+            if (text.isNotEmpty()) {
                 viewModel.addTextPendingSharing()
             } else {
                 viewModel.filesOrTextPendingSharingListCleared()
