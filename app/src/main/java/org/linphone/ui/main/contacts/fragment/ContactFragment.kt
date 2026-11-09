@@ -291,6 +291,7 @@ class ContactFragment : SlidingPaneChildFragment() {
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_STREAM, publicUri)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION) // Needed for Android 18
             putExtra(Intent.EXTRA_SUBJECT, name)
             type = ContactsContract.Contacts.CONTENT_VCARD_TYPE
         }
