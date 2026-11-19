@@ -233,7 +233,7 @@ class AccountSettingsViewModel
                     Log.i("$TAG Outbound proxy server set to [$outboundProxy]")
                     val outboundProxyAddress = core.interpretUrl(outboundProxy, false)
                     if (outboundProxyAddress != null) {
-                        newParams.setRoutesAddresses(arrayOf(outboundProxyAddress))
+                        newParams.routesAddresses = arrayOf(outboundProxyAddress)
                         if (server.isEmpty()) {
                             newParams.serverAddress = outboundProxyAddress
                         }
@@ -241,7 +241,7 @@ class AccountSettingsViewModel
                         Log.e("$TAG Failed to parse outbound proxy server!")
                     }
                 } else {
-                    newParams.setRoutesAddresses(arrayOf<Address>())
+                    newParams.routesAddresses = arrayOf<Address>()
                 }
 
                 if (::natPolicy.isInitialized) {

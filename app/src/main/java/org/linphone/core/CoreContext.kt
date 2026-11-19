@@ -726,7 +726,7 @@ class CoreContext
         paths.add(context.filesDir?.absolutePath.orEmpty())
         val pathsArray = arrayOfNulls<String>(paths.size)
         paths.toArray(pathsArray)
-        core.setChatMessageFilesDirectories(pathsArray)
+        core.chatMessageFilesDirectories = pathsArray
         for (path in paths) {
             Log.i("$TAG Adding path [$path] to list of directories from which Core is allowed to delete files from")
         }

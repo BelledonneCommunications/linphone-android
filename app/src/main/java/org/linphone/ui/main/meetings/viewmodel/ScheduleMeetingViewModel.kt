@@ -155,9 +155,9 @@ class ScheduleMeetingViewModel
         @WorkerThread
         override fun onInvitationsSent(
             conferenceScheduler: ConferenceScheduler,
-            failedInvitations: Array<out Address>?
+            failedInvitations: Array<out Address>
         ) {
-            when (val failedCount = failedInvitations?.size) {
+            when (val failedCount = failedInvitations.size) {
                 0 -> {
                     Log.i("$TAG All invitations have been sent")
                 }
@@ -167,7 +167,7 @@ class ScheduleMeetingViewModel
                 }
                 else -> {
                     Log.w("$TAG [$failedCount] invitations couldn't have been sent for:")
-                    for (failed in failedInvitations.orEmpty()) {
+                    for (failed in failedInvitations) {
                         Log.w(failed.asStringUriOnly())
                     }
                     showRedToast(R.string.meeting_failed_to_send_part_of_invites_toast, R.drawable.warning_circle)
@@ -443,7 +443,7 @@ class ScheduleMeetingViewModel
 
             val participantsInfoArray = arrayOfNulls<ParticipantInfo>(participantsInfoList.size)
             participantsInfoList.toArray(participantsInfoArray)
-            conferenceInfo.setParticipantInfos(participantsInfoArray)
+            conferenceInfo.participantInfos = participantsInfoArray
 
             if (!::conferenceScheduler.isInitialized) {
                 conferenceScheduler = LinphoneUtils.createConferenceScheduler(localAccount)
@@ -499,7 +499,7 @@ class ScheduleMeetingViewModel
 
             val participantsInfoArray = arrayOfNulls<ParticipantInfo>(participantsInfoList.size)
             participantsInfoList.toArray(participantsInfoArray)
-            conferenceInfo.setParticipantInfos(participantsInfoArray)
+            conferenceInfo.participantInfos = participantsInfoArray
 
             if (!::conferenceScheduler.isInitialized) {
                 conferenceScheduler = LinphoneUtils.createConferenceScheduler(
