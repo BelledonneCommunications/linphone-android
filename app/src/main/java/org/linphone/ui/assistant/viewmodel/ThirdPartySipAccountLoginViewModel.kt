@@ -256,7 +256,7 @@ class ThirdPartySipAccountLoginViewModel
                     else -> TransportType.Udp
                 }
                 Log.i("$TAG Created outbound proxy server SIP address [${outboundProxyAddress.asStringUriOnly()}]")
-                accountParams.setRoutesAddresses(arrayOf(outboundProxyAddress))
+                accountParams.routesAddresses = arrayOf(outboundProxyAddress)
             }
 
             val proxyServerValue = proxy.value.orEmpty().trim()
