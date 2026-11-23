@@ -881,4 +881,8 @@
     <string name="assistant_sip_account_lime_algorithm_hint">Допустимі значення: c25519, c448, c25519k512, c25519mlk512 та c448mlk1024</string>
     <string name="assistant_dialog_phone_number_validation_not_available_message">Перевірка номера телефону недоступна, будь ласка, скористайтеся електронну пошту для створення облікового запису.</string>
     <string name="settings_meetings_show_past_meetings_title">Показати минулі зустрічі</string>
+    <string name="manage_account_dialog_outbound_proxy_help_message">Якщо це поле заповнено, вихідний проксі-сервер буде ввімкнено автоматично. Залиште це поле порожнім, щоб вимкнути його.</string>
+    <string name="call_action_decline">Відхилити</string>
+    <string name="call_audio_device_type_microphone">Мікрофон</string>
+    <string name="call_action_stop_record_call">Зупинити запис</string>
 </resources>

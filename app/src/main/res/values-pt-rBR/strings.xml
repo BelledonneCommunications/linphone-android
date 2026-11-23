@@ -858,4 +858,14 @@
     <string name="history_list_empty_missed_calls">Nenhuma chamada perdida…</string>
     <string name="history_list_filter_all_calls">Todas as chamadas</string>
     <string name="history_list_filter_missed_calls">Perdida</string>
+    <string name="manage_account_dialog_outbound_proxy_help_message">Se este campo estiver preenchido, o proxy de saída será ativado automaticamente. Deixe vazio para desabilitá-lo.</string>
+    <string name="conversation_message_edited_label">Editado</string>
+    <string name="conversation_message_content_deleted_label"><i>Esta mensagem foi excluída</i></string>
+    <string name="conversation_message_content_deleted_by_us_label"><i>Você excluiu esta mensagem</i></string>
+    <string name="call_action_decline">Recusar</string>
+    <string name="call_audio_device_type_microphone">Microfone</string>
+    <string name="settings_meetings_show_past_meetings_title">Exibir reuniões anteriores</string>
+    <string name="assistant_dialog_phone_number_validation_not_available_title">Validação de número telefônico indisponível</string>
+    <string name="assistant_dialog_phone_number_validation_not_available_register_button_label">Registre com um e-mail</string>
+    <string name="call_action_stop_record_call">Parar de gravar</string>
 </resources>

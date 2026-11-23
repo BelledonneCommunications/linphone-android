@@ -931,4 +931,8 @@
     <string name="conversation_warning_unsafe_bottom_sheet_message">Сообщения в этом диалоге могут быть перехвачены и прочитаны посторонними людьми, конфиденциальность не гарантирована!</string>
     <string name="call_stats_ip_family_label">Диапазон IP: %s</string>
     <string name="conversation_pdf_file_error_toast">Невозможно открыть этот PDF-файл, возможно он повреждён</string>
+    <string name="call_action_stop_record_call">Прекратить запись</string>
+    <string name="history_list_empty_missed_calls">Нет пропущенных звонков…</string>
+    <string name="history_list_filter_all_calls">Все звонки</string>
+    <string name="history_list_filter_missed_calls">Пропущенные</string>
 </resources>

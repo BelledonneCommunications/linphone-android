@@ -216,7 +216,6 @@
     <string name="content_description_chat_create">Begin een nieuw gesprek</string>
     <string name="content_description_chat_search_message_down">Zoek naar beneden</string>
     <string name="content_description_chat_search_message_up">Zoek omhoog</string>
-
     <string name="content_description_chat_toggle_mute">Zet geluid aan/uit voor dit gesprek</string>
     <string name="content_description_call_voicemail">Lang indrukken om voicemail te bellen</string>
     <string name="content_description_voicemail_available">Spraakberichten zijn beschikbaar</string>
@@ -835,4 +834,17 @@
     <string name="conversation_participants_list_header">Deelnemers</string>
     <string name="call_zrtp_point_to_point_encrypted">Punt-naar-puntversleuteling door ZRTP</string>
     <string name="content_description_cancel_files_or_text_pending_sharing">Klik om vrijgeven van bestanden of teksten te annuleren.</string>
+    <string name="manage_account_dialog_outbound_proxy_help_message">Als dit veld ingevuld is, zal de uitgaande proxy automatisch ingeschakeld worden. Laat het leeg om het te deactiveren.</string>
+    <string name="conversation_message_edited_label">Bewerkt</string>
+    <string name="conversation_message_content_deleted_label"><i>Dit bericht werd verwijderd</i></string>
+    <string name="conversation_message_content_deleted_by_us_label"><i>Je hebt dit bericht verwijderd</i></string>
+    <string name="call_action_decline">Weigeren</string>
+    <string name="call_audio_device_type_microphone">Microfoon</string>
+    <string name="settings_meetings_show_past_meetings_title">Toon afgelopen meetings</string>
+    <string name="assistant_dialog_phone_number_validation_not_available_title">Telefoonnummer verificatie niet beschikbaar</string>
+    <string name="assistant_dialog_phone_number_validation_not_available_register_button_label">Registreer met een email</string>
+    <string name="call_action_stop_record_call">Opname stoppen</string>
+    <string name="history_list_empty_missed_calls">Geen gemiste oproep…</string>
+    <string name="history_list_filter_all_calls">Alle oproepen</string>
+    <string name="history_list_filter_missed_calls">Gemist</string>
 </resources>

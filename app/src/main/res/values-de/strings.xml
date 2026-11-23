@@ -361,7 +361,7 @@
     <string name="contact_video_call_action">Videoanruf</string>
     <string name="contact_make_call_check_device_trust">Verifizieren</string>
     <string name="contact_device_without_name">Unbenanntes Gerät</string>
-    <string name="conversations_list_empty">Kein Chat im Moment…</string>
+    <string name="conversations_list_empty">Derzeit gibt es keine Chats zu diesem Konto…</string>
     <string name="conversations_list_is_being_removed_label">Entfernung läuft…</string>
     <string name="conversations_last_message_format">%s:</string>
     <plurals name="conversations_files_waiting_to_be_shared_toast">
