@@ -153,6 +153,8 @@ class AccountSettingsViewModel
                 sipProxyServer.postValue(params.serverAddress?.asStringUriOnly())
                 if (params.routesAddresses.isNotEmpty()) {
                     outboundProxyServer.postValue(params.routesAddresses.first().asStringUriOnly())
+                } else {
+                    outboundProxyServer.postValue("")
                 }
 
                 natPolicy = params.natPolicy ?: core.createNatPolicy()
@@ -228,10 +230,15 @@ class AccountSettingsViewModel
                         Log.e("$TAG Failed to parse proxy server!")
                     }
                 }
-                val outboundProxy = outboundProxyServer.value.orEmpty()
+                val outboundProxy = outboundProxyServer.value.orEmpty().trim()
                 if (outboundProxy.isNotEmpty()) {
                     Log.i("$TAG Outbound proxy server set to [$outboundProxy]")
-                    val outboundProxyAddress = core.interpretUrl(outboundProxy, false)
+                    val proxyUri = if (outboundProxy.startsWith("sip:") || outboundProxy.startsWith("sips:")) {
+                        outboundProxy
+                    } else {
+                        "sip:$outboundProxy"
+                    }
+                    val outboundProxyAddress = core.interpretUrl(proxyUri, false)
                     if (outboundProxyAddress != null) {
                         newParams.routesAddresses = arrayOf(outboundProxyAddress)
                         if (server.isEmpty()) {
