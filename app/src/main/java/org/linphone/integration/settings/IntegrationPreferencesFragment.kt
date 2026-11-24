@@ -40,10 +40,13 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.integration.IntegrationPrefs
 import org.linphone.integration.IntegrationPrefs.CallMode
+import org.linphone.integration.IntegrationPrefs.ContactsMode
 import org.linphone.integration.IntegrationPrefs.RedirectMode
 import org.linphone.integration.calls.CallLogPreferenceReceiver
 import org.linphone.integration.calls.ManagedAccounts
 import org.linphone.integration.calls.ManagedCalls
+import org.linphone.integration.contacts.ContactsAccount
+import org.linphone.integration.contacts.ContactsIntegration
 
 /**
  * The detailed settings of the Android integration, in Linphone's config ([IntegrationPrefs]), and the status of
@@ -60,8 +63,16 @@ class IntegrationPreferencesFragment : PreferenceFragmentCompat() {
         refreshStatus()
     }
 
-    private val locationPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-        Log.i("$TAG ACCESS_FINE_LOCATION ${if (it) "granted" else "denied"}")
+    // fine location is asked together with coarse (Android 12+: the user may grant only the coarse one, which does
+    // not give the Wi-Fi network's name)
+    private val locationPermission = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+        Log.i("$TAG Location permissions: $it")
+        refreshStatus()
+    }
+
+    private val contactsPermissions = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+        Log.i("$TAG Contacts permissions: $it")
+        ContactsIntegration.apply(requireContext())
         refreshStatus()
     }
 
@@ -86,6 +97,8 @@ class IntegrationPreferencesFragment : PreferenceFragmentCompat() {
             "allow_transfer" -> IntegrationPrefs.allowTransfer
             "self_managed_call_log" -> IntegrationPrefs.selfManagedCallLog
             "redirect_only_when_registered" -> IntegrationPrefs.redirectOnlyWhenRegistered
+            "contacts_call_action" -> IntegrationPrefs.contactsCallAction
+            "contacts_message_action" -> IntegrationPrefs.contactsMessageAction
             else -> defValue
         }
 
@@ -108,7 +121,10 @@ class IntegrationPreferencesFragment : PreferenceFragmentCompat() {
                     "allow_transfer" -> IntegrationPrefs.allowTransfer = value
                     "self_managed_call_log" -> IntegrationPrefs.selfManagedCallLog = value
                     "redirect_only_when_registered" -> IntegrationPrefs.redirectOnlyWhenRegistered = value
+                    "contacts_call_action" -> IntegrationPrefs.contactsCallAction = value
+                    "contacts_message_action" -> IntegrationPrefs.contactsMessageAction = value
                 }
+                if (key.startsWith("contacts_")) ContactsAccount.requestSync(coreContext.context)
                 coreContext.postOnMainThread { refreshStatus() }
             }
         }
@@ -121,6 +137,7 @@ class IntegrationPreferencesFragment : PreferenceFragmentCompat() {
             "redirect_wifi_networks" -> IntegrationPrefs.redirectWifiNetworks
             "redirect_min_digits" -> IntegrationPrefs.redirectMinDigits.toString()
             "redirect_excluded_prefixes" -> IntegrationPrefs.redirectExcludedPrefixes
+            "contacts_mode" -> IntegrationPrefs.contactsMode.key
             else -> defValue
         }
 
@@ -146,6 +163,10 @@ class IntegrationPreferencesFragment : PreferenceFragmentCompat() {
                     "redirect_wifi_networks" -> IntegrationPrefs.redirectWifiNetworks = v.trim()
                     "redirect_min_digits" -> IntegrationPrefs.redirectMinDigits = v.trim().toIntOrNull()?.coerceIn(1, 20) ?: 6
                     "redirect_excluded_prefixes" -> IntegrationPrefs.redirectExcludedPrefixes = v.trim()
+                    "contacts_mode" -> {
+                        IntegrationPrefs.contactsMode = ContactsMode.of(v)
+                        ContactsIntegration.apply(coreContext.context)
+                    }
                 }
                 coreContext.postOnMainThread { refreshStatus() }
             }
@@ -173,7 +194,7 @@ class IntegrationPreferencesFragment : PreferenceFragmentCompat() {
         }
         findPreference<Preference>("status_location_permission")?.setOnPreferenceClickListener {
             if (!granted(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                locationPermission.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                locationPermission.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
             }
             true
         }
@@ -183,6 +204,19 @@ class IntegrationPreferencesFragment : PreferenceFragmentCompat() {
         }
         findPreference<Preference>("status_system_call_log")?.setOnPreferenceClickListener {
             callLogSettingsIntent()?.let { intent -> startActivity(intent) }
+            true
+        }
+        findPreference<Preference>("status_contacts_permission")?.setOnPreferenceClickListener {
+            requestContactsPermissions()
+            true
+        }
+        findPreference<Preference>("action_contacts_sync")?.setOnPreferenceClickListener {
+            ContactsIntegration.apply(requireContext())
+            android.widget.Toast.makeText(requireContext(), R.string.integration_contacts_sync_started, android.widget.Toast.LENGTH_SHORT).show()
+            true
+        }
+        findPreference<ListPreference>("contacts_mode")?.setOnPreferenceChangeListener { _, value ->
+            if (value != ContactsMode.OFF.key) requestContactsPermissions()
             true
         }
         // asking for what a setting needs when it is turned on
@@ -198,7 +232,7 @@ class IntegrationPreferencesFragment : PreferenceFragmentCompat() {
         }
         findPreference<EditTextPreference>("redirect_wifi_networks")?.setOnPreferenceChangeListener { _, value ->
             if ((value as? String).orEmpty().isNotBlank() && !granted(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                locationPermission.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                locationPermission.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
             }
             true
         }
@@ -214,6 +248,12 @@ class IntegrationPreferencesFragment : PreferenceFragmentCompat() {
 
     private fun granted(permission: String) =
         ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED
+
+    private fun requestContactsPermissions() {
+        if (!ContactsIntegration.permissionsGranted(requireContext())) {
+            contactsPermissions.launch(arrayOf(Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS))
+        }
+    }
 
     private fun requestRedirectionRole() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) return
@@ -308,6 +348,27 @@ class IntegrationPreferencesFragment : PreferenceFragmentCompat() {
             else -> getString(R.string.integration_system_call_log_unavailable)
         }
         findPreference<Preference>("self_managed_call_log")?.isEnabled = Build.VERSION.SDK_INT >= 37
+
+        // contacts
+        val contacts = ContactsMode.of(store.getString("contacts_mode", null))
+        findPreference<ListPreference>("contacts_mode")?.summary = getString(
+            when (contacts) {
+                ContactsMode.OFF -> R.string.integration_contacts_mode_summary_off
+                ContactsMode.ALL_NUMBERS -> R.string.integration_contacts_mode_summary_all
+                ContactsMode.SIP_ONLY -> R.string.integration_contacts_mode_summary_sip
+            }
+        )
+        val contactsOn = contacts != ContactsMode.OFF
+        for (key in listOf("status_contacts_permission", "contacts_call_action", "contacts_message_action", "action_contacts_sync")) {
+            findPreference<Preference>(key)?.isVisible = contactsOn
+        }
+        findPreference<Preference>("status_contacts_permission")?.summary = getString(
+            if (ContactsIntegration.permissionsGranted(context)) {
+                R.string.integration_contacts_permission_granted
+            } else {
+                R.string.integration_contacts_permission_missing
+            }
+        )
 
         // redirection
         val redirect = RedirectMode.of(store.getString("redirect_mode", null))

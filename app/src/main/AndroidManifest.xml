@@ -55,6 +55,12 @@
     <!-- Android integration: redirect phone calls only on selected Wi-Fi networks (the network name needs the
     location permission, asked for only when networks are selected) -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+
+    <!-- Android integration: the "Linphone" account with the actions "Call via …" / "Message via …" on contacts -->
+    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <!-- Simply to prevent "attributionTag  not declared in manifest of org.linphone" error in logs -->
@@ -203,6 +209,56 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <!-- Android integration: a tap on "Call via …" / "Message via …" in the contacts or the dialer, and sms:
+        links opened with Linphone -->
+        <activity
+            android:name=".integration.contacts.ContactActionActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.item/vnd.org.linphone.integration.call" />
+                <data android:mimeType="vnd.android.cursor.item/vnd.org.linphone.integration.message" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SENDTO" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="sms" />
+                <data android:scheme="smsto" />
+            </intent-filter>
+        </activity>
+
+        <!-- Android integration: the "Linphone" account (no credentials) and its contacts sync -->
+        <service
+            android:name=".integration.contacts.ContactsAuthenticatorService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/integration_authenticator" />
+        </service>
+
+        <service
+            android:name=".integration.contacts.ContactsSyncService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/integration_syncadapter" />
+            <meta-data
+                android:name="android.provider.CONTACTS_STRUCTURE"
+                android:resource="@xml/integration_contacts" />
+        </service>
 
         <!-- Services -->
 

@@ -99,4 +99,28 @@
     <string name="integration_redirect_excluded">Nikdy nepřesměrovaná čísla</string>
     <string name="integration_redirect_excluded_dialog">Předvolby oddělené čárkami (například placené nebo servisní linky: +420900, 900). Čísla, která jimi začínají, zůstanou na SIM.</string>
     <string name="integration_none">Žádná</string>
+
+    <string name="integration_contact_call">Volat %1$s</string>
+    <string name="integration_contact_message">Zpráva %1$s</string>
+    <string name="integration_cat_contacts">Kontakty</string>
+    <string name="integration_cat_contacts_summary">Akce u kontaktů v systémových kontaktech a číselníku: „Volat přes …“ a „Zpráva přes …“ přes SIP účet</string>
+    <string name="integration_contacts_mode">Kontakty s akcemi Linphone</string>
+    <string-array name="integration_contacts_mode_entries">
+        <item>Žádné</item>
+        <item>Každé telefonní číslo a SIP adresa</item>
+        <item>Jen SIP adresy</item>
+    </string-array>
+    <string name="integration_contacts_mode_summary_off">Žádné akce Linphone v kontaktech (účet Linphone se odstraní)</string>
+    <string name="integration_contacts_mode_summary_all">Akce dostane každé telefonní číslo a SIP adresa – pro bránu jako MU300, která volá a píše na telefonní čísla</string>
+    <string name="integration_contacts_mode_summary_sip">Akce dostanou jen SIP adresy kontaktů</string>
+    <string name="integration_contacts_permission">Oprávnění měnit kontakty</string>
+    <string name="integration_contacts_permission_granted">Uděleno</string>
+    <string name="integration_contacts_permission_missing">Neuděleno – klepnutím povolíte (akce se přidají k vašim kontaktům)</string>
+    <string name="integration_contacts_call">Akce Volat</string>
+    <string name="integration_contacts_call_summary">„Volat … přes“ účet, u každého čísla</string>
+    <string name="integration_contacts_message">Akce Zpráva</string>
+    <string name="integration_contacts_message_summary">„Zpráva … přes“ účet (přes bránu jako MU300: SMS)</string>
+    <string name="integration_contacts_sync">Aktualizovat kontakty</string>
+    <string name="integration_contacts_sync_summary">Akce se řídí vašimi kontakty samy; tímto se to provede hned</string>
+    <string name="integration_contacts_sync_started">Kontakty se aktualizují…</string>
 </resources>

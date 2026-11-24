@@ -136,6 +136,46 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        app:key="cat_contacts"
+        app:title="@string/integration_cat_contacts"
+        app:summary="@string/integration_cat_contacts_summary"
+        app:iconSpaceReserved="false">
+
+        <ListPreference
+            app:key="contacts_mode"
+            app:title="@string/integration_contacts_mode"
+            app:entries="@array/integration_contacts_mode_entries"
+            app:entryValues="@array/integration_contacts_mode_values"
+            app:defaultValue="all_numbers"
+            app:iconSpaceReserved="false" />
+
+        <Preference
+            app:key="status_contacts_permission"
+            app:title="@string/integration_contacts_permission"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreferenceCompat
+            app:key="contacts_call_action"
+            app:title="@string/integration_contacts_call"
+            app:summary="@string/integration_contacts_call_summary"
+            app:defaultValue="true"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreferenceCompat
+            app:key="contacts_message_action"
+            app:title="@string/integration_contacts_message"
+            app:summary="@string/integration_contacts_message_summary"
+            app:defaultValue="true"
+            app:iconSpaceReserved="false" />
+
+        <Preference
+            app:key="action_contacts_sync"
+            app:title="@string/integration_contacts_sync"
+            app:summary="@string/integration_contacts_sync_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
         app:key="cat_redirection"
         app:title="@string/integration_cat_redirection"
         app:summary="@string/integration_cat_redirection_summary"

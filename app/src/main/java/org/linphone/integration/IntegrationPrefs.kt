@@ -21,7 +21,7 @@ package org.linphone.integration
 
 import androidx.annotation.AnyThread
 import androidx.annotation.WorkerThread
-import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 
 /**
  * The settings of the Android integration (Settings → Android integration), kept in Linphone's own config file,
@@ -58,7 +58,8 @@ object IntegrationPrefs {
         }
     }
 
-    private val config get() = coreContext.core.config
+    // the app's config, available before the Core is (a sync adapter may start the process on its own)
+    private val config get() = corePreferences.config
 
     @AnyThread
     private fun bool(key: String, default: Boolean) = config.getBool(S, key, default)
@@ -154,6 +155,36 @@ object IntegrationPrefs {
         @AnyThread get() = bool("self_managed_call_log", true)
 
         @WorkerThread set(value) = setBool("self_managed_call_log", value)
+
+    // ---- contacts --------------------------------------------------------------------------------------------
+
+    /** which contacts get the actions "Call via …" / "Message via …" in the system contacts and dialer */
+    enum class ContactsMode(val key: String) {
+        OFF("off"),
+        /** every phone number (a gateway such as the MU300 dials them) and SIP address */
+        ALL_NUMBERS("all_numbers"),
+        /** only contacts' SIP addresses */
+        SIP_ONLY("sip_only");
+
+        companion object {
+            fun of(key: String?) = entries.firstOrNull { it.key == key } ?: ALL_NUMBERS
+        }
+    }
+
+    var contactsMode: ContactsMode
+        @AnyThread get() = ContactsMode.of(string("contacts_mode", ContactsMode.ALL_NUMBERS.key))
+
+        @WorkerThread set(value) = setString("contacts_mode", value.key)
+
+    var contactsCallAction: Boolean
+        @AnyThread get() = bool("contacts_call_action", true)
+
+        @WorkerThread set(value) = setBool("contacts_call_action", value)
+
+    var contactsMessageAction: Boolean
+        @AnyThread get() = bool("contacts_message_action", true)
+
+        @WorkerThread set(value) = setBool("contacts_message_action", value)
 
     // ---- call redirection (ROLE_CALL_REDIRECTION) ------------------------------------------------------------
 

@@ -84,7 +84,10 @@ class ManagedConnection(
         var caps = CAPABILITY_HOLD or CAPABILITY_SUPPORT_HOLD or CAPABILITY_MUTE
         if (IntegrationPrefs.rejectWithMessage) caps = caps or CAPABILITY_CAN_SEND_RESPONSE_VIA_CONNECTION
         if (IntegrationPrefs.allowDeflect && incoming) caps = caps or CAPABILITY_SUPPORT_DEFLECT
-        if (IntegrationPrefs.allowTransfer) caps = caps or CAPABILITY_TRANSFER or CAPABILITY_TRANSFER_CONSULTATIVE
+        // public from Android 17 (API 37); before, Telecom offers no transfer for self-provided calls
+        if (IntegrationPrefs.allowTransfer && Build.VERSION.SDK_INT >= 37) {
+            caps = caps or CAPABILITY_TRANSFER or CAPABILITY_TRANSFER_CONSULTATIVE
+        }
         connectionCapabilities = caps
     }
 
@@ -155,6 +158,8 @@ class ManagedConnection(
     /** HD voice (a wideband codec) and Wi-Fi: the badges of the system call screen */
     @WorkerThread
     private fun updateProperties(call: Call) {
+        // HD and Wi-Fi properties are public from Android 11 (API 30)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return
         var props = 0
         if (IntegrationPrefs.reportHdAudio) {
             val clockRate = call.currentParams.usedAudioPayloadType?.clockRate ?: 0

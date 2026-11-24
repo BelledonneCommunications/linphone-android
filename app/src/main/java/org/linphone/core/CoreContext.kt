@@ -818,6 +818,7 @@ class CoreContext
         contactsManager.onCoreStarted(core)
         telecomManager.onCoreStarted(core)
         ManagedCalls.start(context, core)
+        org.linphone.integration.contacts.ContactsIntegration.apply(context)
         notificationsManager.onCoreStarted(core, oldVersion < 600000) // Re-create channels when migrating from a non 6.0 version
         Log.i("$TAG Started contacts, telecom & notifications managers")
 

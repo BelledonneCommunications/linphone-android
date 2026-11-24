@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- the rows ContactsPublisher adds to contacts: the contacts app and the dialer show them as actions
+     (summary: "via <account>", detail: "Call +420 …"), a tap opens ContactActionActivity -->
+<ContactsAccountType xmlns:android="http://schemas.android.com/apk/res/android">
+    <ContactsDataKind
+        android:mimeType="vnd.android.cursor.item/vnd.org.linphone.integration.call"
+        android:icon="@drawable/phone"
+        android:summaryColumn="data2"
+        android:detailColumn="data3" />
+    <ContactsDataKind
+        android:mimeType="vnd.android.cursor.item/vnd.org.linphone.integration.message"
+        android:icon="@drawable/chat_teardrop_text"
+        android:summaryColumn="data2"
+        android:detailColumn="data3" />
+</ContactsAccountType>

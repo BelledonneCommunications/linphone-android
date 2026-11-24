@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- the "Linphone" account of the Android integration (contact actions); no credentials -->
+<account-authenticator xmlns:android="http://schemas.android.com/apk/res/android"
+    android:accountType="org.linphone.integration"
+    android:icon="@mipmap/ic_launcher"
+    android:smallIcon="@drawable/linphone_notification"
+    android:label="@string/app_name" />

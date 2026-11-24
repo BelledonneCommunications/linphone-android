@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Android integration (fork): calls, messages and contacts in the system apps -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="integration_account_registered">registered</string>
     <string name="integration_account_registering">registering…</string>
     <string name="integration_account_not_registered">not registered</string>
@@ -113,4 +113,35 @@
     <string name="integration_redirect_excluded">Numbers never redirected</string>
     <string name="integration_redirect_excluded_dialog">Prefixes, separated by commas (for example premium or service numbers: +420900, 900). Numbers starting with one stay on the SIM.</string>
     <string name="integration_none">None</string>
+
+    <!-- contacts -->
+    <string name="integration_contact_summary" translatable="false">%1$s</string>
+    <string name="integration_contact_call">Call %1$s</string>
+    <string name="integration_contact_message">Message %1$s</string>
+    <string name="integration_cat_contacts">Contacts</string>
+    <string name="integration_cat_contacts_summary">Actions on your contacts in the system contacts and dialer: \"Call via …\" and \"Message via …\", through the SIP account</string>
+    <string name="integration_contacts_mode">Contacts with Linphone actions</string>
+    <string-array name="integration_contacts_mode_entries">
+        <item>None</item>
+        <item>Every phone number and SIP address</item>
+        <item>Only SIP addresses</item>
+    </string-array>
+    <string-array name="integration_contacts_mode_values" translatable="false">
+        <item>off</item>
+        <item>all_numbers</item>
+        <item>sip_only</item>
+    </string-array>
+    <string name="integration_contacts_mode_summary_off">No Linphone actions in the contacts (the Linphone account is removed)</string>
+    <string name="integration_contacts_mode_summary_all">Every phone number and SIP address gets the actions - for a gateway such as the MU300, which calls and texts phone numbers</string>
+    <string name="integration_contacts_mode_summary_sip">Only contacts\' SIP addresses get the actions</string>
+    <string name="integration_contacts_permission">Permission to change contacts</string>
+    <string name="integration_contacts_permission_granted">Granted</string>
+    <string name="integration_contacts_permission_missing">Not granted - tap to allow (the actions are added to your contacts)</string>
+    <string name="integration_contacts_call">Call action</string>
+    <string name="integration_contacts_call_summary">\"Call … via\" the account, on each number</string>
+    <string name="integration_contacts_message">Message action</string>
+    <string name="integration_contacts_message_summary">\"Message … via\" the account (through a gateway such as the MU300: an SMS)</string>
+    <string name="integration_contacts_sync">Update the contacts now</string>
+    <string name="integration_contacts_sync_summary">The actions follow your contacts by themselves; this runs it at once</string>
+    <string name="integration_contacts_sync_started">Updating the contacts…</string>
 </resources>
