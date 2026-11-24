@@ -157,6 +157,13 @@ class SettingsFragment : GenericMainFragment() {
             }
         }
 
+        binding.setIntegrationSettingsClickListener {
+            if (findNavController().currentDestination?.id == R.id.settingsFragment) {
+                val action = SettingsFragmentDirections.actionSettingsFragmentToIntegrationSettingsFragment()
+                findNavController().navigate(action)
+            }
+        }
+
         binding.setAdvancedSettingsClickListener {
             if (findNavController().currentDestination?.id == R.id.settingsFragment) {
                 val action = SettingsFragmentDirections.actionSettingsFragmentToSettingsAdvancedFragment()

@@ -13,6 +13,7 @@ constraintLayout = "2.2.2"
 coreKtx = "1.19.1"
 splashscreen = "1.2.0"
 telecom = "1.1.0"
+preference = "1.2.1"
 media = "1.8.0"
 recyclerview = "1.4.0"
 swipeRefreshLayout = "1.2.0"
@@ -44,6 +45,7 @@ androidx-constraint-layout = { group = "androidx.constraintlayout", name = "cons
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
 androidx-telecom = { group = "androidx.core", name = "core-telecom", version.ref = "telecom" }
+androidx-preference = { group = "androidx.preference", name = "preference-ktx", version.ref = "preference" }
 androidx-media = { group = "androidx.media", name = "media", version.ref = "media" }
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
 androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swipeRefreshLayout" }

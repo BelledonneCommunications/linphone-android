@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="integration_account_registered">registrován</string>
+    <string name="integration_account_registering">registruje se…</string>
+    <string name="integration_account_not_registered">neregistrován</string>
+    <string name="integration_call_via">přes %1$s</string>
+
+    <string name="integration_end_busy">Obsazeno</string>
+    <string name="integration_end_declined">Hovor odmítnut</string>
+    <string name="integration_end_not_found">Číslo neexistuje</string>
+    <string name="integration_end_unavailable">Nedostupný</string>
+    <string name="integration_end_forbidden">Server hovor nepovolil</string>
+    <string name="integration_end_network">Chyba sítě nebo serveru</string>
+    <string name="integration_end_error">Hovor se nezdařil</string>
+    <string name="integration_end_no_account">SIP účet už neexistuje</string>
+
+    <string name="integration_settings_title">Integrace s Androidem</string>
+    <string name="integration_cat_calls">Hovory</string>
+    <string name="integration_call_mode">Integrace hovorů</string>
+    <string-array name="integration_call_mode_entries">
+        <item>Automaticky: systémová aplikace Telefon, když je volací účet zapnutý</item>
+        <item>Vždy systémová aplikace Telefon</item>
+        <item>Vlastní obrazovka hovoru Linphone</item>
+    </string-array>
+    <string name="integration_call_mode_summary_automatic">Hovory běží v systémové aplikaci Telefon (její číselník, obrazovka hovoru a historie), když je volací účet zapnutý; jinak v obrazovce hovoru Linphone.</string>
+    <string name="integration_call_mode_summary_system">Všechny hovory běží v systémové aplikaci Telefon. Volací účet, který není zapnutý, nemůže volat ani přijímat hovory.</string>
+    <string name="integration_call_mode_summary_linphone">Hovory běží ve vlastní obrazovce hovoru Linphone, jako v původní aplikaci.</string>
+    <string name="integration_calling_accounts">Volací účty</string>
+    <string name="integration_calling_accounts_none">Zatím žádný SIP účet</string>
+    <string name="integration_calling_account_enabled">%1$s: zapnutý</string>
+    <string name="integration_calling_account_disabled">%1$s: nezapnutý – klepnutím ho zapnete v Nastavení → Hovory → Volací účty</string>
+    <string name="integration_call_permission">Oprávnění volat</string>
+    <string name="integration_call_permission_granted">Uděleno: hovory zahájené v Linphone běží v systémové aplikaci Telefon</string>
+    <string name="integration_call_permission_missing">Neuděleno – klepnutím povolíte. Bez něj hovory zahájené v Linphone používají obrazovku hovoru Linphone.</string>
+    <string name="integration_place_app_calls">Hovory z Linphone přes systém</string>
+    <string name="integration_place_app_calls_summary">Hovory zahájené v Linphone (kontakty, historie, číselník) také běží v systémové aplikaci Telefon</string>
+    <string name="integration_accept_numbers">Telefonní čísla v systémovém číselníku</string>
+    <string name="integration_accept_numbers_summary">Nabízet účet i pro běžná telefonní čísla (tel:), nejen pro SIP adresy. Potřeba pro bránu jako MU300, která je vytáčí přes svůj modem.</string>
+    <string name="integration_account_label">Název volacího účtu</string>
+    <string name="integration_account_label_dialog">Název, který systém zobrazuje pro volací účet (v číselníku, obrazovce hovoru a historii). Prázdné: zobrazované jméno SIP účtu, nebo uživatel@doména.</string>
+    <string name="integration_account_label_default">Název SIP účtu</string>
+    <string name="integration_video_in_linphone">Videohovory v Linphone</string>
+    <string name="integration_video_in_linphone_summary">Příchozí videohovor nebo videohovor, který zahájíte, používá obrazovku hovoru Linphone: systémová obrazovka hovoru video nemá</string>
+
+    <string name="integration_cat_call_screen">V systémové obrazovce hovoru</string>
+    <string name="integration_hd_audio">Označení HD hlasu</string>
+    <string name="integration_hd_audio_summary">Označit hovory se širokopásmovým kodekem (Opus, G.722, AMR-WB …) jako HD</string>
+    <string name="integration_wifi">Označení volání přes Wi-Fi</string>
+    <string name="integration_wifi_summary">Označit hovory přes Wi-Fi</string>
+    <string name="integration_status_hints">Zobrazit účet</string>
+    <string name="integration_status_hints_summary">„přes &lt;účet&gt;“ pod jménem volajícího</string>
+    <string name="integration_audio_route">Řídit se systémovou cestou zvuku</string>
+    <string name="integration_audio_route_summary">Reproduktor, sluchátko, Bluetooth nebo náhlavní souprava podle volby v systémové obrazovce hovoru</string>
+    <string name="integration_reject_message">Odmítnout se zprávou</string>
+    <string name="integration_reject_message_summary">Rychlé odpovědi systémové obrazovky příchozího hovoru se volajícímu pošlou jako zpráva v chatu (přes bránu jako MU300: jako SMS)</string>
+    <string name="integration_reject_busy">Odmítat jako obsazeno</string>
+    <string name="integration_reject_busy_summary">Odmítnutý hovor odpoví 486 Busy Here (volající slyší obsazeno) místo 603 Decline</string>
+    <string name="integration_deflect">Přesměrovat vyzvánějící hovor</string>
+    <string name="integration_deflect_summary">Poslat vyzvánějící hovor na jiné číslo (SIP 302) ze systémové obrazovky hovoru</string>
+    <string name="integration_transfer">Přepojení hovoru</string>
+    <string name="integration_transfer_summary">Přepojení naslepo i s konzultací ze systémové obrazovky hovoru (SIP REFER)</string>
+
+    <string name="integration_cat_call_log">Historie hovorů</string>
+    <string name="integration_self_managed_log">Hovory z obrazovky Linphone v systémové historii</string>
+    <string name="integration_self_managed_log_summary">Android 17 a novější: hovory ve vlastní obrazovce Linphone jdou také do jednotné systémové historie hovorů, s možností „zavolat zpět“. Hovory v systémové aplikaci Telefon tam jsou vždy.</string>
+    <string name="integration_system_call_log">Nastavení systému</string>
+    <string name="integration_system_call_log_allowed">V systému povoleno</string>
+    <string name="integration_system_call_log_refused">V systému vypnuto – klepnutím to změníte</string>
+    <string name="integration_system_call_log_unknown">Klepnutím zobrazíte systémové nastavení integrace historie hovorů</string>
+    <string name="integration_system_call_log_unavailable">V této verzi Androidu není k dispozici</string>
+
+    <string name="integration_cat_redirection">Telefonní hovory přes SIP</string>
+    <string name="integration_cat_redirection_summary">Hovory vytočené v systémovém číselníku jdou přes SIP účet místo SIM (tísňová volání nikdy)</string>
+    <string name="integration_redirect_mode">Přesměrovat telefonní hovory</string>
+    <string-array name="integration_redirect_mode_entries">
+        <item>Nikdy</item>
+        <item>Jen čísla kontaktů se SIP adresou</item>
+        <item>Vždy</item>
+        <item>Pokaždé se zeptat</item>
+        <item>Jen na Wi-Fi (nebo na vybraných sítích)</item>
+    </string-array>
+    <string name="integration_redirection_role">Oprávnění přesměrovat hovory</string>
+    <string name="integration_redirection_role_held">Linphone je aplikace pro přesměrování hovorů</string>
+    <string name="integration_redirection_role_missing">Neuděleno – klepnutím povolíte</string>
+    <string name="integration_redirection_role_unavailable">Na tomto zařízení není k dispozici</string>
+    <string name="integration_redirect_account">Účet</string>
+    <string name="integration_redirect_account_default">Výchozí účet</string>
+    <string name="integration_redirect_wifi">Sítě Wi-Fi</string>
+    <string name="integration_redirect_wifi_dialog">Názvy sítí (SSID) oddělené čárkami. Prázdné: jakákoli Wi-Fi. Čtení názvu sítě vyžaduje oprávnění k poloze.</string>
+    <string name="integration_redirect_wifi_any">Jakákoli síť Wi-Fi</string>
+    <string name="integration_location_permission">Oprávnění k poloze</string>
+    <string name="integration_location_permission_granted">Uděleno: název sítě Wi-Fi lze přečíst</string>
+    <string name="integration_location_permission_missing">Potřeba jen pro vybrané sítě Wi-Fi – klepnutím povolíte</string>
+    <string name="integration_redirect_registered">Jen při registraci</string>
+    <string name="integration_redirect_registered_summary">Nechat hovory na SIM, dokud SIP účet není registrovaný (jinak by selhaly)</string>
+    <string name="integration_redirect_min_digits">Nejkratší přesměrované číslo</string>
+    <string name="integration_redirect_min_digits_dialog">Čísla s méně číslicemi (krátká čísla, služby operátora) zůstanou na SIM.</string>
+    <string name="integration_redirect_min_digits_summary">%1$s číslic</string>
+    <string name="integration_redirect_excluded">Nikdy nepřesměrovaná čísla</string>
+    <string name="integration_redirect_excluded_dialog">Předvolby oddělené čárkami (například placené nebo servisní linky: +420900, 900). Čísla, která jimi začínají, zůstanou na SIM.</string>
+    <string name="integration_none">Žádná</string>
+</resources>

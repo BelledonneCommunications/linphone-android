@@ -51,6 +51,7 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.compatibility.Compatibility
 import org.linphone.contacts.ContactsManager
 import org.linphone.core.tools.Log
+import org.linphone.integration.calls.ManagedCalls
 import org.linphone.notifications.NotificationsManager
 import org.linphone.telecom.TelecomManager
 import org.linphone.utils.ActivityMonitor
@@ -334,6 +335,8 @@ class CoreContext
             Log.i(
                 "$TAG Call [${call.remoteAddress.asStringUriOnly()}] state changed [$currentState]"
             )
+            // a call of the system phone app: it shows the call and picks the audio route
+            val managed = ManagedCalls.isManaged(call) || ManagedCalls.shouldManage(call)
             when (currentState) {
                 Call.State.IncomingReceived -> {
                     if (corePreferences.autoAnswerEnabled) {
@@ -351,7 +354,7 @@ class CoreContext
                     }
                 }
                 Call.State.IncomingEarlyMedia -> {
-                    if (core.ringDuringIncomingEarlyMedia) {
+                    if (core.ringDuringIncomingEarlyMedia && !managed) {
                         val speaker = core.audioDevices.find {
                             it.type == AudioDevice.Type.Speaker
                         }
@@ -366,7 +369,9 @@ class CoreContext
                 Call.State.OutgoingInit -> {
                     val conferenceInfo = core.findConferenceInformationFromUri(call.remoteAddress)
                     // Do not show outgoing call view for conference calls, wait for connected state
-                    if (conferenceInfo == null) {
+                    if (managed) {
+                        Log.i("$TAG Managed call: the system phone app shows it")
+                    } else if (conferenceInfo == null) {
                         postOnMainThread {
                             showCallActivity()
                         }
@@ -377,17 +382,19 @@ class CoreContext
                     }
                 }
                 Call.State.OutgoingRinging, Call.State.OutgoingEarlyMedia -> {
-                    if (corePreferences.routeAudioToBluetoothWhenPossible) {
+                    if (corePreferences.routeAudioToBluetoothWhenPossible && !managed) {
                         Log.i("$TAG Trying to route audio to either bluetooth, hearing aid, headphones or headset if available")
                         AudioUtils.routeAudioToAnyConnectedAudioDeviceOtherThanEarpieceAndSpeaker(call)
                     }
                 }
                 Call.State.Connected -> {
-                    postOnMainThread {
-                        showCallActivity()
+                    if (!managed) {
+                        postOnMainThread {
+                            showCallActivity()
+                        }
                     }
 
-                    if (previousCallState == Call.State.IncomingEarlyMedia && core.ringDuringIncomingEarlyMedia && !LinphoneUtils.isVideoEnabled(call)) {
+                    if (!managed && previousCallState == Call.State.IncomingEarlyMedia && core.ringDuringIncomingEarlyMedia && !LinphoneUtils.isVideoEnabled(call)) {
                         Log.i("$TAG Audio call is in Connected state and was in IncomingEarlyMedia before with ring during early media enabled")
                         val earpiece = core.audioDevices.find {
                             it.type == AudioDevice.Type.Earpiece
@@ -400,7 +407,7 @@ class CoreContext
                         }
                     }
 
-                    if (corePreferences.routeAudioToBluetoothWhenPossible) {
+                    if (corePreferences.routeAudioToBluetoothWhenPossible && !managed) {
                         Log.i("$TAG Call is connected, trying to route audio to either bluetooth, hearing aid, headphones or headset if available")
                         AudioUtils.routeAudioToAnyConnectedAudioDeviceOtherThanEarpieceAndSpeaker(call)
                     }
@@ -810,6 +817,7 @@ class CoreContext
 
         contactsManager.onCoreStarted(core)
         telecomManager.onCoreStarted(core)
+        ManagedCalls.start(context, core)
         notificationsManager.onCoreStarted(core, oldVersion < 600000) // Re-create channels when migrating from a non 6.0 version
         Log.i("$TAG Started contacts, telecom & notifications managers")
 
@@ -838,6 +846,7 @@ class CoreContext
         Log.w("$TAG Core is being shut down, notifying managers so they can remove their listeners and do some cleanup if needed")
         contactsManager.onCoreStopped(core)
         telecomManager.onCoreStopped(core)
+        ManagedCalls.stop(core)
         notificationsManager.onCoreStopped(core)
     }
 
@@ -1041,6 +1050,18 @@ class CoreContext
             return
         }
 
+        // a managed account: the call is placed through the system phone app, which shows and logs it
+        val callAccount = localAddress?.let { la ->
+            core.accountList.find { it.params.identityAddress?.weakEqual(la) == true }
+        } ?: callParams?.account
+        // (not a call with its own media settings: forced ZRTP, or a meeting, which keep Linphone's call screen)
+        val isMeeting = core.findConferenceInformationFromUri(address) != null
+        if (!forceZRTP && !isMeeting &&
+            ManagedCalls.placeThroughSystem(address, callAccount, callParams?.isVideoEnabled == true)
+        ) {
+            return
+        }
+
         val currentCall = core.currentCall
         if (currentCall != null) {
             Log.w(
@@ -1193,6 +1214,16 @@ class CoreContext
 
     @UiThread
     fun showCallActivity() {
+        if (ManagedCalls.allCallsManaged()) {
+            // the calls run in the system phone app: its call screen, not Linphone's
+            Log.i("$TAG Calls are managed, showing the system's in-call screen")
+            try {
+                context.getSystemService(android.telecom.TelecomManager::class.java)?.showInCallScreen(false)
+            } catch (e: SecurityException) {
+                Log.e("$TAG Can't show the system's in-call screen: $e")
+            }
+            return
+        }
         Log.i("$TAG Starting Call activity")
         val intent = LinphoneUtils.getCallActivityIntent(context)
         val options = Compatibility.getPendingIntentActivityOptions(true)

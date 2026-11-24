@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android integration (fork): calls, messages and contacts in the system apps -->
+<resources>
+    <string name="integration_account_registered">registered</string>
+    <string name="integration_account_registering">registering…</string>
+    <string name="integration_account_not_registered">not registered</string>
+    <string name="integration_call_via">via %1$s</string>
+
+    <string name="integration_end_busy">Busy</string>
+    <string name="integration_end_declined">Call declined</string>
+    <string name="integration_end_not_found">Number not found</string>
+    <string name="integration_end_unavailable">Unavailable</string>
+    <string name="integration_end_forbidden">Not allowed by the server</string>
+    <string name="integration_end_network">Network or server error</string>
+    <string name="integration_end_error">Call failed</string>
+    <string name="integration_end_no_account">The SIP account no longer exists</string>
+
+    <!-- Settings → Android integration -->
+    <string name="integration_settings_title">Android integration</string>
+    <string name="integration_cat_calls">Calls</string>
+    <string name="integration_call_mode">Call integration</string>
+    <string-array name="integration_call_mode_entries">
+        <item>Automatic: the system phone app when the calling account is enabled</item>
+        <item>Always the system phone app</item>
+        <item>Linphone\'s own call screen</item>
+    </string-array>
+    <string-array name="integration_call_mode_values" translatable="false">
+        <item>automatic</item>
+        <item>system</item>
+        <item>linphone</item>
+    </string-array>
+    <string name="integration_call_mode_summary_automatic">Calls run in the system phone app (its dialer, call screen and call log) when the account\'s calling account is enabled; otherwise in Linphone\'s call screen.</string>
+    <string name="integration_call_mode_summary_system">Every call runs in the system phone app. A calling account that is not enabled can\'t make or receive calls.</string>
+    <string name="integration_call_mode_summary_linphone">Calls run in Linphone\'s own call screen, as in the original app.</string>
+    <string name="integration_calling_accounts">Calling accounts</string>
+    <string name="integration_calling_accounts_none">No SIP account yet</string>
+    <string name="integration_calling_account_enabled">%1$s: enabled</string>
+    <string name="integration_calling_account_disabled">%1$s: not enabled - tap to enable it in Settings → Calls → Calling accounts</string>
+    <string name="integration_call_permission">Permission to place calls</string>
+    <string name="integration_call_permission_granted">Granted: calls you start in Linphone run in the system phone app</string>
+    <string name="integration_call_permission_missing">Not granted - tap to allow. Without it, calls you start in Linphone use Linphone\'s call screen.</string>
+    <string name="integration_place_app_calls">Calls from Linphone through the system</string>
+    <string name="integration_place_app_calls_summary">Calls you start in Linphone (contacts, history, dial pad) also run in the system phone app</string>
+    <string name="integration_accept_numbers">Phone numbers in the system dialer</string>
+    <string name="integration_accept_numbers_summary">Offer the account for normal phone numbers (tel:), not only for SIP addresses. Needed for a gateway such as the MU300, which dials them through its modem.</string>
+    <string name="integration_account_label">Calling account name</string>
+    <string name="integration_account_label_dialog">The name the system shows for the calling account (in the dialer, the call screen and the call log). Empty: the SIP account\'s display name, or user@domain.</string>
+    <string name="integration_account_label_default">The SIP account\'s name</string>
+    <string name="integration_video_in_linphone">Video calls in Linphone</string>
+    <string name="integration_video_in_linphone_summary">An incoming video call, or a video call you start, uses Linphone\'s call screen: the system call screen has no video</string>
+
+    <string name="integration_cat_call_screen">In the system call screen</string>
+    <string name="integration_hd_audio">HD voice badge</string>
+    <string name="integration_hd_audio_summary">Mark calls with a wideband codec (Opus, G.722, AMR-WB …) as HD</string>
+    <string name="integration_wifi">Wi-Fi calling badge</string>
+    <string name="integration_wifi_summary">Mark calls made over Wi-Fi</string>
+    <string name="integration_status_hints">Show the account</string>
+    <string name="integration_status_hints_summary">\"via &lt;account&gt;\" under the caller\'s name</string>
+    <string name="integration_audio_route">Follow the system\'s audio route</string>
+    <string name="integration_audio_route_summary">Speaker, earpiece, Bluetooth or headset as chosen in the system call screen</string>
+    <string name="integration_reject_message">Reject with a message</string>
+    <string name="integration_reject_message_summary">The quick replies of the system\'s incoming call screen are sent to the caller as a chat message (through a gateway such as the MU300: as an SMS)</string>
+    <string name="integration_reject_busy">Reject as busy</string>
+    <string name="integration_reject_busy_summary">A rejected call answers 486 Busy Here (the caller hears busy) instead of 603 Decline</string>
+    <string name="integration_deflect">Deflect a ringing call</string>
+    <string name="integration_deflect_summary">Send a ringing call to another number (SIP 302) from the system call screen</string>
+    <string name="integration_transfer">Call transfer</string>
+    <string name="integration_transfer_summary">Blind and consultative transfer from the system call screen (SIP REFER)</string>
+
+    <string name="integration_cat_call_log">Call history</string>
+    <string name="integration_self_managed_log">Linphone call screen calls in the system call history</string>
+    <string name="integration_self_managed_log_summary">Android 17 and later: calls in Linphone\'s own call screen also go to the system\'s unified call history, with \"call back\". Calls in the system phone app are always there.</string>
+    <string name="integration_system_call_log">System setting</string>
+    <string name="integration_system_call_log_allowed">Allowed in the system</string>
+    <string name="integration_system_call_log_refused">Turned off in the system - tap to change it</string>
+    <string name="integration_system_call_log_unknown">Tap to see the system\'s call log integration settings</string>
+    <string name="integration_system_call_log_unavailable">Not available on this Android version</string>
+
+    <string name="integration_cat_redirection">Phone calls over SIP</string>
+    <string name="integration_cat_redirection_summary">Calls dialled in the system dialer go over a SIP account instead of the SIM (emergency calls never do)</string>
+    <string name="integration_redirect_mode">Redirect phone calls</string>
+    <string-array name="integration_redirect_mode_entries">
+        <item>Never</item>
+        <item>Only numbers of contacts with a SIP address</item>
+        <item>Always</item>
+        <item>Ask every time</item>
+        <item>Only on Wi-Fi (or on selected networks)</item>
+    </string-array>
+    <string-array name="integration_redirect_mode_values" translatable="false">
+        <item>off</item>
+        <item>sip_contacts</item>
+        <item>always</item>
+        <item>ask</item>
+        <item>wifi</item>
+    </string-array>
+    <string name="integration_redirection_role">Call redirection permission</string>
+    <string name="integration_redirection_role_held">Linphone is the call redirection app</string>
+    <string name="integration_redirection_role_missing">Not granted - tap to allow</string>
+    <string name="integration_redirection_role_unavailable">Not available on this device</string>
+    <string name="integration_redirect_account">Account</string>
+    <string name="integration_redirect_account_default">The default account</string>
+    <string name="integration_redirect_wifi">Wi-Fi networks</string>
+    <string name="integration_redirect_wifi_dialog">Network names (SSIDs), separated by commas. Empty: any Wi-Fi. Reading the network name needs the location permission.</string>
+    <string name="integration_redirect_wifi_any">Any Wi-Fi network</string>
+    <string name="integration_location_permission">Location permission</string>
+    <string name="integration_location_permission_granted">Granted: the Wi-Fi network name can be read</string>
+    <string name="integration_location_permission_missing">Needed only for selected Wi-Fi networks - tap to allow</string>
+    <string name="integration_redirect_registered">Only while registered</string>
+    <string name="integration_redirect_registered_summary">Leave calls on the SIM while the SIP account is not registered (they would fail)</string>
+    <string name="integration_redirect_min_digits">Shortest number redirected</string>
+    <string name="integration_redirect_min_digits_dialog">Numbers with fewer digits (short codes, operator services) stay on the SIM.</string>
+    <string name="integration_redirect_min_digits_summary">%1$s digits</string>
+    <string name="integration_redirect_excluded">Numbers never redirected</string>
+    <string name="integration_redirect_excluded_dialog">Prefixes, separated by commas (for example premium or service numbers: +420900, 900). Numbers starting with one stay on the SIM.</string>
+    <string name="integration_none">None</string>
+</resources>

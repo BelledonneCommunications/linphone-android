@@ -48,6 +48,15 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.READ_PHONE_NUMBERS"/>
 
+    <!-- Android integration: calls Linphone's own UI starts go through the system phone app (TelecomManager.placeCall
+    with a managed calling account) -->
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+
+    <!-- Android integration: redirect phone calls only on selected Wi-Fi networks (the network name needs the
+    location permission, asked for only when networks are selected) -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
     <!-- Simply to prevent "attributionTag  not declared in manifest of org.linphone" error in logs -->
     <attribution android:tag="@string/empty" android:label="@string/app_name" />
 
@@ -180,6 +189,21 @@
             android:resizeableActivity="true"
             android:supportsPictureInPicture="true" />
 
+        <!-- Android integration: "call back" from the system's unified call history (Android 17) for a self-managed
+        call. Only apps that may place calls (the dialer) can start it. -->
+        <activity
+            android:name=".integration.calls.CallBackActivity"
+            android:exported="true"
+            android:permission="android.permission.CALL_PHONE"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.telecom.action.CALL_BACK" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <!-- Services -->
 
         <service
@@ -249,6 +273,15 @@
         </service>
 
         <!-- Receivers -->
+
+        <!-- Android integration: the user's choice about this app's calls in the system call history (Android 17) -->
+        <receiver
+            android:name=".integration.calls.CallLogPreferenceReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.telecom.action.VOIP_CALL_LOG_PREFERENCE" />
+            </intent-filter>
+        </receiver>
 
         <receiver android:name=".core.CorePushReceiver"
             android:exported="false">

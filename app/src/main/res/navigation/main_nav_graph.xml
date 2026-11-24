@@ -130,6 +130,14 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
         <action
+            android:id="@+id/action_settingsFragment_to_integrationSettingsFragment"
+            app:destination="@id/integrationSettingsFragment"
+            app:launchSingleTop="true"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
             android:id="@+id/action_settingsFragment_to_settingsAdvancedFragment"
             app:destination="@id/settingsAdvancedFragment"
             app:launchSingleTop="true"
@@ -406,6 +414,13 @@
             android:name="displayName"
             app:argType="string"
             app:nullable="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/integrationSettingsFragment"
+        android:name="org.linphone.integration.settings.IntegrationSettingsFragment"
+        android:label="IntegrationSettingsFragment"
+        tools:layout="@layout/integration_settings_fragment">
     </fragment>
 
     <fragment

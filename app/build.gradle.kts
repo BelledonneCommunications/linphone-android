@@ -231,6 +231,8 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.splashscreen)
     implementation(libs.androidx.telecom)
+    // Android integration settings
+    implementation(libs.androidx.preference)
     implementation(libs.androidx.media)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.swiperefreshlayout)

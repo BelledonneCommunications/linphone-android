@@ -37,6 +37,7 @@ import org.linphone.R
 import org.linphone.contacts.getListOfSipAddresses
 import org.linphone.core.GlobalState
 import org.linphone.core.tools.Log
+import org.linphone.integration.calls.CallRedirection
 import java.util.concurrent.TimeUnit
 
 @RequiresApi(Build.VERSION_CODES.Q)
@@ -80,6 +81,11 @@ class TelecomRedirectionService : CallRedirectionService() {
     @WorkerThread
     private fun handleCallRedirection(handle: Uri, allowInteractiveResponse: Boolean) {
         Log.i("$TAG onPlaceCall called with URI [$handle], interactive response is [${if (allowInteractiveResponse) "allowed" else "denied"}]")
+        // Android integration: the redirection modes (Settings → Android integration); upstream's own handling
+        // below stays for the mode "contacts with a SIP address"
+        if (CallRedirection.handle(this, handle, allowInteractiveResponse) { getPhoneAccount(this).accountHandle }) {
+            return
+        }
 
         if (!corePreferences.useCallRedirectionService) {
             Log.i("$TAG Use of call redirection service is OFF, placing call unmodified")

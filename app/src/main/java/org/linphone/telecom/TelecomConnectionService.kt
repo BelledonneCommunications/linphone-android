@@ -25,6 +25,8 @@ import android.telecom.ConnectionService
 import android.telecom.PhoneAccountHandle
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.tools.Log
+import org.linphone.integration.calls.ManagedAccounts
+import org.linphone.integration.calls.ManagedCalls
 
 class TelecomConnectionService : ConnectionService() {
     companion object {
@@ -37,6 +39,11 @@ class TelecomConnectionService : ConnectionService() {
     ): Connection {
         val uri = request.address
         Log.i("$TAG Received request with URI [$uri]")
+
+        // a call on one of the system calling accounts (the dialer, a contact, the call log, our placeCall)
+        if (ManagedAccounts.isManagedHandle(this, request.accountHandle)) {
+            return ManagedCalls.createOutgoing(this, request)
+        }
 
         if (uri.toString().startsWith("tel:")) {
             Log.w("$TAG Uri is using tel: scheme, aborting Linphone call")
@@ -59,5 +66,32 @@ class TelecomConnectionService : ConnectionService() {
         }
 
         return Connection.createCanceledConnection()
+    }
+
+    override fun onCreateIncomingConnection(
+        connectionManagerPhoneAccount: PhoneAccountHandle?,
+        request: ConnectionRequest
+    ): Connection {
+        Log.i("$TAG Incoming call on [${request.accountHandle?.id}]")
+        if (ManagedAccounts.isManagedHandle(this, request.accountHandle)) {
+            return ManagedCalls.createIncoming(this, request)
+        }
+        return Connection.createCanceledConnection()
+    }
+
+    override fun onCreateIncomingConnectionFailed(
+        connectionManagerPhoneAccount: PhoneAccountHandle?,
+        request: ConnectionRequest?
+    ) {
+        Log.w("$TAG The system could not create the incoming call")
+        ManagedCalls.incomingFailed(request)
+    }
+
+    override fun onCreateOutgoingConnectionFailed(
+        connectionManagerPhoneAccount: PhoneAccountHandle?,
+        request: ConnectionRequest?
+    ) {
+        Log.w("$TAG The system could not create the outgoing call")
+        ManagedCalls.outgoingFailed(request)
     }
 }

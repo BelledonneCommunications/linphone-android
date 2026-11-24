@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Settings → Android integration. Keys are IntegrationPrefs' config keys (section [android_integration]);
+     keys starting with "status_" or "action_" are not settings but status lines and buttons. -->
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        app:key="cat_calls"
+        app:title="@string/integration_cat_calls"
+        app:iconSpaceReserved="false">
+
+        <ListPreference
+            app:key="call_mode"
+            app:title="@string/integration_call_mode"
+            app:entries="@array/integration_call_mode_entries"
+            app:entryValues="@array/integration_call_mode_values"
+            app:defaultValue="automatic"
+            app:iconSpaceReserved="false" />
+
+        <Preference
+            app:key="status_calling_accounts"
+            app:title="@string/integration_calling_accounts"
+            app:iconSpaceReserved="false" />
+
+        <Preference
+            app:key="status_call_permission"
+            app:title="@string/integration_call_permission"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreferenceCompat
+            app:key="place_app_calls_through_system"
+            app:title="@string/integration_place_app_calls"
+            app:summary="@string/integration_place_app_calls_summary"
+            app:defaultValue="true"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreferenceCompat
+            app:key="accept_phone_numbers"
+            app:title="@string/integration_accept_numbers"
+            app:summary="@string/integration_accept_numbers_summary"
+            app:defaultValue="true"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:key="account_label"
+            app:title="@string/integration_account_label"
+            app:dialogMessage="@string/integration_account_label_dialog"
+            app:defaultValue=""
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreferenceCompat
+            app:key="video_calls_in_linphone"
+            app:title="@string/integration_video_in_linphone"
+            app:summary="@string/integration_video_in_linphone_summary"
+            app:defaultValue="true"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="cat_call_screen"
+        app:title="@string/integration_cat_call_screen"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreferenceCompat
+            app:key="report_hd_audio"
+            app:title="@string/integration_hd_audio"
+            app:summary="@string/integration_hd_audio_summary"
+            app:defaultValue="true"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreferenceCompat
+            app:key="report_wifi"
+            app:title="@string/integration_wifi"
+            app:summary="@string/integration_wifi_summary"
+            app:defaultValue="true"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreferenceCompat
+            app:key="status_hints"
+            app:title="@string/integration_status_hints"
+            app:summary="@string/integration_status_hints_summary"
+            app:defaultValue="true"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreferenceCompat
+            app:key="follow_system_audio_route"
+            app:title="@string/integration_audio_route"
+            app:summary="@string/integration_audio_route_summary"
+            app:defaultValue="true"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreferenceCompat
+            app:key="reject_with_message"
+            app:title="@string/integration_reject_message"
+            app:summary="@string/integration_reject_message_summary"
+            app:defaultValue="true"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreferenceCompat
+            app:key="reject_as_busy"
+            app:title="@string/integration_reject_busy"
+            app:summary="@string/integration_reject_busy_summary"
+            app:defaultValue="false"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreferenceCompat
+            app:key="allow_deflect"
+            app:title="@string/integration_deflect"
+            app:summary="@string/integration_deflect_summary"
+            app:defaultValue="true"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreferenceCompat
+            app:key="allow_transfer"
+            app:title="@string/integration_transfer"
+            app:summary="@string/integration_transfer_summary"
+            app:defaultValue="true"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="cat_call_log"
+        app:title="@string/integration_cat_call_log"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreferenceCompat
+            app:key="self_managed_call_log"
+            app:title="@string/integration_self_managed_log"
+            app:summary="@string/integration_self_managed_log_summary"
+            app:defaultValue="true"
+            app:iconSpaceReserved="false" />
+
+        <Preference
+            app:key="status_system_call_log"
+            app:title="@string/integration_system_call_log"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="cat_redirection"
+        app:title="@string/integration_cat_redirection"
+        app:summary="@string/integration_cat_redirection_summary"
+        app:iconSpaceReserved="false">
+
+        <ListPreference
+            app:key="redirect_mode"
+            app:title="@string/integration_redirect_mode"
+            app:entries="@array/integration_redirect_mode_entries"
+            app:entryValues="@array/integration_redirect_mode_values"
+            app:defaultValue="off"
+            app:iconSpaceReserved="false" />
+
+        <Preference
+            app:key="status_redirection_role"
+            app:title="@string/integration_redirection_role"
+            app:iconSpaceReserved="false" />
+
+        <ListPreference
+            app:key="redirect_account"
+            app:title="@string/integration_redirect_account"
+            app:defaultValue=""
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:key="redirect_wifi_networks"
+            app:title="@string/integration_redirect_wifi"
+            app:dialogMessage="@string/integration_redirect_wifi_dialog"
+            app:defaultValue=""
+            app:iconSpaceReserved="false" />
+
+        <Preference
+            app:key="status_location_permission"
+            app:title="@string/integration_location_permission"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreferenceCompat
+            app:key="redirect_only_when_registered"
+            app:title="@string/integration_redirect_registered"
+            app:summary="@string/integration_redirect_registered_summary"
+            app:defaultValue="true"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:key="redirect_min_digits"
+            app:title="@string/integration_redirect_min_digits"
+            app:dialogMessage="@string/integration_redirect_min_digits_dialog"
+            app:defaultValue="6"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:key="redirect_excluded_prefixes"
+            app:title="@string/integration_redirect_excluded"
+            app:dialogMessage="@string/integration_redirect_excluded_dialog"
+            app:defaultValue=""
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+</PreferenceScreen>

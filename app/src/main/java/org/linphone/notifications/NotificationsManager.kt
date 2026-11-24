@@ -65,6 +65,7 @@ import org.linphone.core.ChatRoom
 import org.linphone.core.ConferenceParams
 import org.linphone.core.Core
 import org.linphone.core.CoreInCallService
+import org.linphone.integration.calls.ManagedCalls
 import org.linphone.core.CoreKeepAliveThirdPartyAccountsService
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.Factory
@@ -213,6 +214,20 @@ class NotificationsManager
         ) {
             val currentState = call.state
             Log.i("$TAG Call state changed: [$currentState]")
+            // a managed call rings, shows and is reported missed by the system phone app; the in-call foreground
+            // Service (and its notification) is still needed for the microphone and the process
+            val managed = ManagedCalls.isManaged(call) || ManagedCalls.shouldManage(call)
+            if (managed && (
+                    currentState == Call.State.IncomingReceived || currentState == Call.State.IncomingEarlyMedia
+                    )
+            ) {
+                Log.i("$TAG Managed call: the system phone app shows the incoming call")
+                return
+            }
+            if (currentState == Call.State.Released && ManagedCalls.wasManaged(call.callLog.callId)) {
+                Log.i("$TAG Managed call: the system reports it in the call log (no missed call notification)")
+                return
+            }
             when (currentState) {
                 Call.State.IncomingReceived, Call.State.IncomingEarlyMedia -> {
                     Log.i(
@@ -727,6 +742,12 @@ class NotificationsManager
 
         cancelNotification(notificationId)
         currentlyRingingCallRemoteAddress = null
+    }
+
+    /** an incoming call the system phone app could not take: Linphone's own incoming call notification */
+    @WorkerThread
+    fun showIncomingCallNotificationFallback(call: Call) {
+        showCallNotification(call, true)
     }
 
     @WorkerThread

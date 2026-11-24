@@ -19,6 +19,9 @@
  */
 package org.linphone.telecom
 
+import org.linphone.integration.IntegrationPrefs
+import org.linphone.integration.calls.CallBackActivity
+import org.linphone.integration.calls.ManagedCalls
 import android.content.Context
 import androidx.annotation.WorkerThread
 import androidx.core.telecom.CallAttributesCompat
@@ -64,8 +67,11 @@ class TelecomManager
             state: Call.State?,
             message: String
         ) {
-            if (state == Call.State.IncomingReceived || state == Call.State.OutgoingProgress) {
-                onCallCreated(call)
+            if (state == Call.State.IncomingReceived) {
+                // the system phone app takes it when its account is managed; otherwise it is self-managed here
+                if (!ManagedCalls.offerIncoming(call)) onCallCreated(call)
+            } else if (state == Call.State.OutgoingProgress) {
+                if (!ManagedCalls.isManaged(call)) onCallCreated(call)
             }
         }
 
@@ -146,6 +152,7 @@ class TelecomManager
             CallAttributesCompat.CALL_TYPE_VIDEO_CALL
         }
 
+        val callBackUri = address.asStringUriOnly()
         scope.launch {
             try {
                 val callAttributes = CallAttributesCompat(
@@ -154,7 +161,8 @@ class TelecomManager
                     direction,
                     type,
                     capabilities,
-                    isLogExcluded = true
+                    // Android 17's unified call history (with ACTION_CALL_BACK: CallBackActivity)
+                    isLogExcluded = !IntegrationPrefs.selfManagedCallLog
                 )
                 Log.i("$TAG Adding call to Telecom's CallsManager with attributes [$callAttributes]")
 
@@ -193,6 +201,8 @@ class TelecomManager
                         }
                     }
                 ) {
+                    // what "call back" from the system call history (ACTION_CALL_BACK, EXTRA_UUID) dials
+                    CallBackActivity.remember(getCallId().uuid.toString(), callBackUri)
                     val callbacks = TelecomCallControlCallback(call, this, scope)
 
                     // We must first call setCallback on callControlScope before using it
