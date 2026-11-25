@@ -104,7 +104,7 @@ class StartConversationViewModel
 
             operationInProgress.postValue(true)
 
-            val groupChatRoomSubject = subject.value.orEmpty()
+            val groupChatRoomSubject = subject.value.orEmpty().trim()
             val params = coreContext.core.createConferenceParams(null)
             params.isChatEnabled = true
             params.isGroupEnabled = true

@@ -126,7 +126,7 @@ class StartCallViewModel
                 removedCharacterAtCurrentPositionEvent.value = Event(true)
             },
             { // OnCallClicked
-                val suggestion = searchFilter.value.orEmpty()
+                val suggestion = searchFilter.value.orEmpty().trim()
                 if (suggestion.isNotEmpty()) {
                     Log.i("$TAG Using numpad dial button to call [$suggestion]")
                     coreContext.postOnCoreThread { core ->
@@ -145,7 +145,7 @@ class StartCallViewModel
                 }
             },
             { // OnBlindTransferClicked
-                val suggestion = searchFilter.value.orEmpty()
+                val suggestion = searchFilter.value.orEmpty().trim()
                 if (suggestion.isNotEmpty()) {
                     Log.i("$TAG Using numpad transfer button to blind forward call to [$suggestion]")
                     coreContext.postOnCoreThread { core ->

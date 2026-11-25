@@ -809,12 +809,12 @@ class SettingsViewModel
                 tunnel?.cleanServers()
 
                 val config = Factory.instance().createTunnelConfig()
-                config.host = tunnelMainHost.value.orEmpty()
+                config.host = tunnelMainHost.value.orEmpty().trim()
                 config.port = tunnelMainPort.value?.toInt() ?: 0
 
                 tunnel?.isDualModeEnabled = tunnelDualMode.value == true
                 if (tunnelDualMode.value == true) {
-                    config.host2 = tunnelDualHost.value.orEmpty()
+                    config.host2 = tunnelDualHost.value.orEmpty().trim()
                     config.port2 = tunnelDualPort.value?.toInt() ?: 0
                 }
 

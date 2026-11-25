@@ -218,7 +218,7 @@ class AccountSettingsViewModel
 
                 newParams.instantMessagingEncryptionMandatory = imEncryptionMandatory.value == true
 
-                val server = sipProxyServer.value.orEmpty()
+                val server = sipProxyServer.value.orEmpty().trim()
                 if (server.isNotEmpty()) {
                     Log.i("$TAG Proxy server set to [$server]")
                     val serverAddress = core.interpretUrl(server, false)
@@ -228,7 +228,7 @@ class AccountSettingsViewModel
                         Log.e("$TAG Failed to parse proxy server!")
                     }
                 }
-                val outboundProxy = outboundProxyServer.value.orEmpty()
+                val outboundProxy = outboundProxyServer.value.orEmpty().trim()
                 if (outboundProxy.isNotEmpty()) {
                     Log.i("$TAG Outbound proxy server set to [$outboundProxy]")
                     val outboundProxyAddress = core.interpretUrl(outboundProxy, false)
@@ -263,14 +263,14 @@ class AccountSettingsViewModel
                         } else {
                             Log.i("$TAG Found NAT policy auth info, updating it")
                             natPolicyAuthInfo.username = stunTurnUsername
-                            natPolicyAuthInfo.password = turnPassword.value.orEmpty()
+                            natPolicyAuthInfo.password = turnPassword.value.orEmpty().trim()
                         }
                     } else if (stunTurnUsername.isNotEmpty()) {
                         Log.i("$TAG No NAT policy auth info found, creating it with")
                         val authInfo = Factory.instance().createAuthInfo(
                             stunTurnUsername,
                             null,
-                            turnPassword.value.orEmpty(),
+                            turnPassword.value.orEmpty().trim(),
                             null,
                             null,
                             null
@@ -301,7 +301,7 @@ class AccountSettingsViewModel
                     newParams.voicemailAddress = null
                 }
 
-                val expire = expire.value.orEmpty()
+                val expire = expire.value.orEmpty().trim()
                 val expireInt = if (expire.isEmpty()) {
                     31536000
                 } else {
@@ -313,7 +313,7 @@ class AccountSettingsViewModel
                 }
                 newParams.expires = expireInt
 
-                val conferenceUri = conferenceFactoryUri.value.orEmpty()
+                val conferenceUri = conferenceFactoryUri.value.orEmpty().trim()
                 if (conferenceUri.isNotEmpty()) {
                     val conferenceFactoryAddress = core.interpretUrl(conferenceUri, false)
                     newParams.conferenceFactoryAddress = conferenceFactoryAddress
@@ -321,7 +321,7 @@ class AccountSettingsViewModel
                     newParams.conferenceFactoryAddress = null
                 }
 
-                val audioVideoConferenceUri = audioVideoConferenceFactoryUri.value.orEmpty()
+                val audioVideoConferenceUri = audioVideoConferenceFactoryUri.value.orEmpty().trim()
                 if (audioVideoConferenceUri.isNotEmpty()) {
                     val audioVideoConferenceFactoryAddress = core.interpretUrl(
                         audioVideoConferenceUri,
