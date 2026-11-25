@@ -228,10 +228,16 @@ class AccountSettingsViewModel
                         Log.e("$TAG Failed to parse proxy server!")
                     }
                 }
-                val outboundProxy = outboundProxyServer.value.orEmpty().trim()
-                if (outboundProxy.isNotEmpty()) {
-                    Log.i("$TAG Outbound proxy server set to [$outboundProxy]")
-                    val outboundProxyAddress = core.interpretUrl(outboundProxy, false)
+
+                val outboundProxyValue = outboundProxyServer.value.orEmpty().trim()
+                if (outboundProxyValue.isNotEmpty()) {
+                    Log.i("$TAG Outbound proxy server set to [$outboundProxyValue]")
+                    val server = if (outboundProxyValue.startsWith("sip:") || outboundProxyValue.startsWith("sips:")) {
+                        outboundProxyValue
+                    } else {
+                        "sip:$outboundProxyValue"
+                    }
+                    val outboundProxyAddress = Factory.instance().createAddress(server)
                     if (outboundProxyAddress != null) {
                         newParams.routesAddresses = arrayOf(outboundProxyAddress)
                         if (server.isEmpty()) {
