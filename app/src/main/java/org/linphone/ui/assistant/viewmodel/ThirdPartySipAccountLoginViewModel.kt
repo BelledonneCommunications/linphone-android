@@ -173,10 +173,12 @@ class ThirdPartySipAccountLoginViewModel
         coreContext.postOnCoreThread { core ->
             core.loadConfigFromXml(corePreferences.thirdPartyDefaultValuesPath)
 
-            // Remove sip: in front of domain, just in case...
+            // Remove sip: or sips: in front of domain, just in case...
             val domainValue = domain.value.orEmpty().trim()
             val domainWithoutSip = if (domainValue.startsWith("sip:")) {
                 domainValue.substring("sip:".length)
+            } else if (domainValue.startsWith("sips:")) {
+                domainValue.substring("sips:".length)
             } else {
                 domainValue
             }
@@ -240,7 +242,7 @@ class ThirdPartySipAccountLoginViewModel
 
             val outboundProxyValue = outboundProxy.value.orEmpty().trim()
             val outboundProxyAddress = if (outboundProxyValue.isNotEmpty()) {
-                val server = if (outboundProxyValue.startsWith("sip:")) {
+                val server = if (outboundProxyValue.startsWith("sip:") || outboundProxyValue.startsWith("sips:")) {
                     outboundProxyValue
                 } else {
                     "sip:$outboundProxyValue"
