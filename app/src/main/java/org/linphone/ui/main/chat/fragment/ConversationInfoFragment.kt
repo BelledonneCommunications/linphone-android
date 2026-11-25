@@ -230,7 +230,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
         }
 
         binding.setEditSubjectClickListener {
-            val currentSubject = viewModel.subject.value.orEmpty()
+            val currentSubject = viewModel.subject.value.orEmpty().trim()
             val model = GroupSetOrEditSubjectDialogModel(currentSubject, isGroupConversation = true)
 
             val dialog = DialogUtils.getSetOrEditGroupSubjectDialog(

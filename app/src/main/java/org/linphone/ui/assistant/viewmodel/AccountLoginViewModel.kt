@@ -216,7 +216,7 @@ open class AccountLoginViewModel
             accountParams.identityAddress = identityAddress
 
             val prefix = internationalPrefix.value.orEmpty().trim()
-            val isoCountryCode = internationalPrefixIsoCountryCode.value.orEmpty()
+            val isoCountryCode = internationalPrefixIsoCountryCode.value.orEmpty().trim()
             if (prefix.isNotEmpty()) {
                 val prefixDigits = if (prefix.startsWith("+")) {
                     prefix.substring(1)

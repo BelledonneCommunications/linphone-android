@@ -54,7 +54,7 @@ class GroupSetOrEditSubjectDialogModel
 
     @UiThread
     fun confirm() {
-        val newSubject = subject.value.orEmpty()
+        val newSubject = subject.value.orEmpty().trim()
         emptySubject.value = newSubject.isEmpty()
         confirmEvent.value = Event(newSubject)
     }
