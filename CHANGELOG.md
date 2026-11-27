@@ -10,6 +10,21 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [6.2.11] - 2026-11-27
+
+### Added
+- Incoming call will show caller name if the username of the SIP URI calling is either a phone number from one of your contact or can be linked to one
+- Flag FLAG_GRANT_READ_URI_PERMISSION has been added to intents, required starting Android 18
+
+### Changed
+- Updated translations from Weblate, Turkish and Basque added to locales_config
+
+### Fixed
+- Prevent rare crash that happens when cache directory doesn't exists
+- Manual download of file in chat message random crash
+- Outbound proxy SIP URI parsing depending on how user typed it in AccountSettingsViewModel
+- Missing calls to trim() on some input text fields.
+
 ## [6.2.10] - 2026-11-05
 
 ### Changed
